@@ -1,0 +1,14 @@
+<Item>
+	<Name>Bare Hands</Name>
+	<Description>A pair of hands.</Description>
+	<Icon>
+		<Name>blank</Name>
+		<UpdateRate>1</UpdateRate>
+		<Size>1</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+	</Icon>
+	<Slot>Hands</Slot>
+	<Type>Armour</Type>
+	<DefensePower>1</DefensePower>
+</Item>

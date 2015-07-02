@@ -1,0 +1,29 @@
+<Item>
+	<Name>Sword</Name>
+	<Description>A sword. Stabby stabby.</Description>
+	<Icon>
+		<Name>Items/MedWep</Name>
+		<UpdateRate>1</UpdateRate>
+		<Size>16</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+	</Icon>
+	<HitEffect>
+		<Name>slash/slash</Name>
+		<UpdateRate>0.05</UpdateRate>
+		<Size>32</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+		<WordList>cut</WordList>
+	</HitEffect>
+	<Slot>MainWeapon</Slot>
+	<Type>Weapon</Type>
+	<Statistics>
+		<Weight>2</Weight>
+		<AttackPower>5</AttackPower>
+		<MetalAttack>1</MetalAttack>
+		<FireAttack>1</FireAttack>
+
+		<MetalDefense>1</MetalDefense>
+	</Statistics>
+</Item>

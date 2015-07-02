@@ -1,0 +1,14 @@
+<DataScope>
+	<Any>
+		<Sequence>
+			<GetAllVisible Type="Enemies" Key="Enemies"></GetAllVisible>
+			<PickClosest InputKey="Enemies" OutputKey="Enemy"></PickClosest>
+			<ConvertTo InputKey="Enemy" OutputKey="Pos" Type="Position"></ConvertTo>
+		</Sequence>
+		<Until State="Running">
+			<MoveTo Key="Pos"></MoveTo>
+			<Attack Key="Pos"></Attack>
+			<ClearValue Key="Pos"></ClearValue>
+		</Until>
+	</Any>
+</DataScope>

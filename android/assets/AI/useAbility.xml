@@ -1,0 +1,17 @@
+<DataScope>
+	<Any>
+		<Sequence>
+			<GetAllAbilities Key="Abilities" ></GetAllAbilities>
+			<PickRandom InputKey="Abilities" OutputKey="Ability"></PickRandom>
+			<UseAbility Key="Ability" Target="Pos"></UseAbility>
+			<ClearValue Key="Pos"></ClearValue>
+			<ClearValue Key="Ability"></ClearValue>
+		</Sequence>
+		<Sequence>
+			<CheckValue Key="Ability"></CheckValue>
+			<GetAllVisible Type="Enemies" Key="Enemies"></GetAllVisible>
+			<PickClosest InputKey="Enemies" OutputKey="Enemy"></PickClosest>
+			<ConvertTo InputKey="Enemy" OutputKey="Pos" Type="Position"></ConvertTo>
+		</Sequence>
+	</Any>
+</DataScope>

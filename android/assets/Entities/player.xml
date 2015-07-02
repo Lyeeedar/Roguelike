@@ -1,0 +1,39 @@
+<Entity Extends="human">
+	<Name>Player</Name>
+	
+	<Statistics>
+		<Range>50</Range>
+	</Statistics>
+	
+	<Factions>
+		<Faction>Player</Faction>
+	</Factions>
+	
+	<ActiveAbilities>
+		<ActiveAbility>firebolt</ActiveAbility>
+		<ActiveAbility>firebeam</ActiveAbility>
+	</ActiveAbilities>
+	
+	<PassiveAbilities>
+		<PassiveAbility>ScionOfFlame</PassiveAbility>
+	</PassiveAbilities>
+	
+	<AI>player</AI>
+	
+	<Sprite>
+		<Name>Player</Name>
+		<UpdateRate>0.5</UpdateRate>
+		<Size>16</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+	</Sprite>
+	
+	<Light>
+		<Colour>
+			<Red>0.4</Red>
+			<Green>0.4</Green>
+			<Blue>0.4</Blue></Colour>
+		<Intensity>4</Intensity>
+	</Light>
+	
+</Entity>

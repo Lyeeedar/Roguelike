@@ -1,0 +1,47 @@
+<Ability>
+	<Name>Firebeam</Name>
+	<Description>A beam of fire.</Description>
+	<Icon>
+		<Name>firebeam/firebeam</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Size>32</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+	</Icon>
+	<Sprite>
+		<Name>firebeam/firebeam</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Size>32</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+	</Sprite>
+	<Type>Channeled</Type>
+	<Statistics>
+		<Range>5</Range>
+		<Speed>2</<Speed>
+		<Cooldown>20</Cooldown>
+		<AttackPower>2</AttackPower>
+		<FireAttack>2</FireAttack>
+	</Statistics>
+	<Light>
+		<Colour>
+			<Red>1.0</Red>
+			<Green>0.9</Green>
+			<Blue>0.4</Blue>
+		</Colour>
+		<Intensity>5</Intensity>
+	</Light>
+	<AI>
+		<Beam />
+		<Strike>
+			<HitEffect>
+				<Name>slash/slash</Name>
+				<UpdateRate>0.05</UpdateRate>
+				<Size>32</Size>
+				<IndexX>0</IndexX>
+				<IndexY>0</IndexY>
+				<WordList>cut</WordList>
+			</HitEffect>
+		</Strike>
+	</AI>
+</Ability>

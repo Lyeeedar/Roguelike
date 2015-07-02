@@ -1,0 +1,13 @@
+<Item>
+	<Name>Bare Ear</Name>
+	<Description>Your ear. Allows you to listen for things.</Description>
+	<Icon>
+		<Name>blank</Name>
+		<UpdateRate>1</UpdateRate>
+		<Size>1</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+	</Icon>
+	<Slot>Earring</Slot>
+	<Type>Armour</Type>
+</Item>

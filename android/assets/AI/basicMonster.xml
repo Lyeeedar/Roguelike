@@ -1,0 +1,8 @@
+<Priority>
+	<Import Path="useAbility.xml"></Import>
+	<Import Path="attackClosest.xml"></Import>
+	<Random>
+		<Wait></Wait>
+		<Import Path="wander.xml"></Import>
+	</Random>
+</Priority>

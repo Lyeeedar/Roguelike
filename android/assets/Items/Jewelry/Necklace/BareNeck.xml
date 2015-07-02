@@ -1,0 +1,13 @@
+<Item>
+	<Name>Bare Neck</Name>
+	<Description>This is your neck. Try not to get it cut.</Description>
+	<Icon>
+		<Name>blank</Name>
+		<UpdateRate>1</UpdateRate>
+		<Size>1</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+	</Icon>
+	<Slot>Necklace</Slot>
+	<Type>Jewelry</Type>
+</Item>

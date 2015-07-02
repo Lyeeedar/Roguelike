@@ -1,0 +1,11 @@
+<PassiveAbility>
+	<Name>Scion Of Flame</Name>
+	<Description>You hold within you effense of the elemental flame.</Description>
+	<Icon>
+		<Name>firebolt/firebolt</Name>
+	</Icon>
+	<Statistics>
+		<FireAttack>1</FireAttack>
+		<FireDefense>1</<FireDefense>
+	</Statistics>
+</PassiveAbility>

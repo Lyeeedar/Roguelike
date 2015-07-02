@@ -1,0 +1,47 @@
+<Ability>
+	<Name>Firebolt</Name>
+	<Description>A small bolt of fire.</Description>
+	<Icon>
+		<Name>firebolt/firebolt</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Size>32</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+	</Icon>
+	<Sprite>
+		<Name>firebolt/firebolt</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Size>32</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+	</Sprite>
+	<Type>OneShot</Type>
+	<Statistics>
+		<Range>10</Range>
+		<Speed>2</<Speed>
+		<Cooldown>20</Cooldown>
+		<AttackPower>2</AttackPower>
+		<FireAttack>2</FireAttack>
+	</Statistics>
+	<Light>
+		<Colour>
+			<Red>1.0</Red>
+			<Green>0.9</Green>
+			<Blue>0.4</Blue>
+		</Colour>
+		<Intensity>5</Intensity>
+	</Light>
+	<AI>
+		<Bolt />
+		<Strike>
+			<HitEffect>
+				<Name>slash/slash</Name>
+				<UpdateRate>0.05</UpdateRate>
+				<Size>32</Size>
+				<IndexX>0</IndexX>
+				<IndexY>0</IndexY>
+				<WordList>cut</WordList>
+			</HitEffect>
+		</Strike>
+	</AI>
+</Ability>

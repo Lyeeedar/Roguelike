@@ -1,0 +1,45 @@
+<Item>
+	<Name></Name>
+	<Description></Description>
+	<Icon>
+		<Name></Name>
+		<UpdateRate></UpdateRate>
+		<Size></Size>
+		<IndexX></IndexX>
+		<IndexY></IndexY>
+	</Icon>
+	<HitEffect>
+		<Name></Name>
+		<UpdateRate></UpdateRate>
+		<Size></Size>
+		<IndexX></IndexX>
+		<IndexY></IndexY>
+		<WordList></WordList>
+	</HitEffect>
+	<Slot></Slot>
+	<Type></Type>
+	
+	<Statistics>
+		<MaxHP></MaxHP>
+		<Range></<Range>
+		<Speed></<Speed>
+		<Weight></Weight>
+		<Cooldown></Cooldown>
+
+		<AttackPower></AttackPower>
+		<DefensePower></<DefensePower>
+
+		<MetalAttack></MetalAttack>
+		<WoodAttack></<WoodAttack>
+		<AirAttack></<AirAttack>
+		<WaterAttack></WaterAttack>
+		<FireAttack></FireAttack>
+
+		<MetalDefense></MetalDefense>
+		<WoodDefense></WoodDefense>
+		<AirDefense></AirDefense>
+		<WaterDefense></<WaterDefense>
+		<FireDefense></<FireDefense>
+	</Statistics>
+	
+</Item>

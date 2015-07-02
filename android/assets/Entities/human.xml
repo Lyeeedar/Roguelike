@@ -1,0 +1,34 @@
+<Entity>
+	<Name>Human</Name>
+	
+	<HitEffect>
+		<Name>strike/strike</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Size>32</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+		<WordList>cut</WordList>
+	</HitEffect>
+	
+	<Statistics>
+		<MaxHP>10</MaxHP>
+		<Range>25</<Range>
+		<Speed>5</<Speed>
+		<Weight>1</Weight>
+
+		<AttackPower>5</AttackPower>
+		<DefensePower>1</<DefensePower>
+
+		<MetalAttack>0</MetalAttack>
+		<WoodAttack>0</<WoodAttack>
+		<AirAttack>0</<AirAttack>
+		<WaterAttack>0</WaterAttack>
+		<FireAttack>0</FireAttack>
+
+		<MetalDefense>1</MetalDefense>
+		<WoodDefense>1</WoodDefense>
+		<AirDefense>0</AirDefense>
+		<WaterDefense>0</<WaterDefense>
+		<FireDefense>0</<FireDefense>
+	</Statistics>
+</Entity>

@@ -1,0 +1,14 @@
+<Item>
+	<Name>Bare Feet</Name>
+	<Description>A pair of feet.</Description>
+	<Icon>
+		<Name>blank</Name>
+		<UpdateRate>1</UpdateRate>
+		<Size>1</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+	</Icon>
+	<Slot>Feet</Slot>
+	<Type>Armour</Type>
+	<DefensePower>1</DefensePower>
+</Item>

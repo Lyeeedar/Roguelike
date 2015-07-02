@@ -1,0 +1,22 @@
+<Item>
+	<Name>Bare Fist</Name>
+	<Description>Your fist. Can deliver a satisfying thump to your opponents.</Description>
+	<Icon>
+		<Name>blank</Name>
+		<UpdateRate>1</UpdateRate>
+		<Size>1</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+	</Icon>
+	<HitEffect>
+		<Name>strike/strike</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Size>32</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+		<WordList>cut</WordList>
+	</HitEffect>
+	<Slot>MainWeapon</Slot>
+	<Type>Weapon</Type>
+	<AttackPower>5</AttackPower>
+</Item>

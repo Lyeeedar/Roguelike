@@ -1,0 +1,14 @@
+<Item>
+	<Name>Wood Armour</Name>
+	<Description>Armour made out of wood. Constant splinters is a small price to pay for not being chopped in half.</Description>
+	<Icon>
+		<Name>Items/Armor</Name>
+		<UpdateRate>1</UpdateRate>
+		<Size>16</Size>
+		<IndexX>0</IndexX>
+		<IndexY>6</IndexY>
+	</Icon>
+	<Slot>Body</Slot>
+	<Type>Armour</Type>
+	<DefensePower>5</DefensePower>
+</Item>
