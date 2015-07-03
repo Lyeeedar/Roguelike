@@ -1,0 +1,28 @@
+<AbilityLine>
+	<Name>Metal Adept</Name>
+	<Description>Attune yourself with elemental Metal.</Description>
+	<Tiers>
+		<Tier>
+			<PassiveAbility>
+				<Name>ScionOfMetal</Name>
+				<Cost>100</Cost>
+			</PassiveAbility>
+			<ActiveAbility>
+				<Name>IronBolt</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<ActiveAbility>
+				<Name>SpikeTrap</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<ActiveAbility>
+				<Name>IronHide</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<ActiveAbility>
+				<Name>IronMace</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+		</Tier>
+	</Tiers>
+</AbilityLine>

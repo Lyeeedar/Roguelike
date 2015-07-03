@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 import Roguelike.AssetManager;
 import Roguelike.Entity.AI.AbilityAI.AbilityAIBeam;
 import Roguelike.Entity.AI.AbilityAI.AbilityAIBolt;
+import Roguelike.Entity.AI.AbilityAI.AbilityAIInstant;
 import Roguelike.Entity.AI.AbilityAI.AbilityAIStrike;
 import Roguelike.Entity.AI.AbilityAI.AbstractAbilityAI;
 import Roguelike.Global.Statistics;
@@ -279,6 +280,7 @@ public class ActiveAbility implements IAbility
 		ClassMap.put("Bolt", AbilityAIBolt.class);
 		ClassMap.put("Beam", AbilityAIBeam.class);
 		ClassMap.put("Strike", AbilityAIStrike.class);
+		ClassMap.put("Instant", AbilityAIInstant.class);
 	}
 	
 	//----------------------------------------------------------------------

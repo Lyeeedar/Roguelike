@@ -1,8 +1,13 @@
 package Roguelike.Entity;
 
+import java.io.IOException;
+
 import Roguelike.Entity.AbilityPool.AbilityLine.Ability;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class AbilityPool
 {
@@ -10,31 +15,57 @@ public class AbilityPool
 	
 	public AbilityPool()
 	{
-		for (int i = 0; i < 10; i++)
+		loadAbilityLine("MetalAdept");
+	}
+	
+	public void loadAbilityLine(String name)
+	{
+		XmlReader xml = new XmlReader();
+		Element xmlElement = null;
+		
+		try
 		{
-			AbilityLine newLine = new AbilityLine();
-			
-			newLine.name = "Ability Line " + i;
-			
-			ActiveAbility aa1 = ActiveAbility.load("firebolt");
-			ActiveAbility aa2 = ActiveAbility.load("firebeam");
-			Ability a1 = new Ability();
-			a1.ability = aa1;
-			
-			Ability a2 = new Ability();
-			a2.ability = aa2;
-			
-			Ability a3 = new Ability();
-			a3.ability = PassiveAbility.load("ScionOfFlame");
-			
-			newLine.abilityTiers.add(new Ability[]{a3, a2, a1, a1, a1});
-			newLine.abilityTiers.add(new Ability[]{a2, a2, a1, a2, a2});
-			newLine.abilityTiers.add(new Ability[]{a2, a1, a2, a1, a2});
-			newLine.abilityTiers.add(new Ability[]{a1, a1, a1, a2, a2});
-			newLine.abilityTiers.add(new Ability[]{a1, a1, a1, a1, a2});
-			
-			abilityLines.add(newLine);
+			xmlElement = xml.parse(Gdx.files.internal("Abilities/Lines/"+name+".xml"));
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
 		}
+		
+		AbilityLine newLine = new AbilityLine();
+		
+		newLine.name = xmlElement.get("Name");
+		newLine.description = xmlElement.get("Description");
+		
+		Element tiersElement = xmlElement.getChildByName("Tiers");
+		for (Element tierElement : tiersElement.getChildrenByName("Tier"))
+		{
+			Ability[] tier = new Ability[5];
+			
+			for (int i = 0; i < 5; i++)
+			{
+				Element abilityElement = tierElement.getChild(i);
+				
+				Ability ab = new Ability();
+				
+				if (abilityElement.getName().equals("ActiveAbility"))
+				{
+					ab.ability = ActiveAbility.load(abilityElement.get("Name"));
+				}
+				else
+				{
+					ab.ability = PassiveAbility.load(abilityElement.get("Name"));
+				}
+				
+				ab.cost = abilityElement.getInt("Cost");
+				
+				tier[i] = ab;
+			}
+			
+			newLine.abilityTiers.add(tier);
+		}
+		
+		abilityLines.add(newLine);
 	}
 	
 	public static class AbilityLine
@@ -47,7 +78,9 @@ public class AbilityPool
 		public static class Ability
 		{
 			public IAbility ability;
-			int level;
+			public int cost;
+			public boolean unlocked;
+			public boolean linked;
 		}
 	}
 }

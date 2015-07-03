@@ -1,0 +1,11 @@
+<PassiveAbility>
+	<Name>Scion Of Metal</Name>
+	<Description>You hold within you essence of the elemental Metal.</Description>
+	<Icon>
+		<Name>Skills/ScionOfMetal</Name>
+	</Icon>
+	<Statistics>
+		<MetalAttack>1</MetalAttack>
+		<MetalDefense>1</<MetalDefense>
+	</Statistics>
+</PassiveAbility>

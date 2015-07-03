@@ -32,6 +32,7 @@ public class AbilityPoolPanel extends Widget
 	private final BitmapFont font;
 	private final Texture white;
 	
+	private final Sprite locked;
 	private final Sprite usedTileSprite;
 	private final Skin skin;
 	private final Stage stage;
@@ -39,6 +40,8 @@ public class AbilityPoolPanel extends Widget
 	private Tooltip tooltip;
 	
 	private int selectedAbilityLine = 0;
+	
+	private Ability unlocking;
 	
 	public AbilityPoolPanel(AbilityPool abilityPool, Skin skin, Stage stage)
 	{
@@ -48,6 +51,7 @@ public class AbilityPoolPanel extends Widget
 		
 		this.font = new BitmapFont();
 		this.white = AssetManager.loadTexture("Sprites/white.png");
+		this.locked = AssetManager.loadSprite("GUI/locked");
 				
 		this.usedTileSprite = AssetManager.loadSprite("GUI/GUI", 0.5f, new int[]{16, 16}, new int[]{8, 10});
 		
@@ -117,8 +121,26 @@ public class AbilityPoolPanel extends Widget
 			
 			for (int ii = 0; ii < 5; ii++)
 			{
+				Ability ab = abilityLine.get(i)[ii];
+				
 				usedTileSprite.render(batch, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
-				abilityLine.get(i)[ii].ability.getIcon().render(batch, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
+				ab.ability.getIcon().render(batch, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
+				
+				if (!ab.unlocked)
+				{
+					batch.setColor(0.5f, 0.5f, 0.5f, 0.5f);
+					batch.draw(white, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
+					batch.setColor(Color.WHITE);
+					
+					if (ab == unlocking)
+					{
+						
+					}
+					else
+					{
+						locked.render(batch, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
+					}
+				}
 			}
 			
 			y -= TileSize*1.5f;
@@ -143,6 +165,8 @@ public class AbilityPoolPanel extends Widget
 					tooltip = new Tooltip(t, skin, stage);
 					tooltip.show(event, x, y);
 				}
+				
+				unlocking = null;
 			}
 			else
 			{
@@ -155,6 +179,7 @@ public class AbilityPoolPanel extends Widget
 					if (ycursor < ypos + TileSize/2)
 					{
 						// over tier
+						unlocking = null;
 						break;
 					}
 					ypos += TileSize * 0.5f;
@@ -164,9 +189,14 @@ public class AbilityPoolPanel extends Widget
 						// over tiles
 						
 						int xindex = (int)((x - MaxLineWidth - TileSize) / TileSize);
-						if (xindex < 5)
+						if (xindex >= 0 && xindex < 5)
 						{
 							Ability a = abilityLine.get(i)[xindex];
+							
+							if (a != unlocking)
+							{
+								unlocking = null;
+							}
 							
 							tooltip = new Tooltip(a.ability.createTable(skin), skin, stage);
 							tooltip.show(event, x, y);
@@ -179,6 +209,7 @@ public class AbilityPoolPanel extends Widget
 					if (ycursor < ypos + TileSize*1.5f)
 					{
 						// over blank space
+						unlocking = null;
 						break;
 					}
 					ypos += TileSize * 0.5f;
@@ -224,7 +255,22 @@ public class AbilityPoolPanel extends Widget
 						{
 							Ability a = abilityLine.get(i)[xindex];
 							
-							RoguelikeGame.Instance.dragDropPayload = new DragDropPayload(a.ability, a.ability.getIcon(), x-16, getHeight() - y - 16);
+							if (a.unlocked)
+							{
+								RoguelikeGame.Instance.dragDropPayload = new DragDropPayload(a.ability, a.ability.getIcon(), x-16, getHeight() - y - 16);
+							}
+							else
+							{
+								if (unlocking == a)
+								{
+									a.unlocked = true;
+									unlocking = null;
+								}
+								else
+								{
+									unlocking = a;
+								}
+							}
 						}
 						
 						break;
@@ -246,6 +292,8 @@ public class AbilityPoolPanel extends Widget
 		@Override
 		public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) 
 		{
+			//unlocking = null;
+			
 			if (tooltip != null)
 			{
 				tooltip.setVisible(false);
