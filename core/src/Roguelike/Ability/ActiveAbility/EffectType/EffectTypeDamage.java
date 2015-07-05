@@ -4,6 +4,7 @@ import Roguelike.Global.Direction;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.SpriteEffect;
+import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -27,6 +28,9 @@ public class EffectTypeDamage extends AbstractEffectType
 		{
 			tile.Entity.HP -= 5;
 			tile.Entity.SpriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
+			
+			StatusEffect se = StatusEffect.load("Poison");
+			tile.Entity.addStatusEffect(se);
 		}
 		else
 		{

@@ -11,16 +11,19 @@ import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
+import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 import Roguelike.UI.AbilityPanel;
 import Roguelike.UI.AbilityPoolPanel;
 import Roguelike.UI.DragDropPayload;
+import Roguelike.UI.EntityStatusRenderer;
 import Roguelike.UI.HPWidget;
 import Roguelike.UI.InventoryPanel;
 import Roguelike.UI.SpriteWidget;
 import Roguelike.UI.TabPane;
+import Roguelike.UI.Tooltip;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -268,6 +271,14 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			
 			entity.Sprite.render(batch, cx, cy, TileSize, TileSize);
 			
+			for (StatusEffect se : entity.statusEffects)
+			{
+				if (se.continualEffect != null)
+				{
+					se.continualEffect.render(batch, cx, cy, TileSize, TileSize);
+				}
+			}
+			
 			for (SpriteEffect e : entity.SpriteEffects)
 			{
 				if (e.Corner == Direction.CENTER)
@@ -278,14 +289,6 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 				{								
 					e.Sprite.render(batch, cx + TileSize3*(e.Corner.GetX()*-1+1), cy + TileSize3*(e.Corner.GetY()*-1+1), TileSize3, TileSize3);
 				}
-			}
-			
-			if (entity.HP != entity.getStatistic(Statistics.MAXHP))
-			{
-				float val = (float)entity.HP / (float)entity.getStatistic(Statistics.MAXHP);
-				
-				batch.setColor(new Color(Color.RED).lerp(Color.GREEN, val));
-				batch.draw(white, x*TileSize + offsetx, y*TileSize + offsety, TileSize*val, TileSize/10);
 			}
 			
 			batch.setColor(Color.WHITE);
@@ -335,6 +338,17 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			border.update(delta);
 			border.render(batch, mousex*TileSize + offsetx, mousey*TileSize + offsety, TileSize, TileSize);
 			batch.setColor(Color.WHITE);
+		}
+		
+		for (Entity entity : toBeDrawn)
+		{
+			int x = entity.Tile.x;
+			int y = entity.Tile.y;
+						
+			int cx = x*TileSize + offsetx;
+			int cy = y*TileSize + offsety;
+			
+			EntityStatusRenderer.draw(entity, batch, cx, cy, TileSize, TileSize);
 		}
 		
 		batch.end();
@@ -475,7 +489,13 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	//----------------------------------------------------------------------
 	@Override
 	public boolean mouseMoved(int screenX, int screenY)
-	{		
+	{	
+		if (tooltip != null)
+		{
+			tooltip.remove();
+			tooltip = null;
+		}
+		
 		if (
 		//	(tabPane != null && isInBounds(screenX, screenY, tabPane)) ||
 			(abilityPanel != null && isInBounds(screenX, screenY, abilityPanel)) ||
@@ -493,6 +513,30 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			mousePosY = Gdx.graphics.getHeight() - screenY;
 			
 			stage.setScrollFocus(null);
+			
+			screenY = Gdx.graphics.getHeight() - screenY;
+			
+			int offsetx = Gdx.graphics.getWidth() / 2 - level.player.Tile.x * TileSize;
+			int offsety = Gdx.graphics.getHeight() / 2 - level.player.Tile.y * TileSize;
+			
+			int x = (screenX - offsetx) / TileSize;
+			int y = (screenY - offsety) / TileSize;
+			
+			if (x >= 0 && x < level.width && y >= 0 && y < level.height)
+			{
+				GameTile tile = level.getGameTile(x, y);
+				
+				if (tile.Entity != null)
+				{
+					Table table = EntityStatusRenderer.getMouseOverTable(tile.Entity, x*TileSize+offsetx, y*TileSize+offsety, TileSize, TileSize, screenX, screenY, skin);
+					
+					if (table != null)
+					{
+						tooltip = new Tooltip(table, skin, stage);
+						tooltip.show(screenX, screenY);
+					}					
+				}
+			}
 		}
 		
 		return false;
@@ -572,6 +616,8 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	SpriteBatch batch;
 	Texture blank;
 	Texture white;
+	
+	Tooltip tooltip;
 	
 	boolean mouseOverTabs;
 	

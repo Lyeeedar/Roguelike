@@ -20,7 +20,6 @@
 	<Type>Weapon</Type>
 	<Statistics>
 		<Weight>2</Weight>
-		<AttackPower>5</AttackPower>
 		<MetalAttack>1</MetalAttack>
 		<FireAttack>1</FireAttack>
 

@@ -3,6 +3,7 @@ package Roguelike.Entity;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
@@ -17,6 +18,7 @@ import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
+import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.Gdx;
@@ -36,6 +38,13 @@ public class Entity
 	//region Public Methods
 	
 	//----------------------------------------------------------------------
+	public void addStatusEffect(StatusEffect se)
+	{
+		se.attachedTo = this;
+		statusEffects.add(se);
+	}
+	
+	//----------------------------------------------------------------------
 	public void updateAccumulators(float cost)
 	{
 		actionDelayAccumulator += cost;
@@ -45,6 +54,19 @@ public class Entity
 			if (a != null)
 			{
 				a.cooldownAccumulator -= cost;
+			}
+		}
+		
+		Iterator<StatusEffect> itr = statusEffects.iterator();
+		while (itr.hasNext())
+		{
+			StatusEffect se = itr.next();
+			
+			se.onTurn(cost);
+			
+			if(se.duration <= 0)
+			{
+				itr.remove();
 			}
 		}
 	}
@@ -264,6 +286,7 @@ public class Entity
 	private PassiveAbility[] m_slottedPassiveAbilities = new PassiveAbility[Global.NUM_ABILITY_SLOTS];
 	private ActiveAbility[] m_slottedActiveAbilities = new ActiveAbility[Global.NUM_ABILITY_SLOTS];
 	private Inventory m_inventory = new Inventory();
+	public Array<StatusEffect> statusEffects = new Array<StatusEffect>(false, 16);
 	
 	//----------------------------------------------------------------------
 	public String Name;
@@ -271,7 +294,7 @@ public class Entity
 	//----------------------------------------------------------------------
 	public Sprite Sprite;
 	public Light Light;
-	public Array<SpriteEffect> SpriteEffects = new Array<SpriteEffect>();
+	public Array<SpriteEffect> SpriteEffects = new Array<SpriteEffect>(false, 16);
 	private Sprite m_defaultHitEffect;
 	
 	//----------------------------------------------------------------------

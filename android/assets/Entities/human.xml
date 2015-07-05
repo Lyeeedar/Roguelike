@@ -16,9 +16,6 @@
 		<Speed>5</<Speed>
 		<Weight>1</Weight>
 
-		<AttackPower>5</AttackPower>
-		<DefensePower>1</<DefensePower>
-
 		<MetalAttack>0</MetalAttack>
 		<WoodAttack>0</<WoodAttack>
 		<AirAttack>0</<AirAttack>

@@ -66,6 +66,34 @@ public class Tooltip extends Table
 		toFront();
 	}
 	
+	public void show(float x, float y)
+	{
+		setVisible(true);
+		
+		Vector2 tmp = new Vector2(x, y);
+		tmp.add(10, 10);
+		
+		// Fit within stage
+		
+		if (tmp.x + getWidth() > getStage().getWidth())
+		{
+			tmp.x = getStage().getWidth() - getWidth();
+		}
+		
+		if (tmp.y + getHeight()/2 > getStage().getHeight())
+		{
+			tmp.y = getStage().getHeight() - getHeight()/2;
+		}
+		
+		if (tmp.y - getHeight()/2 < 0)
+		{
+			tmp.y = getHeight()/2;
+		}
+		
+		setPosition(tmp.x, tmp.y);
+		toFront();
+	}
+	
 	public static class TooltipStyle
 	{
 

@@ -1,0 +1,15 @@
+<StatusEffect>
+	<Name>Poison</Name>
+	<Description>A slow acting but no less dangerous poison.</Description>
+	<Duration>5</Duration>
+	
+	<Icon>
+		<Name>Skills/SpikeTrap</Name>
+	</Icon>
+	
+	<OnTurnEffects>
+		<DOT>
+			<DPS>1</DPS>
+		</DOT>
+	</OnTurnEffects>
+</StatusEffect>

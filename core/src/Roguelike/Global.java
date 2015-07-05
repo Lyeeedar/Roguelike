@@ -85,15 +85,15 @@ public class Global
 	//----------------------------------------------------------------------
 	public enum Statistics
 	{
+		// Basic stats
 		MAXHP,
 		RANGE,
 		SPEED,
 		WEIGHT,
+		CARRYLIMIT,
 		COOLDOWN,
 
-		ATTACKPOWER,
-		DEFENSEPOWER,
-
+		// Tier 1 elements
 		METALATTACK,
 		WOODATTACK,
 		AIRATTACK,
@@ -104,7 +104,16 @@ public class Global
 		WOODDEFENSE,
 		AIRDEFENSE,
 		WATERDEFENSE,
-		FIREDEFENSE;
+		FIREDEFENSE,
+		
+		// Tier 2 elements
+		POISONATTACK,
+		ACIDATTACK,
+		MINDSHOCKATTACK,
+		ICEATTACK,
+		PLASMAATTACK,
+		LIGHTNINGATTACK
+		;
 		
 		public static EnumMap<Statistics, Integer> getStatisticsBlock()
 		{
@@ -195,26 +204,21 @@ public class Global
 	}
 	
 	//----------------------------------------------------------------------
-	public enum Tier2ElementHarmful
+	public enum Tier1ComboHarmful
 	{
-		// Status Effects
 		POISON(Tier1Element.METAL, Tier1Element.WOOD),
 		PARALYZE(Tier1Element.METAL, Tier1Element.AIR),
 		TORPOR(Tier1Element.METAL, Tier1Element.WATER),
 		IMMOLATE(Tier1Element.METAL, Tier1Element.FIRE),
-		
-		// ABility Modifiers
-		EXTEND(Tier1Element.WOOD, Tier1Element.AIR),
-		ENHANCE(Tier1Element.WOOD, Tier1Element.WATER),
-		EXPLODE(Tier1Element.WOOD, Tier1Element.FIRE),
-		
-		// Damage
+		MINDSHOCK(Tier1Element.WOOD, Tier1Element.AIR),
+		CORROSION(Tier1Element.WOOD, Tier1Element.WATER),
+		ACID(Tier1Element.WOOD, Tier1Element.FIRE),		
 		ICE(Tier1Element.WATER, Tier1Element.AIR),	
 		PLASMA(Tier1Element.WATER, Tier1Element.FIRE),
 		LIGHTNING(Tier1Element.AIR, Tier1Element.FIRE);
 		
 		public final Tier1Element[] Tier1Elements;
-		Tier2ElementHarmful(Tier1Element e1, Tier1Element e2)
+		Tier1ComboHarmful(Tier1Element e1, Tier1Element e2)
 		{
 			Tier1Elements = new Tier1Element[]{e1, e2};
 		}
@@ -223,18 +227,13 @@ public class Global
 	//----------------------------------------------------------------------
 	public enum Tier2ElementHelpful
 	{
-		// Status Effects
 		REGENERATION(Tier1Element.METAL, Tier1Element.WOOD),
 		DODGE(Tier1Element.METAL, Tier1Element.AIR),
 		HASTE(Tier1Element.METAL, Tier1Element.WATER),
 		POWER(Tier1Element.METAL, Tier1Element.FIRE),
-
-		// ABility Modifiers
-		EXTEND(Tier1Element.WOOD, Tier1Element.AIR),
-		ENHANCE(Tier1Element.WOOD, Tier1Element.WATER),
-		EXPLODE(Tier1Element.WOOD, Tier1Element.FIRE),
-
-		// Damage
+		STABILITY(Tier1Element.WOOD, Tier1Element.AIR),
+		PROTECTION(Tier1Element.WOOD, Tier1Element.WATER),
+		RETALIATION(Tier1Element.WOOD, Tier1Element.FIRE),
 		ICECHARGE(Tier1Element.WATER, Tier1Element.AIR),	
 		PLASMACHARGE(Tier1Element.WATER, Tier1Element.FIRE),
 		LIGHTNINGCHARGE(Tier1Element.AIR, Tier1Element.FIRE);
@@ -270,7 +269,7 @@ public class Global
 			attackScale += _attack.get(el.AttackStatistic) * defense;
 		}
 		
-		float attack = ( _attack.get(Statistics.ATTACKPOWER) * attackScale ) / _defense.get(Statistics.DEFENSEPOWER);
+		float attack = (1 * attackScale ) / 1;
 		
 		return (int)Math.ceil(attack);
 	}
