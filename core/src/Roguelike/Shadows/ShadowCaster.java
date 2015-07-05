@@ -11,78 +11,57 @@
 package Roguelike.Shadows;
 
 import java.util.ArrayDeque;
+import java.util.HashSet;
+
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 
 public class ShadowCaster
 {
-	private final int viewRange;
+	private final HashSet<String> tileLookup = new HashSet<String>(); 
 	
+	private final int range;
+	private final ShadowCastTile[][] grid;
+
 	private int startX;
 	private int startY;
 
-	public ShadowCaster()
+	public ShadowCaster(ShadowCastTile[][] grid, int range)
 	{
-		this.viewRange = 99999;
-	}
-	
-	public ShadowCaster(int viewRange)
-	{
-		this.viewRange = viewRange;
+		this.grid = grid;
+		this.range = range;
 	}
 
 	// Takes a circle in the form of a center point and radius, and a function
-	// that
-	// can tell whether a given cell is opaque. Calls the setFoV action on
+	// that can tell whether a given cell is opaque. Calls the setFoV action on
 	// every cell that is both within the radius and visible from the center.
 
-	public void ComputeFieldOfViewWithShadowCasting(int x, int y, ShadowCastTile[][] level)
+	public void ComputeFOV(int x, int y, Array<int[]> output)
 	{
-		this.startX = x;
-		this.startY = y;
+		this.startX = MathUtils.clamp(x, 0, grid.length - 1);
+		this.startY = MathUtils.clamp(y, 0, grid[0].length - 1);
 
-		if (startX > level.length - 1)
+		for (int octant = 0; octant < 8; octant++)
 		{
-			startX = level.length - 1;
-		}
-		if (startY > level[0].length - 1)
-		{
-			startY = level[0].length - 1;
-		}
-		if (startX < 0)
-		{
-			startX = 0;
-		}
-		if (startY < 0)
-		{
-			startY = 0;
-		}
-
-		for (int i = 0; i < level.length; i++)
-		{
-			for (int j = 0; j < level[0].length; j++)
-			{
-				level[i][j].SetVisible(false);
-			}
-		}
-
-		for (int octant = 0; octant < 8; ++octant)
-		{
-			ComputeFieldOfViewInOctantZero(level, octant);
+			ComputeFieldOfViewInOctantZero(octant, output);
 		}
 	}
 
-	private void ComputeFieldOfViewInOctantZero(ShadowCastTile[][] level, int octant)
+	private void ComputeFieldOfViewInOctantZero(int octant, Array<int[]> output)
 	{
 		ArrayDeque<Column> queue = new ArrayDeque<Column>();
+		
 		queue.addFirst(new Column(0, new int[] { 1, 0 }, new int[] { 1, 1 }, octant));
-		while (queue.size() != 0)
+		
+		while (!queue.isEmpty())
 		{
 			Column current = queue.pollLast();
-			if (current.getX() > viewRange)
+			if (current.getX() > range)
 			{
 				continue;
 			}
 
-			ComputeFoVForColumnPortion(current.getX(), current.getTopVector(), current.getBottomVector(), queue, current.getOctant(), level);
+			ComputeFoVForColumnPortion(current.getX(), current.getTopVector(), current.getBottomVector(), queue, current.getOctant(), output);
 		}
 	}
 
@@ -90,7 +69,7 @@ public class ShadowCaster
 	// portion that are within the radius as in the field of view, and
 	// (2) it computes which portions of the following column are in the
 	// field of view, and puts them on a work queue for later processing.
-	private void ComputeFoVForColumnPortion(int x, int[] topVector, int[] bottomVector, ArrayDeque<Column> queue, int octant, ShadowCastTile[][] level)
+	private void ComputeFoVForColumnPortion(int x, int[] topVector, int[] bottomVector, ArrayDeque<Column> queue, int octant, Array<int[]> output)
 	{
 		// Search for transitions from opaque to transparent or
 		// transparent to opaque and use those to determine what
@@ -99,59 +78,61 @@ public class ShadowCaster
 		// Start at the top of the column portion and work down.
 
 		int topY;
-		if (x == 0)
-		{
-			topY = 0;
-		} else
+		if (x == 0) { topY = 0; } 
+		else
 		{
 			int quotient = (2 * x + 1) * topVector[1] / (2 * topVector[0]);
 			int remainder = (2 * x + 1) * topVector[1] % (2 * topVector[0]);
 
-			if (remainder > topVector[0]) topY = quotient + 1;
-			else topY = quotient;
+			if (remainder > topVector[0]) { topY = quotient + 1; }
+			else { topY = quotient; }
 		}
 
 		// Note that this can find a top cell that is actually entirely blocked
-		// by
-		// the cell below it; consider detecting and eliminating that.
+		// by the cell below it; consider detecting and eliminating that.
 
 		int bottomY;
-		if (x == 0)
-		{
-			bottomY = 0;
-		} else
+		if (x == 0) { bottomY = 0; } 
+		else
 		{
 			int quotient = (2 * x - 1) * bottomVector[1] / (2 * bottomVector[0]);
 			int remainder = (2 * x - 1) * bottomVector[1] % (2 * bottomVector[0]);
 
-			if (remainder >= bottomVector[0]) bottomY = quotient + 1;
-			else bottomY = quotient;
+			if (remainder >= bottomVector[0]) { bottomY = quotient + 1; }
+			else { bottomY = quotient; }
 		}
 
 		// A more sophisticated algorithm would say that a cell is visible if
-		// there is
-		// *any* straight line segment that passes through *any* portion of the
-		// origin cell
-		// and any portion of the target cell, passing through only transparent
-		// cells
-		// along the way. This is the "Permissive Field Of View" algorithm, and
-		// it
-		// is much harder to implement.
+		// there is *any* straight line segment that passes through *any* portion 
+		// of the origin cell and any portion of the target cell, passing through 
+		// only transparent cells along the way. This is the "Permissive Field Of 
+		// View" algorithm, and it is much harder to implement.
 		Boolean wasLastCellOpaque = null;
-		for (int y = topY; y >= bottomY; --y)
+		for (int y = topY; y >= bottomY; y--)
 		{
-			boolean inRadius = IsInRadius(x, y);
+			int[] temp = TranslateOctant(new int[] { x, y }, octant);
+			boolean inRadius = IsInRadius(temp[0], temp[1]);
 			if (inRadius)
 			{
 				// The current cell is in the field of view.
-				int[] temp = TranslateOctant(new int[] { x, y }, octant);
 
-				if ((temp[0] < 0) || (temp[1] < 0) || (temp[0] >= level.length) || temp[1] >= level[0].length)
+				if (
+					temp[0] < 0 ||
+					temp[1] < 0 ||
+					temp[0] >= grid.length ||
+					temp[1] >= grid[0].length
+					)
 				{
 					continue;
 				}
-
-				level[temp[0]][temp[1]].SetVisible(true);
+				
+				String s = temp[0]+","+temp[1];
+				if (!tileLookup.contains(s))
+				{
+					output.add(temp);
+					
+					tileLookup.add(s);
+				}
 			}
 
 			// A cell that was too far away to be seen is effectively
@@ -160,14 +141,13 @@ public class ShadowCaster
 			// an opaque cell and not scan the cells that are also too
 			// far away in the next column.
 
-			boolean currentIsOpaque = !inRadius || isOpaque(x, y, octant, level);
+			boolean currentIsOpaque = !inRadius || isOpaque(x, y, octant);
 			if (wasLastCellOpaque != null)
 			{
 				if (currentIsOpaque)
 				{
 					// We've found a boundary from transparent to opaque. Make a
-					// note
-					// of it and revisit it later.
+					// note of it and revisit it later.
 					if (!wasLastCellOpaque.booleanValue())
 					{
 						// The new bottom vector touches the upper left corner
@@ -175,11 +155,11 @@ public class ShadowCaster
 						// opaque cell that is below the transparent cell.
 						queue.addFirst(new Column(x + 1, new int[] { x * 2 - 1, y * 2 + 1 }, topVector, octant));
 					}
-				} else if (wasLastCellOpaque.booleanValue())
+				} 
+				else if (wasLastCellOpaque.booleanValue())
 				{
 					// We've found a boundary from opaque to transparent. Adjust
-					// the
-					// top vector so that when we find the next boundary or do
+					// the top vector so that when we find the next boundary or do
 					// the bottom cell, we have the right top vector.
 					//
 					// The new top vector touches the lower right corner of the
@@ -202,7 +182,7 @@ public class ShadowCaster
 	// Is the lower-left corner of cell (x,y) within the radius?
 	private boolean IsInRadius(int x, int y)
 	{
-		return (2 * x - 1) * (2 * x - 1) + (2 * y - 1) * (2 * y - 1) <= 4 * viewRange * viewRange;
+		return Math.abs(x - startX) <= range && Math.abs(y - startY) <= range;
 	}
 
 	// Octant helpers
@@ -225,29 +205,35 @@ public class ShadowCaster
 			int temp = pos[0];
 			pos[0] = pos[1];
 			pos[1] = temp;
-		} else if (octant == 2)
+		} 
+		else if (octant == 2)
 		{
 			int temp = pos[0];
 			pos[0] = pos[1] * -1;
 			pos[1] = temp;
-		} else if (octant == 3)
+		} 
+		else if (octant == 3)
 		{
 			pos[0] = pos[0] * -1;
-		} else if (octant == 4)
+		} 
+		else if (octant == 4)
 		{
 			int temp = pos[0] * -1;
 			pos[0] = pos[1] * -1;
 			pos[1] = temp;
-		} else if (octant == 5)
+		} 
+		else if (octant == 5)
 		{
 			pos[1] = pos[1] * -1;
 			pos[0] = pos[0] * -1;
-		} else if (octant == 6)
+		} 
+		else if (octant == 6)
 		{
 			int temp = pos[1];
 			pos[1] = pos[0] * -1;
 			pos[0] = temp;
-		} else if (octant == 7)
+		} 
+		else if (octant == 7)
 		{
 			pos[1] = pos[1] * -1;
 		}
@@ -258,10 +244,10 @@ public class ShadowCaster
 		return pos;
 	}
 
-	private boolean isOpaque(int x, int y, int octant, ShadowCastTile[][] level)
+	private boolean isOpaque(int x, int y, int octant)
 	{
 		int[] pos = TranslateOctant(new int[] { x, y }, octant);
-		return level[pos[0]][pos[1]].GetOpaque();
+		return grid[pos[0]][pos[1]].GetOpaque();
 	}
 }
 

@@ -3,25 +3,20 @@ package Roguelike.UI;
 import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
-import Roguelike.Entity.ActiveAbility;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Entity.Entity;
-import Roguelike.Entity.PassiveAbility;
-import Roguelike.Items.Item.ItemType;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 public class AbilityPanel extends Widget
@@ -31,9 +26,7 @@ public class AbilityPanel extends Widget
 	private Tooltip tooltip;
 	private int lastX;
 	private int lastY;
-	
-	private int SelectedAbility;
-	
+		
 	private BitmapFont font;
 	private Texture white;
 	
@@ -57,9 +50,7 @@ public class AbilityPanel extends Widget
 		
 		this.skin = skin;
 		this.stage = stage;
-		
-		SelectedAbility = 0;
-		
+				
 		addListener(new AbilityPanelListener());
 	}
 	
@@ -86,7 +77,7 @@ public class AbilityPanel extends Widget
 				batch.setColor(Color.CYAN);
 			}
 			
-			if (i == SelectedAbility)
+			if (aa != null && aa == RoguelikeGame.Instance.preparedAbility)
 			{
 				equippedTileSprite.render(batch, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
 			}
@@ -146,7 +137,7 @@ public class AbilityPanel extends Widget
 			x += TileSize;
 		}
 		
-		ActiveAbility selected = entity.getSlottedActiveAbilities()[SelectedAbility];
+		ActiveAbility selected = RoguelikeGame.Instance.preparedAbility;
 		if (selected != null)
 		{
 			usedTileSprite.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize*2, TileSize*2);
@@ -177,11 +168,6 @@ public class AbilityPanel extends Widget
 	public float getPrefHeight()
 	{
 		return TileSize * 2;
-	}
-	
-	public ActiveAbility getSelectedAbility()
-	{
-		return entity.getSlottedActiveAbilities()[SelectedAbility];
 	}
 	
 	public void handleDrop(float x, float y)
@@ -232,9 +218,9 @@ public class AbilityPanel extends Widget
 				{
 					ActiveAbility aa = entity.getSlottedActiveAbilities()[xIndex];
 					
-					if (aa != null)
+					if (aa != null && aa.cooldownAccumulator <= 0)
 					{
-						SelectedAbility = xIndex;
+						RoguelikeGame.Instance.prepareAbility(aa);
 					}
 				}
 			}
@@ -277,7 +263,7 @@ public class AbilityPanel extends Widget
 				}
 				else
 				{
-					ActiveAbility aa = entity.getSlottedActiveAbilities()[SelectedAbility];
+					ActiveAbility aa = RoguelikeGame.Instance.preparedAbility;
 					
 					if (aa != null)
 					{

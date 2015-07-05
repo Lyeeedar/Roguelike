@@ -5,6 +5,7 @@ import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Shadows.ShadowCastTile;
+import Roguelike.Sprite.SpriteEffect;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
@@ -20,6 +21,8 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	
 	public Entity Entity;
 	public Level Level;
+	
+	public Array<SpriteEffect> SpriteEffects = new Array<SpriteEffect>();
 	
 	public Array<Item> Items = new Array<Item>(false, 16);
 		
@@ -68,6 +71,6 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	@Override
 	public boolean GetPassable()
 	{
-		return TileData.Passable && Entity == null;
+		return TileData.Passable;
 	}
 }

@@ -2,7 +2,7 @@
 	<Name>Player</Name>
 	
 	<Statistics>
-		<Range>50</Range>
+		<Range>10</Range>
 	</Statistics>
 	
 	<Factions>
@@ -10,8 +10,7 @@
 	</Factions>
 	
 	<ActiveAbilities>
-		<ActiveAbility>firebolt</ActiveAbility>
-		<ActiveAbility>firebeam</ActiveAbility>
+		<ActiveAbility>Flamestrike</ActiveAbility>
 	</ActiveAbilities>
 	
 	<PassiveAbilities>

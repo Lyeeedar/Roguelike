@@ -1,4 +1,4 @@
-package Roguelike.Entity;
+package Roguelike.Ability;
 
 import Roguelike.Sprite.Sprite;
 

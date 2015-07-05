@@ -2,6 +2,7 @@ package Roguelike.Entity.Tasks;
 
 import Roguelike.Global.Direction;
 import Roguelike.Entity.Entity;
+import Roguelike.Sprite.SpriteAnimation;
 import Roguelike.Tiles.GameTile;
 
 public class TaskMove extends AbstractTask
@@ -43,6 +44,11 @@ public class TaskMove extends AbstractTask
 					oldTile.addObject(newTile.Entity);
 					newTile.addObject(obj);
 				}
+			}
+			else
+			{
+				obj.attack(newTile.Entity, Dir);				
+				obj.Sprite.SpriteAnimation = new SpriteAnimation(Dir, 0.1f);
 			}
 		}
 		else if (newTile.GetPassable())

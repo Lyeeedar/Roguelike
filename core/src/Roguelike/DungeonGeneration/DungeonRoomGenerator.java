@@ -98,8 +98,8 @@ public class DungeonRoomGenerator
 		Sprite wall = AssetManager.loadSprite("Objects/Wall", 0.5f, new int[]{16, 16}, new int[]{10, 15});
 		Sprite floor = AssetManager.loadSprite("Objects/Floor", 0.5f, new int[]{16, 16}, new int[]{15, 7});
 		
-		TileData wallData = new TileData(wall, null, true, false, "wall");
-		TileData floorData = new TileData(floor, null, false, true, "grass");
+		TileData wallData = new TileData(wall, true, false, "wall");
+		TileData floorData = new TileData(floor, false, true, "grass");
 		
 		GameTile[][] actualTiles = new GameTile[width][height];
 		Level level = new Level(actualTiles);

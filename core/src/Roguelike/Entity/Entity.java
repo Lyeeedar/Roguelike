@@ -8,6 +8,8 @@ import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistics;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.Items.Item;
@@ -15,7 +17,6 @@ import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
-import Roguelike.Sprite.SpriteEffect.EffectType;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.Gdx;
@@ -58,7 +59,7 @@ public class Entity
 		other.HP -= damage;		
 		
 		// add hit effects
-		SpriteEffect e = new SpriteEffect(hitEffect, EffectType.SINGLE, dir);
+		SpriteEffect e = new SpriteEffect(hitEffect, dir, null);
 		e.Sprite.rotation = dir.GetAngle();
 		
 		other.SpriteEffects.add(e);

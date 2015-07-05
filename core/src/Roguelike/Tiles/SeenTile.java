@@ -11,9 +11,7 @@ public class SeenTile
 {
 	public boolean seen = false;
 	public Array<SeenHistoryItem> History = new Array<SeenHistoryItem>();
-	
-	public SeenHistoryItem CeilingItem;
-	
+		
 	public GameTile GameTile;
 	
 	public Table createTable(Skin skin)

@@ -73,16 +73,7 @@ public class Sprite
 	
 	public void render(Batch batch, int x, int y, int width, int height)
 	{
-		batch.draw(
-				textures[currentTexture], 
-				x, y,
-				width/2, height/2, // origin x, y
-				width, height, // width, height
-				1, 1, // scale
-				rotation, // rotation
-				tileBounds[0], tileBounds[1], tileBounds[2], tileBounds[3],
-				false, false // flip x, y
-				);
+		render(batch, x, y, width, height, currentTexture);
 	}
 	
 	public void render(Batch batch, int x, int y, int width, int height, int texIndex)

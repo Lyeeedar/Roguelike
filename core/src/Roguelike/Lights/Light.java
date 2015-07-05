@@ -8,6 +8,18 @@ public class Light
 	public Color Colour;
 	public float Intensity;
 	
+	public int lx;
+	public int ly;
+	
+	public Light copy()
+	{
+		Light l = new Light();
+		l.Colour = new Color(Colour);
+		l.Intensity = Intensity;
+		
+		return l;
+	}
+	
 	public static Light load(Element xml)
 	{
 		Light l = new Light();

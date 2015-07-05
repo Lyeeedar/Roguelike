@@ -15,4 +15,11 @@ public class AbilityTypeHelpful extends AbstractAbilityType
 	{
 	}
 
+	
+	@Override
+	public AbstractAbilityType copy()
+	{
+		return new AbilityTypeHelpful();
+	}
+
 }

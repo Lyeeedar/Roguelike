@@ -1,31 +1,16 @@
 package Roguelike;
 
-import java.util.Iterator;
-
-import MobiDevelop.UI.HorizontalFlowGroup;
-import MobiDevelop.UI.VerticalFlowGroup;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistics;
+import Roguelike.Ability.AbilityPool;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.DungeonGeneration.DungeonRoomGenerator;
-import Roguelike.DungeonGeneration.VillageGenerator;
-import Roguelike.Entity.AbilityPool;
-import Roguelike.Entity.ActiveAbility.AbilityTile;
 import Roguelike.Entity.Entity;
-import Roguelike.Entity.ActiveAbility;
-import Roguelike.Entity.AI.BehaviourTree.BehaviourTree;
 import Roguelike.Entity.Tasks.TaskUseAbility;
-import Roguelike.Entity.Tasks.TaskMove;
-import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
-import Roguelike.Items.Item.EquipmentSlot;
-import Roguelike.Items.Item.ItemType;
 import Roguelike.Levels.Level;
-import Roguelike.Lights.Light;
-import Roguelike.Pathfinding.AStarPathfind;
-import Roguelike.Pathfinding.Pathfinder;
-import Roguelike.Shadows.ShadowCaster;
-import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
@@ -33,44 +18,29 @@ import Roguelike.UI.AbilityPanel;
 import Roguelike.UI.AbilityPoolPanel;
 import Roguelike.UI.DragDropPayload;
 import Roguelike.UI.HPWidget;
+import Roguelike.UI.InventoryPanel;
 import Roguelike.UI.SpriteWidget;
 import Roguelike.UI.TabPane;
-import Roguelike.UI.InventoryPanel;
-import Roguelike.UI.Tooltip;
-import Roguelike.UI.TooltipListener;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
@@ -95,6 +65,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	public void create () 
 	{
 		batch = new SpriteBatch();
+		font = new BitmapFont();
 		
 		blank = AssetManager.loadTexture("Sprites/blank.png");
 		white = AssetManager.loadTexture("Sprites/white.png");
@@ -103,7 +74,6 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		//VillageGenerator generator = new VillageGenerator(100, 100);
 		generator.generate();
 		level = generator.getLevel();
-		level.revealWholeLevel();
 		
 		border = AssetManager.loadSprite("GUI/frame", 0.5f, new int[]{32, 32}, new int[]{0, 0});
 		
@@ -134,8 +104,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			if (exit) { break;} 
 		}
 		
-		ShadowCaster shadow = new ShadowCaster(level.player.getStatistic(Statistics.RANGE));
-		shadow.ComputeFieldOfViewWithShadowCasting((int)level.player.Tile.x, (int)level.player.Tile.y, level.getGrid());	
+		level.updateVisibleTiles();
 		
 		LoadUI();
 		
@@ -207,6 +176,14 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	{
 		float delta = Gdx.graphics.getDeltaTime();
 		
+		frametime = (frametime + delta) / 2.0f;
+		fpsAccumulator += delta;
+		if (fpsAccumulator > 0.5f)
+		{
+			fps = (int)(1.0f / frametime);
+			fpsAccumulator = 0;
+		}
+		
 		level.update(delta);
 		
 		int offsetx = Gdx.graphics.getWidth() / 2 - level.player.Tile.x * TileSize;
@@ -214,21 +191,6 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		
 		int mousex = (mousePosX - offsetx) / TileSize;
 		int mousey = (mousePosY - offsety) / TileSize;
-		
-		boolean drawCeiling = true;
-		
-		if (
-				mousex >= 0 && mousex < level.width &&
-				mousey >= 0 && mousey < level.height &&
-				level.getSeenTile(mousex, mousey).seen &&
-				level.getGameTile(mousex, mousey).TileData.CeilingSprite != null)
-		{	
-			drawCeiling = false;
-		}
-		else if (level.player.Tile.TileData.CeilingSprite != null)
-		{
-			drawCeiling = false;
-		}
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -258,6 +220,18 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					if (entity != null)
 					{
 						toBeDrawn.add(entity);
+					}
+					
+					for (SpriteEffect e : gtile.SpriteEffects)
+					{
+						if (e.Corner == Direction.CENTER)
+						{
+							e.Sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
+						}
+						else
+						{								
+							e.Sprite.render(batch, x*TileSize + offsetx + TileSize3*(e.Corner.GetX()*-1+1), y*TileSize + offsety + TileSize3*(e.Corner.GetY()*-1+1), TileSize3, TileSize3);
+						}
 					}
 					
 					batch.setColor(Color.WHITE);
@@ -317,26 +291,25 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			batch.setColor(Color.WHITE);
 		}
 		
-		for (ActiveAbility s : level.ActiveAbilities)
+		for (ActiveAbility aa : level.ActiveAbilities)
 		{
-			for (AbilityTile tile : s.AffectedTiles)
+			for (GameTile tile : aa.AffectedTiles)
 			{
-				if (tile.Tile.GetVisible())
+				if (tile.GetVisible())
 				{
-					int x = tile.Tile.x;
-					int y = tile.Tile.y;
-					
-					batch.setColor(tile.Tile.Light);
-					
-					int cx = x*TileSize + offsetx;
-					int cy = y*TileSize + offsety;
-					
-					tile.Sprite.render(batch, cx, cy, TileSize, TileSize);
+					aa.getSprite().render(batch, tile.x*TileSize + offsetx, tile.y*TileSize + offsety, TileSize, TileSize);
 				}
-			}
+			}			
 		}
 		
-		border.update(delta);
+		if (preparedAbility != null)
+		{
+			batch.setColor(0.3f, 0.6f, 0.8f, 0.5f);
+			for (int[] tile : abilityTiles)
+			{
+				batch.draw(white, tile[0]*TileSize + offsetx, tile[1]*TileSize + offsety, TileSize, TileSize);
+			}
+		}
 		
 		if (!mouseOverTabs)
 		{					
@@ -359,43 +332,9 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 				}				
 			}
 			
+			border.update(delta);
 			border.render(batch, mousex*TileSize + offsetx, mousey*TileSize + offsety, TileSize, TileSize);
 			batch.setColor(Color.WHITE);
-		}
-		
-		if (drawCeiling)
-		{
-			for (int x = 0; x < level.width; x++)
-			{
-				for (int y = 0; y < level.height; y++)
-				{
-					GameTile gtile = level.getGameTile(x, y);
-					SeenTile stile = level.getSeenTile(x, y);
-					
-					if (gtile.GetVisible())
-					{
-						if (gtile.TileData.CeilingSprite != null)
-						{
-							batch.setColor(gtile.Light);	
-							
-							gtile.TileData.CeilingSprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
-
-							batch.setColor(Color.WHITE);
-						}	
-					}
-					else if (stile.seen)
-					{
-						if (stile.CeilingItem != null)
-						{
-							batch.setColor(level.Ambient);
-							
-							stile.CeilingItem.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize, stile.CeilingItem.spriteIndex);		
-							
-							batch.setColor(Color.WHITE);
-						}						
-					}
-				}
-			}
 		}
 		
 		batch.end();
@@ -409,6 +348,8 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		{
 			dragDropPayload.sprite.render(batch, (int)dragDropPayload.x, (int)dragDropPayload.y, 32, 32);
 		}
+		
+		font.draw(batch, "FPS: "+fps, 0, Gdx.graphics.getHeight() - 20);
 		
 		batch.end();
 	}
@@ -452,24 +393,54 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			int x = (screenX - offsetx) / TileSize;
 			int y = (screenY - offsety) / TileSize;
 			
-			if (button == Buttons.RIGHT)
+			if (preparedAbility != null)
 			{
-				ActiveAbility aa = abilityPanel.getSelectedAbility();
-				if (aa != null && aa.cooldownAccumulator <= 0)
+				if (button == Buttons.LEFT)
 				{
-					level.player.Tasks.add(new TaskUseAbility(new int[]{x, y}, aa));
+					if (x >= 0 && x < level.width && y >= 0 && y < level.height)
+					{
+						GameTile tile = level.getGameTile(x, y);
+						if (preparedAbility.isTargetValid(tile, abilityTiles))
+						{
+							preparedAbility.lockTarget(tile);
+							level.player.Tasks.add(new TaskUseAbility(new int[]{x, y}, preparedAbility));
+						}
+					}
 				}
+				preparedAbility = null;
 			}
 			else
 			{
-				if (x >= 0 && x < level.width && y >= 0 && y < level.height && level.getSeenTile(x, y).seen)
+				if (button == Buttons.RIGHT)
 				{
-					level.player.AI.setData("ClickPos", new int[]{x, y});
+//					ActiveAbility aa = abilityPanel.getSelectedAbility();
+//					if (aa != null && aa.cooldownAccumulator <= 0)
+//					{
+//						level.player.Tasks.add(new TaskUseAbility(new int[]{x, y}, aa));
+//					}
+				}
+				else
+				{
+					if (x >= 0 && x < level.width && y >= 0 && y < level.height && level.getSeenTile(x, y).seen)
+					{
+						level.player.AI.setData("ClickPos", new int[]{x, y});
+					}
 				}
 			}
 		}
+		else
+		{
+			preparedAbility = null;
+		}
 				
 		return false;
+	}
+	
+	public void prepareAbility(ActiveAbility aa)
+	{
+		preparedAbility = aa;
+		preparedAbility.caster = level.player;
+		abilityTiles = preparedAbility.getValidTargets();
 	}
 
 	//----------------------------------------------------------------------
@@ -579,6 +550,12 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	private static int TileSize3 = TileSize / 3;
 	
 	//----------------------------------------------------------------------
+	private int fps;
+	private float fpsAccumulator;
+	private float frametime;
+	private BitmapFont font;
+	
+	//----------------------------------------------------------------------
 	public DragDropPayload dragDropPayload;
 
 	//----------------------------------------------------------------------
@@ -611,6 +588,10 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	
 	//----------------------------------------------------------------------
 	public static RoguelikeGame Instance;
+	
+	//----------------------------------------------------------------------
+	public ActiveAbility preparedAbility;
+	private int[][] abilityTiles;
 		
 	//endregion Data
 	//####################################################################//

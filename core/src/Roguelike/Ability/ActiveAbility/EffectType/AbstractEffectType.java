@@ -2,20 +2,18 @@ package Roguelike.Ability.ActiveAbility.EffectType;
 
 import java.util.HashMap;
 
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Tiles.GameTile;
+
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 public abstract class AbstractEffectType
 {
-	protected int aoe;
-	protected int duration;
-	
-	public void parse(Element xml)
-	{
-		aoe = xml.getInt("AOE", 0);
-		duration = xml.getInt("Duration", 0);
-	}
+	public abstract void update(ActiveAbility aa, float time, GameTile tile);
+	public abstract void parse(Element xml);
+	public abstract AbstractEffectType copy();
 	
 	public static AbstractEffectType load(Element xml)
 	{		
@@ -39,6 +37,7 @@ public abstract class AbstractEffectType
 	public static final HashMap<String, Class> ClassMap = new HashMap<String, Class>();
 	static
 	{
-		
+		ClassMap.put("Damage", EffectTypeDamage.class);
+		ClassMap.put("Heal", EffectTypeHeal.class);
 	}
 }

@@ -1,27 +1,19 @@
 package Roguelike.Sprite;
 
 import Roguelike.Global.Direction;
-import Roguelike.Entity.ActiveAbility;
+import Roguelike.Lights.Light;
 
 public class SpriteEffect
 {	
-	public enum EffectType
-	{
-		SINGLE,
-		DURATION
-	}
-	
 	public Sprite Sprite;
-	public EffectType Type;
 	public Direction Corner;
-	
-	public ActiveAbility LinkedAbility;
-	
-	public SpriteEffect(Sprite sprite, EffectType type, Direction Corner)
+	public Light light;
+		
+	public SpriteEffect(Sprite sprite, Direction Corner, Light light)
 	{
 		this.Sprite = sprite;
-		this.Type = type;
 		this.Corner = Corner;
+		this.light = light;
 	}
 	
 }

@@ -3,24 +3,24 @@
 	<Description>Attune yourself with elemental Metal.</Description>
 	<Tiers>
 		<Tier>
-			<PassiveAbility>
-				<Name>ScionOfMetal</Name>
-				<Cost>100</Cost>
-			</PassiveAbility>
 			<ActiveAbility>
-				<Name>IronBolt</Name>
+				<Name>Flamestrike</Name>
 				<Cost>100</Cost>
 			</ActiveAbility>
 			<ActiveAbility>
-				<Name>SpikeTrap</Name>
+				<Name>Flamestrike</Name>
 				<Cost>100</Cost>
 			</ActiveAbility>
 			<ActiveAbility>
-				<Name>IronHide</Name>
+				<Name>Flamestrike</Name>
 				<Cost>100</Cost>
 			</ActiveAbility>
 			<ActiveAbility>
-				<Name>IronMace</Name>
+				<Name>Flamestrike</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<ActiveAbility>
+				<Name>Flamestrike</Name>
 				<Cost>100</Cost>
 			</ActiveAbility>
 		</Tier>

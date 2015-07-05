@@ -1,0 +1,58 @@
+<ActiveAbility>
+
+	<Name></Name>
+	<Description></Description>
+	
+	<Cooldown>1</Cooldown>
+	<Range>10</Range>
+	<AOE>10</AOE>
+	
+	<Light>
+		<Intensity>4</Intensity>
+		<Colour>
+			<Red>1</Red>
+			<Green>0.7</Green>
+			<Blue>0.6</Blue>
+		</Colour>
+	</Light>
+	
+	<Icon>
+		<Name>Skills/SpikeTrap</Name>
+	</Icon>
+	
+	<MovementSprite>
+		<Name>firebolt/firebolt</Name>
+	</MovementSprite>
+	
+	<HitSprite>
+		<Name>Fireburst/Fireburst</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</HitSprite>
+	
+	<AOESprite>
+		<Name>Skills/SpikeTrap</Name>
+	</AOESprite>
+	
+	<Type>
+		<Harmful>
+			<Fire>1</Fire>
+		</Harmful>
+	</Type>
+	
+	<Targeting>
+		<Direction>
+			<NotSelf></NotSelf>
+		</Direction>
+	</Targeting>
+	
+	<Movement>
+		<Bolt>
+			<Speed>3</Speed>
+		</Bolt>
+	</Movement>
+	
+	<Effect>
+		<Damage></Damage>
+	</Effect>
+	
+</ActiveAbility>

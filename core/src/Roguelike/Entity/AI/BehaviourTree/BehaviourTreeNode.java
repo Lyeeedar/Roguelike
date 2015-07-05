@@ -2,10 +2,8 @@ package Roguelike.Entity.AI.BehaviourTree;
 
 import java.util.HashMap;
 
-import com.badlogic.gdx.utils.XmlReader.Element;
-
 import Roguelike.Entity.Entity;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionAttack;
+import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionClearValue;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionConvertTo;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionGetAllAbilities;
@@ -17,19 +15,19 @@ import Roguelike.Entity.AI.BehaviourTree.Actions.ActionProcessInput;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionSetValue;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionUseAbility;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionWait;
-import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.AI.BehaviourTree.Conditionals.ConditionalCheckValue;
 import Roguelike.Entity.AI.BehaviourTree.Decorators.DecoratorDataScope;
 import Roguelike.Entity.AI.BehaviourTree.Decorators.DecoratorImport;
 import Roguelike.Entity.AI.BehaviourTree.Decorators.DecoratorInvert;
 import Roguelike.Entity.AI.BehaviourTree.Decorators.DecoratorRepeat;
 import Roguelike.Entity.AI.BehaviourTree.Decorators.DecoratorSetState;
-import Roguelike.Entity.AI.BehaviourTree.Selectors.AbstractSelector;
 import Roguelike.Entity.AI.BehaviourTree.Selectors.SelectorAny;
 import Roguelike.Entity.AI.BehaviourTree.Selectors.SelectorPriority;
 import Roguelike.Entity.AI.BehaviourTree.Selectors.SelectorRandom;
 import Roguelike.Entity.AI.BehaviourTree.Selectors.SelectorSequence;
 import Roguelike.Entity.AI.BehaviourTree.Selectors.SelectorUntil;
+
+import com.badlogic.gdx.utils.XmlReader.Element;
 
 public abstract class BehaviourTreeNode
 {	
@@ -87,7 +85,6 @@ public abstract class BehaviourTreeNode
 		ClassMap.put("CheckValue", ConditionalCheckValue.class);
 		
 		//Actions
-		ClassMap.put("Attack", ActionAttack.class);
 		ClassMap.put("ClearValue", ActionClearValue.class);
 		ClassMap.put("ConvertTo", ActionConvertTo.class);
 		ClassMap.put("GetAllVisible", ActionGetAllVisible.class);

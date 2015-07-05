@@ -14,5 +14,12 @@ public class AbilityTypeHarmful extends AbstractAbilityType
 	public void parse(Element xml)
 	{
 	}
+
+	
+	@Override
+	public AbstractAbilityType copy()
+	{
+		return new AbilityTypeHarmful();
+	}
 	
 }

@@ -3,9 +3,9 @@ package Roguelike.UI;
 import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
-import Roguelike.Entity.AbilityPool;
-import Roguelike.Entity.AbilityPool.AbilityLine;
-import Roguelike.Entity.AbilityPool.AbilityLine.Ability;
+import Roguelike.Ability.AbilityPool;
+import Roguelike.Ability.AbilityPool.AbilityLine;
+import Roguelike.Ability.AbilityPool.AbilityLine.Ability;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.graphics.Color;

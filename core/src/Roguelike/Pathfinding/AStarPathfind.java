@@ -52,7 +52,7 @@ public class AStarPathfind
 		this.grid = grid;
 		this.width = grid.length;
 		this.height = grid[0].length;
-		this.canMoveDiagonal = false;//canMoveDiagonal;
+		this.canMoveDiagonal = canMoveDiagonal;
 		
 		this.startx = startx;
 		this.starty = starty;

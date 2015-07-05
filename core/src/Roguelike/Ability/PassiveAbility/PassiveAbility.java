@@ -1,4 +1,4 @@
-package Roguelike.Entity;
+package Roguelike.Ability.PassiveAbility;
 
 import java.io.IOException;
 import java.util.EnumMap;
@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 import Roguelike.AssetManager;
+import Roguelike.Ability.IAbility;
 import Roguelike.Global.Statistics;
 import Roguelike.Sprite.Sprite;
 

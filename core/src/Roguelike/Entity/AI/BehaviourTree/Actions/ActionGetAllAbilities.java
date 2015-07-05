@@ -1,6 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
-import Roguelike.Entity.ActiveAbility;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 

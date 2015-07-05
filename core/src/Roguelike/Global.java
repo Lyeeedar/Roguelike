@@ -3,6 +3,8 @@ package Roguelike;
 import java.util.EnumMap;
 import java.util.HashMap;
 
+import Roguelike.Tiles.GameTile;
+
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -72,6 +74,11 @@ public class Global
 		public static Direction getDirection(int[] dir)
 		{
 			return getDirection(dir[0], dir[1]);
+		}
+		
+		public static Direction getDirection(GameTile t1, GameTile t2)
+		{
+			return getDirection(t2.x - t1.x, t2.y - t1.y);
 		}
 	}
 	

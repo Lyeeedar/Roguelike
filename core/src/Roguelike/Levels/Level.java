@@ -3,18 +3,16 @@ package Roguelike.Levels;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import Roguelike.Global.Statistics;
 import Roguelike.RoguelikeGame;
-import Roguelike.Entity.ActiveAbility;
-import Roguelike.Entity.ActiveAbility.AbilityTile;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.Tasks.AbstractTask;
-import Roguelike.Global.Statistics;
 import Roguelike.Items.Item;
 import Roguelike.Lights.Light;
 import Roguelike.Shadows.ShadowCaster;
-import Roguelike.Sprite.SpriteEffect;
-import Roguelike.Sprite.SpriteEffect.EffectType;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
@@ -27,15 +25,13 @@ public class Level
 {
 	public Entity player;
 	
-	public Color Ambient = new Color(0.1f, 0.1f, 0.6f, 1.0f);
+	public Color Ambient = new Color(0.01f, 0.01f, 0.4f, 1.0f);
 	
 	private SeenTile[][] SeenGrid;
 	private GameTile[][] Grid;
 	public int width;
 	public int height;
-	
-	public Array<ActiveAbility> ActiveAbilities = new Array<ActiveAbility>(false, 16);
-		
+			
 	public Level(GameTile[][] grid)
 	{
 		this.Grid = grid;
@@ -92,11 +88,6 @@ public class Level
 					
 					s.History.clear();
 					s.History.add(new SeenHistoryItem(Grid[x][y].TileData.FloorSprite, Grid[x][y].TileData.Description));
-					
-					if (Grid[x][y].TileData.CeilingSprite != null)
-					{
-						s.CeilingItem = new SeenHistoryItem(Grid[x][y].TileData.CeilingSprite, "");
-					}
 				}
 			}
 		}
@@ -126,11 +117,6 @@ public class Level
 					{
 						s.History.add(new SeenHistoryItem(i.Icon, "A " + i.Name));
 					}
-					
-					if (Grid[x][y].TileData.CeilingSprite != null)
-					{
-						s.CeilingItem = new SeenHistoryItem(Grid[x][y].TileData.CeilingSprite, "");
-					}
 				}
 			}
 		}
@@ -146,44 +132,34 @@ public class Level
 			}
 		}
 		
-		for (Entity obj : getAllEntities())
+		for (Light l : getAllLights())
 		{
-			if (obj.Light != null)
-			{
-				calculateSingleLight(obj.Light, obj.Tile.x, obj.Tile.y);
-			}
-		}
-		
-		for (ActiveAbility s : ActiveAbilities)
-		{
-			if (s.Light != null)
-			{
-				for (AbilityTile tile : s.AffectedTiles)
-				{
-					calculateSingleLight(s.Light, tile.Tile.x, tile.Tile.y);
-				}
-			}
+			calculateSingleLight(l);
 		}
 	}
 	
-	private void calculateSingleLight(Light l, int lx, int ly)
+	private void calculateSingleLight(Light l)
 	{
-		ShadowCaster shadow = new ShadowCaster();
-		shadow.ComputeFieldOfViewWithShadowCasting(lx, ly, Grid);
-		
-		for (int x = 0; x < width; x++)
+		Array<int[]> output = new Array<int[]>();
+		ShadowCaster shadow = new ShadowCaster(Grid, (int)Math.ceil(l.Intensity));
+		shadow.ComputeFOV(l.lx, l.ly, output);
+				
+		for (int[] tilePos : output)
 		{
-			for (int y = 0; y < height; y++)
-			{
-				if (Grid[x][y].GetVisible())
-				{
-					float dst = 1 - Vector2.dst(lx, ly, x, y) / l.Intensity;
-					if (dst < 0) {dst = 0;}
-					
-					Grid[x][y].Light.add(new Color(l.Colour).mul(dst));
-				}
-			}
+			GameTile tile = getGameTile(tilePos);
+			
+			float dst = 1 - Vector2.dst(l.lx, l.ly, tile.x, tile.y) / l.Intensity;
+			if (dst < 0) {dst = 0;}
+			
+			tile.Light.add(new Color(l.Colour).mul(dst));
 		}
+	}
+	
+	public Array<ActiveAbility> ActiveAbilities = new Array<ActiveAbility>(false, 16);
+	Array<ActiveAbility> NewActiveAbilities = new Array<ActiveAbility>(false, 16);
+	public void addActiveAbility(ActiveAbility aa)
+	{
+		NewActiveAbilities.add(aa);
 	}
 	
 	public Array<Entity> visibleList = new Array<Entity>(false, 16);
@@ -196,35 +172,49 @@ public class Level
 		updateAccumulator += delta;
 		
 		if (!hasActiveEffects())
-		{
+		{	
 			// Do player move and fill lists
-			if (visibleList.size == 0 && invisibleList.size == 0 && !abilitiesToBeUpdated() && updateAccumulator >= updateDeltaStep)
+			if (visibleList.size == 0 && invisibleList.size == 0 && updateAccumulator >= updateDeltaStep && !hasAbilitiesToUpdate())
 			{
 				processPlayer();
 								
 				updateAccumulator = 0;
 			}			
 			
-			if ((visibleList.size > 0 || invisibleList.size > 0 || abilitiesToBeUpdated()) && !hasActiveEffects())
+			if (visibleList.size > 0 || invisibleList.size > 0)
 			{
 				// process invisible until empty
 				processInvisibleList();
 				
 				// process visible
 				processVisibleList();
-				
-				// process all spells
-				processAbilities();
+			}
+			
+			if (ActiveAbilities.size > 0)
+			{
+				Iterator<ActiveAbility> itr = ActiveAbilities.iterator();
+				while (itr.hasNext())
+				{
+					ActiveAbility aa = itr.next();
+					boolean finished = aa.update();
+					
+					if (finished)
+					{
+						itr.remove();
+					}
+				}
+			}
+			
+			if (NewActiveAbilities.size > 0)
+			{
+				ActiveAbilities.addAll(NewActiveAbilities, 0, NewActiveAbilities.size);
+				NewActiveAbilities.clear();
 			}
 		}
 		
 		cleanUpDead();
 		
 		calculateLight();	
-		
-		ShadowCaster shadow = new ShadowCaster(player.getStatistic(Statistics.RANGE));
-		shadow.ComputeFieldOfViewWithShadowCasting((int)player.Tile.x, (int)player.Tile.y, Grid);
-		UpdateSeenGrid();
 		
 		for (Sprite s : getAllSprites())
 		{
@@ -235,19 +225,63 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{
+				Iterator<SpriteEffect> itr = Grid[x][y].SpriteEffects.iterator();
+				while (itr.hasNext())
+				{
+					SpriteEffect e = itr.next();
+					boolean finished = e.Sprite.update(delta);
+					
+					if (finished) { itr.remove(); }
+				}
+				
 				if (Grid[x][y].Entity != null)
 				{
-					Iterator<SpriteEffect> itr = Grid[x][y].Entity.SpriteEffects.iterator();
+					itr = Grid[x][y].Entity.SpriteEffects.iterator();
 					while (itr.hasNext())
 					{
 						SpriteEffect e = itr.next();
 						boolean finished = e.Sprite.update(delta);
 						
-						if (e.Type == EffectType.SINGLE && finished) { itr.remove(); }
+						if ( finished) { itr.remove(); }
 					}
 				}
 			}
 		}
+	}
+	
+	private boolean hasAbilitiesToUpdate()
+	{
+		for (ActiveAbility aa : ActiveAbilities)
+		{
+			if (aa.needsUpdate())
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+		
+	public void updateVisibleTiles()
+	{
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{	
+				Grid[x][y].SetVisible(false);
+			}
+		}
+		
+		Array<int[]> output = new Array<int[]>();
+		ShadowCaster shadow = new ShadowCaster(Grid, player.getStatistic(Statistics.RANGE));
+		shadow.ComputeFOV(player.Tile.x, player.Tile.y, output);
+		
+		for (int[] tilePos : output)
+		{
+			getGameTile(tilePos).SetVisible(true);
+		}
+		
+		UpdateSeenGrid();
 	}
 	
 	private void processPlayer()
@@ -264,8 +298,7 @@ public class Level
 			
 			player.updateAccumulators(actionCost);
 			
-			ShadowCaster shadow = new ShadowCaster(player.getStatistic(Statistics.MAXHP));
-			shadow.ComputeFieldOfViewWithShadowCasting((int)player.Tile.x, (int)player.Tile.y, Grid);
+			updateVisibleTiles();
 			
 			getAllEntitiesToBeProcessed(actionCost);
 			
@@ -276,31 +309,6 @@ public class Level
 				player.AI.setData("Pos", null);
 			}
 		}
-	}
-	
-	private void processAbilities()
-	{
-		for (ActiveAbility s : ActiveAbilities)
-		{
-			if (s.actionDelayAccumulator > 0 && s.isAlive())
-			{
-				s.update();
-				s.actionDelayAccumulator -= s.getActionDelay();
-			}
-		}
-	}
-	
-	private boolean abilitiesToBeUpdated()
-	{
-		for (ActiveAbility s : ActiveAbilities)
-		{
-			if (s.isAlive() && s.actionDelayAccumulator > 0)
-			{
-				return true;
-			}
-		}
-		
-		return false;
 	}
 	
 	private void processVisibleList()
@@ -435,6 +443,13 @@ public class Level
 			{			
 				if (!Grid[x][y].GetVisible()) { continue; }
 				
+				if (Grid[x][y].SpriteEffects.size > 0)
+				{
+					activeEffects = true;
+					break;
+							
+				}
+				
 				Entity e = Grid[x][y].Entity;
 				if (e != null)
 				{									
@@ -462,13 +477,9 @@ public class Level
 			activeEffects = true;
 		}
 		
-		for (SpriteEffect eff : e.SpriteEffects)
+		if (e.SpriteEffects.size > 0)
 		{
-			if (eff.Type == EffectType.SINGLE)
-			{
-				activeEffects = true;
-				break;
-			}
+			activeEffects = true;
 		}
 		
 		return activeEffects;
@@ -501,9 +512,9 @@ public class Level
 			}
 		}
 		
-		for (ActiveAbility s : ActiveAbilities)
+		for (ActiveAbility aa : ActiveAbilities)
 		{
-			s.actionDelayAccumulator += cost;
+			aa.updateAccumulators(cost);
 		}
 	}
 	
@@ -530,17 +541,6 @@ public class Level
 				}
 			}
 		}
-		
-		Iterator<ActiveAbility> itr = ActiveAbilities.iterator();
-		while(itr.hasNext())
-		{
-			ActiveAbility s = itr.next();
-			
-			if (!s.isAlive())
-			{
-				itr.remove();
-			}
-		}
 	}
 	
 	public HashSet<Sprite> getAllSprites()
@@ -552,11 +552,6 @@ public class Level
 			for (int y = 0; y < height; y++)
 			{
 				sprites.add(Grid[x][y].TileData.FloorSprite);
-				
-				if (Grid[x][y].TileData.CeilingSprite != null)
-				{
-					sprites.add(Grid[x][y].TileData.CeilingSprite);
-				}
 				
 				if (Grid[x][y].Entity != null)
 				{
@@ -570,12 +565,9 @@ public class Level
 			}
 		}
 		
-		for (ActiveAbility s : ActiveAbilities)
+		for (ActiveAbility aa : ActiveAbilities)
 		{
-			for (AbilityTile tile : s.AffectedTiles)
-			{
-				sprites.add(tile.Sprite);
-			}
+			sprites.add(aa.getSprite());
 		}
 		
 		return sprites;
@@ -598,5 +590,72 @@ public class Level
 		
 		return list;
 	}
-
+	
+	public Array<Light> getAllLights()
+	{
+		Array<Light> list = new Array<Light>();
+		
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				GameTile tile = Grid[x][y];
+				
+				for (SpriteEffect se : tile.SpriteEffects)
+				{
+					if (se.light != null)
+					{
+						se.light.lx = x;
+						se.light.ly = y;
+						list.add(se.light);
+					}
+				}
+				
+				if (tile.Entity != null)
+				{
+					if (tile.Entity.Light != null)
+					{
+						tile.Entity.Light.lx = x;
+						tile.Entity.Light.ly = y;
+						list.add(tile.Entity.Light);
+					}
+					
+					for (SpriteEffect se : tile.Entity.SpriteEffects)
+					{
+						if (se.light != null)
+						{
+							se.light.lx = x;
+							se.light.ly = y;
+							list.add(se.light);
+						}
+					}
+				}
+			}
+		}
+		
+		for (ActiveAbility aa : ActiveAbilities)
+		{
+			if (aa.light != null)
+			{
+				if (aa.AffectedTiles.size == 1)
+				{
+					aa.light.lx = aa.AffectedTiles.peek().x;
+					aa.light.ly = aa.AffectedTiles.peek().y;
+					list.add(aa.light);
+				}
+				else
+				{
+					for (GameTile tile : aa.AffectedTiles)
+					{
+						Light l = aa.light.copy();
+						l.lx = tile.x;
+						l.ly = tile.y;
+						list.add(l);
+					}
+				}
+			}
+		}
+		
+		return list;
+	}
 }

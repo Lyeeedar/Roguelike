@@ -1,8 +1,10 @@
-package Roguelike.Entity;
+package Roguelike.Ability;
 
 import java.io.IOException;
 
-import Roguelike.Entity.AbilityPool.AbilityLine.Ability;
+import Roguelike.Ability.AbilityPool.AbilityLine.Ability;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.PassiveAbility.PassiveAbility;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;

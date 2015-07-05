@@ -7,7 +7,6 @@
 		</Sequence>
 		<Until State="Running">
 			<MoveTo Key="Pos"></MoveTo>
-			<Attack Key="Pos"></Attack>
 			<ClearValue Key="Pos"></ClearValue>
 		</Until>
 	</Any>

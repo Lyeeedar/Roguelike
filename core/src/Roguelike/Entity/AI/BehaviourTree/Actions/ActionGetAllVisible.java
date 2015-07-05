@@ -24,20 +24,15 @@ public class ActionGetAllVisible extends AbstractAction
 	@Override
 	public BehaviourTreeState evaluate(Entity entity)
 	{
-		ShadowCaster shadower = new ShadowCaster(entity.getStatistic(Statistics.RANGE));
-		shadower.ComputeFieldOfViewWithShadowCasting(entity.Tile.x, entity.Tile.y, entity.Tile.Level.getGrid());
+		Array<int[]> output = new Array<int[]>();
+		
+		ShadowCaster shadower = new ShadowCaster(entity.Tile.Level.getGrid(), entity.getStatistic(Statistics.RANGE));
+		shadower.ComputeFOV(entity.Tile.x, entity.Tile.y, output);
 		
 		Array<GameTile> visibleTiles = new Array<GameTile>();
-		for (int x = 0; x < entity.Tile.Level.width; x++)
+		for (int[] tile : output)
 		{
-			for (int y = 0; y < entity.Tile.Level.height; y++)
-			{
-				GameTile tile = entity.Tile.Level.getGameTile(x, y);
-				if (tile.GetVisible())
-				{
-					visibleTiles.add(tile);
-				}
-			}
+			visibleTiles.add(entity.Tile.Level.getGameTile(tile));
 		}
 		
 		if (Type == FindType.TILES)
