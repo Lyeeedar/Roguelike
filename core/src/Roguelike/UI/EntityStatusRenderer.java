@@ -3,6 +3,7 @@ package Roguelike.UI;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
@@ -14,12 +15,18 @@ import Roguelike.Global.Statistics;
 
 public class EntityStatusRenderer
 {
-	public static void draw(Entity entity, Batch batch, int x, int y, int width, int height)
+	public static void draw(Entity entity, Batch batch, int x, int y, int width, int height, float heightScale)
 	{
 		Texture white = AssetManager.loadTexture("Sprites/white.png");
 		
 		float val = (float)entity.HP / (float)entity.getStatistic(Statistics.MAXHP);
-		float barheight = Math.min(height/10, 10);	
+		float barheight = height * heightScale;
+		
+		batch.setColor(Color.LIGHT_GRAY);		
+		batch.draw(white, x-2, y+height-barheight-2, width+4, barheight+4);
+		
+		batch.setColor(Color.DARK_GRAY);		
+		batch.draw(white, x-1, y+height-barheight-1, width+2, barheight+2);
 		
 		batch.setColor(new Color(Color.RED).lerp(Color.GREEN, val));		
 		batch.draw(white, x, y+height-barheight, width*val, barheight);
@@ -27,7 +34,7 @@ public class EntityStatusRenderer
 		
 		Array<StatusEffectStack> stacks = stackStatusEffects(entity);
 		
-		int statusTileSize = width / 3;
+		int statusTileSize = Math.min(width / 3, 32);
 		int sx = x;
 		int sy = (int)(y+height-barheight - statusTileSize);
 		
@@ -36,15 +43,21 @@ public class EntityStatusRenderer
 			stack.effect.icon.render(batch, sx, sy, statusTileSize, statusTileSize);
 			
 			sx += statusTileSize;
+			
+			if (sx >= x+width)
+			{
+				sx = x;
+				sy += statusTileSize;
+			}
 		}
 	}
 	
-	public static Table getMouseOverTable(Entity entity, int x, int y, int width, int height, int mousex, int mousey, Skin skin)
+	public static Table getMouseOverTable(Entity entity, int x, int y, int width, int height, float heightScale, int mousex, int mousey, Skin skin)
 	{
 		Array<StatusEffectStack> stacks = stackStatusEffects(entity);
 		
-		float barheight = Math.min(height/10, 10);	
-		int statusTileSize = width / 3;
+		float barheight = height * heightScale;	
+		int statusTileSize = Math.min(width / 3, 32);
 		int sx = x;
 		int sy = (int)(y+height-barheight - statusTileSize);
 				
@@ -56,6 +69,12 @@ public class EntityStatusRenderer
 			}
 			
 			sx += statusTileSize;
+			
+			if (sx >= x+width)
+			{
+				sx = x;
+				sy += statusTileSize;
+			}
 		}
 		
 		return null;

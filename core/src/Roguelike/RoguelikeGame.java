@@ -22,7 +22,7 @@ import Roguelike.UI.EntityStatusRenderer;
 import Roguelike.UI.HPWidget;
 import Roguelike.UI.InventoryPanel;
 import Roguelike.UI.SpriteWidget;
-import Roguelike.UI.TabPane;
+import Roguelike.UI.TabPanel;
 import Roguelike.UI.Tooltip;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -93,7 +93,6 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					{
 						//level.player.Inventory.Items.add(AssetManager.loadItem("Jewelry/Necklace/GoldNecklace"));
 					}
-					level.player.getInventory().m_items.add(Item.load("rock"));
 					level.player.getInventory().m_items.add(Item.load("Weapon/MainWeapon/sword"));
 					level.player.getInventory().m_items.add(Item.load("Armour/Body/WoodArmour"));
 					level.player.getInventory().m_items.add(Item.load("Jewelry/Necklace/GoldNecklace"));
@@ -130,13 +129,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		mainUITable.setFillParent(true);
 		stage.addActor(mainUITable);
 		
-		Table abHPTable = new Table();	
 		abilityPanel = new AbilityPanel(level.player, skin, stage);
-		hpWidget = new HPWidget(level.player);
-		
-		abHPTable.add(abilityPanel).uniform().fill();
-		abHPTable.row();
-		abHPTable.add(hpWidget).uniform().fill();
 		
 		inventoryPanel = new InventoryPanel(level.player, skin, stage);
 		abilityPoolPanel = new AbilityPoolPanel(new AbilityPool(), skin, stage);
@@ -147,16 +140,16 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		messageScrollPane.setScrollingDisabled(true, false);
 		messageScrollPane.setFillParent(true);
 				
-		tabPane = new TabPane();
+		tabPane = new TabPanel();
 
-		tabPane.addTab(new SpriteWidget(AssetManager.loadSprite("Skills/skill", 1, new int[]{26, 26}, new int[]{0, 1})), messageScrollPane);
-		tabPane.addTab(new SpriteWidget(AssetManager.loadSprite("Skills/skill", 1, new int[]{26, 26}, new int[]{2, 3})), inventoryPanel);
-		tabPane.addTab(new SpriteWidget(AssetManager.loadSprite("Skills/skill", 1, new int[]{26, 26}, new int[]{1, 3})), abilityPoolPanel);
+		//tabPane.addTab(AssetManager.loadSprite("Skills/skill", 1, new int[]{26, 26}, new int[]{0, 1}), messageScrollPane);
+		tabPane.addTab(AssetManager.loadSprite("GUI/Abilities"), abilityPoolPanel);
+		tabPane.addTab(AssetManager.loadSprite("GUI/Inventory"), inventoryPanel);
 		
 		
 		mainUITable.add(tabPane).width(Value.percentWidth(0.5f, mainUITable)).height(Value.percentHeight(0.3f, mainUITable)).expand().bottom().left().pad(5);
 		
-		mainUITable.add(abHPTable).expand().bottom().right().pad(20);
+		mainUITable.add(abilityPanel).expand().bottom().right().pad(20);
 	}
 	
 	//endregion Create
@@ -348,7 +341,11 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			int cx = x*TileSize + offsetx;
 			int cy = y*TileSize + offsety;
 			
-			EntityStatusRenderer.draw(entity, batch, cx, cy, TileSize, TileSize);
+			EntityStatusRenderer.draw(entity, batch, cx, cy, TileSize, TileSize, 1.0f/8.0f);
+		}
+		
+		{
+			EntityStatusRenderer.draw(level.player, batch, 20, Gdx.graphics.getHeight() - 120, Gdx.graphics.getWidth()/4, 100, 1.0f/4.0f);
 		}
 		
 		batch.end();
@@ -363,7 +360,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			dragDropPayload.sprite.render(batch, (int)dragDropPayload.x, (int)dragDropPayload.y, 32, 32);
 		}
 		
-		font.draw(batch, "FPS: "+fps, 0, Gdx.graphics.getHeight() - 20);
+		font.draw(batch, "FPS: "+fps, Gdx.graphics.getWidth()-50, Gdx.graphics.getHeight() - 20);
 		
 		batch.end();
 	}
@@ -528,7 +525,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 				
 				if (tile.Entity != null)
 				{
-					Table table = EntityStatusRenderer.getMouseOverTable(tile.Entity, x*TileSize+offsetx, y*TileSize+offsety, TileSize, TileSize, screenX, screenY, skin);
+					Table table = EntityStatusRenderer.getMouseOverTable(tile.Entity, x*TileSize+offsetx, y*TileSize+offsety, TileSize, TileSize, 1.0f/8.0f, screenX, screenY, skin);
 					
 					if (table != null)
 					{
@@ -536,6 +533,16 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 						tooltip.show(screenX, screenY);
 					}					
 				}
+			}
+			
+			{
+				Table table = EntityStatusRenderer.getMouseOverTable(level.player, 20, Gdx.graphics.getHeight() - 120, Gdx.graphics.getWidth()/4, 100, 1.0f/4.0f, screenX, screenY, skin);
+				
+				if (table != null)
+				{
+					tooltip = new Tooltip(table, skin, stage);
+					tooltip.show(screenX, screenY);
+				}	
 			}
 		}
 		
@@ -608,7 +615,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	AbilityPoolPanel abilityPoolPanel;
 	HPWidget hpWidget;
 	Table messageStack;
-	TabPane tabPane;
+	TabPanel tabPane;
 	ScrollPane messageScrollPane;
 	
 	Skin skin;

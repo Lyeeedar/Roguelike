@@ -25,9 +25,6 @@
 	</Light>
 	
 	<Inventory>
-		<Equipment>
-			<Item>Weapon/MainWeapon/BareFist</Item>
-		</Equipment>
 		<Item>Jewelry/Necklace/GoldNecklace</Item>
 	</Inventory>
 	

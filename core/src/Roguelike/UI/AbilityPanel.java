@@ -24,25 +24,22 @@ public class AbilityPanel extends Widget
 	private final int TileSize = 32;
 	
 	private Tooltip tooltip;
-	private int lastX;
-	private int lastY;
 		
 	private BitmapFont font;
 	private Texture white;
 	
 	private final Entity entity;
-	private final Sprite equippedTileSprite;
-	private final Sprite usedTileSprite;
-	private final Sprite unusedTileSprite;
+	
+	private final Sprite tileBackground;
+	private final Sprite tileBorder;
 	
 	private final Skin skin;
 	private final Stage stage;
 	
 	public AbilityPanel(Entity entity, Skin skin, Stage stage)
 	{
-		this.equippedTileSprite = AssetManager.loadSprite("GUI/GUI", 0.5f, new int[]{16, 16}, new int[]{8, 7});
-		this.usedTileSprite = AssetManager.loadSprite("GUI/GUI", 0.5f, new int[]{16, 16}, new int[]{8, 10});
-		this.unusedTileSprite = AssetManager.loadSprite("GUI/GUI", 0.5f, new int[]{16, 16}, new int[]{8, 13});
+		this.tileBackground = AssetManager.loadSprite("GUI/TileBackground");	
+		this.tileBorder = AssetManager.loadSprite("GUI/TileBorder");
 		this.font = new BitmapFont();
 		this.white = AssetManager.loadTexture("Sprites/white.png");
 				
@@ -72,30 +69,12 @@ public class AbilityPanel extends Widget
 			ActiveAbility aa = entity.getSlottedActiveAbilities()[i];
 			PassiveAbility pa = entity.getSlottedPassiveAbilities()[i];
 			
-			if (aaDragged)
-			{
-				batch.setColor(Color.CYAN);
-			}
+			// Draw active
 			
-			if (aa != null && aa == RoguelikeGame.Instance.preparedAbility)
-			{
-				equippedTileSprite.render(batch, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
-			}
-			else if (aa != null)
-			{
-				usedTileSprite.render(batch, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
-				
-			}
-			else
-			{
-				unusedTileSprite.render(batch, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
-			}
+			// background
+			tileBackground.render(batch, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
 			
-			if (aaDragged)
-			{
-				batch.setColor(Color.WHITE);
-			}
-			
+			// icon
 			if (aa != null)
 			{
 				aa.Icon.render(batch, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
@@ -110,58 +89,49 @@ public class AbilityPanel extends Widget
 				}
 			}
 			
-			if (paDragged)
+			// border
+			if (aa != null && aa == RoguelikeGame.Instance.preparedAbility)
 			{
 				batch.setColor(Color.CYAN);
 			}
-			
-			if (pa != null)
-			{
-				usedTileSprite.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize, TileSize);			
-			}
-			else
-			{
-				unusedTileSprite.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize, TileSize);
+			else if (aaDragged)
+			{				
+				batch.setColor(0.5f, 0.6f, 1.0f, 1.0f);
 			}
 			
-			if (paDragged)
-			{
-				batch.setColor(Color.WHITE);
-			}
+			tileBorder.render(batch, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
 			
+			batch.setColor(Color.WHITE);
+			
+			// Draw Passive
+			
+			// background
+			tileBackground.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize, TileSize);			
+			
+			// icon
 			if (pa != null)
 			{
 				pa.Icon.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize, TileSize);
 			}
 			
-			x += TileSize;
-		}
-		
-		ActiveAbility selected = RoguelikeGame.Instance.preparedAbility;
-		if (selected != null)
-		{
-			usedTileSprite.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize*2, TileSize*2);
-			selected.Icon.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize*2, TileSize*2);
-			
-			if (selected.cooldownAccumulator > 0)
+			// border
+			if (paDragged)
 			{
-				batch.setColor(0.5f, 0.5f, 0.5f, 0.5f);
-				batch.draw(white, (int)(xoffset + x), top - TileSize*2, TileSize*2, TileSize*2);
-				batch.setColor(Color.WHITE);
-				
-				font.draw(batch, ""+selected.cooldownAccumulator, (int)(xoffset + x) + TileSize, top - TileSize);
+				batch.setColor(Color.CYAN);
 			}
-		}
-		else
-		{
-			unusedTileSprite.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize*2, TileSize*2);
+			
+			tileBorder.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize, TileSize);	
+			
+			batch.setColor(Color.WHITE);
+			
+			x += TileSize;
 		}
 	}
 	
 	@Override
 	public float getPrefWidth()
 	{
-		return TileSize * (Global.NUM_ABILITY_SLOTS+2);
+		return TileSize * Global.NUM_ABILITY_SLOTS;
 	}
 
 	@Override
@@ -234,36 +204,13 @@ public class AbilityPanel extends Widget
 			int xIndex = (int) (x / TileSize);
 			int yIndex = (int) ((getHeight() - y) / TileSize);
 			
-			if (xIndex != lastX || yIndex != lastY || tooltip == null)
+			if (tooltip != null) { tooltip.remove(); tooltip = null; }
+			
+			if (xIndex < Global.NUM_ABILITY_SLOTS)
 			{
-				if (tooltip != null) { tooltip.remove(); tooltip = null; }
-				
-				if (xIndex < Global.NUM_ABILITY_SLOTS)
+				if (yIndex == 0)
 				{
-					if (yIndex == 0)
-					{
-						ActiveAbility aa = entity.getSlottedActiveAbilities()[xIndex];
-						
-						if (aa != null)
-						{
-							tooltip = new Tooltip(aa.createTable(skin), skin, stage);
-							tooltip.show(event, x, y);
-						}
-					}
-					else
-					{
-						PassiveAbility aa = entity.getSlottedPassiveAbilities()[xIndex];
-						
-						if (aa != null)
-						{
-							tooltip = new Tooltip(aa.createTable(skin), skin, stage);
-							tooltip.show(event, x, y);
-						}
-					}
-				}
-				else
-				{
-					ActiveAbility aa = RoguelikeGame.Instance.preparedAbility;
+					ActiveAbility aa = entity.getSlottedActiveAbilities()[xIndex];
 					
 					if (aa != null)
 					{
@@ -271,9 +218,16 @@ public class AbilityPanel extends Widget
 						tooltip.show(event, x, y);
 					}
 				}
-				
-				lastX = xIndex;
-				lastY = yIndex;
+				else
+				{
+					PassiveAbility aa = entity.getSlottedPassiveAbilities()[xIndex];
+					
+					if (aa != null)
+					{
+						tooltip = new Tooltip(aa.createTable(skin), skin, stage);
+						tooltip.show(event, x, y);
+					}
+				}
 			}
 			
 			return true;

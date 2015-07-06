@@ -7,6 +7,7 @@ import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.AbilityType.AbstractAbilityType;
 import Roguelike.Ability.ActiveAbility.EffectType.AbstractEffectType;
 import Roguelike.Ability.ActiveAbility.MovementType.AbstractMovementType;
+import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeBolt;
 import Roguelike.Ability.ActiveAbility.TargetingType.AbstractTargetingType;
 import Roguelike.Entity.Entity;
 import Roguelike.Lights.Light;
@@ -73,7 +74,7 @@ public class ActiveAbility implements IAbility
 		
 		aa.caster = caster;
 		
-		aa.light = light.copy();
+		aa.light = light != null ? light.copy() : null;
 		aa.Icon = Icon != null ? Icon.copy() : null;
 		aa.movementSprite = movementSprite != null ? movementSprite.copy() : null;
 		aa.hitSprite = hitSprite != null ? hitSprite.copy() : null;
@@ -137,6 +138,7 @@ public class ActiveAbility implements IAbility
 		for (int[] tilePos : output)
 		{
 			GameTile tile = caster.Tile.Level.getGameTile(tilePos);
+			
 			if (targetingType.isTargetValid(this, tile))
 			{
 				validTargets.add(tilePos);
@@ -166,7 +168,7 @@ public class ActiveAbility implements IAbility
 	public boolean update()
 	{
 		boolean finished = movementType.update(this);
-		movementSprite.rotation = movementType.direction.GetAngle();
+		if (movementSprite != null) { movementSprite.rotation = movementType.direction.GetAngle(); }
 		
 		if (finished)
 		{

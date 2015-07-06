@@ -1,28 +1,17 @@
 package Roguelike.UI;
 
-import MobiDevelop.UI.HorizontalFlowGroup;
 import Roguelike.AssetManager;
 import Roguelike.Sprite.Sprite;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
-public class TabPane extends WidgetGroup
+public class TabPanel extends WidgetGroup
 {
 	private final Array<Tab> tabs = new Array<Tab>();
 	private Tab selectedTab = null;
@@ -31,11 +20,14 @@ public class TabPane extends WidgetGroup
 	private float prefWidth = 300;
 	private float prefHeight = 300;
 	
-	private final Sprite border = AssetManager.loadSprite("GUI/frame");
+	private final Sprite buttonUp;
+	private final Sprite buttonDown;
 	
-	public TabPane()
+	public TabPanel()
 	{
-		
+		this.buttonUp = AssetManager.loadSprite("GUI/ButtonUp");
+		this.buttonDown = AssetManager.loadSprite("GUI/ButtonDown");
+		addListener(new TabPanelListener());
 	}
 	
 	@Override
@@ -50,7 +42,6 @@ public class TabPane extends WidgetGroup
 		float y = getHeight() - tabHeaderSize;
 		for (Tab tab : tabs)
 		{
-			tab.header.setBounds(xoffset, y+yoffset, tabHeaderSize, tabHeaderSize);
 			y -= tabHeaderSize;
 			
 			tab.body.setBounds(xoffset+tabHeaderSize, yoffset, bodyWidth, bodyHeight);
@@ -64,18 +55,21 @@ public class TabPane extends WidgetGroup
 		
 		float xoffset = getX();
 		float yoffset = getY();
-				
-		float y = getHeight();
+		
+		float y = getHeight() - tabHeaderSize;
 		for (Tab tab : tabs)
 		{
 			if (tab == selectedTab)
 			{
-				batch.setColor(Color.ORANGE);
-				border.render(batch, (int)tab.header.getX()+tabHeaderSize/4, (int)tab.header.getY()+tabHeaderSize/4, (int)tab.header.getWidth(), (int)tab.header.getHeight());
-				break;
+				buttonUp.render(batch, (int)xoffset, (int)(y+yoffset), tabHeaderSize, tabHeaderSize);
+			}
+			else
+			{
+				buttonDown.render(batch, (int)xoffset, (int)(y+yoffset), tabHeaderSize, tabHeaderSize);
 			}
 			
-			y -= tabHeaderSize;
+			tab.header.render(batch, (int)xoffset, (int)(y+yoffset), tabHeaderSize, tabHeaderSize);
+			y -= tabHeaderSize;			
 		}
 	}
 	
@@ -84,26 +78,25 @@ public class TabPane extends WidgetGroup
 		stage.setScrollFocus(selectedTab.body);
 	}
 	
-	public void addTab(Actor header, Actor body)
+	public void addTab(Sprite header, Actor body)
 	{
 		final Tab tab = new Tab(header, body);
 		tabs.add(tab);
 		
-		addActor(header);
 		addActor(body);
 		
 		body.setVisible(false);
 		
 		selectTab(tab);
 		
-		header.addListener(new InputListener()
-		{
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-			{
-				selectTab(tab);
-				return true;
-			}
-		});
+//		header.addListener(new InputListener()
+//		{
+//			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+//			{
+//				selectTab(tab);
+//				return true;
+//			}
+//		});
 	}
 	
 	public void selectTab(Tab tab)
@@ -130,13 +123,34 @@ public class TabPane extends WidgetGroup
 	
 	private class Tab
 	{
-		Actor header;
+		Sprite header;
 		Actor body;
 		
-		public Tab(Actor header, Actor body)
+		public Tab(Sprite header, Actor body)
 		{
 			this.header = header;
 			this.body = body;
+		}
+	}
+	
+	private class TabPanelListener extends InputListener
+	{
+		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+		{
+			if (x < tabHeaderSize)
+			{
+				y = getHeight() - y;
+				
+				int index = (int)Math.floor(y / tabHeaderSize);
+				
+				if (index < tabs.size)
+				{
+					Tab tab = tabs.get(index);
+					selectTab(tab);
+				}
+			}
+			
+			return false;
 		}
 	}
 }

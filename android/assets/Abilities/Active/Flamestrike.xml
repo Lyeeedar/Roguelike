@@ -1,11 +1,10 @@
 <ActiveAbility>
 
-	<Name></Name>
-	<Description></Description>
+	<Name>Flame Strike</Name>
+	<Description>A blast of fire burns your opponent</Description>
 	
-	<Cooldown>1</Cooldown>
-	<Range>10</Range>
-	<AOE>10</AOE>
+	<Cooldown>10</Cooldown>
+	<Range>3</Range>
 	
 	<Light>
 		<Intensity>4</Intensity>
@@ -17,21 +16,13 @@
 	</Light>
 	
 	<Icon>
-		<Name>Skills/SpikeTrap</Name>
+		<Name>Skills/IronBolt</Name>
 	</Icon>
-	
-	<MovementSprite>
-		<Name>firebolt/firebolt</Name>
-	</MovementSprite>
 	
 	<HitSprite>
 		<Name>Fireburst/Fireburst</Name>
 		<UpdateRate>0.1</UpdateRate>
 	</HitSprite>
-	
-	<AOESprite>
-		<Name>Skills/SpikeTrap</Name>
-	</AOESprite>
 	
 	<Type>
 		<Harmful>
@@ -40,15 +31,14 @@
 	</Type>
 	
 	<Targeting>
-		<Direction>
+		<Entity>
 			<NotSelf></NotSelf>
-		</Direction>
+		</Entity>
 	</Targeting>
 	
 	<Movement>
-		<Bolt>
-			<Speed>3</Speed>
-		</Bolt>
+		<Smite>
+		</Smite>
 	</Movement>
 	
 	<Effect>

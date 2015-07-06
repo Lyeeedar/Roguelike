@@ -1,30 +1,39 @@
-<Ability>
+<ActiveAbility>
+
 	<Name>Iron Mace</Name>
 	<Description>A heavy mace of iron slams into your target.</Description>
+	
+	<Cooldown>10</Cooldown>
+	<Range>1</Range>
+	
 	<Icon>
 		<Name>Skills/IronMace</Name>
 	</Icon>
-	<Sprite>
-		<Name>Skills/IronMace</Name>
-	</Sprite>
-	<Type>OneShot</Type>
-	<Statistics>
-		<Range>10</Range>
-		<Speed>2</<Speed>
-		<Cooldown>20</Cooldown>
-		<AttackPower>2</AttackPower>
-		<MetalAttack>2</<MetalAttack>>
-	</Statistics>
-	<AI>
-		<Strike>
-			<HitEffect>
-				<Name>slash/slash</Name>
-				<UpdateRate>0.05</UpdateRate>
-				<Size>32</Size>
-				<IndexX>0</IndexX>
-				<IndexY>0</IndexY>
-				<WordList>cut</WordList>
-			</HitEffect>
-		</Strike>
-	</AI>
-</Ability>
+	
+	<HitSprite>
+		<Name>slash/slash</Name>
+		<UpdateRate>0.05</UpdateRate>
+	</HitSprite>
+	
+	<Type>
+		<Harmful>
+			<Metal>1</Metal>
+		</Harmful>
+	</Type>
+	
+	<Targeting>
+		<Entity>
+			<NotSelf/>
+		</Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Damage></Damage>
+	</Effect>
+	
+</ActiveAbility>

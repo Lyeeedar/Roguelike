@@ -1,31 +1,31 @@
-<Ability>
+<ActiveAbility>
+
 	<Name>Iron Hide</Name>
-	<Description>Your skin hardens, giving you the strength of iron.</Description>
+	<Description>Grant the toughness of iron for a small duration.</Description>
+	
+	<Cooldown>10</Cooldown>
+	<Range>1</Range>
+	
 	<Icon>
 		<Name>Skills/IronHide</Name>
 	</Icon>
-	<Sprite>
-		<Name>Skills/IronHide</Name>
-	</Sprite>
-	<Type>OneShot</Type>
-	<Statistics>
-		<Range>10</Range>
-		<Speed>2</<Speed>
-		<Cooldown>20</Cooldown>
-		<AttackPower>2</AttackPower>
-		<MetalAttack>2</<MetalAttack>>
-	</Statistics>
-	<AI>
-		<Bolt />
-		<Strike>
-			<HitEffect>
-				<Name>slash/slash</Name>
-				<UpdateRate>0.05</UpdateRate>
-				<Size>32</Size>
-				<IndexX>0</IndexX>
-				<IndexY>0</IndexY>
-				<WordList>cut</WordList>
-			</HitEffect>
-		</Strike>
-	</AI>
-</Ability>
+
+	<Type>
+		<Helpful>
+			<Metal>1</Metal>
+		</Helpful>
+	</Type>
+	
+	<Targeting>
+		<Self>
+		</Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite></Smite>
+	</Movement>
+	
+	<Effect>
+	</Effect>
+	
+</ActiveAbility>

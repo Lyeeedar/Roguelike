@@ -1,5 +1,6 @@
 package Roguelike.UI;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import Roguelike.AssetManager;
@@ -25,8 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 public class InventoryPanel extends Widget
 {
 	private Tooltip tooltip;
-	private int lastX;
-	private int lastY;
 	
 	private int TileSize;
 	private boolean sizeInvalid;
@@ -40,17 +39,18 @@ public class InventoryPanel extends Widget
 	private final Skin skin;
 	private final Stage stage;
 	
-	private final Sprite equippedTileSprite;
-	private final Sprite usedTileSprite;
-	private final Sprite unusedTileSprite;
-	private final Sprite floorTileSprite;
+	private final Sprite tileBackground;
+	private final Sprite tileBorder;
+	
+	private final Sprite buttonUp;
+	private final Sprite buttonDown;
+	
+	private final HashMap<ItemType, Sprite> headers = new HashMap<ItemType, Sprite>();
 	
 	private final Entity entity;
 	
 	private ItemType selectedFilter = ItemType.ALL;
-	
-	private final BitmapFont font = new BitmapFont();
-	
+		
 	public InventoryPanel(Entity entity, Skin skin, Stage stage)
 	{
 		this.entity = entity;
@@ -59,10 +59,18 @@ public class InventoryPanel extends Widget
 		this.skin = skin;
 		this.stage = stage;
 		
-		this.equippedTileSprite = AssetManager.loadSprite("GUI/GUI", 0.5f, new int[]{16, 16}, new int[]{8, 7});
-		this.usedTileSprite = AssetManager.loadSprite("GUI/GUI", 0.5f, new int[]{16, 16}, new int[]{8, 10});
-		this.unusedTileSprite = AssetManager.loadSprite("GUI/GUI", 0.5f, new int[]{16, 16}, new int[]{8, 13});
-		this.floorTileSprite = AssetManager.loadSprite("GUI/GUI", 0.5f, new int[]{16, 16}, new int[]{8, 16});		
+		this.tileBackground = AssetManager.loadSprite("GUI/TileBackground");	
+		this.tileBorder = AssetManager.loadSprite("GUI/TileBorder");
+		
+		this.buttonUp = AssetManager.loadSprite("GUI/ButtonUp");
+		this.buttonDown = AssetManager.loadSprite("GUI/ButtonDown");
+		
+		headers.put(ItemType.WEAPON, AssetManager.loadSprite("GUI/Weapon"));
+		headers.put(ItemType.ARMOUR, AssetManager.loadSprite("GUI/Armour"));
+		headers.put(ItemType.JEWELRY, AssetManager.loadSprite("GUI/Jewelry"));
+		headers.put(ItemType.TREASURE, AssetManager.loadSprite("GUI/Treasure"));
+		headers.put(ItemType.MISC, AssetManager.loadSprite("GUI/Misc"));
+		headers.put(ItemType.ALL, AssetManager.loadSprite("GUI/All"));
 				
 		this.addListener(new InventoryPanelListener());
 	}
@@ -101,8 +109,17 @@ public class InventoryPanel extends Widget
 		int x = 0;
 		for (ItemType type : ItemType.values())
 		{
-			equippedTileSprite.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
-			font.draw(batch, ""+type.toString().charAt(0), x*TileSize + xOffset, top - y*TileSize);		
+			if (type == selectedFilter)
+			{
+				buttonDown.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+			}
+			else
+			{
+				buttonUp.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+			}
+			
+			int headerSize = 24;
+			headers.get(type).render(batch, x*TileSize + xOffset + 4, top - y*TileSize + 4, headerSize, headerSize);
 			x++;
 		}
 		
@@ -110,33 +127,44 @@ public class InventoryPanel extends Widget
 		{
 			for (x = 0; x < NumTilesWidth; x++)
 			{
+				batch.setColor(Color.WHITE);
+				
 				if (itr.hasNext())
 				{
 					Item item = itr.next();
 										
+					tileBackground.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+					
+					item.Icon.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+					
 					if (entity.getInventory().isEquipped(item))
 					{
-						equippedTileSprite.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+						batch.setColor(Color.GREEN);
 					}
 					else
 					{
-						usedTileSprite.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+						batch.setColor(Color.DARK_GRAY);
 					}
-					
-					item.Icon.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
 				}
 				else
 				{
-					unusedTileSprite.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+					tileBackground.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+					batch.setColor(Color.DARK_GRAY);
 				}
+				
+				tileBorder.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
 			}
 		}
-		
+				
 		itr = entity.Tile.Items.iterator();
 		y = NumTilesHeight;
 		for (x = 0; x < NumTilesWidth; x++)
 		{
-			floorTileSprite.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+			batch.setColor(Color.LIGHT_GRAY);
+			
+			tileBackground.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+			
+			batch.setColor(Color.WHITE);
 			
 			if (itr.hasNext())
 			{
@@ -170,59 +198,53 @@ public class InventoryPanel extends Widget
 			int tileX = (int)(x / TileSize);
 			int tileY = (int)((getHeight() - y) / TileSize);
 			
-			if (tileX != lastX || tileY != lastY || tooltip == null)
+			if (tooltip != null) { tooltip.remove(); tooltip = null; }
+			
+			if (tileY == NumTilesHeight-1 && tileX < entity.Tile.Items.size)
 			{
-				if (tooltip != null) { tooltip.remove(); tooltip = null; }
-				
-				if (tileY == NumTilesHeight-1 && tileX < entity.Tile.Items.size)
+				if (tileX < entity.Tile.Items.size)
 				{
-					if (tileX < entity.Tile.Items.size)
-					{
-						Table t = entity.Tile.Items.get(tileX).createTable(skin, entity.getInventory());
-						
-						tooltip = new Tooltip(t, skin, stage);
-						tooltip.show(event, x, y);
-					}
-				}
-				else if (tileY == 0 && tileX < NumTilesWidth)
-				{
-					ItemType type = ItemType.values()[tileX];
-					
-					Table t = new Table();
-					t.add(new Label(type.toString(), skin));
+					Table t = entity.Tile.Items.get(tileX).createTable(skin, entity.getInventory());
 					
 					tooltip = new Tooltip(t, skin, stage);
 					tooltip.show(event, x, y);
 				}
-				else
-				{					
-					int index = (tileY-1)*NumTilesWidth + tileX;
-					
-					Item item = null;
-					Iterator<Item> itr = entity.getInventory().iterator(selectedFilter);
-					int count = 0;
-					while (itr.hasNext())
+			}
+			else if (tileY == 0 && tileX < NumTilesWidth)
+			{
+				ItemType type = ItemType.values()[tileX];
+				
+				Table t = new Table();
+				t.add(new Label(type.toString(), skin));
+				
+				tooltip = new Tooltip(t, skin, stage);
+				tooltip.show(event, x, y);
+			}
+			else
+			{					
+				int index = (tileY-1)*NumTilesWidth + tileX;
+				
+				Item item = null;
+				Iterator<Item> itr = entity.getInventory().iterator(selectedFilter);
+				int count = 0;
+				while (itr.hasNext())
+				{
+					Item i = itr.next();
+					if (count == index)
 					{
-						Item i = itr.next();
-						if (count == index)
-						{
-							item = i;
-							break;
-						}
-						count++;
+						item = i;
+						break;
 					}
-					
-					if (item != null)
-					{
-						Table t = item.createTable(skin, entity.getInventory());
-						
-						tooltip = new Tooltip(t, skin, stage);
-						tooltip.show(event, x, y);
-					}
+					count++;
 				}
 				
-				lastX = tileX;
-				lastY = tileY;
+				if (item != null)
+				{
+					Table t = item.createTable(skin, entity.getInventory());
+					
+					tooltip = new Tooltip(t, skin, stage);
+					tooltip.show(event, x, y);
+				}
 			}
 			
 			return true;
@@ -272,6 +294,11 @@ public class InventoryPanel extends Widget
 					}
 					else if (button == Buttons.RIGHT)
 					{
+						if (entity.getInventory().isEquipped(item))
+						{
+							entity.getInventory().unequip(item);
+						}
+						
 						entity.getInventory().removeItem(item);
 						entity.Tile.Items.add(item);
 					}

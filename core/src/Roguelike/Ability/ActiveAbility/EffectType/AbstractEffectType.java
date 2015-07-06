@@ -39,5 +39,6 @@ public abstract class AbstractEffectType
 	{
 		ClassMap.put("Damage", EffectTypeDamage.class);
 		ClassMap.put("Heal", EffectTypeHeal.class);
+		ClassMap.put("Status", EffectTypeStatus.class);
 	}
 }

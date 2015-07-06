@@ -4,25 +4,25 @@
 	<Tiers>
 		<Tier>
 			<ActiveAbility>
-				<Name>Flamestrike</Name>
+				<Name>IronBolt</Name>
 				<Cost>100</Cost>
 			</ActiveAbility>
 			<ActiveAbility>
-				<Name>Flamestrike</Name>
+				<Name>IronHide</Name>
 				<Cost>100</Cost>
 			</ActiveAbility>
 			<ActiveAbility>
-				<Name>Flamestrike</Name>
+				<Name>IronMace</Name>
 				<Cost>100</Cost>
 			</ActiveAbility>
 			<ActiveAbility>
-				<Name>Flamestrike</Name>
+				<Name>PoisonDart</Name>
 				<Cost>100</Cost>
 			</ActiveAbility>
-			<ActiveAbility>
-				<Name>Flamestrike</Name>
+			<PassiveAbility>
+				<Name>ScionOfMetal</Name>
 				<Cost>100</Cost>
-			</ActiveAbility>
+			</PassiveAbility>
 		</Tier>
 	</Tiers>
 </AbilityLine>

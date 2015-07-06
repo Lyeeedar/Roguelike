@@ -21,6 +21,8 @@ public class TargetingTypeDirection extends AbstractTargetingType
 		int x = tile.x - ab.caster.Tile.x;
 		int y = tile.y - ab.caster.Tile.y;
 		
+		if (x == 0 && y == 0) { return false; }
+		
 		if (
 			(x == 0 && y != 0) || // vertical
 			(x != 0 && y == 0) || // horizontal
@@ -33,7 +35,6 @@ public class TargetingTypeDirection extends AbstractTargetingType
 
 		return false;
 	}
-
 	
 	@Override
 	public AbstractTargetingType copy()

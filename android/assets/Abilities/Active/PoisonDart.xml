@@ -1,17 +1,17 @@
 <ActiveAbility>
 
-	<Name>Iron Bolt</Name>
-	<Description>A razor sharp bolt of iron.</Description>
+	<Name>Poison Dart</Name>
+	<Description>A dart tipped in a mild poison.</Description>
 	
 	<Cooldown>10</Cooldown>
 	<Range>10</Range>
 	
 	<Icon>
-		<Name>Skills/IronBolt</Name>
+		<Name>Skills/SpikeTrap</Name>
 	</Icon>
 	
 	<MovementSprite>
-		<Name>Skills/IronBolt</Name>
+		<Name>Skills/SpikeTrap</Name>
 	</MovementSprite>
 	
 	<HitSprite>
@@ -37,7 +37,7 @@
 	</Movement>
 	
 	<Effect>
-		<Damage></Damage>
+		<Status>Poison</Status>
 	</Effect>
 	
 </ActiveAbility>

@@ -24,8 +24,7 @@ public class Item
 		// Armour
 		HEAD,
 		BODY,
-		FEET,
-		HANDS,
+		LEGS,
 		
 		// Jewelry
 		EARRING,
@@ -42,8 +41,6 @@ public class Item
 		ARMOUR,
 		WEAPON,
 		JEWELRY,
-		CONSUMABLE,
-		BOOK,
 		TREASURE,
 		MISC,
 		
