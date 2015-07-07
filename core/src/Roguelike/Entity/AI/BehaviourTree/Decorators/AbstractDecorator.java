@@ -36,7 +36,7 @@ public abstract class AbstractDecorator extends BehaviourTreeContainer
 
 		try
 		{
-			Class<BehaviourTreeNode> c = ClassMap.get(xml.getName());
+			Class<BehaviourTreeNode> c = ClassMap.get(xml.getName().toUpperCase());
 			BehaviourTreeNode node = (BehaviourTreeNode)ClassReflection.newInstance(c);
 
 			setNode(node);

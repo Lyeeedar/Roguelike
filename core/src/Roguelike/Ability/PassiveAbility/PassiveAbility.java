@@ -12,15 +12,15 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import Roguelike.AssetManager;
 import Roguelike.Ability.IAbility;
+import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Global.Statistics;
+import Roguelike.Global.Tier1Element;
 import Roguelike.Sprite.Sprite;
 
-public class PassiveAbility implements IAbility
+public class PassiveAbility extends GameEventHandler implements IAbility
 {
 	public String Name;
 	public String Description;
-	private EnumMap<Statistics, Integer> m_statistics = Statistics.getStatisticsBlock();
-	
 	public Sprite Icon;
 
 	//----------------------------------------------------------------------
@@ -46,12 +46,6 @@ public class PassiveAbility implements IAbility
 	}
 
 	//----------------------------------------------------------------------
-	public int getStatistic(Statistics stat)
-	{
-		return m_statistics.get(stat);
-	}
-	
-	//----------------------------------------------------------------------
 	private void internalLoad(String name)
 	{
 		XmlReader xml = new XmlReader();
@@ -75,10 +69,10 @@ public class PassiveAbility implements IAbility
 		Name = xmlElement.get("Name", Name);
 		Icon = xmlElement.getChildByName("Icon") != null ? AssetManager.loadSprite(xmlElement.getChildByName("Icon")) : Icon;
 		
-		Element statElement = xmlElement.getChildByName("Statistics");
-		if (statElement != null)
+		Element eventsElement = xmlElement.getChildByName("Events");
+		if (eventsElement != null)
 		{
-			Statistics.load(statElement, m_statistics);
+			super.parse(eventsElement);
 		}
 	}
 	

@@ -1,6 +1,10 @@
 package Roguelike.Ability.ActiveAbility.EffectType;
 
+import java.util.EnumMap;
+
+import Roguelike.Global;
 import Roguelike.Global.Direction;
+import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.SpriteEffect;
@@ -11,12 +15,12 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class EffectTypeDamage extends AbstractEffectType
 {
-	private int power;
+	private EnumMap<Tier1Element, Integer> m_attunement = Tier1Element.getElementMap();
 	
 	@Override
 	public void parse(Element xml)
 	{		
-		//power = xml.getInt("Power");
+		m_attunement = Tier1Element.load(xml.getChildByName("Attunement"), m_attunement);
 	}
 
 	@Override
@@ -26,11 +30,10 @@ public class EffectTypeDamage extends AbstractEffectType
 		
 		if (tile.Entity != null)
 		{
-			tile.Entity.HP -= 5;
-			tile.Entity.SpriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
+			int damage = Global.calculateDamage(aa.caster.getAttunement(), tile.Entity.getAttunement(), m_attunement);
 			
-			StatusEffect se = StatusEffect.load("Poison");
-			tile.Entity.addStatusEffect(se);
+			tile.Entity.applyDamage(damage);
+			tile.Entity.SpriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
 		}
 		else
 		{
@@ -42,7 +45,8 @@ public class EffectTypeDamage extends AbstractEffectType
 	@Override
 	public AbstractEffectType copy()
 	{
-		
-		return new EffectTypeDamage();
+		EffectTypeDamage e = new EffectTypeDamage();
+		e.m_attunement = Tier1Element.copy(m_attunement);
+		return e;
 	}
 }

@@ -47,7 +47,7 @@ public class DecoratorImport extends AbstractDecorator
 		
 		try
 		{
-			Class<BehaviourTreeNode> c = ClassMap.get(importXmlElement.getName());
+			Class<BehaviourTreeNode> c = ClassMap.get(importXmlElement.getName().toUpperCase());
 			BehaviourTreeNode node = (BehaviourTreeNode)ClassReflection.newInstance(c);
 
 			setNode(node);

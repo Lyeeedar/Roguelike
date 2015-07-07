@@ -4,8 +4,18 @@
 	<Icon>
 		<Name>Skills/ScionOfMetal</Name>
 	</Icon>
-	<Statistics>
-		<MetalAttack>1</MetalAttack>
-		<MetalDefense>1</<MetalDefense>
-	</Statistics>
+	
+	<Events>
+		<OnTurn>
+			<HOT>
+				<Heal>0.1</Heal>
+			</HOT>
+		</OnTurn>
+		<OnDealDamage>
+			<Status>
+				<Defender>poison</Defender>
+			</Status>
+		</OnDealDamage>
+	</Events>
+	
 </PassiveAbility>

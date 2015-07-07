@@ -11,21 +11,18 @@
 	</HitEffect>
 	
 	<Statistics>
-		<MaxHP>10</MaxHP>
+		<MaxHP>100</MaxHP>
 		<Range>5</<Range>
 		<Speed>5</<Speed>
 		<Weight>1</Weight>
-
-		<MetalAttack>0</MetalAttack>
-		<WoodAttack>0</<WoodAttack>
-		<AirAttack>0</<AirAttack>
-		<WaterAttack>0</WaterAttack>
-		<FireAttack>0</FireAttack>
-
-		<MetalDefense>1</MetalDefense>
-		<WoodDefense>1</WoodDefense>
-		<AirDefense>0</AirDefense>
-		<WaterDefense>0</<WaterDefense>
-		<FireDefense>0</<FireDefense>
 	</Statistics>
+	
+	<Attunement>
+		<Metal>10</Metal>
+		<Wood>10</Wood>
+		<Air>1</Air>
+		<Water>2</Water>
+		<Fire>2</Fire>
+	</Attunement>
+	
 </Entity>

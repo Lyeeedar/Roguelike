@@ -33,7 +33,11 @@
 	</Movement>
 	
 	<Effect>
-		<Damage></Damage>
+		<Damage>
+			<Attunement>
+				<Metal>30</Metal>
+			</Attunement>
+		</Damage>
 	</Effect>
 	
 </ActiveAbility>

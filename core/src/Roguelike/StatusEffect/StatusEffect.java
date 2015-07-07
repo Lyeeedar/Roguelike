@@ -2,20 +2,19 @@ package Roguelike.StatusEffect;
 
 import java.io.IOException;
 
+import Roguelike.AssetManager;
+import Roguelike.Entity.Entity;
+import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.Sprite.Sprite;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-import Roguelike.AssetManager;
-import Roguelike.Entity.Entity;
-import Roguelike.Sprite.Sprite;
-import Roguelike.StatusEffect.OnTurn.AbstractOnTurnEffect;
-
-public class StatusEffect
+public class StatusEffect extends GameEventHandler
 {
 	public String name;
 	private String description;
@@ -25,7 +24,13 @@ public class StatusEffect
 	public float duration;
 	public Entity attachedTo;
 	
-	private Array<AbstractOnTurnEffect> onTurnEffects = new Array<AbstractOnTurnEffect>();
+	@Override
+	public void onTurn(Entity entity, float cost)
+	{
+		super.onTurn(entity, cost);
+		
+		duration -= cost;
+	}
 	
 	public Table createTable(Skin skin)
 	{
@@ -41,17 +46,7 @@ public class StatusEffect
 		
 		return table;
 	}
-	
-	public void onTurn(float cost)
-	{
-		duration -= cost;
 		
-		for (AbstractOnTurnEffect effect : onTurnEffects)
-		{
-			effect.evaluate(this, cost);
-		}
-	}
-	
 	private void internalLoad(String name)
 	{
 		XmlReader xml = new XmlReader();
@@ -79,14 +74,10 @@ public class StatusEffect
 		continualEffect = xmlElement.getChildByName("ContinualEffect") != null ? AssetManager.loadSprite(xmlElement.getChildByName("ContinualEffect")) : continualEffect;
 		duration = xmlElement.getFloat("Duration", duration);
 		
-		Element onTurnEffectsElement = xmlElement.getChildByName("OnTurnEffects");
-		if (onTurnEffectsElement != null)
+		Element eventsElement = xmlElement.getChildByName("Events");
+		if (eventsElement != null)
 		{
-			for (int i = 0; i < onTurnEffectsElement.getChildCount(); i++)
-			{
-				Element onTurnEffectElement = onTurnEffectsElement.getChild(i);
-				onTurnEffects.add(AbstractOnTurnEffect.load(onTurnEffectElement));
-			}
+			super.parse(eventsElement);
 		}
 	}
 	

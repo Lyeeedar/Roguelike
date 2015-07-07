@@ -8,10 +8,13 @@ import Roguelike.Ability.AbilityPool.AbilityLine;
 import Roguelike.Ability.AbilityPool.AbilityLine.Ability;
 import Roguelike.Sprite.Sprite;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -55,7 +58,14 @@ public class AbilityPoolPanel extends Widget
 		this.skin = skin;
 		this.stage = stage;
 		
-		this.font = new BitmapFont();
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/SDS_8x8.ttf"));
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = 10;
+		parameter.borderWidth = 1;
+		parameter.borderColor = Color.BLACK;
+		font = generator.generateFont(parameter); // font size 12 pixels
+		generator.dispose(); // don't forget to dispose to avoid memory leaks!
+		
 		this.white = AssetManager.loadTexture("Sprites/white.png");
 		this.locked = AssetManager.loadSprite("GUI/locked");
 				

@@ -1,7 +1,10 @@
 package Roguelike;
 
+import java.util.EnumMap;
+
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistics;
+import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.AbilityPool;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.DungeonGeneration.DungeonRoomGenerator;
@@ -35,6 +38,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -43,6 +49,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -68,7 +75,14 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	public void create () 
 	{
 		batch = new SpriteBatch();
-		font = new BitmapFont();
+		
+		FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/SDS_8x8.ttf"));
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = 10;
+		parameter.borderWidth = 1;
+		parameter.borderColor = Color.BLACK;
+		font = fgenerator.generateFont(parameter); // font size 12 pixels
+		fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
 		
 		blank = AssetManager.loadTexture("Sprites/blank.png");
 		white = AssetManager.loadTexture("Sprites/white.png");
@@ -115,13 +129,55 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(inputProcessorOne);
 		inputMultiplexer.addProcessor(inputProcessorTwo);
-		Gdx.input.setInputProcessor(inputMultiplexer);		
+		Gdx.input.setInputProcessor(inputMultiplexer);	
+		
+		//damageTester();
+	}
+	
+	private void damageTester()
+	{		
+		for (int i = 0; i < 1000; i++)
+		{
+			EnumMap<Tier1Element, Integer> src = createThingy();
+			EnumMap<Tier1Element, Integer> tar = createThingy();
+			EnumMap<Tier1Element, Integer> att = createThingy();
+			
+			int dam = Global.calculateDamage(src, tar, att);
+			
+			String srcS = "";
+			String tarS = "";
+			String attS = "";
+			
+			for (Tier1Element el : Tier1Element.values())
+			{
+				srcS += src.get(el) + ",";
+				tarS += tar.get(el) + ",";
+				attS += att.get(el) + ",";
+			}
+			
+			
+			System.out.println("Src: " + srcS + " :: Tar: " + tarS + " :: Att: " + attS + " = " + dam);
+		}
+	}
+	private EnumMap<Tier1Element, Integer> createThingy()
+	{
+		EnumMap<Tier1Element, Integer> thing = new EnumMap<Tier1Element, Integer>(Tier1Element.class);
+		
+		for (Tier1Element el : Tier1Element.values())
+		{
+			thing.put(el, MathUtils.random(200));
+		}
+		
+		return thing;
 	}
 	
 	//----------------------------------------------------------------------
 	public void LoadUI()
 	{
 		skin = new Skin(Gdx.files.internal("GUI/uiskin.json"));
+		LabelStyle ls = skin.get("default", LabelStyle.class);
+		ls.font = font;
+				
 		stage = new Stage(new ScreenViewport());
 		
 		Table mainUITable = new Table();
@@ -360,7 +416,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			dragDropPayload.sprite.render(batch, (int)dragDropPayload.x, (int)dragDropPayload.y, 32, 32);
 		}
 		
-		font.draw(batch, "FPS: "+fps, Gdx.graphics.getWidth()-50, Gdx.graphics.getHeight() - 20);
+		font.draw(batch, "FPS: "+fps, Gdx.graphics.getWidth()-100, Gdx.graphics.getHeight() - 20);
 		
 		batch.end();
 	}

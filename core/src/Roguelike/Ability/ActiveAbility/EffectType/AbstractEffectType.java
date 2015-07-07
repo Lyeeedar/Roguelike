@@ -17,7 +17,7 @@ public abstract class AbstractEffectType
 	
 	public static AbstractEffectType load(Element xml)
 	{		
-		Class<AbstractEffectType> c = ClassMap.get(xml.getName());
+		Class<AbstractEffectType> c = ClassMap.get(xml.getName().toUpperCase());
 		AbstractEffectType type = null;
 		
 		try
@@ -37,8 +37,8 @@ public abstract class AbstractEffectType
 	public static final HashMap<String, Class> ClassMap = new HashMap<String, Class>();
 	static
 	{
-		ClassMap.put("Damage", EffectTypeDamage.class);
-		ClassMap.put("Heal", EffectTypeHeal.class);
-		ClassMap.put("Status", EffectTypeStatus.class);
+		ClassMap.put("DAMAGE", EffectTypeDamage.class);
+		ClassMap.put("HEAL", EffectTypeHeal.class);
+		ClassMap.put("STATUS", EffectTypeStatus.class);
 	}
 }

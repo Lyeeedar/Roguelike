@@ -42,7 +42,11 @@
 	</Movement>
 	
 	<Effect>
-		<Damage></Damage>
+		<Damage>
+			<Attunement>
+				<Fire>20</Fire>
+			</Attunement>
+		</Damage>
 	</Effect>
 	
 </ActiveAbility>

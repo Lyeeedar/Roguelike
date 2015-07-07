@@ -1,9 +1,12 @@
 package Roguelike.UI;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
@@ -15,6 +18,18 @@ import Roguelike.Global.Statistics;
 
 public class EntityStatusRenderer
 {
+	private static BitmapFont font;
+	static
+	{
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/SDS_8x8.ttf"));
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = 8;
+		parameter.borderWidth = 1;
+		parameter.borderColor = Color.BLACK;
+		font = generator.generateFont(parameter); // font size 12 pixels
+		generator.dispose(); // don't forget to dispose to avoid memory leaks!
+	}
+	
 	public static void draw(Entity entity, Batch batch, int x, int y, int width, int height, float heightScale)
 	{
 		Texture white = AssetManager.loadTexture("Sprites/white.png");
@@ -41,6 +56,7 @@ public class EntityStatusRenderer
 		for (StatusEffectStack stack : stacks)
 		{
 			stack.effect.icon.render(batch, sx, sy, statusTileSize, statusTileSize);
+			font.draw(batch, ""+stack.count, sx, sy);
 			
 			sx += statusTileSize;
 			

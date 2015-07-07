@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import Roguelike.AssetManager;
 import Roguelike.Global.Statistics;
+import Roguelike.Global.Tier1Element;
 import Roguelike.RoguelikeGame;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
@@ -67,6 +68,23 @@ public class Inventory
 			if (m_equipment.containsKey(slot))
 			{
 				val += m_equipment.get(slot).getStatistic(stat);
+			}
+		}
+		
+		return val;
+	}
+	
+	public int getAttunement(Tier1Element el)
+	{
+		int val = 0;
+		
+		for (EquipmentSlot slot : EquipmentSlot.values())
+		{
+			if (slot == EquipmentSlot.MAINWEAPON || slot == EquipmentSlot.OFFWEAPON) { continue; }
+			
+			if (m_equipment.containsKey(slot))
+			{
+				val += m_equipment.get(slot).getAttunement(el);
 			}
 		}
 		

@@ -92,27 +92,6 @@ public class Global
 		WEIGHT,
 		CARRYLIMIT,
 		COOLDOWN,
-
-		// Tier 1 elements
-		METALATTACK,
-		WOODATTACK,
-		AIRATTACK,
-		WATERATTACK,
-		FIREATTACK,
-
-		METALDEFENSE,
-		WOODDEFENSE,
-		AIRDEFENSE,
-		WATERDEFENSE,
-		FIREDEFENSE,
-		
-		// Tier 2 elements
-		POISONATTACK,
-		ACIDATTACK,
-		MINDSHOCKATTACK,
-		ICEATTACK,
-		PLASMAATTACK,
-		LIGHTNINGATTACK
 		;
 		
 		public static EnumMap<Statistics, Integer> getStatisticsBlock()
@@ -141,12 +120,12 @@ public class Global
 		
 		public static EnumMap<Statistics, Integer> copy(EnumMap<Statistics, Integer> stats)
 		{
-			EnumMap<Statistics, Integer> newStats = new EnumMap<Statistics, Integer>(Statistics.class);
-			for (Statistics s : Statistics.values())
+			EnumMap<Statistics, Integer> map = new EnumMap<Statistics, Integer>(Statistics.class);
+			for (Statistics e : Statistics.values())
 			{
-				newStats.put(s, stats.get(s));
+				map.put(e, stats.get(e));
 			}			
-			return newStats;
+			return map;
 		}
 
 	}
@@ -154,11 +133,11 @@ public class Global
 	//----------------------------------------------------------------------
 	public enum Tier1Element
 	{
-		METAL(Statistics.METALATTACK, Statistics.METALDEFENSE),
-		WOOD(Statistics.WOODATTACK, Statistics.WOODDEFENSE),
-		AIR(Statistics.AIRATTACK, Statistics.AIRDEFENSE),
-		WATER(Statistics.WATERATTACK, Statistics.WATERDEFENSE),
-		FIRE(Statistics.FIREATTACK, Statistics.FIREDEFENSE);
+		METAL,
+		WOOD,
+		AIR,
+		WATER,
+		FIRE;
 		
 		public Tier1Element Weakness;
 		public Tier1Element Strength;
@@ -181,15 +160,6 @@ public class Global
 			Tier1Element.FIRE.Strength = Tier1Element.METAL;
 		}
 		
-		public Statistics AttackStatistic;
-		public Statistics DefenseStatistic;
-		
-		Tier1Element(Statistics att, Statistics def)
-		{
-			this.AttackStatistic = att;
-			this.DefenseStatistic = def;
-		}
-		
 		public static EnumMap<Tier1Element, Integer> getElementMap()
 		{
 			EnumMap<Tier1Element, Integer> map = new EnumMap<Tier1Element, Integer>(Tier1Element.class);
@@ -199,6 +169,28 @@ public class Global
 				map.put(el, 0);
 			}
 			
+			return map;
+		}
+	
+		public static EnumMap<Tier1Element, Integer> load(Element xml, EnumMap<Tier1Element, Integer> values)
+		{
+			for (int i = 0; i < xml.getChildCount(); i++)
+			{
+				Element el = xml.getChild(i);
+
+				values.put(Tier1Element.valueOf(el.getName().toUpperCase()), Integer.parseInt(el.getText()));
+			}
+
+			return values;
+		}
+		
+		public static EnumMap<Tier1Element, Integer> copy(EnumMap<Tier1Element, Integer> stats)
+		{
+			EnumMap<Tier1Element, Integer> map = new EnumMap<Tier1Element, Integer>(Tier1Element.class);
+			for (Tier1Element e : Tier1Element.values())
+			{
+				map.put(e, stats.get(e));
+			}			
 			return map;
 		}
 	}
@@ -246,31 +238,32 @@ public class Global
 	}
 	
 	//----------------------------------------------------------------------
-	public static int calculateDamage(EnumMap<Statistics, Integer> _attack, EnumMap<Statistics, Integer> _defense)
+	public static int calculateDamage(EnumMap<Tier1Element, Integer> srcAttunement, EnumMap<Tier1Element, Integer> targetAttunement, EnumMap<Tier1Element, Integer> attackAttunement)
 	{
-		float attackScale = 0;
+		float damage = 0;
 		
 		for (Tier1Element el : Tier1Element.values())
 		{
-			Tier1Element strength = el.Strength;
-			Tier1Element weakness = el.Weakness;
+			int src = srcAttunement.get(el);
+			int attack = attackAttunement.get(el);
+			attack = Math.max(attack, 1);
 			
-			float defense = _defense.get(strength.DefenseStatistic) - ( _defense.get(weakness.DefenseStatistic) / 2.0f );
+			float scaledAttack = src != 0 ? attack * (1.0f + src / 100.0f) : attack;
+			//scaledAttack = MathUtils.log2(scaledAttack);
 			
-			if (defense <= 0)
-			{
-				defense = Math.abs(defense) + 1;
-			}
-			else
-			{
-				defense = 1 / ( defense + 1 );
-			}
+			int weakness = targetAttunement.get(el.Weakness);
+			int neutral = targetAttunement.get(el);
+			int strength = targetAttunement.get(el.Strength);
 			
-			attackScale += _attack.get(el.AttackStatistic) * defense;
+			float defense = weakness * -0.5f + neutral * 0.3f + strength * 0.6f;
+			defense = Math.max(defense, 2);
+			//defense = MathUtils.log2(defense);
+			
+			float reducedAttack = scaledAttack / defense;
+			
+			damage += reducedAttack;
 		}
-		
-		float attack = (1 * attackScale ) / 1;
-		
-		return (int)Math.ceil(attack);
+				
+		return (int)Math.ceil(damage);
 	}
 }

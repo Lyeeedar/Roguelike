@@ -7,9 +7,12 @@
 		<Name>Skills/SpikeTrap</Name>
 	</Icon>
 	
-	<OnTurnEffects>
-		<DOT>
-			<DPS>1</DPS>
-		</DOT>
-	</OnTurnEffects>
+	<Events>
+		<OnTurn>
+			<DOT>
+				<Damage>1</Damage>
+			</DOT>
+		</OnTurn>
+	</Events>
+	
 </StatusEffect>

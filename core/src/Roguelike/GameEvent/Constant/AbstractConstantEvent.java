@@ -1,26 +1,28 @@
-package Roguelike.StatusEffect.OnTurn;
+package Roguelike.GameEvent.Constant;
 
 import java.util.HashMap;
+
+import Roguelike.Global.Statistics;
+import Roguelike.Global.Tier1Element;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
-import Roguelike.StatusEffect.StatusEffect;
-
-public abstract class AbstractOnTurnEffect
+public abstract class AbstractConstantEvent
 {
-	public abstract void evaluate(StatusEffect effect, float time);
 	public abstract void parse(Element xml);
+	public abstract int getStatistic(Statistics s);
+	public abstract int getAttunement(Tier1Element el);
 	
-	public static AbstractOnTurnEffect load(Element xml)
+	public static AbstractConstantEvent load(Element xml)
 	{		
-		Class<AbstractOnTurnEffect> c = ClassMap.get(xml.getName());
-		AbstractOnTurnEffect type = null;
+		Class<AbstractConstantEvent> c = ClassMap.get(xml.getName());
+		AbstractConstantEvent type = null;
 		
 		try
 		{
-			type = (AbstractOnTurnEffect)ClassReflection.newInstance(c);
+			type = (AbstractConstantEvent)ClassReflection.newInstance(c);
 		} 
 		catch (ReflectionException e)
 		{
@@ -35,6 +37,6 @@ public abstract class AbstractOnTurnEffect
 	public static final HashMap<String, Class> ClassMap = new HashMap<String, Class>();
 	static
 	{
-		ClassMap.put("DOT", DamageOverTimeEffect.class);
+		
 	}
 }

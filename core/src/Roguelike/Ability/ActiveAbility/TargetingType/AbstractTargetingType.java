@@ -18,7 +18,7 @@ public abstract class AbstractTargetingType
 	
 	public static AbstractTargetingType load(Element xml)
 	{		
-		Class<AbstractTargetingType> c = ClassMap.get(xml.getName());
+		Class<AbstractTargetingType> c = ClassMap.get(xml.getName().toUpperCase());
 		AbstractTargetingType type = null;
 		
 		try
@@ -38,9 +38,9 @@ public abstract class AbstractTargetingType
 	public static final HashMap<String, Class> ClassMap = new HashMap<String, Class>();
 	static
 	{
-		ClassMap.put("Self", TargetingTypeSelf.class);
-		ClassMap.put("Entity", TargetingTypeEntity.class);
-		ClassMap.put("Tile", TargetingTypeTile.class);
-		ClassMap.put("Direction", TargetingTypeDirection.class);
+		ClassMap.put("SELF", TargetingTypeSelf.class);
+		ClassMap.put("ENTITY", TargetingTypeEntity.class);
+		ClassMap.put("TILE", TargetingTypeTile.class);
+		ClassMap.put("DIRECTION", TargetingTypeDirection.class);
 	}
 }

@@ -61,11 +61,11 @@ public class TabPanel extends WidgetGroup
 		{
 			if (tab == selectedTab)
 			{
-				buttonUp.render(batch, (int)xoffset, (int)(y+yoffset), tabHeaderSize, tabHeaderSize);
+				buttonDown.render(batch, (int)xoffset, (int)(y+yoffset), tabHeaderSize, tabHeaderSize);
 			}
 			else
 			{
-				buttonDown.render(batch, (int)xoffset, (int)(y+yoffset), tabHeaderSize, tabHeaderSize);
+				buttonUp.render(batch, (int)xoffset, (int)(y+yoffset), tabHeaderSize, tabHeaderSize);
 			}
 			
 			tab.header.render(batch, (int)xoffset, (int)(y+yoffset), tabHeaderSize, tabHeaderSize);

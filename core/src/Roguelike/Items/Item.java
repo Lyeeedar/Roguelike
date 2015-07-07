@@ -14,10 +14,12 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import Roguelike.AssetManager;
 import Roguelike.Entity.Inventory;
+import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Global.Statistics;
+import Roguelike.Global.Tier1Element;
 
-public class Item
+public class Item extends GameEventHandler
 {
 	public enum EquipmentSlot
 	{
@@ -59,15 +61,6 @@ public class Item
 	public EquipmentSlot Slot;
 	public ItemType Type;
 	public int Count;
-	public WordList Words;
-	
-	private EnumMap<Statistics, Integer> m_statistics = Statistics.getStatisticsBlock();
-	
-	//----------------------------------------------------------------------
-	public int getStatistic(Statistics stat)
-	{
-		return m_statistics.get(stat);
-	}
 	
 	//----------------------------------------------------------------------
 	public Table createTable(Skin skin, Inventory inventory)
@@ -90,8 +83,8 @@ public class Item
 			{
 				for (Statistics stat : Statistics.values())
 				{
-					int oldval = other.m_statistics.get(stat);
-					int newval = m_statistics.get(stat);
+					int oldval = other.getStatistic(stat);
+					int newval = getStatistic(stat);
 					
 					if (oldval != 0 || newval != 0)
 					{
@@ -121,7 +114,7 @@ public class Item
 			{
 				for (Statistics stat : Statistics.values())
 				{
-					int val = m_statistics.get(stat);
+					int val = getStatistic(stat);
 					
 					if (val != 0)
 					{
@@ -175,12 +168,6 @@ public class Item
 		Name = xmlElement.get("Name", Name);		
 		Description = xmlElement.get("Description",Description);
 		
-		Element statElement = xmlElement.getChildByName("Statistics");
-		if (statElement != null)
-		{
-			Statistics.load(statElement, m_statistics);
-		}
-		
 		Element iconElement = xmlElement.getChildByName("Icon");	
 		if (iconElement != null)
 		{
@@ -191,11 +178,12 @@ public class Item
 		if (hitElement != null)
 		{
 			HitEffect = AssetManager.loadSprite(hitElement);
-			
-			if (hitElement.get("WordList", null) != null)
-			{
-				Words = WordList.loadWordList(hitElement.get("WordList"));
-			}
+		}
+		
+		Element eventsElement = xmlElement.getChildByName("Events");
+		if (eventsElement != null)
+		{
+			super.parse(eventsElement);
 		}
 		
 		Slot = xmlElement.get("Slot", null) != null ? EquipmentSlot.valueOf(xmlElement.get("Slot").toUpperCase()) : Slot;

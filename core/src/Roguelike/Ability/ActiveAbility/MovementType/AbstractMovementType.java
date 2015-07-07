@@ -25,7 +25,7 @@ public abstract class AbstractMovementType
 	
 	public static AbstractMovementType load(Element xml)
 	{
-		Class<AbstractMovementType> c = ClassMap.get(xml.getName());
+		Class<AbstractMovementType> c = ClassMap.get(xml.getName().toUpperCase());
 		AbstractMovementType type = null;
 		
 		try
@@ -45,7 +45,7 @@ public abstract class AbstractMovementType
 	public static final HashMap<String, Class> ClassMap = new HashMap<String, Class>();
 	static
 	{
-		ClassMap.put("Smite", MovementTypeSmite.class);
-		ClassMap.put("Bolt", MovementTypeBolt.class);
+		ClassMap.put("SMITE", MovementTypeSmite.class);
+		ClassMap.put("BOLT", MovementTypeBolt.class);
 	}
 }

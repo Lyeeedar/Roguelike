@@ -68,34 +68,34 @@ public abstract class BehaviourTreeNode
 	static
 	{
 		// Selectors
-		ClassMap.put("Priority", SelectorPriority.class);
-		ClassMap.put("Any", SelectorAny.class);
-		ClassMap.put("Sequence", SelectorSequence.class);
-		ClassMap.put("Random", SelectorRandom.class);
-		ClassMap.put("Until", SelectorUntil.class);
+		ClassMap.put("PRIORITY", SelectorPriority.class);
+		ClassMap.put("ANY", SelectorAny.class);
+		ClassMap.put("SEQUENCE", SelectorSequence.class);
+		ClassMap.put("RANDOM", SelectorRandom.class);
+		ClassMap.put("UNTIL", SelectorUntil.class);
 		
 		//Decorators
-		ClassMap.put("DataScope", DecoratorDataScope.class);
-		ClassMap.put("Import", DecoratorImport.class);
-		ClassMap.put("Invert", DecoratorInvert.class);
-		ClassMap.put("Repeat", DecoratorRepeat.class);
-		ClassMap.put("SetState", DecoratorSetState.class);
+		ClassMap.put("DATASCOPE", DecoratorDataScope.class);
+		ClassMap.put("IMPORT", DecoratorImport.class);
+		ClassMap.put("INVERT", DecoratorInvert.class);
+		ClassMap.put("REPEAT", DecoratorRepeat.class);
+		ClassMap.put("SETSTATE", DecoratorSetState.class);
 		
 		//Conditionals
-		ClassMap.put("CheckValue", ConditionalCheckValue.class);
+		ClassMap.put("CHECKVALUE", ConditionalCheckValue.class);
 		
 		//Actions
-		ClassMap.put("ClearValue", ActionClearValue.class);
-		ClassMap.put("ConvertTo", ActionConvertTo.class);
-		ClassMap.put("GetAllVisible", ActionGetAllVisible.class);
-		ClassMap.put("GetAllAbilities", ActionGetAllAbilities.class);
-		ClassMap.put("MoveTo", ActionMoveTo.class);
-		ClassMap.put("PickClosest", ActionPickClosest.class);
-		ClassMap.put("PickRandom", ActionPickRandom.class);
-		ClassMap.put("ProcessInput", ActionProcessInput.class);
-		ClassMap.put("SetValue", ActionSetValue.class);
-		ClassMap.put("UseAbility", ActionUseAbility.class);
-		ClassMap.put("Wait", ActionWait.class);
+		ClassMap.put("CLEARVALUE", ActionClearValue.class);
+		ClassMap.put("CONVERTTO", ActionConvertTo.class);
+		ClassMap.put("GETALLVISIBLE", ActionGetAllVisible.class);
+		ClassMap.put("GETALLABILITIES", ActionGetAllAbilities.class);
+		ClassMap.put("MOVETO", ActionMoveTo.class);
+		ClassMap.put("PICKCLOSEST", ActionPickClosest.class);
+		ClassMap.put("PICKRANDOM", ActionPickRandom.class);
+		ClassMap.put("PROCESSINPUT", ActionProcessInput.class);
+		ClassMap.put("SETVALUE", ActionSetValue.class);
+		ClassMap.put("USEABILITY", ActionUseAbility.class);
+		ClassMap.put("WAIT", ActionWait.class);
 	}
 	
 	//----------------------------------------------------------------------

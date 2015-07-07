@@ -20,9 +20,5 @@
 	<Type>Weapon</Type>
 	<Statistics>
 		<Weight>2</Weight>
-		<MetalAttack>1</MetalAttack>
-		<FireAttack>1</FireAttack>
-
-		<MetalDefense>1</MetalDefense>
 	</Statistics>
 </Item>

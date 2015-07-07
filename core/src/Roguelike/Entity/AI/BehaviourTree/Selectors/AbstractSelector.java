@@ -42,7 +42,7 @@ public abstract class AbstractSelector extends BehaviourTreeContainer
 
 			try
 			{
-				Class<BehaviourTreeNode> c = ClassMap.get(xml.getName());
+				Class<BehaviourTreeNode> c = ClassMap.get(xml.getName().toUpperCase());
 				BehaviourTreeNode node = (BehaviourTreeNode)ClassReflection.newInstance(c);
 				
 				addNode(node);

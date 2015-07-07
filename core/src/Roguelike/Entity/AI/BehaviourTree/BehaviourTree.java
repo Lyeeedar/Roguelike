@@ -53,7 +53,7 @@ public class BehaviourTree
 
 		try
 		{			
-			Class<BehaviourTreeNode> c = BehaviourTreeNode.ClassMap.get(xmlElement.getName());
+			Class<BehaviourTreeNode> c = BehaviourTreeNode.ClassMap.get(xmlElement.getName().toUpperCase());
 			node = (BehaviourTreeNode)ClassReflection.newInstance(c);
 
 			node.Data = new HashMap<String, Object>();

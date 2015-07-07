@@ -9,10 +9,13 @@ import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistics;
+import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree;
 import Roguelike.Entity.Tasks.AbstractTask;
+import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
@@ -57,13 +60,16 @@ public class Entity
 			}
 		}
 		
+		for (GameEventHandler h : getAllHandlers())
+		{
+			h.onTurn(this, cost);
+		}
+		
 		Iterator<StatusEffect> itr = statusEffects.iterator();
 		while (itr.hasNext())
 		{
 			StatusEffect se = itr.next();
-			
-			se.onTurn(cost);
-			
+						
 			if(se.duration <= 0)
 			{
 				itr.remove();
@@ -72,19 +78,74 @@ public class Entity
 	}
 	
 	//----------------------------------------------------------------------
+	private Array<GameEventHandler> getAllHandlers()
+	{
+		Array<GameEventHandler> handlers = new Array<GameEventHandler>();
+		
+		for (PassiveAbility pa : m_slottedPassiveAbilities)
+		{
+			if (pa != null)
+			{
+				handlers.add(pa);
+			}
+		}
+		
+		for (StatusEffect se : statusEffects)
+		{
+			handlers.add(se);
+		}
+		
+		for (EquipmentSlot slot : EquipmentSlot.values())
+		{
+			Item i = m_inventory.getEquip(slot);
+			if (i != null)
+			{
+				handlers.add(i);
+			}
+		}
+		
+		return handlers;
+	}
+	
+	//----------------------------------------------------------------------
 	public void attack(Entity other, Direction dir)
 	{
 		Item weapon = getInventory().getEquip(EquipmentSlot.MAINWEAPON);
 		Sprite hitEffect = weapon != null ? weapon.HitEffect : m_defaultHitEffect;
 		
-		int damage = Global.calculateDamage(getStatistics(), other.getStatistics());		
-		other.HP -= damage;		
+		int damage = Global.calculateDamage(getAttunement(), other.getAttunement(), weapon != null ? weapon.getAttunements() : Tier1Element.getElementMap());
+		DamageObject damObj = new DamageObject(this, other, damage);
+		
+		for (GameEventHandler handler : getAllHandlers())
+		{
+			handler.onDealDamage(damObj);
+		}
+		
+		for (GameEventHandler handler : other.getAllHandlers())
+		{
+			handler.onReceiveDamage(damObj);
+		}
+		
+		other.applyDamage(damObj.damage);
 		
 		// add hit effects
 		SpriteEffect e = new SpriteEffect(hitEffect, dir, null);
 		e.Sprite.rotation = dir.GetAngle();
 		
 		other.SpriteEffects.add(e);
+	}
+	
+	//----------------------------------------------------------------------
+	public void applyDamage(int dam)
+	{
+		HP = Math.max(HP-dam, 0);
+	}
+	
+	//----------------------------------------------------------------------
+	public void applyHealing(int heal)
+	{
+		HP = Math.min(HP+heal, getStatistic(Statistics.MAXHP));
+		
 	}
 	
 	//----------------------------------------------------------------------
@@ -156,6 +217,12 @@ public class Entity
 		{
 			Statistics.load(statElement, m_statistics);
 		}
+		
+		Element attunementElement = xmlElement.getChildByName("Attunement");
+		if (attunementElement != null)
+		{
+			Tier1Element.load(attunementElement, m_attunement);
+		}
 				
 		Element activeAbilityElement = xmlElement.getChildByName("ActiveAbilities");
 		if (activeAbilityElement != null)
@@ -201,6 +268,11 @@ public class Entity
 			}
 		}
 		
+		for (StatusEffect se : statusEffects)
+		{
+			val += se.getStatistic(stat);
+		}
+		
 		val += m_inventory.getStatistic(stat);
 		
 		return val;
@@ -216,6 +288,35 @@ public class Entity
 		}
 		
 		return newMap;
+	}
+	
+	//----------------------------------------------------------------------
+	public EnumMap<Tier1Element, Integer> getAttunement()
+	{
+		EnumMap<Tier1Element, Integer> map = new EnumMap<Tier1Element, Integer>(Tier1Element.class);
+
+		for (Tier1Element el : Tier1Element.values())
+		{
+			int val = m_attunement.get(el);
+			val += m_inventory.getAttunement(el);
+			
+			for (StatusEffect se : statusEffects)
+			{
+				val += se.getAttunement(el);
+			}
+			
+			for (PassiveAbility passive : m_slottedPassiveAbilities)
+			{
+				if (passive != null)
+				{
+					val += passive.getAttunement(el);
+				}
+			}
+
+			map.put(el, val);
+		}
+
+		return map;
 	}
 	
 	public float getActionDelay()
@@ -283,6 +384,7 @@ public class Entity
 
 	//----------------------------------------------------------------------
 	private EnumMap<Statistics, Integer> m_statistics = Statistics.getStatisticsBlock();
+	private EnumMap<Tier1Element, Integer> m_attunement = Tier1Element.getElementMap();
 	private PassiveAbility[] m_slottedPassiveAbilities = new PassiveAbility[Global.NUM_ABILITY_SLOTS];
 	private ActiveAbility[] m_slottedActiveAbilities = new ActiveAbility[Global.NUM_ABILITY_SLOTS];
 	private Inventory m_inventory = new Inventory();

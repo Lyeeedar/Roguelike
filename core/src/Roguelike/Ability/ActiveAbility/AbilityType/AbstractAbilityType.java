@@ -30,7 +30,7 @@ public abstract class AbstractAbilityType
 	
 	public static AbstractAbilityType load(Element xml)
 	{		
-		Class<AbstractAbilityType> c = ClassMap.get(xml.getName());
+		Class<AbstractAbilityType> c = ClassMap.get(xml.getName().toUpperCase());
 		AbstractAbilityType type = null;
 		
 		try
@@ -50,7 +50,7 @@ public abstract class AbstractAbilityType
 	public static final HashMap<String, Class> ClassMap = new HashMap<String, Class>();
 	static
 	{
-		ClassMap.put("Harmful", AbilityTypeHarmful.class);
-		ClassMap.put("Helpful", AbilityTypeHelpful.class);
+		ClassMap.put("HARMFUL", AbilityTypeHarmful.class);
+		ClassMap.put("HELPFUL", AbilityTypeHelpful.class);
 	}
 }
