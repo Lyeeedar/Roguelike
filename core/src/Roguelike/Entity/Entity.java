@@ -5,6 +5,8 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
@@ -113,7 +115,7 @@ public class Entity
 		Item weapon = getInventory().getEquip(EquipmentSlot.MAINWEAPON);
 		Sprite hitEffect = weapon != null ? weapon.HitEffect : m_defaultHitEffect;
 		
-		int damage = Global.calculateDamage(getAttunement(), other.getAttunement(), weapon != null ? weapon.getAttunements() : Tier1Element.getElementMap());
+		int damage = Global.calculateDamage(getAttunements(), other.getAttunements(), weapon != null ? weapon.getAttunements() : Tier1Element.getElementMap());
 		DamageObject damObj = new DamageObject(this, other, damage);
 		
 		for (GameEventHandler handler : getAllHandlers())
@@ -291,28 +293,35 @@ public class Entity
 	}
 	
 	//----------------------------------------------------------------------
-	public EnumMap<Tier1Element, Integer> getAttunement()
+	public int getAttunement(Tier1Element el)
+	{
+		int val = m_attunement.get(el);
+		val += m_inventory.getAttunement(el);
+		
+		for (StatusEffect se : statusEffects)
+		{
+			val += se.getAttunement(el);
+		}
+		
+		for (PassiveAbility passive : m_slottedPassiveAbilities)
+		{
+			if (passive != null)
+			{
+				val += passive.getAttunement(el);
+			}
+		}
+		
+		return val;
+	}
+	
+	//----------------------------------------------------------------------
+	public EnumMap<Tier1Element, Integer> getAttunements()
 	{
 		EnumMap<Tier1Element, Integer> map = new EnumMap<Tier1Element, Integer>(Tier1Element.class);
 
 		for (Tier1Element el : Tier1Element.values())
 		{
-			int val = m_attunement.get(el);
-			val += m_inventory.getAttunement(el);
-			
-			for (StatusEffect se : statusEffects)
-			{
-				val += se.getAttunement(el);
-			}
-			
-			for (PassiveAbility passive : m_slottedPassiveAbilities)
-			{
-				if (passive != null)
-				{
-					val += passive.getAttunement(el);
-				}
-			}
-
+			int val = getAttunement(el);
 			map.put(el, val);
 		}
 
@@ -371,6 +380,37 @@ public class Entity
 		}
 		
 		m_slottedPassiveAbilities[index] = pa;
+	}
+	
+	public Expression fillExpressionWithValues(ExpressionBuilder expB, String prefix)
+	{
+		for (Tier1Element el : Tier1Element.values())
+		{
+			expB.variable(prefix+el.toString());
+		}
+		
+		for (Statistics s : Statistics.values())
+		{
+			expB.variable(prefix+s.toString());
+		}
+		
+		expB.variable(prefix+"HP");
+		
+		Expression exp = expB.build();
+		
+		for (Tier1Element el : Tier1Element.values())
+		{
+			exp.setVariable(prefix+el.toString(), getAttunement(el));
+		}
+		
+		for (Statistics s : Statistics.values())
+		{
+			exp.setVariable(prefix+s.toString(), getStatistic(s));
+		}
+		
+		exp.setVariable(prefix+"HP", HP);
+		
+		return exp;
 	}
 	
 	//endregion Public Methods

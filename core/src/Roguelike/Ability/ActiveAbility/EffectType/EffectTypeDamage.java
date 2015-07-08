@@ -30,7 +30,7 @@ public class EffectTypeDamage extends AbstractEffectType
 		
 		if (tile.Entity != null)
 		{
-			int damage = Global.calculateDamage(aa.caster.getAttunement(), tile.Entity.getAttunement(), m_attunement);
+			int damage = Global.calculateDamage(aa.caster.getAttunements(), tile.Entity.getAttunements(), m_attunement);
 			
 			tile.Entity.applyDamage(damage);
 			tile.Entity.SpriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));

@@ -246,7 +246,7 @@ public class Global
 		{
 			int src = srcAttunement.get(el);
 			int attack = attackAttunement.get(el);
-			attack = Math.max(attack, 1);
+			attack = Math.max(attack, 2);
 			
 			float scaledAttack = src != 0 ? attack * (1.0f + src / 100.0f) : attack;
 			//scaledAttack = MathUtils.log2(scaledAttack);
@@ -255,7 +255,7 @@ public class Global
 			int neutral = targetAttunement.get(el);
 			int strength = targetAttunement.get(el.Strength);
 			
-			float defense = weakness * -0.5f + neutral * 0.3f + strength * 0.6f;
+			float defense = neutral;//weakness * -0.5f + neutral * 0.3f + strength * 0.6f;
 			defense = Math.max(defense, 2);
 			//defense = MathUtils.log2(defense);
 			
