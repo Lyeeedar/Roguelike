@@ -26,7 +26,7 @@ public class Level
 {
 	public Entity player;
 	
-	public Color Ambient = new Color(0.01f, 0.01f, 0.4f, 1.0f);
+	public Color Ambient = new Color(0.1f, 0.1f, 0.3f, 1.0f);
 	
 	private SeenTile[][] SeenGrid;
 	private GameTile[][] Grid;
@@ -88,7 +88,7 @@ public class Level
 					s.seen = true;
 					
 					s.History.clear();
-					s.History.add(new SeenHistoryItem(Grid[x][y].TileData.FloorSprite, Grid[x][y].TileData.Description));
+					s.History.add(new SeenHistoryItem(Grid[x][y].TileData.floorSprite, Grid[x][y].TileData.Description));
 				}
 			}
 		}
@@ -107,7 +107,7 @@ public class Level
 					s.seen = true;
 					
 					s.History.clear();
-					s.History.add(new SeenHistoryItem(Grid[x][y].TileData.FloorSprite, Grid[x][y].TileData.Description));
+					s.History.add(new SeenHistoryItem(Grid[x][y].TileData.floorSprite, Grid[x][y].TileData.Description));
 										
 					if (Grid[x][y].Entity != null)
 					{						
@@ -141,6 +141,11 @@ public class Level
 	
 	private void calculateSingleLight(Light l)
 	{
+		if (Math.max(Math.abs(player.Tile.x - l.lx), Math.abs(player.Tile.y - l.ly)) > player.getStatistic(Statistics.RANGE)+(int)Math.ceil(l.Intensity))
+		{
+			return; // too far away
+		}
+		
 		Array<int[]> output = new Array<int[]>();
 		ShadowCaster shadow = new ShadowCaster(Grid, (int)Math.ceil(l.Intensity));
 		shadow.ComputeFOV(l.lx, l.ly, output);
@@ -552,7 +557,8 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{
-				sprites.add(Grid[x][y].TileData.FloorSprite);
+				sprites.add(Grid[x][y].TileData.floorSprite);
+				if (Grid[x][y].TileData.featureSprite != null) { sprites.add(Grid[x][y].TileData.featureSprite); }
 				
 				if (Grid[x][y].Entity != null)
 				{
@@ -609,6 +615,14 @@ public class Level
 			for (int y = 0; y < height; y++)
 			{
 				GameTile tile = Grid[x][y];
+				
+				if (tile.TileData.light != null)
+				{
+					Light l = tile.TileData.light.copy();
+					l.lx = x;
+					l.ly = y;
+					list.add(l);
+				}
 				
 				for (SpriteEffect se : tile.SpriteEffects)
 				{

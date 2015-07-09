@@ -78,9 +78,9 @@ public class VillageGenerator
 		Sprite grass = AssetManager.loadSprite("Objects/Floor", 0.5f, new int[]{16, 16}, new int[]{8, 7});
 		Sprite ceiling = AssetManager.loadSprite("Objects/Wall", 0.5f, new int[]{16, 16}, new int[]{10, 27});
 		
-		TileData wallData = new TileData(wall, true, false, "wall");
-		TileData floorData = new TileData(floor, false, true, "floor");
-		TileData grassData = new TileData(grass, false, true, "grass");
+		TileData wallData = new TileData(wall, null, null, true, false, "wall");
+		TileData floorData = new TileData(floor, null, null, false, true, "floor");
+		TileData grassData = new TileData(grass, null, null, false, true, "grass");
 		
 		GameTile[][] actualTiles = new GameTile[width][height];
 		Level level = new Level(actualTiles);

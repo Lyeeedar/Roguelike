@@ -18,6 +18,7 @@ public class AbilityPool
 	public AbilityPool()
 	{
 		loadAbilityLine("MetalAdept");
+		loadAbilityLine("Ravager/Ravager");
 	}
 	
 	public void loadAbilityLine(String name)

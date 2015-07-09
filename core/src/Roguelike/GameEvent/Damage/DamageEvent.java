@@ -1,4 +1,4 @@
-package Roguelike.GameEvent.OnTurn;
+package Roguelike.GameEvent.Damage;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -10,7 +10,7 @@ import exp4j.Functions.RandomFunction;
 import exp4j.Helpers.EquationHelper;
 import exp4j.Operators.BooleanOperators;
 
-public class HealOverTimeEvent extends AbstractOnTurnEvent
+public class DamageEvent extends AbstractOnDamageEvent
 {
 	String condition;
 	
@@ -18,14 +18,18 @@ public class HealOverTimeEvent extends AbstractOnTurnEvent
 	float remainder;
 	
 	@Override
-	public boolean handle(Entity entity, float time)
+	public boolean handle(DamageObject obj)
 	{
 		if (condition != null)
 		{
 			ExpressionBuilder expB = new ExpressionBuilder(condition);
 			BooleanOperators.applyOperators(expB);
 			expB.function(new RandomFunction());
-			entity.fillExpressionBuilderWithValues(expB, "");
+			
+			obj.attacker.fillExpressionBuilderWithValues(expB, "ATK_");
+			obj.defender.fillExpressionBuilderWithValues(expB, "DEF_");
+			
+			expB.variable("DAMAGE");
 			
 			Expression exp = EquationHelper.tryBuild(expB);
 			if (exp == null)
@@ -33,7 +37,10 @@ public class HealOverTimeEvent extends AbstractOnTurnEvent
 				return false;
 			}
 			
-			entity.fillExpressionWithValues(exp, "");
+			obj.attacker.fillExpressionWithValues(exp, "ATK_");
+			obj.defender.fillExpressionWithValues(exp, "DEF_");
+			
+			exp.setVariable("DAMAGE", obj.damage);
 			
 			double conditionVal = exp.evaluate();
 			
@@ -46,7 +53,11 @@ public class HealOverTimeEvent extends AbstractOnTurnEvent
 		ExpressionBuilder expB = new ExpressionBuilder(equation);
 		BooleanOperators.applyOperators(expB);
 		expB.function(new RandomFunction());
-		entity.fillExpressionBuilderWithValues(expB, "");
+		
+		obj.attacker.fillExpressionBuilderWithValues(expB, "ATK_");
+		obj.defender.fillExpressionBuilderWithValues(expB, "DEF_");
+		
+		expB.variable("DAMAGE");
 		
 		Expression exp = EquationHelper.tryBuild(expB);
 		if (exp == null)
@@ -54,15 +65,12 @@ public class HealOverTimeEvent extends AbstractOnTurnEvent
 			return false;
 		}
 		
-		entity.fillExpressionWithValues(exp, "");
+		obj.attacker.fillExpressionWithValues(exp, "ATK_");
+		obj.defender.fillExpressionWithValues(exp, "DEF_");
 		
-		float raw = (float)exp.evaluate() * time + remainder;
+		exp.setVariable("DAMAGE", obj.damage);
 		
-		int rounded = (int)Math.floor(raw);
-		
-		remainder = raw - rounded;
-		
-		entity.applyHealing(rounded);
+		obj.damage = (int)Math.max(0, obj.damage + exp.evaluate());
 		
 		return true;
 	}
@@ -71,7 +79,6 @@ public class HealOverTimeEvent extends AbstractOnTurnEvent
 	public void parse(Element xml)
 	{
 		condition = xml.get("Condition", null);
-		equation = xml.get("Heal");
+		equation = xml.get("Damage");
 	}
-
 }

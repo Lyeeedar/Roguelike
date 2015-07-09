@@ -40,6 +40,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -260,7 +261,8 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 				if (gtile.GetVisible())
 				{
 					batch.setColor(gtile.Light);					
-					gtile.TileData.FloorSprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
+					gtile.TileData.floorSprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
+					if (gtile.TileData.featureSprite != null) { gtile.TileData.featureSprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize); }
 					
 					for (Item i : gtile.Items)
 					{
@@ -290,6 +292,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 				}
 				else if (stile.seen)
 				{
+					//batch.setShader(GrayscaleShader.Instance);
 					batch.setColor(level.Ambient);
 					
 					for (SeenHistoryItem hist : stile.History)
@@ -298,6 +301,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					}				
 					
 					batch.setColor(Color.WHITE);
+					//batch.setShader(null);
 				}
 			}
 		}
@@ -307,16 +311,18 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			int x = entity.Tile.x;
 			int y = entity.Tile.y;
 			
-			batch.setColor(entity.Tile.Light);
-			
 			int cx = x*TileSize + offsetx;
 			int cy = y*TileSize + offsety;
+			
+			EntityStatusRenderer.draw(entity, batch, cx, cy, TileSize, TileSize, 1.0f/8.0f);
 			
 			if (entity.Sprite.SpriteAnimation != null)
 			{
 				cx += TileSize3 * entity.Sprite.SpriteAnimation.Alpha * entity.Sprite.SpriteAnimation.Direction.GetX();
 				cy += TileSize3 * entity.Sprite.SpriteAnimation.Alpha * entity.Sprite.SpriteAnimation.Direction.GetY();
 			}
+			
+			batch.setColor(entity.Tile.Light);
 			
 			entity.Sprite.render(batch, cx, cy, TileSize, TileSize);
 			
@@ -389,16 +395,16 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			batch.setColor(Color.WHITE);
 		}
 		
-		for (Entity entity : toBeDrawn)
-		{
-			int x = entity.Tile.x;
-			int y = entity.Tile.y;
-						
-			int cx = x*TileSize + offsetx;
-			int cy = y*TileSize + offsety;
-			
-			EntityStatusRenderer.draw(entity, batch, cx, cy, TileSize, TileSize, 1.0f/8.0f);
-		}
+//		for (Entity entity : toBeDrawn)
+//		{
+//			int x = entity.Tile.x;
+//			int y = entity.Tile.y;
+//						
+//			int cx = x*TileSize + offsetx;
+//			int cy = y*TileSize + offsety;
+//			
+//			EntityStatusRenderer.draw(entity, batch, cx, cy, TileSize, TileSize, 1.0f/8.0f);
+//		}
 		
 		{
 			EntityStatusRenderer.draw(level.player, batch, 20, Gdx.graphics.getHeight() - 120, Gdx.graphics.getWidth()/4, 100, 1.0f/4.0f);
@@ -704,4 +710,38 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		
 	//endregion Data
 	//####################################################################//
+	
+	public static class GrayscaleShader {
+	    static String vertexShader = "attribute vec4 a_position;\n" +
+	            "attribute vec4 a_color;\n" +
+	            "attribute vec2 a_texCoord0;\n" +
+	            "\n" +
+	            "uniform mat4 u_projTrans;\n" +
+	            "\n" +
+	            "varying vec4 v_color;\n" +
+	            "varying vec2 v_texCoords;\n" +
+	            "\n" +
+	            "void main() {\n" +
+	            "    v_color = a_color;\n" +
+	            "    v_texCoords = a_texCoord0;\n" +
+	            "    gl_Position = u_projTrans * a_position;\n" +
+	            "}";
+
+	    static String fragmentShader = "#ifdef GL_ES\n" +
+	            "    precision mediump float;\n" +
+	            "#endif\n" +
+	            "\n" +
+	            "varying vec4 v_color;\n" +
+	            "varying vec2 v_texCoords;\n" +
+	            "uniform sampler2D u_texture;\n" +
+	            "\n" +
+	            "void main() {\n" +
+	            "  vec4 c = v_color * texture2D(u_texture, v_texCoords);\n" +
+	            "  float grey = (c.r + c.g + c.b) / 3.0;\n" +
+	            "  gl_FragColor = vec4(grey, grey, grey, c.a);\n" +
+	            "}";
+
+	    public static ShaderProgram Instance = new ShaderProgram(vertexShader,
+	            fragmentShader);
+	}
 }

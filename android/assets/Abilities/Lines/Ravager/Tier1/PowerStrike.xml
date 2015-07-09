@@ -1,0 +1,46 @@
+<ActiveAbility>
+
+	<Name>Power Strike</Name>
+	<Description>Strike your opponent with a powerful blow.</Description>
+	
+	<Cooldown>10</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Skills/PowerStrike</Name>
+	</Icon>
+	
+	<HitSprite>
+		<Name>strike/strike</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</HitSprite>
+	
+	<Type>
+		<Harmful>
+		</Harmful>
+	</Type>
+	
+	<Targeting>
+		<Entity>
+			<NotSelf></NotSelf>
+		</Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Damage>
+			<Attunement>
+				<Metal>METAL*1.5</Metal>
+				<Wood>WOOD*1.5</Wood>
+				<Air>AIR*1.5</Air>
+				<Water>WATER*1.5</Water>
+				<Fire>FIRE*1.5</Fire>
+			</Attunement>
+		</Damage>
+	</Effect>
+	
+</ActiveAbility>

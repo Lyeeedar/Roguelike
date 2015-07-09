@@ -1,0 +1,22 @@
+<PassiveAbility>
+	<Name>Bloodthirst</Name>
+	<Description>The sight of blood fills you with terrible joy, spurring you onto even greater heights of violence.</Description>
+	<Icon>
+		<Name>Skills/Bloodlust</Name>
+	</Icon>
+	
+	<Events>
+		<OnDealDamage>
+			<Damage>
+				<Damage>DAMAGE*(1+0.05*ATK_BLOODLUST)</Damage>
+			</Damage>
+		</OnDealDamage>
+		<OnReceiveDamage>
+			<Status>
+				<Condition>rnd(1)&lt;0.2</Condition>
+				<Defender>Bloodlust</Defender>
+			</Status>
+		</OnReceiveDamage>
+	</Events>
+	
+</PassiveAbility>

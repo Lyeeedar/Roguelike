@@ -1,0 +1,26 @@
+<Entity Extends="human" >
+	<Name>Orc</Name>
+
+	<Sprite>
+		<Name>Player</Name>
+		<UpdateRate>0.5</UpdateRate>
+		<Size>16</Size>
+		<IndexX>7</IndexX>
+		<IndexY>12</IndexY>
+	</Sprite>
+	
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Orc</Faction>
+	</Factions>
+	
+	<Light>
+		<Colour>
+			<Red>0.7</Red>
+			<Green>0.4</Green>
+			<Blue>0.4</Blue></Colour>
+		<Intensity>3</Intensity>
+	</Light>
+	
+</Entity>

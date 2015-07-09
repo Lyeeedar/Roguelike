@@ -1,0 +1,10 @@
+<StatusEffect>
+	<Name>Bloodlust</Name>
+	<Description>You desire nothing more than to see the world covered in the blood of your foes.</Description>
+	<Duration>10</Duration>
+	
+	<Icon>
+		<Name>Skills/Bloodlust</Name>
+	</Icon>
+	
+</StatusEffect>

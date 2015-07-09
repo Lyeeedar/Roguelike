@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
 import Roguelike.Entity.Entity;
+import Roguelike.Entity.Entity.StatusEffectStack;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.AssetManager;
 import Roguelike.Global.Statistics;
@@ -47,7 +48,7 @@ public class EntityStatusRenderer
 		batch.draw(white, x, y+height-barheight, width*val, barheight);
 		batch.setColor(Color.WHITE);
 		
-		Array<StatusEffectStack> stacks = stackStatusEffects(entity);
+		Array<StatusEffectStack> stacks = entity.stackStatusEffects();
 		
 		int statusTileSize = Math.min(width / 3, 32);
 		int sx = x;
@@ -70,7 +71,7 @@ public class EntityStatusRenderer
 	
 	public static Table getMouseOverTable(Entity entity, int x, int y, int width, int height, float heightScale, int mousex, int mousey, Skin skin)
 	{
-		Array<StatusEffectStack> stacks = stackStatusEffects(entity);
+		Array<StatusEffectStack> stacks = entity.stackStatusEffects();
 		
 		float barheight = height * heightScale;	
 		int statusTileSize = Math.min(width / 3, 32);
@@ -96,39 +97,4 @@ public class EntityStatusRenderer
 		return null;
 	}
 	
-	private static Array<StatusEffectStack> stackStatusEffects(Entity entity)
-	{
-		Array<StatusEffectStack> stacks = new Array<StatusEffectStack>();
-		
-		for (StatusEffect se : entity.statusEffects)
-		{
-			boolean found = false;
-			for (StatusEffectStack stack : stacks)
-			{
-				if (stack.effect.name.equals(se.name))
-				{
-					stack.count++;
-					found = true;
-					break;
-				}
-			}
-			
-			if (!found)
-			{
-				StatusEffectStack stack = new StatusEffectStack();
-				stack.count = 1;
-				stack.effect = se;
-				
-				stacks.add(stack);
-			}
-		}
-		
-		return stacks;
-	}
-	
-	private static class StatusEffectStack
-	{
-		public StatusEffect effect;
-		int count;
-	}
 }

@@ -43,6 +43,37 @@ public class Entity
 	//region Public Methods
 	
 	//----------------------------------------------------------------------
+	public Array<StatusEffectStack> stackStatusEffects()
+	{
+		Array<StatusEffectStack> stacks = new Array<StatusEffectStack>();
+		
+		for (StatusEffect se : statusEffects)
+		{
+			boolean found = false;
+			for (StatusEffectStack stack : stacks)
+			{
+				if (stack.effect.name.equals(se.name))
+				{
+					stack.count++;
+					found = true;
+					break;
+				}
+			}
+			
+			if (!found)
+			{
+				StatusEffectStack stack = new StatusEffectStack();
+				stack.count = 1;
+				stack.effect = se;
+				
+				stacks.add(stack);
+			}
+		}
+		
+		return stacks;
+	}	
+	
+	//----------------------------------------------------------------------
 	public void addStatusEffect(StatusEffect se)
 	{
 		se.attachedTo = this;
@@ -382,8 +413,10 @@ public class Entity
 		m_slottedPassiveAbilities[index] = pa;
 	}
 	
-	public Expression fillExpressionWithValues(ExpressionBuilder expB, String prefix)
+	public void fillExpressionBuilderWithValues(ExpressionBuilder expB, String prefix)
 	{
+		Array<StatusEffectStack> stacks = stackStatusEffects();
+		
 		for (Tier1Element el : Tier1Element.values())
 		{
 			expB.variable(prefix+el.toString());
@@ -396,7 +429,15 @@ public class Entity
 		
 		expB.variable(prefix+"HP");
 		
-		Expression exp = expB.build();
+		for (StatusEffectStack s : stacks)
+		{
+			expB.variable(s.effect.name.toUpperCase());
+		}			
+	}
+	
+	public void fillExpressionWithValues(Expression exp, String prefix)
+	{
+		Array<StatusEffectStack> stacks = stackStatusEffects();
 		
 		for (Tier1Element el : Tier1Element.values())
 		{
@@ -410,7 +451,10 @@ public class Entity
 		
 		exp.setVariable(prefix+"HP", HP);
 		
-		return exp;
+		for (StatusEffectStack s : stacks)
+		{
+			exp.setVariable(prefix+s.effect.name.toUpperCase(), s.count);
+		}		
 	}
 	
 	//endregion Public Methods
@@ -450,6 +494,13 @@ public class Entity
 	public HashSet<String> m_factions = new HashSet<String>();		
 	public BehaviourTree AI;
 	public ActiveAbility Channeling = null;
+	
+	//----------------------------------------------------------------------
+	public static class StatusEffectStack
+	{
+		public StatusEffect effect;
+		public int count;
+	}
 		
 	//endregion Data
 	//####################################################################//

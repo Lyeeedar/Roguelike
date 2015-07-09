@@ -1,0 +1,28 @@
+<AbilityLine>
+	<Name>Ravager</Name>
+	<Description>Fury and bloodthirst.</Description>
+	<Tiers>
+		<Tier>
+			<ActiveAbility>
+				<Name>../Lines/Ravager/Tier1/PowerStrike</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<PassiveAbility>
+				<Name>../Lines/Ravager/Tier1/Bloodthirst</Name>
+				<Cost>100</Cost>
+			</PassiveAbility>
+			<ActiveAbility>
+				<Name>../Lines/Ravager/Tier1/Enrage</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<ActiveAbility>
+				<Name>../Lines/Ravager/Tier1/FuriousStrike</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<PassiveAbility>
+				<Name>ScionOfMetal</Name>
+				<Cost>100</Cost>
+			</PassiveAbility>
+		</Tier>
+	</Tiers>
+</AbilityLine>

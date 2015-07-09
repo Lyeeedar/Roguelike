@@ -95,11 +95,10 @@ public class DungeonRoomGenerator
 	
 	public Level getLevel()
 	{
-		Sprite wall = AssetManager.loadSprite("Objects/Wall", 0.5f, new int[]{16, 16}, new int[]{10, 15});
-		Sprite floor = AssetManager.loadSprite("Objects/Floor", 0.5f, new int[]{16, 16}, new int[]{15, 7});
+		DungeonFileParser dfp = DungeonFileParser.load("level1"); 
 		
-		TileData wallData = new TileData(wall, true, false, "wall");
-		TileData floorData = new TileData(floor, false, true, "grass");
+		TileData wallData = dfp.sharedSymbolMap.get('#').tileData;
+		TileData floorData = dfp.sharedSymbolMap.get('.').tileData;
 		
 		GameTile[][] actualTiles = new GameTile[width][height];
 		Level level = new Level(actualTiles);
@@ -123,8 +122,7 @@ public class DungeonRoomGenerator
 		
 		for (DungeonRoom room : rooms)
 		{
-			Entity obj = Entity.load("Enemies/orc");			
-			actualTiles[room.x][room.y].addObject(obj);
+			dfp.placeRoom(room.x, room.y, room.width, room.height, actualTiles);
 		}
 		
 		return level;
@@ -139,14 +137,14 @@ public class DungeonRoomGenerator
 		connectRooms();	
 	}
 	
-	private int minSize = 5;
-	private int maxSize = 30;
+	private int minSize = 25;
+	private int maxSize = 40;
 	public void partition(int x, int y, int width, int height, Array<DungeonRoom> output)
 	{
 		if ((width < minSize*3 && height < minSize*3) || (width < maxSize && height < maxSize && ran.nextInt(5) == 0))
 		{
-			float pw = 0.6f + ran.nextFloat() * 0.3f;
-			float ph = 0.6f + ran.nextFloat() * 0.3f;
+			float pw = 0.4f + ran.nextFloat() * 0.3f;
+			float ph = 0.4f + ran.nextFloat() * 0.3f;
 			
 			float ow = ran.nextFloat() * (1.0f - pw);
 			float oh = ran.nextFloat() * (1.0f - ph);

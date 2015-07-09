@@ -1,0 +1,46 @@
+<ActiveAbility>
+
+	<Name>Furious Strike</Name>
+	<Description>Channel all your bloodlust into a single attack.</Description>
+	
+	<Cooldown>10</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Skills/PowerStrike</Name>
+	</Icon>
+	
+	<HitSprite>
+		<Name>strike/strike</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</HitSprite>
+	
+	<Type>
+		<Harmful>
+		</Harmful>
+	</Type>
+	
+	<Targeting>
+		<Entity>
+			<NotSelf></NotSelf>
+		</Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Damage>
+			<Attunement>
+				<Metal>METAL*(1+0.15*BLOODLUST)</Metal>
+				<Wood>WOOD*(1+0.15*BLOODLUST)</Wood>
+				<Air>AIR*(1+0.15*BLOODLUST)</Air>
+				<Water>WATER*(1+0.15*BLOODLUST)</Water>
+				<Fire>FIRE*(1+0.15*BLOODLUST)</Fire>
+			</Attunement>
+		</Damage>
+	</Effect>
+	
+</ActiveAbility>

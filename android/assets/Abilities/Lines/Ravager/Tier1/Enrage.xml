@@ -1,0 +1,35 @@
+<ActiveAbility>
+
+	<Name>Enrage</Name>
+	<Description>Incite yourself into a murderous fury, gaining bloodlust.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Skills/Enrage</Name>
+	</Icon>
+	
+	<Type>
+		<Helpful>
+		</Helpful>
+	</Type>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Status>Bloodlust</Status>
+		<Status>Bloodlust</Status>
+		<Status>Bloodlust</Status>
+		<Status>Bloodlust</Status>
+		<Status>Bloodlust</Status>
+	</Effect>
+	
+</ActiveAbility>
