@@ -11,18 +11,12 @@
 	</HitEffect>
 	
 	<Statistics>
-		<MaxHP>100</MaxHP>
+		<MaxHP>1000</MaxHP>
 		<Range>5</<Range>
 		<Speed>5</<Speed>
 		<Weight>1</Weight>
+		
+		<Wood_Atk>20</Wood_Atk>
 	</Statistics>
-	
-	<Attunement>
-		<Metal>10</Metal>
-		<Wood>10</Wood>
-		<Air>1</Air>
-		<Water>2</Water>
-		<Fire>2</Fire>
-	</Attunement>
 	
 </Entity>

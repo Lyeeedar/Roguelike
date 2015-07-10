@@ -8,7 +8,7 @@
 	<Events>
 		<OnDealDamage>
 			<Damage>
-				<Damage>DAMAGE*(1+0.05*ATK_BLOODLUST)</Damage>
+				<Damage>DAMAGE*(0.05*ATTACKER_BLOODLUST)</Damage>
 			</Damage>
 		</OnDealDamage>
 		<OnReceiveDamage>

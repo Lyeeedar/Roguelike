@@ -83,8 +83,8 @@ public class Item extends GameEventHandler
 			{
 				for (Statistics stat : Statistics.values())
 				{
-					int oldval = other.getStatistic(stat);
-					int newval = getStatistic(stat);
+					int oldval = 1;//other.getStatistic(stat);
+					int newval = 1;//getStatistic(stat);
 					
 					if (oldval != 0 || newval != 0)
 					{
@@ -114,7 +114,7 @@ public class Item extends GameEventHandler
 			{
 				for (Statistics stat : Statistics.values())
 				{
-					int val = getStatistic(stat);
+					int val = 1;//getStatistic(stat);
 					
 					if (val != 0)
 					{

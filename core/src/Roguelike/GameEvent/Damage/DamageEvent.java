@@ -26,8 +26,8 @@ public class DamageEvent extends AbstractOnDamageEvent
 			BooleanOperators.applyOperators(expB);
 			expB.function(new RandomFunction());
 			
-			obj.attacker.fillExpressionBuilderWithValues(expB, "ATK_");
-			obj.defender.fillExpressionBuilderWithValues(expB, "DEF_");
+			obj.attacker.fillExpressionBuilderWithValues(expB, "ATTACKER_");
+			obj.defender.fillExpressionBuilderWithValues(expB, "DEFENDER_");
 			
 			expB.variable("DAMAGE");
 			
@@ -37,8 +37,8 @@ public class DamageEvent extends AbstractOnDamageEvent
 				return false;
 			}
 			
-			obj.attacker.fillExpressionWithValues(exp, "ATK_");
-			obj.defender.fillExpressionWithValues(exp, "DEF_");
+			obj.attacker.fillExpressionWithValues(exp, "ATTACKER_");
+			obj.defender.fillExpressionWithValues(exp, "DEFENDER_");
 			
 			exp.setVariable("DAMAGE", obj.damage);
 			
@@ -54,8 +54,8 @@ public class DamageEvent extends AbstractOnDamageEvent
 		BooleanOperators.applyOperators(expB);
 		expB.function(new RandomFunction());
 		
-		obj.attacker.fillExpressionBuilderWithValues(expB, "ATK_");
-		obj.defender.fillExpressionBuilderWithValues(expB, "DEF_");
+		obj.attacker.fillExpressionBuilderWithValues(expB, "ATTACKER_");
+		obj.defender.fillExpressionBuilderWithValues(expB, "DEFENDER_");
 		
 		expB.variable("DAMAGE");
 		
@@ -65,8 +65,8 @@ public class DamageEvent extends AbstractOnDamageEvent
 			return false;
 		}
 		
-		obj.attacker.fillExpressionWithValues(exp, "ATK_");
-		obj.defender.fillExpressionWithValues(exp, "DEF_");
+		obj.attacker.fillExpressionWithValues(exp, "ATTACKER_");
+		obj.defender.fillExpressionWithValues(exp, "DEFENDER_");
 		
 		exp.setVariable("DAMAGE", obj.damage);
 		

@@ -33,13 +33,13 @@
 	
 	<Effect>
 		<Damage>
-			<Attunement>
-				<Metal>METAL*1.5</Metal>
-				<Wood>WOOD*1.5</Wood>
-				<Air>AIR*1.5</Air>
-				<Water>WATER*1.5</Water>
-				<Fire>FIRE*1.5</Fire>
-			</Attunement>
+			<Statistics>
+				<Metal_ATK>METAL_ATK*1.5</Metal_ATK>
+				<Wood_ATK>WOOD_ATK*1.5</Wood_ATK>
+				<Air_ATK>AIR_ATK*1.5</Air_ATK>
+				<Water_ATK>WATER_ATK*1.5</Water_ATK>
+				<Fire_ATK>FIRE_ATK*1.5</Fire_ATK>
+			</Statistics>
 		</Damage>
 	</Effect>
 	

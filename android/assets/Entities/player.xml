@@ -9,14 +9,6 @@
 		<Faction>Player</Faction>
 	</Factions>
 	
-	<ActiveAbilities>
-		<ActiveAbility>Flamestrike</ActiveAbility>
-	</ActiveAbilities>
-	
-	<PassiveAbilities>
-		<PassiveAbility>ScionOfFlame</PassiveAbility>
-	</PassiveAbilities>
-	
 	<AI>player</AI>
 	
 	<Sprite>

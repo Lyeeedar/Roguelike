@@ -8,17 +8,15 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.Array;
 
-public class TabPanel extends WidgetGroup
+public class TabPanel extends Widget
 {
 	private final Array<Tab> tabs = new Array<Tab>();
 	private Tab selectedTab = null;
 	private final int tabHeaderSize = 24;
-	
-	private float prefWidth = 300;
-	private float prefHeight = 300;
 	
 	private final Sprite buttonUp;
 	private final Sprite buttonDown;
@@ -33,18 +31,9 @@ public class TabPanel extends WidgetGroup
 	@Override
 	public void layout()
 	{
-		float bodyWidth = getWidth() - tabHeaderSize;
-		float bodyHeight = getHeight();
-		
-		float xoffset = getX();
-		float yoffset = getY();
-		
-		float y = getHeight() - tabHeaderSize;
 		for (Tab tab : tabs)
-		{
-			y -= tabHeaderSize;
-			
-			tab.body.setBounds(xoffset+tabHeaderSize, yoffset, bodyWidth, bodyHeight);
+		{			
+			tab.body.setBounds(getX()+tabHeaderSize, getY(), getWidth(), getHeight());
 		}
 	}
 	
@@ -57,6 +46,9 @@ public class TabPanel extends WidgetGroup
 		float yoffset = getY();
 		
 		float y = getHeight() - tabHeaderSize;
+		
+		selectedTab.body.draw(batch, parentAlpha);
+		
 		for (Tab tab : tabs)
 		{
 			if (tab == selectedTab)
@@ -78,25 +70,14 @@ public class TabPanel extends WidgetGroup
 		stage.setScrollFocus(selectedTab.body);
 	}
 	
-	public void addTab(Sprite header, Actor body)
+	public void addTab(Sprite header, Widget body)
 	{
 		final Tab tab = new Tab(header, body);
 		tabs.add(tab);
-		
-		addActor(body);
-		
+				
 		body.setVisible(false);
 		
 		selectTab(tab);
-		
-//		header.addListener(new InputListener()
-//		{
-//			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-//			{
-//				selectTab(tab);
-//				return true;
-//			}
-//		});
 	}
 	
 	public void selectTab(Tab tab)
@@ -113,20 +94,20 @@ public class TabPanel extends WidgetGroup
 	
 	public float getPrefWidth()
 	{
-		return prefWidth;
+		return tabHeaderSize + selectedTab.body.getPrefWidth();
 	}
 
 	public float getPrefHeight()
 	{
-		return prefHeight;
+		return Math.max(getHeight(), selectedTab.body.getPrefHeight());
 	}
 	
 	private class Tab
 	{
 		Sprite header;
-		Actor body;
+		Widget body;
 		
-		public Tab(Sprite header, Actor body)
+		public Tab(Sprite header, Widget body)
 		{
 			this.header = header;
 			this.body = body;

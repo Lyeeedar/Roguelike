@@ -15,6 +15,7 @@ public class StatusEvent extends AbstractOnDamageEvent
 	private String condition;
 	private String attackerStatus;
 	private String defenderStatus;
+	private String stacksEqn;
 	
 	@Override
 	public boolean handle(DamageObject obj)
@@ -25,8 +26,8 @@ public class StatusEvent extends AbstractOnDamageEvent
 			BooleanOperators.applyOperators(expB);
 			expB.function(new RandomFunction());
 			
-			obj.attacker.fillExpressionBuilderWithValues(expB, "ATK_");
-			obj.defender.fillExpressionBuilderWithValues(expB, "DEF_");
+			obj.attacker.fillExpressionBuilderWithValues(expB, "ATTACKER_");
+			obj.defender.fillExpressionBuilderWithValues(expB, "DEFENDER_");
 			
 			expB.variable("DAMAGE");
 			
@@ -36,8 +37,8 @@ public class StatusEvent extends AbstractOnDamageEvent
 				return false;
 			}
 			
-			obj.attacker.fillExpressionWithValues(exp, "ATK_");
-			obj.defender.fillExpressionWithValues(exp, "DEF_");
+			obj.attacker.fillExpressionWithValues(exp, "ATTACKER_");
+			obj.defender.fillExpressionWithValues(exp, "DEFENDER_");
 			
 			exp.setVariable("DAMAGE", obj.damage);
 			
@@ -49,14 +50,45 @@ public class StatusEvent extends AbstractOnDamageEvent
 			}
 		}
 		
+		int stacks = 1;
+		
+		if (stacksEqn != null)
+		{
+			ExpressionBuilder expB = new ExpressionBuilder(stacksEqn);
+			BooleanOperators.applyOperators(expB);
+			expB.function(new RandomFunction());
+			
+			obj.attacker.fillExpressionBuilderWithValues(expB, "ATTACKER_");
+			obj.defender.fillExpressionBuilderWithValues(expB, "DEFENDER_");
+			
+			expB.variable("DAMAGE");
+			
+			Expression exp = EquationHelper.tryBuild(expB);
+			if (exp != null)
+			{
+				obj.attacker.fillExpressionWithValues(exp, "ATTACKER_");
+				obj.defender.fillExpressionWithValues(exp, "DEFENDER_");
+				
+				exp.setVariable("DAMAGE", obj.damage);
+				
+				stacks = (int)Math.ceil(exp.evaluate());
+			}
+		}
+		
 		if (attackerStatus != null)
 		{
-			obj.attacker.addStatusEffect(StatusEffect.load(attackerStatus));
+			for (int i = 0; i < stacks; i++)
+			{
+				obj.attacker.addStatusEffect(StatusEffect.load(attackerStatus));
+			}
 		}
 		
 		if (defenderStatus != null)
 		{
-			obj.defender.addStatusEffect(StatusEffect.load(defenderStatus));
+			for (int i = 0; i < stacks; i++)
+			{
+				obj.defender.addStatusEffect(StatusEffect.load(defenderStatus));
+			}
 		}
 		
 		return true;
@@ -68,6 +100,7 @@ public class StatusEvent extends AbstractOnDamageEvent
 		condition = xml.get("Condition", null);
 		attackerStatus = xml.get("Attacker", null);
 		defenderStatus = xml.get("Defender", null);
+		stacksEqn = xml.get("Stacks", null);
 	}
 
 }

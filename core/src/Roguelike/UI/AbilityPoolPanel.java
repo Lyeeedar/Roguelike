@@ -136,7 +136,7 @@ public class AbilityPoolPanel extends Widget
 		}
 		
 		batch.setColor(0.3f, 0.3f, 0.3f, 0.5f);
-		batch.draw(white, getX() + MaxLineWidth, getY(), getWidth() - MaxLineWidth, getHeight());
+		batch.draw(white, getX() + MaxLineWidth, getY(), getPrefWidth() - MaxLineWidth, getHeight());
 		batch.setColor(Color.WHITE);
 		
 		Array<Ability[]> tiers = selectedLine.abilityTiers;

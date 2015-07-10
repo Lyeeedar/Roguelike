@@ -117,7 +117,7 @@ public class AbilityPanel extends Widget
 			// border
 			if (paDragged)
 			{
-				batch.setColor(Color.CYAN);
+				batch.setColor(0.5f, 0.6f, 1.0f, 1.0f);
 			}
 			
 			tileBorder.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize, TileSize);	

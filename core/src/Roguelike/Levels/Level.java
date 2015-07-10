@@ -17,6 +17,8 @@ import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
+import Roguelike.UI.MessageStack.Line;
+import Roguelike.UI.MessageStack.Message;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
@@ -218,8 +220,6 @@ public class Level
 			}
 		}
 		
-		cleanUpDead();
-		
 		calculateLight();	
 		
 		for (Sprite s : getAllSprites())
@@ -253,6 +253,8 @@ public class Level
 				}
 			}
 		}
+		
+		cleanUpDead();
 	}
 	
 	private boolean hasAbilitiesToUpdate()
@@ -537,7 +539,7 @@ public class Level
 					{
 						e.Tile.Entity = null;
 						
-						RoguelikeGame.Instance.addConsoleMessage("The " + e.Name + " dies!");
+						RoguelikeGame.Instance.addConsoleMessage(new Line(new Message("The " + e.Name + " dies!")));
 						
 						for (Item i : e.getInventory().m_items)
 						{

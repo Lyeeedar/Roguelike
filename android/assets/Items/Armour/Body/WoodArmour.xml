@@ -10,5 +10,12 @@
 	</Icon>
 	<Slot>Body</Slot>
 	<Type>Armour</Type>
-	<DefensePower>5</DefensePower>
+	<Events>
+		<Constant>
+			<Metal_Def>2</Metal_Def>
+			<Metal_Hardiness>5</Metal_Hardiness>
+			<Wood_Def>5</Wood_Def>
+			<Wood_Hardiness>10</Wood_Hardiness>
+		</Constant>
+	</Events>
 </Item>

@@ -3,10 +3,16 @@ package Roguelike;
 import java.util.EnumMap;
 import java.util.HashMap;
 
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.XmlReader.Element;
+
+import exp4j.Functions.RandomFunction;
+import exp4j.Helpers.EquationHelper;
+import exp4j.Operators.BooleanOperators;
 
 public class Global
 {
@@ -92,6 +98,31 @@ public class Global
 		WEIGHT,
 		CARRYLIMIT,
 		COOLDOWN,
+		
+		METAL_ATK,
+		METAL_PIERCE,
+		METAL_DEF,
+		METAL_HARDINESS,
+		
+		WOOD_ATK,
+		WOOD_PIERCE,
+		WOOD_DEF,
+		WOOD_HARDINESS,
+		
+		AIR_ATK,
+		AIR_PIERCE,
+		AIR_DEF,
+		AIR_HARDINESS,
+		
+		WATER_ATK,
+		WATER_PIERCE,
+		WATER_DEF,
+		WATER_HARDINESS,
+		
+		FIRE_ATK,
+		FIRE_PIERCE,
+		FIRE_DEF,
+		FIRE_HARDINESS		
 		;
 		
 		public static EnumMap<Statistics, Integer> getStatisticsBlock()
@@ -110,9 +141,26 @@ public class Global
 		{
 			for (int i = 0; i < xml.getChildCount(); i++)
 			{
+				
 				Element el = xml.getChild(i);
 
-				values.put(Statistics.valueOf(el.getName().toUpperCase()), Integer.parseInt(el.getText()));
+				Statistics stat = Statistics.valueOf(el.getName().toUpperCase());
+				String eqn = el.getText();				
+				int newVal = values.get(stat);
+				
+				ExpressionBuilder expB = new ExpressionBuilder(eqn);
+				BooleanOperators.applyOperators(expB);
+				expB.function(new RandomFunction());
+				expB.variable("Value");
+				
+				Expression exp = EquationHelper.tryBuild(expB);
+				if (exp != null)
+				{
+					exp.setVariable("Value", newVal);
+					newVal = (int)exp.evaluate();
+				}
+				
+				values.put(stat, newVal);
 			}
 
 			return values;
@@ -142,6 +190,11 @@ public class Global
 		public Tier1Element Weakness;
 		public Tier1Element Strength;
 		
+		public Statistics Attack;
+		public Statistics Pierce;
+		public Statistics Defense;
+		public Statistics Hardiness;
+		
 		static
 		{
 			Tier1Element.METAL.Weakness = Tier1Element.FIRE;
@@ -160,38 +213,12 @@ public class Global
 			Tier1Element.FIRE.Strength = Tier1Element.METAL;
 		}
 		
-		public static EnumMap<Tier1Element, Integer> getElementMap()
+		Tier1Element()
 		{
-			EnumMap<Tier1Element, Integer> map = new EnumMap<Tier1Element, Integer>(Tier1Element.class);
-			
-			for (Tier1Element el : Tier1Element.values())
-			{
-				map.put(el, 0);
-			}
-			
-			return map;
-		}
-	
-		public static EnumMap<Tier1Element, Integer> load(Element xml, EnumMap<Tier1Element, Integer> values)
-		{
-			for (int i = 0; i < xml.getChildCount(); i++)
-			{
-				Element el = xml.getChild(i);
-
-				values.put(Tier1Element.valueOf(el.getName().toUpperCase()), Integer.parseInt(el.getText()));
-			}
-
-			return values;
-		}
-		
-		public static EnumMap<Tier1Element, Integer> copy(EnumMap<Tier1Element, Integer> stats)
-		{
-			EnumMap<Tier1Element, Integer> map = new EnumMap<Tier1Element, Integer>(Tier1Element.class);
-			for (Tier1Element e : Tier1Element.values())
-			{
-				map.put(e, stats.get(e));
-			}			
-			return map;
+			Attack = Statistics.valueOf(toString()+"_ATK");
+			Pierce = Statistics.valueOf(toString()+"_PIERCE");
+			Defense = Statistics.valueOf(toString()+"_DEF");
+			Hardiness = Statistics.valueOf(toString()+"_HARDINESS");
 		}
 	}
 	
@@ -238,30 +265,27 @@ public class Global
 	}
 	
 	//----------------------------------------------------------------------
-	public static int calculateDamage(EnumMap<Tier1Element, Integer> srcAttunement, EnumMap<Tier1Element, Integer> targetAttunement, EnumMap<Tier1Element, Integer> attackAttunement)
+	public static int calculateDamage(EnumMap<Statistics, Integer> attackerStats, EnumMap<Statistics, Integer> defenderStats)
 	{
 		float damage = 0;
 		
 		for (Tier1Element el : Tier1Element.values())
 		{
-			int src = srcAttunement.get(el);
-			int attack = attackAttunement.get(el);
-			attack = Math.max(attack, 2);
+			float attack = attackerStats.get(el.Attack);
+			float pierce = attackerStats.get(el.Pierce);
 			
-			float scaledAttack = src != 0 ? attack * (1.0f + src / 100.0f) : attack;
-			//scaledAttack = MathUtils.log2(scaledAttack);
+			float defense = defenderStats.get(el.Defense);
+			float hardiness = 1.0f - defenderStats.get(el.Hardiness) / 100.0f;
 			
-			int weakness = targetAttunement.get(el.Weakness);
-			int neutral = targetAttunement.get(el);
-			int strength = targetAttunement.get(el.Strength);
+			float maxReduction = attack * hardiness;
 			
-			float defense = neutral;//weakness * -0.5f + neutral * 0.3f + strength * 0.6f;
-			defense = Math.max(defense, 2);
-			//defense = MathUtils.log2(defense);
+			float reduction = defense - pierce;
+			reduction = MathUtils.clamp(reduction, 0, maxReduction);
 			
-			float reducedAttack = scaledAttack / defense;
+			attack -= reduction;
+			attack = Math.max(attack, 0);
 			
-			damage += reducedAttack;
+			damage += attack;
 		}
 				
 		return (int)Math.ceil(damage);

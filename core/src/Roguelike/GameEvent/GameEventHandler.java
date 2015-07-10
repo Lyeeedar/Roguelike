@@ -5,7 +5,7 @@ import java.util.EnumMap;
 import Roguelike.Global.Statistics;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Entity.Entity;
-import Roguelike.GameEvent.Constant.AbstractConstantEvent;
+import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.GameEvent.Damage.AbstractOnDamageEvent;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.GameEvent.OnTurn.AbstractOnTurnEvent;
@@ -16,58 +16,34 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public abstract class GameEventHandler
 {
 	protected Array<AbstractOnTurnEvent> onTurnEvents = new Array<AbstractOnTurnEvent>();
-	protected Array<AbstractConstantEvent> constantEvents = new Array<AbstractConstantEvent>();
+	protected ConstantEvent constantEvent;
 	protected Array<AbstractOnDamageEvent> onDealDamageEvents = new Array<AbstractOnDamageEvent>();
 	protected Array<AbstractOnDamageEvent> onReceiveDamageEvents = new Array<AbstractOnDamageEvent>();
 	
-	public int getStatistic(Statistics s)
+	public int getStatistic(Entity entity, Statistics s)
 	{
 		int val = 0;
 		
-		for (AbstractConstantEvent e : constantEvents)
+		if (constantEvent != null)
 		{
-			val += e.getStatistic(s);
+			val += constantEvent.getStatistic(entity, s);
 		}
 		
 		return val;
 	}
 	
-	public EnumMap<Statistics, Integer> getStatistics()
+	public EnumMap<Statistics, Integer> getStatistics(Entity entity)
 	{
 		EnumMap<Statistics, Integer> newMap = new EnumMap<Statistics, Integer>(Statistics.class);
 		
 		for (Statistics stat : Statistics.values())
 		{
-			newMap.put(stat, getStatistic(stat));
+			newMap.put(stat, getStatistic(entity, stat));
 		}
 		
 		return newMap;
 	}
-	
-	public int getAttunement(Tier1Element el)
-	{
-		int val = 0;
 		
-		for (AbstractConstantEvent e : constantEvents)
-		{
-			val += e.getAttunement(el);
-		}
-		
-		return val;
-	}
-	
-	public EnumMap<Tier1Element, Integer> getAttunements()
-	{
-		EnumMap<Tier1Element, Integer> newMap = new EnumMap<Tier1Element, Integer>(Tier1Element.class);
-		
-		for (Tier1Element el : Tier1Element.values())
-		{
-			newMap.put(el, getAttunement(el));
-		}
-		
-		return newMap;
-	}
-	
 	public void onTurn(Entity entity, float cost)
 	{		
 		for (AbstractOnTurnEvent event : onTurnEvents)
@@ -104,14 +80,10 @@ public abstract class GameEventHandler
 			}
 		}
 		
-		Element constantElements = xml.getChildByName("Constant");
-		if (constantElements != null)
+		Element constantElement = xml.getChildByName("Constant");
+		if (constantElement != null)
 		{
-			for (int i = 0; i < constantElements.getChildCount(); i++)
-			{
-				Element constantElement = constantElements.getChild(i);
-				constantEvents.add(AbstractConstantEvent.load(constantElement));
-			}
+			constantEvent = ConstantEvent.load(constantElement);
 		}
 		
 		Element onDealDamageElements = xml.getChildByName("OnDealDamage");

@@ -33,13 +33,13 @@
 	
 	<Effect>
 		<Damage>
-			<Attunement>
-				<Metal>METAL*(1+0.15*BLOODLUST)</Metal>
-				<Wood>WOOD*(1+0.15*BLOODLUST)</Wood>
-				<Air>AIR*(1+0.15*BLOODLUST)</Air>
-				<Water>WATER*(1+0.15*BLOODLUST)</Water>
-				<Fire>FIRE*(1+0.15*BLOODLUST)</Fire>
-			</Attunement>
+			<Statistics>
+				<Metal_Atk>METAL_ATK*(1+0.15*BLOODLUST)</Metal_Atk>
+				<Wood_Atk>WOOD_ATK*(1+0.15*BLOODLUST)</Wood_Atk>
+				<Air_Atk>AIR_ATK*(1+0.15*BLOODLUST)</Air_Atk>
+				<Water_Atk>WATER_ATK*(1+0.15*BLOODLUST)</Water_Atk>
+				<Fire_Atk>FIRE_ATK*(1+0.15*BLOODLUST)</Fire_Atk>
+			</Statistics>
 		</Damage>
 	</Effect>
 	

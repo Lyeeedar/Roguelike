@@ -1,0 +1,32 @@
+<AbilityLine>
+	<Name>Pyromaniac</Name>
+	<Description>Kill it with FIRE.</Description>
+	<Tiers>
+		<Tier>
+			<PassiveAbility>
+				<Name>Pyromaniac/Tier1/StickyFlames</Name>
+				<Cost>100</Cost>
+			</PassiveAbility>
+			
+			<ActiveAbility>
+				<Name>Pyromaniac/Tier1/Flamestrike</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Pyromaniac/Tier1/BurningBlades</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Pyromaniac/Tier1/FanFlames</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Pyromaniac/Tier1/FanFlames</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+		</Tier>
+	</Tiers>
+</AbilityLine>

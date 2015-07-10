@@ -73,6 +73,7 @@ public class InventoryPanel extends Widget
 		headers.put(ItemType.ALL, AssetManager.loadSprite("GUI/All"));
 				
 		this.addListener(new InventoryPanelListener());
+		this.setWidth(getPrefWidth());
 	}
 	
 	private void computeSize()
@@ -175,6 +176,12 @@ public class InventoryPanel extends Widget
 		
 		super.draw(batch, parentAlpha);
 	}
+	
+	@Override
+	public float getWidth()
+	{
+		return getPrefWidth();
+	}
 
 	@Override
 	public float getPrefWidth()
@@ -200,7 +207,7 @@ public class InventoryPanel extends Widget
 			
 			if (tooltip != null) { tooltip.remove(); tooltip = null; }
 			
-			if (tileY == NumTilesHeight-1 && tileX < entity.Tile.Items.size)
+			if (tileY == NumTilesHeight-1)
 			{
 				if (tileX < entity.Tile.Items.size)
 				{
@@ -210,15 +217,18 @@ public class InventoryPanel extends Widget
 					tooltip.show(event, x, y);
 				}
 			}
-			else if (tileY == 0 && tileX < NumTilesWidth)
+			else if (tileY == 0)
 			{
-				ItemType type = ItemType.values()[tileX];
-				
-				Table t = new Table();
-				t.add(new Label(type.toString(), skin));
-				
-				tooltip = new Tooltip(t, skin, stage);
-				tooltip.show(event, x, y);
+				if (tileX < NumTilesWidth)
+				{
+					ItemType type = ItemType.values()[tileX];
+					
+					Table t = new Table();
+					t.add(new Label(type.toString(), skin));
+					
+					tooltip = new Tooltip(t, skin, stage);
+					tooltip.show(event, x, y);
+				}				
 			}
 			else
 			{					
@@ -258,15 +268,21 @@ public class InventoryPanel extends Widget
 						
 			if (tooltip != null) { tooltip.remove(); }
 			
-			if (tileY == NumTilesHeight-1 && tileX < entity.Tile.Items.size)
+			if (tileY == NumTilesHeight-1)
 			{
-				Item i = entity.Tile.Items.get(tileX);
-				entity.getInventory().addItem(i);
-				entity.Tile.Items.removeValue(i, true);
+				if (tileX < entity.Tile.Items.size)
+				{
+					Item i = entity.Tile.Items.get(tileX);
+					entity.getInventory().addItem(i);
+					entity.Tile.Items.removeValue(i, true);
+				}				
 			}
-			else if (tileY == 0 && tileX < NumTilesWidth)
+			else if (tileY == 0)
 			{
-				selectedFilter = ItemType.values()[tileX];
+				if (tileX < NumTilesWidth)
+				{
+					selectedFilter = ItemType.values()[tileX];
+				}
 			}
 			else
 			{

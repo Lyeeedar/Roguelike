@@ -21,4 +21,7 @@
 	<Statistics>
 		<Weight>2</Weight>
 	</Statistics>
+	<Attunement>
+		<Metal>10</Metal>
+	</Attunement>
 </Item>

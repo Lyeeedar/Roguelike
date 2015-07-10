@@ -59,7 +59,7 @@ public class Inventory
 		m_items.removeValue(item, true);
 	}
 	
-	public int getStatistic(Statistics stat)
+	public int getStatistic(Entity entity, Statistics stat)
 	{
 		int val = 0;
 		
@@ -67,24 +67,7 @@ public class Inventory
 		{
 			if (m_equipment.containsKey(slot))
 			{
-				val += m_equipment.get(slot).getStatistic(stat);
-			}
-		}
-		
-		return val;
-	}
-	
-	public int getAttunement(Tier1Element el)
-	{
-		int val = 0;
-		
-		for (EquipmentSlot slot : EquipmentSlot.values())
-		{
-			if (slot == EquipmentSlot.MAINWEAPON || slot == EquipmentSlot.OFFWEAPON) { continue; }
-			
-			if (m_equipment.containsKey(slot))
-			{
-				val += m_equipment.get(slot).getAttunement(el);
+				val += m_equipment.get(slot).getStatistic(entity, stat);
 			}
 		}
 		

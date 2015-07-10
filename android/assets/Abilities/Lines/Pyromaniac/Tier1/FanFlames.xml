@@ -1,7 +1,7 @@
 <ActiveAbility>
 
-	<Name>Enrage</Name>
-	<Description>Incite yourself into a murderous fury, gaining bloodlust.</Description>
+	<Name>Fan Flames</Name>
+	<Description>Double the intensity of the flames engulfing the target.</Description>
 	
 	<Cooldown>20</Cooldown>
 	<Range>1</Range>
@@ -16,7 +16,7 @@
 	</Type>
 	
 	<Targeting>
-		<Self></Self>
+		<Entity><NotSelf/></Entity>
 	</Targeting>
 	
 	<Movement>
@@ -26,8 +26,8 @@
 	
 	<Effect>
 		<Status>
-			<Name>Bloodlust</Name>
-			<Stacks>5</Stacks>
+			<Name>Burning</Name>
+			<Stacks>DEFENDER_BURNING</Stacks>
 		</Status>
 	</Effect>
 	

@@ -24,6 +24,9 @@ import Roguelike.UI.DragDropPayload;
 import Roguelike.UI.EntityStatusRenderer;
 import Roguelike.UI.HPWidget;
 import Roguelike.UI.InventoryPanel;
+import Roguelike.UI.MessageStack;
+import Roguelike.UI.MessageStack.Line;
+import Roguelike.UI.MessageStack.Message;
 import Roguelike.UI.SpriteWidget;
 import Roguelike.UI.TabPanel;
 import Roguelike.UI.Tooltip;
@@ -81,6 +84,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = 10;
 		parameter.borderWidth = 1;
+		parameter.kerning = true;
 		parameter.borderColor = Color.BLACK;
 		font = fgenerator.generateFont(parameter); // font size 12 pixels
 		fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
@@ -135,43 +139,6 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		//damageTester();
 	}
 	
-	private void damageTester()
-	{		
-		for (int i = 0; i < 1000; i++)
-		{
-			EnumMap<Tier1Element, Integer> src = createThingy();
-			EnumMap<Tier1Element, Integer> tar = createThingy();
-			EnumMap<Tier1Element, Integer> att = createThingy();
-			
-			int dam = Global.calculateDamage(src, tar, att);
-			
-			String srcS = "";
-			String tarS = "";
-			String attS = "";
-			
-			for (Tier1Element el : Tier1Element.values())
-			{
-				srcS += src.get(el) + ",";
-				tarS += tar.get(el) + ",";
-				attS += att.get(el) + ",";
-			}
-			
-			
-			System.out.println("Src: " + srcS + " :: Tar: " + tarS + " :: Att: " + attS + " = " + dam);
-		}
-	}
-	private EnumMap<Tier1Element, Integer> createThingy()
-	{
-		EnumMap<Tier1Element, Integer> thing = new EnumMap<Tier1Element, Integer>(Tier1Element.class);
-		
-		for (Tier1Element el : Tier1Element.values())
-		{
-			thing.put(el, MathUtils.random(200));
-		}
-		
-		return thing;
-	}
-	
 	//----------------------------------------------------------------------
 	public void LoadUI()
 	{
@@ -188,25 +155,32 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		
 		abilityPanel = new AbilityPanel(level.player, skin, stage);
 		
-		inventoryPanel = new InventoryPanel(level.player, skin, stage);
 		abilityPoolPanel = new AbilityPoolPanel(new AbilityPool(), skin, stage);
-
-		messageStack = new Table();
+		inventoryPanel = new InventoryPanel(level.player, skin, stage);
+		messageStack = new MessageStack();
+		messageStack.addLine(new Line(new Message("Welcome to the DUNGEON!")));
 		
-		messageScrollPane = new ScrollPane(messageStack);
-		messageScrollPane.setScrollingDisabled(true, false);
-		messageScrollPane.setFillParent(true);
-				
+		stage.addActor(messageStack);
+		stage.addActor(inventoryPanel);
+		stage.addActor(abilityPoolPanel);
+						
 		tabPane = new TabPanel();
 
-		//tabPane.addTab(AssetManager.loadSprite("Skills/skill", 1, new int[]{26, 26}, new int[]{0, 1}), messageScrollPane);
-		tabPane.addTab(AssetManager.loadSprite("GUI/Abilities"), abilityPoolPanel);
 		tabPane.addTab(AssetManager.loadSprite("GUI/Inventory"), inventoryPanel);
-		
-		
-		mainUITable.add(tabPane).width(Value.percentWidth(0.5f, mainUITable)).height(Value.percentHeight(0.3f, mainUITable)).expand().bottom().left().pad(5);
+		tabPane.addTab(AssetManager.loadSprite("GUI/Abilities"), abilityPoolPanel);
+		tabPane.addTab(AssetManager.loadSprite("GUI/Message"), messageStack);
+				
+		mainUITable.add(tabPane).width(Value.percentWidth(0.5f, mainUITable)).height(Value.percentHeight(0.3f, mainUITable)).expand().bottom().left().pad(10);
 		
 		mainUITable.add(abilityPanel).expand().bottom().right().pad(20);
+	}
+	
+	//----------------------------------------------------------------------
+	public void prepareAbility(ActiveAbility aa)
+	{
+		preparedAbility = aa;
+		preparedAbility.caster = level.player;
+		abilityTiles = preparedAbility.getValidTargets();
 	}
 	
 	//endregion Create
@@ -306,6 +280,32 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			}
 		}
 		
+		if (!mouseOverTabs)
+		{					
+			if (
+					mousex < 0 || mousex >= level.width ||
+					mousey < 0 || mousey >= level.height ||
+					!level.getSeenTile(mousex, mousey).seen)
+			{				
+				batch.setColor(Color.RED);
+			}
+			else
+			{
+				if (level.getGameTile(mousex, mousey).TileData.Passable)
+				{
+					batch.setColor(Color.GREEN);
+				}
+				else
+				{
+					batch.setColor(Color.RED);
+				}				
+			}
+			
+			border.update(delta);
+			border.render(batch, mousex*TileSize + offsetx, mousey*TileSize + offsety, TileSize, TileSize);
+			batch.setColor(Color.WHITE);
+		}
+		
 		for (Entity entity : toBeDrawn)
 		{
 			int x = entity.Tile.x;
@@ -313,8 +313,6 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			
 			int cx = x*TileSize + offsetx;
 			int cy = y*TileSize + offsety;
-			
-			EntityStatusRenderer.draw(entity, batch, cx, cy, TileSize, TileSize, 1.0f/8.0f);
 			
 			if (entity.Sprite.SpriteAnimation != null)
 			{
@@ -347,6 +345,8 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			}
 			
 			batch.setColor(Color.WHITE);
+			
+			EntityStatusRenderer.draw(entity, batch, cx, cy, TileSize, TileSize, 1.0f/8.0f);
 		}
 		
 		for (ActiveAbility aa : level.ActiveAbilities)
@@ -367,32 +367,6 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			{
 				batch.draw(white, tile[0]*TileSize + offsetx, tile[1]*TileSize + offsety, TileSize, TileSize);
 			}
-		}
-		
-		if (!mouseOverTabs)
-		{					
-			if (
-					mousex < 0 || mousex >= level.width ||
-					mousey < 0 || mousey >= level.height ||
-					!level.getSeenTile(mousex, mousey).seen)
-			{				
-				batch.setColor(Color.RED);
-			}
-			else
-			{
-				if (level.getGameTile(mousex, mousey).TileData.Passable)
-				{
-					batch.setColor(Color.GREEN);
-				}
-				else
-				{
-					batch.setColor(Color.RED);
-				}				
-			}
-			
-			border.update(delta);
-			border.render(batch, mousex*TileSize + offsetx, mousey*TileSize + offsety, TileSize, TileSize);
-			batch.setColor(Color.WHITE);
 		}
 		
 //		for (Entity entity : toBeDrawn)
@@ -509,13 +483,6 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		return false;
 	}
 	
-	public void prepareAbility(ActiveAbility aa)
-	{
-		preparedAbility = aa;
-		preparedAbility.caster = level.player;
-		abilityTiles = preparedAbility.getValidTargets();
-	}
-
 	//----------------------------------------------------------------------
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button)
@@ -556,7 +523,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		}
 		
 		if (
-		//	(tabPane != null && isInBounds(screenX, screenY, tabPane)) ||
+			(tabPane != null && isInBounds(screenX, screenY, tabPane)) ||
 			(abilityPanel != null && isInBounds(screenX, screenY, abilityPanel)) ||
 			(hpWidget != null && isInBounds(screenX, screenY, hpWidget))
 			)
@@ -632,15 +599,9 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	//endregion InputProcessor
 	//####################################################################//
 	
-	public void addConsoleMessage(String message)
+	public void addConsoleMessage(Line line)
 	{
-		Label l = new Label(message, skin);
-		l.setWrap(true);
-		messageStack.row();
-		messageStack.add(l).width(Value.percentWidth(1, messageStack));
-		
-		messageScrollPane.layout();
-		messageScrollPane.setScrollY(messageScrollPane.getMaxY());
+		messageStack.addLine(line);
 	}
 	
 	//endregion Public Methods
@@ -676,9 +637,8 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	AbilityPanel abilityPanel;
 	AbilityPoolPanel abilityPoolPanel;
 	HPWidget hpWidget;
-	Table messageStack;
+	MessageStack messageStack;
 	TabPanel tabPane;
-	ScrollPane messageScrollPane;
 	
 	Skin skin;
 	Stage stage;

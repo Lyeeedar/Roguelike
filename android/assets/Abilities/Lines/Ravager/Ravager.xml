@@ -4,25 +4,25 @@
 	<Tiers>
 		<Tier>
 			<ActiveAbility>
-				<Name>../Lines/Ravager/Tier1/PowerStrike</Name>
+				<Name>Ravager/Tier1/PowerStrike</Name>
 				<Cost>100</Cost>
 			</ActiveAbility>
 			<PassiveAbility>
-				<Name>../Lines/Ravager/Tier1/Bloodthirst</Name>
+				<Name>Ravager/Tier1/Bloodthirst</Name>
 				<Cost>100</Cost>
 			</PassiveAbility>
-			<ActiveAbility>
-				<Name>../Lines/Ravager/Tier1/Enrage</Name>
-				<Cost>100</Cost>
-			</ActiveAbility>
-			<ActiveAbility>
-				<Name>../Lines/Ravager/Tier1/FuriousStrike</Name>
-				<Cost>100</Cost>
-			</ActiveAbility>
 			<PassiveAbility>
-				<Name>ScionOfMetal</Name>
+				<Name>Ravager/Tier1/Bloodthirst</Name>
 				<Cost>100</Cost>
 			</PassiveAbility>
+			<ActiveAbility>
+				<Name>Ravager/Tier1/Enrage</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<ActiveAbility>
+				<Name>Ravager/Tier1/FuriousStrike</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
 		</Tier>
 	</Tiers>
 </AbilityLine>

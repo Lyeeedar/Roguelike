@@ -6,6 +6,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
+import Roguelike.Global.Statistics;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Lights.Light;
@@ -16,22 +17,23 @@ import Roguelike.Tiles.GameTile;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Functions.RandomFunction;
+import exp4j.Helpers.EquationHelper;
 import exp4j.Operators.BooleanOperators;
 
 public class EffectTypeDamage extends AbstractEffectType
 {
-	private EnumMap<Tier1Element, String> m_attunement = new EnumMap<Tier1Element, String>(Tier1Element.class);
+	private EnumMap<Statistics, String> equations = new EnumMap<Statistics, String>(Statistics.class);
 	
 	@Override
 	public void parse(Element xml)
 	{		
-		Element attunementElement = xml.getChildByName("Attunement");
-		for (int i = 0; i < attunementElement.getChildCount(); i++)
+		Element statsElement = xml.getChildByName("Statistics");
+		for (int i = 0; i < statsElement.getChildCount(); i++)
 		{
-			Element attEl = attunementElement.getChild(i);
+			Element sEl = statsElement.getChild(i);
 			
-			Tier1Element el = Tier1Element.valueOf(attEl.getName().toUpperCase());
-			m_attunement.put(el, attEl.getText());
+			Statistics el = Statistics.valueOf(sEl.getName().toUpperCase());
+			equations.put(el, sEl.getText());
 		}
 	}
 
@@ -42,27 +44,34 @@ public class EffectTypeDamage extends AbstractEffectType
 		
 		if (tile.Entity != null)
 		{
-			EnumMap<Tier1Element, Integer> att = Tier1Element.getElementMap();
-			for (Tier1Element el : Tier1Element.values())
+			EnumMap<Statistics, Integer> att = Statistics.getStatisticsBlock();
+			for (Statistics stat : Statistics.values())
 			{
-				if (m_attunement.containsKey(el))
+				if (equations.containsKey(stat))
 				{
-					String eqn = m_attunement.get(el);
+					String eqn = equations.get(stat);
 					
 					ExpressionBuilder expB = new ExpressionBuilder(eqn);
 					BooleanOperators.applyOperators(expB);
 					expB.function(new RandomFunction());
+					
 					aa.caster.fillExpressionBuilderWithValues(expB, "");
-					Expression exp = expB.build();
+					
+					Expression exp = EquationHelper.tryBuild(expB);
+					if (exp == null)
+					{
+						continue;
+					}
+					
 					aa.caster.fillExpressionWithValues(exp, "");
 					
 					int raw = (int)exp.evaluate();
 					
-					att.put(el, raw);
+					att.put(stat, raw);
 				}
 			}
 			
-			int damage = Global.calculateDamage(aa.caster.getAttunements(), tile.Entity.getAttunements(), att);
+			int damage = Global.calculateDamage(att, tile.Entity.getStatistics());
 			
 			tile.Entity.applyDamage(damage);
 			tile.Entity.SpriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
@@ -78,7 +87,7 @@ public class EffectTypeDamage extends AbstractEffectType
 	public AbstractEffectType copy()
 	{
 		EffectTypeDamage e = new EffectTypeDamage();
-		e.m_attunement = m_attunement;
+		e.equations = equations;
 		return e;
 	}
 }

@@ -1,0 +1,17 @@
+<PassiveAbility>
+	<Name>Sticky Flames</Name>
+	<Description>Your fire attacks ignite your foes.</Description>
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Events>
+		<OnDealDamage>
+			<Status>
+				<Condition>ATTACKER_FIRE_ATK &gt; 0 &amp;&amp; rnd(1) &lt; 0.8</Condition>
+				<Defender>Burning</Defender>
+			</Status>
+		</OnDealDamage>
+	</Events>
+	
+</PassiveAbility>

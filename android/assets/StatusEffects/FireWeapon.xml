@@ -1,0 +1,16 @@
+<StatusEffect>
+	<Name>Fire Weapon</Name>
+	<Description>Flickering flames coat your weapons.</Description>
+	<Duration>10</Duration>
+	
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Events>
+		<Constant>
+			<Fire_ATK>10</Fire_ATK>
+		</Constant>
+	</Events>
+	
+</StatusEffect>

@@ -212,7 +212,7 @@ public class ActiveAbility implements IAbility
 		
 		try
 		{
-			xmlElement = xml.parse(Gdx.files.internal("Abilities/Active/"+name+".xml"));
+			xmlElement = xml.parse(Gdx.files.internal("Abilities/Lines/"+name+".xml"));
 		} 
 		catch (IOException e)
 		{

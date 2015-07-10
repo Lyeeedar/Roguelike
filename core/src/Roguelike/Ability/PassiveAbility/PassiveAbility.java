@@ -53,7 +53,7 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 		
 		try
 		{
-			xmlElement = xml.parse(Gdx.files.internal("Abilities/Passive/"+name+".xml"));
+			xmlElement = xml.parse(Gdx.files.internal("Abilities/Lines/"+name+".xml"));
 		} 
 		catch (IOException e)
 		{

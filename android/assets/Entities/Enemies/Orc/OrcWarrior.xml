@@ -15,4 +15,8 @@
 		<Faction>Orc</Faction>
 	</Factions>
 	
+	<Statistics>
+		<Metal_Atk>Value+5</Metal_Atk>
+	</Statistics>
+	
 </Entity>

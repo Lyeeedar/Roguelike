@@ -93,7 +93,7 @@ public class BooleanOperators
 	{
 		public AndOperator()
 		{
-			super("&&", 2, true,  Operator.PRECEDENCE_ADDITION - 1);
+			super("&&", 2, true,  Operator.PRECEDENCE_ADDITION - 2);
 		}
 
 		@Override
@@ -110,7 +110,7 @@ public class BooleanOperators
 	{
 		public OrOperator()
 		{
-			super("||", 2, true,  Operator.PRECEDENCE_ADDITION - 1);
+			super("||", 2, true,  Operator.PRECEDENCE_ADDITION - 2);
 		}
 
 		@Override

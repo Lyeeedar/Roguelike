@@ -9,6 +9,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.AssetManager;
 import Roguelike.Global;
+import Roguelike.RoguelikeGame;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistics;
 import Roguelike.Global.Tier1Element;
@@ -25,8 +26,11 @@ import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
+import Roguelike.UI.MessageStack.Line;
+import Roguelike.UI.MessageStack.Message;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -146,7 +150,7 @@ public class Entity
 		Item weapon = getInventory().getEquip(EquipmentSlot.MAINWEAPON);
 		Sprite hitEffect = weapon != null ? weapon.HitEffect : m_defaultHitEffect;
 		
-		int damage = Global.calculateDamage(getAttunements(), other.getAttunements(), weapon != null ? weapon.getAttunements() : Tier1Element.getElementMap());
+		int damage = Global.calculateDamage(getStatistics(), other.getStatistics());
 		DamageObject damObj = new DamageObject(this, other, damage);
 		
 		for (GameEventHandler handler : getAllHandlers())
@@ -172,6 +176,8 @@ public class Entity
 	public void applyDamage(int dam)
 	{
 		HP = Math.max(HP-dam, 0);
+		
+		RoguelikeGame.Instance.addConsoleMessage(new Line(new Message(Name+" takes"), new Message(" "+dam, Color.RED), new Message(" damage!")));		
 	}
 	
 	//----------------------------------------------------------------------
@@ -250,12 +256,6 @@ public class Entity
 		{
 			Statistics.load(statElement, m_statistics);
 		}
-		
-		Element attunementElement = xmlElement.getChildByName("Attunement");
-		if (attunementElement != null)
-		{
-			Tier1Element.load(attunementElement, m_attunement);
-		}
 				
 		Element activeAbilityElement = xmlElement.getChildByName("ActiveAbilities");
 		if (activeAbilityElement != null)
@@ -288,7 +288,7 @@ public class Entity
 		}
 	}
 	
-	// Stats
+	//----------------------------------------------------------------------
 	public int getStatistic(Statistics stat)
 	{
 		int val = m_statistics.get(stat);
@@ -297,20 +297,21 @@ public class Entity
 		{
 			if (passive != null)
 			{
-				val += passive.getStatistic(stat);
+				val += passive.getStatistic(this, stat);
 			}
 		}
 		
 		for (StatusEffect se : statusEffects)
 		{
-			val += se.getStatistic(stat);
+			val += se.getStatistic(this, stat);
 		}
 		
-		val += m_inventory.getStatistic(stat);
+		val += m_inventory.getStatistic(this, stat);
 		
 		return val;
 	}
 	
+	//----------------------------------------------------------------------
 	public EnumMap<Statistics, Integer> getStatistics()
 	{
 		EnumMap<Statistics, Integer> newMap = new EnumMap<Statistics, Integer>(Statistics.class);
@@ -324,41 +325,6 @@ public class Entity
 	}
 	
 	//----------------------------------------------------------------------
-	public int getAttunement(Tier1Element el)
-	{
-		int val = m_attunement.get(el);
-		val += m_inventory.getAttunement(el);
-		
-		for (StatusEffect se : statusEffects)
-		{
-			val += se.getAttunement(el);
-		}
-		
-		for (PassiveAbility passive : m_slottedPassiveAbilities)
-		{
-			if (passive != null)
-			{
-				val += passive.getAttunement(el);
-			}
-		}
-		
-		return val;
-	}
-	
-	//----------------------------------------------------------------------
-	public EnumMap<Tier1Element, Integer> getAttunements()
-	{
-		EnumMap<Tier1Element, Integer> map = new EnumMap<Tier1Element, Integer>(Tier1Element.class);
-
-		for (Tier1Element el : Tier1Element.values())
-		{
-			int val = getAttunement(el);
-			map.put(el, val);
-		}
-
-		return map;
-	}
-	
 	public float getActionDelay()
 	{
 		int speed = getStatistic(Statistics.SPEED);
@@ -367,16 +333,19 @@ public class Entity
 		return 1;//(float) weight / (float) speed;
 	}
 	
+	//----------------------------------------------------------------------
 	public Inventory getInventory()
 	{
 		return m_inventory;
 	}
 	
+	//----------------------------------------------------------------------
 	public ActiveAbility[] getSlottedActiveAbilities()
 	{
 		return m_slottedActiveAbilities;
 	}
 	
+	//----------------------------------------------------------------------
 	public void slotActiveAbility(ActiveAbility aa, int index)
 	{
 		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
@@ -395,11 +364,13 @@ public class Entity
 		m_slottedActiveAbilities[index] = aa;
 	}
 	
+	//----------------------------------------------------------------------
 	public PassiveAbility[] getSlottedPassiveAbilities()
 	{
 		return m_slottedPassiveAbilities;
 	}
 	
+	//----------------------------------------------------------------------
 	public void slotPassiveAbility(PassiveAbility pa, int index)
 	{
 		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
@@ -413,14 +384,10 @@ public class Entity
 		m_slottedPassiveAbilities[index] = pa;
 	}
 	
+	//----------------------------------------------------------------------
 	public void fillExpressionBuilderWithValues(ExpressionBuilder expB, String prefix)
 	{
 		Array<StatusEffectStack> stacks = stackStatusEffects();
-		
-		for (Tier1Element el : Tier1Element.values())
-		{
-			expB.variable(prefix+el.toString());
-		}
 		
 		for (Statistics s : Statistics.values())
 		{
@@ -431,18 +398,14 @@ public class Entity
 		
 		for (StatusEffectStack s : stacks)
 		{
-			expB.variable(s.effect.name.toUpperCase());
+			expB.variable(prefix+s.effect.name.toUpperCase());
 		}			
 	}
 	
+	//----------------------------------------------------------------------
 	public void fillExpressionWithValues(Expression exp, String prefix)
 	{
 		Array<StatusEffectStack> stacks = stackStatusEffects();
-		
-		for (Tier1Element el : Tier1Element.values())
-		{
-			exp.setVariable(prefix+el.toString(), getAttunement(el));
-		}
 		
 		for (Statistics s : Statistics.values())
 		{
@@ -457,6 +420,24 @@ public class Entity
 		}		
 	}
 	
+	//----------------------------------------------------------------------
+	public void fillExpressionWithBaseValues(Expression exp, String prefix)
+	{
+		for (Statistics s : Statistics.values())
+		{
+			exp.setVariable(prefix+s.toString(), m_statistics.get(s));
+		}
+	}
+	
+	//----------------------------------------------------------------------
+	public void fillExpressionBuilderWithBaseValues(ExpressionBuilder expB, String prefix)
+	{
+		for (Statistics s : Statistics.values())
+		{
+			expB.variable(prefix+s.toString());
+		}
+	}
+	
 	//endregion Public Methods
 	//####################################################################//
 	//region Private Methods
@@ -465,10 +446,8 @@ public class Entity
 	//####################################################################//
 	//region Data
 	
-
 	//----------------------------------------------------------------------
 	private EnumMap<Statistics, Integer> m_statistics = Statistics.getStatisticsBlock();
-	private EnumMap<Tier1Element, Integer> m_attunement = Tier1Element.getElementMap();
 	private PassiveAbility[] m_slottedPassiveAbilities = new PassiveAbility[Global.NUM_ABILITY_SLOTS];
 	private ActiveAbility[] m_slottedActiveAbilities = new ActiveAbility[Global.NUM_ABILITY_SLOTS];
 	private Inventory m_inventory = new Inventory();

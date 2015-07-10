@@ -1,0 +1,43 @@
+<ActiveAbility>
+
+	<Name>Flame Strike</Name>
+	<Description>A blast of flame.</Description>
+	
+	<Cooldown>7</Cooldown>
+	<Range>5</Range>
+	
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<HitSprite>
+		<Name>Fireburst/Fireburst</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</HitSprite>
+	
+	<Type>
+		<Harmful>
+		</Harmful>
+	</Type>
+	
+	<Targeting>
+		<Entity></Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Damage>
+			<Statistics>
+				<Fire_ATK>10+FIRE_ATK*1.5</Fire_ATK>
+			</Statistics>
+		</Damage>
+		<Status>
+			<Name>Burning</Name>
+		</Status>
+	</Effect>
+	
+</ActiveAbility>
