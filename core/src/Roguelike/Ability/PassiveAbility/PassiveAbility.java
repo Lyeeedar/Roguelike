@@ -85,5 +85,18 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 		
 		return ab;
 	}
+
+	
+	@Override
+	public String getName()
+	{
+		return Name;
+	}
+
+	@Override
+	public String getDescription()
+	{
+		return Description;
+	}
 	
 }

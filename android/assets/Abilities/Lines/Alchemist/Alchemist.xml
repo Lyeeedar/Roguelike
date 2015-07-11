@@ -1,0 +1,32 @@
+<AbilityLine>
+	<Name>Alchemist</Name>
+	<Description>Expert in chemical warfare.</Description>
+	<Tiers>
+		<Tier>
+			<ActiveAbility>
+				<Name>Alchemist/Tier1/ChromaticFlask</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Alchemist/Tier1/ContactPoison</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Alchemist/Tier1/ChromaticFlask</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Alchemist/Tier1/ElixirOfStrength</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Alchemist/Tier1/ElixirOfStrength</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+		</Tier>
+	</Tiers>
+</AbilityLine>

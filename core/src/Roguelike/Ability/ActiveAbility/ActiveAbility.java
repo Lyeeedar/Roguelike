@@ -10,6 +10,8 @@ import Roguelike.Ability.ActiveAbility.MovementType.AbstractMovementType;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeBolt;
 import Roguelike.Ability.ActiveAbility.TargetingType.AbstractTargetingType;
 import Roguelike.Entity.Entity;
+import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.GameEvent.IGameObject;
 import Roguelike.Lights.Light;
 import Roguelike.Shadows.ShadowCaster;
 import Roguelike.Sprite.Sprite;
@@ -23,7 +25,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-public class ActiveAbility implements IAbility
+public class ActiveAbility implements IAbility, IGameObject
 {
 	private String name;
 	private String description;
@@ -277,5 +279,18 @@ public class ActiveAbility implements IAbility
 		ab.internalLoad(name);
 		
 		return ab;
+	}
+
+	
+	@Override
+	public String getName()
+	{
+		return name;
+	}
+
+	@Override
+	public String getDescription()
+	{
+		return description;
 	}
 }

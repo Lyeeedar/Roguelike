@@ -23,10 +23,10 @@
 				<Cost>100</Cost>
 			</ActiveAbility>
 			
-			<ActiveAbility>
-				<Name>Pyromaniac/Tier1/FanFlames</Name>
+			<PassiveAbility>
+				<Name>Pyromaniac/Tier1/UnreliableFlames</Name>
 				<Cost>100</Cost>
-			</ActiveAbility>
+			</PassiveAbility>
 		</Tier>
 	</Tiers>
 </AbilityLine>

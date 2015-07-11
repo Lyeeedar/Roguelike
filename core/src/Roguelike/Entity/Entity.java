@@ -2,6 +2,7 @@ package Roguelike.Entity;
 
 import java.io.IOException;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -115,7 +116,7 @@ public class Entity
 	}
 	
 	//----------------------------------------------------------------------
-	private Array<GameEventHandler> getAllHandlers()
+	public Array<GameEventHandler> getAllHandlers()
 	{
 		Array<GameEventHandler> handlers = new Array<GameEventHandler>();
 		
@@ -150,20 +151,7 @@ public class Entity
 		Item weapon = getInventory().getEquip(EquipmentSlot.MAINWEAPON);
 		Sprite hitEffect = weapon != null ? weapon.HitEffect : m_defaultHitEffect;
 		
-		int damage = Global.calculateDamage(getStatistics(), other.getStatistics());
-		DamageObject damObj = new DamageObject(this, other, damage);
-		
-		for (GameEventHandler handler : getAllHandlers())
-		{
-			handler.onDealDamage(damObj);
-		}
-		
-		for (GameEventHandler handler : other.getAllHandlers())
-		{
-			handler.onReceiveDamage(damObj);
-		}
-		
-		other.applyDamage(damObj.damage);
+		Global.calculateDamage(this, other, null);
 		
 		// add hit effects
 		SpriteEffect e = new SpriteEffect(hitEffect, dir, null);
@@ -383,59 +371,47 @@ public class Entity
 		
 		m_slottedPassiveAbilities[index] = pa;
 	}
-	
-	//----------------------------------------------------------------------
-	public void fillExpressionBuilderWithValues(ExpressionBuilder expB, String prefix)
-	{
-		Array<StatusEffectStack> stacks = stackStatusEffects();
 		
+	//----------------------------------------------------------------------
+	public HashMap<String, Integer> getVariableMap()
+	{
+		HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
+				
 		for (Statistics s : Statistics.values())
 		{
-			expB.variable(prefix+s.toString());
+			variableMap.put(s.toString(), getStatistic(s));
 		}
 		
-		expB.variable(prefix+"HP");
+		variableMap.put("HP", HP);
 		
+		Array<StatusEffectStack> stacks = stackStatusEffects();
 		for (StatusEffectStack s : stacks)
 		{
-			expB.variable(prefix+s.effect.name.toUpperCase());
-		}			
+			variableMap.put(s.effect.name.toUpperCase(), s.count);
+		}
+		
+		return variableMap;
 	}
 	
 	//----------------------------------------------------------------------
-	public void fillExpressionWithValues(Expression exp, String prefix)
+	public HashMap<String, Integer> getBaseVariableMap()
 	{
-		Array<StatusEffectStack> stacks = stackStatusEffects();
-		
+		HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
+
 		for (Statistics s : Statistics.values())
 		{
-			exp.setVariable(prefix+s.toString(), getStatistic(s));
+			variableMap.put(s.toString(), m_statistics.get(s));
 		}
 		
-		exp.setVariable(prefix+"HP", HP);
+		variableMap.put("HP", HP);
 		
+		Array<StatusEffectStack> stacks = stackStatusEffects();
 		for (StatusEffectStack s : stacks)
 		{
-			exp.setVariable(prefix+s.effect.name.toUpperCase(), s.count);
-		}		
-	}
-	
-	//----------------------------------------------------------------------
-	public void fillExpressionWithBaseValues(Expression exp, String prefix)
-	{
-		for (Statistics s : Statistics.values())
-		{
-			exp.setVariable(prefix+s.toString(), m_statistics.get(s));
+			variableMap.put(s.effect.name.toUpperCase(), s.count);
 		}
-	}
-	
-	//----------------------------------------------------------------------
-	public void fillExpressionBuilderWithBaseValues(ExpressionBuilder expB, String prefix)
-	{
-		for (Statistics s : Statistics.values())
-		{
-			expB.variable(prefix+s.toString());
-		}
+
+		return variableMap;
 	}
 	
 	//endregion Public Methods

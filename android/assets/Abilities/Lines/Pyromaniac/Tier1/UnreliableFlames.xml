@@ -1,0 +1,14 @@
+<PassiveAbility>
+	<Name>Unreliable Flames</Name>
+	<Description>Fire ebbs and flows within you, granting a random amount of fire damage to your attacks.</Description>
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Events>
+		<Constant>
+			<Fire_Atk>rnd(50)</Fire_Atk>
+		</Constant>
+	</Events>
+	
+</PassiveAbility>

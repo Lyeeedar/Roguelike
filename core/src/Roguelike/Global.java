@@ -5,6 +5,9 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Entity.Entity;
+import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.math.MathUtils;
@@ -125,6 +128,18 @@ public class Global
 		FIRE_HARDINESS		
 		;
 		
+		public static HashMap<String, Integer> statsBlockToVariableBlock(EnumMap<Statistics, Integer> stats)
+		{
+			HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
+			
+			for (Statistics key : stats.keySet())
+			{
+				variableMap.put(key.toString(), stats.get(key));
+			}
+			
+			return variableMap;
+		}
+		
 		public static EnumMap<Statistics, Integer> getStatisticsBlock()
 		{
 			EnumMap<Statistics, Integer> stats = new EnumMap<Statistics, Integer>(Statistics.class);
@@ -220,6 +235,18 @@ public class Global
 			Defense = Statistics.valueOf(toString()+"_DEF");
 			Hardiness = Statistics.valueOf(toString()+"_HARDINESS");
 		}
+	
+		public static EnumMap<Tier1Element, Integer> getElementBlock()
+		{
+			EnumMap<Tier1Element, Integer> map = new EnumMap<Tier1Element, Integer>(Tier1Element.class);
+			
+			for (Tier1Element el : Tier1Element.values())
+			{
+				map.put(el, 0);
+			}
+			
+			return map;
+		}
 	}
 	
 	//----------------------------------------------------------------------
@@ -265,17 +292,17 @@ public class Global
 	}
 	
 	//----------------------------------------------------------------------
-	public static int calculateDamage(EnumMap<Statistics, Integer> attackerStats, EnumMap<Statistics, Integer> defenderStats)
+	public static void calculateDamage(Entity attacker, Entity defender, HashMap<String, Integer> additionalAttack)
 	{
-		float damage = 0;
+		DamageObject damObj = new DamageObject(attacker, defender, additionalAttack);
 		
 		for (Tier1Element el : Tier1Element.values())
 		{
-			float attack = attackerStats.get(el.Attack);
-			float pierce = attackerStats.get(el.Pierce);
+			float attack = damObj.attackerVariableMap.get(el.Attack.toString());
+			float pierce = damObj.attackerVariableMap.get(el.Pierce.toString());
 			
-			float defense = defenderStats.get(el.Defense);
-			float hardiness = 1.0f - defenderStats.get(el.Hardiness) / 100.0f;
+			float defense = damObj.defenderVariableMap.get(el.Defense.toString());
+			float hardiness = 1.0f - damObj.defenderVariableMap.get(el.Hardiness.toString()) / 100.0f;
 			
 			float maxReduction = attack * hardiness;
 			
@@ -285,9 +312,28 @@ public class Global
 			attack -= reduction;
 			attack = Math.max(attack, 0);
 			
-			damage += attack;
+			damObj.damageMap.put(el, (int)MathUtils.ceil(attack));
+		}
+		
+		damObj.setDamageVariables();
+		
+		for (GameEventHandler handler : attacker.getAllHandlers())
+		{
+			handler.onDealDamage(damObj);
+		}
+		
+		for (GameEventHandler handler : defender.getAllHandlers())
+		{
+			handler.onReceiveDamage(damObj);
 		}
 				
-		return (int)Math.ceil(damage);
+		int totalDamage = 0;
+		
+		for (Tier1Element el : Tier1Element.values())
+		{
+			totalDamage += damObj.damageMap.get(el);
+		}
+		
+		defender.applyDamage(totalDamage);
 	}
 }

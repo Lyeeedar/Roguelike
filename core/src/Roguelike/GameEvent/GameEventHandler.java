@@ -13,7 +13,7 @@ import Roguelike.GameEvent.OnTurn.AbstractOnTurnEvent;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-public abstract class GameEventHandler
+public abstract class GameEventHandler implements IGameObject
 {
 	protected Array<AbstractOnTurnEvent> onTurnEvents = new Array<AbstractOnTurnEvent>();
 	protected ConstantEvent constantEvent;
@@ -56,7 +56,7 @@ public abstract class GameEventHandler
 	{
 		for (AbstractOnDamageEvent event : onDealDamageEvents)
 		{
-			event.handle(obj);
+			event.handle(obj, this);
 		}
 	}
 	
@@ -64,7 +64,7 @@ public abstract class GameEventHandler
 	{
 		for (AbstractOnDamageEvent event : onReceiveDamageEvents)
 		{
-			event.handle(obj);
+			event.handle(obj, this);
 		}
 	}
 	

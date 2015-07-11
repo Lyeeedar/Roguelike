@@ -1,13 +1,13 @@
 <ActiveAbility>
 
-	<Name>Burning Blades</Name>
-	<Description>Enchant your weaponry with fire.</Description>
+	<Name>Elixir of Strength</Name>
+	<Description>Drink a custom strength potion, granting yourself power.</Description>
 	
 	<Cooldown>20</Cooldown>
 	<Range>1</Range>
 	
 	<Icon>
-		<Name>Skills/Burning</Name>
+		<Name>Skills/Enrage</Name>
 	</Icon>
 	
 	<Type>
@@ -26,14 +26,8 @@
 	
 	<Effect>
 		<Status>
-			<Attacker>
-				<Duration>10</Duration>
-				<Events>
-					<Constant>
-						<Fire_Atk>100</Fire_Atk>
-					</Constant>
-				</Events>
-			</Attacker>
+			<Attacker>Power</Attacker>
+			<Stacks>2+rnd(6)</Stacks>
 		</Status>
 	</Effect>
 	

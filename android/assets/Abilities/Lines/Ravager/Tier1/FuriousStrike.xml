@@ -33,7 +33,7 @@
 	
 	<Effect>
 		<Damage>
-			<Statistics>
+			<Statistics ReliesOn="Bloodlust">
 				<Metal_Atk>METAL_ATK*(1+0.15*BLOODLUST)</Metal_Atk>
 				<Wood_Atk>WOOD_ATK*(1+0.15*BLOODLUST)</Wood_Atk>
 				<Air_Atk>AIR_ATK*(1+0.15*BLOODLUST)</Air_Atk>

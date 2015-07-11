@@ -10,7 +10,7 @@
 	<Events>
 		<OnTurn>
 			<DOT>
-				<Damage>MAXHP*0.3</Damage>
+				<Damage>10</Damage>
 			</DOT>
 		</OnTurn>
 	</Events>

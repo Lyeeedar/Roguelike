@@ -1,5 +1,7 @@
 package Roguelike.GameEvent.OnTurn;
 
+import java.util.HashMap;
+
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Entity.Entity;
@@ -20,20 +22,20 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 	@Override
 	public boolean handle(Entity entity, float time)
 	{
+		HashMap<String, Integer> variableMap = entity.getVariableMap();
+		
 		if (condition != null)
 		{
-			ExpressionBuilder expB = new ExpressionBuilder(condition);
-			BooleanOperators.applyOperators(expB);
-			expB.function(new RandomFunction());
-			entity.fillExpressionBuilderWithValues(expB, "");
-			
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder(condition);
+			EquationHelper.setVariableNames(expB, variableMap, "");
+					
 			Expression exp = EquationHelper.tryBuild(expB);
 			if (exp == null)
 			{
 				return false;
 			}
 			
-			entity.fillExpressionWithValues(exp, "");
+			EquationHelper.setVariableValues(exp, variableMap, "");
 			
 			double conditionVal = exp.evaluate();
 			
@@ -43,18 +45,16 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 			}
 		}
 		
-		ExpressionBuilder expB = new ExpressionBuilder(equation);
-		BooleanOperators.applyOperators(expB);
-		expB.function(new RandomFunction());
-		entity.fillExpressionBuilderWithValues(expB, "");
-		
+		ExpressionBuilder expB = EquationHelper.createEquationBuilder(equation);
+		EquationHelper.setVariableNames(expB, variableMap, "");
+				
 		Expression exp = EquationHelper.tryBuild(expB);
 		if (exp == null)
 		{
 			return false;
 		}
 		
-		entity.fillExpressionWithValues(exp, "");
+		EquationHelper.setVariableValues(exp, variableMap, "");
 		
 		float raw = (float)exp.evaluate() * time + remainder;
 		

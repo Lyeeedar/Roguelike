@@ -189,4 +189,23 @@ public class Item extends GameEventHandler
 		Slot = xmlElement.get("Slot", null) != null ? EquipmentSlot.valueOf(xmlElement.get("Slot").toUpperCase()) : Slot;
 		Type = xmlElement.get("Type", null) != null ? ItemType.valueOf(xmlElement.get("Type").toUpperCase()) : Type;
 	}
+
+	
+	@Override
+	public String getName()
+	{
+		return Name;
+	}
+
+	@Override
+	public String getDescription()
+	{
+		return Description;
+	}
+
+	@Override
+	public Sprite getIcon()
+	{
+		return Icon;
+	}
 }

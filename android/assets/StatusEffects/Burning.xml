@@ -10,7 +10,7 @@
 	<Events>
 		<OnTurn>
 			<DOT>
-				<Damage>5+BURNING/2</Damage>
+				<Damage>5+BURNING/3</Damage>
 			</DOT>
 		</OnTurn>
 	</Events>

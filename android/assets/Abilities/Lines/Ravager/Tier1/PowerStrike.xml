@@ -3,7 +3,7 @@
 	<Name>Power Strike</Name>
 	<Description>Strike your opponent with a powerful blow.</Description>
 	
-	<Cooldown>10</Cooldown>
+	<Cooldown>4</Cooldown>
 	<Range>1</Range>
 	
 	<Icon>

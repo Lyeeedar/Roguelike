@@ -2,13 +2,15 @@ package Roguelike.GameEvent.Damage;
 
 import java.util.HashMap;
 
+import Roguelike.GameEvent.IGameObject;
+
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 public abstract class AbstractOnDamageEvent
 {
-	public abstract boolean handle(DamageObject obj);
+	public abstract boolean handle(DamageObject obj, IGameObject parent);
 	public abstract void parse(Element xml);
 	
 	public static AbstractOnDamageEvent load(Element xml)
@@ -34,6 +36,5 @@ public abstract class AbstractOnDamageEvent
 	static
 	{
 		ClassMap.put("STATUS", StatusEvent.class);
-		ClassMap.put("DAMAGE", DamageEvent.class);
 	}
 }

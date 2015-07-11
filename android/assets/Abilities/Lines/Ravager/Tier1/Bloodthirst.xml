@@ -6,11 +6,13 @@
 	</Icon>
 	
 	<Events>
-		<OnDealDamage>
-			<Damage>
-				<Damage>DAMAGE*(0.05*ATTACKER_BLOODLUST)</Damage>
-			</Damage>
-		</OnDealDamage>
+		<Constant ReliesOn="Bloodlust">			
+			<Metal_Atk>METAL_ATK*(0.15*BLOODLUST)</Metal_Atk>
+			<Wood_Atk>WOOD_ATK*(0.15*BLOODLUST)</Wood_Atk>
+			<Air_Atk>AIR_ATK*(0.15*BLOODLUST)</Air_Atk>
+			<Water_Atk>WATER_ATK*(0.15*BLOODLUST)</Water_Atk>
+			<Fire_Atk>FIRE_ATK*(0.15*BLOODLUST)</Fire_Atk>
+		</Constant>
 		<OnReceiveDamage>
 			<Status>
 				<Condition>rnd(1)&lt;0.2</Condition>

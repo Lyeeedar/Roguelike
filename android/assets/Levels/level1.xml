@@ -383,7 +383,7 @@
 				<row>.#......#.</row>
 				<row>..........</row>
 				<row>.#......#.</row>
-				<row>..........</row>
+				<row>....7.....</row>
 				<row>.#......#.</row>
 				<row>..........</row>
 				<row>.#......#.</row>
@@ -401,7 +401,7 @@
 				<row>.#..#..#..</row>
 				<row>.#..#..#..</row>
 				<row>.#..#..#..</row>
-				<row>.#.....#..</row>
+				<row>.#33...#..</row>
 				<row>.#..#..#..</row>
 				<row>.#..#..#..</row>
 				<row>.#..#..#..</row>
@@ -431,7 +431,7 @@
 
 			<Rows>
 				<row>.....</row>
-				<row>..t..</row>
+				<row>..t0.</row>
 				<row>.t#t.</row>
 				<row>..t..</row>
 				<row>.....</row>
@@ -444,8 +444,8 @@
 
 			<Rows>
 				<row>.....</row>
-				<row>.#.#.</row>
-				<row>..l..</row>
+				<row>.#1#.</row>
+				<row>..l1.</row>
 				<row>.#.#.</row>
 				<row>.....</row>
 			</Rows>

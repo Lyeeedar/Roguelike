@@ -20,9 +20,12 @@ import exp4j.Operators.BooleanOperators;
 public class ConstantEvent
 {
 	private EnumMap<Statistics, String> equations = new EnumMap<Statistics, String>(Statistics.class);
+	private String[] reliesOn;
 	
 	public void parse(Element xml)
 	{
+		reliesOn = xml.getAttribute("ReliesOn", "").split(",");
+		
 		for (int i = 0; i < xml.getChildCount(); i++)
 		{
 			Element sEl = xml.getChild(i);
@@ -41,19 +44,25 @@ public class ConstantEvent
 			return 0;
 		}
 		
-		ExpressionBuilder expB = new ExpressionBuilder(eqn);
-		BooleanOperators.applyOperators(expB);
-		expB.function(new RandomFunction());
+		HashMap<String, Integer> variableMap = entity.getBaseVariableMap();
+		for (String name : reliesOn)
+		{
+			if (!variableMap.containsKey(name.toUpperCase()))
+			{
+				variableMap.put(name.toUpperCase(), 0);
+			}
+		}
 		
-		entity.fillExpressionBuilderWithBaseValues(expB, "");
-		
+		ExpressionBuilder expB = EquationHelper.createEquationBuilder(eqn);
+		EquationHelper.setVariableNames(expB, variableMap, "");
+				
 		Expression exp = EquationHelper.tryBuild(expB);
 		if (exp == null)
 		{
 			return 0;
 		}
 		
-		entity.fillExpressionWithBaseValues(exp, "");
+		EquationHelper.setVariableValues(exp, variableMap, "");
 		
 		int val = (int)exp.evaluate();
 		

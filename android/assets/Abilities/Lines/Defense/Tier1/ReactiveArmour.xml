@@ -1,0 +1,68 @@
+<PassiveAbility>
+	<Name>Reactive Armour</Name>
+	<Description>Your armour improves with each blow.</Description>
+	<Icon>
+		<Name>Skills/Bloodlust</Name>
+	</Icon>
+	
+	<Events>
+		<OnReceiveDamage>
+			<Status>
+				<Condition>ATTACKER_METAL_ATK &gt; 0</Condition>
+				<Defender>
+					<Duration>3</Duration>
+					<Events>
+						<Constant>
+							<Metal_Def>10</Metal_Def>
+						</Constant>
+					</Events>
+				</Defender>
+			</Status>
+			<Status>
+				<Condition>ATTACKER_WOOD_ATK &gt; 0</Condition>
+				<Defender>
+					<Duration>3</Duration>
+					<Events>
+						<Constant>
+							<WOOD_Def>10</WOOD_Def>
+						</Constant>
+					</Events>
+				</Defender>
+			</Status>
+			<Status>
+				<Condition>ATTACKER_AIR_ATK &gt; 0</Condition>
+				<Defender>
+					<Duration>3</Duration>
+					<Events>
+						<Constant>
+							<AIR_Def>10</AIR_Def>
+						</Constant>
+					</Events>
+				</Defender>
+			</Status>
+			<Status>
+				<Condition>ATTACKER_WATER_ATK &gt; 0</Condition>
+				<Defender>
+					<Duration>3</Duration>
+					<Events>
+						<Constant>
+							<WATER_Def>10</WATER_Def>
+						</Constant>
+					</Events>
+				</Defender>
+			</Status>
+			<Status>
+				<Condition>ATTACKER_FIRE_ATK &gt; 0</Condition>
+				<Defender>
+					<Duration>3</Duration>
+					<Events>
+						<Constant>
+							<FIRE_Def>10</FIRE_Def>
+						</Constant>
+					</Events>
+				</Defender>
+			</Status>
+		</OnReceiveDamage>
+	</Events>
+	
+</PassiveAbility>

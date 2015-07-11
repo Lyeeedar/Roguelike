@@ -137,8 +137,8 @@ public class DungeonRoomGenerator
 		connectRooms();	
 	}
 	
-	private int minSize = 25;
-	private int maxSize = 40;
+	private int minSize = 5;
+	private int maxSize = 20;
 	public void partition(int x, int y, int width, int height, Array<DungeonRoom> output)
 	{
 		if ((width < minSize*3 && height < minSize*3) || (width < maxSize && height < maxSize && ran.nextInt(5) == 0))

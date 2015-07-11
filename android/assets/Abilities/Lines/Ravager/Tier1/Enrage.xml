@@ -26,7 +26,7 @@
 	
 	<Effect>
 		<Status>
-			<Name>Bloodlust</Name>
+			<Attacker>Bloodlust</Attacker>
 			<Stacks>5</Stacks>
 		</Status>
 	</Effect>

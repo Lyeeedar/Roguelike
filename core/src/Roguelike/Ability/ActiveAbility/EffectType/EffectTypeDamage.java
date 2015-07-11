@@ -1,6 +1,7 @@
 package Roguelike.Ability.ActiveAbility.EffectType;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -23,11 +24,15 @@ import exp4j.Operators.BooleanOperators;
 public class EffectTypeDamage extends AbstractEffectType
 {
 	private EnumMap<Statistics, String> equations = new EnumMap<Statistics, String>(Statistics.class);
+	private String[] reliesOn;
 	
 	@Override
 	public void parse(Element xml)
-	{		
+	{	
 		Element statsElement = xml.getChildByName("Statistics");
+		
+		reliesOn = statsElement.getAttribute("ReliesOn", "").split(",");
+		
 		for (int i = 0; i < statsElement.getChildCount(); i++)
 		{
 			Element sEl = statsElement.getChild(i);
@@ -44,36 +49,42 @@ public class EffectTypeDamage extends AbstractEffectType
 		
 		if (tile.Entity != null)
 		{
-			EnumMap<Statistics, Integer> att = Statistics.getStatisticsBlock();
+			HashMap<String, Integer> variableMap = aa.caster.getVariableMap();
+			
+			for (String name : reliesOn)
+			{
+				if (!variableMap.containsKey(name.toUpperCase()))
+				{
+					variableMap.put(name.toUpperCase(), 0);
+				}
+			}
+			
+			EnumMap<Statistics, Integer> stats = Statistics.getStatisticsBlock();
+			
 			for (Statistics stat : Statistics.values())
 			{
 				if (equations.containsKey(stat))
 				{
 					String eqn = equations.get(stat);
 					
-					ExpressionBuilder expB = new ExpressionBuilder(eqn);
-					BooleanOperators.applyOperators(expB);
-					expB.function(new RandomFunction());
-					
-					aa.caster.fillExpressionBuilderWithValues(expB, "");
-					
+					ExpressionBuilder expB = EquationHelper.createEquationBuilder(eqn);
+					EquationHelper.setVariableNames(expB, variableMap, "");
+										
 					Expression exp = EquationHelper.tryBuild(expB);
 					if (exp == null)
 					{
 						continue;
 					}
 					
-					aa.caster.fillExpressionWithValues(exp, "");
-					
+					EquationHelper.setVariableValues(exp, variableMap, "");
+										
 					int raw = (int)exp.evaluate();
 					
-					att.put(stat, raw);
+					stats.put(stat, raw);
 				}
 			}
 			
-			int damage = Global.calculateDamage(att, tile.Entity.getStatistics());
-			
-			tile.Entity.applyDamage(damage);
+			Global.calculateDamage(aa.caster, tile.Entity, Statistics.statsBlockToVariableBlock(stats));			
 			tile.Entity.SpriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
 		}
 		else
@@ -88,6 +99,7 @@ public class EffectTypeDamage extends AbstractEffectType
 	{
 		EffectTypeDamage e = new EffectTypeDamage();
 		e.equations = equations;
+		e.reliesOn = reliesOn;
 		return e;
 	}
 }

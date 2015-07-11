@@ -5,6 +5,7 @@ import java.io.IOException;
 import Roguelike.AssetManager;
 import Roguelike.Entity.Entity;
 import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.GameEvent.IGameObject;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.Gdx;
@@ -20,7 +21,6 @@ public class StatusEffect extends GameEventHandler
 	private String description;
 	
 	public Sprite icon;
-	public Sprite continualEffect;
 	public float duration;
 	public Entity attachedTo;
 	
@@ -61,6 +61,11 @@ public class StatusEffect extends GameEventHandler
 			e.printStackTrace();
 		}
 		
+		internalLoad(xmlElement);
+	}
+	
+	private void internalLoad(Element xmlElement)
+	{		
 		String extendsElement = xmlElement.getAttribute("Extends", null);
 		if (extendsElement != null)
 		{
@@ -71,7 +76,6 @@ public class StatusEffect extends GameEventHandler
 		description = xmlElement.get("Description", description);
 		
 		icon = xmlElement.getChildByName("Icon") != null ? AssetManager.loadSprite(xmlElement.getChildByName("Icon")) : icon;
-		continualEffect = xmlElement.getChildByName("ContinualEffect") != null ? AssetManager.loadSprite(xmlElement.getChildByName("ContinualEffect")) : continualEffect;
 		duration = xmlElement.getFloat("Duration", duration);
 		
 		Element eventsElement = xmlElement.getChildByName("Events");
@@ -88,6 +92,55 @@ public class StatusEffect extends GameEventHandler
 		se.internalLoad(name);
 		
 		return se;
+	}
+	
+	public static StatusEffect load(Element xml, IGameObject parent)
+	{
+		StatusEffect se = new StatusEffect();
+	
+		if (xml.getText() != null)
+		{
+			se.internalLoad(xml.getText());
+		}
+		else
+		{
+			se.internalLoad(xml);
+			
+			if (se.name == null)
+			{
+				se.name = parent.getName();
+			}
+			
+			if (se.description == null)
+			{
+				se.description = parent.getDescription();
+			}
+			
+			if (se.icon == null)
+			{
+				se.icon = parent.getIcon().copy();
+			}
+		}
+		
+		return se;
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
+	}
+
+	@Override
+	public String getDescription()
+	{
+		return description;
+	}
+
+	@Override
+	public Sprite getIcon()
+	{
+		return icon;
 	}
 }
 

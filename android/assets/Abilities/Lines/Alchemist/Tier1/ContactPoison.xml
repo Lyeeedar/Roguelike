@@ -1,0 +1,51 @@
+<ActiveAbility>
+
+	<Name>Contact Poison</Name>
+	<Description>Coat your weaponry in a deadly poison.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Skills/Bloodlust</Name>
+	</Icon>
+	
+	<Type>
+		<Helpful>
+		</Helpful>
+	</Type>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Status>
+			<Attacker>
+				<Duration>10</Duration>
+				<Events>
+					<OnDealDamage>
+						<Status>
+							<Defender>
+								<Duration>5</Duration>
+								<Events>
+									<OnTurn>
+										<DOT>
+											<Damage>25</Damage>
+										</DOT>
+									</OnTurn>
+								</Events>
+							</Defender>
+						</Status>
+					</OnDealDamage>
+				</Events>
+			</Attacker>
+		</Status>
+	</Effect>
+	
+</ActiveAbility>

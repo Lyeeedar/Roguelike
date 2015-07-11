@@ -565,14 +565,6 @@ public class Level
 				if (Grid[x][y].Entity != null)
 				{
 					sprites.add(Grid[x][y].Entity.Sprite);
-					
-					for (StatusEffect se : Grid[x][y].Entity.statusEffects)
-					{
-						if (se.continualEffect != null)
-						{
-							sprites.add(se.continualEffect);
-						}
-					}
 				}
 				
 				for (Item i : Grid[x][y].Items)

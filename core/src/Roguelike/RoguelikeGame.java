@@ -324,14 +324,6 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			
 			entity.Sprite.render(batch, cx, cy, TileSize, TileSize);
 			
-			for (StatusEffect se : entity.statusEffects)
-			{
-				if (se.continualEffect != null)
-				{
-					se.continualEffect.render(batch, cx, cy, TileSize, TileSize);
-				}
-			}
-			
 			for (SpriteEffect e : entity.SpriteEffects)
 			{
 				if (e.Corner == Direction.CENTER)
