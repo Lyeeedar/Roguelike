@@ -1,0 +1,42 @@
+<ActiveAbility>
+
+	<Name>Healing Breeze</Name>
+	<Description>A faint wind washes your ills away.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Type>
+		<Helpful>
+		</Helpful>
+	</Type>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Status>
+			<Attacker>
+				<Duration>10</Duration>
+				<Events>
+					<OnTurn>
+					    <HOT>
+					        <Heal>33</Heal>
+					    </HOT>
+					</OnTurn>
+				</Events>
+			</Attacker>
+		</Status>
+	</Effect>
+	
+</ActiveAbility>

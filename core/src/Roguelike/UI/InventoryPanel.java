@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import Roguelike.AssetManager;
 import Roguelike.Entity.Entity;
+import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.ItemType;
 import Roguelike.Sprite.Sprite;
@@ -317,6 +318,11 @@ public class InventoryPanel extends Widget
 						
 						entity.getInventory().removeItem(item);
 						entity.Tile.Items.add(item);
+					}
+					
+					for (int i = 0; i < 3; i++)
+					{
+						entity.Tasks.add(new TaskWait());
 					}
 				}				
 			}

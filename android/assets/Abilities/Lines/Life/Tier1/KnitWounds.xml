@@ -1,0 +1,31 @@
+<ActiveAbility>
+
+	<Name>Knit Wounds</Name>
+	<Description>Knit your wounds.</Description>
+	
+	<Cooldown>10</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Type>
+		<Helpful>
+		</Helpful>
+	</Type>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Heal>100</Heal>
+	</Effect>
+	
+</ActiveAbility>

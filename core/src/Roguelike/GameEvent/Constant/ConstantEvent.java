@@ -31,7 +31,7 @@ public class ConstantEvent
 			Element sEl = xml.getChild(i);
 			
 			Statistics el = Statistics.valueOf(sEl.getName().toUpperCase());
-			equations.put(el, sEl.getText());
+			equations.put(el, sEl.getText().toUpperCase());
 		}
 	}
 	

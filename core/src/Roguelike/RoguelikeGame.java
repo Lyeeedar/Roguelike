@@ -46,7 +46,12 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -377,10 +382,10 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		}
 		
 		batch.end();
-		
+				
 		stage.act(delta);
 		stage.draw();
-		
+				
 		batch.begin();
 		
 		if (dragDropPayload != null && dragDropPayload.shouldDraw())
@@ -594,6 +599,18 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	public void addConsoleMessage(Line line)
 	{
 		messageStack.addLine(line);
+	}
+	
+	public void addAbilityAvailabilityAction(Sprite sprite)
+	{
+		Table table = new Table();
+		table.add(new SpriteWidget(sprite)).size(TileSize/2);
+		table.addAction(new SequenceAction(
+				Actions.moveTo(Gdx.graphics.getWidth()/2+TileSize/2, Gdx.graphics.getHeight()/2+TileSize+TileSize/2, 1),
+				Actions.removeActor()));		
+		table.setPosition(Gdx.graphics.getWidth()/2+TileSize/2, Gdx.graphics.getHeight()/2+TileSize);		
+		stage.addActor(table);	
+		table.setVisible(true);
 	}
 	
 	//endregion Public Methods

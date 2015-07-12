@@ -1,0 +1,32 @@
+<ActiveAbility>
+
+	<Name>Healing Burst</Name>
+	<Description>A blast of healing energy surges from within you.</Description>
+	
+	<Cooldown>10</Cooldown>
+	<Range>1</Range>
+	<AOE>1</AOE>
+	
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Type>
+		<Helpful>
+		</Helpful>
+	</Type>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Heal>500</Heal>
+	</Effect>
+	
+</ActiveAbility>

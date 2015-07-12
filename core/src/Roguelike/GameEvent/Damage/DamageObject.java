@@ -44,9 +44,15 @@ public class DamageObject
 	
 	public void setDamageVariables()
 	{
+		int total = 0;
 		for (Tier1Element key : damageMap.keySet())
 		{
-			damageVariableMap.put(key.toString(), damageMap.get(key));
+			int dam = damageMap.get(key);
+			damageVariableMap.put(key.toString(), dam);
+			
+			total += dam;
 		}
+		
+		damageVariableMap.put("DAMAGE", total);
 	}
 }

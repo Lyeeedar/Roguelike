@@ -1,0 +1,23 @@
+<Item>
+	<Name>Shield</Name>
+	<Description>A sword. Stabby stabby.</Description>
+	<Icon>
+		<Name>Items/MedWep</Name>
+		<UpdateRate>1</UpdateRate>
+		<Size>16</Size>
+		<IndexX>0</IndexX>
+		<IndexY>0</IndexY>
+	</Icon>
+	<Slot>OffWeapon</Slot>
+	<Type>Weapon</Type>
+	<Statistics>
+		<Weight>2</Weight>
+	</Statistics>
+	<Events>
+	    <OnReceiveDamage>
+	        <Damage Condition="rnd(1) < 0.5">
+	            <Metal_Atk>-ATTACKER_METAL_ATK</Metal_Atk>
+	        </Damage>
+	    </OnReceiveDamage>
+	</Events>
+</Item>

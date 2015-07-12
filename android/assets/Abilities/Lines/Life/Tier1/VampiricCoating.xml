@@ -1,0 +1,40 @@
+<ActiveAbility>
+
+	<Name>Vampiric Coating</Name>
+	<Description>Enchant your weaponry with the ability to steal LIFE.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Type>
+		<Helpful>
+		</Helpful>
+	</Type>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Status>
+			<Attacker>
+				<Duration>10</Duration>
+				<Events>
+					<OnDealDamage>
+					    <Heal>DAMAGE*0.2</Heal>
+					</OnDealDamage>
+				</Events>
+			</Attacker>
+		</Status>
+	</Effect>
+	
+</ActiveAbility>

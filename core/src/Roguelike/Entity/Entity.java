@@ -18,6 +18,7 @@ import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree;
 import Roguelike.Entity.Tasks.AbstractTask;
+import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.Items.Item;
@@ -94,7 +95,13 @@ public class Entity
 		{
 			if (a != null)
 			{
+				boolean gtz = a.cooldownAccumulator > 0;
 				a.cooldownAccumulator -= cost;
+				
+				if (gtz && a.cooldownAccumulator <= 0)
+				{
+					RoguelikeGame.Instance.addAbilityAvailabilityAction(a.Icon);
+				}
 			}
 		}
 		
@@ -350,6 +357,11 @@ public class Entity
 		}
 		
 		m_slottedActiveAbilities[index] = aa;
+		
+		for (int i = 0; i < 3; i++)
+		{
+			Tasks.add(new TaskWait());
+		}
 	}
 	
 	//----------------------------------------------------------------------
@@ -370,6 +382,11 @@ public class Entity
 		}
 		
 		m_slottedPassiveAbilities[index] = pa;
+		
+		for (int i = 0; i < 3; i++)
+		{
+			Tasks.add(new TaskWait());
+		}
 	}
 		
 	//----------------------------------------------------------------------

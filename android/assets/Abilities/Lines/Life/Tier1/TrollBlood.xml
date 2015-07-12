@@ -1,0 +1,16 @@
+<PassiveAbility>
+	<Name>Troll Blood</Name>
+	<Description>Troll blood runs in your viens, giving you regeneration.</Description>
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Events>
+		<OnTurn>
+			<HOT>
+				<Heal>10</Heal>
+			</HOT>
+		</OnTurn>
+	</Events>
+	
+</PassiveAbility>
