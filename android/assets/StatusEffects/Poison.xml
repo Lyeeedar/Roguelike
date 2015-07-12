@@ -10,7 +10,7 @@
 	<Events>
 		<OnTurn>
 			<DOT>
-				<Damage>10</Damage>
+				<Wood_Atk>10</Wood_Atk>
 			</DOT>
 		</OnTurn>
 	</Events>

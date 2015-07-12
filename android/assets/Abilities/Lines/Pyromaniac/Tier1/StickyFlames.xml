@@ -7,8 +7,7 @@
 	
 	<Events>
 		<OnDealDamage>
-			<Status>
-				<Condition>ATTACKER_FIRE_ATK &gt; 0 &amp;&amp; rnd(1) &lt; 0.2</Condition>
+			<Status Condition="ATTACKER_FIRE_ATK > 0 && rnd(1) < 0.4" ReliesOn="Burning">
 				<Defender>Burning</Defender>
 			</Status>
 		</OnDealDamage>

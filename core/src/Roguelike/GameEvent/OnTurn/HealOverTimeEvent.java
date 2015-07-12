@@ -22,7 +22,7 @@ public class HealOverTimeEvent extends AbstractOnTurnEvent
 	@Override
 	public boolean handle(Entity entity, float time)
 	{
-HashMap<String, Integer> variableMap = entity.getVariableMap();
+		HashMap<String, Integer> variableMap = entity.getVariableMap();
 		
 		if (condition != null)
 		{
@@ -70,7 +70,7 @@ HashMap<String, Integer> variableMap = entity.getVariableMap();
 	@Override
 	public void parse(Element xml)
 	{
-		condition = xml.get("Condition", null);
+		condition = xml.getAttribute("Condition", null);
 		equation = xml.get("Heal");
 	}
 

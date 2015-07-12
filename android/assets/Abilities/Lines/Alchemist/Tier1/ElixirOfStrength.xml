@@ -25,7 +25,7 @@
 	</Movement>
 	
 	<Effect>
-		<Status>
+		<Status ReliesOn="Power">
 			<Attacker>Power</Attacker>
 			<Stacks>2+rnd(6)</Stacks>
 		</Status>

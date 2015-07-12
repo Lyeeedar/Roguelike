@@ -89,16 +89,14 @@ public class StatusEvent extends AbstractOnDamageEvent
 			
 			for (String name : reliesOn)
 			{
-				String atkName = "ATTACKER_" + name.toUpperCase();
-				if (!obj.attackerVariableMap.containsKey(atkName))
+				if (!obj.attackerVariableMap.containsKey(name.toUpperCase()))
 				{
-					expB.variable(atkName);
+					expB.variable("ATTACKER_" + name.toUpperCase());
 				}
 				
-				String defName = "DEFENDER_" + name.toUpperCase();
-				if (!obj.defenderVariableMap.containsKey(defName))
+				if (!obj.defenderVariableMap.containsKey(name.toUpperCase()))
 				{
-					expB.variable(defName);
+					expB.variable("DEFENDER_" + name.toUpperCase());
 				}
 			}
 			
@@ -111,16 +109,14 @@ public class StatusEvent extends AbstractOnDamageEvent
 				
 				for (String name : reliesOn)
 				{
-					String atkName = "ATTACKER_" + name.toUpperCase();
-					if (!obj.attackerVariableMap.containsKey(atkName))
+					if (!obj.attackerVariableMap.containsKey(name.toUpperCase()))
 					{
-						exp.setVariable(atkName, 0);
+						exp.setVariable("ATTACKER_" + name.toUpperCase(), 0);
 					}
 					
-					String defName = "DEFENDER_" + name.toUpperCase();
-					if (!obj.defenderVariableMap.containsKey(defName))
+					if (!obj.defenderVariableMap.containsKey(name.toUpperCase()))
 					{
-						exp.setVariable(defName, 0);
+						exp.setVariable("DEFENDER_" + name.toUpperCase(), 0);
 					}
 				}
 				
@@ -151,7 +147,7 @@ public class StatusEvent extends AbstractOnDamageEvent
 	public void parse(Element xml)
 	{
 		reliesOn = xml.getAttribute("ReliesOn", "").split(",");
-		condition = xml.get("Condition", null);
+		condition = xml.getAttribute("Condition", null);
 		attackerStatus = xml.getChildByName("Attacker");
 		defenderStatus = xml.getChildByName("Defender");
 		stacksEqn = xml.get("Stacks", null);

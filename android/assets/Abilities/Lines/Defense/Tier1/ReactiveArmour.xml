@@ -7,8 +7,7 @@
 	
 	<Events>
 		<OnReceiveDamage>
-			<Status>
-				<Condition>ATTACKER_METAL_ATK &gt; 0</Condition>
+			<Status Condition="ATTACKER_METAL_ATK &gt; 0">
 				<Defender>
 					<Duration>3</Duration>
 					<Events>
@@ -18,8 +17,7 @@
 					</Events>
 				</Defender>
 			</Status>
-			<Status>
-				<Condition>ATTACKER_WOOD_ATK &gt; 0</Condition>
+			<Status Condition="ATTACKER_WOOD_ATK &gt; 0">
 				<Defender>
 					<Duration>3</Duration>
 					<Events>
@@ -29,8 +27,7 @@
 					</Events>
 				</Defender>
 			</Status>
-			<Status>
-				<Condition>ATTACKER_AIR_ATK &gt; 0</Condition>
+			<Status Condition="ATTACKER_AIR_ATK &gt; 0">
 				<Defender>
 					<Duration>3</Duration>
 					<Events>
@@ -40,8 +37,7 @@
 					</Events>
 				</Defender>
 			</Status>
-			<Status>
-				<Condition>ATTACKER_WATER_ATK &gt; 0</Condition>
+			<Status Condition="ATTACKER_WATER_ATK &gt; 0">
 				<Defender>
 					<Duration>3</Duration>
 					<Events>
@@ -51,8 +47,7 @@
 					</Events>
 				</Defender>
 			</Status>
-			<Status>
-				<Condition>ATTACKER_FIRE_ATK &gt; 0</Condition>
+			<Status Condition="ATTACKER_FIRE_ATK &gt; 0">
 				<Defender>
 					<Duration>3</Duration>
 					<Events>

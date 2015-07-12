@@ -32,14 +32,12 @@
 	</Movement>
 	
 	<Effect>
-		<Damage>
-			<Statistics ReliesOn="Bloodlust">
-				<Metal_Atk>METAL_ATK*(1+0.15*BLOODLUST)</Metal_Atk>
-				<Wood_Atk>WOOD_ATK*(1+0.15*BLOODLUST)</Wood_Atk>
-				<Air_Atk>AIR_ATK*(1+0.15*BLOODLUST)</Air_Atk>
-				<Water_Atk>WATER_ATK*(1+0.15*BLOODLUST)</Water_Atk>
-				<Fire_Atk>FIRE_ATK*(1+0.15*BLOODLUST)</Fire_Atk>
-			</Statistics>
+		<Damage ReliesOn="Bloodlust">
+			<Metal_Atk>METAL_ATK*(1+0.15*BLOODLUST)</Metal_Atk>
+			<Wood_Atk>WOOD_ATK*(1+0.15*BLOODLUST)</Wood_Atk>
+			<Air_Atk>AIR_ATK*(1+0.15*BLOODLUST)</Air_Atk>
+			<Water_Atk>WATER_ATK*(1+0.15*BLOODLUST)</Water_Atk>
+			<Fire_Atk>FIRE_ATK*(1+0.15*BLOODLUST)</Fire_Atk>
 		</Damage>
 	</Effect>
 	

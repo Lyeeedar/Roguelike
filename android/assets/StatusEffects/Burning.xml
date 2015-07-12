@@ -9,8 +9,8 @@
 	
 	<Events>
 		<OnTurn>
-			<DOT>
-				<Damage>5+BURNING/3</Damage>
+			<DOT ReliesOn="Burning">
+				<Fire_Atk>5+BURNING/5</Fire_Atk>
 			</DOT>
 		</OnTurn>
 	</Events>

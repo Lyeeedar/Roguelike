@@ -113,6 +113,8 @@ public class Entity
 				itr.remove();
 			}
 		}
+		
+		stacks = stackStatusEffects();
 	}
 	
 	//----------------------------------------------------------------------
@@ -151,7 +153,7 @@ public class Entity
 		Item weapon = getInventory().getEquip(EquipmentSlot.MAINWEAPON);
 		Sprite hitEffect = weapon != null ? weapon.HitEffect : m_defaultHitEffect;
 		
-		Global.calculateDamage(this, other, null);
+		Global.calculateDamage(this, other, null, true);
 		
 		// add hit effects
 		SpriteEffect e = new SpriteEffect(hitEffect, dir, null);
@@ -163,9 +165,7 @@ public class Entity
 	//----------------------------------------------------------------------
 	public void applyDamage(int dam)
 	{
-		HP = Math.max(HP-dam, 0);
-		
-		RoguelikeGame.Instance.addConsoleMessage(new Line(new Message(Name+" takes"), new Message(" "+dam, Color.RED), new Message(" damage!")));		
+		HP = Math.max(HP-dam, 0);		
 	}
 	
 	//----------------------------------------------------------------------
@@ -384,7 +384,6 @@ public class Entity
 		
 		variableMap.put("HP", HP);
 		
-		Array<StatusEffectStack> stacks = stackStatusEffects();
 		for (StatusEffectStack s : stacks)
 		{
 			variableMap.put(s.effect.name.toUpperCase(), s.count);
@@ -405,7 +404,6 @@ public class Entity
 		
 		variableMap.put("HP", HP);
 		
-		Array<StatusEffectStack> stacks = stackStatusEffects();
 		for (StatusEffectStack s : stacks)
 		{
 			variableMap.put(s.effect.name.toUpperCase(), s.count);
@@ -428,6 +426,7 @@ public class Entity
 	private ActiveAbility[] m_slottedActiveAbilities = new ActiveAbility[Global.NUM_ABILITY_SLOTS];
 	private Inventory m_inventory = new Inventory();
 	public Array<StatusEffect> statusEffects = new Array<StatusEffect>(false, 16);
+	Array<StatusEffectStack> stacks;
 	
 	//----------------------------------------------------------------------
 	public String Name;

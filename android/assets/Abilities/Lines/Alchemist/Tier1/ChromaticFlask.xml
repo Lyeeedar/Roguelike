@@ -32,13 +32,11 @@
 	
 	<Effect>
 		<Damage>
-			<Statistics>
-				<Metal_ATK>rnd(50)</Metal_ATK>
-				<Wood_ATK>rnd(50)</Wood_ATK>
-				<Air_ATK>rnd(50)</Air_ATK>
-				<Water_ATK>rnd(50)</Water_ATK>
-				<Fire_ATK>rnd(50)</Fire_ATK>
-			</Statistics>
+			<Metal_ATK>rnd(50)</Metal_ATK>
+			<Wood_ATK>rnd(50)</Wood_ATK>
+			<Air_ATK>rnd(50)</Air_ATK>
+			<Water_ATK>rnd(50)</Water_ATK>
+			<Fire_ATK>rnd(50)</Fire_ATK>
 		</Damage>
 	</Effect>
 	

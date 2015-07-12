@@ -31,13 +31,8 @@
 	
 	<Effect>
 		<Damage>
-			<Statistics>
-				<Fire_ATK>10+FIRE_ATK*1.5</Fire_ATK>
-			</Statistics>
+			<Fire_ATK>10+FIRE_ATK*1.5</Fire_ATK>
 		</Damage>
-		<Status>
-			<Name>Burning</Name>
-		</Status>
 	</Effect>
 	
 </ActiveAbility>

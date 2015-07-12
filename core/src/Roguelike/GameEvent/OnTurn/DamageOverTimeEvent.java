@@ -1,10 +1,13 @@
 package Roguelike.GameEvent.OnTurn;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import Roguelike.Entity.Entity;
+import Roguelike.Global.Statistics;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -14,15 +17,27 @@ import exp4j.Operators.BooleanOperators;
 
 public class DamageOverTimeEvent extends AbstractOnTurnEvent
 {
-	String condition;
+	private String condition;	
+	private EnumMap<Statistics, String> equations = new EnumMap<Statistics, String>(Statistics.class);
+	private String[] reliesOn;
 	
-	String equation;
-	float remainder;
+	private float accumulator;
 	
 	@Override
 	public boolean handle(Entity entity, float time)
 	{
+		accumulator += time;
+		
+		if (accumulator < 0) { return false; }
+		
 		HashMap<String, Integer> variableMap = entity.getVariableMap();
+		for (String name : reliesOn)
+		{
+			if (!variableMap.containsKey(name.toUpperCase()))
+			{
+				variableMap.put(name.toUpperCase(), 0);
+			}
+		}
 		
 		if (condition != null)
 		{
@@ -32,6 +47,7 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 			Expression exp = EquationHelper.tryBuild(expB);
 			if (exp == null)
 			{
+				accumulator = 0;
 				return false;
 			}
 			
@@ -41,28 +57,42 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 			
 			if (conditionVal == 0)
 			{
+				accumulator = 0;
 				return false;
 			}
 		}
 		
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder(equation);
-		EquationHelper.setVariableNames(expB, variableMap, "");
-				
-		Expression exp = EquationHelper.tryBuild(expB);
-		if (exp == null)
+		EnumMap<Statistics, Integer> stats = Statistics.getStatisticsBlock();
+		
+		for (Statistics stat : Statistics.values())
 		{
-			return false;
+			if (equations.containsKey(stat))
+			{
+				String eqn = equations.get(stat);
+				
+				ExpressionBuilder expB = EquationHelper.createEquationBuilder(eqn);
+				EquationHelper.setVariableNames(expB, variableMap, "");
+									
+				Expression exp = EquationHelper.tryBuild(expB);
+				if (exp == null)
+				{
+					continue;
+				}
+				
+				EquationHelper.setVariableValues(exp, variableMap, "");
+									
+				int raw = (int)exp.evaluate();
+				
+				stats.put(stat, raw);
+			}
 		}
 		
-		EquationHelper.setVariableValues(exp, variableMap, "");
-		
-		float raw = (float)exp.evaluate() * time + remainder;
-		
-		int rounded = (int)Math.floor(raw);
-		
-		remainder = raw - rounded;
-		
-		entity.applyDamage(rounded);
+		while (accumulator > 1)
+		{
+			accumulator -= 1;
+			
+			Global.calculateDamage(entity, entity, Statistics.statsBlockToVariableBlock(stats), false);	
+		}
 		
 		return true;
 	}
@@ -70,8 +100,16 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 	@Override
 	public void parse(Element xml)
 	{
-		condition = xml.get("Condition", null);
-		equation = xml.get("Damage");
+		condition = xml.getAttribute("Condition", null);
+				
+		reliesOn = xml.getAttribute("ReliesOn", "").split(",");
+		
+		for (int i = 0; i < xml.getChildCount(); i++)
+		{
+			Element sEl = xml.getChild(i);
+			
+			Statistics el = Statistics.valueOf(sEl.getName().toUpperCase());
+			equations.put(el, sEl.getText());
+		}
 	}
-
 }

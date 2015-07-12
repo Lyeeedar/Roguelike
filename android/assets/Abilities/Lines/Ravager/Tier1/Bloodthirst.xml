@@ -14,8 +14,7 @@
 			<Fire_Atk>FIRE_ATK*(0.15*BLOODLUST)</Fire_Atk>
 		</Constant>
 		<OnReceiveDamage>
-			<Status>
-				<Condition>rnd(1)&lt;0.2</Condition>
+			<Status Condition="rnd(1) < 0.2">
 				<Defender>Bloodlust</Defender>
 			</Status>
 		</OnReceiveDamage>

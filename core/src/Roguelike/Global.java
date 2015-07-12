@@ -9,7 +9,10 @@ import Roguelike.Entity.Entity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.Tiles.GameTile;
+import Roguelike.UI.MessageStack.Line;
+import Roguelike.UI.MessageStack.Message;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -196,11 +199,11 @@ public class Global
 	//----------------------------------------------------------------------
 	public enum Tier1Element
 	{
-		METAL,
-		WOOD,
-		AIR,
-		WATER,
-		FIRE;
+		METAL(Color.LIGHT_GRAY),
+		WOOD(Color.GREEN),
+		AIR(Color.CYAN),
+		WATER(Color.BLUE),
+		FIRE(Color.ORANGE);
 		
 		public Tier1Element Weakness;
 		public Tier1Element Strength;
@@ -209,6 +212,8 @@ public class Global
 		public Statistics Pierce;
 		public Statistics Defense;
 		public Statistics Hardiness;
+		
+		public Color Colour;
 		
 		static
 		{
@@ -228,8 +233,10 @@ public class Global
 			Tier1Element.FIRE.Strength = Tier1Element.METAL;
 		}
 		
-		Tier1Element()
+		Tier1Element(Color colour)
 		{
+			this.Colour = colour;
+			
 			Attack = Statistics.valueOf(toString()+"_ATK");
 			Pierce = Statistics.valueOf(toString()+"_PIERCE");
 			Defense = Statistics.valueOf(toString()+"_DEF");
@@ -292,7 +299,7 @@ public class Global
 	}
 	
 	//----------------------------------------------------------------------
-	public static void calculateDamage(Entity attacker, Entity defender, HashMap<String, Integer> additionalAttack)
+	public static void calculateDamage(Entity attacker, Entity defender, HashMap<String, Integer> additionalAttack, boolean doEvents)
 	{
 		DamageObject damObj = new DamageObject(attacker, defender, additionalAttack);
 		
@@ -317,22 +324,37 @@ public class Global
 		
 		damObj.setDamageVariables();
 		
-		for (GameEventHandler handler : attacker.getAllHandlers())
+		if (doEvents)
 		{
-			handler.onDealDamage(damObj);
-		}
-		
-		for (GameEventHandler handler : defender.getAllHandlers())
-		{
-			handler.onReceiveDamage(damObj);
+			for (GameEventHandler handler : attacker.getAllHandlers())
+			{
+				handler.onDealDamage(damObj);
+			}
+			
+			for (GameEventHandler handler : defender.getAllHandlers())
+			{
+				handler.onReceiveDamage(damObj);
+			}
 		}
 				
 		int totalDamage = 0;
 		
+		Line line = new Line(new Message(attacker.Name + " hits " + defender.Name + " for"));
+		
 		for (Tier1Element el : Tier1Element.values())
 		{
-			totalDamage += damObj.damageMap.get(el);
+			int dam = damObj.damageMap.get(el);
+			totalDamage += dam;
+			
+			if (dam != 0)
+			{
+				line.messages.add(new Message(", " + dam + "(" + el.toString().toLowerCase() + ")", el.Colour));
+			}			
 		}
+		
+		line.messages.add(new Message(" damage!"));
+		
+		RoguelikeGame.Instance.addConsoleMessage(line);
 		
 		defender.applyDamage(totalDamage);
 	}

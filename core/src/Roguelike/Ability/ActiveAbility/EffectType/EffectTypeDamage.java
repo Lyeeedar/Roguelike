@@ -28,14 +28,12 @@ public class EffectTypeDamage extends AbstractEffectType
 	
 	@Override
 	public void parse(Element xml)
-	{	
-		Element statsElement = xml.getChildByName("Statistics");
+	{			
+		reliesOn = xml.getAttribute("ReliesOn", "").split(",");
 		
-		reliesOn = statsElement.getAttribute("ReliesOn", "").split(",");
-		
-		for (int i = 0; i < statsElement.getChildCount(); i++)
+		for (int i = 0; i < xml.getChildCount(); i++)
 		{
-			Element sEl = statsElement.getChild(i);
+			Element sEl = xml.getChild(i);
 			
 			Statistics el = Statistics.valueOf(sEl.getName().toUpperCase());
 			equations.put(el, sEl.getText());
@@ -84,7 +82,7 @@ public class EffectTypeDamage extends AbstractEffectType
 				}
 			}
 			
-			Global.calculateDamage(aa.caster, tile.Entity, Statistics.statsBlockToVariableBlock(stats));			
+			Global.calculateDamage(aa.caster, tile.Entity, Statistics.statsBlockToVariableBlock(stats), true);			
 			tile.Entity.SpriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
 		}
 		else

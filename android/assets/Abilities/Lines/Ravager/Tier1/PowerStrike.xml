@@ -33,13 +33,11 @@
 	
 	<Effect>
 		<Damage>
-			<Statistics>
-				<Metal_ATK>METAL_ATK*1.5</Metal_ATK>
-				<Wood_ATK>WOOD_ATK*1.5</Wood_ATK>
-				<Air_ATK>AIR_ATK*1.5</Air_ATK>
-				<Water_ATK>WATER_ATK*1.5</Water_ATK>
-				<Fire_ATK>FIRE_ATK*1.5</Fire_ATK>
-			</Statistics>
+			<Metal_ATK>METAL_ATK*1.5</Metal_ATK>
+			<Wood_ATK>WOOD_ATK*1.5</Wood_ATK>
+			<Air_ATK>AIR_ATK*1.5</Air_ATK>
+			<Water_ATK>WATER_ATK*1.5</Water_ATK>
+			<Fire_ATK>FIRE_ATK*1.5</Fire_ATK>
 		</Damage>
 	</Effect>
 	
