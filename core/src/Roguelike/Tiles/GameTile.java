@@ -1,5 +1,7 @@
 package Roguelike.Tiles;
 
+import java.util.HashSet;
+
 import Roguelike.Entity.Entity;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
@@ -69,8 +71,10 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	}
 
 	@Override
-	public boolean GetPassable()
+	public boolean GetPassable(HashSet<String> factions)
 	{
-		return TileData.Passable;
+		if (!TileData.Passable) { return false; }
+		
+		return Entity != null ? !Entity.isAllies(factions) : true ;
 	}
 }

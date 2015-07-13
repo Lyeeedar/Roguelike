@@ -1,5 +1,7 @@
 package Roguelike.Ability.ActiveAbility.MovementType;
 
+import java.util.HashSet;
+
 import Roguelike.Global.Direction;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Pathfinding.BresenhamLine;
@@ -25,7 +27,7 @@ public class MovementTypeBolt extends AbstractMovementType
 	@Override
 	public void init(ActiveAbility ab, int endx, int endy)
 	{
-		int[][] fullpath = BresenhamLine.line(ab.caster.Tile.x, ab.caster.Tile.y, endx, endy, ab.caster.Tile.Level.getGrid(), false, true);
+		int[][] fullpath = BresenhamLine.line(ab.caster.Tile.x, ab.caster.Tile.y, endx, endy, ab.caster.Tile.Level.getGrid(), false, true, new HashSet<String>());
 		
 		Array<int[]> actualpath = new Array<int[]>(fullpath.length);
 		for (int i = 1; i < ab.range+1 && i < fullpath.length; i++)

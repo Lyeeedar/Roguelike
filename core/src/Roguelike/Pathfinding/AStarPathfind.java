@@ -10,7 +10,6 @@
  ******************************************************************************/
 package Roguelike.Pathfinding;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
@@ -32,22 +31,24 @@ public class AStarPathfind
 		{ +1, +1 }
 	};
 	
-	PathfindingTile[][] grid;
-	int width;
-	int height;
-	boolean canMoveDiagonal;
+	private PathfindingTile[][] grid;
+	private int width;
+	private int height;
+	private boolean canMoveDiagonal;
 	
-	int startx;
-	int starty;
-	int endx;
-	int endy;
-	int currentx;
-	int currenty;
-	Node[][] nodes;
+	private int startx;
+	private int starty;
+	private int endx;
+	private int endy;
+	private int currentx;
+	private int currenty;
+	private Node[][] nodes;
 	
-	PriorityQueue<Node> openList = new PriorityQueue<Node>();
+	private PriorityQueue<Node> openList = new PriorityQueue<Node>();
+	
+	private HashSet<String> factions;
 
-	public AStarPathfind(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal)
+	public AStarPathfind(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, HashSet<String> factions)
 	{
 		this.grid = grid;
 		this.width = grid.length;
@@ -60,6 +61,8 @@ public class AStarPathfind
 		this.currenty = starty;
 		this.endx = endx;
 		this.endy = endy;
+		
+		this.factions = factions;
 	}
 	
 	private void path()
@@ -107,7 +110,7 @@ public class AStarPathfind
 			return;
 		}
 		
-		if (!isStart(x, y) && !isEnd(x, y) && !grid[x][y].GetPassable()) { return; }
+		if (!isStart(x, y) && !isEnd(x, y) && !grid[x][y].GetPassable(factions)) { return; }
 		
 		if (nodes[x][y] == null)
 		{
@@ -220,7 +223,7 @@ public class AStarPathfind
 		}
 	}
 		
-	class Node implements Comparable<Node>
+	private class Node implements Comparable<Node>
 	{
 		int x;
 		int y;

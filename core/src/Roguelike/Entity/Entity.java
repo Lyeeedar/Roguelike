@@ -193,6 +193,17 @@ public class Entity
 		return false;
 	}
 	
+	// ----------------------------------------------------------------------
+	public boolean isAllies(HashSet<String> other)
+	{
+		for (String faction : m_factions)
+		{
+			if (other.contains(faction)) { return true; }
+		}
+
+		return false;
+	}
+	
 	//----------------------------------------------------------------------
 	public static Entity load(String name)
 	{

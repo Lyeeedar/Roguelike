@@ -1,5 +1,6 @@
 package Roguelike.DungeonGeneration;
 
+import java.util.HashSet;
 import java.util.Random;
 
 import com.badlogic.gdx.utils.Array;
@@ -44,7 +45,7 @@ public class VillageGenerator
 		public TileType tileType = TileType.GRASS;
 		
 		@Override
-		public boolean GetPassable()
+		public boolean GetPassable(HashSet<String> factions)
 		{
 			return tileType == TileType.GRASS;
 		}

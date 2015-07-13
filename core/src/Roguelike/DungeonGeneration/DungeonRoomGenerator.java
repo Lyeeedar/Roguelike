@@ -11,6 +11,7 @@
 package Roguelike.DungeonGeneration;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 
 import PaulChew.Pnt;
@@ -42,7 +43,7 @@ public class DungeonRoomGenerator
 		public TileType tileType = TileType.WALL;
 		
 		@Override
-		public boolean GetPassable()
+		public boolean GetPassable(HashSet<String> factions)
 		{
 			return true;
 		}
@@ -225,7 +226,7 @@ public class DungeonRoomGenerator
 
 		for (Pnt[] p : paths)
 		{
-			Pathfinder pathFind = new Pathfinder(tiles, (int)p[0].coord(0), (int)p[0].coord(1), (int)p[1].coord(0), (int)p[1].coord(1), false);
+			Pathfinder pathFind = new Pathfinder(tiles, (int)p[0].coord(0), (int)p[0].coord(1), (int)p[1].coord(0), (int)p[1].coord(1), false, new HashSet<String>());
 			carveCorridor(pathFind.getPath());
 		}
 	}
