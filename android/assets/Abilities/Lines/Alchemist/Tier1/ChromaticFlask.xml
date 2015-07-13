@@ -22,7 +22,7 @@
 	</Type>
 	
 	<Targeting>
-		<Entity></Entity>
+		<Tile></Tile>
 	</Targeting>
 	
 	<Movement>

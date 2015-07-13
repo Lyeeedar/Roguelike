@@ -471,7 +471,7 @@ public class Entity
 	private ActiveAbility[] m_slottedActiveAbilities = new ActiveAbility[Global.NUM_ABILITY_SLOTS];
 	private Inventory m_inventory = new Inventory();
 	public Array<StatusEffect> statusEffects = new Array<StatusEffect>(false, 16);
-	Array<StatusEffectStack> stacks;
+	private Array<StatusEffectStack> stacks;
 	
 	//----------------------------------------------------------------------
 	public String Name;

@@ -36,5 +36,7 @@ public abstract class AbstractOnDamageEvent
 	static
 	{
 		ClassMap.put("STATUS", StatusEvent.class);
+		ClassMap.put("HEAL", HealEvent.class);
+		ClassMap.put("DAMAGE", DamageEvent.class);
 	}
 }

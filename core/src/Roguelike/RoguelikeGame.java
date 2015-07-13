@@ -121,6 +121,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 						//level.player.Inventory.Items.add(AssetManager.loadItem("Jewelry/Necklace/GoldNecklace"));
 					}
 					level.player.getInventory().m_items.add(Item.load("Weapon/MainWeapon/sword"));
+					level.player.getInventory().m_items.add(Item.load("Weapon/OffWeapon/shield"));
 					level.player.getInventory().m_items.add(Item.load("Armour/Body/WoodArmour"));
 					level.player.getInventory().m_items.add(Item.load("Jewelry/Necklace/GoldNecklace"));
 										

@@ -339,8 +339,9 @@ public class Global
 				
 		int totalDamage = 0;
 		
-		Line line = new Line(new Message(attacker.Name + " hits " + defender.Name + " for"));
+		Line line = new Line(new Message(" ("));
 		
+		boolean first = true;
 		for (Tier1Element el : Tier1Element.values())
 		{
 			int dam = damObj.damageMap.get(el);
@@ -348,13 +349,26 @@ public class Global
 			
 			if (dam != 0)
 			{
-				line.messages.add(new Message(", " + dam + "(" + el.toString().toLowerCase() + ")", el.Colour));
+				if (first)
+				{
+					first = false;					
+					line.messages.add(new Message("" + dam, el.Colour));
+				}
+				else
+				{
+					line.messages.add(new Message(", " + dam, el.Colour));
+				}
 			}			
 		}
 		
-		line.messages.add(new Message(" damage!"));
+		line.messages.add(new Message(")"));
 		
-		RoguelikeGame.Instance.addConsoleMessage(line);
+		line.messages.insert(0, new Message(attacker.Name + " hits " + defender.Name + " for " + totalDamage + " damage!"));
+		
+		if (totalDamage > 0)
+		{
+			RoguelikeGame.Instance.addConsoleMessage(line);
+		}
 		
 		defender.applyDamage(totalDamage);
 	}

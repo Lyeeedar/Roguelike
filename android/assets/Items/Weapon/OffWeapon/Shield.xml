@@ -16,7 +16,8 @@
 	<Events>
 	    <OnReceiveDamage>
 	        <Damage Condition="rnd(1) < 0.5">
-	            <Metal_Atk>-ATTACKER_METAL_ATK</Metal_Atk>
+	            <Metal>-DAMAGE_METAL</Metal>
+	            <Wood>-DAMAGE_WOOD</Wood>
 	        </Damage>
 	    </OnReceiveDamage>
 	</Events>

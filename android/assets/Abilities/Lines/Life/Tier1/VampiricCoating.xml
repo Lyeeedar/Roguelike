@@ -30,7 +30,9 @@
 				<Duration>10</Duration>
 				<Events>
 					<OnDealDamage>
-					    <Heal>DAMAGE*0.2</Heal>
+					    <Heal>
+					    	<Attacker>DAMAGE*0.2</Attacker>
+					    </Heal>
 					</OnDealDamage>
 				</Events>
 			</Attacker>

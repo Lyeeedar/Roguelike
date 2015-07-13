@@ -3,26 +3,21 @@ package Roguelike.GameEvent.Damage;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.GameEvent.IGameObject;
-import Roguelike.StatusEffect.StatusEffect;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-import exp4j.Functions.RandomFunction;
 import exp4j.Helpers.EquationHelper;
-import exp4j.Operators.BooleanOperators;
 
-public class StatusEvent extends AbstractOnDamageEvent
+public class HealEvent extends AbstractOnDamageEvent
 {
-	public String condition;
-	public Element attackerStatus;
-	public Element defenderStatus;
-	public String stacksEqn;
-	
+	private String condition;
+	private String attacker;
+	private String defender;
 	private String[] reliesOn;
 	
 	@Override
 	public boolean handle(DamageObject obj, IGameObject parent)
-	{		
+	{
 		if (condition != null)
 		{
 			ExpressionBuilder expB = EquationHelper.createEquationBuilder(condition);
@@ -44,35 +39,35 @@ public class StatusEvent extends AbstractOnDamageEvent
 			}
 		}
 		
-		int stacks = 1;
-		
-		if (stacksEqn != null)
+		if (attacker != null)
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder(stacksEqn);
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder(attacker);
 			obj.writeVariableNames(expB, reliesOn);
-			
+
 			Expression exp = EquationHelper.tryBuild(expB);
 			if (exp != null)
 			{
 				obj.writeVariableValues(exp, reliesOn);
 				
-				stacks = (int)Math.ceil(exp.evaluate());
+				int raw = (int)exp.evaluate();
+				
+				obj.attacker.applyHealing(raw);
 			}
 		}
 		
-		if (attackerStatus != null)
+		if (defender != null)
 		{
-			for (int i = 0; i < stacks; i++)
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder(defender);
+			obj.writeVariableNames(expB, reliesOn);
+
+			Expression exp = EquationHelper.tryBuild(expB);
+			if (exp != null)
 			{
-				obj.attacker.addStatusEffect(StatusEffect.load(attackerStatus, parent));
-			}
-		}
-		
-		if (defenderStatus != null)
-		{
-			for (int i = 0; i < stacks; i++)
-			{
-				obj.defender.addStatusEffect(StatusEffect.load(defenderStatus, parent));
+				obj.writeVariableValues(exp, reliesOn);
+				
+				int raw = (int)exp.evaluate();
+				
+				obj.defender.applyHealing(raw);
 			}
 		}
 		
@@ -82,11 +77,10 @@ public class StatusEvent extends AbstractOnDamageEvent
 	@Override
 	public void parse(Element xml)
 	{
-		reliesOn = xml.getAttribute("ReliesOn", "").split(",");
+		reliesOn = xml.getAttribute("ReliesOn", "").split(",");		
 		condition = xml.getAttribute("Condition", null);
-		attackerStatus = xml.getChildByName("Attacker");
-		defenderStatus = xml.getChildByName("Defender");
-		stacksEqn = xml.get("Stacks", null);
+		attacker = xml.get("Attacker", null);
+		defender = xml.get("Defender", null);
 	}
 
 }
