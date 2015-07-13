@@ -28,4 +28,8 @@
 		<Item>Jewelry/Necklace/GoldNecklace</Item>
 	</Inventory>
 	
+	<ActiveAbilities>
+		<Ability>Pyromaniac/Tier1/Flamestrike</Ability>
+	</ActiveAbilities>
+	
 </Entity>

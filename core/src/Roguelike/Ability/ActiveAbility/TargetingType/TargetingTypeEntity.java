@@ -22,11 +22,11 @@ public class TargetingTypeEntity extends AbstractTargetingType
 		
 		if (notSelf)
 		{
-			return tile.Entity != null && tile.Entity != ab.caster;
+			return tile.Entity != null && tile.Entity != ab.caster && !tile.Entity.isAllies(ab.caster);
 		}
 		else
 		{
-			return tile.Entity != null;
+			return tile.Entity != null && !tile.Entity.isAllies(ab.caster);
 		}
 	}
 

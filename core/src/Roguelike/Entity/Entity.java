@@ -98,7 +98,7 @@ public class Entity
 				boolean gtz = a.cooldownAccumulator > 0;
 				a.cooldownAccumulator -= cost;
 				
-				if (gtz && a.cooldownAccumulator <= 0)
+				if (gtz && a.cooldownAccumulator <= 0 && Tile.Level.player == this)
 				{
 					RoguelikeGame.Instance.addAbilityAvailabilityAction(a.Icon);
 				}
@@ -114,7 +114,7 @@ public class Entity
 		while (itr.hasNext())
 		{
 			StatusEffect se = itr.next();
-						
+
 			if(se.duration <= 0)
 			{
 				itr.remove();
@@ -272,6 +272,7 @@ public class Entity
 				
 				ActiveAbility ab = ActiveAbility.load(abEl.getText());
 				m_slottedActiveAbilities[i] = ab;
+				ab.caster = this;
 			}
 		}
 		
@@ -396,6 +397,7 @@ public class Entity
 		}
 		
 		m_slottedActiveAbilities[index] = aa;
+		aa.caster = this;
 		
 		for (int i = 0; i < 3; i++)
 		{

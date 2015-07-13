@@ -39,7 +39,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	private AbstractAbilityType abilityType;
 	private AbstractTargetingType targetingType;
 	private AbstractMovementType movementType;
-	private Array<AbstractEffectType> effectTypes = new Array<AbstractEffectType>();
+	public Array<AbstractEffectType> effectTypes = new Array<AbstractEffectType>();
 	public Array<GameTile> AffectedTiles = new Array<GameTile>();
 	
 	public Entity caster;

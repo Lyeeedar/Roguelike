@@ -456,7 +456,6 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 						GameTile tile = level.getGameTile(x, y);
 						if (preparedAbility.isTargetValid(tile, abilityTiles))
 						{
-							preparedAbility.lockTarget(tile);
 							level.player.Tasks.add(new TaskUseAbility(new int[]{x, y}, preparedAbility));
 						}
 					}

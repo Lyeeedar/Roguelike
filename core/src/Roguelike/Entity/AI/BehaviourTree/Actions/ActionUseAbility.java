@@ -10,22 +10,28 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public class ActionUseAbility extends AbstractAction
 {
 	String abilityKey;
-	String targetKey;
 
 	@Override
 	public BehaviourTreeState evaluate(Entity entity)
 	{
 		ActiveAbility ability = (ActiveAbility)getData(abilityKey, null);
-		int[] target = (int[])getData(targetKey, null);
 		
 		// if no target or ability, fail
-		if (target == null || ability == null)
+		if (ability == null)
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
 		
-		entity.Tasks.add(new TaskUseAbility(target, ability));
+		int[][] validTargets = ability.getValidTargets();
+		
+		if (validTargets.length == 0)
+		{
+			State = BehaviourTreeState.FAILED;
+			return State;
+		}
+		
+		entity.Tasks.add(new TaskUseAbility(validTargets[0], ability));
 		
 		State = BehaviourTreeState.SUCCEEDED;
 		return State;
@@ -40,6 +46,5 @@ public class ActionUseAbility extends AbstractAction
 	public void parse(Element xmlElement)
 	{
 		abilityKey = xmlElement.getAttribute("Key");
-		targetKey = xmlElement.getAttribute("Target");
 	}
 }

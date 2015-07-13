@@ -1,4 +1,4 @@
-<Entity Extends="human" >
+<Entity Extends="Enemies/orc" >
 	<Name>Orc</Name>
 
 	<Sprite>
