@@ -60,8 +60,8 @@ public class AbilityPanel extends Widget
 		int xoffset = (int)getX();		
 		int top = (int)(getY()+getHeight());
 		
-		boolean aaDragged = RoguelikeGame.Instance.dragDropPayload != null && RoguelikeGame.Instance.dragDropPayload.obj instanceof ActiveAbility;
-		boolean paDragged = RoguelikeGame.Instance.dragDropPayload != null && RoguelikeGame.Instance.dragDropPayload.obj instanceof PassiveAbility;
+		boolean aaDragged = RoguelikeGame.Instance.dragDropPayload != null && RoguelikeGame.Instance.dragDropPayload.shouldDraw() && RoguelikeGame.Instance.dragDropPayload.obj instanceof ActiveAbility;
+		boolean paDragged = RoguelikeGame.Instance.dragDropPayload != null && RoguelikeGame.Instance.dragDropPayload.shouldDraw() && RoguelikeGame.Instance.dragDropPayload.obj instanceof PassiveAbility;
 		
 		float x = 0;
 		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
@@ -190,12 +190,43 @@ public class AbilityPanel extends Widget
 					
 					if (aa != null && aa.cooldownAccumulator <= 0)
 					{
+						RoguelikeGame.Instance.dragDropPayload = new DragDropPayload(aa, aa.getIcon(), x-16, getHeight() - y - 16);
+					}
+				}
+				else if (yIndex == 1)
+				{
+					PassiveAbility pa = entity.getSlottedPassiveAbilities()[xIndex];
+					
+					if (pa != null)
+					{
+						RoguelikeGame.Instance.dragDropPayload = new DragDropPayload(pa, pa.getIcon(), x-16, getHeight() - y - 16);
+					}
+				}
+			}	
+			
+			return true;
+		}
+		
+		@Override
+		public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+		{
+			int xIndex = (int) (x / TileSize);
+			int yIndex = (int) ((getHeight() - y) / TileSize);
+			
+			if (tooltip != null) { tooltip.remove(); tooltip = null; }
+			
+			if (xIndex < Global.NUM_ABILITY_SLOTS)
+			{
+				if (yIndex == 0)
+				{
+					ActiveAbility aa = entity.getSlottedActiveAbilities()[xIndex];
+					
+					if (aa != null && aa.cooldownAccumulator <= 0)
+					{
 						RoguelikeGame.Instance.prepareAbility(aa);
 					}
 				}
-			}
-			
-			return true;
+			}		
 		}
 		
 		@Override

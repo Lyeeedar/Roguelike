@@ -7,6 +7,7 @@ import Roguelike.Global.Statistics;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.AbilityPool;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.DungeonGeneration.DungeonRoomGenerator;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.Tasks.TaskUseAbility;
@@ -48,6 +49,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
@@ -285,7 +288,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			}
 		}
 		
-		if (!mouseOverTabs)
+		if (!mouseOverUI)
 		{					
 			if (
 					mousex < 0 || mousex >= level.width ||
@@ -427,8 +430,14 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)
 	{
-		if (!mouseOverTabs)
+		if (!mouseOverUI)
 		{
+			if (contextMenu != null)
+			{
+				contextMenu.remove();
+				contextMenu = null;
+			}
+			
 			screenY = Gdx.graphics.getHeight() - screenY;
 			
 			int offsetx = Gdx.graphics.getWidth() / 2 - level.player.Tile.x * TileSize;
@@ -457,11 +466,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			{
 				if (button == Buttons.RIGHT)
 				{
-//					ActiveAbility aa = abilityPanel.getSelectedAbility();
-//					if (aa != null && aa.cooldownAccumulator <= 0)
-//					{
-//						level.player.Tasks.add(new TaskUseAbility(new int[]{x, y}, aa));
-//					}
+					createAbilityContextMenu(screenX, screenY);
 				}
 				else
 				{
@@ -471,6 +476,8 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					}
 				}
 			}
+			
+			return true;
 		}
 		else
 		{
@@ -484,11 +491,36 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button)
 	{
-		if (dragDropPayload != null && isInBounds(screenX, screenY, abilityPanel))
+		if (dragDropPayload != null)
 		{
-			Vector2 tmp = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
-			tmp = abilityPanel.stageToLocalCoordinates(tmp);
-			abilityPanel.handleDrop(tmp.x, tmp.y);
+			if (isInBounds(screenX, screenY, abilityPanel))
+			{
+				if (dragDropPayload.shouldDraw())
+				{
+					Vector2 tmp = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+					tmp = abilityPanel.stageToLocalCoordinates(tmp);
+					abilityPanel.handleDrop(tmp.x, tmp.y);
+				}
+			}
+			else
+			{
+				if (dragDropPayload.obj instanceof ActiveAbility)
+				{
+					int index = level.player.getActiveAbilityIndex((ActiveAbility)dragDropPayload.obj);
+					if (index != -1)
+					{
+						level.player.slotActiveAbility(null, index);
+					}
+				}
+				else if (dragDropPayload.obj instanceof PassiveAbility)
+				{
+					int index = level.player.getPassiveAbilityIndex((PassiveAbility)dragDropPayload.obj);
+					if (index != -1)
+					{
+						level.player.slotPassiveAbility(null, index);
+					}
+				}
+			}
 		}
 		
 		dragDropPayload = null;
@@ -525,12 +557,12 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			(hpWidget != null && isInBounds(screenX, screenY, hpWidget))
 			)
 		{
-			mouseOverTabs = true;
+			mouseOverUI = true;
 			tabPane.focusCurrentTab(stage);
 		}
 		else
 		{
-			mouseOverTabs = false;
+			mouseOverUI = false;
 			
 			mousePosX = screenX;
 			mousePosY = Gdx.graphics.getHeight() - screenY;
@@ -579,7 +611,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	@Override
 	public boolean scrolled(int amount)
 	{
-		if (!mouseOverTabs)
+		if (!mouseOverUI)
 		{
 			TileSize -= amount*5;
 			if (TileSize < 8)
@@ -613,20 +645,77 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		table.setVisible(true);
 	}
 	
-	//endregion Public Methods
-	//####################################################################//
-	//region Private Methods
-	
 	public boolean isInBounds(float x, float y, Widget actor)
 	{
 		Vector2 tmp = new Vector2(x, Gdx.graphics.getHeight() - y);
 		tmp = actor.stageToLocalCoordinates(tmp);
 		return tmp.x >= 0 && tmp.x <= actor.getPrefWidth() && tmp.y >= 0 && tmp.y <= actor.getPrefHeight();
 	}
+	
+	//endregion Public Methods
+	//####################################################################//
+	//region Private Methods
+	
+	private void createAbilityContextMenu(int screenX, int screenY)
+	{
+		Array<ActiveAbility> available = new Array<ActiveAbility>();
+		
+		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
+		{
+			ActiveAbility aa = level.player.getSlottedActiveAbilities()[i];
+			if (aa != null && aa.cooldownAccumulator <= 0)
+			{
+				available.add(aa);
+			}
+		}
+		
+		if (available.size > 0)
+		{
+			Table table = new Table();
+			
+			for (final ActiveAbility aa : available)
+			{
+				Table row = new Table();
+				
+				row.add(new SpriteWidget(aa.Icon));
+				row.add(new Label(aa.getName(), skin)).expand().fill();
+				
+				row.addListener(new InputListener()
+				{
+					@Override
+					public boolean mouseMoved (InputEvent event, float x, float y)
+					{
+						mouseOverUI = true;
+						
+						return true;
+					}
+					
+					@Override
+					public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+					{	
+						prepareAbility(aa);
+						contextMenu.remove();
+						contextMenu = null;
+						
+						return true;
+					}
+				});
+				
+				table.add(row).width(Value.percentWidth(1, table));
+				table.row();
+			}
+			
+			contextMenu = new Tooltip(table, skin, stage);
+			contextMenu.show(screenX, screenY);
+		}
+	}
 		
 	//endregion Private Methods
 	//####################################################################//
 	//region Data
+	
+	//----------------------------------------------------------------------
+	private Tooltip contextMenu;
 	
 	//----------------------------------------------------------------------
 	private static int TileSize = 32;
@@ -657,7 +746,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	
 	Tooltip tooltip;
 	
-	boolean mouseOverTabs;
+	boolean mouseOverUI;
 	
 	//----------------------------------------------------------------------
 	Level level;

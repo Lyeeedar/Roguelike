@@ -335,6 +335,34 @@ public class Entity
 	}
 	
 	//----------------------------------------------------------------------
+	public int getActiveAbilityIndex(ActiveAbility aa)
+	{
+		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
+		{
+			if (m_slottedActiveAbilities[i] == aa)
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	//----------------------------------------------------------------------
+	public int getPassiveAbilityIndex(PassiveAbility pa)
+	{
+		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
+		{
+			if (m_slottedPassiveAbilities[i] == pa)
+			{
+				return i;
+			}
+		}
+
+		return -1;
+	}
+	
+	//----------------------------------------------------------------------
 	public ActiveAbility[] getSlottedActiveAbilities()
 	{
 		return m_slottedActiveAbilities;
