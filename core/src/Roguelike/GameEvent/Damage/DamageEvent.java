@@ -75,14 +75,14 @@ public class DamageEvent extends AbstractOnDamageEvent
 	public void parse(Element xml)
 	{
 		reliesOn = xml.getAttribute("ReliesOn", "").split(",");
-		condition = xml.getAttribute("Condition", null);
+		condition = xml.getAttribute("Condition", null); if (condition != null) { condition = condition.toUpperCase(); }
 		
 		for (int i = 0; i < xml.getChildCount(); i++)
 		{
 			Element sEl = xml.getChild(i);
 			
 			Tier1Element el = Tier1Element.valueOf(sEl.getName().toUpperCase());
-			equations.put(el, sEl.getText());
+			equations.put(el, sEl.getText().toUpperCase());
 		}
 	}
 }

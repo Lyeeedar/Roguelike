@@ -20,7 +20,7 @@ public class EffectTypeHeal extends AbstractEffectType
 	public void parse(Element xml)
 	{	
 		reliesOn = xml.getAttribute("ReliesOn", "").split(",");		
-		equation = xml.get("Heal");
+		equation = xml.get("Heal").toUpperCase();
 	}
 
 	@Override

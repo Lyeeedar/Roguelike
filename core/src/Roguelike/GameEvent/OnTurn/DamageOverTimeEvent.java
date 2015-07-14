@@ -100,7 +100,7 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 	@Override
 	public void parse(Element xml)
 	{
-		condition = xml.getAttribute("Condition", null);
+		condition = xml.getAttribute("Condition", null); if (condition != null) { condition = condition.toUpperCase(); }
 				
 		reliesOn = xml.getAttribute("ReliesOn", "").split(",");
 		
@@ -109,7 +109,7 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 			Element sEl = xml.getChild(i);
 			
 			Statistics el = Statistics.valueOf(sEl.getName().toUpperCase());
-			equations.put(el, sEl.getText());
+			equations.put(el, sEl.getText().toUpperCase());
 		}
 	}
 }
