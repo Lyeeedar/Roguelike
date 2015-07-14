@@ -68,6 +68,7 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 		
 		Name = xmlElement.get("Name", Name);
 		Icon = xmlElement.getChildByName("Icon") != null ? AssetManager.loadSprite(xmlElement.getChildByName("Icon")) : Icon;
+		Description = xmlElement.get("Description", Description);
 		
 		Element eventsElement = xmlElement.getChildByName("Events");
 		if (eventsElement != null)

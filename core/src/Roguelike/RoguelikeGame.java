@@ -88,7 +88,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	{
 		batch = new SpriteBatch();
 		
-		FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/SDS_8x8.ttf"));
+		FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = 10;
 		parameter.borderWidth = 1;
@@ -105,7 +105,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		generator.generate();
 		level = generator.getLevel();
 		
-		border = AssetManager.loadSprite("GUI/frame", 0.5f, new int[]{32, 32}, new int[]{0, 0});
+		border = AssetManager.loadSprite("GUI/frame");
 		
 		boolean exit = false;
 		for (int x = 0; x < level.width; x++)

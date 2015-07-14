@@ -3,6 +3,9 @@
 	<Description>The sight of blood fills you with terrible joy, spurring you onto even greater heights of violence.</Description>
 	<Icon>
 		<Name>Skills/Bloodlust</Name>
+		<Colour>
+			<Red>1</Red>
+		</Colour>
 	</Icon>
 	
 	<Events>

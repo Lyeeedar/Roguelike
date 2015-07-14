@@ -3,6 +3,7 @@ package Roguelike.DungeonGeneration;
 import java.util.HashSet;
 import java.util.Random;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 
 import Roguelike.AssetManager;
@@ -74,10 +75,10 @@ public class VillageGenerator
 	
 	public Level getLevel()
 	{
-		Sprite wall = AssetManager.loadSprite("Objects/Wall", 0.5f, new int[]{16, 16}, new int[]{10, 3});
-		Sprite floor = AssetManager.loadSprite("Objects/Floor", 0.5f, new int[]{16, 16}, new int[]{8, 19});
-		Sprite grass = AssetManager.loadSprite("Objects/Floor", 0.5f, new int[]{16, 16}, new int[]{8, 7});
-		Sprite ceiling = AssetManager.loadSprite("Objects/Wall", 0.5f, new int[]{16, 16}, new int[]{10, 27});
+		Sprite wall = AssetManager.loadSprite("Objects/Wall", 0.5f, new int[]{16, 16}, new int[]{10, 3}, Color.WHITE);
+		Sprite floor = AssetManager.loadSprite("Objects/Floor", 0.5f, new int[]{16, 16}, new int[]{8, 19}, Color.WHITE);
+		Sprite grass = AssetManager.loadSprite("Objects/Floor", 0.5f, new int[]{16, 16}, new int[]{8, 7}, Color.WHITE);
+		Sprite ceiling = AssetManager.loadSprite("Objects/Wall", 0.5f, new int[]{16, 16}, new int[]{10, 27}, Color.WHITE);
 		
 		TileData wallData = new TileData(wall, null, null, true, false, "wall");
 		TileData floorData = new TileData(floor, null, null, false, true, "floor");

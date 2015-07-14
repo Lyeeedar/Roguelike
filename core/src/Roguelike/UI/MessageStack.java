@@ -20,7 +20,7 @@ public class MessageStack extends Widget
 	private static BitmapFont font;
 	static
 	{
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/SDS_8x8.ttf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = 10;
 		parameter.kerning = true;
@@ -46,7 +46,7 @@ public class MessageStack extends Widget
 		super.draw(batch, parentAlpha);
 		batch.setColor(Color.WHITE);
 				
-		float y = getY()+20;
+		float y = getY();
 		
 		for (Line l : messageList)
 		{
@@ -65,7 +65,7 @@ public class MessageStack extends Widget
 				height = layout.height;
 			}
 			
-			y += height;
+			y += height+5;
 			
 			if (y > getTop()) { break; }
 		}

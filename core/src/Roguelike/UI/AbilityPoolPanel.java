@@ -58,7 +58,7 @@ public class AbilityPoolPanel extends Widget
 		this.skin = skin;
 		this.stage = stage;
 		
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/SDS_8x8.ttf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = 10;
 		parameter.borderWidth = 1;
