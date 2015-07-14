@@ -1,6 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskWait;
 
@@ -12,7 +12,7 @@ public class ActionProcessInput extends AbstractAction
 {
 
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		int[] targetPos = (int[])getData("ClickPos", null);
 		

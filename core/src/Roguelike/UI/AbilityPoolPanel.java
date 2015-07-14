@@ -13,12 +13,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -49,8 +51,8 @@ public class AbilityPoolPanel extends Widget
 	private Tooltip tooltip;
 	
 	private int selectedAbilityLine = 0;
-	
-	private Ability unlocking;
+		
+	private final GlyphLayout layout = new GlyphLayout();
 	
 	public AbilityPoolPanel(AbilityPool abilityPool, Skin skin, Stage stage)
 	{
@@ -81,14 +83,13 @@ public class AbilityPoolPanel extends Widget
 	}
 	
 	private void calculateWidth()
-	{
-		float spaceSize = 10;//font.getSpaceWidth();
-		
+	{		
 		float maxLineWidth = 0;
 		
 		for (AbilityLine line : abilityPool.abilityLines)
 		{
-			float temp = line.name.length() * spaceSize;
+			layout.setText(font, line.name);
+			float temp = layout.width+30;
 			if (temp > maxLineWidth)
 			{
 				maxLineWidth = temp;
@@ -120,6 +121,7 @@ public class AbilityPoolPanel extends Widget
 		batch.setColor(Color.WHITE);
 		
 		float y = getY() + getHeight();
+		
 		for (AbilityLine line : abilityPool.abilityLines)
 		{
 			if (line == selectedLine)
@@ -162,14 +164,7 @@ public class AbilityPoolPanel extends Widget
 					batch.draw(white, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
 					batch.setColor(Color.WHITE);
 					
-					if (ab == unlocking)
-					{
-						
-					}
-					else
-					{
-						locked.render(batch, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
-					}
+					locked.render(batch, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
 				}
 			}
 			
@@ -179,6 +174,27 @@ public class AbilityPoolPanel extends Widget
 	
 	private class AbilityPoolPanelListener extends InputListener
 	{
+		//----------------------------------------------------------------------
+		@Override
+		public void touchDragged (InputEvent event, float x, float y, int pointer)
+		{
+			if (RoguelikeGame.Instance.dragDropPayload != null)
+			{
+				RoguelikeGame.Instance.dragDropPayload.x = event.getStageX() - 16;
+				RoguelikeGame.Instance.dragDropPayload.y = event.getStageY() - 16;				
+			}			
+		}
+		
+		//----------------------------------------------------------------------
+		@Override
+		public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+		{
+			if (RoguelikeGame.Instance.dragDropPayload != null)
+			{
+				RoguelikeGame.Instance.touchUp((int)event.getStageX(), Gdx.graphics.getHeight() - (int)event.getStageY(), pointer, button);
+			}
+		}
+		
 		@Override
 		public boolean mouseMoved (InputEvent event, float x, float y)
 		{
@@ -194,9 +210,7 @@ public class AbilityPoolPanel extends Widget
 					t.add(new Label(abilityPool.abilityLines.get(yindex).name, skin));
 					tooltip = new Tooltip(t, skin, stage);
 					tooltip.show(event, x, y);
-				}
-				
-				unlocking = null;
+				}				
 			}
 			else
 			{
@@ -209,7 +223,6 @@ public class AbilityPoolPanel extends Widget
 					if (ycursor < ypos + TileSize/2)
 					{
 						// over tier
-						unlocking = null;
 						break;
 					}
 					ypos += TileSize * 0.5f;
@@ -223,12 +236,15 @@ public class AbilityPoolPanel extends Widget
 						{
 							Ability a = abilityLine.get(i)[xindex];
 							
-							if (a != unlocking)
+							Table table = a.ability.createTable(skin);
+							
+							if (!a.unlocked)
 							{
-								unlocking = null;
+								table.row();
+								table.add(new Label("Cost: "+a.cost, skin));
 							}
 							
-							tooltip = new Tooltip(a.ability.createTable(skin), skin, stage);
+							tooltip = new Tooltip(table, skin, stage);
 							tooltip.show(event, x, y);
 						}
 						
@@ -239,7 +255,6 @@ public class AbilityPoolPanel extends Widget
 					if (ycursor < ypos + TileSize*1.5f)
 					{
 						// over blank space
-						unlocking = null;
 						break;
 					}
 					ypos += TileSize * 0.5f;
@@ -251,7 +266,9 @@ public class AbilityPoolPanel extends Widget
 		
 		@Override
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-		{			
+		{
+			RoguelikeGame.Instance.clearContextMenu();
+			
 			if (x < MaxLineWidth)
 			{
 				int yindex = (int)((getHeight() - y) / ButtonHeight);
@@ -283,7 +300,7 @@ public class AbilityPoolPanel extends Widget
 						int xindex = (int)((x - MaxLineWidth - TileSize) / TileSize);
 						if (xindex < 5)
 						{
-							Ability a = abilityLine.get(i)[xindex];
+							final Ability a = abilityLine.get(i)[xindex];
 							
 							if (a.unlocked)
 							{
@@ -291,15 +308,25 @@ public class AbilityPoolPanel extends Widget
 							}
 							else
 							{
-								if (unlocking == a)
+								Dialog dialog = new Dialog("Unlock Ability?", skin)
 								{
-									a.unlocked = true;
-									unlocking = null;
-								}
-								else
-								{
-									unlocking = a;
-								}
+									public void result(Object obj)
+									{
+										if (obj != null)
+										{
+											a.unlocked = true;
+										}
+									}
+								};
+								
+								dialog.text("Unlock '"+a.ability.getName()+"' for "+a.cost+" essence?");
+								dialog.button("Unlock", a);
+								dialog.button("Cancel");
+								dialog.pack();
+								
+								dialog.setPosition(Gdx.graphics.getWidth()/2-dialog.getWidth(), Gdx.graphics.getHeight()/2);
+								
+								stage.addActor(dialog);
 							}
 						}
 						

@@ -2,7 +2,7 @@ package Roguelike.Entity.AI.BehaviourTree.Decorators;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 public class DecoratorRepeat extends AbstractDecorator
@@ -13,7 +13,7 @@ public class DecoratorRepeat extends AbstractDecorator
 	private int i = 0;
 
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		BehaviourTreeState retState = node.evaluate(entity);
 		

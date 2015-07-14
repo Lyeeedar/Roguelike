@@ -9,7 +9,7 @@ import Roguelike.Ability.ActiveAbility.EffectType.AbstractEffectType;
 import Roguelike.Ability.ActiveAbility.MovementType.AbstractMovementType;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeBolt;
 import Roguelike.Ability.ActiveAbility.TargetingType.AbstractTargetingType;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.IGameObject;
 import Roguelike.Lights.Light;
@@ -42,7 +42,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	public Array<AbstractEffectType> effectTypes = new Array<AbstractEffectType>();
 	public Array<GameTile> AffectedTiles = new Array<GameTile>();
 	
-	public Entity caster;
+	public GameEntity caster;
 	
 	//----------------------------------------------------------------------
 	// rendering

@@ -59,7 +59,7 @@ public class Inventory
 		m_items.removeValue(item, true);
 	}
 	
-	public int getStatistic(Entity entity, Statistics stat)
+	public int getStatistic(GameEntity entity, Statistics stat)
 	{
 		int val = 0;
 		

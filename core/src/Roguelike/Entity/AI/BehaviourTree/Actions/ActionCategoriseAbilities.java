@@ -5,7 +5,7 @@ import Roguelike.Ability.ActiveAbility.EffectType.AbstractEffectType;
 import Roguelike.Ability.ActiveAbility.EffectType.EffectTypeDamage;
 import Roguelike.Ability.ActiveAbility.EffectType.EffectTypeHeal;
 import Roguelike.Ability.ActiveAbility.EffectType.EffectTypeStatus;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 import com.badlogic.gdx.utils.Array;
@@ -17,7 +17,7 @@ public class ActionCategoriseAbilities extends AbstractAction
 	String targetKey;
 
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		Array<ActiveAbility> abilities = (Array<ActiveAbility>)getData(abilitiesKey, null);
 		

@@ -6,7 +6,7 @@ import java.util.Iterator;
 import Roguelike.Global.Statistics;
 import Roguelike.RoguelikeGame;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.Items.Item;
 import Roguelike.Lights.Light;
@@ -26,7 +26,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class Level
 {
-	public Entity player;
+	public GameEntity player;
 	
 	public Color Ambient = new Color(0.1f, 0.1f, 0.3f, 1.0f);
 	
@@ -170,8 +170,8 @@ public class Level
 		NewActiveAbilities.add(aa);
 	}
 	
-	public Array<Entity> visibleList = new Array<Entity>(false, 16);
-	public Array<Entity> invisibleList = new Array<Entity>(false, 16);
+	public Array<GameEntity> visibleList = new Array<GameEntity>(false, 16);
+	public Array<GameEntity> invisibleList = new Array<GameEntity>(false, 16);
 	
 	private float updateDeltaStep = 0.05f;
 	private float updateAccumulator;
@@ -321,10 +321,10 @@ public class Level
 	
 	private void processVisibleList()
 	{
-		Iterator<Entity> itr = visibleList.iterator();
+		Iterator<GameEntity> itr = visibleList.iterator();
 		while (itr.hasNext())
 		{
-			Entity e = itr.next();
+			GameEntity e = itr.next();
 			
 			if (e.HP <= 0)
 			{
@@ -370,12 +370,12 @@ public class Level
 	{
 		while(invisibleList.size > 0)
 		{
-			Iterator<Entity> itr = invisibleList.iterator();
+			Iterator<GameEntity> itr = invisibleList.iterator();
 			
 			// Repeat full pass through list
 			while (itr.hasNext())
 			{
-				Entity e = itr.next();
+				GameEntity e = itr.next();
 				
 				if (e.HP <= 0)
 				{
@@ -458,7 +458,7 @@ public class Level
 							
 				}
 				
-				Entity e = Grid[x][y].Entity;
+				GameEntity e = Grid[x][y].Entity;
 				if (e != null)
 				{									
 					boolean active = hasActiveEffects(e);
@@ -476,7 +476,7 @@ public class Level
 		return activeEffects;
 	}
 	
-	public boolean hasActiveEffects(Entity e)
+	public boolean hasActiveEffects(GameEntity e)
 	{
 		boolean activeEffects = false;
 		
@@ -500,7 +500,7 @@ public class Level
 			for (int y = 0; y < height; y++)
 			{
 				boolean visible = Grid[x][y].GetVisible();
-				Entity e = Grid[x][y].Entity;
+				GameEntity e = Grid[x][y].Entity;
 				if (e != null && e != player)
 				{
 					e.updateAccumulators(cost);
@@ -532,7 +532,7 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{
-				Entity e = Grid[x][y].Entity;
+				GameEntity e = Grid[x][y].Entity;
 				if (e != null && e != player)
 				{
 					if (e.HP <= 0 && !hasActiveEffects(e))
@@ -582,9 +582,9 @@ public class Level
 		return sprites;
 	}
 		
-	public Array<Entity> getAllEntities()
+	public Array<GameEntity> getAllEntities()
 	{
-		Array<Entity> list = new Array<Entity>();
+		Array<GameEntity> list = new Array<GameEntity>();
 		
 		for (int x = 0; x < width; x++)
 		{

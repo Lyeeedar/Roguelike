@@ -1,7 +1,7 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 import com.badlogic.gdx.utils.Array;
@@ -12,7 +12,7 @@ public class ActionGetAllAbilities extends AbstractAction
 	private String Key;
 
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		Array<ActiveAbility> abilities = new Array<ActiveAbility>();
 		

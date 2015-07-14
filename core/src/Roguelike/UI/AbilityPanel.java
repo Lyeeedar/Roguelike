@@ -5,9 +5,10 @@ import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Sprite.Sprite;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -28,7 +29,7 @@ public class AbilityPanel extends Widget
 	private BitmapFont font;
 	private Texture white;
 	
-	private final Entity entity;
+	private final GameEntity entity;
 	
 	private final Sprite tileBackground;
 	private final Sprite tileBorder;
@@ -36,7 +37,7 @@ public class AbilityPanel extends Widget
 	private final Skin skin;
 	private final Stage stage;
 	
-	public AbilityPanel(Entity entity, Skin skin, Stage stage)
+	public AbilityPanel(GameEntity entity, Skin skin, Stage stage)
 	{
 		this.tileBackground = AssetManager.loadSprite("GUI/TileBackground");	
 		this.tileBorder = AssetManager.loadSprite("GUI/TileBorder");
@@ -174,9 +175,22 @@ public class AbilityPanel extends Widget
 	
 	private class AbilityPanelListener extends InputListener
 	{
+		//----------------------------------------------------------------------
+		@Override
+		public void touchDragged (InputEvent event, float x, float y, int pointer)
+		{
+			if (RoguelikeGame.Instance.dragDropPayload != null)
+			{
+				RoguelikeGame.Instance.dragDropPayload.x = event.getStageX() - 16;
+				RoguelikeGame.Instance.dragDropPayload.y = event.getStageY() - 16;				
+			}			
+		}
+		
 		@Override
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 		{
+			RoguelikeGame.Instance.clearContextMenu();
+			
 			int xIndex = (int) (x / TileSize);
 			int yIndex = (int) ((getHeight() - y) / TileSize);
 			
@@ -210,23 +224,30 @@ public class AbilityPanel extends Widget
 		@Override
 		public void touchUp (InputEvent event, float x, float y, int pointer, int button)
 		{
-			int xIndex = (int) (x / TileSize);
-			int yIndex = (int) ((getHeight() - y) / TileSize);
-			
-			if (tooltip != null) { tooltip.remove(); tooltip = null; }
-			
-			if (xIndex < Global.NUM_ABILITY_SLOTS)
+			if (RoguelikeGame.Instance.dragDropPayload != null)
 			{
-				if (yIndex == 0)
+				RoguelikeGame.Instance.touchUp((int)event.getStageX(), Gdx.graphics.getHeight() - (int)event.getStageY(), pointer, button);
+			}
+			else
+			{
+				int xIndex = (int) (x / TileSize);
+				int yIndex = (int) ((getHeight() - y) / TileSize);
+				
+				if (tooltip != null) { tooltip.remove(); tooltip = null; }
+				
+				if (xIndex < Global.NUM_ABILITY_SLOTS)
 				{
-					ActiveAbility aa = entity.getSlottedActiveAbilities()[xIndex];
-					
-					if (aa != null && aa.cooldownAccumulator <= 0)
+					if (yIndex == 0)
 					{
-						RoguelikeGame.Instance.prepareAbility(aa);
+						ActiveAbility aa = entity.getSlottedActiveAbilities()[xIndex];
+						
+						if (aa != null && aa.cooldownAccumulator <= 0)
+						{
+							RoguelikeGame.Instance.prepareAbility(aa);
+						}
 					}
-				}
-			}		
+				}	
+			}	
 		}
 		
 		@Override

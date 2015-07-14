@@ -1,6 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Selectors;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 // A selector that will run through each node until the first node that does not finish is encountered
@@ -11,7 +11,7 @@ public class SelectorSequence extends AbstractSelector
 	
 	//----------------------------------------------------------------------
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		BehaviourTreeState state = BehaviourTreeState.SUCCEEDED;
 		

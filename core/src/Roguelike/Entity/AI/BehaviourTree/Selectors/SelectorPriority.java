@@ -1,6 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Selectors;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 // A selector that will run through the nodes until the first non-failed node is found
@@ -11,7 +11,7 @@ public class SelectorPriority extends AbstractSelector
 	
 	//----------------------------------------------------------------------
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		BehaviourTreeState state = BehaviourTreeState.FAILED;
 		

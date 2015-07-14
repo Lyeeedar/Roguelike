@@ -11,8 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
-import Roguelike.Entity.Entity;
-import Roguelike.Entity.Entity.StatusEffectStack;
+import Roguelike.Entity.GameEntity;
+import Roguelike.Entity.GameEntity.StatusEffectStack;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.AssetManager;
 import Roguelike.Global.Statistics;
@@ -31,7 +31,7 @@ public class EntityStatusRenderer
 		generator.dispose(); // don't forget to dispose to avoid memory leaks!
 	}
 	
-	public static void draw(Entity entity, Batch batch, int x, int y, int width, int height, float heightScale)
+	public static void draw(GameEntity entity, Batch batch, int x, int y, int width, int height, float heightScale)
 	{
 		Texture white = AssetManager.loadTexture("Sprites/white.png");
 		
@@ -69,7 +69,7 @@ public class EntityStatusRenderer
 		}
 	}
 	
-	public static Table getMouseOverTable(Entity entity, int x, int y, int width, int height, float heightScale, int mousex, int mousey, Skin skin)
+	public static Table getMouseOverTable(GameEntity entity, int x, int y, int width, int height, float heightScale, int mousex, int mousey, Skin skin)
 	{
 		Array<StatusEffectStack> stacks = entity.stackStatusEffects();
 		

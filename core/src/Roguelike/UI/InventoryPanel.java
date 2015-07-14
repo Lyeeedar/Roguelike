@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import Roguelike.AssetManager;
-import Roguelike.Entity.Entity;
+import Roguelike.RoguelikeGame;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.ItemType;
@@ -48,11 +49,11 @@ public class InventoryPanel extends Widget
 	
 	private final HashMap<ItemType, Sprite> headers = new HashMap<ItemType, Sprite>();
 	
-	private final Entity entity;
+	private final GameEntity entity;
 	
 	private ItemType selectedFilter = ItemType.ALL;
 		
-	public InventoryPanel(Entity entity, Skin skin, Stage stage)
+	public InventoryPanel(GameEntity entity, Skin skin, Stage stage)
 	{
 		this.entity = entity;
 		
@@ -264,6 +265,8 @@ public class InventoryPanel extends Widget
 		@Override
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 		{
+			RoguelikeGame.Instance.clearContextMenu();
+			
 			int tileX = (int)(x / TileSize);
 			int tileY = (int)((getHeight() - y) / TileSize);
 						

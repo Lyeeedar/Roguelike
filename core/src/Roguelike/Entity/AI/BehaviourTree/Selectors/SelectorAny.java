@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.utils.Array;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 public class SelectorAny extends AbstractSelector
@@ -12,7 +12,7 @@ public class SelectorAny extends AbstractSelector
 	Array<Integer> runningList = new Array<Integer>();
 	
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		BehaviourTreeState state = BehaviourTreeState.FAILED;
 		

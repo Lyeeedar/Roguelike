@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import Roguelike.AssetManager;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Tiles.GameTile;
@@ -84,7 +84,7 @@ public class DungeonFileParser
 				
 				if (s.entityName != null)
 				{
-					tile.addObject(Entity.load(s.entityName));
+					tile.addObject(GameEntity.load(s.entityName));
 				}
 			}
 		}

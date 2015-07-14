@@ -1,6 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Tiles.GameTile;
 
@@ -18,7 +18,7 @@ public class ActionConvertTo extends AbstractAction
 	String OutputKey;
 
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		Object o = getData(InputKey, null);
 		
@@ -36,9 +36,9 @@ public class ActionConvertTo extends AbstractAction
 					setData(OutputKey, new int[]{gt.x, gt.y});					
 					State = BehaviourTreeState.SUCCEEDED;
 				}
-				else if (o instanceof Entity)
+				else if (o instanceof GameEntity)
 				{
-					Entity e = (Entity)o;					
+					GameEntity e = (GameEntity)o;					
 					setData(OutputKey, new int[]{e.Tile.x, e.Tile.y});					
 					State = BehaviourTreeState.SUCCEEDED;
 				}

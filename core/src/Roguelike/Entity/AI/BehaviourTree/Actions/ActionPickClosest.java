@@ -1,6 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Tiles.GameTile;
 
@@ -14,7 +14,7 @@ public class ActionPickClosest extends AbstractAction
 	String outputKey;
 
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		Object obj = getData(inputKey, null);
 		
@@ -52,9 +52,9 @@ public class ActionPickClosest extends AbstractAction
 							bestObj = o;
 						}
 					}
-					else if (o instanceof Entity)
+					else if (o instanceof GameEntity)
 					{
-						Entity pos = (Entity)o;
+						GameEntity pos = (GameEntity)o;
 						float tmp = Vector2.dst2(entity.Tile.x, entity.Tile.y, pos.Tile.x, pos.Tile.y);
 						
 						if (tmp < best)

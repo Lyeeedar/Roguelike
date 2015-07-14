@@ -3,7 +3,7 @@ package Roguelike.Entity.AI.BehaviourTree.Actions;
 import java.util.Iterator;
 import java.util.Random;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 import com.badlogic.gdx.utils.Array;
@@ -16,7 +16,7 @@ public class ActionPickRandom extends AbstractAction
 	String outputKey;
 
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		Object obj = getData(inputKey, null);
 		

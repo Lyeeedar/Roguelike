@@ -37,12 +37,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-public class Entity
+public class GameEntity
 {
 	//####################################################################//
 	//region Constructor
 	
-	private Entity() {}
+	private GameEntity() {}
 		
 	//endregion Constructor
 	//####################################################################//
@@ -155,7 +155,7 @@ public class Entity
 	}
 	
 	//----------------------------------------------------------------------
-	public void attack(Entity other, Direction dir)
+	public void attack(GameEntity other, Direction dir)
 	{
 		Item weapon = getInventory().getEquip(EquipmentSlot.MAINWEAPON);
 		Sprite hitEffect = weapon != null ? weapon.HitEffect : m_defaultHitEffect;
@@ -170,9 +170,15 @@ public class Entity
 	}
 	
 	//----------------------------------------------------------------------
-	public void applyDamage(int dam)
+	public void applyDamage(int dam, GameEntity damager)
 	{
-		HP = Math.max(HP-dam, 0);		
+		HP = Math.max(HP-dam, 0);
+		
+		if (HP == 0)
+		{
+			damager.Essence += Essence;
+			Essence = 0;
+		}
 	}
 	
 	//----------------------------------------------------------------------
@@ -183,7 +189,7 @@ public class Entity
 	}
 	
 	//----------------------------------------------------------------------
-	public boolean isAllies(Entity other)
+	public boolean isAllies(GameEntity other)
 	{
 		for (String faction : m_factions)
 		{
@@ -205,9 +211,9 @@ public class Entity
 	}
 	
 	//----------------------------------------------------------------------
-	public static Entity load(String name)
+	public static GameEntity load(String name)
 	{
-		Entity e = new Entity();
+		GameEntity e = new GameEntity();
 		
 		e.internalLoad(name);
 		
@@ -397,11 +403,15 @@ public class Entity
 		}
 		
 		m_slottedActiveAbilities[index] = aa;
-		aa.caster = this;
 		
-		for (int i = 0; i < 3; i++)
+		if (aa != null)
 		{
-			Tasks.add(new TaskWait());
+			aa.caster = this;
+			
+			for (int i = 0; i < 3; i++)
+			{
+				Tasks.add(new TaskWait());
+			}
 		}
 	}
 	
@@ -502,7 +512,8 @@ public class Entity
 	public boolean CanSwap;
 	
 	//----------------------------------------------------------------------
-	public int HP;	
+	public int HP;
+	public int Essence = 100;
 	public HashSet<String> m_factions = new HashSet<String>();		
 	public BehaviourTree AI;
 	public ActiveAbility Channeling = null;

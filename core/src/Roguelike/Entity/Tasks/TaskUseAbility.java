@@ -1,7 +1,7 @@
 package Roguelike.Entity.Tasks;
 
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 
 public class TaskUseAbility extends AbstractTask
 {
@@ -15,7 +15,7 @@ public class TaskUseAbility extends AbstractTask
 	}
 	
 	@Override
-	public float processTask(Entity obj)
+	public float processTask(GameEntity obj)
 	{	
 		ability.cooldownAccumulator = ability.cooldown;
 		

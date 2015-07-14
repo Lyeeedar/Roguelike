@@ -1,12 +1,12 @@
 package Roguelike.Entity.Tasks;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 
 public class TaskKill extends AbstractTask
 {
 
 	@Override
-	public float processTask(Entity obj)
+	public float processTask(GameEntity obj)
 	{
 		obj.Channeling = null;
 		

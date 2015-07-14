@@ -1,7 +1,7 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
 import Roguelike.Global.Direction;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.Pathfinding.Pathfinder;
@@ -15,7 +15,7 @@ public class ActionMoveTo extends AbstractAction
 	public String key;
 	
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		int[] target = (int[])getData(key, null);
 		

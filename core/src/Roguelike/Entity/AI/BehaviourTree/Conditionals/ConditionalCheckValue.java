@@ -2,7 +2,7 @@ package Roguelike.Entity.AI.BehaviourTree.Conditionals;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 public class ConditionalCheckValue extends AbstractConditional
@@ -12,7 +12,7 @@ public class ConditionalCheckValue extends AbstractConditional
 	
 	//----------------------------------------------------------------------
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		Object storedValue = getData(key, null);
 		

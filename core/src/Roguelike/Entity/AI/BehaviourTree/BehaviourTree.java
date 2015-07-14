@@ -3,7 +3,7 @@ package Roguelike.Entity.AI.BehaviourTree;
 import java.io.IOException;
 import java.util.HashMap;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.XmlReader;
@@ -29,7 +29,7 @@ public class BehaviourTree
 	}
 	
 	//----------------------------------------------------------------------
-	public void update(Entity entity)
+	public void update(GameEntity entity)
 	{
 		root.evaluate(entity);
 	}

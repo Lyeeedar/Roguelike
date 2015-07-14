@@ -2,14 +2,14 @@ package Roguelike.Entity.AI.BehaviourTree.Actions;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskWait;
 
 public class ActionWait extends AbstractAction
 {
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		entity.Tasks.add(new TaskWait());
 		

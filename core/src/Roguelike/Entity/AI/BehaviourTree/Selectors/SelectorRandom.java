@@ -1,6 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Selectors;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 import com.badlogic.gdx.utils.Array;
@@ -13,7 +13,7 @@ public class SelectorRandom extends AbstractSelector
 	
 	//----------------------------------------------------------------------
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		BehaviourTreeState state = BehaviourTreeState.FAILED;
 		

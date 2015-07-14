@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.Tiles.GameTile;
@@ -299,7 +299,7 @@ public class Global
 	}
 	
 	//----------------------------------------------------------------------
-	public static void calculateDamage(Entity attacker, Entity defender, HashMap<String, Integer> additionalAttack, boolean doEvents)
+	public static void calculateDamage(GameEntity attacker, GameEntity defender, HashMap<String, Integer> additionalAttack, boolean doEvents)
 	{
 		DamageObject damObj = new DamageObject(attacker, defender, additionalAttack);
 		
@@ -370,6 +370,6 @@ public class Global
 			RoguelikeGame.Instance.addConsoleMessage(line);
 		}
 		
-		defender.applyDamage(totalDamage);
+		defender.applyDamage(totalDamage, attacker);
 	}
 }

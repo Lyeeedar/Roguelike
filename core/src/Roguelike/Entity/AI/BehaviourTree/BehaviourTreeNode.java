@@ -2,7 +2,7 @@ package Roguelike.Entity.AI.BehaviourTree;
 
 import java.util.HashMap;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionClearValue;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionConvertTo;
@@ -49,7 +49,7 @@ public abstract class BehaviourTreeNode
 	}
 	
 	//----------------------------------------------------------------------
-	public abstract BehaviourTreeState evaluate(Entity entity);
+	public abstract BehaviourTreeState evaluate(GameEntity entity);
 	
 	//----------------------------------------------------------------------
 	public abstract void cancel();

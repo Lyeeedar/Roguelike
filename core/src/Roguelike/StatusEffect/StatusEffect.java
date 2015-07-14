@@ -3,7 +3,7 @@ package Roguelike.StatusEffect;
 import java.io.IOException;
 
 import Roguelike.AssetManager;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.IGameObject;
 import Roguelike.Sprite.Sprite;
@@ -22,10 +22,10 @@ public class StatusEffect extends GameEventHandler
 	
 	public Sprite icon;
 	public float duration;
-	public Entity attachedTo;
+	public GameEntity attachedTo;
 	
 	@Override
-	public void onTurn(Entity entity, float cost)
+	public void onTurn(GameEntity entity, float cost)
 	{
 		super.onTurn(entity, cost);
 		

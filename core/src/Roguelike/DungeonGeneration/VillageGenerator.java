@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 
 import Roguelike.AssetManager;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Sprite.Sprite;
@@ -120,7 +120,7 @@ public class VillageGenerator
 		
 		for (Building room : buildings)
 		{
-			Entity obj = Entity.load("Enemies/orc");			
+			GameEntity obj = GameEntity.load("Enemies/orc");			
 			actualTiles[room.x+room.width/2][room.y+room.height/2].addObject(obj);
 		}
 		

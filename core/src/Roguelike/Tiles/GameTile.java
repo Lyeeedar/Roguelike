@@ -2,7 +2,7 @@ package Roguelike.Tiles;
 
 import java.util.HashSet;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.PathfindingTile;
@@ -21,7 +21,7 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	
 	public Color Light;
 	
-	public Entity Entity;
+	public GameEntity Entity;
 	public Level Level;
 	
 	public Array<SpriteEffect> SpriteEffects = new Array<SpriteEffect>();
@@ -41,7 +41,7 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 		Light = new Color(Color.WHITE);
 	}
 		
-	public void addObject(Entity obj)
+	public void addObject(GameEntity obj)
 	{
 		if (obj.Tile != null)
 		{

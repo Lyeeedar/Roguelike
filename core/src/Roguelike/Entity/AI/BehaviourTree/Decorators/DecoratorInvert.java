@@ -1,12 +1,12 @@
 package Roguelike.Entity.AI.BehaviourTree.Decorators;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 public class DecoratorInvert extends AbstractDecorator
 {
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		BehaviourTreeState state = node.evaluate(entity);
 		

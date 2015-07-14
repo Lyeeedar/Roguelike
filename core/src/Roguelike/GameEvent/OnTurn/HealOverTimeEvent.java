@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -20,7 +20,7 @@ public class HealOverTimeEvent extends AbstractOnTurnEvent
 	float remainder;
 	
 	@Override
-	public boolean handle(Entity entity, float time)
+	public boolean handle(GameEntity entity, float time)
 	{
 		HashMap<String, Integer> variableMap = entity.getVariableMap();
 		

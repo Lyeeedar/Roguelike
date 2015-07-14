@@ -1,7 +1,7 @@
 package Roguelike.Entity.Tasks;
 
 import Roguelike.Global.Direction;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Sprite.SpriteAnimation;
 import Roguelike.Tiles.GameTile;
 
@@ -14,7 +14,7 @@ public class TaskMove extends AbstractTask
 	}
 	
 	@Override
-	public float processTask(Entity obj)
+	public float processTask(GameEntity obj)
 	{
 		obj.Channeling = null;
 		

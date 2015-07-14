@@ -1,7 +1,7 @@
 package Roguelike.UI;
 
 import Roguelike.AssetManager;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Global.Statistics;
 
 import com.badlogic.gdx.graphics.Color;
@@ -12,11 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 public class HPWidget extends Widget
 {
-	Entity entity;
+	GameEntity entity;
 	private BitmapFont font;
 	private Texture white;
 	
-	public HPWidget(Entity entity)
+	public HPWidget(GameEntity entity)
 	{
 		this.entity = entity;
 		

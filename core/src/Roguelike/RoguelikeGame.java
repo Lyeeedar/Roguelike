@@ -6,10 +6,11 @@ import Roguelike.Global.Direction;
 import Roguelike.Global.Statistics;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.AbilityPool;
+import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.DungeonGeneration.DungeonRoomGenerator;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
@@ -37,11 +38,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -55,6 +58,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -90,7 +94,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		
 		FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = 10;
+		parameter.size = 12;
 		parameter.borderWidth = 1;
 		parameter.kerning = true;
 		parameter.borderColor = Color.BLACK;
@@ -114,7 +118,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			{	
 				if (level.getGameTile(x, y).TileData.Passable)
 				{
-					level.player = Entity.load("player");
+					level.player = GameEntity.load("player");
 					
 					for (int i = 0; i < 40; i++)
 					{
@@ -141,8 +145,9 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		InputProcessor inputProcessorOne = this;
 		InputProcessor inputProcessorTwo = stage;
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
-		inputMultiplexer.addProcessor(inputProcessorOne);
+		
 		inputMultiplexer.addProcessor(inputProcessorTwo);
+		inputMultiplexer.addProcessor(inputProcessorOne);
 		Gdx.input.setInputProcessor(inputMultiplexer);	
 		
 		//damageTester();
@@ -151,9 +156,10 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	//----------------------------------------------------------------------
 	public void LoadUI()
 	{
-		skin = new Skin(Gdx.files.internal("GUI/uiskin.json"));
-		LabelStyle ls = skin.get("default", LabelStyle.class);
-		ls.font = font;
+		skin = new Skin();
+		skin.addRegions(new TextureAtlas(Gdx.files.internal("GUI/uiskin.atlas")));
+		skin.add("default-font", font, BitmapFont.class);
+		skin.load(Gdx.files.internal("GUI/uiskin.json"));
 				
 		stage = new Stage(new ScreenViewport());
 		
@@ -252,7 +258,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 						i.Icon.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
 					}
 					
-					Entity entity = gtile.Entity;
+					GameEntity entity = gtile.Entity;
 					
 					if (entity != null)
 					{
@@ -315,7 +321,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			batch.setColor(Color.WHITE);
 		}
 		
-		for (Entity entity : toBeDrawn)
+		for (GameEntity entity : toBeDrawn)
 		{
 			int x = entity.Tile.x;
 			int y = entity.Tile.y;
@@ -433,11 +439,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	{
 		if (!mouseOverUI)
 		{
-			if (contextMenu != null)
-			{
-				contextMenu.remove();
-				contextMenu = null;
-			}
+			clearContextMenu();
 			
 			screenY = Gdx.graphics.getHeight() - screenY;
 			
@@ -628,11 +630,13 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	//endregion InputProcessor
 	//####################################################################//
 	
+	//----------------------------------------------------------------------
 	public void addConsoleMessage(Line line)
 	{
 		messageStack.addLine(line);
 	}
 	
+	//----------------------------------------------------------------------
 	public void addAbilityAvailabilityAction(Sprite sprite)
 	{
 		Table table = new Table();
@@ -645,6 +649,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		table.setVisible(true);
 	}
 	
+	//----------------------------------------------------------------------
 	public boolean isInBounds(float x, float y, Widget actor)
 	{
 		Vector2 tmp = new Vector2(x, Gdx.graphics.getHeight() - y);
@@ -652,10 +657,21 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		return tmp.x >= 0 && tmp.x <= actor.getPrefWidth() && tmp.y >= 0 && tmp.y <= actor.getPrefHeight();
 	}
 	
+	//----------------------------------------------------------------------
+	public void clearContextMenu()
+	{
+		if (contextMenu != null)
+		{
+			contextMenu.remove();
+			contextMenu = null;
+		}
+	}
+	
 	//endregion Public Methods
 	//####################################################################//
 	//region Private Methods
 	
+	//----------------------------------------------------------------------
 	private void createAbilityContextMenu(int screenX, int screenY)
 	{
 		Array<ActiveAbility> available = new Array<ActiveAbility>();
@@ -706,7 +722,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			}
 			
 			contextMenu = new Tooltip(table, skin, stage);
-			contextMenu.show(screenX, screenY);
+			contextMenu.show(screenX-contextMenu.getWidth()/2, screenY-contextMenu.getHeight());
 		}
 	}
 		
@@ -752,7 +768,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	Level level;
 	
 	//----------------------------------------------------------------------
-	Array<Entity> toBeDrawn = new Array<Entity>();
+	Array<GameEntity> toBeDrawn = new Array<GameEntity>();
 	
 	//----------------------------------------------------------------------
 	Sprite border;

@@ -18,7 +18,7 @@ import PaulChew.Pnt;
 import PaulChew.Triangle;
 import PaulChew.Triangulation;
 import Roguelike.AssetManager;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Pathfinding.PathfindingTile;

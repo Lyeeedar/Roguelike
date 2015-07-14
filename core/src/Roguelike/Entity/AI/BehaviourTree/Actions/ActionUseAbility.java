@@ -1,7 +1,7 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskUseAbility;
 
@@ -12,7 +12,7 @@ public class ActionUseAbility extends AbstractAction
 	String abilityKey;
 
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		ActiveAbility ability = (ActiveAbility)getData(abilityKey, null);
 		

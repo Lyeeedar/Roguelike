@@ -1,6 +1,7 @@
 package Roguelike.UI;
 
 import Roguelike.AssetManager;
+import Roguelike.RoguelikeGame;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -118,6 +119,8 @@ public class TabPanel extends Widget
 	{
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 		{
+			RoguelikeGame.Instance.clearContextMenu();
+			
 			if (x < tabHeaderSize)
 			{
 				y = getHeight() - y;

@@ -2,7 +2,7 @@ package Roguelike.Entity.AI.BehaviourTree.Selectors;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 // A selector that will run through the nodes until the first node that returns the state desired is found
@@ -13,7 +13,7 @@ public class SelectorUntil extends AbstractSelector
 	
 	//----------------------------------------------------------------------
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		BehaviourTreeState state = BehaviourTreeState.FAILED;
 		

@@ -1,6 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
-import Roguelike.Entity.Entity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Global.Statistics;
 import Roguelike.Shadows.ShadowCaster;
@@ -22,7 +22,7 @@ public class ActionGetAllVisible extends AbstractAction
 	private String Key;
 
 	@Override
-	public BehaviourTreeState evaluate(Entity entity)
+	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		Array<int[]> output = new Array<int[]>();
 		
@@ -42,11 +42,11 @@ public class ActionGetAllVisible extends AbstractAction
 		}
 		else
 		{
-			Array<Entity> entities = new Array<Entity>();
+			Array<GameEntity> entities = new Array<GameEntity>();
 			
 			for (GameTile tile : visibleTiles)
 			{
-				Entity e = tile.Entity;
+				GameEntity e = tile.Entity;
 				
 				if (e == null)
 				{
