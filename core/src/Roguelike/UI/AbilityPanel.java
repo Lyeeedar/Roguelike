@@ -228,25 +228,23 @@ public class AbilityPanel extends Widget
 			{
 				RoguelikeGame.Instance.touchUp((int)event.getStageX(), Gdx.graphics.getHeight() - (int)event.getStageY(), pointer, button);
 			}
-			else
+			
+			int xIndex = (int) (x / TileSize);
+			int yIndex = (int) ((getHeight() - y) / TileSize);
+			
+			if (tooltip != null) { tooltip.remove(); tooltip = null; }
+			
+			if (xIndex < Global.NUM_ABILITY_SLOTS)
 			{
-				int xIndex = (int) (x / TileSize);
-				int yIndex = (int) ((getHeight() - y) / TileSize);
-				
-				if (tooltip != null) { tooltip.remove(); tooltip = null; }
-				
-				if (xIndex < Global.NUM_ABILITY_SLOTS)
+				if (yIndex == 0)
 				{
-					if (yIndex == 0)
+					ActiveAbility aa = entity.getSlottedActiveAbilities()[xIndex];
+					
+					if (aa != null && aa.cooldownAccumulator <= 0)
 					{
-						ActiveAbility aa = entity.getSlottedActiveAbilities()[xIndex];
-						
-						if (aa != null && aa.cooldownAccumulator <= 0)
-						{
-							RoguelikeGame.Instance.prepareAbility(aa);
-						}
+						RoguelikeGame.Instance.prepareAbility(aa);
 					}
-				}	
+				}
 			}	
 		}
 		
