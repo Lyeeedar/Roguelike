@@ -212,7 +212,7 @@ public class AbilityPoolPanel extends Widget
 					tooltip.show(event, x, y);
 				}				
 			}
-			else
+			else if (x < getPrefWidth())
 			{
 				int ypos = 0;
 				float ycursor = getHeight() - y;
@@ -260,6 +260,10 @@ public class AbilityPoolPanel extends Widget
 					ypos += TileSize * 0.5f;
 				}
 			}
+			else
+			{
+				return false;
+			}
 			
 			return true;
 		}
@@ -278,7 +282,7 @@ public class AbilityPoolPanel extends Widget
 					selectedAbilityLine = yindex;
 				}
 			}
-			else
+			else if (x < getPrefWidth())
 			{
 				int ypos = 0;
 				float ycursor = getHeight() - y;
@@ -341,6 +345,10 @@ public class AbilityPoolPanel extends Widget
 					}
 					ypos += TileSize * 0.5f;
 				}
+			}
+			else
+			{
+				return false;
 			}
 			
 			return true;

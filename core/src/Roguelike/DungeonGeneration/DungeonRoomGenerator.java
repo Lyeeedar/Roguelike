@@ -18,6 +18,7 @@ import PaulChew.Pnt;
 import PaulChew.Triangle;
 import PaulChew.Triangulation;
 import Roguelike.AssetManager;
+import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.Pathfinder;
@@ -116,6 +117,11 @@ public class DungeonRoomGenerator
 					level,
 					oldTile.tileType == TileType.WALL ? wallData : floorData
 				);
+				
+				if (oldTile.tileType == TileType.DOOR)
+				{
+					newTile.addEnvironmentEntity(EnvironmentEntity.CreateDoor());
+				}
 				
 				actualTiles[x][y] = newTile;
 			}

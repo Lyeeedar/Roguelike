@@ -179,6 +179,8 @@ public class GameEntity
 			damager.Essence += Essence;
 			Essence = 0;
 		}
+		
+		damageAccumulator += dam;
 	}
 	
 	//----------------------------------------------------------------------
@@ -487,6 +489,9 @@ public class GameEntity
 	//endregion Private Methods
 	//####################################################################//
 	//region Data
+	
+	//----------------------------------------------------------------------
+	public int damageAccumulator = 0;
 	
 	//----------------------------------------------------------------------
 	private EnumMap<Statistics, Integer> m_statistics = Statistics.getStatisticsBlock();

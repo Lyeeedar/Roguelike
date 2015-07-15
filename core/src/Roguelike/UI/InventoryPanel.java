@@ -209,6 +209,11 @@ public class InventoryPanel extends Widget
 			
 			if (tooltip != null) { tooltip.remove(); tooltip = null; }
 			
+			if (tileX >= NumTilesWidth || tileX < 0 || tileY >= NumTilesHeight || tileY < 0)
+			{
+				return false;
+			}
+			
 			if (tileY == NumTilesHeight-1)
 			{
 				if (tileX < entity.Tile.Items.size)
@@ -272,6 +277,11 @@ public class InventoryPanel extends Widget
 						
 			if (tooltip != null) { tooltip.remove(); }
 			
+			if (tileX >= NumTilesWidth || tileX < 0 || tileY >= NumTilesHeight || tileY < 0)
+			{
+				return false;
+			}
+			
 			if (tileY == NumTilesHeight-1)
 			{
 				if (tileX < entity.Tile.Items.size)
@@ -327,7 +337,7 @@ public class InventoryPanel extends Widget
 					{
 						entity.Tasks.add(new TaskWait());
 					}
-				}				
+				}		
 			}
 			
 			return true;

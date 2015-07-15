@@ -10,8 +10,11 @@ import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.DungeonGeneration.DungeonRoomGenerator;
+import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Entity.EnvironmentEntity.ActivationAction;
 import Roguelike.Entity.Tasks.TaskUseAbility;
+import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Sprite.Sprite;
@@ -252,6 +255,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					batch.setColor(gtile.Light);					
 					gtile.TileData.floorSprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
 					if (gtile.TileData.featureSprite != null) { gtile.TileData.featureSprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize); }
+					if (gtile.environmentEntity != null) { gtile.environmentEntity.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize); }
 					
 					for (Item i : gtile.Items)
 					{
@@ -468,7 +472,13 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			{
 				if (button == Buttons.RIGHT)
 				{
-					createAbilityContextMenu(screenX, screenY);
+					GameTile tile = null;
+					if (x >= 0 && x < level.width && y >= 0 && y < level.height)
+					{
+						tile = level.getGameTile(x, y);
+					}
+					
+					createContextMenu(screenX, screenY, tile);
 				}
 				else
 				{
@@ -650,6 +660,31 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	}
 	
 	//----------------------------------------------------------------------
+	public void addActorDamageAction(GameEntity entity)
+	{
+		int offsetx = Gdx.graphics.getWidth() / 2 - level.player.Tile.x * TileSize;
+		int offsety = Gdx.graphics.getHeight() / 2 - level.player.Tile.y * TileSize;
+		
+		int x = entity.Tile.x;
+		int y = entity.Tile.y;
+		
+		int cx = x*TileSize + offsetx;
+		int cy = y*TileSize + offsety;
+
+		Label label = new Label("-"+entity.damageAccumulator, skin);
+		label.setColor(Color.RED);
+		
+		label.addAction(new SequenceAction(
+				Actions.moveTo(cx, cy+TileSize/2+TileSize/2, 0.5f),
+				Actions.removeActor()));		
+		label.setPosition(cx, cy+TileSize/2);		
+		stage.addActor(label);	
+		label.setVisible(true);
+		
+		entity.damageAccumulator = 0;
+	}
+	
+	//----------------------------------------------------------------------
 	public boolean isInBounds(float x, float y, Widget actor)
 	{
 		Vector2 tmp = new Vector2(x, Gdx.graphics.getHeight() - y);
@@ -672,7 +707,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	//region Private Methods
 	
 	//----------------------------------------------------------------------
-	private void createAbilityContextMenu(int screenX, int screenY)
+	private void createContextMenu(int screenX, int screenY, GameTile tile)
 	{
 		Array<ActiveAbility> available = new Array<ActiveAbility>();
 		
@@ -685,9 +720,51 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			}
 		}
 		
-		if (available.size > 0)
+		boolean entityWithinRange = false;
+		if (tile != null && tile.environmentEntity != null)
+		{
+			entityWithinRange = 
+					Math.abs(level.player.Tile.x - tile.x) <= 1 &&
+					Math.abs(level.player.Tile.y - tile.y) <= 1;
+		}
+		
+		if (available.size > 0 || entityWithinRange)
 		{
 			Table table = new Table();
+			
+			if (tile != null && tile.environmentEntity != null)
+			{
+				final EnvironmentEntity entity = tile.environmentEntity;
+
+				for (final ActivationAction aa : entity.actions)
+				{
+					if (!aa.visible) { continue; }
+					
+					Table row = new Table();
+
+					row.add(new Label(aa.name, skin)).expand().fill();
+
+					row.addListener(new InputListener()
+					{
+						@Override
+						public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+						{	
+							aa.activate(entity);
+							level.player.Tasks.add(new TaskWait());
+							contextMenu.remove();
+							contextMenu = null;
+
+							return true;
+						}
+					});
+
+					table.add(row).width(Value.percentWidth(1, table));
+					table.row();
+				}
+				
+				table.add(new Label("-------------", skin));
+				table.row();
+			}
 			
 			for (final ActiveAbility aa : available)
 			{
@@ -720,6 +797,8 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 				table.add(row).width(Value.percentWidth(1, table));
 				table.row();
 			}
+			
+			table.pack();
 			
 			contextMenu = new Tooltip(table, skin, stage);
 			contextMenu.show(screenX-contextMenu.getWidth()/2, screenY-contextMenu.getHeight());

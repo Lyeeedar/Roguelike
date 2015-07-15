@@ -2,6 +2,7 @@ package Roguelike.Tiles;
 
 import java.util.HashSet;
 
+import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
@@ -22,6 +23,8 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	public Color Light;
 	
 	public GameEntity Entity;
+	public EnvironmentEntity environmentEntity; 
+	
 	public Level Level;
 	
 	public Array<SpriteEffect> SpriteEffects = new Array<SpriteEffect>();
@@ -40,7 +43,18 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 		
 		Light = new Color(Color.WHITE);
 	}
+	
+	public void addEnvironmentEntity(EnvironmentEntity entity)
+	{
+		if (entity.tile != null)
+		{
+			entity.tile.environmentEntity = null;
+		}
 		
+		environmentEntity = entity;
+		entity.tile = this;
+	}
+	
 	public void addObject(GameEntity obj)
 	{
 		if (obj.Tile != null)
@@ -55,6 +69,11 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	@Override
 	public boolean GetOpaque()
 	{
+		if (environmentEntity != null && environmentEntity.opaque)
+		{
+			 return true;
+		}
+		
 		return TileData.Opaque;
 	}
 
@@ -73,6 +92,7 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	@Override
 	public boolean GetPassable(HashSet<String> factions)
 	{
+		if (environmentEntity != null && !environmentEntity.passable) { return false; }
 		if (!TileData.Passable) { return false; }
 		
 		return Entity != null ? !Entity.isAllies(factions) : true ;

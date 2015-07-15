@@ -533,9 +533,14 @@ public class Level
 			for (int y = 0; y < height; y++)
 			{
 				GameEntity e = Grid[x][y].Entity;
-				if (e != null && e != player)
+				if (e != null)
 				{
-					if (e.HP <= 0 && !hasActiveEffects(e))
+					if (e.damageAccumulator > 0 && Grid[x][y].GetVisible())
+					{
+						RoguelikeGame.Instance.addActorDamageAction(e);
+					}
+					
+					if (e!= player && e.HP <= 0 && !hasActiveEffects(e))
 					{
 						e.Tile.Entity = null;
 						
@@ -559,15 +564,25 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{
-				sprites.add(Grid[x][y].TileData.floorSprite);
-				if (Grid[x][y].TileData.featureSprite != null) { sprites.add(Grid[x][y].TileData.featureSprite); }
+				GameTile tile = Grid[x][y];
+				sprites.add(tile.TileData.floorSprite);
 				
-				if (Grid[x][y].Entity != null)
-				{
-					sprites.add(Grid[x][y].Entity.Sprite);
+				if (tile.TileData.featureSprite != null) 
+				{ 
+					sprites.add(tile.TileData.featureSprite); 
 				}
 				
-				for (Item i : Grid[x][y].Items)
+				if (tile.environmentEntity != null)
+				{
+					sprites.add(tile.environmentEntity.sprite);
+				}
+				
+				if (tile.Entity != null)
+				{
+					sprites.add(tile.Entity.Sprite);
+				}
+				
+				for (Item i : tile.Items)
 				{
 					sprites.add(i.Icon);
 				}
