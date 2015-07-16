@@ -1,6 +1,13 @@
 <Level>
 	<Symbols>
 		<Symbol>
+			<Char>+</Char>
+			<Type>EnvironmentEntity</Type>
+			<Data>
+				<Type>Door</Type>
+			</Data>
+		</Symbol>
+		<Symbol>
 			<Char>.</Char>
 			<Type>Tile</Type>
 			<Data>
@@ -88,368 +95,258 @@
 				</Light>
 			</Data>
 		</Symbol>
-		
+	
 		<Symbol>
 			<Char>0</Char>
-			<Type>Entity</Type>
+			<Type>GameEntity</Type>
 			<Data>Enemies/Orc/OrcGrunt</Data>
 		</Symbol>
-		
 		<Symbol>
 			<Char>1</Char>
-			<Type>Entity</Type>
+			<Type>GameEntity</Type>
 			<Data>Enemies/Orc/OrcWarrior</Data>
 		</Symbol>
 		
 		<Symbol>
 			<Char>2</Char>
-			<Type>Entity</Type>
+			<Type>GameEntity</Type>
 			<Data>Enemies/Orc/OrcNinja</Data>
 		</Symbol>
 		
 		<Symbol>
 			<Char>3</Char>
-			<Type>Entity</Type>
+			<Type>GameEntity</Type>
 			<Data>Enemies/Orc/OrcDude</Data>
 		</Symbol>
 		
 		<Symbol>
 			<Char>4</Char>
-			<Type>Entity</Type>
+			<Type>GameEntity</Type>
 			<Data>Enemies/Orc/OrcPirate</Data>
 		</Symbol>
 		
 		<Symbol>
 			<Char>5</Char>
-			<Type>Entity</Type>
+			<Type>GameEntity</Type>
 			<Data>Enemies/Orc/OrcMonk</Data>
 		</Symbol>
 		
 		<Symbol>
 			<Char>6</Char>
-			<Type>Entity</Type>
+			<Type>GameEntity</Type>
 			<Data>Enemies/Orc/OrcMage</Data>
 		</Symbol>
 		
 		<Symbol>
 			<Char>7</Char>
-			<Type>Entity</Type>
+			<Type>GameEntity</Type>
 			<Data>Enemies/Orc/OrcAlchemist</Data>
 		</Symbol>
 		
 		<Symbol>
 			<Char>8</Char>
-			<Type>Entity</Type>
+			<Type>GameEntity</Type>
 			<Data>Enemies/Orc/OrcChieftan</Data>
 		</Symbol>
 		
 		<Symbol>
 			<Char>9</Char>
-			<Type>Entity</Type>
+			<Type>GameEntity</Type>
 			<Data>Enemies/Orc/OrcSuperChieftan</Data>
 		</Symbol>
 		
 	</Symbols>
 	
-	<Rooms>
-		<pillar-diamond>
-			<width>23</width>
-			<height>23</height>
-			
-			<Rows>
-				<row>.......................</row>
-				<row>...#...#.......#...#...</row>
-				<row>.#...#....#+#....#...#.</row>
-				<row>...#...#.##.##.#...#...</row>
-				<row>.#...#..##.0.##..#...#.</row>
-				<row>...#...##t#.#t##...#...</row>
-				<row>.#...###1.....1###...#.</row>
-				<row>...#.####..#..####.#...</row>
-				<row>.#..##.....#.....##..#.</row>
-				<row>...##....#####....##...</row>
-				<row>.###..##.......##..###.</row>
-				<row>.##....#..#.#..#....##.</row>
-				<row>.#2.#..#...9...#..#.2#.</row>
-				<row>.##...##..#l#..##...##.</row>
-				<row>..##.......#.......##..</row>
-				<row>.#.##.#..#####..#.##.#.</row>
-				<row>...###.....#.....###...</row>
-				<row>.#...##.#.....#.##...#.</row>
-				<row>...#..##..###..##..#...</row>
-				<row>.#...#.##3.$.3##.#...#.</row>
-				<row>...#...###t#t###...#...</row>
-				<row>.#...#...#####...#...#.</row>
-				<row>.......................</row>
-			</Rows>
-		</pillar-diamond>
-		
-		<pillar-room>
-
-			<width>20</width>
-			<height>20</height>
-
-			<Rows>
-				<row>....................</row>
-				<row>....1........##0....</row>
-				<row>..##.........##.....</row>
-				<row>..##.............##.</row>
-				<row>........##.......##.</row>
-				<row>........##..........</row>
-				<row>.............##.....</row>
-				<row>..##....0....##.....</row>
-				<row>..##.............##.</row>
-				<row>........##.......##.</row>
-				<row>........##..........</row>
-				<row>............1##.....</row>
-				<row>..##.........##.....</row>
-				<row>..##.............##.</row>
-				<row>........##.......##.</row>
-				<row>........##..........</row>
-				<row>.......0.....##.....</row>
-				<row>..##.........##.0...</row>
-				<row>..##................</row>
-				<row>....................</row>
-			</Rows>
-
-		</pillar-room>
-		
-		<vault-square>
-			<width>20</width>
-			<height>20</height>
-
-			<Rows>
-				<row>....................</row>
-				<row>.##################.</row>
-				<row>.#$$#t..t.£.t..t#.#.</row>
-				<row>.#.9#..6..B..6..#5#.</row>
-				<row>.#..#....3.3....#.#.</row>
-				<row>.##+#..#.....#..#.#.</row>
-				<row>.#..#t.........t#.#.</row>
-				<row>.#.#######+######.#.</row>
-				<row>.#l#.......#...#.$#.</row>
-				<row>.#l#..#####....#..#.</row>
-				<row>.#........#+#...#.#.</row>
-				<row>.########+#.##..#.#.</row>
-				<row>.#....#$#...t#0.0.#.</row>
-				<row>.#..#.#1#...##.2..#.</row>
-				<row>.#..#...#...#######.</row>
-				<row>.#.0#..###.....0..#.</row>
-				<row>.#..####t########.#.</row>
-				<row>.#.......+.....0..+.</row>
-				<row>.##################.</row>
-				<row>....................</row>
-			</Rows>
-			
-		</vault-square>
-		
-		<library>
+	<Required>
+		<Transition>
 			<Symbols>
 				<Symbol>
-					<Char>b</Char>
-					<Type>Tile</Type>
+					<Char>&gt;</Char>
+					<Type>EnvironmentEntity</Type>
 					<Data>
-						<Opaque>false</Opaque>
-						<Passable>false</Passable>
-						<FloorSprite>
-							<Name>Objects/Floor</Name>
-							<UpdateRate>0.5</UpdateRate>
-							<Size>16</Size>
-							<IndexX>15</IndexX>
-							<IndexY>7</IndexY>
-						</FloorSprite>
-						<FeatureSprite>
-							<Name>Objects/Decor</Name>
-							<UpdateRate>0.5</UpdateRate>
-							<Size>16</Size>
-							<IndexX>6</IndexX>
-							<IndexY>4</IndexY>
-						</FeatureSprite>
-					</Data>
-				</Symbol>
-				<Symbol>
-					<Char>B</Char>
-					<Type>Tile</Type>
-					<Data>
-						<Opaque>false</Opaque>
-						<Passable>false</Passable>
-						<FloorSprite>
-							<Name>Objects/Floor</Name>
-							<UpdateRate>0.5</UpdateRate>
-							<Size>16</Size>
-							<IndexX>15</IndexX>
-							<IndexY>7</IndexY>
-						</FloorSprite>
-						<FeatureSprite>
-							<Name>Objects/Decor</Name>
-							<UpdateRate>0.5</UpdateRate>
-							<Size>16</Size>
-							<IndexX>5</IndexX>
-							<IndexY>4</IndexY>
-						</FeatureSprite>
-					</Data>
-				</Symbol>
-				<Symbol>
-					<Char>T</Char>
-					<Type>Tile</Type>
-					<Data>
-						<Opaque>false</Opaque>
-						<Passable>false</Passable>
-						<FloorSprite>
-							<Name>Objects/Floor</Name>
-							<UpdateRate>0.5</UpdateRate>
-							<Size>16</Size>
-							<IndexX>15</IndexX>
-							<IndexY>7</IndexY>
-						</FloorSprite>
-						<FeatureSprite>
-							<Name>Objects/Decor</Name>
-							<UpdateRate>0.5</UpdateRate>
-							<Size>16</Size>
-							<IndexX>1</IndexX>
-							<IndexY>7</IndexY>
-						</FeatureSprite>
-					</Data>
-				</Symbol>
-				<Symbol>
-					<Char>c</Char>
-					<Type>Tile</Type>
-					<Data>
-						<Opaque>false</Opaque>
-						<Passable>false</Passable>
-						<FloorSprite>
-							<Name>Objects/Floor</Name>
-							<UpdateRate>0.5</UpdateRate>
-							<Size>16</Size>
-							<IndexX>15</IndexX>
-							<IndexY>7</IndexY>
-						</FloorSprite>
-						<FeatureSprite>
-							<Name>Objects/Decor</Name>
-							<UpdateRate>0.5</UpdateRate>
-							<Size>16</Size>
-							<IndexX>0</IndexX>
-							<IndexY>7</IndexY>
-						</FeatureSprite>
+						<Type>Transition_Entrance</Type>
+						<Destination>level1</Destination>
 					</Data>
 				</Symbol>
 			</Symbols>
-		
-			<width>15</width>
-			<height>15</height>
-
+				
 			<Rows>
-				<row>...............</row>
-				<row>.#############.</row>
-				<row>.#tBbbt#tbBBt#.</row>
-				<row>.#bcTcb#bcTcb#.</row>
-				<row>.#B6c6B#b.c.B#.</row>
-				<row>.#b...B#b...b#.</row>
-				<row>.#b...B#b...b#.</row>
-				<row>.#b...B#B...b#.</row>
-				<row>.#b...b#B...B#.</row>
-				<row>.#t...t#t...t#.</row>
-				<row>.###.#####.###.</row>
-				<row>.#.........5.#.</row>
-				<row>.#t.........t#.</row>
-				<row>.######.######.</row>
-				<row>...............</row>
-			</Rows>
-		</library>
-		
-		<monster_camp>
-			<width>10</width>
-			<height>10</height>
-
-			<Rows>
-				<row>..........</row>
-				<row>.####.###.</row>
-				<row>.#t....t#.</row>
-				<row>.#......#.</row>
-				<row>.###.####.</row>
-				<row>.#......#.</row>
-				<row>.#.2.2..#.</row>
-				<row>.#t.4..t#.</row>
-				<row>.########.</row>
-				<row>..........</row>
-			</Rows>
-		</monster_camp>
-		
-		<monster_camp>
-			<width>10</width>
-			<height>10</height>
-
-			<Rows>
-				<row>..........</row>
-				<row>.#......#.</row>
-				<row>..........</row>
-				<row>.#......#.</row>
-				<row>....7.....</row>
-				<row>.#......#.</row>
-				<row>..........</row>
-				<row>.#......#.</row>
-				<row>..........</row>
-				<row>..........</row>
-			</Rows>
-		</monster_camp>
-		
-		<monster_camp>
-			<width>10</width>
-			<height>10</height>
-
-			<Rows>
-				<row>..........</row>
-				<row>.#..#..#..</row>
-				<row>.#..#..#..</row>
-				<row>.#..#..#..</row>
-				<row>.#33...#..</row>
-				<row>.#..#..#..</row>
-				<row>.#..#..#..</row>
-				<row>.#..#..#..</row>
-				<row>.#..#..#..</row>
-				<row>..........</row>
-			</Rows>
-		</monster_camp>
-		
-		<monster_camp>
-
-			<width>5</width>
-			<height>5</height>
-
-			<Rows>
-				<row>.....</row>
-				<row>.0.0.</row>
-				<row>..l.0</row>
-				<row>.0.1.</row>
-				<row>.....</row>
+				<Row>#####</Row>
+				<Row>#...#</Row>
+				<Row>#.>.#</Row>
+				<Row>#...#</Row>
+				<Row>##.##</Row>
 			</Rows>
 
-		</monster_camp>
-		
-		<torch-pillar>
-			<width>5</width>
-			<height>5</height>
-
-			<Rows>
-				<row>.....</row>
-				<row>..t0.</row>
-				<row>.t#t.</row>
-				<row>..t..</row>
-				<row>.....</row>
-			</Rows>
-		</torch-pillar>
-		
-		<pillar-campfire>
-			<width>5</width>
-			<height>5</height>
-
-			<Rows>
-				<row>.....</row>
-				<row>.#1#.</row>
-				<row>..l1.</row>
-				<row>.#.#.</row>
-				<row>.....</row>
-			</Rows>
-		</pillar-campfire>
-		
-	</Rooms>
+		</Transition>
+	</Required>
+	
+	<Optional>
+			
+			<vault>
+				<Rows>
+					<row>.......................</row>
+					<row>...#...#.......#...#...</row>
+					<row>.#...#....#+#....#...#.</row>
+					<row>...#...#.##.##.#...#...</row>
+					<row>.#...#..##.0.##..#...#.</row>
+					<row>...#...##t#.#t##...#...</row>
+					<row>.#...###1.....1###...#.</row>
+					<row>...#.####..#..####.#...</row>
+					<row>.#..##.....#.....##..#.</row>
+					<row>...##....#####....##...</row>
+					<row>.###..##.......##..###.</row>
+					<row>.##....#..#.#..#....##.</row>
+					<row>.#2.#..#...9...#..#.2#.</row>
+					<row>.##...##..#l#..##...##.</row>
+					<row>..##.......#.......##..</row>
+					<row>.#.##.#..#####..#.##.#.</row>
+					<row>...###.....#.....###...</row>
+					<row>.#...##.#.....#.##...#.</row>
+					<row>...#..##..###..##..#...</row>
+					<row>.#...#.##3.$.3##.#...#.</row>
+					<row>...#...###t#t###...#...</row>
+					<row>.#...#...#####...#...#.</row>
+					<row>.......................</row>
+				</Rows>
+			</vault>
+			
+			<vault>
+				<Rows>
+					<row>....................</row>
+					<row>.##################.</row>
+					<row>.#$$#t..t.£.t..t#.#.</row>
+					<row>.#.9#..6..B..6..#5#.</row>
+					<row>.#..#....3.3....#.#.</row>
+					<row>.##+#..#.....#..#.#.</row>
+					<row>.#..#t.........t#.#.</row>
+					<row>.#.#######+######.#.</row>
+					<row>.#l#.......#...#.$#.</row>
+					<row>.#l#..#####....#..#.</row>
+					<row>.#........#+#...#.#.</row>
+					<row>.########+#.##..#.#.</row>
+					<row>.#....#$#...t#0.0.#.</row>
+					<row>.#..#.#1#...##.2..#.</row>
+					<row>.#..#...#...#######.</row>
+					<row>.#.0#..###.....0..#.</row>
+					<row>.#..####t########.#.</row>
+					<row>.#.......+.....0..+.</row>
+					<row>.##################.</row>
+					<row>....................</row>
+				</Rows>
+				
+			</vault>
+			
+			<vault>
+				<Symbols>
+					<Symbol>
+						<Char>b</Char>
+						<Type>Tile</Type>
+						<Data>
+							<Opaque>false</Opaque>
+							<Passable>false</Passable>
+							<FloorSprite>
+								<Name>Objects/Floor</Name>
+								<UpdateRate>0.5</UpdateRate>
+								<Size>16</Size>
+								<IndexX>15</IndexX>
+								<IndexY>7</IndexY>
+							</FloorSprite>
+							<FeatureSprite>
+								<Name>Objects/Decor</Name>
+								<UpdateRate>0.5</UpdateRate>
+								<Size>16</Size>
+								<IndexX>6</IndexX>
+								<IndexY>4</IndexY>
+							</FeatureSprite>
+						</Data>
+					</Symbol>
+					<Symbol>
+						<Char>B</Char>
+						<Type>Tile</Type>
+						<Data>
+							<Opaque>false</Opaque>
+							<Passable>false</Passable>
+							<FloorSprite>
+								<Name>Objects/Floor</Name>
+								<UpdateRate>0.5</UpdateRate>
+								<Size>16</Size>
+								<IndexX>15</IndexX>
+								<IndexY>7</IndexY>
+							</FloorSprite>
+							<FeatureSprite>
+								<Name>Objects/Decor</Name>
+								<UpdateRate>0.5</UpdateRate>
+								<Size>16</Size>
+								<IndexX>5</IndexX>
+								<IndexY>4</IndexY>
+							</FeatureSprite>
+						</Data>
+					</Symbol>
+					<Symbol>
+						<Char>T</Char>
+						<Type>Tile</Type>
+						<Data>
+							<Opaque>false</Opaque>
+							<Passable>false</Passable>
+							<FloorSprite>
+								<Name>Objects/Floor</Name>
+								<UpdateRate>0.5</UpdateRate>
+								<Size>16</Size>
+								<IndexX>15</IndexX>
+								<IndexY>7</IndexY>
+							</FloorSprite>
+							<FeatureSprite>
+								<Name>Objects/Decor</Name>
+								<UpdateRate>0.5</UpdateRate>
+								<Size>16</Size>
+								<IndexX>1</IndexX>
+								<IndexY>7</IndexY>
+							</FeatureSprite>
+						</Data>
+					</Symbol>
+					<Symbol>
+						<Char>c</Char>
+						<Type>Tile</Type>
+						<Data>
+							<Opaque>false</Opaque>
+							<Passable>false</Passable>
+							<FloorSprite>
+								<Name>Objects/Floor</Name>
+								<UpdateRate>0.5</UpdateRate>
+								<Size>16</Size>
+								<IndexX>15</IndexX>
+								<IndexY>7</IndexY>
+							</FloorSprite>
+							<FeatureSprite>
+								<Name>Objects/Decor</Name>
+								<UpdateRate>0.5</UpdateRate>
+								<Size>16</Size>
+								<IndexX>0</IndexX>
+								<IndexY>7</IndexY>
+							</FeatureSprite>
+						</Data>
+					</Symbol>
+				</Symbols>
+	
+				<Rows>
+					<row>...............</row>
+					<row>.#############.</row>
+					<row>.#tBbbt#tbBBt#.</row>
+					<row>.#bcTcb#bcTcb#.</row>
+					<row>.#B6c6B#b.c.B#.</row>
+					<row>.#b...B#b...b#.</row>
+					<row>.#b...B#b...b#.</row>
+					<row>.#b...B#B...b#.</row>
+					<row>.#b...b#B...B#.</row>
+					<row>.#t...t#t...t#.</row>
+					<row>.###.#####.###.</row>
+					<row>.#...........#.</row>
+					<row>.#t.........t#.</row>
+					<row>.######.######.</row>
+					<row>...............</row>
+				</Rows>
+			</vault>
+			
+	</Optional>
 </Level>

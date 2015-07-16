@@ -1,27 +1,16 @@
 package Roguelike.Entity;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.utils.Array;
-
 import Roguelike.AssetManager;
 import Roguelike.RoguelikeGame;
-import Roguelike.Ability.ActiveAbility.ActiveAbility;
-import Roguelike.DungeonGeneration.BSPGenerator;
-import Roguelike.Items.Item;
+import Roguelike.DungeonGeneration.RecursiveDockGenerator;
 import Roguelike.Levels.Level;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Tiles.GameTile;
-import Roguelike.UI.SpriteWidget;
-import Roguelike.UI.Tooltip;
+
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.Array;
 
 public class EnvironmentEntity
 {
@@ -50,7 +39,7 @@ public class EnvironmentEntity
 				// generate new level if required
 				if (connectedLevel == null)
 				{
-					BSPGenerator generator = new BSPGenerator(100, 100);
+					RecursiveDockGenerator generator = new RecursiveDockGenerator(100, 100);
 					//VillageGenerator generator = new VillageGenerator(100, 100);
 					generator.generate();
 					connectedLevel = generator.getLevel();

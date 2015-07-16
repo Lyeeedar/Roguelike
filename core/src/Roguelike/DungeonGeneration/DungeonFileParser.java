@@ -3,52 +3,102 @@ package Roguelike.DungeonGeneration;
 import java.io.IOException;
 import java.util.HashMap;
 
-import Roguelike.AssetManager;
-import Roguelike.DungeonGeneration.RecursiveDockGenerator.GenerationTile;
-import Roguelike.DungeonGeneration.RecursiveDockGenerator.PathfindType;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
-import Roguelike.DungeonGeneration.RecursiveDockGenerator.TileType;
-import Roguelike.Entity.GameEntity;
-import Roguelike.Lights.Light;
-import Roguelike.Sprite.Sprite;
-import Roguelike.Tiles.GameTile;
-import Roguelike.Tiles.TileData;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class DungeonFileParser
 {
+	//----------------------------------------------------------------------
 	public enum SymbolType
 	{
 		TILE,
-		ENTITY
+		GAMEENTITY,
+		ENVIRONMENTENTITY
 	}
 	
-	public class Symbol
+	//----------------------------------------------------------------------
+	public static class Symbol
 	{		
 		public char character;
 		public SymbolType type;
+		public Element data;
 		
-		public TileData tileData;
-		public String entityName;		
+		public static Symbol parse(Element xml)
+		{
+			Symbol symbol = new Symbol();
+			symbol.character = xml.get("Char").charAt(0);
+			symbol.type = SymbolType.valueOf(xml.get("Type").toUpperCase());
+			symbol.data = xml.getChildByName("Data");
+			
+			return symbol;
+		}
+		
+		public boolean isDoor()
+		{
+			return type == SymbolType.ENVIRONMENTENTITY && data.get("Type").equals("Door");
+		}
+		
+		public boolean isPassable()
+		{
+			return type == SymbolType.TILE && data.getBoolean("Passable");
+		}
 	}
 	
-	public class DFPRoom
+	//----------------------------------------------------------------------
+	public static class DFPRoom
 	{
 		public int width;
 		public int height;
-		public HashMap<Character, Symbol> localSymbolMap;
+		public HashMap<Character, Symbol> localSymbolMap = new HashMap<Character, Symbol>();
+		public HashMap<Character, Symbol> sharedSymbolMap;
 		public char[][] roomDef;
+		
+		public static DFPRoom parse(Element xml, HashMap<Character, Symbol> sharedSymbolMap)
+		{
+			DFPRoom room = new DFPRoom();
+			room.sharedSymbolMap = sharedSymbolMap;
+			
+			Element rowsElement = xml.getChildByName("Rows");
+			room.height = rowsElement.getChildCount();
+			for (int i = 0; i < room.height; i++)
+			{
+				if (rowsElement.getChild(i).getText().length() > room.width)
+				{
+					room.width = rowsElement.getChild(i).getText().length();
+				}
+			}
+			
+			room.roomDef = new char[room.width][room.height];
+			for (int x = 0; x < room.width; x++)
+			{
+				for (int y = 0; y < room.height; y++)
+				{
+					room.roomDef[x][y] = rowsElement.getChild(y).getText().charAt(x);
+				}
+			}
+			
+			Element symbolsElement = xml.getChildByName("Symbols");
+			if (symbolsElement != null)
+			{
+				for (int i = 0; i < symbolsElement.getChildCount(); i++)
+				{
+					Symbol symbol = Symbol.parse(symbolsElement.getChild(i));
+					room.localSymbolMap.put(symbol.character, symbol);
+				}
+			}
+			
+			return room;
+		}
 		
 		public void fillRoom(Room room)
 		{
 			room.width = width;
 			room.height = height;
-			room.roomContents = new GenerationTile[width][height];
+			room.roomContents = new Symbol[width][height];
 			
 			for (int x = 0; x < width; x++)
 			{
@@ -59,95 +109,21 @@ public class DungeonFileParser
 					if (s == null) { s = sharedSymbolMap.get(c); }
 					if (s == null) { s = sharedSymbolMap.get('.'); }
 					
-					room.roomContents[x][y] = new GenerationTile();
-					room.roomContents[x][y].symbol = s;
-					room.roomContents[x][y].pathfindType = s.tileData != null && !s.tileData.Passable ? PathfindType.WALL : PathfindType.NONE;
-					room.roomContents[x][y].tileType = s.tileData != null && !s.tileData.Passable ? TileType.WALL : TileType.FLOOR;
+					room.roomContents[x][y] = s;
 				}
 			}
 		}
 	}
 	
-	public HashMap<Character, Symbol> sharedSymbolMap;
+	//----------------------------------------------------------------------
+	public HashMap<Character, Symbol> sharedSymbolMap = new HashMap<Character, Symbol>();
 	
-	public Array<DFPRoom> rooms = new Array<DFPRoom>();
+	//----------------------------------------------------------------------
+	public Array<DFPRoom> requiredRooms = new Array<DFPRoom>();
 	
-	public void placeRoom(int x, int y, int width, int height, GameTile[][] tiles)
-	{
-		Array<DFPRoom> validRooms = new Array<DFPRoom>();
-		for(DFPRoom r : rooms)
-		{
-			if (r.width <= width && r.height <= height)
-			{
-				validRooms.add(r);
-			}
-		}
+	//----------------------------------------------------------------------
+		public Array<DFPRoom> optionalRooms = new Array<DFPRoom>();
 		
-		if (validRooms.size == 0) { return; }
-		
-		DFPRoom chosen = validRooms.get(MathUtils.random(validRooms.size-1));
-		
-		for (int rx = 0; rx < chosen.width; rx++)
-		{
-			for (int ry = 0; ry < chosen.height; ry++)
-			{
-				if (x+rx >= tiles.length-1 || y+ry >= tiles[0].length-1) { continue; }
-				
-				char c = chosen.roomDef[rx][ry];
-				Symbol s = chosen.localSymbolMap.get(c);
-				if (s == null) { s = sharedSymbolMap.get(c); }
-				if (s == null) { s = sharedSymbolMap.get('.'); }
-				
-				GameTile tile = tiles[x+rx][y+ry];
-				
-				if (s.tileData == null)
-				{
-					tile.TileData = sharedSymbolMap.get('.').tileData;
-				}
-				else
-				{
-					tile.TileData = s.tileData;
-				}
-				
-				if (s.entityName != null)
-				{
-					tile.addObject(GameEntity.load(s.entityName));
-				}
-			}
-		}
-	}
-	
-	private HashMap<Character, Symbol> parseSymbolList(Element symbolsElement)
-	{		
-		HashMap<Character, Symbol> map = new HashMap<Character, Symbol>();
-		
-		for (Element symbolElement : symbolsElement.getChildrenByName("Symbol"))
-		{
-			Symbol symbol = new Symbol();
-			symbol.character = symbolElement.get("Char").charAt(0);
-			symbol.type = SymbolType.valueOf(symbolElement.get("Type").toUpperCase());
-			
-			if (symbol.type == SymbolType.TILE)
-			{
-				Element tileElement = symbolElement.getChildByName("Data");
-				Sprite floorSprite = AssetManager.loadSprite(tileElement.getChildByName("FloorSprite"));
-				Sprite featureSprite = tileElement.getChildByName("FeatureSprite") != null ? AssetManager.loadSprite(tileElement.getChildByName("FeatureSprite")) : null;
-				boolean opaque = tileElement.getBoolean("Opaque");
-				boolean passable = tileElement.getBoolean("Passable");
-				Light light = tileElement.getChildByName("Light") != null ? Light.load(tileElement.getChildByName("Light")) : null;
-				symbol.tileData = new TileData(floorSprite, featureSprite, light, opaque, passable, "");
-			}
-			else
-			{
-				symbol.entityName = symbolElement.get("Data");
-			}
-			
-			map.put(symbol.character, symbol);
-		}
-		
-		return map;
-	}
-
 	//----------------------------------------------------------------------
 	private void internalLoad(String name)
 	{
@@ -163,35 +139,38 @@ public class DungeonFileParser
 			e.printStackTrace();
 		}
 		
-		sharedSymbolMap = xmlElement.getChildByName("Symbols") != null ? parseSymbolList(xmlElement.getChildByName("Symbols")) : new HashMap<Character, Symbol>();
-		
-		Element roomsElement = xmlElement.getChildByName("Rooms");
-		for (int i = 0; i < roomsElement.getChildCount(); i++)
+		Element symbolsElement = xmlElement.getChildByName("Symbols");
+		if (symbolsElement != null)
 		{
-			Element roomElement = roomsElement.getChild(i);
-			
-			DFPRoom room = new DFPRoom();
-			
-			room.width = roomElement.getInt("width");
-			room.height = roomElement.getInt("height");
-			room.localSymbolMap = roomElement.getChildByName("Symbols") != null ? parseSymbolList(roomElement.getChildByName("Symbols")) : new HashMap<Character, Symbol>();
-			room.roomDef = new char[room.width][room.height];
-			
-			Element rowsElement = roomElement.getChildByName("Rows");
-			for (int y = 0; y < room.height; y++)
+			for (int i = 0; i < symbolsElement.getChildCount(); i++)
 			{
-				Element rowElement = rowsElement.getChild(y);
-				String row = rowElement.getText();
-				for (int x = 0; x < room.width; x++)
-				{
-					room.roomDef[x][y] = row.charAt(x);
-				}
+				Symbol symbol = Symbol.parse(symbolsElement.getChild(i));
+				sharedSymbolMap.put(symbol.character, symbol);
 			}
-			
-			rooms.add(room);
+		}
+		
+		Element requiredElement = xmlElement.getChildByName("Required");
+		if (requiredElement != null)
+		{
+			for (int i = 0; i < requiredElement.getChildCount(); i++)
+			{
+				DFPRoom room = DFPRoom.parse(requiredElement.getChild(i), sharedSymbolMap);
+				requiredRooms.add(room);
+			}
+		}
+		
+		Element optionalElement = xmlElement.getChildByName("Optional");
+		if (optionalElement != null)
+		{
+			for (int i = 0; i < optionalElement.getChildCount(); i++)
+			{
+				DFPRoom room = DFPRoom.parse(optionalElement.getChild(i), sharedSymbolMap);
+				optionalRooms.add(room);
+			}
 		}
 	}
 	
+	//----------------------------------------------------------------------
 	public static DungeonFileParser load(String name)
 	{
 		DungeonFileParser dfp = new DungeonFileParser();
