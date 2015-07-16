@@ -44,7 +44,7 @@ public class ActionMoveTo extends AbstractAction
 		}
 		
 		// if next step is impassable then fail
-		if (!entity.Tile.Level.getGameTile(path[1]).GetPassable(entity.m_factions))
+		if (!entity.Tile.Level.getGameTile(path[1]).getPassable(entity.m_factions))
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;

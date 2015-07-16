@@ -9,7 +9,8 @@ import Roguelike.Ability.AbilityPool;
 import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
-import Roguelike.DungeonGeneration.DungeonRoomGenerator;
+import Roguelike.DungeonGeneration.BSPGenerator;
+import Roguelike.DungeonGeneration.RecursiveDockGenerator;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.EnvironmentEntity.ActivationAction;
@@ -107,7 +108,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		blank = AssetManager.loadTexture("Sprites/blank.png");
 		white = AssetManager.loadTexture("Sprites/white.png");
 		
-		DungeonRoomGenerator generator = new DungeonRoomGenerator(100, 100);
+		RecursiveDockGenerator generator = new RecursiveDockGenerator(120, 120);
 		//VillageGenerator generator = new VillageGenerator(100, 100);
 		generator.generate();
 		level = generator.getLevel();
@@ -142,6 +143,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		}
 		
 		level.updateVisibleTiles();
+		level.revealWholeLevel();
 		
 		LoadUI();
 		
@@ -844,7 +846,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	boolean mouseOverUI;
 	
 	//----------------------------------------------------------------------
-	Level level;
+	public Level level;
 	
 	//----------------------------------------------------------------------
 	Array<GameEntity> toBeDrawn = new Array<GameEntity>();

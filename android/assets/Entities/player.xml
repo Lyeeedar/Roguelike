@@ -1,10 +1,6 @@
 <Entity Extends="human">
 	<Name>Player</Name>
 	
-	<Statistics>
-		<Range>10</Range>
-	</Statistics>
-	
 	<Factions>
 		<Faction>Player</Faction>
 	</Factions>
@@ -26,5 +22,14 @@
 			<Blue>0.7</Blue></Colour>
 		<Intensity>3</Intensity>
 	</Light>
+	
+	<Statistics>
+		<MaxHP>1000</MaxHP>
+		<Range>10</<Range>
+		<Speed>5</<Speed>
+		<Weight>1</Weight>
+		
+		<Wood_Atk>50</Wood_Atk>
+	</Statistics>
 	
 </Entity>

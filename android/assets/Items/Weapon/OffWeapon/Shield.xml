@@ -10,9 +10,7 @@
 	</Icon>
 	<Slot>OffWeapon</Slot>
 	<Type>Weapon</Type>
-	<Statistics>
-		<Weight>2</Weight>
-	</Statistics>
+
 	<Events>
 	    <OnReceiveDamage>
 	        <Damage Condition="rnd(1) < 0.5">

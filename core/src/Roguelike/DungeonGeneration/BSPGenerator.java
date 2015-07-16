@@ -29,7 +29,7 @@ import Roguelike.Tiles.TileData;
 
 import com.badlogic.gdx.utils.Array;
 
-public class DungeonRoomGenerator 
+public class BSPGenerator 
 {	
 	public enum TileType
 	{
@@ -44,9 +44,16 @@ public class DungeonRoomGenerator
 		public TileType tileType = TileType.WALL;
 		
 		@Override
-		public boolean GetPassable(HashSet<String> factions)
+		public boolean getPassable(HashSet<String> factions)
 		{
 			return true;
+		}
+
+		
+		@Override
+		public int getInfluence()
+		{
+			return 0;
 		}
 	}
 	
@@ -80,7 +87,7 @@ public class DungeonRoomGenerator
 	final int width;
 	final int height;
 	
-	public DungeonRoomGenerator(int width, int height)
+	public BSPGenerator(int width, int height)
 	{
 		this.width = width;
 		this.height = height;
@@ -130,6 +137,9 @@ public class DungeonRoomGenerator
 		for (DungeonRoom room : rooms)
 		{
 			dfp.placeRoom(room.x, room.y, room.width, room.height, actualTiles);
+			
+			GameTile tile = actualTiles[room.x+room.width/2][room.y+room.height/2];
+			tile.addEnvironmentEntity(EnvironmentEntity.CreateTransition());
 		}
 		
 		return level;

@@ -32,4 +32,13 @@
 		<Ability>Pyromaniac/Tier1/Flamestrike</Ability>
 	</ActiveAbilities>
 	
+	<Statistics>
+		<MaxHP>1000</MaxHP>
+		<Range>5</<Range>
+		<Speed>5</<Speed>
+		<Weight>1</Weight>
+		
+		<Wood_Atk>33</Wood_Atk>
+	</Statistics>
+	
 </Entity>

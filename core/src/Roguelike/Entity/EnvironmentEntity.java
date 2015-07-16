@@ -12,7 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.Array;
 
 import Roguelike.AssetManager;
+import Roguelike.RoguelikeGame;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.DungeonGeneration.BSPGenerator;
+import Roguelike.Items.Item;
+import Roguelike.Levels.Level;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Tiles.GameTile;
@@ -32,6 +36,59 @@ public class EnvironmentEntity
 	public boolean opaque;
 
 	public Array<ActivationAction> actions = new Array<ActivationAction>();
+	
+	public static EnvironmentEntity CreateTransition()
+	{
+		final Sprite stair = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Tile.png")}, new int[]{16, 16}, new int[]{0, 1}, Color.WHITE);
+		
+		ActivationAction transition = new ActivationAction("Change Level")
+		{
+			Level connectedLevel;
+			
+			public void activate(EnvironmentEntity entity)
+			{
+				// generate new level if required
+				if (connectedLevel == null)
+				{
+					BSPGenerator generator = new BSPGenerator(100, 100);
+					//VillageGenerator generator = new VillageGenerator(100, 100);
+					generator.generate();
+					connectedLevel = generator.getLevel();
+				}
+				
+				boolean exit = false;
+				for (int x = 0; x < connectedLevel.width; x++)
+				{
+					for (int y = 0; y < connectedLevel.height; y++)
+					{	
+						if (connectedLevel.getGameTile(x, y).TileData.Passable)
+						{
+							connectedLevel.player = entity.tile.Level.player;
+							
+							connectedLevel.getGameTile(x, y).addObject(entity.tile.Level.player);
+												
+							exit = true;
+							break;
+						}
+					}
+					if (exit) { break;} 
+				}
+				
+				connectedLevel.updateVisibleTiles();
+				
+				// switch out levels
+				RoguelikeGame.Instance.level = connectedLevel;
+			}
+		};
+		
+		EnvironmentEntity entity = new EnvironmentEntity();
+		entity.passable = true;
+		entity.opaque = false;
+		entity.sprite = stair;
+		entity.actions.add(transition);
+		
+		return entity;
+	}
 	
 	public static EnvironmentEntity CreateDoor()
 	{

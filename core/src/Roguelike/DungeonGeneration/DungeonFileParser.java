@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import Roguelike.AssetManager;
+import Roguelike.DungeonGeneration.RecursiveDockGenerator.GenerationTile;
+import Roguelike.DungeonGeneration.RecursiveDockGenerator.PathfindType;
+import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
+import Roguelike.DungeonGeneration.RecursiveDockGenerator.TileType;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
@@ -33,22 +37,45 @@ public class DungeonFileParser
 		public String entityName;		
 	}
 	
-	public class Room
+	public class DFPRoom
 	{
 		public int width;
 		public int height;
 		public HashMap<Character, Symbol> localSymbolMap;
 		public char[][] roomDef;
+		
+		public void fillRoom(Room room)
+		{
+			room.width = width;
+			room.height = height;
+			room.roomContents = new GenerationTile[width][height];
+			
+			for (int x = 0; x < width; x++)
+			{
+				for (int y = 0; y < height; y++)
+				{
+					char c = roomDef[x][y];
+					Symbol s = localSymbolMap.get(c);
+					if (s == null) { s = sharedSymbolMap.get(c); }
+					if (s == null) { s = sharedSymbolMap.get('.'); }
+					
+					room.roomContents[x][y] = new GenerationTile();
+					room.roomContents[x][y].symbol = s;
+					room.roomContents[x][y].pathfindType = s.tileData != null && !s.tileData.Passable ? PathfindType.WALL : PathfindType.NONE;
+					room.roomContents[x][y].tileType = s.tileData != null && !s.tileData.Passable ? TileType.WALL : TileType.FLOOR;
+				}
+			}
+		}
 	}
 	
 	public HashMap<Character, Symbol> sharedSymbolMap;
 	
-	public Array<Room> rooms = new Array<Room>();
+	public Array<DFPRoom> rooms = new Array<DFPRoom>();
 	
 	public void placeRoom(int x, int y, int width, int height, GameTile[][] tiles)
 	{
-		Array<Room> validRooms = new Array<Room>();
-		for(Room r : rooms)
+		Array<DFPRoom> validRooms = new Array<DFPRoom>();
+		for(DFPRoom r : rooms)
 		{
 			if (r.width <= width && r.height <= height)
 			{
@@ -58,7 +85,7 @@ public class DungeonFileParser
 		
 		if (validRooms.size == 0) { return; }
 		
-		Room chosen = validRooms.get(MathUtils.random(validRooms.size-1));
+		DFPRoom chosen = validRooms.get(MathUtils.random(validRooms.size-1));
 		
 		for (int rx = 0; rx < chosen.width; rx++)
 		{
@@ -143,7 +170,7 @@ public class DungeonFileParser
 		{
 			Element roomElement = roomsElement.getChild(i);
 			
-			Room room = new Room();
+			DFPRoom room = new DFPRoom();
 			
 			room.width = roomElement.getInt("width");
 			room.height = roomElement.getInt("height");

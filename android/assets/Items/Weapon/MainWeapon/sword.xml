@@ -18,10 +18,10 @@
 	</HitEffect>
 	<Slot>MainWeapon</Slot>
 	<Type>Weapon</Type>
-	<Statistics>
-		<Weight>2</Weight>
-	</Statistics>
-	<Attunement>
-		<Metal>10</Metal>
-	</Attunement>
+
+	<Events>
+		<Constant>
+			<Metal_Atk>100</Metal_Atk>
+		</Constant>
+	</Events>
 </Item>

@@ -46,9 +46,16 @@ public class VillageGenerator
 		public TileType tileType = TileType.GRASS;
 		
 		@Override
-		public boolean GetPassable(HashSet<String> factions)
+		public boolean getPassable(HashSet<String> factions)
 		{
 			return tileType == TileType.GRASS;
+		}
+
+		
+		@Override
+		public int getInfluence()
+		{
+			return 0;
 		}
 	}
 	

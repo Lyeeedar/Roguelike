@@ -51,7 +51,7 @@ public class TaskMove extends AbstractTask
 				obj.Sprite.SpriteAnimation = new SpriteAnimation(Dir, 0.1f);
 			}
 		}
-		else if (newTile.GetPassable(obj.m_factions))
+		else if (newTile.getPassable(obj.m_factions))
 		{
 			newTile.addObject(obj);
 		}

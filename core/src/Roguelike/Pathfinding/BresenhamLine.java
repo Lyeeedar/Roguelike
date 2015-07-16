@@ -69,7 +69,7 @@ public class BresenhamLine
 	        	y < 0 ||
 	        	x >= Grid.length-1 ||
 	        	y >= Grid[0].length-1 ||
-	        	(checkPassable && !Grid[x][y].GetPassable(factions))
+	        	(checkPassable && !Grid[x][y].getPassable(factions))
 	        	) 
 	        { 
 	        	break; 

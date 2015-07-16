@@ -110,7 +110,7 @@ public class AStarPathfind
 			return;
 		}
 		
-		if (!isStart(x, y) && !isEnd(x, y) && !grid[x][y].GetPassable(factions)) { return; }
+		if (!isStart(x, y) && !isEnd(x, y) && !grid[x][y].getPassable(factions)) { return; }
 		
 		if (nodes[x][y] == null)
 		{
@@ -130,7 +130,7 @@ public class AStarPathfind
 				Math.pow( Math.abs(y-endy), 2));
 		
 		Node node = nodes[x][y];
-		node.setup(heuristic, distance+1);
+		node.setup(heuristic, distance+1, grid[x][y].getInfluence());
 		
 		if (!openList.contains(node))
 		{
@@ -230,6 +230,7 @@ public class AStarPathfind
 		int cost;
 		int heuristic;
 		int distance;
+		int influence;
 
 		public Node(int x, int y)
 		{
@@ -237,11 +238,12 @@ public class AStarPathfind
 			this.y = y;
 		}
 		
-		public void setup(int heuristic, int distance)
+		public void setup(int heuristic, int distance, int influence)
 		{
 			this.heuristic = heuristic;
 			this.distance = distance;
-			this.cost = (heuristic*2) + distance;
+			this.influence = influence;
+			this.cost = (heuristic*2) + distance + influence * 4;
 		}
 
 		@Override

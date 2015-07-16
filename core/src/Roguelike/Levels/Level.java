@@ -28,7 +28,7 @@ public class Level
 {
 	public GameEntity player;
 	
-	public Color Ambient = new Color(0.1f, 0.1f, 0.3f, 1.0f);
+	public Color Ambient = new Color(0.91f, 0.91f, 0.93f, 1.0f);
 	
 	private SeenTile[][] SeenGrid;
 	private GameTile[][] Grid;
@@ -102,21 +102,27 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{
-				if (Grid[x][y].GetVisible())
+				GameTile tile = Grid[x][y];
+				if (tile.GetVisible())
 				{
 					SeenTile s = SeenGrid[x][y];
-					s.GameTile = Grid[x][y];
+					s.GameTile = tile;
 					s.seen = true;
 					
 					s.History.clear();
-					s.History.add(new SeenHistoryItem(Grid[x][y].TileData.floorSprite, Grid[x][y].TileData.Description));
+					s.History.add(new SeenHistoryItem(tile.TileData.floorSprite, tile.TileData.Description));
+					
+					if (tile.environmentEntity != null)
+					{
+						s.History.add(new SeenHistoryItem(tile.environmentEntity.sprite, ""));
+					}
 										
-					if (Grid[x][y].Entity != null)
+					if (tile.Entity != null)
 					{						
-						s.History.add(new SeenHistoryItem(Grid[x][y].Entity.Sprite, "A " + Grid[x][y].Entity.Name));
+						s.History.add(new SeenHistoryItem(tile.Entity.Sprite, "A " + tile.Entity.Name));
 					}
 					
-					for (Item i : Grid[x][y].Items)
+					for (Item i : tile.Items)
 					{
 						s.History.add(new SeenHistoryItem(i.Icon, "A " + i.Name));
 					}
