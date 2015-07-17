@@ -30,6 +30,8 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	public Array<SpriteEffect> SpriteEffects = new Array<SpriteEffect>();
 	
 	public Array<Item> Items = new Array<Item>(false, 16);
+	
+	public String metaValue;
 		
 	boolean visible;
 	

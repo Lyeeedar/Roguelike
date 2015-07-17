@@ -27,7 +27,7 @@ public class RecursiveDockGenerator
 	//----------------------------------------------------------------------
 	public RecursiveDockGenerator(int width, int height)
 	{
-		dfp = DungeonFileParser.load("level1"); 
+		dfp = DungeonFileParser.load("Forest"); 
 		
 		this.width = width;
 		this.height = height;
@@ -54,6 +54,7 @@ public class RecursiveDockGenerator
 		
 		GameTile[][] actualTiles = new GameTile[width][height];
 		Level level = new Level(actualTiles);
+		level.Ambient = dfp.ambient;
 		
 		for (int x = 0; x < width; x++)
 		{
@@ -87,8 +88,13 @@ public class RecursiveDockGenerator
 					newTile.addObject(GameEntity.load(oldTile.symbol.data.getText()));
 				}
 				
+				newTile.metaValue = oldTile.symbol.metaValue;
+				
 				actualTiles[x][y] = newTile;
+				
+				System.out.print(oldTile.symbol.character);
 			}
+			System.out.print("\n");
 		}
 		
 		return level;
@@ -356,7 +362,7 @@ public class RecursiveDockGenerator
 				{
 					if (x == 0 || x == room.width-1 || y == 0 || y == room.height-1)
 					{
-						if (room.roomContents[x][y].isDoor())
+						if (room.roomContents[x][y] == dfp.sharedSymbolMap.get('.'))
 						{
 							Pnt p = new Pnt(x+room.x, y+room.y);
 							roomPnts.add(p);							
@@ -645,35 +651,54 @@ public class RecursiveDockGenerator
 			// 0 2
 			//  3
 			
-			int doorSide = ran.nextInt(4);
+			int numDoors = (int)(Math.max(0, ran.nextGaussian())*2) + 1;
+			for (int i = 0; i < numDoors; i++)
+			{
+				int doorSide = ran.nextInt(4);
+				
+				if (doorSide == 0)
+				{
+					int x = 0;
+					int y = 1 + ran.nextInt(height-2);
+					
+					roomContents[x][y] = dfp.sharedSymbolMap.get('.');
+				}
+				else if (doorSide == 1)
+				{
+					int x = 1 + ran.nextInt(width-2);
+					int y = 0;
+					
+					roomContents[x][y] = dfp.sharedSymbolMap.get('.');
+				}
+				else if (doorSide == 2)
+				{
+					int x = width-1;
+					int y = 1 + ran.nextInt(height-2);
+					
+					roomContents[x][y] = dfp.sharedSymbolMap.get('.');
+				}
+				else if (doorSide == 3)
+				{
+					int x = 1 + ran.nextInt(width-2);
+					int y = height-1;
+					
+					roomContents[x][y] = dfp.sharedSymbolMap.get('.');
+				}
+			}
 			
-			if (doorSide == 0)
+			int difficulty = (int)(Math.max(0, ran.nextGaussian())*8) + 1;
+			
+			while (difficulty > 0)
 			{
-				int x = 0;
-				int y = 1 + ran.nextInt(height-2);
+				int mon = ran.nextInt(difficulty);
 				
-				roomContents[x][y] = dfp.sharedSymbolMap.get('+');
-			}
-			else if (doorSide == 1)
-			{
-				int x = 1 + ran.nextInt(width-2);
-				int y = 0;
+				// place
+				int x = ran.nextInt(width-2)+1;
+				int y = ran.nextInt(height-2)+1;
 				
-				roomContents[x][y] = dfp.sharedSymbolMap.get('+');
-			}
-			else if (doorSide == 2)
-			{
-				int x = width-1;
-				int y = 1 + ran.nextInt(height-2);
+				roomContents[x][y] = dfp.sharedSymbolMap.get((""+mon).charAt(0));
 				
-				roomContents[x][y] = dfp.sharedSymbolMap.get('+');
-			}
-			else if (doorSide == 3)
-			{
-				int x = 1 + ran.nextInt(width-2);
-				int y = height-1;
-				
-				roomContents[x][y] = dfp.sharedSymbolMap.get('+');
+				difficulty -= mon+1;
 			}
 		}
 	}

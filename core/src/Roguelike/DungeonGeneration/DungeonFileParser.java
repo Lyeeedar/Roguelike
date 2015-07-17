@@ -8,6 +8,7 @@ import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Tiles.TileData;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -19,7 +20,8 @@ public class DungeonFileParser
 	{
 		TILE,
 		GAMEENTITY,
-		ENVIRONMENTENTITY
+		ENVIRONMENTENTITY,
+		META
 	}
 	
 	//----------------------------------------------------------------------
@@ -31,6 +33,8 @@ public class DungeonFileParser
 		
 		public Object parsedDataBlob;
 		
+		public String metaValue;
+		
 		public TileData getAsTileData()
 		{
 			if (parsedDataBlob == null)
@@ -41,12 +45,28 @@ public class DungeonFileParser
 			return (TileData)parsedDataBlob;
 		}
 		
-		public static Symbol parse(Element xml)
+		public static Symbol parse(Element xml, HashMap<Character, Symbol> sharedSymbolMap, HashMap<Character, Symbol> localSymbolMap)
 		{
 			Symbol symbol = new Symbol();
 			symbol.character = xml.get("Char").charAt(0);
 			symbol.type = SymbolType.valueOf(xml.get("Type").toUpperCase());
 			symbol.data = xml.getChildByName("Data");
+			
+			if (symbol.type == SymbolType.META)
+			{
+				symbol.metaValue = symbol.data.get("Value");
+				
+				char replaceWith = symbol.data.get("ReplaceWith").charAt(0);
+				
+				Symbol rs = localSymbolMap != null ? localSymbolMap.get(replaceWith) : null;
+				if (rs == null)
+				{
+					rs = sharedSymbolMap.get(replaceWith);
+				}
+				
+				symbol.type = rs.type;
+				symbol.data = rs.data;
+			}
 			
 			return symbol;
 		}
@@ -119,7 +139,7 @@ public class DungeonFileParser
 			{
 				for (int i = 0; i < symbolsElement.getChildCount(); i++)
 				{
-					Symbol symbol = Symbol.parse(symbolsElement.getChild(i));
+					Symbol symbol = Symbol.parse(symbolsElement.getChild(i), sharedSymbolMap, room.localSymbolMap);
 					room.localSymbolMap.put(symbol.character, symbol);
 				}
 			}
@@ -155,8 +175,11 @@ public class DungeonFileParser
 	public Array<DFPRoom> requiredRooms = new Array<DFPRoom>();
 	
 	//----------------------------------------------------------------------
-		public Array<DFPRoom> optionalRooms = new Array<DFPRoom>();
-		
+	public Array<DFPRoom> optionalRooms = new Array<DFPRoom>();
+	
+	//----------------------------------------------------------------------
+	public Color ambient;
+	
 	//----------------------------------------------------------------------
 	private void internalLoad(String name)
 	{
@@ -177,7 +200,7 @@ public class DungeonFileParser
 		{
 			for (int i = 0; i < symbolsElement.getChildCount(); i++)
 			{
-				Symbol symbol = Symbol.parse(symbolsElement.getChild(i));
+				Symbol symbol = Symbol.parse(symbolsElement.getChild(i), sharedSymbolMap, null);
 				sharedSymbolMap.put(symbol.character, symbol);
 			}
 		}
@@ -201,6 +224,9 @@ public class DungeonFileParser
 				optionalRooms.add(room);
 			}
 		}
+		
+		Element ae = xmlElement.getChildByName("Ambient");
+		ambient = new Color(ae.getFloat("Red"), ae.getFloat("Blue"), ae.getFloat("Green"), ae.getFloat("Alpha"));
 	}
 	
 	//----------------------------------------------------------------------

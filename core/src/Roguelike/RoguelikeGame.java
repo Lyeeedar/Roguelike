@@ -93,7 +93,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		blank = AssetManager.loadTexture("Sprites/blank.png");
 		white = AssetManager.loadTexture("Sprites/white.png");
 		
-		RecursiveDockGenerator generator = new RecursiveDockGenerator(50, 50);
+		RecursiveDockGenerator generator = new RecursiveDockGenerator(75, 75);
 		//VillageGenerator generator = new VillageGenerator(100, 100);
 		generator.generate();
 		level = generator.getLevel();
@@ -104,8 +104,9 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		for (int x = 0; x < level.width; x++)
 		{
 			for (int y = 0; y < level.height; y++)
-			{	
-				if (level.getGameTile(x, y).TileData.Passable)
+			{
+				GameTile tile = level.getGameTile(x, y);
+				if (tile.metaValue != null && tile.metaValue.equals("PlayerSpawn"))
 				{
 					level.player = GameEntity.load("player");
 					
@@ -118,7 +119,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					level.player.getInventory().m_items.add(Item.load("Armour/Body/WoodArmour"));
 					level.player.getInventory().m_items.add(Item.load("Jewelry/Necklace/GoldNecklace"));
 										
-					level.getGameTile(x, y).addObject(level.player);
+					tile.addObject(level.player);
 										
 					exit = true;
 					break;

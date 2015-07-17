@@ -53,7 +53,7 @@ public class EnvironmentEntity
 				// generate new level if required
 				if (connectedLevel == null)
 				{
-					RecursiveDockGenerator generator = new RecursiveDockGenerator(100, 100);
+					RecursiveDockGenerator generator = new RecursiveDockGenerator(50, 50);
 					generator.toBePlaced.add(exitRoom);
 					generator.generate();
 					connectedLevel = generator.getLevel();

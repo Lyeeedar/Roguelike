@@ -391,28 +391,42 @@ public class GameEntity
 	//----------------------------------------------------------------------
 	public void slotActiveAbility(ActiveAbility aa, int index)
 	{
-		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
-		{
-			if (m_slottedActiveAbilities[i] == aa)
-			{
-				m_slottedActiveAbilities[i] = null;
-			}
-		}
-		
+		// if the target index is on cooldown, then cant swap
 		if (m_slottedActiveAbilities[index] != null && m_slottedActiveAbilities[index].cooldownAccumulator > 0)
 		{
 			return;
 		}
 		
-		m_slottedActiveAbilities[index] = aa;
-		
-		if (aa != null)
+		// check if aa is currently slotted
+		int currentIndex = -1;
+		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
 		{
-			aa.caster = this;
-			
-			for (int i = 0; i < 3; i++)
+			if (m_slottedActiveAbilities[i] == aa)
 			{
-				Tasks.add(new TaskWait());
+				currentIndex = i;
+				break;
+			}
+		}
+		
+		// if is equipped, then swap the abilities without any waits
+		if (currentIndex >= 0)
+		{
+			ActiveAbility temp = m_slottedActiveAbilities[index];
+			m_slottedActiveAbilities[index] = aa;
+			m_slottedActiveAbilities[currentIndex] = temp;
+		}
+		else
+		{
+			m_slottedActiveAbilities[index] = aa;
+			
+			if (aa != null)
+			{
+				aa.caster = this;
+				
+				for (int i = 0; i < 3; i++)
+				{
+					Tasks.add(new TaskWait());
+				}
 			}
 		}
 	}

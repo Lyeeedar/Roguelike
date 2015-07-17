@@ -1,0 +1,12 @@
+<Entity Extends="Enemies/Dog/dog" >
+	<Name>Ghost</Name>
+
+	<Sprite>
+		<Name>Characters/Dog</Name>
+		<UpdateRate>0.5</UpdateRate>
+		<Size>16</Size>
+		<IndexX>3</IndexX>
+		<IndexY>1</IndexY>
+	</Sprite>
+	
+</Entity>

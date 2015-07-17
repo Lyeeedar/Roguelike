@@ -1,0 +1,327 @@
+<Level>
+	<Ambient>
+		<Red>0.5</Red>
+		<Green>0.75</Green>
+		<Blue>0.3</Blue>
+		<Alpha>1</Alpha>
+	</Ambient>
+
+	<Symbols>
+		<Symbol>
+			<Char>.</Char>
+			<Type>Tile</Type>
+			<Data>
+				<Opaque>false</Opaque>
+				<Passable>true</Passable>
+				<FloorSprite>
+					<Name>Objects/Floor</Name>
+					<UpdateRate>0.5</UpdateRate>
+					<Size>16</Size>
+					<IndexX>8</IndexX>
+					<IndexY>7</IndexY>
+				</FloorSprite>
+			</Data>
+		</Symbol>
+		<Symbol>
+			<Char>#</Char>
+			<Type>Tile</Type>
+			<Data>
+				<Opaque>true</Opaque>
+				<Passable>false</Passable>
+				<FloorSprite>
+					<Name>Objects/Tree</Name>
+					<UpdateRate>0.4</UpdateRate>
+					<Size>16</Size>
+					<IndexX>1</IndexX>
+					<IndexY>1</IndexY>
+				</FloorSprite>
+			</Data>
+		</Symbol>
+		
+		<Symbol>
+			<Char>+</Char>
+			<Type>EnvironmentEntity</Type>
+			<Data>
+				<Type>Door</Type>
+			</Data>
+		</Symbol>
+		
+		<Symbol>
+			<Char>t</Char>
+			<Type>Tile</Type>
+			<Data>
+				<Opaque>false</Opaque>
+				<Passable>false</Passable>
+				<FloorSprite>
+					<Name>Objects/Floor</Name>
+					<UpdateRate>0.5</UpdateRate>
+					<Size>16</Size>
+					<IndexX>15</IndexX>
+					<IndexY>7</IndexY>
+				</FloorSprite>
+				<FeatureSprite>
+					<Name>Objects/Decor</Name>
+					<UpdateRate>0.5</UpdateRate>
+					<Size>16</Size>
+					<IndexX>0</IndexX>
+					<IndexY>8</IndexY>
+				</FeatureSprite>
+				<Light>
+					<Colour>
+						<Red>0.6</Red>
+						<Green>0.5</Green>
+						<Blue>0.1</Blue></Colour>
+					<Intensity>4</Intensity>
+				</Light>
+			</Data>
+		</Symbol>
+		
+		<Symbol>
+			<Char>0</Char>
+			<Type>GameEntity</Type>
+			<Data>Enemies/Dog/nibbler</Data>
+		</Symbol>
+		<Symbol>
+			<Char>1</Char>
+			<Type>GameEntity</Type>
+			<Data>Enemies/Dog/nibbler</Data>
+		</Symbol>
+		
+		<Symbol>
+			<Char>2</Char>
+			<Type>GameEntity</Type>
+			<Data>Enemies/Dog/crunch</Data>
+		</Symbol>
+		
+		<Symbol>
+			<Char>3</Char>
+			<Type>GameEntity</Type>
+			<Data>Enemies/Dog/crunch</Data>
+		</Symbol>
+		
+		<Symbol>
+			<Char>4</Char>
+			<Type>GameEntity</Type>
+			<Data>Enemies/Dog/ghost</Data>
+		</Symbol>
+		
+		<Symbol>
+			<Char>5</Char>
+			<Type>GameEntity</Type>
+			<Data>Enemies/Dog/ghost</Data>
+		</Symbol>
+		
+		<Symbol>
+			<Char>6</Char>
+			<Type>GameEntity</Type>
+			<Data>Enemies/Dog/churchill</Data>
+		</Symbol>
+		
+		<Symbol>
+			<Char>7</Char>
+			<Type>GameEntity</Type>
+			<Data>Enemies/Dog/churchill</Data>
+		</Symbol>
+		
+		<Symbol>
+			<Char>8</Char>
+			<Type>GameEntity</Type>
+			<Data>Enemies/Dog/cerberus</Data>
+		</Symbol>
+		
+		<Symbol>
+			<Char>9</Char>
+			<Type>GameEntity</Type>
+			<Data>Enemies/Dog/cerberus</Data>
+		</Symbol>
+	</Symbols>
+	
+	<Required>
+		<PlayerSpawn>
+			<Symbols>
+				<Symbol>
+					<Char>S</Char>
+					<Type>Meta</Type>
+					<Data>
+						<Value>PlayerSpawn</Value>
+						<ReplaceWith>.</ReplaceWith>
+					</Data>
+				</Symbol>
+			</Symbols>
+			
+			<Rows>
+				<Row>#####</Row>
+				<Row>##.##</Row>
+				<Row>#.S.#</Row>
+				<Row>#..##</Row>
+				<Row>##.##</Row>
+			</Rows>
+			
+		</PlayerSpawn>
+	
+		<Transition>
+			<Symbols>
+
+				<Symbol>
+					<Char>&gt;</Char>
+					<Type>EnvironmentEntity</Type>
+					<Data>
+						<Type>Transition</Type>
+						<Destination>Dungeon</Destination>
+						
+						<ExitRoom>
+							<Symbols>
+								<Symbol>
+									<Char>&lt;</Char>
+									<Type>EnvironmentEntity</Type>
+									<Data>
+										<Type>Transition</Type>
+										<Destination>this</Destination>
+									</Data>
+								</Symbol>
+							</Symbols>
+						
+							<Rows>
+								<Row>#####</Row>
+								<Row>#...#</Row>
+								<Row>#.&lt;.#</Row>
+								<Row>#...#</Row>
+								<Row>##.##</Row>
+							</Rows>
+						</ExitRoom>
+					</Data>
+				</Symbol>
+			</Symbols>
+				
+			<Rows>
+				<Row>#####</Row>
+				<Row>###.#</Row>
+				<Row>##&gt;.#</Row>
+				<Row>#..##</Row>
+				<Row>##.##</Row>
+			</Rows>
+
+		</Transition>
+		
+		<BossRoom>
+			<Symbols>
+				<Symbol>
+					<Char>w</Char>
+					<Type>Tile</Type>
+					<Data>
+						<Opaque>true</Opaque>
+						<Passable>false</Passable>
+						<FloorSprite>
+							<Name>Objects/Wall</Name>
+							<UpdateRate>1</UpdateRate>
+							<Size>16</Size>
+							<IndexX>3</IndexX>
+							<IndexY>12</IndexY>
+						</FloorSprite>
+					</Data>
+				</Symbol>
+				
+				<Symbol>
+					<Char>f</Char>
+					<Type>Tile</Type>
+					<Data>
+						<Opaque>false</Opaque>
+						<Passable>true</Passable>
+						<FloorSprite>
+							<Name>Objects/Floor</Name>
+							<UpdateRate>0.5</UpdateRate>
+							<Size>16</Size>
+							<IndexX>8</IndexX>
+							<IndexY>19</IndexY>
+						</FloorSprite>
+					</Data>
+				</Symbol>
+			</Symbols>
+		
+			<Rows>
+				<Row>##############.###############################.##########</Row>
+				<Row>#######...............####............###.........#######</Row>
+				<Row>##..................................................#####</Row>
+				<Row>###.........wwwwwwwwwwwwwwwwwwwwwwwwwwwww.............###</Row>
+				<Row>#...........w..............B............w...............#</Row>
+				<Row>#...........w.............AA............w..............##</Row>
+				<Row>#...........w..ppp.................ppp..w............####</Row>
+				<Row>##...wwwwwwww.........P........P........wwwwwwww......###</Row>
+				<Row>##...w......w..ppp.................ppp..w......w......###</Row>
+				<Row>###..w......w.........P........P........w......w......###</Row>
+				<Row>##...w......w..ppp.................ppp..w......w.......##</Row>
+				<Row>###..w......w.........P........P........w......w........#</Row>
+				<Row>##...w......wwwwwwww..............wwwwwww......w.......##</Row>
+				<Row>.....w......w......w..P........P..w.....w......w........#</Row>
+				<Row>#....w......+......w..............w.....+......w.......##</Row>
+				<Row>##...wwwwwwww......w..P........P..w.....wwwwwwww.......##</Row>
+				<Row>#....w......+......w..............w.....+......w......###</Row>
+				<Row>###..w......w......w..P........P..w.....w......w.......##</Row>
+				<Row>###..w......wwww+wwwwwwww++wwwwwwwww+wwww......w......###</Row>
+				<Row>####.wwwwwwww.........w........w........wwwwwwww....#####</Row>
+				<Row>##..........w.........w........w........w................</Row>
+				<Row>##..........w.........+........+........w..............##</Row>
+				<Row>####........w.........w........w........w...........#####</Row>
+				<Row>##..........wwwwwwwwwwwwww++wwwwwwwwwwwww............####</Row>
+				<Row>##...................................................####</Row>
+				<Row>###................................................######</Row>
+				<Row>######.....................................##############</Row>
+				<Row>##########.##############################################</Row>
+			</Rows>
+		</BossRoom>
+		
+	</Required>
+	
+	<Optional>
+		<Hut>
+			<Symbols>
+				<Symbol>
+					<Char>W</Char>
+					<Type>Tile</Type>
+					<Data>
+						<Opaque>true</Opaque>
+						<Passable>false</Passable>
+						<FloorSprite>
+							<Name>Objects/Wall</Name>
+							<UpdateRate>1</UpdateRate>
+							<Size>16</Size>
+							<IndexX>10</IndexX>
+							<IndexY>12</IndexY>
+						</FloorSprite>
+					</Data>
+				</Symbol>
+				
+				<Symbol>
+					<Char>f</Char>
+					<Type>Tile</Type>
+					<Data>
+						<Opaque>false</Opaque>
+						<Passable>true</Passable>
+						<FloorSprite>
+							<Name>Objects/Floor</Name>
+							<UpdateRate>0.5</UpdateRate>
+							<Size>16</Size>
+							<IndexX>8</IndexX>
+							<IndexY>19</IndexY>
+						</FloorSprite>
+					</Data>
+				</Symbol>
+			</Symbols>
+		
+			<Rows>
+				<Row>########################</Row>
+				<Row>########.........#######</Row>
+				<Row>###..................###</Row>
+				<Row>####..WWWWWWWWWWWW.#####</Row>
+				<Row>#.....WfffWtWffffW....##</Row>
+				<Row>##....Wfff+f+ffffW.....#</Row>
+				<Row>#.....WfffWfWffffW.....#</Row>
+				<Row>#.....WfffWfWffffW.....#</Row>
+				<Row>##....WWWWW+WWWWWW...###</Row>
+				<Row>####..................##</Row>
+				<Row>###########..###########</Row>
+			</Rows>
+		</Hut>
+	</Optional>
+	
+</Level>
