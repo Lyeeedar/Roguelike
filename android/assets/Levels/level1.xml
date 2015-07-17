@@ -160,12 +160,34 @@
 	<Required>
 		<Transition>
 			<Symbols>
+
 				<Symbol>
 					<Char>&gt;</Char>
 					<Type>EnvironmentEntity</Type>
 					<Data>
-						<Type>Transition_Entrance</Type>
+						<Type>Transition</Type>
 						<Destination>level1</Destination>
+						
+						<ExitRoom>
+							<Symbols>
+								<Symbol>
+									<Char>&lt;</Char>
+									<Type>EnvironmentEntity</Type>
+									<Data>
+										<Type>Transition</Type>
+										<Destination>this</Destination>
+									</Data>
+								</Symbol>
+							</Symbols>
+						
+							<Rows>
+								<Row>#####</Row>
+								<Row>#...#</Row>
+								<Row>#.&lt;.#</Row>
+								<Row>#...#</Row>
+								<Row>##+##</Row>
+							</Rows>
+						</ExitRoom>
 					</Data>
 				</Symbol>
 			</Symbols>
@@ -173,9 +195,9 @@
 			<Rows>
 				<Row>#####</Row>
 				<Row>#...#</Row>
-				<Row>#.>.#</Row>
+				<Row>#.&gt;.#</Row>
 				<Row>#...#</Row>
-				<Row>##.##</Row>
+				<Row>##+##</Row>
 			</Rows>
 
 		</Transition>
@@ -185,9 +207,9 @@
 			
 			<vault>
 				<Rows>
-					<row>.......................</row>
-					<row>...#...#.......#...#...</row>
-					<row>.#...#....#+#....#...#.</row>
+					<row>..........#+#..........</row>
+					<row>...#...#..#.#..#...#...</row>
+					<row>.#...#....#.#....#...#.</row>
 					<row>...#...#.##.##.#...#...</row>
 					<row>.#...#..##.0.##..#...#.</row>
 					<row>...#...##t#.#t##...#...</row>
@@ -229,9 +251,9 @@
 					<row>.#..#.#1#...##.2..#.</row>
 					<row>.#..#...#...#######.</row>
 					<row>.#.0#..###.....0..#.</row>
-					<row>.#..####t########.#.</row>
-					<row>.#.......+.....0..+.</row>
-					<row>.##################.</row>
+					<row>.#..####t########.##</row>
+					<row>.#.......+.....0...+</row>
+					<row>.###################</row>
 					<row>....................</row>
 				</Rows>
 				
@@ -344,7 +366,7 @@
 					<row>.#...........#.</row>
 					<row>.#t.........t#.</row>
 					<row>.######.######.</row>
-					<row>...............</row>
+					<row>......#+#......</row>
 				</Rows>
 			</vault>
 			

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
+import Roguelike.Entity.EnvironmentEntity;
+import Roguelike.Tiles.TileData;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
@@ -27,6 +29,18 @@ public class DungeonFileParser
 		public SymbolType type;
 		public Element data;
 		
+		public Object parsedDataBlob;
+		
+		public TileData getAsTileData()
+		{
+			if (parsedDataBlob == null)
+			{
+				parsedDataBlob = TileData.parse(data);
+			}
+			
+			return (TileData)parsedDataBlob;
+		}
+		
 		public static Symbol parse(Element xml)
 		{
 			Symbol symbol = new Symbol();
@@ -40,6 +54,25 @@ public class DungeonFileParser
 		public boolean isDoor()
 		{
 			return type == SymbolType.ENVIRONMENTENTITY && data.get("Type").equals("Door");
+		}
+		
+		public boolean isTransition()
+		{
+			return type == SymbolType.ENVIRONMENTENTITY && data.get("Type").equals("Transition");
+		}
+		
+		public EnvironmentEntity getAsTransition(HashMap<Character, Symbol> sharedSymbolMap)
+		{
+			if (parsedDataBlob == null)
+			{
+				DFPRoom dfpRoom = DFPRoom.parse(data.getChildByName("ExitRoom"), sharedSymbolMap);
+				Room room = new Room();
+				dfpRoom.fillRoom(room);
+				
+				parsedDataBlob = EnvironmentEntity.CreateTransition(data, room);
+			}
+			
+			return (EnvironmentEntity)parsedDataBlob;
 		}
 		
 		public boolean isPassable()

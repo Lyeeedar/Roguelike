@@ -2,7 +2,9 @@ package Roguelike.Entity;
 
 import Roguelike.AssetManager;
 import Roguelike.RoguelikeGame;
+import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator;
+import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
 import Roguelike.Levels.Level;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
@@ -11,6 +13,7 @@ import Roguelike.Tiles.GameTile;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class EnvironmentEntity
 {
@@ -26,13 +29,24 @@ public class EnvironmentEntity
 
 	public Array<ActivationAction> actions = new Array<ActivationAction>();
 	
-	public static EnvironmentEntity CreateTransition()
+	public static EnvironmentEntity CreateTransition(Element data, final Room exitRoom)
 	{
 		final Sprite stair = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Tile.png")}, new int[]{16, 16}, new int[]{0, 1}, Color.WHITE);
 		
-		ActivationAction transition = new ActivationAction("Change Level")
+		final EnvironmentEntity entranceEntity = new EnvironmentEntity();
+		entranceEntity.passable = true;
+		entranceEntity.opaque = false;
+		entranceEntity.sprite = stair;
+		
+		final EnvironmentEntity exitEntity = new EnvironmentEntity();
+		exitEntity.passable = true;
+		exitEntity.opaque = false;
+		exitEntity.sprite = stair;
+		
+		ActivationAction entranceAA = new ActivationAction("Change Level")
 		{
 			Level connectedLevel;
+			EnvironmentEntity exit = exitEntity;
 			
 			public void activate(EnvironmentEntity entity)
 			{
@@ -40,28 +54,13 @@ public class EnvironmentEntity
 				if (connectedLevel == null)
 				{
 					RecursiveDockGenerator generator = new RecursiveDockGenerator(100, 100);
-					//VillageGenerator generator = new VillageGenerator(100, 100);
+					generator.toBePlaced.add(exitRoom);
 					generator.generate();
 					connectedLevel = generator.getLevel();
 				}
 				
-				boolean exit = false;
-				for (int x = 0; x < connectedLevel.width; x++)
-				{
-					for (int y = 0; y < connectedLevel.height; y++)
-					{	
-						if (connectedLevel.getGameTile(x, y).TileData.Passable)
-						{
-							connectedLevel.player = entity.tile.Level.player;
-							
-							connectedLevel.getGameTile(x, y).addObject(entity.tile.Level.player);
-												
-							exit = true;
-							break;
-						}
-					}
-					if (exit) { break;} 
-				}
+				exit.tile.addObject(entity.tile.Level.player);
+				connectedLevel.player = entity.tile.Level.player;
 				
 				connectedLevel.updateVisibleTiles();
 				
@@ -69,14 +68,42 @@ public class EnvironmentEntity
 				RoguelikeGame.Instance.level = connectedLevel;
 			}
 		};
+		entranceEntity.actions.add(entranceAA);
 		
-		EnvironmentEntity entity = new EnvironmentEntity();
-		entity.passable = true;
-		entity.opaque = false;
-		entity.sprite = stair;
-		entity.actions.add(transition);
+		ActivationAction exitAA = new ActivationAction("Change Level")
+		{
+			EnvironmentEntity exit = entranceEntity;
+			
+			public void activate(EnvironmentEntity entity)
+			{
+				Level connectedLevel = entranceEntity.tile.Level;
+				
+				exit.tile.addObject(entity.tile.Level.player);
+				connectedLevel.player = entity.tile.Level.player;
+				
+				connectedLevel.updateVisibleTiles();
+				
+				// switch out levels
+				RoguelikeGame.Instance.level = connectedLevel;
+			}
+		};
+		exitEntity.actions.add(exitAA);
 		
-		return entity;
+		for (int x = 0; x < exitRoom.width; x++)
+		{
+			for (int y = 0; y < exitRoom.height; y++)
+			{
+				if (exitRoom.roomContents[x][y].isTransition())
+				{
+					if (exitRoom.roomContents[x][y].data.get("Destination").equals("this"))
+					{
+						exitRoom.roomContents[x][y].parsedDataBlob = exitEntity;
+					}
+				}
+			}
+		}
+		
+		return entranceEntity;
 	}
 	
 	public static EnvironmentEntity CreateDoor()

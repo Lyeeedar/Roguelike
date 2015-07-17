@@ -128,7 +128,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		}
 		
 		level.updateVisibleTiles();
-		level.revealWholeLevel();
+		//level.revealWholeLevel();
 		
 		LoadUI();
 		

@@ -28,7 +28,7 @@ public class Level
 {
 	public GameEntity player;
 	
-	public Color Ambient = new Color(0.91f, 0.91f, 0.93f, 1.0f);
+	public Color Ambient = new Color(0.1f, 0.1f, 0.3f, 1.0f);
 	
 	private SeenTile[][] SeenGrid;
 	private GameTile[][] Grid;
@@ -111,6 +111,11 @@ public class Level
 					
 					s.History.clear();
 					s.History.add(new SeenHistoryItem(tile.TileData.floorSprite, tile.TileData.Description));
+					
+					if (tile.TileData.featureSprite != null)
+					{
+						s.History.add(new SeenHistoryItem(tile.TileData.featureSprite, ""));
+					}
 					
 					if (tile.environmentEntity != null)
 					{
