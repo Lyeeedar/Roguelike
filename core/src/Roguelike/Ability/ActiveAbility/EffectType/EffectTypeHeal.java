@@ -20,12 +20,14 @@ public class EffectTypeHeal extends AbstractEffectType
 	public void parse(Element xml)
 	{	
 		reliesOn = xml.getAttribute("ReliesOn", "").split(",");		
-		equation = xml.get("Heal").toUpperCase();
+		equation = xml.getText().toUpperCase();
 	}
 
 	@Override
 	public void update(ActiveAbility aa, float time, GameTile tile)
 	{
+		if (tile.Entity == null) { return; }
+		
 		HashMap<String, Integer> variableMap = aa.caster.getVariableMap();
 		
 		for (String name : reliesOn)

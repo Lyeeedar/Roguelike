@@ -1,14 +1,18 @@
 <PassiveAbility>
 	<Name>Troll Blood</Name>
-	<Description>Troll blood runs in your viens, giving you regeneration.</Description>
+	<Description>Troll blood runs in your veins, giving you regeneration but making you weaker to fire.</Description>
 	<Icon>
 		<Name>Skills/Burning</Name>
 	</Icon>
 	
 	<Events>
+		<Constant>
+			<Fire_Def>-50</Fire_Def>
+		</Constant>
+	
 		<OnTurn>
 			<HOT>
-				<Heal>10</Heal>
+				<Heal>5</Heal>
 			</HOT>
 		</OnTurn>
 	</Events>

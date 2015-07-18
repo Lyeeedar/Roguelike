@@ -314,7 +314,7 @@ public class Global
 			float maxReduction = attack * hardiness;
 			
 			float reduction = defense - pierce;
-			reduction = MathUtils.clamp(reduction, 0, maxReduction);
+			reduction = Math.min(reduction, maxReduction);
 			
 			attack -= reduction;
 			attack = Math.max(attack, 0);

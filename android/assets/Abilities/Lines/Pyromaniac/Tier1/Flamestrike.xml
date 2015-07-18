@@ -31,7 +31,7 @@
 	
 	<Effect>
 		<Damage>
-			<Fire_ATK>10+FIRE_ATK*1.5</Fire_ATK>
+			<Fire_ATK>150+FIRE_ATK*0.5</Fire_ATK>
 		</Damage>
 	</Effect>
 	

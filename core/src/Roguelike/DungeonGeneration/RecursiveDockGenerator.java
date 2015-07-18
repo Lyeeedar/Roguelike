@@ -8,7 +8,6 @@ import PaulChew.Triangle;
 import PaulChew.Triangulation;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.DungeonFileParser.Symbol;
-import Roguelike.DungeonGeneration.DungeonFileParser.SymbolType;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Levels.Level;
@@ -25,22 +24,9 @@ public class RecursiveDockGenerator
 	//region Constructor
 	
 	//----------------------------------------------------------------------
-	public RecursiveDockGenerator(int width, int height)
+	public RecursiveDockGenerator(String level)
 	{
-		dfp = DungeonFileParser.load("Forest"); 
-		
-		this.width = width;
-		this.height = height;
-		
-		this.tiles = new GenerationTile[width][height];
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{
-				tiles[x][y] = new GenerationTile();
-				tiles[x][y].symbol = dfp.sharedSymbolMap.get('#');
-			}
-		}
+		dfp = DungeonFileParser.load(level+"/"+level); 
 	}
 
 	//endregion Constructor
@@ -49,9 +35,7 @@ public class RecursiveDockGenerator
 	
 	//----------------------------------------------------------------------
 	public Level getLevel()
-	{
-		TileData floorData = dfp.sharedSymbolMap.get('.').getAsTileData();
-		
+	{		
 		GameTile[][] actualTiles = new GameTile[width][height];
 		Level level = new Level(actualTiles);
 		level.Ambient = dfp.ambient;
@@ -66,13 +50,8 @@ public class RecursiveDockGenerator
 				(
 					x, y,
 					level,
-					oldTile.symbol.type == SymbolType.TILE ? oldTile.symbol.getAsTileData() : floorData
+					oldTile.symbol.getAsTileData()
 				);
-				
-				if (newTile.TileData.floorSprite == null)
-				{
-					newTile.TileData.floorSprite = floorData.floorSprite;
-				}
 				
 				if (oldTile.symbol.isDoor())
 				{
@@ -83,9 +62,9 @@ public class RecursiveDockGenerator
 					newTile.addEnvironmentEntity(oldTile.symbol.getAsTransition(dfp.sharedSymbolMap));
 				}
 				
-				if (oldTile.symbol.type == SymbolType.GAMEENTITY)
+				if (oldTile.symbol.entityData != null)
 				{
-					newTile.addObject(GameEntity.load(oldTile.symbol.data.getText()));
+					newTile.addObject(GameEntity.load(oldTile.symbol.entityData.getText()));
 				}
 				
 				newTile.metaValue = oldTile.symbol.metaValue;
@@ -102,7 +81,7 @@ public class RecursiveDockGenerator
 	
 	//----------------------------------------------------------------------
 	public void generate() 
-	{		
+	{
 		for (DFPRoom r : dfp.requiredRooms)
 		{
 			Room room = new Room();
@@ -118,7 +97,36 @@ public class RecursiveDockGenerator
 			toBePlaced.add(room);
 		}
 		
-		partition(1, 1, width-2, height-2);
+		Array<Room> requiredRooms = new Array<Room>();
+		requiredRooms.addAll(toBePlaced);
+		
+		while (true)
+		{
+			this.tiles = new GenerationTile[width][height];
+			for (int x = 0; x < width; x++)
+			{
+				for (int y = 0; y < height; y++)
+				{
+					tiles[x][y] = new GenerationTile();
+					tiles[x][y].symbol = dfp.sharedSymbolMap.get('#');
+				}
+			}
+			
+			partition(1, 1, width-2, height-2);
+			
+			if (toBePlaced.size == 0)
+			{
+				break;
+			}
+			else
+			{
+				toBePlaced.clear();
+				toBePlaced.addAll(requiredRooms);
+				
+				width += 10;
+				height += 10;
+			}
+		}
 		
 		markRooms();
 
@@ -542,11 +550,11 @@ public class RecursiveDockGenerator
 	//####################################################################//
 	//region Data
 	
-	private final GenerationTile[][] tiles;
+	private GenerationTile[][] tiles;
 	private Random ran = new Random();
 	
-	private int width;
-	private int height;
+	private int width = 75;
+	private int height = 75;
 	
 	private int minPadding = 1;
 	private int maxPadding = 4;
@@ -690,7 +698,7 @@ public class RecursiveDockGenerator
 			
 			while (difficulty > 0)
 			{
-				int mon = ran.nextInt(difficulty);
+				int mon = ran.nextInt(Math.min(5, difficulty));
 				
 				// place
 				int x = ran.nextInt(width-2)+1;

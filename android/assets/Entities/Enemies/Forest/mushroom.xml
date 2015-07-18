@@ -1,0 +1,28 @@
+<Entity>
+	<Name>Mushroom</Name>
+
+	<Sprite>
+		<Name>dc-mon/fungi_plants/wandering_mushroom</Name>
+	</Sprite>
+	
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Forest</Faction>
+	</Factions>
+	
+	<Statistics>
+		<MaxHP>300</MaxHP>
+		<Range>5</<Range>
+		
+		<Wood_Atk>20</Wood_Atk>
+		<Water_Atk>20</Water_Atk>
+		
+		<Wood_Def>50</Wood_Def>
+		<Wood_Hardiness>30</Wood_Hardiness>
+		
+		<Metal_Def>50</Metal_Def>
+		<Metal_Hardiness>20</Metal_Hardiness>
+	</Statistics>
+	
+</Entity>

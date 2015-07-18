@@ -1,5 +1,6 @@
 package Roguelike.Tiles;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 import Roguelike.AssetManager;
@@ -8,8 +9,7 @@ import Roguelike.Sprite.Sprite;
 
 public class TileData
 {
-	public Sprite floorSprite;
-	public Sprite featureSprite;
+	public Sprite[] sprites;
 	public Light light;
 	
 	public boolean Opaque;
@@ -22,10 +22,9 @@ public class TileData
 		
 	}
 	
-	public TileData(Sprite floorSprite, Sprite featureSprite, Light light, boolean opaque, boolean passable, String description)
+	public TileData(Sprite[] sprites, Light light, boolean opaque, boolean passable, String description)
 	{
-		this.floorSprite = floorSprite;
-		this.featureSprite = featureSprite;
+		this.sprites = sprites;
 		this.light = light;
 		this.Opaque = opaque;
 		this.Passable = passable;
@@ -36,8 +35,13 @@ public class TileData
 	{
 		TileData data = new TileData();
 		
-		if (xml.getChildByName("FloorSprite") != null) { data.floorSprite = AssetManager.loadSprite(xml.getChildByName("FloorSprite")); }
-		if (xml.getChildByName("FeatureSprite") != null) { data.featureSprite = AssetManager.loadSprite(xml.getChildByName("FeatureSprite")); }
+		Array<Sprite> sprites = new Array<Sprite>();
+		for (Element spriteElement : xml.getChildrenByName("Sprite"))
+		{
+			sprites.add(AssetManager.loadSprite(spriteElement));
+		}
+		data.sprites = sprites.toArray(Sprite.class);
+		
 		if (xml.getChildByName("Light") != null) { data.light = Light.load(xml.getChildByName("Light")); }
 		data.Opaque = xml.getBoolean("Opaque", false);
 		data.Passable = xml.getBoolean("Passable", true);

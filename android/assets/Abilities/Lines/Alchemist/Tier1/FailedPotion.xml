@@ -1,0 +1,48 @@
+<ActiveAbility>
+
+	<Name>Failed Potion</Name>
+	<Description>Throw a potion that went wrong at your enemy, temporarily reducing their damage.</Description>
+	
+	<Cooldown>30</Cooldown>
+	<AOE>1</AOE>
+	<Range>5</Range>
+	
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<HitSprite>
+		<Name>Fireburst/Fireburst</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</HitSprite>
+	
+	<Type>
+		<Harmful>
+		</Harmful>
+	</Type>
+	
+	<Targeting>
+		<Tile></Tile>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Status>
+			<Defender>
+				<Duration>10</Duration>
+				<Constant>
+					<Metal_Atk>-Metal_Atk*0.2</Metal_Atk>
+					<Wood_Atk>-Wood_Atk*0.2</Wood_Atk>
+					<Air_Atk>-Air_Atk*0.2</Air_Atk>
+					<Water_Atk>-Water_Atk*0.2</Water_Atk>
+					<Fire_Atk>-Fire_Atk*0.2</Fire_Atk>
+				</Constant>
+			</Defender>
+		</Status>
+	</Effect>
+	
+</ActiveAbility>

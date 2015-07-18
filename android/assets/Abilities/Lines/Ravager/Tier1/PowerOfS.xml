@@ -1,0 +1,16 @@
+<PassiveAbility>
+	<Name>Power of S</Name>
+	<Description>Dealing damage fills you with sadistic joy, sending you into a blood fury.</Description>
+	<Icon>
+		<Name>Skills/Bloodlust</Name>
+	</Icon>
+	
+	<Events>
+		<OnDealDamage>
+			<Status Condition="rnd(1) < 0.3">
+				<Attacker>Bloodlust</Attacker>
+			</Status>
+		</OnDealDamage>
+	</Events>
+	
+</PassiveAbility>

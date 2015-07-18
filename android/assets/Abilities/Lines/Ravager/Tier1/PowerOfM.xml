@@ -1,0 +1,16 @@
+<PassiveAbility>
+	<Name>Power of M</Name>
+	<Description>Being hurt only adds to your strength, sending you into a blood fury.</Description>
+	<Icon>
+		<Name>Skills/Bloodlust</Name>
+	</Icon>
+	
+	<Events>
+		<OnReceiveDamage>
+			<Status Condition="rnd(1) < 0.3">
+				<Defender>Bloodlust</Defender>
+			</Status>
+		</OnReceiveDamage>
+	</Events>
+	
+</PassiveAbility>

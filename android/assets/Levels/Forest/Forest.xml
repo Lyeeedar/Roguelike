@@ -1,0 +1,255 @@
+<Level>
+	<Ambient>
+		<Red>0.5</Red>
+		<Green>0.75</Green>
+		<Blue>0.3</Blue>
+		<Alpha>1</Alpha>
+	</Ambient>
+
+	<Symbols>
+	
+		<Symbol>
+			<Char>.</Char>
+			<TileData>
+				<Opaque>false</Opaque>
+				<Passable>true</Passable>
+				<Sprite>
+					<Name>dc-dngn/floor/grass/grass0</Name>
+				</Sprite>
+			</TileData>
+		</Symbol>
+		
+		<Symbol>
+			<Char>#</Char>
+			<TileData>
+				<Opaque>true</Opaque>
+				<Passable>false</Passable>
+				<Sprite>
+					<Name>dc-dngn/floor/grass/grass0</Name>
+				</Sprite>
+				<Sprite>
+					<Name>dc-dngn/wall/tree1_yellow</Name>
+					<Colour>
+						<Red>0.6</Red>
+						<Green>1</Green>
+						<Blue>0</Blue>
+					</Colour>
+				</Sprite>
+			</TileData>
+		</Symbol>
+						
+		<Symbol Extends=".">
+			<Char>0</Char>
+			<EntityData>Enemies/Forest/gecko</EntityData>
+		</Symbol>
+		
+		<Symbol Extends=".">
+			<Char>1</Char>
+			<EntityData>Enemies/Forest/newt</EntityData>
+		</Symbol>
+		
+		<Symbol Extends=".">
+			<Char>2</Char>
+			<EntityData>Enemies/Forest/centipede</EntityData>
+		</Symbol>
+		
+		<Symbol Extends=".">
+			<Char>3</Char>
+			<EntityData>Enemies/Forest/snail</EntityData>
+		</Symbol>
+		
+		<Symbol Extends=".">
+			<Char>4</Char>
+			<EntityData>Enemies/Forest/toad</EntityData>
+		</Symbol>
+		
+		<Symbol Extends=".">
+			<Char>5</Char>
+			<EntityData>Enemies/Forest/mushroom</EntityData>
+		</Symbol>
+		
+		<Symbol Extends=".">
+			<Char>6</Char>
+			<EntityData>Enemies/Forest/bear</EntityData>
+		</Symbol>
+		
+		<Symbol Extends=".">
+			<Char>7</Char>
+			<EntityData>Enemies/Forest/bear</EntityData>
+		</Symbol>
+		
+		<Symbol Extends=".">
+			<Char>8</Char>
+			<EntityData>Enemies/Forest/bear</EntityData>
+		</Symbol>
+		
+		<Symbol Extends=".">
+			<Char>9</Char>
+			<EntityData>Enemies/Forest/bear</EntityData>
+		</Symbol>
+		
+		<Symbol>
+			<Char>w</Char>
+			<TileData>
+				<Opaque>true</Opaque>
+				<Passable>false</Passable>
+				<Sprite>
+					<Name>dc-dngn/wall/stone_brick1</Name>
+				</Sprite>
+			</TileData>
+		</Symbol>
+		
+		<Symbol>
+			<Char>,</Char>
+			<TileData>
+				<Opaque>false</Opaque>
+				<Passable>true</Passable>
+				<Sprite>
+					<Name>dc-dngn/floor/marble_floor1</Name>
+				</Sprite>
+			</TileData>
+		</Symbol>
+		
+		<Symbol Extends=",">
+			<Char>+</Char>
+			<EnvironmentData>
+				<Type>Door</Type>
+			</EnvironmentData>
+		</Symbol>
+		
+	</Symbols>
+	
+	<Required>
+		<PlayerSpawn>
+			<Symbols>
+				<Symbol Extends=".">
+					<Char>S</Char>
+					<MetaValue>PlayerSpawn</MetaValue>
+				</Symbol>
+			</Symbols>
+			
+			<Rows>
+				<Row>#####</Row>
+				<Row>##.##</Row>
+				<Row>#.S.#</Row>
+				<Row>#..##</Row>
+				<Row>##.##</Row>
+			</Rows>
+			
+		</PlayerSpawn>
+	
+		<Transition>
+			<Symbols>
+			
+				<Symbol Extends=",">
+					<Char>v</Char>
+					<EnvironmentData>
+						<Type>Transition</Type>
+						<Destination>Sewer</Destination>
+						
+						<ExitRoom>
+							<Symbols>
+								<Symbol Extends=".">
+									<Char>^</Char>
+									<EnvironmentData>
+										<Type>Transition</Type>
+										<Destination>this</Destination>
+									</EnvironmentData>
+								</Symbol>
+							</Symbols>
+						
+							<Rows>
+								<Row>#####</Row>
+								<Row>#...#</Row>
+								<Row>#.^.#</Row>
+								<Row>#...#</Row>
+								<Row>##.##</Row>
+							</Rows>
+						</ExitRoom>
+					</EnvironmentData>
+				</Symbol>
+			</Symbols>
+				
+			<Rows>Levels/Forest/village</Rows>
+
+		</Transition>
+		
+		<BossRoom>
+			<Symbols>
+				
+				<Symbol>
+					<Char>A</Char>
+					<TileData>
+						<Opaque>false</Opaque>
+						<Passable>false</Passable>
+						<Sprite>
+							<Name>dc-dngn/floor/marble_floor1</Name>
+						</Sprite>
+						<Sprite>
+							<Name>dc-dngn/altars/dngn_altar_vehumet</Name>
+						</Sprite>
+					</TileData>
+				</Symbol>
+				
+				<Symbol>
+					<Char>P</Char>
+					<TileData>
+						<Opaque>true</Opaque>
+						<Passable>false</Passable>
+						<Sprite>
+							<Name>dc-dngn/floor/marble_floor1</Name>
+						</Sprite>
+						<Sprite>
+							<Name>dc-dngn/wall/stone2_gray0</Name>
+						</Sprite>
+					</TileData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>F</Char>
+					<EntityData>Enemies/Forest/female_wrath_moth</EntityData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>M</Char>
+					<EntityData>Enemies/Forest/male_wrath_moth</EntityData>
+				</Symbol>
+				
+			</Symbols>
+		
+			<Rows>Levels/Forest/boss</Rows>
+		</BossRoom>
+		
+	</Required>
+	
+	<Optional>
+		<Hut>
+			<Rows>Levels/Forest/hut</Rows>
+		</Hut>
+		
+		<Pool>
+			<Symbols>
+				<Symbol>
+					<Char>p</Char>
+					<TileData>
+						<Opaque>false</Opaque>
+						<Passable>false</Passable>
+						<Sprite>
+							<Name>dc-dngn/water/dngn_shallow_water</Name>
+						</Sprite>
+					</TileData>
+				</Symbol>
+				
+				<Symbol Extends=".">
+					<Char>t</Char>
+					<EntityData>Enemies/Forest/toad</EntityData>
+				</Symbol>
+				
+			</Symbols>
+		
+			<Rows>Levels/Forest/pool</Rows>
+		</Pool>
+		
+	</Optional>
+	
+</Level>

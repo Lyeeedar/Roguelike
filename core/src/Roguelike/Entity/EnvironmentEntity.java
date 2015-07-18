@@ -29,19 +29,20 @@ public class EnvironmentEntity
 
 	public Array<ActivationAction> actions = new Array<ActivationAction>();
 	
-	public static EnvironmentEntity CreateTransition(Element data, final Room exitRoom)
+	public static EnvironmentEntity CreateTransition(final Element data, final Room exitRoom)
 	{
-		final Sprite stair = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Tile.png")}, new int[]{16, 16}, new int[]{0, 1}, Color.WHITE);
+		final Sprite stairdown = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_down");
+		final Sprite stairup = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_up");
 		
 		final EnvironmentEntity entranceEntity = new EnvironmentEntity();
 		entranceEntity.passable = true;
 		entranceEntity.opaque = false;
-		entranceEntity.sprite = stair;
+		entranceEntity.sprite = stairdown;
 		
 		final EnvironmentEntity exitEntity = new EnvironmentEntity();
 		exitEntity.passable = true;
 		exitEntity.opaque = false;
-		exitEntity.sprite = stair;
+		exitEntity.sprite = stairup;
 		
 		ActivationAction entranceAA = new ActivationAction("Change Level")
 		{
@@ -53,7 +54,7 @@ public class EnvironmentEntity
 				// generate new level if required
 				if (connectedLevel == null)
 				{
-					RecursiveDockGenerator generator = new RecursiveDockGenerator(50, 50);
+					RecursiveDockGenerator generator = new RecursiveDockGenerator(data.get("Destination"));
 					generator.toBePlaced.add(exitRoom);
 					generator.generate();
 					connectedLevel = generator.getLevel();
@@ -95,9 +96,9 @@ public class EnvironmentEntity
 			{
 				if (exitRoom.roomContents[x][y].isTransition())
 				{
-					if (exitRoom.roomContents[x][y].data.get("Destination").equals("this"))
+					if (exitRoom.roomContents[x][y].environmentData.get("Destination").equals("this"))
 					{
-						exitRoom.roomContents[x][y].parsedDataBlob = exitEntity;
+						exitRoom.roomContents[x][y].environmentDataObject = exitEntity;
 					}
 				}
 			}

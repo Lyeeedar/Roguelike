@@ -9,11 +9,11 @@
 	
 	<Events>
 		<Constant>
-			<Metal_Atk>METAL_ATK*1.5</Metal_Atk>
-			<Wood_Atk>WOOD_ATK*1.5</Wood_Atk>
-			<Air_Atk>AIR_ATK*1.5</Air_Atk>
-			<Water_Atk>WATER_ATK*1.5</Water_Atk>
-			<Fire_Atk>FIRE_ATK*1.5</Fire_Atk>
+			<Metal_Atk>METAL_ATK*0.2</Metal_Atk>
+			<Wood_Atk>WOOD_ATK*0.2</Wood_Atk>
+			<Air_Atk>AIR_ATK*0.2</Air_Atk>
+			<Water_Atk>WATER_ATK*0.2</Water_Atk>
+			<Fire_Atk>FIRE_ATK*0.2</Fire_Atk>
 		</Constant>
 	</Events>
 	

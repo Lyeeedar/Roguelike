@@ -1,18 +1,15 @@
 package Roguelike;
 
-import java.io.IOException;
 import java.util.HashMap;
+
+import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
-
-import Roguelike.Items.Item;
-import Roguelike.Sprite.Sprite;
 
 public class AssetManager
 {
@@ -41,6 +38,11 @@ public class AssetManager
 		return loadSprite(name, 0.5f, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE);
 	}
 	
+	public static Sprite loadSprite(String name, float updateTime)
+	{
+		return loadSprite(name, updateTime, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE);
+	}
+	
 	public static Sprite loadSprite(String name, float updateTime, int[] tileSize, int[] tileIndex, Color colour)
 	{
 		Array<Texture> textures = new Array<Texture>();
@@ -48,7 +50,7 @@ public class AssetManager
 		int i = 0;
 		while (true)
 		{
-			Texture tex = loadTexture("Sprites/"+name+i+".png");
+			Texture tex = loadTexture("Sprites/"+name+"_"+i+".png");
 			
 			if (tex == null)
 			{

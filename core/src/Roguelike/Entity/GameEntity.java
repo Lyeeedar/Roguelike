@@ -522,7 +522,7 @@ public class GameEntity
 	public Sprite Sprite;
 	public Light Light;
 	public Array<SpriteEffect> SpriteEffects = new Array<SpriteEffect>(false, 16);
-	private Sprite m_defaultHitEffect;
+	private Sprite m_defaultHitEffect = AssetManager.loadSprite("strike/strike", 0.1f);
 	
 	//----------------------------------------------------------------------
 	public GameTile Tile;

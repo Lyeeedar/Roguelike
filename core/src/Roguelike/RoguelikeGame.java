@@ -93,7 +93,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		blank = AssetManager.loadTexture("Sprites/blank.png");
 		white = AssetManager.loadTexture("Sprites/white.png");
 		
-		RecursiveDockGenerator generator = new RecursiveDockGenerator(75, 75);
+		RecursiveDockGenerator generator = new RecursiveDockGenerator("Forest");
 		//VillageGenerator generator = new VillageGenerator(100, 100);
 		generator.generate();
 		level = generator.getLevel();
@@ -240,9 +240,13 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 				
 				if (gtile.GetVisible())
 				{
-					batch.setColor(gtile.Light);					
-					gtile.TileData.floorSprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
-					if (gtile.TileData.featureSprite != null) { gtile.TileData.featureSprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize); }
+					batch.setColor(gtile.Light);	
+					
+					for (Sprite s : gtile.TileData.sprites)
+					{
+						s.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
+					}
+					
 					if (gtile.environmentEntity != null) { gtile.environmentEntity.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize); }
 					
 					for (Item i : gtile.Items)
@@ -273,7 +277,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 				}
 				else if (stile.seen)
 				{
-					//batch.setShader(GrayscaleShader.Instance);
+					batch.setShader(GrayscaleShader.Instance);
 					batch.setColor(level.Ambient);
 					
 					for (SeenHistoryItem hist : stile.History)
@@ -282,7 +286,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					}				
 					
 					batch.setColor(Color.WHITE);
-					//batch.setShader(null);
+					batch.setShader(null);
 				}
 			}
 		}

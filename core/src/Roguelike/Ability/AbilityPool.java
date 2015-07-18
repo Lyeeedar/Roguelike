@@ -20,6 +20,7 @@ public class AbilityPool
 		loadAbilityLine("Ravager/Ravager");
 		loadAbilityLine("Pyromaniac/Pyromaniac");
 		loadAbilityLine("Alchemist/Alchemist");
+		loadAbilityLine("Life/Life");
 	}
 	
 	public void loadAbilityLine(String name)

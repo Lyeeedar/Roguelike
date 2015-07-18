@@ -2,6 +2,7 @@ package exp4j.Helpers;
 
 import java.util.HashMap;
 
+import exp4j.Functions.MathUtilFunctions;
 import exp4j.Functions.RandomFunction;
 import exp4j.Operators.BooleanOperators;
 import net.objecthunter.exp4j.Expression;
@@ -43,6 +44,7 @@ public class EquationHelper
 		ExpressionBuilder expB = new ExpressionBuilder(eqn);
 		BooleanOperators.applyOperators(expB);
 		expB.function(new RandomFunction());
+		MathUtilFunctions.applyFunctions(expB);
 		
 		return expB;
 	}

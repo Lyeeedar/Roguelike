@@ -90,7 +90,11 @@ public class Level
 					s.seen = true;
 					
 					s.History.clear();
-					s.History.add(new SeenHistoryItem(Grid[x][y].TileData.floorSprite, Grid[x][y].TileData.Description));
+					
+					for (Sprite sprite : Grid[x][y].TileData.sprites)
+					{
+						s.History.add(new SeenHistoryItem(sprite, Grid[x][y].TileData.Description));
+					}
 				}
 			}
 		}
@@ -110,11 +114,10 @@ public class Level
 					s.seen = true;
 					
 					s.History.clear();
-					s.History.add(new SeenHistoryItem(tile.TileData.floorSprite, tile.TileData.Description));
 					
-					if (tile.TileData.featureSprite != null)
+					for (Sprite sprite : tile.TileData.sprites)
 					{
-						s.History.add(new SeenHistoryItem(tile.TileData.featureSprite, ""));
+						s.History.add(new SeenHistoryItem(sprite, tile.TileData.Description));
 					}
 					
 					if (tile.environmentEntity != null)
@@ -576,11 +579,10 @@ public class Level
 			for (int y = 0; y < height; y++)
 			{
 				GameTile tile = Grid[x][y];
-				sprites.add(tile.TileData.floorSprite);
 				
-				if (tile.TileData.featureSprite != null) 
-				{ 
-					sprites.add(tile.TileData.featureSprite); 
+				for (Sprite sprite : tile.TileData.sprites)
+				{
+					sprites.add(sprite);
 				}
 				
 				if (tile.environmentEntity != null)

@@ -3,7 +3,7 @@
 	<Name>Chromatic Flask</Name>
 	<Description>Throw a flask of chaotic energy at your foe, dealing a random amount of damage to your foe and the area.</Description>
 	
-	<Cooldown>10</Cooldown>
+	<Cooldown>30</Cooldown>
 	<AOE>1</AOE>
 	<Range>5</Range>
 	
@@ -32,11 +32,11 @@
 	
 	<Effect>
 		<Damage>
-			<Metal_ATK>rnd(150)</Metal_ATK>
-			<Wood_ATK>rnd(150)</Wood_ATK>
-			<Air_ATK>rnd(150)</Air_ATK>
-			<Water_ATK>rnd(150)</Water_ATK>
-			<Fire_ATK>rnd(150)</Fire_ATK>
+			<Metal_ATK>rnd(30)+20</Metal_ATK>
+			<Wood_ATK>rnd(30)+20</Wood_ATK>
+			<Air_ATK>rnd(30)+20</Air_ATK>
+			<Water_ATK>rnd(30)+20</Water_ATK>
+			<Fire_ATK>rnd(30)+20</Fire_ATK>
 		</Damage>
 	</Effect>
 	

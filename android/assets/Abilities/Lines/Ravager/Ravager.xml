@@ -1,6 +1,6 @@
 <AbilityLine>
 	<Name>Ravager</Name>
-	<Description>Fury and bloodthirst.</Description>
+	<Description>Channel your fury and bloodlust. Become a whirlwind of death.</Description>
 	<Tiers>
 		<Tier>
 			<ActiveAbility>
@@ -8,11 +8,11 @@
 				<Cost>100</Cost>
 			</ActiveAbility>
 			<PassiveAbility>
-				<Name>Ravager/Tier1/Bloodthirst</Name>
+				<Name>Ravager/Tier1/PowerOfM</Name>
 				<Cost>100</Cost>
 			</PassiveAbility>
 			<PassiveAbility>
-				<Name>Ravager/Tier1/Bloodthirst</Name>
+				<Name>Ravager/Tier1/PowerOfS</Name>
 				<Cost>100</Cost>
 			</PassiveAbility>
 			<ActiveAbility>
