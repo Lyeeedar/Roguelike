@@ -13,6 +13,8 @@ package Roguelike.Pathfinding;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
+import com.badlogic.gdx.utils.Array;
+
 public class AStarPathfind
 {
 	private static final int[][] NormalOffsets =
@@ -76,14 +78,14 @@ public class AStarPathfind
 		
 		for (int[] offset : NormalOffsets)
 		{
-			addNodeToOpenList(current.x + offset[0], current.y + offset[1], current.distance);
+			addNodeToOpenList(current.x + offset[0], current.y + offset[1], current.distance, current.cost);
 		}
 		
 		if (canMoveDiagonal)
 		{
 			for (int[] offset : DiagonalOffsets)
 			{
-				addNodeToOpenList(current.x + offset[0], current.y + offset[1], current.distance);
+				addNodeToOpenList(current.x + offset[0], current.y + offset[1], current.distance, current.cost);
 			}
 		}
 	}
@@ -98,7 +100,7 @@ public class AStarPathfind
 		return x == endx && y == endy;
 	}
 	
-	private void addNodeToOpenList(int x, int y, int distance)
+	private void addNodeToOpenList(int x, int y, int distance, int prevCost)
 	{
 		if (
 			x < 0 ||
@@ -112,42 +114,45 @@ public class AStarPathfind
 		
 		if (!isStart(x, y) && !isEnd(x, y) && !grid[x][y].getPassable(factions)) { return; }
 		
+		int heuristic = 0;
+		
+//		if (canMoveDiagonal)
+//		{
+//			heuristic = (int) Math.max(Math.abs(x-endx), Math.abs(y-endy));
+//		}
+//		else
+//		{
+//			heuristic = Math.abs(x-endx) + Math.abs(y-endy);
+//		}
+		
+		heuristic = Math.abs(x-endx) + Math.abs(y-endy);
+				
+		int cost = heuristic + (distance+1) + grid[x][y].getInfluence() + prevCost;
+		
 		if (nodes[x][y] == null)
 		{
 			nodes[x][y] = new Node(x, y);
 		}
 		else
 		{
-			if (nodes[x][y].distance <= distance+1)
+			if (nodes[x][y].cost <= cost)
 			{
 				return;
 			}
 		}
-
-		int heuristic = (int) 
-				Math.sqrt(
-				Math.pow( Math.abs(x-endx), 2) +
-				Math.pow( Math.abs(y-endy), 2));
 		
-		Node node = nodes[x][y];
-		node.setup(heuristic, distance+1, grid[x][y].getInfluence());
+		nodes[x][y].cost = cost;
+		nodes[x][y].distance = distance+1;
 		
-		if (!openList.contains(node))
-		{
-			openList.add(node);
-		}
-		else
-		{
-			openList.remove(node);
-			openList.add(node);
-		}
+		openList.remove(nodes[x][y]);
+		openList.add(nodes[x][y]);
 	}
 	
 	public int[][] getPath()
 	{
 		nodes = new Node[width][height];
 		
-		addNodeToOpenList(startx, starty, -1);
+		addNodeToOpenList(startx, starty, -1, 0);
 				
 		while(!isEnd(currentx, currenty) && openList.size() > 0)
 		{
@@ -160,18 +165,17 @@ public class AStarPathfind
 		}
 		else
 		{
-			int length = nodes[endx][endy].distance+1;
-			int[][] path = new int[length][2];
-			
-			path[length-1][0] = endx;
-			path[length-1][1] = endy;
+			Array<int[]> path = new Array<int[]>(nodes[endx][endy].distance+1);
 
+			path.add(new int[]{endx, endy});
+			
 			int cx = endx;
 			int cy = endy;
 			
-			for (int i = length-1; i > 0; i--)
+			while (cx != startx || cy != starty)
 			{
 				Node n = null;
+				int minCost = Integer.MAX_VALUE;
 				
 				if (canMoveDiagonal)
 				{
@@ -186,10 +190,11 @@ public class AStarPathfind
 							ny >= 0 &&
 							ny <= height-1 &&
 							nodes[nx][ny] != null &&
-							nodes[nx][ny].distance == i-1
+							nodes[nx][ny].cost < minCost
 							)
 						{
 							n = nodes[nx][ny];
+							minCost = n.cost;
 						}
 					}
 				}
@@ -205,51 +210,49 @@ public class AStarPathfind
 						ny >= 0 &&
 						ny <= height-1 &&
 						nodes[nx][ny] != null &&
-						nodes[nx][ny].distance == i-1
+						nodes[nx][ny].cost < minCost
 						)
 					{
 						n = nodes[nx][ny];
+						minCost = n.cost;
 					}
 				}
 				
-				path[i-1][0] = n.x;
-				path[i-1][1] = n.y;
+				path.add(new int[]{n.x, n.y});
 				
 				cx = n.x;
 				cy = n.y;
 			}
 			
-			return path;
+			path.reverse();
+			
+			return path.toArray(int[].class);
 		}
 	}
 		
 	private class Node implements Comparable<Node>
 	{
-		int x;
-		int y;
-		int cost;
-		int heuristic;
-		int distance;
-		int influence;
+		public int x;
+		public int y;
+		public int cost;
+		public int distance;
 
 		public Node(int x, int y)
 		{
 			this.x = x;
 			this.y = y;
 		}
-		
-		public void setup(int heuristic, int distance, int influence)
-		{
-			this.heuristic = heuristic;
-			this.distance = distance;
-			this.influence = influence;
-			this.cost = (heuristic*2) + distance + influence * 4;
-		}
 
 		@Override
 		public int compareTo(Node arg0)
 		{
 			return Integer.compare(cost, arg0.cost);
+		}
+		
+		@Override
+		public String toString()
+		{
+			return ""+cost;
 		}
 	}
 

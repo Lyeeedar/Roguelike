@@ -12,6 +12,7 @@ import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
+import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
@@ -66,6 +67,9 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	public RoguelikeGame()
 	{
 		Instance = this;
+		
+		Pathfinder.PathfinderTest.straightTest();
+		Pathfinder.PathfinderTest.wallTest();
 	}
 		
 	//endregion Constructor

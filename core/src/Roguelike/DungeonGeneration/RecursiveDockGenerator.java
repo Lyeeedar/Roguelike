@@ -737,14 +737,14 @@ public class RecursiveDockGenerator
 		@Override
 		public int getInfluence()
 		{
-			//if (pathfindType == PathfindType.CORRIDOR)
-			//{
+			if (pathfindType == PathfindType.CORRIDOR)
+			{
 				return 0;
-			//}
-			//else
-			//{
-			//	return 5000;
-			//}
+			}
+			else
+			{
+				return 100;
+			}
 		}
 	}
 
