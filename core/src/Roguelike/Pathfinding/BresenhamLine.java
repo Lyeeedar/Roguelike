@@ -7,6 +7,34 @@ import com.badlogic.gdx.utils.Array;
 
 public class BresenhamLine
 {
+	public static int[][] lineNoDiag(int x0, int y0, int x1, int y1) {
+	    int xDist =  Math.abs(x1 - x0);
+	    int yDist = -Math.abs(y1 - y0);
+	    int xStep = (x0 < x1 ? +1 : -1);
+	    int yStep = (y0 < y1 ? +1 : -1);
+	    int error = xDist + yDist;
+
+	    Array<int[]> path = new Array<int[]>();
+	    
+	    path.add(new int[]{x0, y0});
+
+	    while (x0 != x1 || y0 != y1) {
+	        if (2*error - yDist > xDist - 2*error) {
+	            // horizontal step
+	            error += yDist;
+	            x0 += xStep;
+	        } else {
+	            // vertical step
+	            error += xDist;
+	            y0 += yStep;
+	        }
+
+	        path.add(new int[]{x0, y0});
+	    }
+	    
+	    return path.toArray(int[].class);
+	}
+	
 	public static int[][] line (int x, int y, int x2, int y2, PathfindingTile[][] Grid, boolean checkPassable, boolean toInfinity, HashSet<String> factions) 
 	{
 		x = MathUtils.clamp(x, 0, Grid.length-1);

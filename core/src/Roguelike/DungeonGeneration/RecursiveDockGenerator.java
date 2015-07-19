@@ -11,6 +11,8 @@ import Roguelike.DungeonGeneration.DungeonFileParser.Symbol;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Levels.Level;
+import Roguelike.Pathfinding.AStarPathfind;
+import Roguelike.Pathfinding.BresenhamLine;
 import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Tiles.GameTile;
@@ -64,7 +66,7 @@ public class RecursiveDockGenerator
 				
 				if (oldTile.symbol.entityData != null)
 				{
-					newTile.addObject(GameEntity.load(oldTile.symbol.entityData.getText()));
+					//newTile.addObject(GameEntity.load(oldTile.symbol.entityData.getText()));
 				}
 				
 				newTile.metaValue = oldTile.symbol.metaValue;
@@ -559,8 +561,8 @@ public class RecursiveDockGenerator
 	private int minPadding = 1;
 	private int maxPadding = 4;
 	
-	private int minRoomSize = 6;
-	private int maxRoomSize = 15;
+	private int minRoomSize = 10;
+	private int maxRoomSize = 25;
 	
 	private int paddedMinRoom = minRoomSize + minPadding*2;
 	
@@ -641,18 +643,10 @@ public class RecursiveDockGenerator
 		{
 			roomContents = new Symbol[width][height];
 			
-			for (int x = 0; x < width; x++)
-			{
-				for (int y = 0; y < height; y++)
-				{
-					roomContents[x][y] = dfp.sharedSymbolMap.get('.');
-					
-					if (x == 0 || x == width-1 || y == 0 || y == height-1)
-					{
-						roomContents[x][y] = dfp.sharedSymbolMap.get('#');
-					}
-				}
-			}
+			Symbol floor = dfp.sharedSymbolMap.get('.');
+			Symbol wall = dfp.sharedSymbolMap.get('#');
+			
+			CellularAutomata.process(roomContents, floor, wall, ran);
 			
 			// Sides
 			//  1
@@ -664,33 +658,36 @@ public class RecursiveDockGenerator
 			{
 				int doorSide = ran.nextInt(4);
 				
+				int x = 0;
+				int y = 0;
+				
 				if (doorSide == 0)
 				{
-					int x = 0;
-					int y = 1 + ran.nextInt(height-2);
-					
-					roomContents[x][y] = dfp.sharedSymbolMap.get('.');
+					x = 0;
+					y = 1 + ran.nextInt(height-2);
 				}
 				else if (doorSide == 1)
 				{
-					int x = 1 + ran.nextInt(width-2);
-					int y = 0;
-					
-					roomContents[x][y] = dfp.sharedSymbolMap.get('.');
+					x = 1 + ran.nextInt(width-2);
+					y = 0;					
 				}
 				else if (doorSide == 2)
 				{
-					int x = width-1;
-					int y = 1 + ran.nextInt(height-2);
-					
-					roomContents[x][y] = dfp.sharedSymbolMap.get('.');
+					x = width-1;
+					y = 1 + ran.nextInt(height-2);					
 				}
 				else if (doorSide == 3)
 				{
-					int x = 1 + ran.nextInt(width-2);
-					int y = height-1;
-					
-					roomContents[x][y] = dfp.sharedSymbolMap.get('.');
+					x = 1 + ran.nextInt(width-2);
+					y = height-1;					
+				}
+				
+				roomContents[x][y] = floor;
+				
+				int[][] path = BresenhamLine.lineNoDiag(width/2, height/2, x, y);
+				for (int[] pos : path)
+				{
+					roomContents[pos[0]][pos[1]] = floor;
 				}
 			}
 			
