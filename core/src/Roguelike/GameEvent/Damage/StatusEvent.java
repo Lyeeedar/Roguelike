@@ -83,10 +83,10 @@ public class StatusEvent extends AbstractOnDamageEvent
 	public void parse(Element xml)
 	{
 		reliesOn = xml.getAttribute("ReliesOn", "").split(",");
-		condition = xml.getAttribute("Condition", null); if (condition != null) { condition = condition.toUpperCase(); }
+		condition = xml.getAttribute("Condition", null); if (condition != null) { condition = condition.toLowerCase(); }
 		attackerStatus = xml.getChildByName("Attacker");
 		defenderStatus = xml.getChildByName("Defender");
-		stacksEqn = xml.get("Stacks", null); if (stacksEqn != null) { stacksEqn = stacksEqn.toUpperCase(); }
+		stacksEqn = xml.get("Stacks", null); if (stacksEqn != null) { stacksEqn = stacksEqn.toLowerCase(); }
 	}
 
 }

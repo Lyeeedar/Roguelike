@@ -9,7 +9,7 @@ public class RandomFunction extends Function
 
 	public RandomFunction()
 	{
-		super("RND", 1);
+		super("rnd", 1);
 	}
 
 	@Override

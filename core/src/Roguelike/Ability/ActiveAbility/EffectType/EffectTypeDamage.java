@@ -36,7 +36,7 @@ public class EffectTypeDamage extends AbstractEffectType
 			Element sEl = xml.getChild(i);
 			
 			Statistics el = Statistics.valueOf(sEl.getName().toUpperCase());
-			equations.put(el, sEl.getText().toUpperCase());
+			equations.put(el, sEl.getText().toLowerCase());
 		}
 	}
 
@@ -51,9 +51,9 @@ public class EffectTypeDamage extends AbstractEffectType
 			
 			for (String name : reliesOn)
 			{
-				if (!variableMap.containsKey(name.toUpperCase()))
+				if (!variableMap.containsKey(name.toLowerCase()))
 				{
-					variableMap.put(name.toUpperCase(), 0);
+					variableMap.put(name.toLowerCase(), 0);
 				}
 			}
 			

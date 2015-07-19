@@ -305,11 +305,11 @@ public class Global
 		
 		for (Tier1Element el : Tier1Element.values())
 		{
-			float attack = damObj.attackerVariableMap.get(el.Attack.toString());
-			float pierce = damObj.attackerVariableMap.get(el.Pierce.toString());
+			float attack = damObj.attackerVariableMap.get(el.Attack.toString().toLowerCase());
+			float pierce = damObj.attackerVariableMap.get(el.Pierce.toString().toLowerCase());
 			
-			float defense = damObj.defenderVariableMap.get(el.Defense.toString());
-			float hardiness = 1.0f - damObj.defenderVariableMap.get(el.Hardiness.toString()) / 100.0f;
+			float defense = damObj.defenderVariableMap.get(el.Defense.toString().toLowerCase());
+			float hardiness = 1.0f - damObj.defenderVariableMap.get(el.Hardiness.toString().toLowerCase()) / 100.0f;
 			
 			float maxReduction = attack * hardiness;
 			

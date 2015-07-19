@@ -51,12 +51,12 @@ public class DamageObject
 		for (Tier1Element key : damageMap.keySet())
 		{
 			int dam = damageMap.get(key);
-			damageVariableMap.put("DAMAGE_" + key.toString(), dam);
+			damageVariableMap.put(("DAMAGE_" + key.toString()).toLowerCase(), dam);
 			
 			total += dam;
 		}
 		
-		damageVariableMap.put("DAMAGE", total);
+		damageVariableMap.put("damage", total);
 	}
 	
 	public void modifyDamage(EnumMap<Tier1Element, Integer> dam)
@@ -74,19 +74,19 @@ public class DamageObject
 	
 	public void writeVariableNames(ExpressionBuilder expB, String[] reliesOn)
 	{
-		EquationHelper.setVariableNames(expB, attackerVariableMap, "ATTACKER_");
-		EquationHelper.setVariableNames(expB, defenderVariableMap, "DEFENDER_");
+		EquationHelper.setVariableNames(expB, attackerVariableMap, "attacker_");
+		EquationHelper.setVariableNames(expB, defenderVariableMap, "defender_");
 		EquationHelper.setVariableNames(expB, damageVariableMap, "");
 		
 		for (String name : reliesOn)
 		{
-			String atkName = "ATTACKER_" + name.toUpperCase();
+			String atkName = "attacker_" + name.toLowerCase();
 			if (!attackerVariableMap.containsKey(atkName))
 			{
 				expB.variable(atkName);
 			}
 			
-			String defName = "DEFENDER_" + name.toUpperCase();
+			String defName = "defender_" + name.toLowerCase();
 			if (!defenderVariableMap.containsKey(defName))
 			{
 				expB.variable(defName);
@@ -96,19 +96,19 @@ public class DamageObject
 	
 	public void writeVariableValues(Expression exp, String[] reliesOn)
 	{
-		EquationHelper.setVariableValues(exp, attackerVariableMap, "ATTACKER_");
-		EquationHelper.setVariableValues(exp, defenderVariableMap, "DEFENDER_");
+		EquationHelper.setVariableValues(exp, attackerVariableMap, "attacker_");
+		EquationHelper.setVariableValues(exp, defenderVariableMap, "defender_");
 		EquationHelper.setVariableValues(exp, damageVariableMap, "");
 		
 		for (String name : reliesOn)
 		{
-			String atkName = "ATTACKER_" + name.toUpperCase();
+			String atkName = "attacker_" + name.toLowerCase();
 			if (!attackerVariableMap.containsKey(atkName))
 			{
 				exp.setVariable(atkName, 0);
 			}
 			
-			String defName = "DEFENDER_" + name.toUpperCase();
+			String defName = "defender_" + name.toLowerCase();
 			if (!defenderVariableMap.containsKey(defName))
 			{
 				exp.setVariable(defName, 0);

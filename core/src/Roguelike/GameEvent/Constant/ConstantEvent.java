@@ -31,7 +31,7 @@ public class ConstantEvent
 			Element sEl = xml.getChild(i);
 			
 			Statistics el = Statistics.valueOf(sEl.getName().toUpperCase());
-			equations.put(el, sEl.getText().toUpperCase());
+			equations.put(el, sEl.getText().toLowerCase());
 		}
 	}
 	
@@ -47,9 +47,9 @@ public class ConstantEvent
 		HashMap<String, Integer> variableMap = entity.getBaseVariableMap();
 		for (String name : reliesOn)
 		{
-			if (!variableMap.containsKey(name.toUpperCase()))
+			if (!variableMap.containsKey(name.toLowerCase()))
 			{
-				variableMap.put(name.toUpperCase(), 0);
+				variableMap.put(name.toLowerCase(), 0);
 			}
 		}
 		

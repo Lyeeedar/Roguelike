@@ -70,8 +70,8 @@ public class HealOverTimeEvent extends AbstractOnTurnEvent
 	@Override
 	public void parse(Element xml)
 	{
-		condition = xml.getAttribute("Condition", null); if (condition != null) { condition = condition.toUpperCase(); }
-		equation = xml.get("Heal"); if (equation != null) { equation = equation.toUpperCase(); }
+		condition = xml.getAttribute("Condition", null); if (condition != null) { condition = condition.toLowerCase(); }
+		equation = xml.get("Heal"); if (equation != null) { equation = equation.toLowerCase(); }
 	}
 
 }

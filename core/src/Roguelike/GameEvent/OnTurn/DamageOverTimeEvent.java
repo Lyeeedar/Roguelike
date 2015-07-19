@@ -33,9 +33,9 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 		HashMap<String, Integer> variableMap = entity.getVariableMap();
 		for (String name : reliesOn)
 		{
-			if (!variableMap.containsKey(name.toUpperCase()))
+			if (!variableMap.containsKey(name.toLowerCase()))
 			{
-				variableMap.put(name.toUpperCase(), 0);
+				variableMap.put(name.toLowerCase(), 0);
 			}
 		}
 		
@@ -100,7 +100,7 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 	@Override
 	public void parse(Element xml)
 	{
-		condition = xml.getAttribute("Condition", null); if (condition != null) { condition = condition.toUpperCase(); }
+		condition = xml.getAttribute("Condition", null); if (condition != null) { condition = condition.toLowerCase(); }
 				
 		reliesOn = xml.getAttribute("ReliesOn", "").split(",");
 		
@@ -109,7 +109,7 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 			Element sEl = xml.getChild(i);
 			
 			Statistics el = Statistics.valueOf(sEl.getName().toUpperCase());
-			equations.put(el, sEl.getText().toUpperCase());
+			equations.put(el, sEl.getText().toLowerCase());
 		}
 	}
 }

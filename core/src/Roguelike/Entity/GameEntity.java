@@ -463,14 +463,14 @@ public class GameEntity
 				
 		for (Statistics s : Statistics.values())
 		{
-			variableMap.put(s.toString(), getStatistic(s));
+			variableMap.put(s.toString().toLowerCase(), getStatistic(s));
 		}
 		
-		variableMap.put("HP", HP);
+		variableMap.put("hp", HP);
 		
 		for (StatusEffectStack s : stacks)
 		{
-			variableMap.put(s.effect.name.toUpperCase(), s.count);
+			variableMap.put(s.effect.name.toLowerCase(), s.count);
 		}
 		
 		return variableMap;
@@ -483,14 +483,14 @@ public class GameEntity
 
 		for (Statistics s : Statistics.values())
 		{
-			variableMap.put(s.toString(), m_statistics.get(s));
+			variableMap.put(s.toString().toLowerCase(), m_statistics.get(s));
 		}
 		
-		variableMap.put("HP", HP);
+		variableMap.put("hp", HP);
 		
 		for (StatusEffectStack s : stacks)
 		{
-			variableMap.put(s.effect.name.toUpperCase(), s.count);
+			variableMap.put(s.effect.name.toLowerCase(), s.count);
 		}
 
 		return variableMap;

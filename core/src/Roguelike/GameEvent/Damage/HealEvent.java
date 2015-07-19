@@ -78,9 +78,9 @@ public class HealEvent extends AbstractOnDamageEvent
 	public void parse(Element xml)
 	{
 		reliesOn = xml.getAttribute("ReliesOn", "").split(",");		
-		condition = xml.getAttribute("Condition", null); if (condition != null) { condition = condition.toUpperCase(); }
-		attacker = xml.get("Attacker", null); if (attacker != null) { attacker = attacker.toUpperCase(); }
-		defender = xml.get("Defender", null); if (defender != null) { defender = defender.toUpperCase(); }
+		condition = xml.getAttribute("Condition", null); if (condition != null) { condition = condition.toLowerCase(); }
+		attacker = xml.get("Attacker", null); if (attacker != null) { attacker = attacker.toLowerCase(); }
+		defender = xml.get("Defender", null); if (defender != null) { defender = defender.toLowerCase(); }
 	}
 
 }
