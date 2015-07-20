@@ -182,7 +182,11 @@ public class CellularAutomata
 	 */
 	public static void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran)
 	{
-		int wall_prob = 45, r1 = 5, r2 = 0, gen = 5, gen2 = 5;
+		int wall_prob = ran.nextInt(5) + 40;
+		int r1 = 5;
+		int r2 = ran.nextInt(2);
+		int gen = ran.nextInt(2) + 5;
+		int gen2 = ran.nextInt(5);
 		
 		int xi, yi;
 		

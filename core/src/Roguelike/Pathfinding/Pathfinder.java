@@ -47,65 +47,126 @@ public class Pathfinder
 			@Override
 			public boolean getPassable(HashSet<String> factions)
 			{
-				return true;
+				return passable;
 			}
 
 			@Override
 			public int getInfluence()
 			{
-				return passable ? 0 : 200;
+				return 0;//passable ? 0 : 200;
 			}
 		}
 		
-		public static void straightTest()
+		public static void runTests()
 		{
-			TestTile[][] grid = new TestTile[10][10];
-			for (int x = 0; x < 10; x++)
-			{
-				for (int y = 0; y < 10; y++)
-				{
-					grid[x][y] = new TestTile();
-				}
-			}
+			bucketTest();
+			straightTest();
+			wallTest();
+			irregularTest();
 			
-			// diagonal
-			path(grid, 1, 1, 8, 8);			
-			path(grid, 1, 8, 8, 1);
-			
-			// straight
-			path(grid, 1, 1, 1, 8);			
-			path(grid, 1, 8, 8, 8);
-			
-			// offset
-			path(grid, 1, 1, 2, 8);
 		}
 		
-		public static void wallTest()
+		private static void straightTest()
 		{
-			TestTile[][] grid = new TestTile[10][10];
-			for (int x = 0; x < 10; x++)
+			String[] sgrid = {
+					"..........",
+					"..........",
+					"..........",
+					"..........",
+					"..........",
+					"..........",
+					"..........",
+					"..........",
+					"..........",
+					".........."
+			};
+			
+			runTest(sgrid);
+		}
+		
+		private static void wallTest()
+		{
+			String[] sgrid = {
+					"..........",
+					"..........",
+					"..........",
+					"..........",
+					".########.",
+					"..........",
+					"..........",
+					"..........",
+					"..........",
+					".........."
+			};
+			
+			runTest(sgrid);
+		}
+		
+		private static void irregularTest()
+		{
+			String[] sgrid = {
+					".......###",
+					"..........",
+					"#####.....",
+					"..........",
+					".########.",
+					"..........",
+					"#..##.....",
+					".....#####",
+					"..........",
+					".........."
+			};
+			
+			runTest(sgrid);
+		}
+		
+		private static void bucketTest()
+		{
+			String[] sgrid = {
+					"..........",
+					"..........",
+					".#......#.",
+					".#......#.",
+					".########.",
+					".#......#.",
+					".#......#.",
+					"##......#.",
+					"..........",
+					".........."
+			};
+			
+			runTest(sgrid);
+		}
+		
+		private static void runTest(String[] grid)
+		{
+			int width = grid[0].length();
+			int height = grid.length;
+			
+			TestTile[][] testgrid = new TestTile[height][width];
+			for (int x = 0; x < width; x++)
 			{
-				for (int y = 0; y < 10; y++)
+				for (int y = 0; y < height; y++)
 				{
-					grid[x][y] = new TestTile();
+					testgrid[y][x] = new TestTile();
 					
-					if (x == 5 && y > 0 && y < 9)
+					if (grid[y].charAt(x) == '#')
 					{
-						grid[x][y].passable = false;
+						testgrid[y][x].passable = false;
 					}
 				}
 			}
 			
 			// diagonal
-			path(grid, 1, 1, 8, 8);			
-			path(grid, 1, 8, 8, 1);
-			
+			path(testgrid, 1, 1, 8, 8);			
+			path(testgrid, 1, 8, 8, 1);
+
 			// straight
-			path(grid, 1, 1, 1, 8);			
-			path(grid, 1, 8, 8, 8);
-			
+			path(testgrid, 1, 1, 1, 8);			
+			path(testgrid, 1, 8, 8, 8);
+
 			// offset
-			path(grid, 1, 1, 2, 8);
+			path(testgrid, 1, 1, 2, 8);
 		}
 		
 		private static void path(TestTile[][] grid, int startx, int starty, int endx, int endy)

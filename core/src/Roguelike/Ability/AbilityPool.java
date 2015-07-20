@@ -21,6 +21,7 @@ public class AbilityPool
 		loadAbilityLine("Pyromaniac/Pyromaniac");
 		loadAbilityLine("Alchemist/Alchemist");
 		loadAbilityLine("Life/Life");
+		loadAbilityLine("Magus/Magus");
 	}
 	
 	public void loadAbilityLine(String name)

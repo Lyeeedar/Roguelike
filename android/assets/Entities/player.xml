@@ -17,10 +17,10 @@
 	
 	<Light>
 		<Colour>
-			<Red>0.7</Red>
-			<Green>0.7</Green>
-			<Blue>0.7</Blue></Colour>
-		<Intensity>3</Intensity>
+			<Red>0.6</Red>
+			<Green>0.6</Green>
+			<Blue>0.6</Blue></Colour>
+		<Intensity>5</Intensity>
 	</Light>
 	
 	<Statistics>

@@ -1,0 +1,32 @@
+<AbilityLine>
+	<Name>Magus</Name>
+	<Description>Control the elements, shaping them into devastating attacks.</Description>
+	<Tiers>
+		<Tier>
+			<ActiveAbility>
+				<Name>Magus/Tier1/BallLightning</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Magus/Tier1/BallLightning</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Magus/Tier1/Firebolt</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Magus/Tier1/IronSpike</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Magus/Tier1/MagicMissile</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+		</Tier>
+	</Tiers>
+</AbilityLine>

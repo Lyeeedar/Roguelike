@@ -1,0 +1,44 @@
+<MonsterGroup>
+	<Encounters>
+	
+		<Encounter>
+			<Walker>1</Walker>
+		</Encounter>
+		
+		<Encounter>
+			<Walker>1</Walker>
+			<Spore>2</Spore>
+		</Encounter>
+		
+		<Encounter>
+			<Walker>2</Walker>
+		</Encounter>
+		
+		<Encounter>
+			<Walker>2</Walker>
+			<Shooter>1</Shooter>
+		</Encounter>
+		
+		<Encounter>
+			<Shooter>2</Shooter>
+			<Cloud>2</Cloud>
+		</Encounter>
+		
+		<Encounter>
+			<Cloud>3</Cloud>
+			<Spore>3</Spore>
+		</Encounter>
+		
+		<Encounter>
+			<Walker>3</Walker>
+			<Spore>1</Spore>
+			<Shooter>1</Shooter>
+		</Encounter>
+		
+		<Encounter Boss="true">
+			<Mother>1</Mother>
+			<Spore>4</Spore>
+		</Encounter>
+		
+	</Encounters>
+</MonsterGroup>

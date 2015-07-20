@@ -6,8 +6,10 @@ import java.util.Random;
 import PaulChew.Pnt;
 import PaulChew.Triangle;
 import PaulChew.Triangulation;
+import Roguelike.AssetManager;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.DungeonFileParser.Symbol;
+import Roguelike.DungeonGeneration.EncounterParser.Encounter;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Levels.Level;
@@ -15,9 +17,11 @@ import Roguelike.Pathfinding.AStarPathfind;
 import Roguelike.Pathfinding.BresenhamLine;
 import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Pathfinding.PathfindingTile;
+import Roguelike.Sprite.Sprite;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.TileData;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 
 public class RecursiveDockGenerator
@@ -66,7 +70,7 @@ public class RecursiveDockGenerator
 				
 				if (oldTile.symbol.entityData != null)
 				{
-					//newTile.addObject(GameEntity.load(oldTile.symbol.entityData.getText()));
+					newTile.addObject(GameEntity.load(oldTile.symbol.entityData.getText()));
 				}
 				
 				newTile.metaValue = oldTile.symbol.metaValue;
@@ -76,6 +80,54 @@ public class RecursiveDockGenerator
 				System.out.print(oldTile.symbol.character);
 			}
 			System.out.print("\n");
+		}
+		
+		// place enemies
+		EncounterParser encounter = new EncounterParser("Fungi");
+		Color col = new Color(ran.nextFloat()*0.3f + 0.7f, ran.nextFloat()*0.3f + 0.7f, ran.nextFloat()*0.3f + 0.7f, 1.0f);
+		
+		// pick centerpoint
+		Room center = placedRooms.get(ran.nextInt(placedRooms.size));
+		
+		int maxdist = 0;
+		
+		{ int dist = height - (center.y+center.height/2); if (dist > maxdist) { maxdist = dist; } }
+		{ int dist = width - (center.x+center.width/2); if (dist > maxdist) { maxdist = dist; } }
+		{ int dist = center.y+center.height/2; if (dist > maxdist) { maxdist = dist; } }
+		{ int dist = center.x+center.width/2; if (dist > maxdist) { maxdist = dist; } }
+		
+		for (Room room : placedRooms)
+		{
+			int dist = Math.max(Math.abs(room.x-center.x), Math.abs(room.y-center.y));
+			
+			float alpha = (float)dist / (float)maxdist;
+			int index = (int)(encounter.encounters.length * alpha);
+			
+			Encounter enc = encounter.encounters[index];
+			
+			Array<GameTile> freeTiles = new Array<GameTile>();
+			
+			for (int x = 0; x < room.width; x++)
+			{
+				for (int y = 0; y < room.height; y++)
+				{
+					if (actualTiles[room.x+x][room.y+y].getPassable(new HashSet<String>()))
+					{
+						freeTiles.add(actualTiles[room.x+x][room.y+y]);
+					}
+				}
+			}
+			
+			for (String enemy : enc.mobs)
+			{
+				GameTile tile = freeTiles.removeIndex(ran.nextInt(freeTiles.size));
+				GameEntity entity = GameEntity.load(enemy);
+				entity.Sprite.colour = col;
+				
+				tile.addObject(entity);
+			}
+			
+			room.fill(ran, dfp, AssetManager.loadSprite("Objects/Ground0", 16), alpha, actualTiles);
 		}
 		
 		return level;
@@ -110,11 +162,17 @@ public class RecursiveDockGenerator
 				for (int y = 0; y < height; y++)
 				{
 					tiles[x][y] = new GenerationTile();
+					
+					if (x == 0 || y == 0 || x == width-1 || y == height-1)
+					{						
+						tiles[x][y].pathfindType = PathfindType.WALL;
+					}
+					
 					tiles[x][y].symbol = dfp.sharedSymbolMap.get('#');
 				}
 			}
 			
-			partition(1, 1, width-2, height-2);
+			partition(minPadding, minPadding, width-minPadding*2, height-minPadding*2);
 			
 			if (toBePlaced.size == 0)
 			{
@@ -123,10 +181,14 @@ public class RecursiveDockGenerator
 			else
 			{
 				toBePlaced.clear();
+				placedRooms.clear();
+				
 				toBePlaced.addAll(requiredRooms);
 				
 				width += 10;
 				height += 10;
+				
+				System.out.println("Failed to place all rooms. Retrying");
 			}
 		}
 		
@@ -141,7 +203,7 @@ public class RecursiveDockGenerator
 	
 	//----------------------------------------------------------------------
 	protected void partition(int x, int y, int width, int height)
-	{
+	{		
 		int padX = Math.min(ran.nextInt(maxPadding-minPadding)+minPadding, (width-minRoomSize)/2);
 		int padY = Math.min(ran.nextInt(maxPadding-minPadding)+minPadding, (height-minRoomSize)/2);
 		
@@ -403,9 +465,20 @@ public class RecursiveDockGenerator
 		}
 
 		for (Pnt[] p : paths)
-		{			
-			Pathfinder pathFind = new Pathfinder(tiles, (int)p[0].coord(0), (int)p[0].coord(1), (int)p[1].coord(0), (int)p[1].coord(1), false, new HashSet<String>());
-			carveCorridor(pathFind.getPath());
+		{
+			int x1 = (int)p[0].coord(0);
+			int y1 = (int)p[0].coord(1);
+			int x2 = (int)p[1].coord(0);
+			int y2 = (int)p[1].coord(1);
+			Pathfinder pathFind = new Pathfinder(tiles, x1, y1, x2, y2, false, new HashSet<String>());
+			
+			int[][] path = pathFind.getPath();
+			if (path[0][0] != x1 || path[0][1] != y1 || path[path.length-1][0] != x2 || path[path.length-1][1] != y2)
+			{
+				System.out.println("Path failed to find route!!!!");
+			}
+			
+			carveCorridor(path);
 		}
 	}
 	
@@ -561,7 +634,7 @@ public class RecursiveDockGenerator
 	private int minPadding = 1;
 	private int maxPadding = 4;
 	
-	private int minRoomSize = 10;
+	private int minRoomSize = 7;
 	private int maxRoomSize = 25;
 	
 	private int paddedMinRoom = minRoomSize + minPadding*2;
@@ -646,8 +719,116 @@ public class RecursiveDockGenerator
 			Symbol floor = dfp.sharedSymbolMap.get('.');
 			Symbol wall = dfp.sharedSymbolMap.get('#');
 			
-			CellularAutomata.process(roomContents, floor, wall, ran);
+			while (true)
+			{
+				CellularAutomata.process(roomContents, floor, wall, ran);
+				
+				int count = 0;
+				// Ensure solid outer wall and count floor
+				for (int x = 0; x < width; x++)
+				{
+					for (int y = 0; y < height; y++)
+					{
+						if (x == 0 || x == width-1 || y == 0 || y == height-1)
+						{
+							roomContents[x][y] = wall;
+						}
+						
+						if (roomContents[x][y] == floor) { count++; }
+					}
+				}
+				
+				if (count > (width*height)/3)
+				{
+					break;
+				}
+				else
+				{
+					System.out.println("Not enough room tiles filled ("+count+" / " + (width*height) + ").");
+				}
+			}						
 			
+			// minimize room size
+			int minx = -1;
+			int miny = -1;
+			int maxx = -1;
+			int maxy = -1;
+			
+			// find min x
+			loop:
+			for (int x = 0; x < width; x++)
+			{
+				for (int y = 0; y < height; y++)
+				{
+					if (roomContents[x][y] == floor)
+					{
+						minx = x-1;
+						break loop;
+					}
+				}
+			}
+			
+			// find min y
+			loop:
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = minx; x < width; x++)
+				{
+					if (roomContents[x][y] == floor)
+					{
+						miny = y-1;
+						break loop;
+					}
+				}
+			}
+			
+			// find max x
+			loop:
+			for (int x = width-1; x >= minx; x--)
+			{
+				for (int y = miny; y < height; y++)
+				{
+					if (roomContents[x][y] == floor)
+					{
+						maxx = x + 1;
+						break loop;
+					}
+				}
+			}
+			
+			// find max y
+			loop:
+			for (int y = height-1; y >= miny; y--)
+			{
+				for (int x = minx; x < maxx; x++)
+				{
+					if (roomContents[x][y] == floor)
+					{
+						maxy = y + 1;
+						break loop;
+					}
+				}
+			}
+			
+			// minimise room
+			int newwidth = maxx - minx;
+			int newheight = maxy - miny;
+			
+			Symbol[][] newgrid = new Symbol[newwidth][newheight];
+			
+			for (x = 0; x < newwidth; x++)
+			{
+				for (y = 0; y < newheight; y++)
+				{
+					newgrid[x][y] = roomContents[minx+x][miny+y];
+				}
+			}
+			
+			width = newwidth;
+			height = newheight;
+			roomContents = newgrid;
+			
+			// Place corridor connections
 			// Sides
 			//  1
 			// 0 2
@@ -691,19 +872,32 @@ public class RecursiveDockGenerator
 				}
 			}
 			
-			int difficulty = (int)(Math.max(0, ran.nextGaussian())*8) + 1;
 			
-			while (difficulty > 0)
+		}
+	
+		//----------------------------------------------------------------------
+		public void fill(Random ran, DungeonFileParser dfp, Sprite sprite, float alpha, GameTile[][] grid)
+		{
+			Symbol floor = dfp.sharedSymbolMap.get('.');
+			
+			Array<int[]> clear = new Array<int[]>();
+						
+			for (int x = 0; x < width; x++)
 			{
-				int mon = ran.nextInt(Math.min(5, difficulty));
+				for (int y = 0; y < height; y++)
+				{
+					if (roomContents[x][y] == floor) { clear.add(new int[]{x+this.x, y+this.y}); }
+				}
+			}
+			
+			int coverage = (int)((float)clear.size * alpha);
+			
+			while (coverage > 0)
+			{
+				int[] pos = clear.removeIndex(ran.nextInt(clear.size));
+				grid[pos[0]][pos[1]].detail = sprite;
 				
-				// place
-				int x = ran.nextInt(width-2)+1;
-				int y = ran.nextInt(height-2)+1;
-				
-				roomContents[x][y] = dfp.sharedSymbolMap.get((""+mon).charAt(0));
-				
-				difficulty -= mon+1;
+				coverage--;
 			}
 		}
 	}
@@ -742,6 +936,12 @@ public class RecursiveDockGenerator
 			{
 				return 100;
 			}
+		}
+	
+		@Override
+		public String toString()
+		{
+			return ""+symbol.character;
 		}
 	}
 

@@ -46,6 +46,8 @@ public class AStarPathfind
 	private int currenty;
 	private Node[][] nodes;
 	
+	public boolean debug = false;
+	
 	private PriorityQueue<Node> openList = new PriorityQueue<Node>();
 	
 	private HashSet<String> factions;
@@ -105,8 +107,8 @@ public class AStarPathfind
 		if (
 			x < 0 ||
 			y < 0 ||
-			x >= width-1 ||
-			y >= height-1
+			x >= width ||
+			y >= height
 			)
 		{
 			return;
@@ -157,6 +159,37 @@ public class AStarPathfind
 		while(!isEnd(currentx, currenty) && openList.size() > 0)
 		{
 			path();
+			
+			if (debug)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					for (int y = 0; y < height; y++)
+					{
+						if (x == startx && y == starty)
+						{
+							System.out.print("S,");
+						}
+						else if (x == endx && y == endy)
+						{
+							System.out.print("E,");
+						}
+						else if (nodes[x][y] == null)
+						{
+							System.out.print(grid[x][y].getPassable(factions) ? ".," : "#,");
+						}
+						else
+						{
+							System.out.print(nodes[x][y].distance+",");
+						}
+						
+					}
+					System.out.print("\n");
+				}
+				
+				System.out.print("\n");
+				System.out.print("\n");
+			}
 		}
 		
 		if (nodes[endx][endy] == null)

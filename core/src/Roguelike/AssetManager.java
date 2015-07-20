@@ -38,6 +38,11 @@ public class AssetManager
 		return loadSprite(name, 0.5f, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE);
 	}
 	
+	public static Sprite loadSprite(String name, int size)
+	{
+		return loadSprite(name, 0.5f, new int[]{size, size}, new int[]{0, 0}, Color.WHITE);
+	}
+	
 	public static Sprite loadSprite(String name, float updateTime)
 	{
 		return loadSprite(name, updateTime, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE);

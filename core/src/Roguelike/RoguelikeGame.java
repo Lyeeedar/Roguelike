@@ -68,8 +68,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	{
 		Instance = this;
 		
-		Pathfinder.PathfinderTest.straightTest();
-		Pathfinder.PathfinderTest.wallTest();
+		Pathfinder.PathfinderTest.runTests();
 	}
 		
 	//endregion Constructor
@@ -249,6 +248,11 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					for (Sprite s : gtile.TileData.sprites)
 					{
 						s.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
+					}
+					
+					if (gtile.detail != null)
+					{
+						gtile.detail.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
 					}
 					
 					if (gtile.environmentEntity != null) { gtile.environmentEntity.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize); }

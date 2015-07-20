@@ -513,7 +513,7 @@ public class GameEntity
 	private ActiveAbility[] m_slottedActiveAbilities = new ActiveAbility[Global.NUM_ABILITY_SLOTS];
 	private Inventory m_inventory = new Inventory();
 	public Array<StatusEffect> statusEffects = new Array<StatusEffect>(false, 16);
-	private Array<StatusEffectStack> stacks;
+	private Array<StatusEffectStack> stacks = new Array<StatusEffectStack>();
 	
 	//----------------------------------------------------------------------
 	public String Name;

@@ -114,6 +114,12 @@ public class DungeonFileParser
 		{
 			return getAsTileData().Passable;
 		}
+	
+		@Override
+		public String toString()
+		{
+			return ""+character;
+		}
 	}
 	
 	//----------------------------------------------------------------------

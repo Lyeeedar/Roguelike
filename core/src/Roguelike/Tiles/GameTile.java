@@ -8,6 +8,7 @@ import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Shadows.ShadowCastTile;
+import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 
 import com.badlogic.gdx.graphics.Color;
@@ -23,7 +24,9 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	public Color Light;
 	
 	public GameEntity Entity;
-	public EnvironmentEntity environmentEntity; 
+	public EnvironmentEntity environmentEntity;
+	
+	public Sprite detail;
 	
 	public Level Level;
 	

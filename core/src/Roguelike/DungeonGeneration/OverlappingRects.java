@@ -22,8 +22,8 @@ public class OverlappingRects
 	
 	public static void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran)
 	{
-		int width = grid.length;
-		int height = grid[0].length;
+		int width = grid.length-2;
+		int height = grid[0].length-2;
 		
 		// calculate vertical rect
 		float vwidthP = ran.nextFloat() *  V_WIDTH_DIFF + V_WIDTH_MIN;
@@ -50,9 +50,9 @@ public class OverlappingRects
 		int hyoffset = hheightdiff > 1 ? ran.nextInt(hheightdiff / 2) : 0;
 				
 		// intialise to solid
-		for (int x = 0; x < width; x++)
+		for (int x = 0; x < width+2; x++)
 		{
-			for (int y = 0; y < height; y++)
+			for (int y = 0; y < height+2; y++)
 			{
 				grid[x][y] = wall;
 			}
@@ -63,7 +63,7 @@ public class OverlappingRects
 		{
 			for (int y = vyoffset; y < vyoffset+vheight; y++)
 			{
-				grid[x][y] = floor;
+				grid[x+1][y+1] = floor;
 			}
 		}
 		
@@ -72,7 +72,7 @@ public class OverlappingRects
 		{
 			for (int y = hyoffset; y < hyoffset+hheight; y++)
 			{
-				grid[x][y] = floor;
+				grid[x+1][y+1] = floor;
 			}
 		}
 	}
