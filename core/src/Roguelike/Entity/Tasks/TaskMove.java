@@ -1,7 +1,9 @@
 package Roguelike.Entity.Tasks;
 
 import Roguelike.Global.Direction;
+import Roguelike.RoguelikeGame;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Sprite.BumpAnimation;
 import Roguelike.Sprite.SpriteAnimation;
 import Roguelike.Tiles.GameTile;
 
@@ -48,7 +50,7 @@ public class TaskMove extends AbstractTask
 			else
 			{
 				obj.attack(newTile.Entity, Dir);				
-				obj.Sprite.SpriteAnimation = new SpriteAnimation(Dir, 0.1f);
+				obj.Sprite.SpriteAnimation = new BumpAnimation(0.1f, Dir, RoguelikeGame.TileSize);
 			}
 		}
 		else if (newTile.getPassable(obj.m_factions))

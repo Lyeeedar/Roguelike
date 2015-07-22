@@ -13,6 +13,7 @@ import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.Pathfinder;
+import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
@@ -225,6 +226,14 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		int offsetx = Gdx.graphics.getWidth() / 2 - level.player.Tile.x * TileSize;
 		int offsety = Gdx.graphics.getHeight() / 2 - level.player.Tile.y * TileSize;
 		
+		if (level.player.Sprite.SpriteAnimation instanceof MoveAnimation)
+		{
+			int[] offset = level.player.Sprite.SpriteAnimation.getRenderOffset();
+			
+			offsetx -= offset[0];
+			offsety -= offset[1];
+		}
+		
 		int mousex = (mousePosX - offsetx) / TileSize;
 		int mousey = (mousePosY - offsety) / TileSize;
 
@@ -333,8 +342,9 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			
 			if (entity.Sprite.SpriteAnimation != null)
 			{
-				cx += TileSize3 * entity.Sprite.SpriteAnimation.Alpha * entity.Sprite.SpriteAnimation.Direction.GetX();
-				cy += TileSize3 * entity.Sprite.SpriteAnimation.Alpha * entity.Sprite.SpriteAnimation.Direction.GetY();
+				int[] offset = entity.Sprite.SpriteAnimation.getRenderOffset();
+				cx += offset[0];
+				cy += offset[1];
 			}
 			
 			batch.setColor(entity.Tile.Light);
@@ -811,7 +821,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	private Tooltip contextMenu;
 	
 	//----------------------------------------------------------------------
-	private static int TileSize = 32;
+	public static int TileSize = 32;
 	private static int TileSize3 = TileSize / 3;
 	
 	//----------------------------------------------------------------------

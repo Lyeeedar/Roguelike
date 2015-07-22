@@ -2,12 +2,14 @@ package Roguelike.Tiles;
 
 import java.util.HashSet;
 
+import Roguelike.RoguelikeGame;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Shadows.ShadowCastTile;
+import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 
@@ -60,13 +62,26 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	
 	public void addObject(GameEntity obj)
 	{
+		int[] oldPos = null;
+		
 		if (obj.Tile != null)
 		{
 			obj.Tile.Entity = null;
+			
+			oldPos = new int[]{obj.Tile.x * RoguelikeGame.TileSize, obj.Tile.y * RoguelikeGame.TileSize};
 		}
 		
 		Entity = obj;
 		obj.Tile = this;
+		
+		if (oldPos != null)
+		{
+			int[] newPos = {obj.Tile.x * RoguelikeGame.TileSize, obj.Tile.y * RoguelikeGame.TileSize};
+			
+			int[] diff = {oldPos[0] - newPos[0], oldPos[1] - newPos[1]};
+			
+			obj.Sprite.SpriteAnimation = new MoveAnimation(0.05f, diff);
+		}
 	}
 	
 	@Override

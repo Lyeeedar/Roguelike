@@ -1,29 +1,26 @@
 package Roguelike.Sprite;
 
-import Roguelike.Global.Direction;
 
-import com.badlogic.gdx.math.MathUtils;
-
-public class SpriteAnimation
+public abstract class SpriteAnimation
 {
-	public Direction Direction;
-	float duration;
+	protected float duration;
 	
-	public SpriteAnimation(Direction direction, float duration)
+	public SpriteAnimation(float duration)
 	{
-		this.Direction = direction;
 		this.duration = duration;
 	}
-	
-	public float Alpha = 0;
-	
-	float time = 0;
+		
+	protected float time = 0;
 	public boolean update(float delta)
 	{
 		time += delta;
 		
-		Alpha = MathUtils.clamp(Math.abs( ( time - duration / 2 ) / ( duration / 2) ), 0, 1);
-		
+		updateInternal(delta);
+				
 		return time > duration;
 	}
+	
+	public abstract int[] getRenderOffset();
+	
+	protected abstract void updateInternal(float delta);
 }
