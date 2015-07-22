@@ -1,6 +1,60 @@
-<MonsterGroup>
-	<Encounters>
+<Faction>
+	<Name>Fungi</Name>
 	
+	<Features>
+	
+		<Feature>
+			<Name>Glowing Mushroom</Name>
+			<Placement>Any</Placement>
+			<RangeMin>30</RangeMin>
+			<Coverage>20</Coverage>
+			
+			<EnvironmentData>
+				<Sprite>
+					<Name>mushroom/glowing</Name>
+				</Sprite>
+				<Passable>false</Passable>
+				<Light>
+					<Colour>
+						<Green>0.8</Green>
+						<Blue>0.7</Blue>
+					</Colour>
+					<Intensity>4</Intensity>
+				</Light>
+			</EnvironmentData>
+		</Feature>
+		
+		<Feature>
+			<Name>Mushroom Cluster</Name>
+			<Placement>Wall</Placement>
+			<EnvironmentData>
+				<Sprite>
+					<Name>mushroom/cluster</Name>
+				</Sprite>
+			</EnvironmentData>
+			<Coverage>30</Coverage>
+		</Feature>
+		
+		<Feature>
+			<Name>Spore Pod</Name>
+			<Placement>Furthest</Placement>
+			<RangeMin>80</RangeMin>
+			<Coverage>1</Coverage>
+			<EnvironmentData>
+				<Sprite>
+					<Name>mushroom/spawner</Name>
+				</Sprite>
+				<Passable>false</Passable>
+				<Type>Spawner</Type>
+				<Count>1</Count>
+				<Entity>Enemies/Fungi/Spore</Entity>
+				<Respawn>50</Respawn>
+			</EnvironmentData>
+		</Feature>
+		
+	</Features>
+	
+	<Encounters>
 		<Encounter>
 			<Walker>1</Walker>
 		</Encounter>
@@ -39,6 +93,6 @@
 			<Mother>1</Mother>
 			<Spore>4</Spore>
 		</Encounter>
-		
 	</Encounters>
-</MonsterGroup>
+
+</Faction>

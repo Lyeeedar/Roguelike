@@ -2,8 +2,6 @@ package Roguelike.DungeonGeneration;
 
 import java.util.Random;
 
-import Roguelike.DungeonGeneration.DungeonFileParser.Symbol;
-
 public class CellularAutomata
 {
 	private static final int REGION = 25;

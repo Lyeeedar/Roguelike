@@ -4,8 +4,6 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
-import Roguelike.DungeonGeneration.DungeonFileParser.Symbol;
-
 public class Starburst
 {
 	

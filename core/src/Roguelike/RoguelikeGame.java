@@ -250,12 +250,10 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 						s.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
 					}
 					
-					if (gtile.detail != null)
-					{
-						gtile.detail.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
+					if (gtile.environmentEntity != null) 
+					{ 
+						gtile.environmentEntity.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize); 
 					}
-					
-					if (gtile.environmentEntity != null) { gtile.environmentEntity.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize); }
 					
 					for (Item i : gtile.Items)
 					{

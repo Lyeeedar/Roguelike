@@ -1,27 +1,24 @@
 package Roguelike.DungeonGeneration;
 
 import java.util.HashSet;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 import PaulChew.Pnt;
 import PaulChew.Triangle;
 import PaulChew.Triangulation;
-import Roguelike.AssetManager;
+import Roguelike.Global.Direction;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
-import Roguelike.DungeonGeneration.DungeonFileParser.Symbol;
-import Roguelike.DungeonGeneration.EncounterParser.Encounter;
-import Roguelike.Entity.EnvironmentEntity;
+import Roguelike.DungeonGeneration.FactionParser.Feature;
+import Roguelike.DungeonGeneration.FactionParser.FeaturePlacementType;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.AStarPathfind;
 import Roguelike.Pathfinding.BresenhamLine;
 import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Pathfinding.PathfindingTile;
-import Roguelike.Sprite.Sprite;
 import Roguelike.Tiles.GameTile;
-import Roguelike.Tiles.TileData;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 
 public class RecursiveDockGenerator
@@ -41,7 +38,23 @@ public class RecursiveDockGenerator
 	
 	//----------------------------------------------------------------------
 	public Level getLevel()
-	{		
+	{
+		// flatten to symbol grid
+		Symbol[][] symbolGrid = new Symbol[width][height];
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				symbolGrid[x][y] = tiles[x][y].symbol;
+			}
+		}
+		
+		// minimise
+		symbolGrid = RecursiveDockGenerator.minimiseGrid(symbolGrid, dfp.sharedSymbolMap.get('#'));
+		
+		width = symbolGrid.length;
+		height = symbolGrid[0].length;
+		
 		GameTile[][] actualTiles = new GameTile[width][height];
 		Level level = new Level(actualTiles);
 		level.Ambient = dfp.ambient;
@@ -50,84 +63,32 @@ public class RecursiveDockGenerator
 		{
 			for (int y = 0; y < height; y++)
 			{
-				GenerationTile oldTile = tiles[x][y];
+				Symbol symbol = symbolGrid[x][y];
 
 				GameTile newTile = new GameTile
 				(
 					x, y,
 					level,
-					oldTile.symbol.getAsTileData()
+					symbol.getAsTileData()
 				);
 				
-				if (oldTile.symbol.isDoor())
+				if (symbol.hasEnvironmentEntity())
 				{
-					newTile.addEnvironmentEntity(EnvironmentEntity.CreateDoor());
+					newTile.addEnvironmentEntity(symbol.getEnvironmentEntity());
 				}
-				else if (oldTile.symbol.isTransition())
+
+				if (symbol.entityData != null)
 				{
-					newTile.addEnvironmentEntity(oldTile.symbol.getAsTransition(dfp.sharedSymbolMap));
-				}
-				
-				if (oldTile.symbol.entityData != null)
-				{
-					newTile.addObject(GameEntity.load(oldTile.symbol.entityData.getText()));
+					newTile.addObject(GameEntity.load(symbol.entityData.getText()));
 				}
 				
-				newTile.metaValue = oldTile.symbol.metaValue;
+				newTile.metaValue = symbol.metaValue;
 				
 				actualTiles[x][y] = newTile;
 				
-				System.out.print(oldTile.symbol.character);
+				System.out.print(symbol.character);
 			}
 			System.out.print("\n");
-		}
-		
-		// place enemies
-		EncounterParser encounter = new EncounterParser("Fungi");
-		Color col = new Color(ran.nextFloat()*0.3f + 0.7f, ran.nextFloat()*0.3f + 0.7f, ran.nextFloat()*0.3f + 0.7f, 1.0f);
-		
-		// pick centerpoint
-		Room center = placedRooms.get(ran.nextInt(placedRooms.size));
-		
-		int maxdist = 0;
-		
-		{ int dist = height - (center.y+center.height/2); if (dist > maxdist) { maxdist = dist; } }
-		{ int dist = width - (center.x+center.width/2); if (dist > maxdist) { maxdist = dist; } }
-		{ int dist = center.y+center.height/2; if (dist > maxdist) { maxdist = dist; } }
-		{ int dist = center.x+center.width/2; if (dist > maxdist) { maxdist = dist; } }
-		
-		for (Room room : placedRooms)
-		{
-			int dist = Math.max(Math.abs(room.x-center.x), Math.abs(room.y-center.y));
-			
-			float alpha = (float)dist / (float)maxdist;
-			int index = (int)(encounter.encounters.length * alpha);
-			
-			Encounter enc = encounter.encounters[index];
-			
-			Array<GameTile> freeTiles = new Array<GameTile>();
-			
-			for (int x = 0; x < room.width; x++)
-			{
-				for (int y = 0; y < room.height; y++)
-				{
-					if (actualTiles[room.x+x][room.y+y].getPassable(new HashSet<String>()))
-					{
-						freeTiles.add(actualTiles[room.x+x][room.y+y]);
-					}
-				}
-			}
-			
-			for (String enemy : enc.mobs)
-			{
-				GameTile tile = freeTiles.removeIndex(ran.nextInt(freeTiles.size));
-				GameEntity entity = GameEntity.load(enemy);
-				entity.Sprite.colour = col;
-				
-				tile.addObject(entity);
-			}
-			
-			room.fill(ran, dfp, AssetManager.loadSprite("Objects/Ground0", 16), alpha, actualTiles);
 		}
 		
 		return level;
@@ -192,11 +153,129 @@ public class RecursiveDockGenerator
 			}
 		}
 		
+		// place factions
+
+		// get largest room
+		int max = 0;
+		Room largest = null;
+
+		for (Room room : placedRooms)
+		{
+			int size = room.width * room.height;
+
+			if (size > max)
+			{
+				max = size;
+				largest = room;
+			}
+		}
+
+		FactionParser faction = FactionParser.load("Fungi");
+
+		// Add features
+		for (Room room : placedRooms)
+		{
+			int influence = Math.abs(room.x - largest.x) + Math.abs(room.y - largest.y);
+			if (influence > 0) 
+			{ 
+				float fract = (float)influence / (float)(width+height);
+				influence = (int)(fract * 100);
+			}
+			
+			influence = 100 - influence;
+
+			room.addFeatures(ran, dfp, faction, influence);
+		}
+				
 		markRooms();
 
-		connectRooms();	
+		connectRooms();
 	}
+	
+	//----------------------------------------------------------------------
+	public static Symbol[][] minimiseGrid(Symbol[][] grid, Symbol wall)
+	{
+		int width = grid.length;
+		int height = grid[0].length;
 		
+		int minx = -1;
+		int miny = -1;
+		int maxx = -1;
+		int maxy = -1;
+		
+		// find min x
+		loop:
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				if (grid[x][y] != wall)
+				{
+					minx = x-1;
+					break loop;
+				}
+			}
+		}
+		
+		// find min y
+		loop:
+		for (int y = 0; y < height; y++)
+		{
+			for (int x = minx; x < width; x++)
+			{
+				if (grid[x][y] != wall)
+				{
+					miny = y-1;
+					break loop;
+				}
+			}
+		}
+		
+		// find max x
+		loop:
+		for (int x = width-1; x >= minx; x--)
+		{
+			for (int y = miny; y < height; y++)
+			{
+				if (grid[x][y] != wall)
+				{
+					maxx = x + 2;
+					break loop;
+				}
+			}
+		}
+		
+		// find max y
+		loop:
+		for (int y = height-1; y >= miny; y--)
+		{
+			for (int x = minx; x < maxx; x++)
+			{
+				if (grid[x][y] != wall)
+				{
+					maxy = y + 2;
+					break loop;
+				}
+			}
+		}
+		
+		// minimise room
+		int newwidth = maxx - minx;
+		int newheight = maxy - miny;
+		
+		Symbol[][] newgrid = new Symbol[newwidth][newheight];
+		
+		for (int x = 0; x < newwidth; x++)
+		{
+			for (int y = 0; y < newheight; y++)
+			{
+				newgrid[x][y] = grid[minx+x][miny+y];
+			}
+		}
+		
+		return newgrid;
+	}
+	
 	//endregion Public Methods
 	//####################################################################//
 	//region Private Methods
@@ -614,7 +693,7 @@ public class RecursiveDockGenerator
 					GenerationTile tile = tiles[room.x+x][room.y+y];
 					Symbol symbol = room.roomContents[x][y];
 					
-					tile.pathfindType = symbol.isDoor() || symbol.isPassable() ? PathfindType.CORRIDOR : PathfindType.WALL ;
+					tile.pathfindType = symbol.isPassable() ? PathfindType.CORRIDOR : PathfindType.WALL ;
 					tile.symbol = symbol;
 				}
 			}
@@ -643,7 +722,7 @@ public class RecursiveDockGenerator
 	
 	private Array<Room> placedRooms = new Array<Room>();
 	
-	private DungeonFileParser dfp;
+	public DungeonFileParser dfp;
 		
 	//endregion Data
 	//####################################################################//
@@ -748,85 +827,10 @@ public class RecursiveDockGenerator
 				}
 			}						
 			
-			// minimize room size
-			int minx = -1;
-			int miny = -1;
-			int maxx = -1;
-			int maxy = -1;
-			
-			// find min x
-			loop:
-			for (int x = 0; x < width; x++)
-			{
-				for (int y = 0; y < height; y++)
-				{
-					if (roomContents[x][y] == floor)
-					{
-						minx = x-1;
-						break loop;
-					}
-				}
-			}
-			
-			// find min y
-			loop:
-			for (int y = 0; y < height; y++)
-			{
-				for (int x = minx; x < width; x++)
-				{
-					if (roomContents[x][y] == floor)
-					{
-						miny = y-1;
-						break loop;
-					}
-				}
-			}
-			
-			// find max x
-			loop:
-			for (int x = width-1; x >= minx; x--)
-			{
-				for (int y = miny; y < height; y++)
-				{
-					if (roomContents[x][y] == floor)
-					{
-						maxx = x + 1;
-						break loop;
-					}
-				}
-			}
-			
-			// find max y
-			loop:
-			for (int y = height-1; y >= miny; y--)
-			{
-				for (int x = minx; x < maxx; x++)
-				{
-					if (roomContents[x][y] == floor)
-					{
-						maxy = y + 1;
-						break loop;
-					}
-				}
-			}
-			
-			// minimise room
-			int newwidth = maxx - minx;
-			int newheight = maxy - miny;
-			
-			Symbol[][] newgrid = new Symbol[newwidth][newheight];
-			
-			for (x = 0; x < newwidth; x++)
-			{
-				for (y = 0; y < newheight; y++)
-				{
-					newgrid[x][y] = roomContents[minx+x][miny+y];
-				}
-			}
-			
-			width = newwidth;
-			height = newheight;
-			roomContents = newgrid;
+			// minimise room size
+			roomContents = RecursiveDockGenerator.minimiseGrid(roomContents, wall);			
+			width = roomContents.length;
+			height = roomContents[0].length;
 			
 			// Place corridor connections
 			// Sides
@@ -874,31 +878,247 @@ public class RecursiveDockGenerator
 			
 			
 		}
-	
+		
 		//----------------------------------------------------------------------
-		public void fill(Random ran, DungeonFileParser dfp, Sprite sprite, float alpha, GameTile[][] grid)
+		public void addFeatures(Random ran, DungeonFileParser dfp, FactionParser faction, int influence)
 		{
-			Symbol floor = dfp.sharedSymbolMap.get('.');
-			
-			Array<int[]> clear = new Array<int[]>();
-						
-			for (int x = 0; x < width; x++)
+			// find all the entrances
+			Array<int[]> doorArr = new Array<int[]>();
+			for (int x  = 0; x < width; x++)
 			{
 				for (int y = 0; y < height; y++)
 				{
-					if (roomContents[x][y] == floor) { clear.add(new int[]{x+this.x, y+this.y}); }
+					if (x == 0 || y == 0 || x == width-1 || y == height-1)
+					{
+						if (roomContents[x][y].isPassable())
+						{
+							doorArr.add(new int[]{x, y});
+						}
+					}
+				}
+			}
+			int[][] doors = doorArr.toArray(int[].class);
+			
+			// separate floor tiles into lists
+			Array<int[]> anyList = new Array<int[]>();
+			PriorityQueue<FeatureTile> furthestList = new PriorityQueue<FeatureTile>();
+			Array<int[]> wallList = new Array<int[]>();
+			Array<int[]> centreList = new Array<int[]>();
+			
+			for (int x = 1; x < width-1; x++)
+			{
+				for (int y = 1; y < height-1; y++)
+				{
+					if (roomContents[x][y].isPassable() && !roomContents[x][y].hasEnvironmentEntity())
+					{
+						int[] pos = {x, y};
+						
+						anyList.add(pos);
+						
+						boolean isWall = false;
+						for (Direction d : Direction.values())
+						{
+							int nx = x + d.GetX();
+							int ny = y + d.GetY();
+							
+							if (nx >= 0 && nx < width && ny >= 0 && ny < height)
+							{
+								if (!roomContents[nx][ny].isPassable())
+								{
+									isWall = true;
+									break;
+								}
+							}
+						}
+						
+						if (isWall)
+						{
+							wallList.add(pos);
+						}
+						else
+						{
+							centreList.add(pos);
+						}
+						
+						furthestList.add(new FeatureTile(pos, doors));
+					}
 				}
 			}
 			
-			int coverage = (int)((float)clear.size * alpha);
+			// start placing features
 			
-			while (coverage > 0)
+			// Do furthest
+			if (furthestList.size() > 0)
 			{
-				int[] pos = clear.removeIndex(ran.nextInt(clear.size));
-				grid[pos[0]][pos[1]].detail = sprite;
+				Array<Feature> features = faction.features.get(FeaturePlacementType.FURTHEST);
 				
-				coverage--;
+				for (Feature f : features)
+				{
+					// Skip if out of range
+					if (influence < f.minRange || influence > f.maxRange)
+					{
+						continue;
+					}
+					
+					// Skip if no valid tiles left
+					if (furthestList.size() == 0)
+					{
+						break;
+					}
+					
+					// calculate num features to place
+					int numTilesToPlace = f.getNumTilesToPlace(influence, furthestList.size());
+					
+					// Place the features
+					for (int i = 0; i < numTilesToPlace; i++)
+					{
+						int[] pos = furthestList.poll().pos;
+						anyList.removeValue(pos, true);
+						wallList.removeValue(pos, true);
+						centreList.removeValue(pos, true);
+						
+						roomContents[pos[0]][pos[1]] = f.getAsSymbol(roomContents[pos[0]][pos[1]]);
+						
+						if (furthestList.size() == 0) { break; }
+					}
+				}
 			}
+			
+			// Do wall		
+			if (wallList.size > 0)
+			{
+				Array<Feature> features = faction.features.get(FeaturePlacementType.WALL);
+				
+				for (Feature f : features)
+				{
+					if (influence < f.minRange || influence > f.maxRange)
+					{
+						continue;
+					}
+					
+					if (wallList.size == 0)
+					{
+						break;
+					}
+					
+					int numTilesToPlace = f.getNumTilesToPlace(influence, wallList.size);
+					
+					for (int i = 0; i < numTilesToPlace; i++)
+					{
+						int[] pos = wallList.removeIndex(ran.nextInt(wallList.size));
+						anyList.removeValue(pos, true);
+						centreList.removeValue(pos, true);
+						
+						roomContents[pos[0]][pos[1]] = f.getAsSymbol(roomContents[pos[0]][pos[1]]);
+						
+						if (wallList.size == 0) { break; }
+					}
+				}
+			}
+			
+			// Do centre
+			if (centreList.size > 0)
+			{
+				Array<Feature> features = faction.features.get(FeaturePlacementType.CENTRE);
+				
+				for (Feature f : features)
+				{
+					if (influence < f.minRange || influence > f.maxRange)
+					{
+						continue;
+					}
+					
+					if (centreList.size == 0)
+					{
+						break;
+					}
+					
+					int numTilesToPlace = f.getNumTilesToPlace(influence, centreList.size);
+					
+					for (int i = 0; i < numTilesToPlace; i++)
+					{
+						int[] pos = centreList.removeIndex(ran.nextInt(centreList.size));
+						anyList.removeValue(pos, true);
+						
+						roomContents[pos[0]][pos[1]] = f.getAsSymbol(roomContents[pos[0]][pos[1]]);
+						
+						if (anyList.size == 0) { break; }
+					}
+				}
+			}
+			
+			// Do any
+			if (anyList.size > 0)
+			{
+				Array<Feature> features = faction.features.get(FeaturePlacementType.ANY);
+				
+				for (Feature f : features)
+				{
+					if (influence < f.minRange || influence > f.maxRange)
+					{
+						continue;
+					}
+					
+					if (anyList.size == 0)
+					{
+						break;
+					}
+					
+					int numTilesToPlace = f.getNumTilesToPlace(influence, anyList.size);
+
+					
+					for (int i = 0; i < numTilesToPlace; i++)
+					{
+						int[] pos = anyList.removeIndex(ran.nextInt(anyList.size));
+						
+						roomContents[pos[0]][pos[1]] = f.getAsSymbol(roomContents[pos[0]][pos[1]]);
+					}
+				}
+			}
+			
+			// Ensure connectivity
+			for (int[] door : doors)
+			{
+				for (int[] otherDoor : doors)
+				{
+					if (door == otherDoor) { continue; }
+					
+					AStarPathfind pathfind = new AStarPathfind(roomContents, door[0], door[1], otherDoor[0], otherDoor[1], true, new HashSet<String>());
+					int[][] path = pathfind.getPath();
+					
+					for (int[] point : path)
+					{
+						roomContents[point[0]][point[1]] = dfp.sharedSymbolMap.get('.');
+					}
+				}
+			}
+		}
+		
+		//----------------------------------------------------------------------
+		private class FeatureTile implements Comparable<FeatureTile>
+		{
+			public int[] pos;
+			public int dist;
+			
+			public FeatureTile(int[] pos, int[][] doors)
+			{
+				this.pos = pos;
+				
+				int d = 0;
+				for (int[] door : doors)
+				{
+					d += Math.abs(pos[0] - door[0]) + Math.abs(pos[1] - door[1]);
+				}
+				
+				d /= doors.length;
+			}
+			
+			@Override
+			public int compareTo(FeatureTile o)
+			{
+				return ((Integer)dist).compareTo(o.dist);
+			}
+			
 		}
 	}
 	

@@ -141,11 +141,15 @@ public class Level
 	
 	public void calculateLight()
 	{
+		Color acol = new Color(Ambient);
+		acol.mul(acol.a);
+		acol.a = 1;
+		
 		for (int x = 0; x < width; x++)
 		{
 			for (int y = 0; y < height; y++)
-			{
-				Grid[x][y].Light = new Color(Ambient);
+			{	
+				Grid[x][y].Light = new Color(acol);
 			}
 		}
 		
@@ -173,7 +177,11 @@ public class Level
 			float dst = 1 - Vector2.dst(l.lx, l.ly, tile.x, tile.y) / l.Intensity;
 			if (dst < 0) {dst = 0;}
 			
-			tile.Light.add(new Color(l.Colour).mul(dst));
+			Color lcol = new Color(l.Colour).mul(dst);
+			lcol.mul(lcol.a);
+			lcol.a = 1;
+			
+			tile.Light.add(lcol);
 		}
 	}
 	
@@ -644,6 +652,13 @@ public class Level
 					l.lx = x;
 					l.ly = y;
 					list.add(l);
+				}
+				
+				if (tile.environmentEntity != null && tile.environmentEntity.light != null)
+				{
+					tile.environmentEntity.light.lx = x;
+					tile.environmentEntity.light.ly = y;
+					list.add(tile.environmentEntity.light);
 				}
 				
 				for (SpriteEffect se : tile.SpriteEffects)

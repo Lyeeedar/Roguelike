@@ -2,8 +2,6 @@ package Roguelike.DungeonGeneration;
 
 import java.util.Random;
 
-import Roguelike.DungeonGeneration.DungeonFileParser.Symbol;
-
 public class OverlappingRects
 {
 	private static final float V_WIDTH_MIN = 0.3f;

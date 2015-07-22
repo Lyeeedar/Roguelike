@@ -2,9 +2,11 @@ package Roguelike.DungeonGeneration;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
 import Roguelike.Entity.EnvironmentEntity;
+import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Tiles.TileData;
 
 import com.badlogic.gdx.Gdx;
@@ -16,112 +18,6 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class DungeonFileParser
 {
-	//----------------------------------------------------------------------
-	public static class Symbol
-	{		
-		public char character;
-		
-		public Element tileData;
-		public TileData tileDataObject;
-		
-		public Element environmentData;
-		public EnvironmentEntity environmentDataObject;
-		
-		public Element entityData;
-				
-		public String metaValue;
-		
-		public TileData getAsTileData()
-		{
-			if (tileDataObject == null)
-			{
-				tileDataObject = TileData.parse(tileData);
-			}
-			
-			return tileDataObject;
-		}
-		
-		public static Symbol parse(Element xml, HashMap<Character, Symbol> sharedSymbolMap, HashMap<Character, Symbol> localSymbolMap)
-		{
-			Symbol symbol = new Symbol();
-			
-			// load the base symbol
-			if (xml.getAttribute("Extends", null) != null)
-			{
-				char extendsSymbol = xml.getAttribute("Extends").charAt(0);
-				
-				Symbol rs = localSymbolMap != null ? localSymbolMap.get(extendsSymbol) : null;
-				if (rs == null)
-				{
-					rs = sharedSymbolMap.get(extendsSymbol);
-				}
-				
-				symbol.character = rs.character;
-				symbol.tileData = rs.tileData;
-				symbol.environmentData = rs.environmentData;
-				symbol.entityData = rs.entityData;
-				symbol.metaValue = rs.metaValue;
-			}
-			
-			// fill in the new values
-			symbol.character = xml.get("Char", ""+symbol.character).charAt(0);
-			
-			if (xml.getChildByName("TileData") != null)
-			{
-				symbol.tileData = xml.getChildByName("TileData");
-			}
-			
-			if (xml.getChildByName("EnvironmentData") != null)
-			{
-				symbol.environmentData = xml.getChildByName("EnvironmentData");
-			}
-			
-			if (xml.getChildByName("EntityData") != null)
-			{
-				symbol.entityData = xml.getChildByName("EntityData");
-			}
-			
-			symbol.metaValue = xml.get("MetaValue", symbol.metaValue);
-			
-			return symbol;
-		}
-		
-		public boolean isDoor()
-		{
-			return environmentData != null && environmentData.get("Type").equals("Door");
-		}
-		
-		public boolean isTransition()
-		{
-			return environmentData != null && environmentData.get("Type").equals("Transition");
-		}
-		
-		public EnvironmentEntity getAsTransition(HashMap<Character, Symbol> sharedSymbolMap)
-		{
-			if (environmentDataObject == null)
-			{
-				DFPRoom dfpRoom = DFPRoom.parse(environmentData.getChildByName("ExitRoom"), sharedSymbolMap);
-				Room room = new Room();
-				dfpRoom.fillRoom(room);
-				
-				environmentDataObject = EnvironmentEntity.CreateTransition(environmentData, room);
-			}
-			
-			return environmentDataObject;
-		}
-		
-		public boolean isPassable()
-		{
-			return getAsTileData().Passable;
-		}
-	
-		@Override
-		public String toString()
-		{
-			return ""+character;
-		}
-	}
-	
 	//----------------------------------------------------------------------
 	public static class DFPRoom
 	{

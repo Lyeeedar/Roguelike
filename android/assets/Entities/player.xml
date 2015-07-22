@@ -15,14 +15,6 @@
 		<IndexY>0</IndexY>
 	</Sprite>
 	
-	<Light>
-		<Colour>
-			<Red>0.6</Red>
-			<Green>0.6</Green>
-			<Blue>0.6</Blue></Colour>
-		<Intensity>5</Intensity>
-	</Light>
-	
 	<Statistics>
 		<MaxHP>1000</MaxHP>
 		<Range>10</<Range>

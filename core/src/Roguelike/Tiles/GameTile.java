@@ -25,9 +25,7 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	
 	public GameEntity Entity;
 	public EnvironmentEntity environmentEntity;
-	
-	public Sprite detail;
-	
+		
 	public Level Level;
 	
 	public Array<SpriteEffect> SpriteEffects = new Array<SpriteEffect>();

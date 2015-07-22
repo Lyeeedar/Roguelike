@@ -26,9 +26,9 @@ public class Light
 		
 		Element colourElement = xml.getChildByName("Colour");
 		l.Colour = new Color(
-				colourElement.getFloat("Red", 1),
-				colourElement.getFloat("Green", 1),
-				colourElement.getFloat("Blue", 1),
+				colourElement.getFloat("Red", 0),
+				colourElement.getFloat("Green", 0),
+				colourElement.getFloat("Blue", 0),
 				colourElement.getFloat("Alpha", 1)
 				);
 		l.Intensity = xml.getFloat("Intensity");

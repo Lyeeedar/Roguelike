@@ -29,7 +29,7 @@ public class EnvironmentEntity
 
 	public Array<ActivationAction> actions = new Array<ActivationAction>();
 	
-	public static EnvironmentEntity CreateTransition(final Element data, final Room exitRoom)
+	private static EnvironmentEntity CreateTransition(final Element data)
 	{
 		final Sprite stairdown = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_down");
 		final Sprite stairup = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_up");
@@ -55,7 +55,26 @@ public class EnvironmentEntity
 				if (connectedLevel == null)
 				{
 					RecursiveDockGenerator generator = new RecursiveDockGenerator(data.get("Destination"));
-					generator.toBePlaced.add(exitRoom);
+					
+					DFPRoom dfpRoom = DFPRoom.parse(data.getChildByName("ExitRoom"), generator.dfp.sharedSymbolMap);
+					final Room room = new Room();
+					dfpRoom.fillRoom(room);
+					
+					for (int x = 0; x < room.width; x++)
+					{
+						for (int y = 0; y < room.height; y++)
+						{
+							if (room.roomContents[x][y].environmentData != null)
+							{
+								if (room.roomContents[x][y].environmentData.get("Destination", "").equals("this"))
+								{
+									room.roomContents[x][y].environmentEntityObject = exitEntity;
+								}
+							}
+						}
+					}
+					
+					generator.toBePlaced.add(room);
 					generator.generate();
 					connectedLevel = generator.getLevel();
 				}
@@ -90,24 +109,10 @@ public class EnvironmentEntity
 		};
 		exitEntity.actions.add(exitAA);
 		
-		for (int x = 0; x < exitRoom.width; x++)
-		{
-			for (int y = 0; y < exitRoom.height; y++)
-			{
-				if (exitRoom.roomContents[x][y].isTransition())
-				{
-					if (exitRoom.roomContents[x][y].environmentData.get("Destination").equals("this"))
-					{
-						exitRoom.roomContents[x][y].environmentDataObject = exitEntity;
-					}
-				}
-			}
-		}
-		
 		return entranceEntity;
 	}
 	
-	public static EnvironmentEntity CreateDoor()
+	private static EnvironmentEntity CreateDoor()
 	{
 		final Sprite doorClosed = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Door0.png")}, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE);
 		final Sprite doorOpen = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Door1.png")}, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE);
@@ -152,6 +157,34 @@ public class EnvironmentEntity
 		entity.actions.add(close);
 		
 		return entity;
+	}
+	
+	private static EnvironmentEntity CreateBasic(Element xml)
+	{
+		EnvironmentEntity entity = new EnvironmentEntity();
+		entity.passable = xml.getBoolean("Passable", true);
+		entity.opaque = xml.getBoolean("Opaque", false);
+		entity.sprite = AssetManager.loadSprite(xml.getChildByName("Sprite"));
+		entity.light = xml.getChildByName("Light") != null ? Light.load(xml.getChildByName("Light")) : null;
+		
+		return entity;
+	}
+	
+	public static EnvironmentEntity load(Element xml)
+	{
+		String type = xml.get("Type", "");
+		if (type.equalsIgnoreCase("Door"))
+		{
+			return CreateDoor();
+		}
+		else if (type.equalsIgnoreCase("Transition"))
+		{
+			return CreateTransition(xml);
+		}
+		else
+		{
+			return CreateBasic(xml);
+		}
 	}
 
 	public static abstract class ActivationAction

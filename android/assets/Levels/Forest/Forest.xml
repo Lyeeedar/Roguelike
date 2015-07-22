@@ -3,7 +3,7 @@
 		<Red>0.5</Red>
 		<Green>0.75</Green>
 		<Blue>0.3</Blue>
-		<Alpha>1</Alpha>
+		<Alpha>0.4</Alpha>
 	</Ambient>
 
 	<Symbols>
@@ -223,32 +223,10 @@
 	</Required>
 	
 	<Optional>
+	
 		<Hut>
 			<Rows>Levels/Forest/hut</Rows>
 		</Hut>
-		
-		<Pool>
-			<Symbols>
-				<Symbol>
-					<Char>p</Char>
-					<TileData>
-						<Opaque>false</Opaque>
-						<Passable>false</Passable>
-						<Sprite>
-							<Name>dc-dngn/water/dngn_shallow_water</Name>
-						</Sprite>
-					</TileData>
-				</Symbol>
-				
-				<Symbol Extends=".">
-					<Char>t</Char>
-					<EntityData>Enemies/Forest/toad</EntityData>
-				</Symbol>
-				
-			</Symbols>
-		
-			<Rows>Levels/Forest/pool</Rows>
-		</Pool>
 		
 	</Optional>
 	
