@@ -27,13 +27,13 @@ public class ActionMoveTo extends AbstractAction
 		}
 		
 		// if we arrived at our target, succeed
-		if (entity.Tile.x == target[0] && entity.Tile.y == target[1])
+		if (entity.tile.x == target[0] && entity.tile.y == target[1])
 		{			
 			State = BehaviourTreeState.SUCCEEDED;
 			return State;
 		}
 						
-		Pathfinder pathFinder = new Pathfinder(entity.Tile.Level.getGrid(), entity.Tile.x, entity.Tile.y, target[0], target[1], true, entity.m_factions);
+		Pathfinder pathFinder = new Pathfinder(entity.tile.Level.getGrid(), entity.tile.x, entity.tile.y, target[0], target[1], true, entity.factions);
 		int[][] path = pathFinder.getPath();
 		
 		// if couldnt find a valid path, fail
@@ -43,8 +43,8 @@ public class ActionMoveTo extends AbstractAction
 			return State;
 		}
 		
-		// if next step is impassable then fail
-		if (!entity.Tile.Level.getGameTile(path[1]).getPassable(entity.m_factions))
+		// if next step is impassable and not an environment entity then fail
+		if (entity.tile.Level.getGameTile(path[1]).environmentEntity == null && !entity.tile.Level.getGameTile(path[1]).getPassable(entity.factions))
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;
@@ -61,7 +61,7 @@ public class ActionMoveTo extends AbstractAction
 				return State;
 			}
 			
-			entity.Tasks.add(new TaskMove(Direction.getDirection(offset)));
+			entity.tasks.add(new TaskMove(Direction.getDirection(offset)));
 		}
 		// if moving away then just run directly away
 		else
@@ -72,7 +72,7 @@ public class ActionMoveTo extends AbstractAction
 				return State;
 			}
 			
-			entity.Tasks.add(new TaskMove(Direction.getDirection(offset[0]*-1, offset[1]*-1)));
+			entity.tasks.add(new TaskMove(Direction.getDirection(offset[0]*-1, offset[1]*-1)));
 		}
 		
 		State = BehaviourTreeState.RUNNING;

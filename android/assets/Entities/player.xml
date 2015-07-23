@@ -7,6 +7,8 @@
 	
 	<AI>player</AI>
 	
+	<CanSwap>true</CanSwap>
+	
 	<Sprite>
 		<Name>Characters/Player</Name>
 		<UpdateRate>0.5</UpdateRate>
@@ -23,5 +25,11 @@
 		
 		<Wood_Atk>50</Wood_Atk>
 	</Statistics>
+	
+	<Inventory>
+		<Equipment>
+			<Item>Misc/BasicLantern</Item>
+		</Equipment>
+	</Inventory>
 	
 </Entity>

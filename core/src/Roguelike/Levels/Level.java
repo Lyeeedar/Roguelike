@@ -6,12 +6,14 @@ import java.util.Iterator;
 import Roguelike.Global.Statistics;
 import Roguelike.RoguelikeGame;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.Items.Item;
 import Roguelike.Lights.Light;
 import Roguelike.Shadows.ShadowCaster;
+import Roguelike.Sprite.BumpAnimation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.StatusEffect.StatusEffect;
@@ -132,7 +134,7 @@ public class Level
 										
 					if (tile.Entity != null)
 					{						
-						s.History.add(new SeenHistoryItem(tile.Entity.Sprite, "A " + tile.Entity.Name));
+						s.History.add(new SeenHistoryItem(tile.Entity.sprite, "A " + tile.Entity.name));
 					}
 					
 					for (Item i : tile.Items)
@@ -166,7 +168,7 @@ public class Level
 	
 	private void calculateSingleLight(Light l)
 	{
-		if (Math.max(Math.abs(player.Tile.x - l.lx), Math.abs(player.Tile.y - l.ly)) > player.getStatistic(Statistics.RANGE)+(int)Math.ceil(l.Intensity))
+		if (Math.max(Math.abs(player.tile.x - l.lx), Math.abs(player.tile.y - l.ly)) > player.getStatistic(Statistics.RANGE)+(int)Math.ceil(l.Intensity))
 		{
 			return; // too far away
 		}
@@ -269,7 +271,19 @@ public class Level
 				
 				if (Grid[x][y].Entity != null)
 				{
-					itr = Grid[x][y].Entity.SpriteEffects.iterator();
+					itr = Grid[x][y].Entity.spriteEffects.iterator();
+					while (itr.hasNext())
+					{
+						SpriteEffect e = itr.next();
+						boolean finished = e.Sprite.update(delta);
+						
+						if ( finished) { itr.remove(); }
+					}
+				}
+				
+				if (Grid[x][y].environmentEntity != null)
+				{
+					itr = Grid[x][y].environmentEntity.spriteEffects.iterator();
 					while (itr.hasNext())
 					{
 						SpriteEffect e = itr.next();
@@ -309,7 +323,7 @@ public class Level
 		
 		Array<int[]> output = new Array<int[]>();
 		ShadowCaster shadow = new ShadowCaster(Grid, player.getStatistic(Statistics.RANGE));
-		shadow.ComputeFOV(player.Tile.x, player.Tile.y, output);
+		shadow.ComputeFOV(player.tile.x, player.tile.y, output);
 		
 		for (int[] tilePos : output)
 		{
@@ -321,17 +335,17 @@ public class Level
 	
 	private void processPlayer()
 	{
-		if (player.Tasks.size == 0)
+		if (player.tasks.size == 0)
 		{
 			player.AI.update(player);
 		}
 		
-		if (player.Tasks.size > 0)
+		if (player.tasks.size > 0)
 		{
-			AbstractTask task = player.Tasks.removeIndex(0);
+			AbstractTask task = player.tasks.removeIndex(0);
 			float actionCost = task.processTask(player) * player.getActionDelay();
 			
-			player.updateAccumulators(actionCost);
+			player.update(actionCost);
 			
 			updateVisibleTiles();
 			
@@ -346,6 +360,11 @@ public class Level
 			if (enemyVisible())
 			{
 				// Clear pending moves
+				player.AI.setData("Pos", null);
+			}
+			
+			if (player.sprite.SpriteAnimation instanceof BumpAnimation)
+			{
 				player.AI.setData("Pos", null);
 			}
 		}
@@ -368,15 +387,15 @@ public class Level
 			if (e.actionDelayAccumulator > 0)
 			{
 				// If no tasks queued, process the ai
-				if (e.Tasks.size == 0)
+				if (e.tasks.size == 0)
 				{
 					e.AI.update(e);
 				}
 				
 				// If a task is queued, process it
-				if (e.Tasks.size > 0)
+				if (e.tasks.size > 0)
 				{
-					float actionCost = e.Tasks.removeIndex(0).processTask(e);
+					float actionCost = e.tasks.removeIndex(0).processTask(e);
 					e.actionDelayAccumulator -= actionCost * e.getActionDelay();
 				}
 				else
@@ -389,7 +408,7 @@ public class Level
 			{
 				itr.remove();
 			}
-			else if (!e.Tile.GetVisible())
+			else if (!e.tile.GetVisible())
 			{
 				// If entity is now invisible, submit to the invisible list to be processed
 				itr.remove();
@@ -419,15 +438,15 @@ public class Level
 				if (e.actionDelayAccumulator > 0)
 				{
 					// If no tasks queued, process the ai
-					if (e.Tasks.size == 0)
+					if (e.tasks.size == 0)
 					{
 						e.AI.update(e);
 					}
 					
 					// If a task is queued, process it
-					if (e.Tasks.size > 0)
+					if (e.tasks.size > 0)
 					{
-						float actionCost = e.Tasks.removeIndex(0).processTask(e);
+						float actionCost = e.tasks.removeIndex(0).processTask(e);
 						e.actionDelayAccumulator -= actionCost * e.getActionDelay();
 					}
 					else
@@ -440,7 +459,7 @@ public class Level
 				{
 					itr.remove();
 				}
-				else if (e.Tile.GetVisible())
+				else if (e.tile.GetVisible())
 				{
 					// If entity is now visible, submit to the visible list to be processed
 					itr.remove();
@@ -490,16 +509,31 @@ public class Level
 							
 				}
 				
-				GameEntity e = Grid[x][y].Entity;
-				if (e != null)
-				{									
-					boolean active = hasActiveEffects(e);
-					if (active)
-					{
-						activeEffects = true;
-						break;
-					}
-				}				
+				{
+					Entity e = Grid[x][y].Entity;
+					if (e != null)
+					{									
+						boolean active = hasActiveEffects(e);
+						if (active)
+						{
+							activeEffects = true;
+							break;
+						}
+					}	
+				}
+				
+				{
+					Entity e = Grid[x][y].environmentEntity;
+					if (e != null)
+					{									
+						boolean active = hasActiveEffects(e);
+						if (active)
+						{
+							activeEffects = true;
+							break;
+						}
+					}	
+				}			
 			}
 			
 			if (activeEffects) { break; }
@@ -508,16 +542,16 @@ public class Level
 		return activeEffects;
 	}
 	
-	public boolean hasActiveEffects(GameEntity e)
+	public boolean hasActiveEffects(Entity e)
 	{
 		boolean activeEffects = false;
 		
-		if (e.Sprite.SpriteAnimation != null)
+		if (e.sprite.SpriteAnimation != null)
 		{
 			activeEffects = true;
 		}
 		
-		if (e.SpriteEffects.size > 0)
+		if (e.spriteEffects.size > 0)
 		{
 			activeEffects = true;
 		}
@@ -535,7 +569,7 @@ public class Level
 				GameEntity e = Grid[x][y].Entity;
 				if (e != null && e != player)
 				{
-					e.updateAccumulators(cost);
+					e.update(cost);
 					
 					if (e.actionDelayAccumulator > 0)
 					{
@@ -564,23 +598,41 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{
-				GameEntity e = Grid[x][y].Entity;
-				if (e != null)
 				{
-					if (e.damageAccumulator > 0 && Grid[x][y].GetVisible())
+					GameEntity e = Grid[x][y].Entity;
+					if (e != null)
 					{
-						RoguelikeGame.Instance.addActorDamageAction(e);
-					}
-					
-					if (e!= player && e.HP <= 0 && !hasActiveEffects(e))
-					{
-						e.Tile.Entity = null;
-						
-						RoguelikeGame.Instance.addConsoleMessage(new Line(new Message("The " + e.Name + " dies!")));
-						
-						for (Item i : e.getInventory().m_items)
+						if (e.damageAccumulator > 0 && Grid[x][y].GetVisible())
 						{
-							Grid[x][y].Items.add(i);
+							RoguelikeGame.Instance.addActorDamageAction(e);
+						}
+						
+						if (e != player && e.HP <= 0 && !hasActiveEffects(e))
+						{
+							e.tile.Entity = null;
+							
+							RoguelikeGame.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " dies!")));
+							
+							for (Item i : e.getInventory().m_items)
+							{
+								Grid[x][y].Items.add(i);
+							}
+						}
+					}
+				}
+				
+				{
+					Entity e = Grid[x][y].environmentEntity;
+					if (e != null)
+					{
+						if (e.damageAccumulator > 0 && Grid[x][y].GetVisible())
+						{
+							RoguelikeGame.Instance.addActorDamageAction(e);
+						}
+						
+						if (e != player && e.HP <= 0 && !hasActiveEffects(e))
+						{
+							e.tile.environmentEntity = null;							
 						}
 					}
 				}
@@ -610,7 +662,7 @@ public class Level
 				
 				if (tile.Entity != null)
 				{
-					sprites.add(tile.Entity.Sprite);
+					sprites.add(tile.Entity.sprite);
 				}
 				
 				for (Item i : tile.Items)
@@ -701,14 +753,15 @@ public class Level
 				
 				if (tile.Entity != null)
 				{
-					if (tile.Entity.Light != null)
+					Array<Light> lights = tile.Entity.getLight();
+					for (Light l : lights)
 					{
-						tile.Entity.Light.lx = x;
-						tile.Entity.Light.ly = y;
-						list.add(tile.Entity.Light);
+						l.lx = x;
+						l.ly = y;
+						list.add(l);
 					}
 					
-					for (SpriteEffect se : tile.Entity.SpriteEffects)
+					for (SpriteEffect se : tile.Entity.spriteEffects)
 					{
 						if (se.light != null)
 						{

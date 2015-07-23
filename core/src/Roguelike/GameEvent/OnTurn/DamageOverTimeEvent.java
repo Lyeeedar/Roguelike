@@ -6,14 +6,12 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
-import Roguelike.Entity.GameEntity;
 import Roguelike.Global.Statistics;
+import Roguelike.Entity.Entity;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-import exp4j.Functions.RandomFunction;
 import exp4j.Helpers.EquationHelper;
-import exp4j.Operators.BooleanOperators;
 
 public class DamageOverTimeEvent extends AbstractOnTurnEvent
 {
@@ -24,7 +22,7 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 	private float accumulator;
 	
 	@Override
-	public boolean handle(GameEntity entity, float time)
+	public boolean handle(Entity entity, float time)
 	{
 		accumulator += time;
 		

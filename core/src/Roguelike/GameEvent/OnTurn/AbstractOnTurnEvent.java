@@ -6,11 +6,12 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 
 public abstract class AbstractOnTurnEvent
 {
-	public abstract boolean handle(GameEntity entity, float time);
+	public abstract boolean handle(Entity entity, float time);
 	public abstract void parse(Element xml);
 	
 	public static AbstractOnTurnEvent load(Element xml)

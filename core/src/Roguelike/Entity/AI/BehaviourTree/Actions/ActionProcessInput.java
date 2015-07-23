@@ -51,15 +51,15 @@ public class ActionProcessInput extends AbstractAction
 			
 			if (x != 0 || y != 0 || space)
 			{
-				targetPos = new int[]{ entity.Tile.x + x, entity.Tile.y + y };
+				targetPos = new int[]{ entity.tile.x + x, entity.tile.y + y };
 			}
 		}
 		
 		if (targetPos != null)
 		{
-			if (targetPos[0] == entity.Tile.x && targetPos[1] == entity.Tile.y)
+			if (targetPos[0] == entity.tile.x && targetPos[1] == entity.tile.y)
 			{
-				entity.Tasks.add(new TaskWait());
+				entity.tasks.add(new TaskWait());
 				
 				setData("Pos", null);
 			}

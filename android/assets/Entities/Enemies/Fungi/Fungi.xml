@@ -21,17 +21,23 @@
 					</Colour>
 					<Intensity>4</Intensity>
 				</Light>
+				
+				<Statistics>
+					<MaxHP>200</MaxHP>
+				</Statistics>
 			</EnvironmentData>
 		</Feature>
 		
 		<Feature>
 			<Name>Mushroom Cluster</Name>
 			<Placement>Wall</Placement>
+			
 			<EnvironmentData>
 				<Sprite>
 					<Name>mushroom/cluster</Name>
 				</Sprite>
 			</EnvironmentData>
+			
 			<Coverage>20</Coverage>
 		</Feature>
 		
@@ -40,6 +46,7 @@
 			<Placement>Furthest</Placement>
 			<RangeMin>80</RangeMin>
 			<Coverage>1</Coverage>
+			
 			<EnvironmentData>
 				<Sprite>
 					<Name>mushroom/spawner</Name>
@@ -49,6 +56,10 @@
 				<Count>1</Count>
 				<Entity>Enemies/Fungi/Spore</Entity>
 				<Respawn>25</Respawn>
+				
+				<Statistics>
+					<MaxHP>200</MaxHP>
+				</Statistics>
 			</EnvironmentData>
 		</Feature>
 		

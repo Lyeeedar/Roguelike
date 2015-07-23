@@ -39,7 +39,7 @@ public class ActionConvertTo extends AbstractAction
 				else if (o instanceof GameEntity)
 				{
 					GameEntity e = (GameEntity)o;					
-					setData(OutputKey, new int[]{e.Tile.x, e.Tile.y});					
+					setData(OutputKey, new int[]{e.tile.x, e.tile.y});					
 					State = BehaviourTreeState.SUCCEEDED;
 				}
 				else

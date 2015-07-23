@@ -31,7 +31,7 @@ public class ActionUseAbility extends AbstractAction
 			return State;
 		}
 		
-		entity.Tasks.add(new TaskUseAbility(validTargets[0], ability));
+		entity.tasks.add(new TaskUseAbility(validTargets[0], ability));
 		
 		State = BehaviourTreeState.SUCCEEDED;
 		return State;

@@ -1,16 +1,19 @@
 package Roguelike.Entity;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 import Roguelike.AssetManager;
 import Roguelike.Global.Direction;
+import Roguelike.Global.Statistics;
 import Roguelike.RoguelikeGame;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
+import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Levels.Level;
-import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
+import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.graphics.Color;
@@ -18,28 +21,73 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-public class EnvironmentEntity
+public class EnvironmentEntity extends Entity
 {
-	public Sprite sprite;
-
-	public GameTile tile;
-
-	public Light light;
-
 	public boolean passable;
-
 	public boolean opaque;
 
 	public Array<ActivationAction> actions = new Array<ActivationAction>();
 	
 	public OnTurnAction onTurnAction;
 	
-	public void update(float delta)
+	@Override
+	public void update(float cost)
 	{
 		if (onTurnAction != null)
 		{
-			onTurnAction.update(this, delta);
+			onTurnAction.update(this, cost);
 		}
+		
+		for (GameEventHandler h : getAllHandlers())
+		{
+			h.onTurn(this, cost);
+		}
+
+		Iterator<StatusEffect> itr = statusEffects.iterator();
+		while (itr.hasNext())
+		{
+			StatusEffect se = itr.next();
+
+			if(se.duration <= 0)
+			{
+				itr.remove();
+			}
+		}
+
+		stacks = stackStatusEffects();
+	}
+	
+	@Override
+	public int getStatistic(Statistics stat)
+	{
+		int val = statistics.get(stat);
+
+		for (StatusEffect se : statusEffects)
+		{
+			val += se.getStatistic(this, stat);
+		}
+		
+		return val;
+	}
+	
+	@Override
+	protected void internalLoad(String file)
+	{
+		
+	}
+
+	//----------------------------------------------------------------------
+	@Override
+	public Array<GameEventHandler> getAllHandlers()
+	{
+		Array<GameEventHandler> handlers = new Array<GameEventHandler>();
+
+		for (StatusEffect se : statusEffects)
+		{
+			handlers.add(se);
+		}
+
+		return handlers;
 	}
 	
 	private static EnvironmentEntity CreateTransition(final Element data)
@@ -177,12 +225,13 @@ public class EnvironmentEntity
 		EnvironmentEntity entity = new EnvironmentEntity();
 		entity.passable = xml.getBoolean("Passable", true);
 		entity.opaque = xml.getBoolean("Opaque", false);
-		entity.sprite = AssetManager.loadSprite(xml.getChildByName("Sprite"));
-		entity.light = xml.getChildByName("Light") != null ? Light.load(xml.getChildByName("Light")) : null;
+		
+		entity.baseInternalLoad(xml);
 		
 		final int count = xml.getInt("Count", 1);
 		final String name = xml.get("Entity");
 		final int respawn = xml.getInt("Respawn", 50);
+
 		
 		entity.onTurnAction = new OnTurnAction()
 		{
@@ -269,8 +318,8 @@ public class EnvironmentEntity
 		EnvironmentEntity entity = new EnvironmentEntity();
 		entity.passable = xml.getBoolean("Passable", true);
 		entity.opaque = xml.getBoolean("Opaque", false);
-		entity.sprite = AssetManager.loadSprite(xml.getChildByName("Sprite"));
-		entity.light = xml.getChildByName("Light") != null ? Light.load(xml.getChildByName("Light")) : null;
+		
+		entity.baseInternalLoad(xml);
 		
 		return entity;
 	}
@@ -313,4 +362,7 @@ public class EnvironmentEntity
 	{
 		public abstract void update(EnvironmentEntity entity, float delta);
 	}
+
+	
+
 }

@@ -9,21 +9,19 @@ import Roguelike.Tiles.GameTile;
 
 public class TaskMove extends AbstractTask
 {
-	Direction Dir;		
+	Direction dir;		
 	public TaskMove(Direction dir)
 	{
-		this.Dir = dir;
+		this.dir = dir;
 	}
 	
 	@Override
 	public float processTask(GameEntity obj)
-	{
-		obj.Channeling = null;
+	{		
+		GameTile oldTile = obj.tile;
 		
-		GameTile oldTile = obj.Tile;
-		
-		int newX = oldTile.x+Dir.GetX();
-		int newY = oldTile.y+Dir.GetY();
+		int newX = oldTile.x+dir.GetX();
+		int newY = oldTile.y+dir.GetY();
 		
 		if (
 			newX < 0 ||
@@ -41,7 +39,7 @@ public class TaskMove extends AbstractTask
 		{
 			if (obj.isAllies(newTile.Entity))
 			{
-				if (obj.CanSwap)
+				if (obj.canSwap && obj.canMove && newTile.Entity.canMove)
 				{
 					oldTile.addObject(newTile.Entity);
 					newTile.addObject(obj);
@@ -49,11 +47,16 @@ public class TaskMove extends AbstractTask
 			}
 			else
 			{
-				obj.attack(newTile.Entity, Dir);				
-				obj.Sprite.SpriteAnimation = new BumpAnimation(0.1f, Dir, RoguelikeGame.TileSize);
+				obj.attack(newTile.Entity, dir);				
+				obj.sprite.SpriteAnimation = new BumpAnimation(0.1f, dir, RoguelikeGame.TileSize);
 			}
 		}
-		else if (newTile.getPassable(obj.m_factions))
+		else if (newTile.environmentEntity != null && !newTile.environmentEntity.passable)
+		{
+			obj.attack(newTile.environmentEntity, dir);
+			obj.sprite.SpriteAnimation = new BumpAnimation(0.1f, dir, RoguelikeGame.TileSize);
+		}
+		else if (obj.canMove && newTile.getPassable(obj.factions))
 		{
 			newTile.addObject(obj);
 		}

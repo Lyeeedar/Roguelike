@@ -44,7 +44,7 @@ public class ActionPickClosest extends AbstractAction
 					if (o instanceof int[])
 					{
 						int[] pos = (int[])o;
-						float tmp = Vector2.dst2(entity.Tile.x, entity.Tile.y, pos[0], pos[1]);
+						float tmp = Vector2.dst2(entity.tile.x, entity.tile.y, pos[0], pos[1]);
 						
 						if (tmp < best)
 						{
@@ -55,7 +55,7 @@ public class ActionPickClosest extends AbstractAction
 					else if (o instanceof GameEntity)
 					{
 						GameEntity pos = (GameEntity)o;
-						float tmp = Vector2.dst2(entity.Tile.x, entity.Tile.y, pos.Tile.x, pos.Tile.y);
+						float tmp = Vector2.dst2(entity.tile.x, entity.tile.y, pos.tile.x, pos.tile.y);
 						
 						if (tmp < best)
 						{
@@ -66,7 +66,7 @@ public class ActionPickClosest extends AbstractAction
 					else if (o instanceof GameTile)
 					{
 						GameTile pos = (GameTile)o;
-						float tmp = Vector2.dst2(entity.Tile.x, entity.Tile.y, pos.x, pos.y);
+						float tmp = Vector2.dst2(entity.tile.x, entity.tile.y, pos.x, pos.y);
 						
 						if (tmp < best)
 						{

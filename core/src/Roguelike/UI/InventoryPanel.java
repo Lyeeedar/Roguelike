@@ -159,7 +159,7 @@ public class InventoryPanel extends Widget
 			}
 		}
 				
-		itr = entity.Tile.Items.iterator();
+		itr = entity.tile.Items.iterator();
 		y = NumTilesHeight;
 		for (x = 0; x < NumTilesWidth; x++)
 		{
@@ -216,9 +216,9 @@ public class InventoryPanel extends Widget
 			
 			if (tileY == NumTilesHeight-1)
 			{
-				if (tileX < entity.Tile.Items.size)
+				if (tileX < entity.tile.Items.size)
 				{
-					Table t = entity.Tile.Items.get(tileX).createTable(skin, entity.getInventory());
+					Table t = entity.tile.Items.get(tileX).createTable(skin, entity.getInventory());
 					
 					tooltip = new Tooltip(t, skin, stage);
 					tooltip.show(event, x, y);
@@ -284,11 +284,11 @@ public class InventoryPanel extends Widget
 			
 			if (tileY == NumTilesHeight-1)
 			{
-				if (tileX < entity.Tile.Items.size)
+				if (tileX < entity.tile.Items.size)
 				{
-					Item i = entity.Tile.Items.get(tileX);
+					Item i = entity.tile.Items.get(tileX);
 					entity.getInventory().addItem(i);
-					entity.Tile.Items.removeValue(i, true);
+					entity.tile.Items.removeValue(i, true);
 				}				
 			}
 			else if (tileY == 0)
@@ -330,12 +330,12 @@ public class InventoryPanel extends Widget
 						}
 						
 						entity.getInventory().removeItem(item);
-						entity.Tile.Items.add(item);
+						entity.tile.Items.add(item);
 					}
 					
 					for (int i = 0; i < 3; i++)
 					{
-						entity.Tasks.add(new TaskWait());
+						entity.tasks.add(new TaskWait());
 					}
 				}		
 			}

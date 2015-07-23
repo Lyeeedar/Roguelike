@@ -134,12 +134,12 @@ public class ActiveAbility implements IAbility, IGameObject
 		Array<int[]> validTargets = new Array<int[]>();
 		
 		Array<int[]> output = new Array<int[]>();
-		ShadowCaster shadow = new ShadowCaster(caster.Tile.Level.getGrid(), range);
-		shadow.ComputeFOV(caster.Tile.x, caster.Tile.y, output);
+		ShadowCaster shadow = new ShadowCaster(caster.tile.Level.getGrid(), range);
+		shadow.ComputeFOV(caster.tile.x, caster.tile.y, output);
 		
 		for (int[] tilePos : output)
 		{
-			GameTile tile = caster.Tile.Level.getGameTile(tilePos);
+			GameTile tile = caster.tile.Level.getGameTile(tilePos);
 			
 			if (targetingType.isTargetValid(this, tile))
 			{

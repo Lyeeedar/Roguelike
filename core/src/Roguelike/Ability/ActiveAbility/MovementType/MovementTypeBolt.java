@@ -27,7 +27,7 @@ public class MovementTypeBolt extends AbstractMovementType
 	@Override
 	public void init(ActiveAbility ab, int endx, int endy)
 	{
-		int[][] fullpath = BresenhamLine.line(ab.caster.Tile.x, ab.caster.Tile.y, endx, endy, ab.caster.Tile.Level.getGrid(), false, true, new HashSet<String>());
+		int[][] fullpath = BresenhamLine.line(ab.caster.tile.x, ab.caster.tile.y, endx, endy, ab.caster.tile.Level.getGrid(), false, true, new HashSet<String>());
 		
 		Array<int[]> actualpath = new Array<int[]>(fullpath.length);
 		for (int i = 1; i < ab.range+1 && i < fullpath.length; i++)
@@ -37,7 +37,7 @@ public class MovementTypeBolt extends AbstractMovementType
 		path = actualpath.toArray(int[].class);
 		
 		ab.AffectedTiles.clear();
-		ab.AffectedTiles.add(ab.caster.Tile.Level.getGameTile(path[0]));
+		ab.AffectedTiles.add(ab.caster.tile.Level.getGameTile(path[0]));
 	}
 	
 	@Override

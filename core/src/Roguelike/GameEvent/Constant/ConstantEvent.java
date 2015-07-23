@@ -7,6 +7,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global.Statistics;
 import Roguelike.Global.Tier1Element;
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -35,7 +36,7 @@ public class ConstantEvent
 		}
 	}
 	
-	public int getStatistic(GameEntity entity, Statistics stat)
+	public int getStatistic(Entity entity, Statistics stat)
 	{
 		String eqn = equations.get(stat);
 		

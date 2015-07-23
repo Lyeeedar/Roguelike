@@ -1,5 +1,11 @@
 package Roguelike.UI;
 
+import Roguelike.AssetManager;
+import Roguelike.Global.Statistics;
+import Roguelike.Entity.Entity;
+import Roguelike.Entity.Entity.StatusEffectStack;
+import Roguelike.Entity.GameEntity;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,12 +16,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
-
-import Roguelike.Entity.GameEntity;
-import Roguelike.Entity.GameEntity.StatusEffectStack;
-import Roguelike.StatusEffect.StatusEffect;
-import Roguelike.AssetManager;
-import Roguelike.Global.Statistics;
 
 public class EntityStatusRenderer
 {
@@ -31,22 +31,11 @@ public class EntityStatusRenderer
 		generator.dispose(); // don't forget to dispose to avoid memory leaks!
 	}
 	
-	public static void draw(GameEntity entity, Batch batch, int x, int y, int width, int height, float heightScale)
-	{
-		Texture white = AssetManager.loadTexture("Sprites/white.png");
-		
+	public static void draw(Entity entity, Batch batch, int x, int y, int width, int height, float heightScale)
+	{		
 		float val = (float)entity.HP / (float)entity.getStatistic(Statistics.MAXHP);
 		float barheight = height * heightScale;
-		
-		batch.setColor(Color.LIGHT_GRAY);		
-		batch.draw(white, x-2, y+height-barheight-2, width+4, barheight+4);
-		
-		batch.setColor(Color.DARK_GRAY);		
-		batch.draw(white, x-1, y+height-barheight-1, width+2, barheight+2);
-		
-		batch.setColor(new Color(Color.RED).lerp(Color.GREEN, val));		
-		batch.draw(white, x, y+height-barheight, width*val, barheight);
-		batch.setColor(Color.WHITE);
+		drawHpBar(val, batch, x, y, width, height, heightScale);
 		
 		Array<StatusEffectStack> stacks = entity.stackStatusEffects();
 		
@@ -67,6 +56,23 @@ public class EntityStatusRenderer
 				sy += statusTileSize;
 			}
 		}
+	}
+	
+	public static void drawHpBar(float val, Batch batch, int x, int y, int width, int height, float heightScale)
+	{
+		Texture white = AssetManager.loadTexture("Sprites/white.png");
+		
+		float barheight = height * heightScale;
+		
+		batch.setColor(Color.LIGHT_GRAY);		
+		batch.draw(white, x-2, y+height-barheight-2, width+4, barheight+4);
+		
+		batch.setColor(Color.DARK_GRAY);		
+		batch.draw(white, x-1, y+height-barheight-1, width+2, barheight+2);
+		
+		batch.setColor(new Color(Color.RED).lerp(Color.GREEN, val));		
+		batch.draw(white, x, y+height-barheight, width*val, barheight);
+		batch.setColor(Color.WHITE);
 	}
 	
 	public static Table getMouseOverTable(GameEntity entity, int x, int y, int width, int height, float heightScale, int mousex, int mousey, Skin skin)

@@ -64,23 +64,23 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	{
 		int[] oldPos = null;
 		
-		if (obj.Tile != null)
+		if (obj.tile != null)
 		{
-			obj.Tile.Entity = null;
+			obj.tile.Entity = null;
 			
-			oldPos = new int[]{obj.Tile.x * RoguelikeGame.TileSize, obj.Tile.y * RoguelikeGame.TileSize};
+			oldPos = new int[]{obj.tile.x * RoguelikeGame.TileSize, obj.tile.y * RoguelikeGame.TileSize};
 		}
 		
 		Entity = obj;
-		obj.Tile = this;
+		obj.tile = this;
 		
 		if (oldPos != null)
 		{
-			int[] newPos = {obj.Tile.x * RoguelikeGame.TileSize, obj.Tile.y * RoguelikeGame.TileSize};
+			int[] newPos = {obj.tile.x * RoguelikeGame.TileSize, obj.tile.y * RoguelikeGame.TileSize};
 			
 			int[] diff = {oldPos[0] - newPos[0], oldPos[1] - newPos[1]};
 			
-			obj.Sprite.SpriteAnimation = new MoveAnimation(0.05f, diff);
+			obj.sprite.SpriteAnimation = new MoveAnimation(0.05f, diff);
 		}
 	}
 	

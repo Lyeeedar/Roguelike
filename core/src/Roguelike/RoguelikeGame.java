@@ -1,10 +1,12 @@
 package Roguelike;
 
 import Roguelike.Global.Direction;
+import Roguelike.Global.Statistics;
 import Roguelike.Ability.AbilityPool;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator;
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.EnvironmentEntity.ActivationAction;
 import Roguelike.Entity.GameEntity;
@@ -223,12 +225,12 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		
 		level.update(delta);
 		
-		int offsetx = Gdx.graphics.getWidth() / 2 - level.player.Tile.x * TileSize;
-		int offsety = Gdx.graphics.getHeight() / 2 - level.player.Tile.y * TileSize;
+		int offsetx = Gdx.graphics.getWidth() / 2 - level.player.tile.x * TileSize;
+		int offsety = Gdx.graphics.getHeight() / 2 - level.player.tile.y * TileSize;
 		
-		if (level.player.Sprite.SpriteAnimation instanceof MoveAnimation)
+		if (level.player.sprite.SpriteAnimation instanceof MoveAnimation)
 		{
-			int[] offset = level.player.Sprite.SpriteAnimation.getRenderOffset();
+			int[] offset = level.player.sprite.SpriteAnimation.getRenderOffset();
 			
 			offsetx -= offset[0];
 			offsety -= offset[1];
@@ -242,6 +244,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		batch.begin();
 		
 		toBeDrawn.clear();
+		hpBars.clear();
 		
 		for (int x = 0; x < level.width; x++)
 		{
@@ -261,7 +264,12 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					
 					if (gtile.environmentEntity != null) 
 					{ 
-						gtile.environmentEntity.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize); 
+						gtile.environmentEntity.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
+						
+						if (gtile.environmentEntity.HP < gtile.environmentEntity.statistics.get(Statistics.MAXHP) || gtile.environmentEntity.stacks.size > 0)
+						{
+							hpBars.add(gtile.environmentEntity);
+						}
 					}
 					
 					for (Item i : gtile.Items)
@@ -334,24 +342,24 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		
 		for (GameEntity entity : toBeDrawn)
 		{
-			int x = entity.Tile.x;
-			int y = entity.Tile.y;
+			int x = entity.tile.x;
+			int y = entity.tile.y;
 			
 			int cx = x*TileSize + offsetx;
 			int cy = y*TileSize + offsety;
 			
-			if (entity.Sprite.SpriteAnimation != null)
+			if (entity.sprite.SpriteAnimation != null)
 			{
-				int[] offset = entity.Sprite.SpriteAnimation.getRenderOffset();
+				int[] offset = entity.sprite.SpriteAnimation.getRenderOffset();
 				cx += offset[0];
 				cy += offset[1];
 			}
 			
-			batch.setColor(entity.Tile.Light);
+			batch.setColor(entity.tile.Light);
 			
-			entity.Sprite.render(batch, cx, cy, TileSize, TileSize);
+			entity.sprite.render(batch, cx, cy, TileSize, TileSize);
 			
-			for (SpriteEffect e : entity.SpriteEffects)
+			for (SpriteEffect e : entity.spriteEffects)
 			{
 				if (e.Corner == Direction.CENTER)
 				{
@@ -366,6 +374,17 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			batch.setColor(Color.WHITE);
 			
 			EntityStatusRenderer.draw(entity, batch, cx, cy, TileSize, TileSize, 1.0f/8.0f);
+		}
+		
+		for (Entity e : hpBars)
+		{
+			int x = e.tile.x;
+			int y = e.tile.y;
+			
+			int cx = x*TileSize + offsetx;
+			int cy = y*TileSize + offsety;
+			
+			EntityStatusRenderer.draw(e, batch, cx, cy, TileSize, TileSize, 1.0f/8.0f);
 		}
 		
 		for (ActiveAbility aa : level.ActiveAbilities)
@@ -455,8 +474,8 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			
 			screenY = Gdx.graphics.getHeight() - screenY;
 			
-			int offsetx = Gdx.graphics.getWidth() / 2 - level.player.Tile.x * TileSize;
-			int offsety = Gdx.graphics.getHeight() / 2 - level.player.Tile.y * TileSize;
+			int offsetx = Gdx.graphics.getWidth() / 2 - level.player.tile.x * TileSize;
+			int offsety = Gdx.graphics.getHeight() / 2 - level.player.tile.y * TileSize;
 			
 			int x = (screenX - offsetx) / TileSize;
 			int y = (screenY - offsety) / TileSize;
@@ -470,7 +489,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 						GameTile tile = level.getGameTile(x, y);
 						if (preparedAbility.isTargetValid(tile, abilityTiles))
 						{
-							level.player.Tasks.add(new TaskUseAbility(new int[]{x, y}, preparedAbility));
+							level.player.tasks.add(new TaskUseAbility(new int[]{x, y}, preparedAbility));
 						}
 					}
 				}
@@ -591,8 +610,8 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			
 			screenY = Gdx.graphics.getHeight() - screenY;
 			
-			int offsetx = Gdx.graphics.getWidth() / 2 - level.player.Tile.x * TileSize;
-			int offsety = Gdx.graphics.getHeight() / 2 - level.player.Tile.y * TileSize;
+			int offsetx = Gdx.graphics.getWidth() / 2 - level.player.tile.x * TileSize;
+			int offsety = Gdx.graphics.getHeight() / 2 - level.player.tile.y * TileSize;
 			
 			int x = (screenX - offsetx) / TileSize;
 			int y = (screenY - offsety) / TileSize;
@@ -668,13 +687,13 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	}
 	
 	//----------------------------------------------------------------------
-	public void addActorDamageAction(GameEntity entity)
+	public void addActorDamageAction(Entity entity)
 	{
-		int offsetx = Gdx.graphics.getWidth() / 2 - level.player.Tile.x * TileSize;
-		int offsety = Gdx.graphics.getHeight() / 2 - level.player.Tile.y * TileSize;
+		int offsetx = Gdx.graphics.getWidth() / 2 - level.player.tile.x * TileSize;
+		int offsety = Gdx.graphics.getHeight() / 2 - level.player.tile.y * TileSize;
 		
-		int x = entity.Tile.x;
-		int y = entity.Tile.y;
+		int x = entity.tile.x;
+		int y = entity.tile.y;
 		
 		int cx = x*TileSize + offsetx;
 		int cy = y*TileSize + offsety;
@@ -732,8 +751,8 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		if (tile != null && tile.environmentEntity != null)
 		{
 			entityWithinRange = 
-					Math.abs(level.player.Tile.x - tile.x) <= 1 &&
-					Math.abs(level.player.Tile.y - tile.y) <= 1;
+					Math.abs(level.player.tile.x - tile.x) <= 1 &&
+					Math.abs(level.player.tile.y - tile.y) <= 1;
 		}
 		
 		if (available.size > 0 || entityWithinRange)
@@ -758,7 +777,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 						public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 						{	
 							aa.activate(entity);
-							level.player.Tasks.add(new TaskWait());
+							level.player.tasks.add(new TaskWait());
 							contextMenu.remove();
 							contextMenu = null;
 
@@ -856,6 +875,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	
 	//----------------------------------------------------------------------
 	Array<GameEntity> toBeDrawn = new Array<GameEntity>();
+	Array<Entity> hpBars = new Array<Entity>();
 	
 	//----------------------------------------------------------------------
 	Sprite border;

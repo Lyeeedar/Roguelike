@@ -6,6 +6,7 @@ import java.util.HashMap;
 import exp4j.Helpers.EquationHelper;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Global.Statistics;
 import Roguelike.Global.Tier1Element;
@@ -15,13 +16,13 @@ public class DamageObject
 	public final HashMap<String, Integer> attackerVariableMap;
 	public final HashMap<String, Integer> defenderVariableMap;
 	
-	public final GameEntity attacker;
-	public final GameEntity defender;
+	public final Entity attacker;
+	public final Entity defender;
 	
 	public final EnumMap<Tier1Element, Integer> damageMap = Tier1Element.getElementBlock();
 	public final HashMap<String, Integer> damageVariableMap = new HashMap<String, Integer>();
 	
-	public DamageObject(GameEntity attacker, GameEntity defender, HashMap<String, Integer> additionalValues)
+	public DamageObject(Entity attacker, Entity defender, HashMap<String, Integer> additionalValues)
 	{
 		this.attacker = attacker;
 		this.defender = defender;
@@ -34,12 +35,6 @@ public class DamageObject
 			for (String key : additionalValues.keySet())
 			{
 				int val = additionalValues.get(key);
-				
-//				if (attackerVariableMap.containsKey(key))
-//				{
-//					val += attackerVariableMap.get(key);
-//				}
-				
 				attackerVariableMap.put(key, val);
 			}
 		}
@@ -114,5 +109,17 @@ public class DamageObject
 				exp.setVariable(defName, 0);
 			}
 		}
+	}
+
+	public int getTotalDamage()
+	{
+		int totalDam = 0;
+		
+		for (Tier1Element el : Tier1Element.values())
+		{
+			totalDam += damageMap.get(el);
+		}
+		
+		return totalDam;
 	}
 }

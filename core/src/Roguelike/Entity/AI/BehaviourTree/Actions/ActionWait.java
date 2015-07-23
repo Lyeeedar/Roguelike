@@ -11,7 +11,7 @@ public class ActionWait extends AbstractAction
 	@Override
 	public BehaviourTreeState evaluate(GameEntity entity)
 	{
-		entity.Tasks.add(new TaskWait());
+		entity.tasks.add(new TaskWait());
 		
 		State = BehaviourTreeState.SUCCEEDED;
 		return State;

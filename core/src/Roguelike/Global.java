@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Entity.Entity;
+import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
@@ -299,10 +301,32 @@ public class Global
 	}
 	
 	//----------------------------------------------------------------------
-	public static void calculateDamage(GameEntity attacker, GameEntity defender, HashMap<String, Integer> additionalAttack, boolean doEvents)
+	public static void calculateDamage(Entity attacker, Entity defender, HashMap<String, Integer> additionalAttack, boolean doEvents)
 	{
 		DamageObject damObj = new DamageObject(attacker, defender, additionalAttack);
+		runEquations(damObj);
+			
+		if (doEvents)
+		{
+			for (GameEventHandler handler : attacker.getAllHandlers())
+			{
+				handler.onDealDamage(damObj);
+			}
+			
+			for (GameEventHandler handler : defender.getAllHandlers())
+			{
+				handler.onReceiveDamage(damObj);
+			}
+		}
+				
+		printMessages(damObj);
 		
+		defender.applyDamage(damObj.getTotalDamage(), attacker);
+	}
+	
+	//----------------------------------------------------------------------
+	private static void runEquations(DamageObject damObj)
+	{
 		for (Tier1Element el : Tier1Element.values())
 		{
 			float attack = damObj.attackerVariableMap.get(el.Attack.toString().toLowerCase());
@@ -323,29 +347,17 @@ public class Global
 		}
 		
 		damObj.setDamageVariables();
-		
-		if (doEvents)
-		{
-			for (GameEventHandler handler : attacker.getAllHandlers())
-			{
-				handler.onDealDamage(damObj);
-			}
-			
-			for (GameEventHandler handler : defender.getAllHandlers())
-			{
-				handler.onReceiveDamage(damObj);
-			}
-		}
-				
-		int totalDamage = 0;
-		
+	}
+	
+	//----------------------------------------------------------------------
+	private static void printMessages(DamageObject damObj)
+	{		
 		Line line = new Line(new Message(" ("));
 		
 		boolean first = true;
 		for (Tier1Element el : Tier1Element.values())
 		{
 			int dam = damObj.damageMap.get(el);
-			totalDamage += dam;
 			
 			if (dam != 0)
 			{
@@ -363,13 +375,11 @@ public class Global
 		
 		line.messages.add(new Message(")"));
 		
-		line.messages.insert(0, new Message(attacker.Name + " hits " + defender.Name + " for " + totalDamage + " damage!"));
+		line.messages.insert(0, new Message(damObj.attacker.name + " hits " + damObj.defender.name + " for " + damObj.getTotalDamage() + " damage!"));
 		
-		if (totalDamage > 0)
+		if (damObj.getTotalDamage() > 0)
 		{
 			RoguelikeGame.Instance.addConsoleMessage(line);
 		}
-		
-		defender.applyDamage(totalDamage, attacker);
 	}
 }

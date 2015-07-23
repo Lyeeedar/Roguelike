@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import Roguelike.AssetManager;
 import Roguelike.Entity.Inventory;
 import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Global.Statistics;
 import Roguelike.Global.Tier1Element;
@@ -32,6 +33,9 @@ public class Item extends GameEventHandler
 		EARRING,
 		NECKLACE,
 		RING,
+		
+		// Other
+		LANTERN,
 		
 		// Weapons
 		MAINWEAPON,
@@ -61,6 +65,7 @@ public class Item extends GameEventHandler
 	public EquipmentSlot Slot;
 	public ItemType Type;
 	public int Count;
+	public Light light;
 	
 	//----------------------------------------------------------------------
 	public Table createTable(Skin skin, Inventory inventory)
@@ -185,6 +190,8 @@ public class Item extends GameEventHandler
 		{
 			super.parse(eventsElement);
 		}
+		
+		if (xmlElement.getChildByName("Light") != null) { light = Light.load(xmlElement.getChildByName("Light")); }
 		
 		Slot = xmlElement.get("Slot", null) != null ? EquipmentSlot.valueOf(xmlElement.get("Slot").toUpperCase()) : Slot;
 		Type = xmlElement.get("Type", null) != null ? ItemType.valueOf(xmlElement.get("Type").toUpperCase()) : Type;

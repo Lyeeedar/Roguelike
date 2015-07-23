@@ -4,6 +4,7 @@ import java.util.EnumMap;
 
 import Roguelike.Global.Statistics;
 import Roguelike.Global.Tier1Element;
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.GameEvent.Damage.AbstractOnDamageEvent;
@@ -20,7 +21,7 @@ public abstract class GameEventHandler implements IGameObject
 	protected Array<AbstractOnDamageEvent> onDealDamageEvents = new Array<AbstractOnDamageEvent>();
 	protected Array<AbstractOnDamageEvent> onReceiveDamageEvents = new Array<AbstractOnDamageEvent>();
 	
-	public int getStatistic(GameEntity entity, Statistics s)
+	public int getStatistic(Entity entity, Statistics s)
 	{
 		int val = 0;
 		
@@ -32,7 +33,7 @@ public abstract class GameEventHandler implements IGameObject
 		return val;
 	}
 	
-	public EnumMap<Statistics, Integer> getStatistics(GameEntity entity)
+	public EnumMap<Statistics, Integer> getStatistics(Entity entity)
 	{
 		EnumMap<Statistics, Integer> newMap = new EnumMap<Statistics, Integer>(Statistics.class);
 		
@@ -44,7 +45,7 @@ public abstract class GameEventHandler implements IGameObject
 		return newMap;
 	}
 		
-	public void onTurn(GameEntity entity, float cost)
+	public void onTurn(Entity entity, float cost)
 	{		
 		for (AbstractOnTurnEvent event : onTurnEvents)
 		{

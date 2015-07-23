@@ -20,13 +20,13 @@ public class TaskUseAbility extends AbstractTask
 		ability.cooldownAccumulator = ability.cooldown;
 		
 		ActiveAbility aa = ability.copy();		
-		aa.lockTarget(obj.Tile.Level.getGameTile(target));
+		aa.lockTarget(obj.tile.Level.getGameTile(target));
 		
 		boolean finished = aa.update();
 		
 		if (!finished)
 		{
-			obj.Tile.Level.addActiveAbility(aa);
+			obj.tile.Level.addActiveAbility(aa);
 		}
 		
 		return 1.5f;

@@ -1,0 +1,20 @@
+
+<Item>
+	<Name>Basic Lantern</Name>
+	<Description>A normal lantern</Description>
+	<Icon>
+		<Name>GUI/Lantern</Name>
+	</Icon>
+	<Slot>Lantern</Slot>
+	<Type>Misc</Type>
+	
+	<Light>
+		<Colour>
+			<Red>1</Red>
+			<Green>0.9</Green>
+		</Colour>
+		
+		<Intensity>4</Intensity>
+	</Light>
+	
+</Item>

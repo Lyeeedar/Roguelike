@@ -83,7 +83,7 @@ public class EffectTypeDamage extends AbstractEffectType
 			}
 			
 			Global.calculateDamage(aa.caster, tile.Entity, Statistics.statsBlockToVariableBlock(stats), true);			
-			tile.Entity.SpriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
+			tile.Entity.spriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
 		}
 		else
 		{

@@ -51,7 +51,7 @@ public class ImageUtils
 				
 				if (s.hasGameEntity())
 				{
-					Pixmap src = TextureToPixmap(s.getGameEntity().Sprite.getCurrentTexture());
+					Pixmap src = TextureToPixmap(s.getGameEntity().sprite.getCurrentTexture());
 					pixmap.drawPixmap(src, 
 							0, 0, src.getWidth(), src.getHeight(),
 							x*tileSize, y*tileSize, tileSize, tileSize);

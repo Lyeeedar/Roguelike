@@ -18,8 +18,8 @@ public class TargetingTypeDirection extends AbstractTargetingType
 	{
 		if (!tile.GetVisible()) { return false; }
 		
-		int x = tile.x - ab.caster.Tile.x;
-		int y = tile.y - ab.caster.Tile.y;
+		int x = tile.x - ab.caster.tile.x;
+		int y = tile.y - ab.caster.tile.y;
 		
 		if (x == 0 && y == 0) { return false; }
 		
