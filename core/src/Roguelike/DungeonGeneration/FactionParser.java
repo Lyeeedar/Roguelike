@@ -133,6 +133,11 @@ public class FactionParser
 	
 	public static FactionParser load(String faction)
 	{
+		if (!Gdx.files.internal("Entities/Enemies/"+faction+"/"+faction+".xml").exists())
+		{
+			return null;
+		}
+		
 		FactionParser fp = new FactionParser();
 		
 		fp.internalLoad(faction);

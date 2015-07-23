@@ -80,6 +80,8 @@
 	
 	<Required>
 		<PlayerSpawn>
+			<Faction>none</Faction>
+		
 			<Symbols>
 				<Symbol Extends=".">
 					<Char>S</Char>

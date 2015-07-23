@@ -64,7 +64,7 @@ public class ImageUtils
 		try
 		{
 			BufferedImage bi = pixmapToImage(pixmap);
-			File outputfile = new File(System.getProperty("user.home"), "Desktop/" + filename);
+			File outputfile = new File(filename);
 			ImageIO.write(bi, "png", outputfile);
 			
 		} 

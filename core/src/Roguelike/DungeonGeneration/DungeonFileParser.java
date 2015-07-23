@@ -40,11 +40,14 @@ public class DungeonFileParser
 		public HashMap<Character, Symbol> localSymbolMap = new HashMap<Character, Symbol>();
 		public HashMap<Character, Symbol> sharedSymbolMap;
 		public char[][] roomDef;
+		public String faction;
 		
 		public static DFPRoom parse(Element xml, HashMap<Character, Symbol> sharedSymbolMap)
 		{
 			DFPRoom room = new DFPRoom();
 			room.sharedSymbolMap = sharedSymbolMap;
+			
+			room.faction = xml.get("Faction", null);
 			
 			Element rowsElement = xml.getChildByName("Rows");
 			if (rowsElement.getChildCount() > 0)
@@ -116,6 +119,7 @@ public class DungeonFileParser
 			room.width = width;
 			room.height = height;
 			room.roomContents = new Symbol[width][height];
+			room.faction = faction;
 			
 			for (int x = 0; x < width; x++)
 			{

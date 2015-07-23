@@ -214,9 +214,22 @@ public class RecursiveDockGenerator
 		Array<Pair> sortedRooms = new Array<Pair>();
 		for (Room room : placedRooms)
 		{
-			int dist = Math.abs(room.x - largest.x) + Math.abs(room.y - largest.y);
-
-			sortedRooms.add(new Pair(dist, room));
+			if (room.faction == null)
+			{
+				int dist = Math.abs(room.x - largest.x) + Math.abs(room.y - largest.y);
+				sortedRooms.add(new Pair(dist, room));
+			}
+			else
+			{
+				int influence = ran.nextInt(80) + 10;
+				
+				FactionParser fp = FactionParser.load(room.faction);
+				
+				if (fp != null)
+				{
+					room.addFeatures(ran, dfp, fp, influence);
+				}	
+			}
 		}
 		sortedRooms.sort();
 
@@ -814,6 +827,9 @@ public class RecursiveDockGenerator
 
 		//----------------------------------------------------------------------
 		public Symbol[][] roomContents;
+		
+		//----------------------------------------------------------------------
+		public String faction;
 
 		//----------------------------------------------------------------------
 		public void rotate()
