@@ -48,7 +48,7 @@
 				<Type>Spawner</Type>
 				<Count>1</Count>
 				<Entity>Enemies/Fungi/Spore</Entity>
-				<Respawn>50</Respawn>
+				<Respawn>25</Respawn>
 			</EnvironmentData>
 		</Feature>
 		

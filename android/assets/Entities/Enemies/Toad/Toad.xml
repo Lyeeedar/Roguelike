@@ -1,0 +1,29 @@
+<Faction>
+	<Name>Toad</Name>
+	
+	<Features>
+	
+		<Feature>
+			<Name>Pool</Name>
+			<Placement>Centre</Placement>
+			<TileData>
+				<Passable>false</Passable>
+				<Opaque>false</Opaque>
+				<Sprite>
+					<Name>dc-dngn/water/dngn_shallow_water</Name>
+				</Sprite>
+			</TileData>
+			<Coverage>90</Coverage>
+		</Feature>
+		
+	</Features>
+	
+	<Encounters>
+		<Encounter>
+			<Mobs>
+				<GiantToad>3</GiantToad>
+			</Mobs>
+		</Encounter>
+	</Encounters>
+
+</Faction>

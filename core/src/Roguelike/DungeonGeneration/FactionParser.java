@@ -33,6 +33,11 @@ public class FactionParser
 	
 	public Encounter getEncounter(Random ran, int influence)
 	{
+		if (influence == 100)
+		{
+			return encounters.get(encounters.size-1);
+		}
+		
 		Array<Encounter> validEncounters = new Array<Encounter>();
 		int totalWeight = 0;
 		

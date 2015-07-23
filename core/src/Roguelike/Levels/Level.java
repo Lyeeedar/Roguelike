@@ -6,6 +6,7 @@ import java.util.Iterator;
 import Roguelike.Global.Statistics;
 import Roguelike.RoguelikeGame;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.Items.Item;
@@ -64,6 +65,8 @@ public class Level
 	
 	public GameTile getGameTile(int x, int y)
 	{
+		if (x < 0 || x >= width || y < 0 || y >= height) { return null; }
+		
 		return Grid[x][y];
 	}
 	
@@ -74,6 +77,8 @@ public class Level
 	
 	public SeenTile getSeenTile(int x, int y)
 	{
+		if (x < 0 || x >= width || y < 0 || y >= height) { return null; }
+		
 		return SeenGrid[x][y];
 	}
 	
@@ -331,6 +336,11 @@ public class Level
 			updateVisibleTiles();
 			
 			getAllEntitiesToBeProcessed(actionCost);
+			
+			for (EnvironmentEntity ee : getAllEnvironmentEntities())
+			{
+				ee.update(actionCost);
+			}
 			
 			// check if enemy visible			
 			if (enemyVisible())
@@ -629,6 +639,24 @@ public class Level
 				if (Grid[x][y].Entity != null)
 				{
 					list.add(Grid[x][y].Entity);
+				}
+			}
+		}
+		
+		return list;
+	}
+	
+	public Array<EnvironmentEntity> getAllEnvironmentEntities()
+	{
+		Array<EnvironmentEntity> list = new Array<EnvironmentEntity>();
+		
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				if (Grid[x][y].environmentEntity != null)
+				{
+					list.add(Grid[x][y].environmentEntity);
 				}
 			}
 		}

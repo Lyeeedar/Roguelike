@@ -1,6 +1,9 @@
 package Roguelike.Entity;
 
+import java.util.HashSet;
+
 import Roguelike.AssetManager;
+import Roguelike.Global.Direction;
 import Roguelike.RoguelikeGame;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator;
@@ -28,6 +31,16 @@ public class EnvironmentEntity
 	public boolean opaque;
 
 	public Array<ActivationAction> actions = new Array<ActivationAction>();
+	
+	public OnTurnAction onTurnAction;
+	
+	public void update(float delta)
+	{
+		if (onTurnAction != null)
+		{
+			onTurnAction.update(this, delta);
+		}
+	}
 	
 	private static EnvironmentEntity CreateTransition(final Element data)
 	{
@@ -158,7 +171,99 @@ public class EnvironmentEntity
 		
 		return entity;
 	}
+	
+	private static EnvironmentEntity CreateSpawner(Element xml)
+	{
+		EnvironmentEntity entity = new EnvironmentEntity();
+		entity.passable = xml.getBoolean("Passable", true);
+		entity.opaque = xml.getBoolean("Opaque", false);
+		entity.sprite = AssetManager.loadSprite(xml.getChildByName("Sprite"));
+		entity.light = xml.getChildByName("Light") != null ? Light.load(xml.getChildByName("Light")) : null;
 		
+		final int count = xml.getInt("Count", 1);
+		final String name = xml.get("Entity");
+		final int respawn = xml.getInt("Respawn", 50);
+		
+		entity.onTurnAction = new OnTurnAction()
+		{
+			String entityName = name;
+			float cooldown = respawn;
+			
+			GameEntity[] entities = new GameEntity[count];
+			float accumulator;
+			
+			@Override
+			public void update(EnvironmentEntity entity, float delta)
+			{
+				if (accumulator > 0)
+				{
+					accumulator -= delta;
+					
+					if (accumulator <= 0)
+					{
+						GameTile tile = entity.tile;
+						int x = tile.x;
+						int y = tile.y;
+						
+						GameTile spawnTile = null;
+						
+						for (Direction d : Direction.values())
+						{
+							int nx = x + d.GetX();
+							int ny = y + d.GetY();
+							
+							GameTile ntile = tile.Level.getGameTile(nx, ny);
+							
+							if (ntile != null && ntile.getPassable(new HashSet<String>()))
+							{
+								spawnTile = ntile;
+								break;
+							}
+						}
+						
+						if (spawnTile != null)
+						{							
+							GameEntity ge = GameEntity.load(entityName);
+							
+							for (int i = 0; i < entities.length; i++)
+							{
+								if (entities[i] == null)
+								{
+									entities[i] = ge;
+									break;
+								}
+							}
+							
+							spawnTile.addObject(ge);
+						}
+					}
+				}
+				else
+				{
+					boolean needsSpawn = false;
+					for (int i = 0; i < entities.length; i++)
+					{
+						GameEntity ge = entities[i];
+						
+						if (ge == null || ge.HP <= 0)
+						{
+							entities[i] = null;
+							needsSpawn = true;
+						}
+					}
+					
+					if (needsSpawn)
+					{
+						accumulator = cooldown;
+					}
+				}
+			}
+			
+		};
+		
+		return entity;
+	}
+	
 	private static EnvironmentEntity CreateBasic(Element xml)
 	{
 		EnvironmentEntity entity = new EnvironmentEntity();
@@ -181,6 +286,10 @@ public class EnvironmentEntity
 		{
 			return CreateTransition(xml);
 		}
+		else if (type.equalsIgnoreCase("Spawner"))
+		{
+			return CreateSpawner(xml);
+		}
 		else
 		{
 			return CreateBasic(xml);
@@ -198,5 +307,10 @@ public class EnvironmentEntity
 		}
 		
 		public abstract void activate(EnvironmentEntity entity);
+	}
+
+	public static abstract class OnTurnAction
+	{
+		public abstract void update(EnvironmentEntity entity, float delta);
 	}
 }
