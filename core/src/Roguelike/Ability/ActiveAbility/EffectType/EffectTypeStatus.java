@@ -21,14 +21,19 @@ public class EffectTypeStatus extends AbstractEffectType
 	@Override
 	public void update(ActiveAbility aa, float time, GameTile tile)
 	{		
-		if (tile.Entity != null)
+		if (tile.entity != null)
 		{
-			DamageObject ao = new DamageObject(aa.caster, tile.Entity, null);			
+			DamageObject ao = new DamageObject(aa.caster, tile.entity, null);			
+			statusEvent.handle(ao, aa);
+		}
+		
+		if (tile.environmentEntity != null)
+		{
+			DamageObject ao = new DamageObject(aa.caster, tile.environmentEntity, null);			
 			statusEvent.handle(ao, aa);
 		}
 	}
 
-	
 	@Override
 	public AbstractEffectType copy()
 	{

@@ -4,7 +4,9 @@ import Roguelike.Global.Direction;
 import Roguelike.RoguelikeGame;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Sprite.BumpAnimation;
+import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.SpriteAnimation;
+import Roguelike.Sprite.MoveAnimation.MoveEquation;
 import Roguelike.Tiles.GameTile;
 
 public class TaskMove extends AbstractTask
@@ -26,28 +28,31 @@ public class TaskMove extends AbstractTask
 		if (
 			newX < 0 ||
 			newY < 0 ||
-			newX >= oldTile.Level.width-1 ||
-			newY >= oldTile.Level.height-1
+			newX >= oldTile.level.width-1 ||
+			newY >= oldTile.level.height-1
 			)
 		{
 			return 0;
 		}
 		
-		GameTile newTile = oldTile.Level.getGameTile(newX, newY);		
+		GameTile newTile = oldTile.level.getGameTile(newX, newY);		
 		
-		if (newTile.Entity != null)
+		if (newTile.entity != null)
 		{
-			if (obj.isAllies(newTile.Entity))
+			if (obj.isAllies(newTile.entity))
 			{
-				if (obj.canSwap && obj.canMove && newTile.Entity.canMove)
+				if (obj.canSwap && obj.canMove && newTile.entity.canMove)
 				{
-					oldTile.addObject(newTile.Entity);
-					newTile.addObject(obj);
+					int[] diff1 = oldTile.addObject(newTile.entity);
+					int[] diff2 = newTile.addObject(obj);
+					
+					newTile.entity.sprite.SpriteAnimation = new MoveAnimation(0.05f, diff1, MoveEquation.SMOOTHSTEP);
+					obj.sprite.SpriteAnimation = new MoveAnimation(0.05f, diff2, MoveEquation.SMOOTHSTEP);
 				}
 			}
 			else
 			{
-				obj.attack(newTile.Entity, dir);				
+				obj.attack(newTile.entity, dir);				
 				obj.sprite.SpriteAnimation = new BumpAnimation(0.1f, dir, RoguelikeGame.TileSize);
 			}
 		}
@@ -58,7 +63,9 @@ public class TaskMove extends AbstractTask
 		}
 		else if (obj.canMove && newTile.getPassable(obj.factions))
 		{
-			newTile.addObject(obj);
+			int[] diff = newTile.addObject(obj);
+			
+			obj.sprite.SpriteAnimation = new MoveAnimation(0.05f, diff, MoveEquation.SMOOTHSTEP);
 		}
 		
 		return 1;

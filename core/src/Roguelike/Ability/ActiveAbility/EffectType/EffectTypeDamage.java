@@ -10,6 +10,7 @@ import Roguelike.Global.Direction;
 import Roguelike.Global.Statistics;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Entity.Entity;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.StatusEffect.StatusEffect;
@@ -45,52 +46,61 @@ public class EffectTypeDamage extends AbstractEffectType
 	{
 		Light l = aa.light != null ? aa.light.copy() : null;
 		
-		if (tile.Entity != null)
+		if (tile.entity != null)
 		{
-			HashMap<String, Integer> variableMap = aa.caster.getVariableMap();
-			
-			for (String name : reliesOn)
-			{
-				if (!variableMap.containsKey(name.toLowerCase()))
-				{
-					variableMap.put(name.toLowerCase(), 0);
-				}
-			}
-			
-			EnumMap<Statistics, Integer> stats = Statistics.getStatisticsBlock();
-			
-			for (Statistics stat : Statistics.values())
-			{
-				if (equations.containsKey(stat))
-				{
-					String eqn = equations.get(stat);
-					
-					ExpressionBuilder expB = EquationHelper.createEquationBuilder(eqn);
-					EquationHelper.setVariableNames(expB, variableMap, "");
-										
-					Expression exp = EquationHelper.tryBuild(expB);
-					if (exp == null)
-					{
-						continue;
-					}
-					
-					EquationHelper.setVariableValues(exp, variableMap, "");
-										
-					int raw = (int)exp.evaluate();
-					
-					stats.put(stat, raw);
-				}
-			}
-			
-			Global.calculateDamage(aa.caster, tile.Entity, Statistics.statsBlockToVariableBlock(stats), true);			
-			tile.Entity.spriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
+			applyToEntity(tile.entity, aa, l);
 		}
-		else
+		
+		if (tile.environmentEntity != null)
 		{
-			tile.SpriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
+			applyToEntity(tile.environmentEntity, aa, l);
+		}
+		
+		{
+			tile.spriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
 		}
 	}
 
+	private void applyToEntity(Entity target, ActiveAbility aa, Light l)
+	{
+		HashMap<String, Integer> variableMap = aa.caster.getVariableMap();
+		
+		for (String name : reliesOn)
+		{
+			if (!variableMap.containsKey(name.toLowerCase()))
+			{
+				variableMap.put(name.toLowerCase(), 0);
+			}
+		}
+		
+		EnumMap<Statistics, Integer> stats = Statistics.getStatisticsBlock();
+		
+		for (Statistics stat : Statistics.values())
+		{
+			if (equations.containsKey(stat))
+			{
+				String eqn = equations.get(stat);
+				
+				ExpressionBuilder expB = EquationHelper.createEquationBuilder(eqn);
+				EquationHelper.setVariableNames(expB, variableMap, "");
+									
+				Expression exp = EquationHelper.tryBuild(expB);
+				if (exp == null)
+				{
+					continue;
+				}
+				
+				EquationHelper.setVariableValues(exp, variableMap, "");
+									
+				int raw = (int)exp.evaluate();
+				
+				stats.put(stat, raw);
+			}
+		}
+		
+		Global.calculateDamage(aa.caster, target, Statistics.statsBlockToVariableBlock(stats), true);			
+		target.spriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
+	}
 	
 	@Override
 	public AbstractEffectType copy()

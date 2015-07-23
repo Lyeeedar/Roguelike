@@ -18,11 +18,11 @@ public class TargetingTypeTile extends AbstractTargetingType
 	@Override
 	public boolean isTargetValid(ActiveAbility ab, GameTile tile)
 	{
-		if (!tile.GetVisible() || !tile.TileData.Passable) { return false; }
+		if (!tile.GetVisible() || !tile.tileData.Passable) { return false; }
 		
 		if (notSelf)
 		{
-			return tile.Entity == null || tile.Entity != ab.caster;
+			return tile.entity == null || tile.entity != ab.caster;
 		}
 		else
 		{

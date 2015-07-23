@@ -21,18 +21,18 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	public int x;
 	public int y;
 	
-	public TileData TileData;
+	public TileData tileData;
 	
-	public Color Light;
+	public Color light;
 	
-	public GameEntity Entity;
+	public GameEntity entity;
 	public EnvironmentEntity environmentEntity;
 		
-	public Level Level;
+	public Level level;
 	
-	public Array<SpriteEffect> SpriteEffects = new Array<SpriteEffect>();
+	public Array<SpriteEffect> spriteEffects = new Array<SpriteEffect>();
 	
-	public Array<Item> Items = new Array<Item>(false, 16);
+	public Array<Item> items = new Array<Item>(false, 16);
 	
 	public String metaValue;
 		
@@ -42,11 +42,11 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	{
 		this.x = x;
 		this.y = y;
-		this.Level = level;
+		this.level = level;
 		
-		this.TileData = tileData;
+		this.tileData = tileData;
 		
-		Light = new Color(Color.WHITE);
+		light = new Color(Color.WHITE);
 	}
 	
 	public void addEnvironmentEntity(EnvironmentEntity entity)
@@ -60,18 +60,18 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 		entity.tile = this;
 	}
 	
-	public void addObject(GameEntity obj)
+	public int[] addObject(GameEntity obj)
 	{
 		int[] oldPos = null;
 		
 		if (obj.tile != null)
 		{
-			obj.tile.Entity = null;
+			obj.tile.entity = null;
 			
 			oldPos = new int[]{obj.tile.x * RoguelikeGame.TileSize, obj.tile.y * RoguelikeGame.TileSize};
 		}
 		
-		Entity = obj;
+		entity = obj;
 		obj.tile = this;
 		
 		if (oldPos != null)
@@ -80,8 +80,10 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 			
 			int[] diff = {oldPos[0] - newPos[0], oldPos[1] - newPos[1]};
 			
-			obj.sprite.SpriteAnimation = new MoveAnimation(0.05f, diff);
+			return diff;
 		}
+		
+		return new int[]{0, 0};
 	}
 	
 	@Override
@@ -92,7 +94,7 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 			 return true;
 		}
 		
-		return TileData.Opaque;
+		return tileData.Opaque;
 	}
 
 	@Override
@@ -111,9 +113,9 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	public boolean getPassable(HashSet<String> factions)
 	{
 		if (environmentEntity != null && !environmentEntity.passable) { return false; }
-		if (!TileData.Passable) { return false; }
+		if (!tileData.Passable) { return false; }
 		
-		return Entity != null ? !Entity.isAllies(factions) : true ;
+		return entity != null ? !entity.isAllies(factions) : true ;
 	}
 
 	

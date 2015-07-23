@@ -26,13 +26,13 @@ public class ActionGetAllVisible extends AbstractAction
 	{
 		Array<int[]> output = new Array<int[]>();
 		
-		ShadowCaster shadower = new ShadowCaster(entity.tile.Level.getGrid(), entity.getStatistic(Statistics.RANGE));
+		ShadowCaster shadower = new ShadowCaster(entity.tile.level.getGrid(), entity.getStatistic(Statistics.RANGE));
 		shadower.ComputeFOV(entity.tile.x, entity.tile.y, output);
 		
 		Array<GameTile> visibleTiles = new Array<GameTile>();
 		for (int[] tile : output)
 		{
-			visibleTiles.add(entity.tile.Level.getGameTile(tile));
+			visibleTiles.add(entity.tile.level.getGameTile(tile));
 		}
 		
 		if (Type == FindType.TILES)
@@ -46,7 +46,7 @@ public class ActionGetAllVisible extends AbstractAction
 			
 			for (GameTile tile : visibleTiles)
 			{
-				GameEntity e = tile.Entity;
+				GameEntity e = tile.entity;
 				
 				if (e == null)
 				{

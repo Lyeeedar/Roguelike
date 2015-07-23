@@ -134,12 +134,12 @@ public class ActiveAbility implements IAbility, IGameObject
 		Array<int[]> validTargets = new Array<int[]>();
 		
 		Array<int[]> output = new Array<int[]>();
-		ShadowCaster shadow = new ShadowCaster(caster.tile.Level.getGrid(), range);
+		ShadowCaster shadow = new ShadowCaster(caster.tile.level.getGrid(), range);
 		shadow.ComputeFOV(caster.tile.x, caster.tile.y, output);
 		
 		for (int[] tilePos : output)
 		{
-			GameTile tile = caster.tile.Level.getGameTile(tilePos);
+			GameTile tile = caster.tile.level.getGameTile(tilePos);
 			
 			if (targetingType.isTargetValid(this, tile))
 			{
@@ -180,15 +180,15 @@ public class ActiveAbility implements IAbility, IGameObject
 				
 				Array<int[]> output = new Array<int[]>();
 				
-				ShadowCaster shadow = new ShadowCaster(epicenter.Level.getGrid(), aoe);
+				ShadowCaster shadow = new ShadowCaster(epicenter.level.getGrid(), aoe);
 				shadow.ComputeFOV(epicenter.x, epicenter.y, output);
 				
 				AffectedTiles.clear();
 				for (int[] tilePos : output)
 				{
-					GameTile tile = epicenter.Level.getGameTile(tilePos);
+					GameTile tile = epicenter.level.getGameTile(tilePos);
 					
-					if (tile.TileData.Passable)
+					if (tile.tileData.Passable)
 					{
 						AffectedTiles.add(tile);
 					}
@@ -280,7 +280,6 @@ public class ActiveAbility implements IAbility, IGameObject
 		
 		return ab;
 	}
-
 	
 	@Override
 	public String getName()

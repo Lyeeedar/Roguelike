@@ -15,7 +15,7 @@ public class TargetingTypeSelf extends AbstractTargetingType
 	@Override
 	public boolean isTargetValid(ActiveAbility ab, GameTile tile)
 	{
-		return tile.Entity == ab.caster;
+		return tile.entity == ab.caster;
 	}
 
 	

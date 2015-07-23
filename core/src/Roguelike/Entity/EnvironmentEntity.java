@@ -140,8 +140,8 @@ public class EnvironmentEntity extends Entity
 					connectedLevel = generator.getLevel();
 				}
 				
-				exit.tile.addObject(entity.tile.Level.player);
-				connectedLevel.player = entity.tile.Level.player;
+				exit.tile.addObject(entity.tile.level.player);
+				connectedLevel.player = entity.tile.level.player;
 				
 				connectedLevel.updateVisibleTiles();
 				
@@ -157,10 +157,10 @@ public class EnvironmentEntity extends Entity
 			
 			public void activate(EnvironmentEntity entity)
 			{
-				Level connectedLevel = entranceEntity.tile.Level;
+				Level connectedLevel = entranceEntity.tile.level;
 				
-				exit.tile.addObject(entity.tile.Level.player);
-				connectedLevel.player = entity.tile.Level.player;
+				exit.tile.addObject(entity.tile.level.player);
+				connectedLevel.player = entity.tile.level.player;
 				
 				connectedLevel.updateVisibleTiles();
 				
@@ -195,7 +195,7 @@ public class EnvironmentEntity extends Entity
 		{
 			public void activate(EnvironmentEntity entity)
 			{
-				if (entity.tile.Entity != null)
+				if (entity.tile.entity != null)
 				{
 					return;
 				}
@@ -261,9 +261,9 @@ public class EnvironmentEntity extends Entity
 							int nx = x + d.GetX();
 							int ny = y + d.GetY();
 							
-							GameTile ntile = tile.Level.getGameTile(nx, ny);
+							GameTile ntile = tile.level.getGameTile(nx, ny);
 							
-							if (ntile != null && ntile.getPassable(new HashSet<String>()))
+							if (ntile != null && ntile.getPassable(null))
 							{
 								spawnTile = ntile;
 								break;

@@ -40,5 +40,6 @@ public abstract class AbstractEffectType
 		ClassMap.put("DAMAGE", EffectTypeDamage.class);
 		ClassMap.put("HEAL", EffectTypeHeal.class);
 		ClassMap.put("STATUS", EffectTypeStatus.class);
+		ClassMap.put("TELEPORT", EffectTypeTeleport.class);
 	}
 }

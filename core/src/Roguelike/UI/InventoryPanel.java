@@ -159,7 +159,7 @@ public class InventoryPanel extends Widget
 			}
 		}
 				
-		itr = entity.tile.Items.iterator();
+		itr = entity.tile.items.iterator();
 		y = NumTilesHeight;
 		for (x = 0; x < NumTilesWidth; x++)
 		{
@@ -216,9 +216,9 @@ public class InventoryPanel extends Widget
 			
 			if (tileY == NumTilesHeight-1)
 			{
-				if (tileX < entity.tile.Items.size)
+				if (tileX < entity.tile.items.size)
 				{
-					Table t = entity.tile.Items.get(tileX).createTable(skin, entity.getInventory());
+					Table t = entity.tile.items.get(tileX).createTable(skin, entity.getInventory());
 					
 					tooltip = new Tooltip(t, skin, stage);
 					tooltip.show(event, x, y);
@@ -284,11 +284,11 @@ public class InventoryPanel extends Widget
 			
 			if (tileY == NumTilesHeight-1)
 			{
-				if (tileX < entity.tile.Items.size)
+				if (tileX < entity.tile.items.size)
 				{
-					Item i = entity.tile.Items.get(tileX);
+					Item i = entity.tile.items.get(tileX);
 					entity.getInventory().addItem(i);
-					entity.tile.Items.removeValue(i, true);
+					entity.tile.items.removeValue(i, true);
 				}				
 			}
 			else if (tileY == 0)
@@ -330,7 +330,7 @@ public class InventoryPanel extends Widget
 						}
 						
 						entity.getInventory().removeItem(item);
-						entity.tile.Items.add(item);
+						entity.tile.items.add(item);
 					}
 					
 					for (int i = 0; i < 3; i++)

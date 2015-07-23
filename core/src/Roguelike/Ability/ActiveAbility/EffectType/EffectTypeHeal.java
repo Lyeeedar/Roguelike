@@ -5,6 +5,7 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Entity.Entity;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -26,8 +27,19 @@ public class EffectTypeHeal extends AbstractEffectType
 	@Override
 	public void update(ActiveAbility aa, float time, GameTile tile)
 	{
-		if (tile.Entity == null) { return; }
+		if (tile.entity != null)
+		{
+			applyToEntity(tile.entity, aa);
+		}
 		
+		if (tile.environmentEntity != null)
+		{
+			applyToEntity(tile.environmentEntity, aa);
+		}
+	}
+
+	private void applyToEntity(Entity e, ActiveAbility aa)
+	{
 		HashMap<String, Integer> variableMap = aa.caster.getVariableMap();
 		
 		for (String name : reliesOn)
@@ -51,9 +63,8 @@ public class EffectTypeHeal extends AbstractEffectType
 							
 		int raw = (int)exp.evaluate();
 		
-		tile.Entity.applyHealing(raw);
+		e.applyHealing(raw);
 	}
-
 	
 	@Override
 	public AbstractEffectType copy()

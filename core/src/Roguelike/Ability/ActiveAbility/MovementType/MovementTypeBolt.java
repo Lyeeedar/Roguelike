@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class MovementTypeBolt extends AbstractMovementType
 {
-	private float accumulator;
+	private float accumulator = 1;
 	private int speed;
 
 	@Override
@@ -27,7 +27,7 @@ public class MovementTypeBolt extends AbstractMovementType
 	@Override
 	public void init(ActiveAbility ab, int endx, int endy)
 	{
-		int[][] fullpath = BresenhamLine.line(ab.caster.tile.x, ab.caster.tile.y, endx, endy, ab.caster.tile.Level.getGrid(), false, true, new HashSet<String>());
+		int[][] fullpath = BresenhamLine.line(ab.caster.tile.x, ab.caster.tile.y, endx, endy, ab.caster.tile.level.getGrid(), false, true, new HashSet<String>());
 		
 		Array<int[]> actualpath = new Array<int[]>(fullpath.length);
 		for (int i = 1; i < ab.range+1 && i < fullpath.length; i++)
@@ -37,13 +37,13 @@ public class MovementTypeBolt extends AbstractMovementType
 		path = actualpath.toArray(int[].class);
 		
 		ab.AffectedTiles.clear();
-		ab.AffectedTiles.add(ab.caster.tile.Level.getGameTile(path[0]));
+		ab.AffectedTiles.add(ab.caster.tile.level.getGameTile(path[0]));
 	}
 	
 	@Override
 	public boolean update(ActiveAbility ab)
 	{	
-		if (ab.AffectedTiles.peek().Entity != null)
+		if (ab.AffectedTiles.peek().entity != null)
 		{
 			i = path.length;
 			return true;
@@ -54,10 +54,10 @@ public class MovementTypeBolt extends AbstractMovementType
 		{
 			if (i < path.length-1)
 			{
-				GameTile nextTile = ab.AffectedTiles.peek().Level.getGameTile(path[i+1]);				
+				GameTile nextTile = ab.AffectedTiles.peek().level.getGameTile(path[i+1]);				
 				direction = Direction.getDirection(ab.AffectedTiles.peek(), nextTile);								
 								
-				if (!nextTile.TileData.Passable)
+				if (!nextTile.tileData.Passable)
 				{
 					i = path.length;
 					return true;
@@ -66,7 +66,7 @@ public class MovementTypeBolt extends AbstractMovementType
 				ab.AffectedTiles.clear();
 				ab.AffectedTiles.add(nextTile);
 				
-				if (nextTile.Entity != null)
+				if (nextTile.entity != null)
 				{
 					i = path.length;
 					return true;

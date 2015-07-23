@@ -98,9 +98,9 @@ public class Level
 					
 					s.History.clear();
 					
-					for (Sprite sprite : Grid[x][y].TileData.sprites)
+					for (Sprite sprite : Grid[x][y].tileData.sprites)
 					{
-						s.History.add(new SeenHistoryItem(sprite, Grid[x][y].TileData.Description));
+						s.History.add(new SeenHistoryItem(sprite, Grid[x][y].tileData.Description));
 					}
 				}
 			}
@@ -122,9 +122,9 @@ public class Level
 					
 					s.History.clear();
 					
-					for (Sprite sprite : tile.TileData.sprites)
+					for (Sprite sprite : tile.tileData.sprites)
 					{
-						s.History.add(new SeenHistoryItem(sprite, tile.TileData.Description));
+						s.History.add(new SeenHistoryItem(sprite, tile.tileData.Description));
 					}
 					
 					if (tile.environmentEntity != null)
@@ -132,12 +132,12 @@ public class Level
 						s.History.add(new SeenHistoryItem(tile.environmentEntity.sprite, ""));
 					}
 										
-					if (tile.Entity != null)
+					if (tile.entity != null)
 					{						
-						s.History.add(new SeenHistoryItem(tile.Entity.sprite, "A " + tile.Entity.name));
+						s.History.add(new SeenHistoryItem(tile.entity.sprite, "A " + tile.entity.name));
 					}
 					
-					for (Item i : tile.Items)
+					for (Item i : tile.items)
 					{
 						s.History.add(new SeenHistoryItem(i.Icon, "A " + i.Name));
 					}
@@ -156,7 +156,7 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{	
-				Grid[x][y].Light = new Color(acol);
+				Grid[x][y].light = new Color(acol);
 			}
 		}
 		
@@ -188,7 +188,7 @@ public class Level
 			lcol.mul(lcol.a);
 			lcol.a = 1;
 			
-			tile.Light.add(lcol);
+			tile.light.add(lcol);
 		}
 	}
 	
@@ -260,7 +260,7 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{
-				Iterator<SpriteEffect> itr = Grid[x][y].SpriteEffects.iterator();
+				Iterator<SpriteEffect> itr = Grid[x][y].spriteEffects.iterator();
 				while (itr.hasNext())
 				{
 					SpriteEffect e = itr.next();
@@ -269,9 +269,9 @@ public class Level
 					if (finished) { itr.remove(); }
 				}
 				
-				if (Grid[x][y].Entity != null)
+				if (Grid[x][y].entity != null)
 				{
-					itr = Grid[x][y].Entity.spriteEffects.iterator();
+					itr = Grid[x][y].entity.spriteEffects.iterator();
 					while (itr.hasNext())
 					{
 						SpriteEffect e = itr.next();
@@ -477,9 +477,9 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{				
-				if (Grid[x][y].GetVisible() && Grid[x][y].Entity != null)
+				if (Grid[x][y].GetVisible() && Grid[x][y].entity != null)
 				{					
-					if (!Grid[x][y].Entity.isAllies(player))
+					if (!Grid[x][y].entity.isAllies(player))
 					{
 						enemy = true;
 						break;
@@ -502,7 +502,7 @@ public class Level
 			{			
 				if (!Grid[x][y].GetVisible()) { continue; }
 				
-				if (Grid[x][y].SpriteEffects.size > 0)
+				if (Grid[x][y].spriteEffects.size > 0)
 				{
 					activeEffects = true;
 					break;
@@ -510,7 +510,7 @@ public class Level
 				}
 				
 				{
-					Entity e = Grid[x][y].Entity;
+					Entity e = Grid[x][y].entity;
 					if (e != null)
 					{									
 						boolean active = hasActiveEffects(e);
@@ -566,7 +566,7 @@ public class Level
 			for (int y = 0; y < height; y++)
 			{
 				boolean visible = Grid[x][y].GetVisible();
-				GameEntity e = Grid[x][y].Entity;
+				GameEntity e = Grid[x][y].entity;
 				if (e != null && e != player)
 				{
 					e.update(cost);
@@ -599,7 +599,7 @@ public class Level
 			for (int y = 0; y < height; y++)
 			{
 				{
-					GameEntity e = Grid[x][y].Entity;
+					GameEntity e = Grid[x][y].entity;
 					if (e != null)
 					{
 						if (e.damageAccumulator > 0 && Grid[x][y].GetVisible())
@@ -609,13 +609,13 @@ public class Level
 						
 						if (e != player && e.HP <= 0 && !hasActiveEffects(e))
 						{
-							e.tile.Entity = null;
+							e.tile.entity = null;
 							
 							RoguelikeGame.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " dies!")));
 							
 							for (Item i : e.getInventory().m_items)
 							{
-								Grid[x][y].Items.add(i);
+								Grid[x][y].items.add(i);
 							}
 						}
 					}
@@ -650,7 +650,7 @@ public class Level
 			{
 				GameTile tile = Grid[x][y];
 				
-				for (Sprite sprite : tile.TileData.sprites)
+				for (Sprite sprite : tile.tileData.sprites)
 				{
 					sprites.add(sprite);
 				}
@@ -660,12 +660,12 @@ public class Level
 					sprites.add(tile.environmentEntity.sprite);
 				}
 				
-				if (tile.Entity != null)
+				if (tile.entity != null)
 				{
-					sprites.add(tile.Entity.sprite);
+					sprites.add(tile.entity.sprite);
 				}
 				
-				for (Item i : tile.Items)
+				for (Item i : tile.items)
 				{
 					sprites.add(i.Icon);
 				}
@@ -688,9 +688,9 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{
-				if (Grid[x][y].Entity != null)
+				if (Grid[x][y].entity != null)
 				{
-					list.add(Grid[x][y].Entity);
+					list.add(Grid[x][y].entity);
 				}
 			}
 		}
@@ -726,9 +726,9 @@ public class Level
 			{
 				GameTile tile = Grid[x][y];
 				
-				if (tile.TileData.light != null)
+				if (tile.tileData.light != null)
 				{
-					Light l = tile.TileData.light.copy();
+					Light l = tile.tileData.light.copy();
 					l.lx = x;
 					l.ly = y;
 					list.add(l);
@@ -741,7 +741,7 @@ public class Level
 					list.add(tile.environmentEntity.light);
 				}
 				
-				for (SpriteEffect se : tile.SpriteEffects)
+				for (SpriteEffect se : tile.spriteEffects)
 				{
 					if (se.light != null)
 					{
@@ -751,9 +751,9 @@ public class Level
 					}
 				}
 				
-				if (tile.Entity != null)
+				if (tile.entity != null)
 				{
-					Array<Light> lights = tile.Entity.getLight();
+					Array<Light> lights = tile.entity.getLight();
 					for (Light l : lights)
 					{
 						l.lx = x;
@@ -761,7 +761,7 @@ public class Level
 						list.add(l);
 					}
 					
-					for (SpriteEffect se : tile.Entity.spriteEffects)
+					for (SpriteEffect se : tile.entity.spriteEffects)
 					{
 						if (se.light != null)
 						{

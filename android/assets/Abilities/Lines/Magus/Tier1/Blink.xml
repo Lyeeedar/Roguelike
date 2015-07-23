@@ -1,0 +1,30 @@
+<ActiveAbility>
+
+	<Name>Blink</Name>
+	<Description>Teleport to the indicated position.</Description>
+	
+	<Cooldown>7</Cooldown>
+	<Range>8</Range>
+	
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Type>
+		<Helpful>
+		</Helpful>
+	</Type>
+	
+	<Targeting>
+		<Tile></<Tile>>
+	</Targeting>
+	
+	<Movement>
+		<Smite></Smite>
+	</Movement>
+	
+	<Effect>
+		<Teleport></Teleport>
+	</Effect>
+	
+</ActiveAbility>

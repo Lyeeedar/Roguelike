@@ -16,7 +16,7 @@ public class MovementTypeSmite extends AbstractMovementType
 	public void init(ActiveAbility ab, int endx, int endy)
 	{
 		ab.AffectedTiles.clear();
-		ab.AffectedTiles.add(ab.caster.tile.Level.getGameTile(endx, endy));
+		ab.AffectedTiles.add(ab.caster.tile.level.getGameTile(endx, endy));
 	}
 
 	@Override

@@ -71,6 +71,9 @@ public class Global
 
 		public static Direction getDirection(int x, int y)
 		{
+			x = MathUtils.clamp(x, -1, 1);
+			y = MathUtils.clamp(y, -1, 1);
+			
 			Direction d = Direction.CENTER;
 
 			for (Direction dir : Direction.values())

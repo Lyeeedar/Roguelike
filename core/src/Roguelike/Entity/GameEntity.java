@@ -76,7 +76,7 @@ public class GameEntity extends Entity
 				boolean gtz = a.cooldownAccumulator > 0;
 				a.cooldownAccumulator -= cost;
 
-				if (gtz && a.cooldownAccumulator <= 0 && tile.Level.player == this)
+				if (gtz && a.cooldownAccumulator <= 0 && tile.level.player == this)
 				{
 					RoguelikeGame.Instance.addAbilityAvailabilityAction(a.Icon);
 				}
@@ -147,6 +147,8 @@ public class GameEntity extends Entity
 	// ----------------------------------------------------------------------
 	public boolean isAllies(HashSet<String> other)
 	{
+		if (other == null) { return false; }
+		
 		for (String faction : factions)
 		{
 			if (other.contains(faction)) { return true; }

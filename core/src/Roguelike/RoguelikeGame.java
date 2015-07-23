@@ -255,9 +255,9 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 				
 				if (gtile.GetVisible())
 				{
-					batch.setColor(gtile.Light);	
+					batch.setColor(gtile.light);	
 					
-					for (Sprite s : gtile.TileData.sprites)
+					for (Sprite s : gtile.tileData.sprites)
 					{
 						s.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
 					}
@@ -272,19 +272,19 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 						}
 					}
 					
-					for (Item i : gtile.Items)
+					for (Item i : gtile.items)
 					{
 						i.Icon.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
 					}
 					
-					GameEntity entity = gtile.Entity;
+					GameEntity entity = gtile.entity;
 					
 					if (entity != null)
 					{
 						toBeDrawn.add(entity);
 					}
 					
-					for (SpriteEffect e : gtile.SpriteEffects)
+					for (SpriteEffect e : gtile.spriteEffects)
 					{
 						if (e.Corner == Direction.CENTER)
 						{
@@ -325,7 +325,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			}
 			else
 			{
-				if (level.getGameTile(mousex, mousey).TileData.Passable)
+				if (level.getGameTile(mousex, mousey).tileData.Passable)
 				{
 					batch.setColor(Color.GREEN);
 				}
@@ -355,7 +355,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 				cy += offset[1];
 			}
 			
-			batch.setColor(entity.tile.Light);
+			batch.setColor(entity.tile.light);
 			
 			entity.sprite.render(batch, cx, cy, TileSize, TileSize);
 			
@@ -620,9 +620,9 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			{
 				GameTile tile = level.getGameTile(x, y);
 				
-				if (tile.Entity != null)
+				if (tile.entity != null)
 				{
-					Table table = EntityStatusRenderer.getMouseOverTable(tile.Entity, x*TileSize+offsetx, y*TileSize+offsety, TileSize, TileSize, 1.0f/8.0f, screenX, screenY, skin);
+					Table table = EntityStatusRenderer.getMouseOverTable(tile.entity, x*TileSize+offsetx, y*TileSize+offsety, TileSize, TileSize, 1.0f/8.0f, screenX, screenY, skin);
 					
 					if (table != null)
 					{
