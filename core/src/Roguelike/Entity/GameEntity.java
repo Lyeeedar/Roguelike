@@ -51,16 +51,7 @@ public class GameEntity extends Entity
 	//----------------------------------------------------------------------
 	public void attack(Entity other, Direction dir)
 	{
-		Item weapon = getInventory().getEquip(EquipmentSlot.MAINWEAPON);
-		Sprite hitEffect = weapon != null ? weapon.HitEffect : defaultHitEffect;
-
 		Global.calculateDamage(this, other, null, true);
-
-		// add hit effects
-		SpriteEffect e = new SpriteEffect(hitEffect, dir, null);
-		e.Sprite.rotation = dir.GetAngle();
-
-		other.spriteEffects.add(e);
 	}
 
 	//----------------------------------------------------------------------
@@ -408,7 +399,7 @@ public class GameEntity extends Entity
 	private Inventory inventory = new Inventory();
 
 	//----------------------------------------------------------------------
-	private Sprite defaultHitEffect = AssetManager.loadSprite("strike/strike", 0.1f);
+	public Sprite defaultHitEffect = AssetManager.loadSprite("strike/strike", 0.1f);
 
 	//----------------------------------------------------------------------
 	public Array<AbstractTask> tasks = new Array<AbstractTask>();

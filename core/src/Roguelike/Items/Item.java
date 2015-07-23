@@ -22,6 +22,15 @@ import Roguelike.Global.Tier1Element;
 
 public class Item extends GameEventHandler
 {
+	public enum WeaponType
+	{
+		NONE,
+		SWORD,
+		SPEAR,
+		AXE,
+		BOW
+	}
+	
 	public enum EquipmentSlot
 	{
 		// Armour
@@ -62,6 +71,7 @@ public class Item extends GameEventHandler
 	public String Description;
 	public Sprite Icon;
 	public Sprite HitEffect;
+	public WeaponType weaponType = WeaponType.NONE;
 	public EquipmentSlot Slot;
 	public ItemType Type;
 	public int Count;
@@ -195,21 +205,25 @@ public class Item extends GameEventHandler
 		
 		Slot = xmlElement.get("Slot", null) != null ? EquipmentSlot.valueOf(xmlElement.get("Slot").toUpperCase()) : Slot;
 		Type = xmlElement.get("Type", null) != null ? ItemType.valueOf(xmlElement.get("Type").toUpperCase()) : Type;
+		
+		weaponType = xmlElement.get("WeaponType", null) != null ? WeaponType.valueOf(xmlElement.get("WeaponType").toUpperCase()) : weaponType;
 	}
-
 	
+	//----------------------------------------------------------------------
 	@Override
 	public String getName()
 	{
 		return Name;
 	}
 
+	//----------------------------------------------------------------------
 	@Override
 	public String getDescription()
 	{
 		return Description;
 	}
 
+	//----------------------------------------------------------------------
 	@Override
 	public Sprite getIcon()
 	{

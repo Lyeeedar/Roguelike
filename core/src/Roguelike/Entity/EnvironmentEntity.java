@@ -1,6 +1,5 @@
 package Roguelike.Entity;
 
-import java.util.HashSet;
 import java.util.Iterator;
 
 import Roguelike.AssetManager;
@@ -263,7 +262,7 @@ public class EnvironmentEntity extends Entity
 							
 							GameTile ntile = tile.level.getGameTile(nx, ny);
 							
-							if (ntile != null && ntile.getPassable(null))
+							if (ntile != null && ntile.getPassable(null) && ntile.entity == null)
 							{
 								spawnTile = ntile;
 								break;

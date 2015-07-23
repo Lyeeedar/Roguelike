@@ -18,6 +18,7 @@
 	</HitEffect>
 	<Slot>MainWeapon</Slot>
 	<Type>Weapon</Type>
+	<WeaponType>Sword</WeaponType>
 
 	<Events>
 		<Constant>

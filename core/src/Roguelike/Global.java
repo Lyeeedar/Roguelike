@@ -42,8 +42,41 @@ public class Global
 		private final int x;
 		private final int y;
 		private final float angle;
+		
+		private Direction clockwise;
+		private Direction anticlockwise;
+		
+		static
+		{
+			Direction.CENTER.clockwise = Direction.CENTER;
+			Direction.CENTER.anticlockwise = Direction.CENTER;
+			
+			Direction.NORTH.anticlockwise = Direction.NORTHWEST;
+			Direction.NORTH.clockwise = Direction.NORTHEAST;
+			
+			Direction.NORTHEAST.anticlockwise = Direction.NORTH;
+			Direction.NORTHEAST.clockwise = Direction.EAST;
+			
+			Direction.EAST.anticlockwise = Direction.NORTHEAST;
+			Direction.EAST.clockwise = Direction.SOUTHEAST;
+			
+			Direction.SOUTHEAST.anticlockwise = Direction.EAST;
+			Direction.SOUTHEAST.clockwise = Direction.SOUTH;
+			
+			Direction.SOUTH.anticlockwise = Direction.SOUTHEAST;
+			Direction.SOUTH.clockwise = Direction.SOUTHWEST;
+			
+			Direction.SOUTHWEST.anticlockwise = Direction.SOUTH;
+			Direction.SOUTHWEST.clockwise = Direction.WEST;
+			
+			Direction.WEST.anticlockwise = Direction.SOUTHWEST;
+			Direction.WEST.clockwise = Direction.NORTHWEST;
+			
+			Direction.NORTHWEST.anticlockwise = Direction.WEST;
+			Direction.NORTHWEST.clockwise = Direction.NORTH;
+		}
 
-		Direction(int x, int y) 
+ 		Direction(int x, int y) 
 		{
 			this.x = x;
 			this.y = y;
@@ -69,6 +102,16 @@ public class Global
 			return angle;
 		}
 
+		public Direction GetClockwise()
+		{
+			return clockwise;
+		}
+		
+		public Direction GetAnticlockwise()
+		{
+			return anticlockwise;
+		}
+		
 		public static Direction getDirection(int x, int y)
 		{
 			x = MathUtils.clamp(x, -1, 1);
