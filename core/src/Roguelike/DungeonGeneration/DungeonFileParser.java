@@ -3,6 +3,7 @@ package Roguelike.DungeonGeneration;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 
 import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
 import Roguelike.Entity.EnvironmentEntity;
@@ -18,6 +19,19 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class DungeonFileParser
 {
+	//----------------------------------------------------------------------
+	public static class Faction
+	{
+		public String name;
+		public int weight;
+		
+		public Faction(String name, int weight)
+		{
+			this.name = name;
+			this.weight = weight;
+		}
+	}
+	
 	//----------------------------------------------------------------------
 	public static class DFPRoom
 	{
@@ -137,7 +151,63 @@ public class DungeonFileParser
 	public Array<DFPRoom> optionalRooms = new Array<DFPRoom>();
 	
 	//----------------------------------------------------------------------
+	public Array<Faction> majorFactions = new Array<Faction>();
+	
+	//----------------------------------------------------------------------
+	public Array<Faction> minorFactions = new Array<Faction>();
+	
+	//----------------------------------------------------------------------
 	public Color ambient;
+	
+	//----------------------------------------------------------------------
+	public String getMajorFaction(Random ran)
+	{
+		int totalWeight = 0;
+		for (Faction fac : majorFactions)
+		{
+			totalWeight += fac.weight;
+		}
+		
+		int ranVal = ran.nextInt(totalWeight);
+		
+		int currentWeight = 0;
+		for (Faction fac : majorFactions)
+		{
+			currentWeight += fac.weight;
+			
+			if (currentWeight >= ranVal)
+			{
+				return fac.name;
+			}
+		}
+		
+		return null;
+	}
+
+	//----------------------------------------------------------------------
+	public String getMinorFaction(Random ran)
+	{
+		int totalWeight = 0;
+		for (Faction fac : minorFactions)
+		{
+			totalWeight += fac.weight;
+		}
+
+		int ranVal = ran.nextInt(totalWeight);
+
+		int currentWeight = 0;
+		for (Faction fac : minorFactions)
+		{
+			currentWeight += fac.weight;
+
+			if (currentWeight >= ranVal)
+			{
+				return fac.name;
+			}
+		}
+
+		return null;
+	}
 	
 	//----------------------------------------------------------------------
 	private void internalLoad(String name)
@@ -154,14 +224,36 @@ public class DungeonFileParser
 			e.printStackTrace();
 		}
 		
-		Element symbolsElement = xmlElement.getChildByName("Symbols");
-		if (symbolsElement != null)
+		Element factionsElement = xmlElement.getChildByName("Factions");
+		
+		Element majorFacElement = factionsElement.getChildByName("Major");
+		for (int i = 0; i < majorFacElement.getChildCount(); i++)
 		{
-			for (int i = 0; i < symbolsElement.getChildCount(); i++)
-			{
-				Symbol symbol = Symbol.parse(symbolsElement.getChild(i), sharedSymbolMap, null);
-				sharedSymbolMap.put(symbol.character, symbol);
-			}
+			Element facElement = majorFacElement.getChild(i);
+			
+			String facname = facElement.getName();
+			int weight = Integer.parseInt(facElement.getText());
+			
+			majorFactions.add(new Faction(facname, weight));
+		}
+		
+		Element minorFacElement = factionsElement.getChildByName("Minor");
+		for (int i = 0; i < minorFacElement.getChildCount(); i++)
+		{
+			Element facElement = minorFacElement.getChild(i);
+			
+			String facname = facElement.getName();
+			int weight = Integer.parseInt(facElement.getText());
+			
+			minorFactions.add(new Faction(facname, weight));
+		}
+		
+		
+		Element symbolsElement = xmlElement.getChildByName("Symbols");
+		for (int i = 0; i < symbolsElement.getChildCount(); i++)
+		{
+			Symbol symbol = Symbol.parse(symbolsElement.getChild(i), sharedSymbolMap, null);
+			sharedSymbolMap.put(symbol.character, symbol);
 		}
 		
 		Element requiredElement = xmlElement.getChildByName("Required");

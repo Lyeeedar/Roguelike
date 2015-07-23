@@ -98,6 +98,11 @@ public class Sprite
 		batch.setColor(oldCol);
 	}
 
+	public Texture getCurrentTexture()
+	{
+		return textures[currentTexture];
+	}
+	
 	public Sprite copy()
 	{
 		return new Sprite(animationDelay, textures, tileSize, tileIndex, colour);

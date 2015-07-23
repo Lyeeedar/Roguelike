@@ -7,7 +7,7 @@
 			<Name>Glowing Mushroom</Name>
 			<Placement>Any</Placement>
 			<RangeMin>30</RangeMin>
-			<Coverage>20</Coverage>
+			<Coverage>10</Coverage>
 			
 			<EnvironmentData>
 				<Sprite>
@@ -32,7 +32,7 @@
 					<Name>mushroom/cluster</Name>
 				</Sprite>
 			</EnvironmentData>
-			<Coverage>30</Coverage>
+			<Coverage>20</Coverage>
 		</Feature>
 		
 		<Feature>
@@ -56,42 +56,63 @@
 	
 	<Encounters>
 		<Encounter>
-			<Walker>1</Walker>
+			<Mobs>
+				<Walker>1</Walker>
+			</Mobs>
 		</Encounter>
 		
 		<Encounter>
-			<Walker>1</Walker>
-			<Spore>2</Spore>
+			<Mobs>
+				<Walker>1</Walker>
+				<Spore>2</Spore>
+			</Mobs>
 		</Encounter>
 		
 		<Encounter>
-			<Walker>2</Walker>
+			<Mobs>
+				<Walker>2</Walker>
+			</Mobs>
+		</Encounter>
+		
+		<Encounter>			
+			<Mobs>
+				<Walker>2</Walker>
+				<Shooter>1</Shooter>
+			</Mobs>
+			<RangeMin>50</RangeMin>
 		</Encounter>
 		
 		<Encounter>
-			<Walker>2</Walker>
-			<Shooter>1</Shooter>
+			<Mobs>
+				<Shooter>2</Shooter>
+				<Cloud>2</Cloud>
+			</Mobs>
+			<RangeMin>60</RangeMin>
 		</Encounter>
 		
 		<Encounter>
-			<Shooter>2</Shooter>
-			<Cloud>2</Cloud>
+			<Mobs>
+				<Cloud>3</Cloud>
+				<Spore>3</Spore>
+			</Mobs>
+			<RangeMin>70</RangeMin>
 		</Encounter>
 		
 		<Encounter>
-			<Cloud>3</Cloud>
-			<Spore>3</Spore>
+			<Mobs>
+				<Walker>3</Walker>
+				<Spore>1</Spore>
+				<Shooter>1</Shooter>
+			</Mobs>
+			<RangeMin>80</RangeMin>
 		</Encounter>
 		
 		<Encounter>
-			<Walker>3</Walker>
-			<Spore>1</Spore>
-			<Shooter>1</Shooter>
-		</Encounter>
-		
-		<Encounter Boss="true">
-			<Mother>1</Mother>
-			<Spore>4</Spore>
+			<Mobs>
+				<Mother>1</Mother>
+				<Spore>4</Spore>
+			</Mobs>
+			<RangeMin>100</RangeMin>
 		</Encounter>
 	</Encounters>
 

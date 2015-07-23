@@ -158,7 +158,7 @@ public class EnvironmentEntity
 		
 		return entity;
 	}
-	
+		
 	private static EnvironmentEntity CreateBasic(Element xml)
 	{
 		EnvironmentEntity entity = new EnvironmentEntity();

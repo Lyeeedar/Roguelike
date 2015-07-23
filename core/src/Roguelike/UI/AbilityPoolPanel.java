@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -328,7 +329,10 @@ public class AbilityPoolPanel extends Widget
 								dialog.button("Cancel");
 								dialog.pack();
 								
-								dialog.setPosition(Gdx.graphics.getWidth()/2-dialog.getWidth(), Gdx.graphics.getHeight()/2);
+								Vector2 tmp = new Vector2(x, y);
+								event.getListenerActor().localToStageCoordinates(tmp);
+								
+								dialog.setPosition(tmp.x-dialog.getWidth(), tmp.y);
 								
 								stage.addActor(dialog);
 							}

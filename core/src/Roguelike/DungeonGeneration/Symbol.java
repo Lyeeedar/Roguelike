@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import Roguelike.Entity.EnvironmentEntity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Tiles.TileData;
 
@@ -19,21 +20,21 @@ public class Symbol implements PathfindingTile
 	public Element environmentData;
 	public EnvironmentEntity environmentEntityObject;
 
-	public Element entityData;
+	public String entityData;
 
 	public String metaValue;
 	
-//	public Symbol copy()
-//	{
-//		Symbol s = new Symbol();
-//		s.character = character;
-//		s.tileData = tileData;
-//		s.environmentData = environmentData;
-//		s.entityData = entityData;
-//		s.metaValue = metaValue;
-//		
-//		return s;
-//	}
+	public Symbol copy()
+	{
+		Symbol s = new Symbol();
+		s.character = character;
+		s.tileData = tileData;
+		s.environmentData = environmentData;
+		s.entityData = entityData;
+		s.metaValue = metaValue;
+		
+		return s;
+	}
 	
 	public boolean hasEnvironmentEntity()
 	{
@@ -55,7 +56,17 @@ public class Symbol implements PathfindingTile
 		return null;
 	}
 
-	public TileData getAsTileData()
+	public boolean hasGameEntity()
+	{
+		return entityData != null;
+	}
+	
+	public GameEntity getGameEntity()
+	{
+		return entityData != null ? GameEntity.load(entityData) : null;
+	}
+	
+	public TileData getTileData()
 	{
 		return TileData.parse(tileData);
 	}
@@ -97,7 +108,7 @@ public class Symbol implements PathfindingTile
 
 		if (xml.getChildByName("EntityData") != null)
 		{
-			symbol.entityData = xml.getChildByName("EntityData");
+			symbol.entityData = xml.get("EntityData");
 		}
 
 		symbol.metaValue = xml.get("MetaValue", symbol.metaValue);
@@ -107,7 +118,7 @@ public class Symbol implements PathfindingTile
 
 	public boolean isPassable()
 	{
-		return getAsTileData().Passable;
+		return getTileData().Passable;
 	}
 
 	@Override
