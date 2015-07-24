@@ -168,7 +168,7 @@ public class RecursiveDockGenerator
 					symbolGrid[x][y] = tiles[x][y].symbol;
 				}
 			}
-			ImageUtils.writeSymbolGridToFile(symbolGrid, "beforeFeatures.png", 16);
+			ImageUtils.writeSymbolGridToFile(symbolGrid, "beforeFeatures.png", 8);
 		}
 
 
@@ -274,7 +274,7 @@ public class RecursiveDockGenerator
 					symbolGrid[x][y] = tiles[x][y].symbol;
 				}
 			}
-			ImageUtils.writeSymbolGridToFile(symbolGrid, "afterFeatures.png", 16);
+			ImageUtils.writeSymbolGridToFile(symbolGrid, "afterFeatures.png", 8);
 		}
 	}
 

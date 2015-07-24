@@ -18,11 +18,12 @@
 	</HitEffect>
 	<Slot>MainWeapon</Slot>
 	<Type>Weapon</Type>
-	<WeaponType>Sword</WeaponType>
+	<WeaponType>Bow</WeaponType>
 
 	<Events>
 		<Constant>
 			<Metal_Atk>100</Metal_Atk>
+			<Range>5</Range>
 		</Constant>
 	</Events>
 </Item>

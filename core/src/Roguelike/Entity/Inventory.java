@@ -29,7 +29,18 @@ public class Inventory
 			{
 				Element el = equipElement.getChild(i);
 				
-				Item item = Item.load(el.getText());
+				Item item = null;
+				if (el.getChildCount() > 0)
+				{
+					item = Item.load(el);
+				}
+				else
+				{
+					item = Item.load(el.getText());
+				}
+				
+				item.canDrop = el.getBooleanAttribute("Drop", true);
+				
 				addItem(item);
 				equip(item);
 			}
@@ -37,7 +48,19 @@ public class Inventory
 		
 		for (Element el : xml.getChildrenByName("Item"))
 		{
-			Item item = Item.load(el.getText());
+			Item item = null;
+			
+			if (el.getChildCount() > 0)
+			{
+				item = Item.load(el);
+			}
+			else
+			{			
+				Item.load(el.getText());
+			}
+			
+			item.canDrop = el.getBooleanAttribute("Drop", true);
+			
 			addItem(item);
 		}
 	}

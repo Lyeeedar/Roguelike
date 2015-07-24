@@ -76,6 +76,7 @@ public class Item extends GameEventHandler
 	public ItemType Type;
 	public int Count;
 	public Light light;
+	public boolean canDrop = true;
 	
 	//----------------------------------------------------------------------
 	public Table createTable(Skin skin, Inventory inventory)
@@ -160,6 +161,16 @@ public class Item extends GameEventHandler
 	}
 	
 	//----------------------------------------------------------------------
+	public static Item load(Element xml)
+	{
+		Item item = new Item();
+
+		item.internalLoad(xml);
+
+		return item;
+	}
+	
+	//----------------------------------------------------------------------
 	private void internalLoad(String name)
 	{
 		XmlReader xml = new XmlReader();
@@ -173,6 +184,13 @@ public class Item extends GameEventHandler
 		{
 			e.printStackTrace();
 		}
+		
+		internalLoad(xmlElement);
+	}
+		
+	//----------------------------------------------------------------------
+	private void internalLoad(Element xmlElement)
+	{
 		
 		String extendsElement = xmlElement.getAttribute("Extends", null);
 		if (extendsElement != null)

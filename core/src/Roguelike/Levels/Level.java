@@ -615,7 +615,10 @@ public class Level
 							
 							for (Item i : e.getInventory().m_items)
 							{
-								Grid[x][y].items.add(i);
+								if (i.canDrop)
+								{
+									Grid[x][y].items.add(i);
+								}
 							}
 						}
 					}

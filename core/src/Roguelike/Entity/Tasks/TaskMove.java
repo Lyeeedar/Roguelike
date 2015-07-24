@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.badlogic.gdx.utils.Array;
 
 import Roguelike.Global.Direction;
+import Roguelike.Global.Statistics;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Items.Item.WeaponType;
@@ -39,10 +40,28 @@ public class TaskMove extends AbstractTask
 		
 		Item wep = obj.getInventory().getEquip(EquipmentSlot.MAINWEAPON);
 		WeaponType type = WeaponType.NONE;
+		int range = 1;
 		
 		if (wep != null)
 		{
 			type = wep.weaponType;
+			
+			range = wep.getStatistic(obj, Statistics.RANGE);
+			if (range == 0) 
+			{ 
+				if (type == WeaponType.SPEAR)
+				{
+					range = 2;
+				}
+				else if (type == WeaponType.BOW)
+				{
+					range = 4;
+				}
+				else
+				{
+					range = 1;
+				}
+			}
 		}
 		
 		Array<GameTile> hitTiles = new Array<GameTile>();
@@ -50,10 +69,13 @@ public class TaskMove extends AbstractTask
 		
 		if (type == WeaponType.SPEAR)
 		{
-			hitTiles.add(oldTile.level.getGameTile(
-					oldTile.x+dir.GetX()*2, 
-					oldTile.y+dir.GetY()*2
-					));
+			for (int i = 1; i < range; i++)
+			{
+				hitTiles.add(oldTile.level.getGameTile(
+						oldTile.x+dir.GetX()*(i+1), 
+						oldTile.y+dir.GetY()*(i+1)
+						));
+			}
 		}
 		else if (type == WeaponType.AXE)
 		{
@@ -88,7 +110,7 @@ public class TaskMove extends AbstractTask
 					oldTile.y+clockwise.GetY()
 					));
 			
-			for (int i = 2; i <= 4; i++)
+			for (int i = 2; i <= range; i++)
 			{
 				int acx = oldTile.x + anticlockwise.GetX()*i;
 				int acy = oldTile.y + anticlockwise.GetY()*i;
@@ -128,7 +150,7 @@ public class TaskMove extends AbstractTask
 		
 		// Remove invisible tiles
 		Array<int[]> visibleTiles = new Array<int[]>();
-		ShadowCaster shadowCaster = new ShadowCaster(obj.tile.level.getGrid(), 4);
+		ShadowCaster shadowCaster = new ShadowCaster(obj.tile.level.getGrid(), range);
 		shadowCaster.ComputeFOV(obj.tile.x, obj.tile.y, visibleTiles);
 		
 		Iterator<GameTile> itr = hitTiles.iterator();
@@ -240,7 +262,7 @@ public class TaskMove extends AbstractTask
 					}
 					
 					Item weapon = obj.getInventory().getEquip(EquipmentSlot.MAINWEAPON);
-					Sprite hitEffect = weapon != null ? weapon.HitEffect : obj.defaultHitEffect;
+					Sprite hitEffect = weapon != null && weapon.HitEffect != null ? weapon.HitEffect : obj.defaultHitEffect;
 					
 					if (bestTarget.entity != null)
 					{
@@ -266,6 +288,7 @@ public class TaskMove extends AbstractTask
 			}
 			else
 			{
+				// hit all tiles
 				for (GameTile tile : hitTiles)
 				{
 					if (tile.entity != null && !tile.entity.isAllies(obj))
@@ -279,7 +302,7 @@ public class TaskMove extends AbstractTask
 				}
 				
 				Item weapon = obj.getInventory().getEquip(EquipmentSlot.MAINWEAPON);
-				Sprite hitEffect = weapon != null ? weapon.HitEffect : obj.defaultHitEffect;
+				Sprite hitEffect = weapon != null && weapon.HitEffect != null ? weapon.HitEffect : obj.defaultHitEffect;
 				
 				// add hit effects
 				for (GameTile tile : hitTiles)

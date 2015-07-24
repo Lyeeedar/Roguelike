@@ -203,8 +203,18 @@ public class GameEntity extends Entity
 			for (int i = 0; i < activeAbilityElement.getChildCount() && i < Global.NUM_ABILITY_SLOTS; i++)
 			{
 				Element abEl = activeAbilityElement.getChild(i);
+				
+				ActiveAbility ab = null;
+				
+				if (abEl.getChildCount() > 0)
+				{
+					ab = ActiveAbility.load(abEl);
+				}
+				else
+				{
+					ab = ActiveAbility.load(abEl.getText());
+				}
 
-				ActiveAbility ab = ActiveAbility.load(abEl.getText());
 				slottedActiveAbilities[i] = ab;
 				ab.caster = this;
 			}

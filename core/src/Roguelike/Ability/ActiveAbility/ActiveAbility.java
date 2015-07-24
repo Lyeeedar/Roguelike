@@ -8,7 +8,9 @@ import Roguelike.Ability.ActiveAbility.AbilityType.AbstractAbilityType;
 import Roguelike.Ability.ActiveAbility.EffectType.AbstractEffectType;
 import Roguelike.Ability.ActiveAbility.MovementType.AbstractMovementType;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeBolt;
+import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeSmite;
 import Roguelike.Ability.ActiveAbility.TargetingType.AbstractTargetingType;
+import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeTile;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.IGameObject;
@@ -30,15 +32,15 @@ public class ActiveAbility implements IAbility, IGameObject
 	private String name;
 	private String description;
 	
-	private int aoe;
-	public int range;
+	private int aoe = 0;
+	public int range = 1;
 			
 	public float cooldownAccumulator;
-	public float cooldown;
+	public float cooldown = 1;
 	
 	private AbstractAbilityType abilityType;
-	private AbstractTargetingType targetingType;
-	private AbstractMovementType movementType;
+	private AbstractTargetingType targetingType = new TargetingTypeTile();
+	private AbstractMovementType movementType = new MovementTypeSmite();
 	public Array<AbstractEffectType> effectTypes = new Array<AbstractEffectType>();
 	public Array<GameTile> AffectedTiles = new Array<GameTile>();
 	
@@ -60,7 +62,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		aa.aoe = aoe;
 		aa.range = range;
 		
-		aa.abilityType = abilityType.copy();
+		//aa.abilityType = abilityType.copy();
 		aa.targetingType = targetingType.copy();
 		aa.movementType = movementType.copy();
 		
@@ -221,6 +223,12 @@ public class ActiveAbility implements IAbility, IGameObject
 			e.printStackTrace();
 		}
 		
+		internalLoad(xmlElement);
+	}
+	
+	private void internalLoad(Element xmlElement)
+	{
+		
 		String extendsElement = xmlElement.getAttribute("Extends", null);
 		if (extendsElement != null)
 		{
@@ -243,11 +251,11 @@ public class ActiveAbility implements IAbility, IGameObject
 			light = Roguelike.Lights.Light.load(lightElement);
 		}
 		
-		Element typeElement = xmlElement.getChildByName("Type");
-		if (typeElement != null)
-		{
-			abilityType = AbstractAbilityType.load(typeElement.getChild(0));
-		}
+//		Element typeElement = xmlElement.getChildByName("Type");
+//		if (typeElement != null)
+//		{
+//			abilityType = AbstractAbilityType.load(typeElement.getChild(0));
+//		}
 		
 		Element targetingElement = xmlElement.getChildByName("Targeting");
 		if (targetingElement != null)
@@ -277,6 +285,15 @@ public class ActiveAbility implements IAbility, IGameObject
 		ActiveAbility ab = new ActiveAbility();
 		
 		ab.internalLoad(name);
+		
+		return ab;
+	}
+	
+	public static ActiveAbility load(Element xml)
+	{
+		ActiveAbility ab = new ActiveAbility();
+		
+		ab.internalLoad(xml);
 		
 		return ab;
 	}
