@@ -3,6 +3,7 @@
 
 	<Sprite>
 		<Name>dc-mon/animals/giant_toad</Name>
+		<AnimationMode>Shrink</AnimationMode>
 	</Sprite>
 	
 	<AI>basicMonster</AI>

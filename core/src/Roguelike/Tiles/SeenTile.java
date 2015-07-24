@@ -1,6 +1,7 @@
 package Roguelike.Tiles;
 
 import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.Sprite.AnimationState;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -43,7 +44,7 @@ public class SeenTile
 	public static class SeenHistoryItem
 	{
 		public Sprite sprite;
-		public int spriteIndex;
+		public AnimationState animationState;
 		
 		String description;
 		int turn;
@@ -51,7 +52,7 @@ public class SeenTile
 		public SeenHistoryItem(Sprite sprite, String desc)
 		{
 			this.sprite = sprite;
-			this.spriteIndex = sprite.currentTexture;
+			this.animationState = sprite.animationState.copy();
 			this.description = desc;
 		}
 	}

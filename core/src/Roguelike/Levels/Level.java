@@ -146,7 +146,7 @@ public class Level
 		}
 	}
 	
-	public void calculateLight()
+	public void calculateLight(float delta)
 	{
 		Color acol = new Color(Ambient);
 		acol.mul(acol.a);
@@ -162,29 +162,30 @@ public class Level
 		
 		for (Light l : getAllLights())
 		{
+			l.update(delta);
 			calculateSingleLight(l);
 		}
 	}
 	
 	private void calculateSingleLight(Light l)
 	{
-		if (Math.max(Math.abs(player.tile.x - l.lx), Math.abs(player.tile.y - l.ly)) > player.getStatistic(Statistics.RANGE)+(int)Math.ceil(l.Intensity))
+		if (Math.max(Math.abs(player.tile.x - l.lx), Math.abs(player.tile.y - l.ly)) > player.getStatistic(Statistics.RANGE)+(int)Math.ceil(l.actualIntensity))
 		{
 			return; // too far away
 		}
 		
 		Array<int[]> output = new Array<int[]>();
-		ShadowCaster shadow = new ShadowCaster(Grid, (int)Math.ceil(l.Intensity));
+		ShadowCaster shadow = new ShadowCaster(Grid, (int)Math.ceil(l.actualIntensity));
 		shadow.ComputeFOV(l.lx, l.ly, output);
 				
 		for (int[] tilePos : output)
 		{
 			GameTile tile = getGameTile(tilePos);
 			
-			float dst = 1 - Vector2.dst(l.lx, l.ly, tile.x, tile.y) / l.Intensity;
+			float dst = 1 - Vector2.dst(l.lx, l.ly, tile.x, tile.y) / l.actualIntensity;
 			if (dst < 0) {dst = 0;}
 			
-			Color lcol = new Color(l.Colour).mul(dst);
+			Color lcol = new Color(l.colour).mul(dst);
 			lcol.mul(lcol.a);
 			lcol.a = 1;
 			
@@ -249,7 +250,7 @@ public class Level
 			}
 		}
 		
-		calculateLight();	
+		calculateLight(delta);	
 		
 		for (Sprite s : getAllSprites())
 		{

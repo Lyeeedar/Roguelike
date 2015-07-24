@@ -3,6 +3,7 @@
 
 	<Sprite>
 		<Name>dc-mon/fungi_plants/wandering_mushroom</Name>
+		<AnimationMode>Shrink</AnimationMode>
 	</Sprite>
 	
 	<AI>basicMonster</AI>

@@ -20,6 +20,8 @@
 						<Blue>0.7</Blue>
 					</Colour>
 					<Intensity>4</Intensity>
+					<Flicker>1</Flicker>
+					<FlickerPeriod>5</FlickerPeriod>
 				</Light>
 				
 				<Statistics>

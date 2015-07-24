@@ -305,7 +305,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					
 					for (SeenHistoryItem hist : stile.History)
 					{
-						hist.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize, hist.spriteIndex);
+						hist.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize, hist.animationState);
 					}				
 					
 					batch.setColor(Color.WHITE);

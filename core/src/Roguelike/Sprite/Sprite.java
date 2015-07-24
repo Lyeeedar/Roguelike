@@ -7,6 +7,14 @@ import com.badlogic.gdx.utils.Array;
 
 public class Sprite
 {
+	public enum AnimationMode
+	{
+		NONE,
+		TEXTURE,
+		SHRINK,
+		SINE
+	}
+	
 	public Color colour = new Color(Color.WHITE);
 	
 	public float animationDelay;
@@ -18,22 +26,26 @@ public class Sprite
 	public int[] tileIndex;
 	public int[] tileBounds;
 	
-	public int currentTexture = 0;
 	public Texture[] textures;
 	
 	public SpriteAnimation SpriteAnimation;
 	
-	public Sprite(float animationDelay, Array<Texture> textures, int[] tileSize, int[] tileIndex, Color colour)
+	public AnimationState animationState;
+	
+ 	public Sprite(float animationDelay, Array<Texture> textures, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode)
 	{
-		this(animationDelay, (Texture[])textures.toArray(Texture.class), tileSize, tileIndex, colour);
+		this(animationDelay, (Texture[])textures.toArray(Texture.class), tileSize, tileIndex, colour, mode);
 	}
 	
-	public Sprite(float animationDelay, Texture[] textures, int[] tileSize, int[] tileIndex, Color colour)
+	public Sprite(float animationDelay, Texture[] textures, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode)
 	{
 		this.textures = textures;
 		this.animationDelay = animationDelay;
 		this.tileSize = tileSize;
 		this.tileIndex = tileIndex;
+		
+		animationState = new AnimationState();
+		animationState.mode = mode;
 		
 		this.tileBounds = new int[]
 		{
@@ -53,12 +65,29 @@ public class Sprite
 		{
 			animationAccumulator -= animationDelay;
 			
-			currentTexture++;
-			if (currentTexture >= textures.length)
+			if (animationState.mode == AnimationMode.TEXTURE)
 			{
-				currentTexture = 0;
+				animationState.texIndex++;
+				if (animationState.texIndex >= textures.length)
+				{
+					animationState.texIndex = 0;
+					looped = true;
+				}
+			}
+			else if (animationState.mode == AnimationMode.SHRINK)
+			{
+				animationState.isShrunk = !animationState.isShrunk;
+				looped = animationState.isShrunk;
+			}
+			else if (animationState.mode == AnimationMode.SINE)
+			{
 				looped = true;
 			}
+		}
+		
+		if (animationState.mode == AnimationMode.SINE)
+		{
+			animationState.sinOffset = (float)Math.sin(animationAccumulator / (animationDelay/(2*Math.PI)));
 		}
 		
 		if (SpriteAnimation != null)
@@ -75,36 +104,87 @@ public class Sprite
 	
 	public void render(Batch batch, int x, int y, int width, int height)
 	{
-		render(batch, x, y, width, height, currentTexture);
+		render(batch, x, y, width, height, animationState);
 	}
 	
-	public void render(Batch batch, int x, int y, int width, int height, int texIndex)
+	public void render(Batch batch, int x, int y, int width, int height, AnimationState animationState)
 	{
 		Color oldCol = batch.getColor();
 		Color col = new Color(oldCol).mul(colour);
 		batch.setColor(col);
 		
-		batch.draw(
-				textures[texIndex],
-				x, y,
-				width/2, height/2, // origin x, y
-				width, height, // width, height
-				1, 1, // scale
-				rotation, // rotation
-				tileBounds[0], tileBounds[1], tileBounds[2], tileBounds[3],
-				false, false // flip x, y
-				);
+		if (animationState.mode == AnimationMode.SHRINK && animationState.isShrunk)
+		{
+			batch.draw(
+					textures[animationState.texIndex],
+					x, y,
+					width/2, height/2, // origin x, y
+					width, height * 0.9f, // width, height
+					1, 1, // scale
+					rotation, // rotation
+					tileBounds[0], tileBounds[1], tileBounds[2], tileBounds[3],
+					false, false // flip x, y
+					);
+		}
+		else if (animationState.mode == AnimationMode.SINE)
+		{
+			batch.draw(
+					textures[animationState.texIndex],
+					x, y+(height/20)*animationState.sinOffset,
+					width/2, height/2, // origin x, y
+					width, height, // width, height
+					1, 1, // scale
+					rotation, // rotation
+					tileBounds[0], tileBounds[1], tileBounds[2], tileBounds[3],
+					false, false // flip x, y
+					);
+		}
+		else
+		{
+			batch.draw(
+					textures[animationState.texIndex],
+					x, y,
+					width/2, height/2, // origin x, y
+					width, height, // width, height
+					1, 1, // scale
+					rotation, // rotation
+					tileBounds[0], tileBounds[1], tileBounds[2], tileBounds[3],
+					false, false // flip x, y
+					);
+		}
+		
 		
 		batch.setColor(oldCol);
 	}
 
 	public Texture getCurrentTexture()
 	{
-		return textures[currentTexture];
+		return textures[animationState.texIndex];
 	}
 	
 	public Sprite copy()
 	{
-		return new Sprite(animationDelay, textures, tileSize, tileIndex, colour);
+		return new Sprite(animationDelay, textures, tileSize, tileIndex, colour, animationState.mode);
+	}
+	
+	public static class AnimationState
+	{
+		public AnimationMode mode;
+		
+		public int texIndex;
+		public boolean isShrunk;
+		public float sinOffset;
+		
+		public AnimationState copy()
+		{
+			AnimationState as = new AnimationState();
+			
+			as.mode = mode;
+			as.texIndex = texIndex;
+			as.isShrunk = isShrunk;
+			as.sinOffset = sinOffset;
+			
+			return as;
+		}
 	}
 }

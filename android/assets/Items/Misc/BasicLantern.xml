@@ -15,6 +15,7 @@
 		</Colour>
 		
 		<Intensity>4</Intensity>
+		<Flicker>3</Flicker>
 	</Light>
 	
 </Item>

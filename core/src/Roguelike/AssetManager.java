@@ -3,6 +3,7 @@ package Roguelike;
 import java.util.HashMap;
 
 import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.Sprite.AnimationMode;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -35,20 +36,20 @@ public class AssetManager
 	
 	public static Sprite loadSprite(String name)
 	{
-		return loadSprite(name, 0.5f, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE);
+		return loadSprite(name, 0.5f, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE, AnimationMode.TEXTURE);
 	}
 	
 	public static Sprite loadSprite(String name, int size)
 	{
-		return loadSprite(name, 0.5f, new int[]{size, size}, new int[]{0, 0}, Color.WHITE);
+		return loadSprite(name, 0.5f, new int[]{size, size}, new int[]{0, 0}, Color.WHITE, AnimationMode.TEXTURE);
 	}
 	
 	public static Sprite loadSprite(String name, float updateTime)
 	{
-		return loadSprite(name, updateTime, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE);
+		return loadSprite(name, updateTime, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE, AnimationMode.TEXTURE);
 	}
 	
-	public static Sprite loadSprite(String name, float updateTime, int[] tileSize, int[] tileIndex, Color colour)
+	public static Sprite loadSprite(String name, float updateTime, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode)
 	{
 		Array<Texture> textures = new Array<Texture>();
 		
@@ -94,7 +95,19 @@ public class AssetManager
 			tileSize[1] = textures.get(0).getHeight();
 		}
 		
-		Sprite sprite = new Sprite(updateTime, textures, tileSize, tileIndex, colour);
+		if (updateTime <= 0)
+		{
+			if (mode == AnimationMode.SINE)
+			{
+				updateTime = 4;
+			}
+			else
+			{
+				updateTime = 0.5f;
+			}
+		}
+		
+		Sprite sprite = new Sprite(updateTime, textures, tileSize, tileIndex, colour, mode);
 		
 		return sprite;
 	}
@@ -103,14 +116,15 @@ public class AssetManager
 	{
 		return loadSprite(
 				xml.get("Name"),
-				xml.getFloat("UpdateRate", 0.5f),
+				xml.getFloat("UpdateRate", 0),
 				new int[]{xml.getInt("Width", xml.getInt("Size", 0)), xml.getInt("Height", xml.getInt("Size", 0))},
 				new int[]{xml.getInt("IndexX", 0), xml.getInt("IndexY", 0)},
 				xml.getChildByName("Colour") != null ? new Color(
 						xml.getChildByName("Colour").getFloat("Red", 0), 
 						xml.getChildByName("Colour").getFloat("Green", 0), 
 						xml.getChildByName("Colour").getFloat("Blue", 0), 
-						xml.getChildByName("Colour").getFloat("Alpha", 1)) : Color.WHITE
+						xml.getChildByName("Colour").getFloat("Alpha", 1)) : Color.WHITE,
+				AnimationMode.valueOf(xml.get("AnimationMode", "Texture").toUpperCase())
 				);
 	}
 

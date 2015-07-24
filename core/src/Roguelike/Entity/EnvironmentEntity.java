@@ -12,6 +12,7 @@ import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Levels.Level;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.Sprite.AnimationMode;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 
@@ -174,8 +175,8 @@ public class EnvironmentEntity extends Entity
 	
 	private static EnvironmentEntity CreateDoor()
 	{
-		final Sprite doorClosed = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Door0.png")}, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE);
-		final Sprite doorOpen = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Door1.png")}, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE);
+		final Sprite doorClosed = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Door0.png")}, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE, AnimationMode.NONE);
+		final Sprite doorOpen = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Door1.png")}, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE, AnimationMode.NONE);
 		
 		ActivationAction open = new ActivationAction("Open")
 		{

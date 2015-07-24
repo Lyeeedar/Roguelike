@@ -10,11 +10,9 @@
 	<CanSwap>true</CanSwap>
 	
 	<Sprite>
-		<Name>Characters/Player</Name>
+		<Name>player/base/human_m</Name>
 		<UpdateRate>0.5</UpdateRate>
-		<Size>16</Size>
-		<IndexX>0</IndexX>
-		<IndexY>0</IndexY>
+		<AnimationMode>Shrink</AnimationMode>
 	</Sprite>
 	
 	<Statistics>

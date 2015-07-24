@@ -3,6 +3,7 @@
 
 	<Sprite>
 		<Name>dc-mon/fungi_plants/giant_spore</Name>
+		<AnimationMode>Sine</AnimationMode>
 	</Sprite>
 	
 	<AI>basicMonster</AI>
