@@ -2,7 +2,7 @@
 	<Name>Toad</Name>
 
 	<Sprite>
-		<Name>dc-mon/animals/giant_toad</Name>
+		<Name>dc-mon/animals/spiny_frog</Name>
 		<AnimationMode>Shrink</AnimationMode>
 	</Sprite>
 	
@@ -13,7 +13,7 @@
 	</Factions>
 	
 	<ActiveAbilities>
-		<Pull>
+		<Leap>
 			<Cooldown>20</Cooldown>
 			<Range>3</Range>
 			<Targeting><Entity Type="Enemy"/></Targeting>
@@ -23,11 +23,11 @@
 					<Wood_Atk>30</Wood_Atk>
 				</Damage>
 				<Teleport>
-					<Mode>TargetToCaster</Mode>
+					<Mode>CasterToTarget</Mode>
 					<Style>Leap</Style>
 				</Teleport>
 			</Effect>
-		</Pull>
+		</Leap>
 	</ActiveAbilities>
 	
 	<Statistics>

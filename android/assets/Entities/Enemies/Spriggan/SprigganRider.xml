@@ -1,0 +1,54 @@
+<Entity>
+	<Name>Spriggan Grunt</Name>
+
+	<Sprite>
+		<Name>dc-mon/spriggan/spriggan_rider</Name>
+		<AnimationMode>Sine</AnimationMode>
+	</Sprite>
+	
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Spriggan</Faction>
+	</Factions>
+	
+	<Inventory>
+		<Equipment>
+			<Lance Drop="false">
+				<Slot>MainWeapon</Slot>
+				<WeaponType>Spear</WeaponType>
+				<Events>
+					<Constant>
+						<Wood_Atk>55</Wood_Atk>
+					</Constant>
+				</Events>
+			</Lance>
+		</Equipment>
+	</Inventory>
+	
+	<ActiveAbilities>
+		<Leap>
+			<Cooldown>20</Cooldown>
+			<Range>4</Range>
+			<Targeting><Entity Type="Enemy"/></Targeting>
+			<Movement><Smite/></Movement>
+			<Effect>
+				<Damage>
+					<Air_Atk>30</Air_Atk>
+				</Damage>
+				<Teleport>
+					<Mode>CasterToTarget</Mode>
+					<Style>Leap</Style>
+				</Teleport>
+			</Effect>
+		</Leap>
+	</ActiveAbilities>
+	
+	<Statistics>
+		<MaxHP>300</MaxHP>
+		<Range>5</<Range>
+		
+		<Wood_Atk>25</Wood_Atk>
+	</Statistics>
+	
+</Entity>

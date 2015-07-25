@@ -28,7 +28,9 @@ public class Sprite
 	
 	public Texture[] textures;
 	
-	public SpriteAnimation SpriteAnimation;
+	public Array<Texture> extraLayers = new Array<Texture>();
+	
+	public SpriteAnimation spriteAnimation;
 	
 	public AnimationState animationState;
 	
@@ -90,12 +92,12 @@ public class Sprite
 			animationState.sinOffset = (float)Math.sin(animationAccumulator / (animationDelay/(2*Math.PI)));
 		}
 		
-		if (SpriteAnimation != null)
+		if (spriteAnimation != null)
 		{
-			boolean finished = SpriteAnimation.update(delta);
-			if (finished)
+			looped = spriteAnimation.update(delta);
+			if (looped)
 			{
-				SpriteAnimation = null;
+				spriteAnimation = null;
 			}
 		}
 		
@@ -104,6 +106,13 @@ public class Sprite
 	
 	public void render(Batch batch, int x, int y, int width, int height)
 	{
+		if (spriteAnimation != null)
+		{
+			int[] offset = spriteAnimation.getRenderOffset();
+			x += offset[0];
+			y += offset[1];
+		}
+		
 		render(batch, x, y, width, height, animationState);
 	}
 	
@@ -113,10 +122,22 @@ public class Sprite
 		Color col = new Color(oldCol).mul(colour);
 		batch.setColor(col);
 		
+		drawTexture(batch, textures[animationState.texIndex], x, y, width, height, animationState);
+		
+		for (Texture tex : extraLayers)
+		{
+			drawTexture(batch, tex, x, y, width, height, animationState);
+		}
+		
+		batch.setColor(oldCol);
+	}
+	
+	private void drawTexture(Batch batch, Texture texture, int x, int y, int width, int height, AnimationState animationState)
+	{		
 		if (animationState.mode == AnimationMode.SHRINK && animationState.isShrunk)
 		{
 			batch.draw(
-					textures[animationState.texIndex],
+					texture,
 					x, y,
 					width/2, height/2, // origin x, y
 					width, height * 0.9f, // width, height
@@ -129,7 +150,7 @@ public class Sprite
 		else if (animationState.mode == AnimationMode.SINE)
 		{
 			batch.draw(
-					textures[animationState.texIndex],
+					texture,
 					x, y+(height/20)*animationState.sinOffset,
 					width/2, height/2, // origin x, y
 					width, height, // width, height
@@ -142,7 +163,7 @@ public class Sprite
 		else
 		{
 			batch.draw(
-					textures[animationState.texIndex],
+					texture,
 					x, y,
 					width/2, height/2, // origin x, y
 					width, height, // width, height
@@ -152,9 +173,6 @@ public class Sprite
 					false, false // flip x, y
 					);
 		}
-		
-		
-		batch.setColor(oldCol);
 	}
 
 	public Texture getCurrentTexture()

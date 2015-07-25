@@ -57,7 +57,7 @@ public class EffectTypeDamage extends AbstractEffectType
 		}
 		
 		{
-			tile.spriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
+			tile.spriteEffects.add(new SpriteEffect(aa.getHitSprite().copy(), Direction.CENTER, l));
 		}
 	}
 
@@ -99,7 +99,7 @@ public class EffectTypeDamage extends AbstractEffectType
 		}
 		
 		Global.calculateDamage(aa.caster, target, Statistics.statsBlockToVariableBlock(stats), true);			
-		target.spriteEffects.add(new SpriteEffect(aa.hitSprite.copy(), Direction.CENTER, l));
+		target.spriteEffects.add(new SpriteEffect(aa.getHitSprite().copy(), Direction.CENTER, l));
 	}
 	
 	@Override

@@ -1,0 +1,22 @@
+<Entity>
+	<Name>Treant</Name>
+
+	<Sprite>
+		<Name>dc-mon/nonliving/earth_elemental</Name>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Spriggan</Faction>
+	</Factions>
+	
+	<Statistics>
+		<MaxHP>600</MaxHP>
+		<Range>5</<Range>
+		
+		<Wood_Atk>50</Wood_Atk>
+	</Statistics>
+	
+</Entity>

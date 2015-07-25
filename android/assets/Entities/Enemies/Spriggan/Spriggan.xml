@@ -1,0 +1,111 @@
+<Faction>
+
+	<Features>
+	
+		<Feature>
+			<Name>Glowing Tree</Name>
+			<Placement>Any</Placement>
+			<RangeMin>30</RangeMin>
+			<Coverage>10</Coverage>
+			
+			<EnvironmentData>
+				<Sprite>
+					<Name>spriggan/glowtree</Name>
+				</Sprite>
+				<Passable>false</Passable>
+				<Opaque>true</Opaque>
+				<Light>
+					<Colour>
+						<Red>0.7</Red>
+						<Green>0.8</Green>
+					</Colour>
+					<Intensity>4</Intensity>
+					<Flicker>1</Flicker>
+					<FlickerPeriod>2</FlickerPeriod>
+				</Light>
+				
+				<Statistics>
+					<MaxHP>800</MaxHP>
+				</Statistics>
+			</EnvironmentData>
+		</Feature>
+		
+		<Feature>
+			<Name>Flower Cluster</Name>
+			<Placement>Any</Placement>
+			
+			<EnvironmentData>
+				<Sprite>
+					<Name>spriggan/flowers</Name>
+				</Sprite>
+			</EnvironmentData>
+			
+			<Coverage>40</Coverage>
+		</Feature>
+		
+	</Features>
+
+	<Encounters>
+	
+		<Encounter>
+			<Mobs>
+				<SprigganGrunt>2</SprigganGrunt>
+			</Mobs>
+			<RangeMax>40</RangeMax>
+		</Encounter>
+		
+		<Encounter>
+			<Mobs>
+				<SprigganGrunt>2</SprigganGrunt>
+				<SprigganWarrior>1</SprigganWarrior>
+			</Mobs>
+			<RangeMax>50</RangeMax>
+		</Encounter>
+		
+		<Encounter>
+			<Mobs>
+				<SprigganWarrior>2</SprigganWarrior>
+				<SprigganDruid>1</SprigganDruid>
+			</Mobs>
+			<RangeMin>40</RangeMin>
+			<RangeMax>70</RangeMax>
+		</Encounter>
+		
+		<Encounter>
+			<Mobs>
+				<SprigganWarrior>1</SprigganWarrior>
+				<SprigganDruid>1</SprigganDruid>
+				<SprigganGrunt>2</SprigganGrunt>
+			</Mobs>
+			<RangeMin>40</RangeMin>
+			<RangeMax>70</RangeMax>
+		</Encounter>
+		
+		<Encounter>
+			<Mobs>
+				<SprigganRider>2</SprigganRider>
+				<SprigganDruid>1</SprigganDruid>
+			</Mobs>
+			<RangeMin>60</RangeMin>
+		</Encounter>
+		
+		<Encounter>
+			<Mobs>
+				<SprigganRider>2</SprigganRider>
+				<SprigganDruid>1</SprigganDruid>
+				<Treant>1</Treant>
+			</Mobs>
+			<RangeMin>70</RangeMin>
+		</Encounter>
+		
+		<Encounter>
+			<Mobs>
+				<SprigganDruid>1</SprigganDruid>
+				<Treant>3</Treant>
+			</Mobs>
+			<RangeMin>90</RangeMin>
+		</Encounter>
+		
+	</Encounters>
+	
+</Faction>

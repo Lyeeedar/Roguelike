@@ -13,6 +13,7 @@ import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
+import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Sprite.MoveAnimation;
@@ -192,6 +193,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	{
 		preparedAbility = aa;
 		preparedAbility.caster = level.player;
+		
 		abilityTiles = preparedAbility.getValidTargets();
 	}
 	
@@ -228,9 +230,9 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		int offsetx = Gdx.graphics.getWidth() / 2 - level.player.tile.x * TileSize;
 		int offsety = Gdx.graphics.getHeight() / 2 - level.player.tile.y * TileSize;
 		
-		if (level.player.sprite.SpriteAnimation instanceof MoveAnimation)
+		if (level.player.sprite.spriteAnimation instanceof MoveAnimation)
 		{
-			int[] offset = level.player.sprite.SpriteAnimation.getRenderOffset();
+			int[] offset = level.player.sprite.spriteAnimation.getRenderOffset();
 			
 			offsetx -= offset[0];
 			offsety -= offset[1];
@@ -251,8 +253,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			for (int y = 0; y < level.height; y++)
 			{
 				GameTile gtile = level.getGameTile(x, y);
-				SeenTile stile = level.getSeenTile(x, y);
-				
+								
 				if (gtile.GetVisible())
 				{
 					batch.setColor(gtile.light);	
@@ -274,7 +275,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					
 					for (Item i : gtile.items)
 					{
-						i.Icon.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
+						i.icon.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
 					}
 					
 					GameEntity entity = gtile.entity;
@@ -284,6 +285,19 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 						toBeDrawn.add(entity);
 					}
 					
+					batch.setColor(Color.WHITE);
+				}
+			}
+		}
+		
+		for (int x = 0; x < level.width; x++)
+		{
+			for (int y = 0; y < level.height; y++)
+			{
+				GameTile gtile = level.getGameTile(x, y);
+				
+				if (gtile.GetVisible())
+				{
 					for (SpriteEffect e : gtile.spriteEffects)
 					{
 						if (e.Corner == Direction.CENTER)
@@ -295,21 +309,6 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 							e.Sprite.render(batch, x*TileSize + offsetx + TileSize3*(e.Corner.GetX()*-1+1), y*TileSize + offsety + TileSize3*(e.Corner.GetY()*-1+1), TileSize3, TileSize3);
 						}
 					}
-					
-					batch.setColor(Color.WHITE);
-				}
-				else if (stile.seen)
-				{
-					batch.setShader(GrayscaleShader.Instance);
-					batch.setColor(level.Ambient);
-					
-					for (SeenHistoryItem hist : stile.History)
-					{
-						hist.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize, hist.animationState);
-					}				
-					
-					batch.setColor(Color.WHITE);
-					batch.setShader(null);
 				}
 			}
 		}
@@ -325,7 +324,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			}
 			else
 			{
-				if (level.getGameTile(mousex, mousey).tileData.Passable)
+				if (level.getGameTile(mousex, mousey).tileData.passable)
 				{
 					batch.setColor(Color.GREEN);
 				}
@@ -342,18 +341,27 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		
 		for (GameEntity entity : toBeDrawn)
 		{
+			if (entity == level.player)
+			{
+				Sprite sprite = level.player.sprite;
+				sprite.extraLayers.clear();
+				
+				for (EquipmentSlot slot : EquipmentSlot.values())
+				{
+					Item equip = level.player.getInventory().getEquip(slot);
+					
+					if (equip != null)
+					{
+						sprite.extraLayers.add(equip.getEquipTexture());
+					}
+				}
+			}
+			
 			int x = entity.tile.x;
 			int y = entity.tile.y;
 			
 			int cx = x*TileSize + offsetx;
 			int cy = y*TileSize + offsety;
-			
-			if (entity.sprite.SpriteAnimation != null)
-			{
-				int[] offset = entity.sprite.SpriteAnimation.getRenderOffset();
-				cx += offset[0];
-				cy += offset[1];
-			}
 			
 			batch.setColor(entity.tile.light);
 			
@@ -372,6 +380,13 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			}
 			
 			batch.setColor(Color.WHITE);
+			
+			if (entity.sprite.spriteAnimation != null)
+			{
+				int[] offset = entity.sprite.spriteAnimation.getRenderOffset();
+				cx += offset[0];
+				cy += offset[1];
+			}
 			
 			EntityStatusRenderer.draw(entity, batch, cx, cy, TileSize, TileSize, 1.0f/8.0f);
 		}
@@ -407,20 +422,61 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 			}
 		}
 		
-//		for (Entity entity : toBeDrawn)
-//		{
-//			int x = entity.Tile.x;
-//			int y = entity.Tile.y;
-//						
-//			int cx = x*TileSize + offsetx;
-//			int cy = y*TileSize + offsety;
-//			
-//			EntityStatusRenderer.draw(entity, batch, cx, cy, TileSize, TileSize, 1.0f/8.0f);
-//		}
-		
+		for (int x = 0; x < level.width; x++)
 		{
-			EntityStatusRenderer.draw(level.player, batch, 20, Gdx.graphics.getHeight() - 120, Gdx.graphics.getWidth()/4, 100, 1.0f/4.0f);
+			for (int y = 0; y < level.height; y++)
+			{
+				GameTile gtile = level.getGameTile(x, y);
+				SeenTile stile = level.getSeenTile(x, y);
+				
+				if (!gtile.GetVisible() && stile.seen)
+				{
+					batch.setShader(GrayscaleShader.Instance);
+					batch.setColor(level.Ambient);
+					
+					for (SeenHistoryItem hist : stile.History)
+					{
+						hist.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize, hist.animationState);
+					}				
+					
+					batch.setColor(Color.WHITE);
+					batch.setShader(null);
+				}
+				else if (!gtile.GetVisible())
+				{
+					batch.setColor(Color.BLACK);
+					
+					batch.draw(white, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
+					
+					batch.setColor(Color.WHITE);
+				}
+			}
 		}
+		
+		if (!mouseOverUI)
+		{	
+			if (
+					mousex >= 0 && mousex < level.width &&
+					mousey >= 0 && mousey < level.height &&
+					!level.getGameTile(mousex, mousey).GetVisible())
+			{
+				if (
+						!level.getSeenTile(mousex, mousey).seen ||
+						!level.getGameTile(mousex, mousey).tileData.passable)
+				{
+					batch.setColor(Color.RED);
+				}
+				else
+				{
+					batch.setColor(Color.GREEN);
+				}
+				
+				border.render(batch, mousex*TileSize + offsetx, mousey*TileSize + offsety, TileSize, TileSize);
+				batch.setColor(Color.WHITE);
+			}
+		}
+		
+		EntityStatusRenderer.draw(level.player, batch, 20, Gdx.graphics.getHeight() - 120, Gdx.graphics.getWidth()/4, 100, 1.0f/4.0f);
 		
 		batch.end();
 				

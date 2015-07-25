@@ -1,0 +1,22 @@
+<Entity>
+	<Name>Fly</Name>
+
+	<Sprite>
+		<Name>dc-mon/animals/giant_mosquito</Name>
+		<AnimationMode>Sine</AnimationMode>
+	</Sprite>
+	
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Fly</Faction>
+	</Factions>
+	
+	<Statistics>
+		<MaxHP>250</MaxHP>
+		<Range>1</<Range>
+		
+		<Wood_Atk>10</Wood_Atk>
+	</Statistics>
+	
+</Entity>

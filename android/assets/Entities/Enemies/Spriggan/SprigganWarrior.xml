@@ -1,0 +1,28 @@
+<Entity>
+	<Name>Spriggan Warrior</Name>
+
+	<Sprite>
+		<Name>dc-mon/spriggan/spriggan_defender</Name>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Spriggan</Faction>
+	</Factions>
+	
+	<Statistics>
+		<MaxHP>400</MaxHP>
+		<Range>5</<Range>
+		
+		<Wood_Atk>45</Wood_Atk>
+		
+		<Metal_Def>15</Metal_Def>
+		<Metal_Hardiness>30</Metal_Hardiness>
+		
+		<Wood_Def>30</Wood_Def>
+		<Wood_Hardiness>50</Wood_Hardiness>
+	</Statistics>
+	
+</Entity>

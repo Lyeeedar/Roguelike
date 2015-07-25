@@ -118,7 +118,7 @@ public class Symbol implements PathfindingTile
 
 	public boolean isPassable()
 	{
-		return getTileData().Passable;
+		return getTileData().passable;
 	}
 
 	@Override

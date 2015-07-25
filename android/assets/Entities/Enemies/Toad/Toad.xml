@@ -16,12 +16,50 @@
 			<Coverage>90</Coverage>
 		</Feature>
 		
+		<Feature>
+			<Name>FlyEgg</Name>
+			<Placement>Any</Placement>
+			<Coverage>10</Coverage>
+			
+			<EnvironmentData>
+				<Sprite>
+					<Name>mushroom/spawner</Name>
+				</Sprite>
+				<Passable>false</Passable>
+				<Type>Spawner</Type>
+				<Count>3</Count>
+				<Entity>Enemies/Toad/Fly</Entity>
+				<Respawn>25</Respawn>
+				
+				<Statistics>
+					<MaxHP>200</MaxHP>
+				</Statistics>
+			</EnvironmentData>
+		</Feature>
+		
 	</Features>
 	
 	<Encounters>
 		<Encounter>
 			<Mobs>
 				<GiantToad>3</GiantToad>
+			</Mobs>
+		</Encounter>
+		<Encounter>
+			<Mobs>
+				<SpinyToad>3</SpinyToad>
+			</Mobs>
+		</Encounter>
+		<Encounter>
+			<Mobs>
+				<GiantToad>1</GiantToad>
+				<SpinyToad>2</SpinyToad>
+			</Mobs>
+		</Encounter>
+		<Encounter>
+			<Mobs>
+				<GiantToad>2</GiantToad>
+				<SpinyToad>1</SpinyToad>
 			</Mobs>
 		</Encounter>
 	</Encounters>

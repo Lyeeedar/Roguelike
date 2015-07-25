@@ -100,7 +100,7 @@ public class Level
 					
 					for (Sprite sprite : Grid[x][y].tileData.sprites)
 					{
-						s.History.add(new SeenHistoryItem(sprite, Grid[x][y].tileData.Description));
+						s.History.add(new SeenHistoryItem(sprite, Grid[x][y].tileData.description));
 					}
 				}
 			}
@@ -124,7 +124,7 @@ public class Level
 					
 					for (Sprite sprite : tile.tileData.sprites)
 					{
-						s.History.add(new SeenHistoryItem(sprite, tile.tileData.Description));
+						s.History.add(new SeenHistoryItem(sprite, tile.tileData.description));
 					}
 					
 					if (tile.environmentEntity != null)
@@ -139,7 +139,7 @@ public class Level
 					
 					for (Item i : tile.items)
 					{
-						s.History.add(new SeenHistoryItem(i.Icon, "A " + i.Name));
+						s.History.add(new SeenHistoryItem(i.icon, "A " + i.name));
 					}
 				}
 			}
@@ -250,6 +250,7 @@ public class Level
 			}
 		}
 		
+		updateVisibleTiles();
 		calculateLight(delta);	
 		
 		for (Sprite s : getAllSprites())
@@ -348,8 +349,6 @@ public class Level
 			
 			player.update(actionCost);
 			
-			updateVisibleTiles();
-			
 			getAllEntitiesToBeProcessed(actionCost);
 			
 			for (EnvironmentEntity ee : getAllEnvironmentEntities())
@@ -364,7 +363,7 @@ public class Level
 				player.AI.setData("Pos", null);
 			}
 			
-			if (player.sprite.SpriteAnimation instanceof BumpAnimation)
+			if (player.sprite.spriteAnimation instanceof BumpAnimation)
 			{
 				player.AI.setData("Pos", null);
 			}
@@ -547,7 +546,7 @@ public class Level
 	{
 		boolean activeEffects = false;
 		
-		if (e.sprite.SpriteAnimation != null)
+		if (e.sprite.spriteAnimation != null)
 		{
 			activeEffects = true;
 		}
@@ -671,7 +670,7 @@ public class Level
 				
 				for (Item i : tile.items)
 				{
-					sprites.add(i.Icon);
+					sprites.add(i.icon);
 				}
 			}
 		}

@@ -57,7 +57,7 @@ public class MovementTypeBolt extends AbstractMovementType
 				GameTile nextTile = ab.AffectedTiles.peek().level.getGameTile(path[i+1]);				
 				direction = Direction.getDirection(ab.AffectedTiles.peek(), nextTile);								
 								
-				if (!nextTile.tileData.Passable)
+				if (!nextTile.tileData.passable)
 				{
 					i = path.length;
 					return true;

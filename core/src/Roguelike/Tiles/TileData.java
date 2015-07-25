@@ -12,10 +12,10 @@ public class TileData
 	public Sprite[] sprites;
 	public Light light;
 	
-	public boolean Opaque;
-	public boolean Passable;
+	public boolean opaque;
+	public boolean passable;
 	
-	public String Description;
+	public String description;
 	
 	public TileData()
 	{
@@ -26,9 +26,9 @@ public class TileData
 	{
 		this.sprites = sprites;
 		this.light = light;
-		this.Opaque = opaque;
-		this.Passable = passable;
-		this.Description = description;
+		this.opaque = opaque;
+		this.passable = passable;
+		this.description = description;
 	}
 	
 	public static TileData parse(Element xml)
@@ -43,8 +43,8 @@ public class TileData
 		data.sprites = sprites.toArray(Sprite.class);
 		
 		if (xml.getChildByName("Light") != null) { data.light = Light.load(xml.getChildByName("Light")); }
-		data.Opaque = xml.getBoolean("Opaque", false);
-		data.Passable = xml.getBoolean("Passable", true);
+		data.opaque = xml.getBoolean("Opaque", false);
+		data.passable = xml.getBoolean("Passable", true);
 		
 		return data;
 	}

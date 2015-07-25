@@ -21,7 +21,7 @@
 					</Colour>
 					<Intensity>4</Intensity>
 					<Flicker>1</Flicker>
-					<FlickerPeriod>5</FlickerPeriod>
+					<FlickerPeriod>2</FlickerPeriod>
 				</Light>
 				
 				<Statistics>
@@ -72,6 +72,7 @@
 			<Mobs>
 				<Walker>1</Walker>
 			</Mobs>
+			<RangeMax>40</RangeMax>
 		</Encounter>
 		
 		<Encounter>
@@ -79,12 +80,14 @@
 				<Walker>1</Walker>
 				<Spore>2</Spore>
 			</Mobs>
+			<RangeMax>50</RangeMax>
 		</Encounter>
 		
 		<Encounter>
 			<Mobs>
 				<Walker>2</Walker>
 			</Mobs>
+			<RangeMax>60</RangeMax>
 		</Encounter>
 		
 		<Encounter>			
@@ -93,6 +96,7 @@
 				<Shooter>1</Shooter>
 			</Mobs>
 			<RangeMin>50</RangeMin>
+			<RangeMax>70</RangeMax>
 		</Encounter>
 		
 		<Encounter>
@@ -101,6 +105,7 @@
 				<Cloud>2</Cloud>
 			</Mobs>
 			<RangeMin>60</RangeMin>
+			<RangeMax>80</RangeMax>
 		</Encounter>
 		
 		<Encounter>
@@ -109,6 +114,7 @@
 				<Spore>3</Spore>
 			</Mobs>
 			<RangeMin>70</RangeMin>
+			<RangeMax>90</RangeMax>
 		</Encounter>
 		
 		<Encounter>

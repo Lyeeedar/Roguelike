@@ -14,6 +14,8 @@ import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeTile;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.IGameObject;
+import Roguelike.Items.Item;
+import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
 import Roguelike.Shadows.ShadowCaster;
 import Roguelike.Sprite.Sprite;
@@ -50,8 +52,8 @@ public class ActiveAbility implements IAbility, IGameObject
 	// rendering
 	public Light light;
 	public Sprite Icon;
-	public Sprite movementSprite;
-	public Sprite hitSprite;
+	private Sprite movementSprite;
+	private Sprite hitSprite;
 	
 	public ActiveAbility copy()
 	{
@@ -94,6 +96,14 @@ public class ActiveAbility implements IAbility, IGameObject
 	public Sprite getSprite()
 	{
 		return movementSprite;
+	}
+	
+	public Sprite getHitSprite()
+	{
+		if (hitSprite != null) { return hitSprite; }
+		Item wep = caster.getInventory().getEquip(EquipmentSlot.MAINWEAPON);
+		if (wep != null && wep.hitEffect != null) { return wep.hitEffect; }
+		return caster.defaultHitEffect;
 	}
 	
 	//----------------------------------------------------------------------
@@ -190,7 +200,7 @@ public class ActiveAbility implements IAbility, IGameObject
 				{
 					GameTile tile = epicenter.level.getGameTile(tilePos);
 					
-					if (tile.tileData.Passable)
+					if (tile.tileData.passable)
 					{
 						AffectedTiles.add(tile);
 					}

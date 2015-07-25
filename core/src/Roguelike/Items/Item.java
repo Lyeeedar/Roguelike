@@ -5,6 +5,7 @@ import java.util.EnumMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -24,11 +25,19 @@ public class Item extends GameEventHandler
 {
 	public enum WeaponType
 	{
-		NONE,
-		SWORD,
-		SPEAR,
-		AXE,
-		BOW
+		NONE("strike/strike"),
+		SWORD("slash/slash"),
+		SPEAR("thrust/thrust"),
+		AXE("slash/slash"),
+		BOW("arrow"),
+		WAND("bolt");
+		
+		public final Sprite hitSprite;
+		
+		private WeaponType(String hit)
+		{
+			hitSprite = hit != null ? AssetManager.loadSprite(hit, 0.1f) : null;
+		}
 	}
 	
 	public enum EquipmentSlot
@@ -67,33 +76,78 @@ public class Item extends GameEventHandler
 		
 	}
 	
-	public String Name;
-	public String Description;
-	public Sprite Icon;
-	public Sprite HitEffect;
+	public String name;
+	public String description;
+	public Sprite icon;
+	public Sprite hitEffect;
 	public WeaponType weaponType = WeaponType.NONE;
-	public EquipmentSlot Slot;
-	public ItemType Type;
-	public int Count;
+	public EquipmentSlot slot;
+	public ItemType type;
+	public int count;
 	public Light light;
 	public boolean canDrop = true;
+	
+	public Texture getEquipTexture()
+	{
+		if (slot == EquipmentSlot.MAINWEAPON)
+		{
+			if (weaponType == WeaponType.SWORD)
+			{
+				return AssetManager.loadTexture("Sprites/player/hand1/sword2.png");
+			}
+			else if (weaponType == WeaponType.SPEAR)
+			{
+				return AssetManager.loadTexture("Sprites/player/hand1/spear1.png");
+			}
+			else if (weaponType == WeaponType.AXE)
+			{
+				return AssetManager.loadTexture("Sprites/player/hand1/axe.png");
+			}
+			else if (weaponType == WeaponType.BOW)
+			{
+				return AssetManager.loadTexture("Sprites/player/hand1/bow.png");
+			}
+			else if (weaponType == WeaponType.WAND)
+			{
+				return AssetManager.loadTexture("Sprites/player/hand1/sceptre.png");
+			}
+		}
+		else if (slot == EquipmentSlot.OFFWEAPON)
+		{
+			return AssetManager.loadTexture("Sprites/player/hand2/shield_round1.png");
+		}
+		else if (slot == EquipmentSlot.HEAD)
+		{
+			return AssetManager.loadTexture("Sprites/player/head/chain.png");
+		}
+		else if (slot == EquipmentSlot.BODY)
+		{
+			return AssetManager.loadTexture("Sprites/player/body/chainmail3.png");
+		}
+		else if (slot == EquipmentSlot.LEGS)
+		{
+			return AssetManager.loadTexture("Sprites/player/legs/leg_armor02.png");
+		}
+		
+		return AssetManager.loadTexture("Sprites/blank.png");
+	}
 	
 	//----------------------------------------------------------------------
 	public Table createTable(Skin skin, Inventory inventory)
 	{
 		Table table = new Table();
 		
-		table.add(new Label(Name, skin)).expandX().left();
+		table.add(new Label(name, skin)).expandX().left();
 		table.row();
 		
-		Label descLabel = new Label(Description, skin);
+		Label descLabel = new Label(description, skin);
 		descLabel.setWrap(true);
 		table.add(descLabel).expand().left().width(com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth(1, table));
 		table.row();
 		
-		if (Slot != null)
+		if (slot != null)
 		{
-			Item other = inventory.getEquip(Slot);
+			Item other = inventory.getEquip(slot);
 			
 			if (other != null)
 			{
@@ -198,19 +252,19 @@ public class Item extends GameEventHandler
 			internalLoad(extendsElement);
 		}
 		
-		Name = xmlElement.get("Name", Name);		
-		Description = xmlElement.get("Description",Description);
+		name = xmlElement.get("Name", name);		
+		description = xmlElement.get("Description",description);
 		
 		Element iconElement = xmlElement.getChildByName("Icon");	
 		if (iconElement != null)
 		{
-			Icon = AssetManager.loadSprite(iconElement);
+			icon = AssetManager.loadSprite(iconElement);
 		}
 		
 		Element hitElement = xmlElement.getChildByName("HitEffect");
 		if (hitElement != null)
 		{
-			HitEffect = AssetManager.loadSprite(hitElement);
+			hitEffect = AssetManager.loadSprite(hitElement);
 		}
 		
 		Element eventsElement = xmlElement.getChildByName("Events");
@@ -221,8 +275,8 @@ public class Item extends GameEventHandler
 		
 		if (xmlElement.getChildByName("Light") != null) { light = Light.load(xmlElement.getChildByName("Light")); }
 		
-		Slot = xmlElement.get("Slot", null) != null ? EquipmentSlot.valueOf(xmlElement.get("Slot").toUpperCase()) : Slot;
-		Type = xmlElement.get("Type", null) != null ? ItemType.valueOf(xmlElement.get("Type").toUpperCase()) : Type;
+		slot = xmlElement.get("Slot", null) != null ? EquipmentSlot.valueOf(xmlElement.get("Slot").toUpperCase()) : slot;
+		type = xmlElement.get("Type", null) != null ? ItemType.valueOf(xmlElement.get("Type").toUpperCase()) : type;
 		
 		weaponType = xmlElement.get("WeaponType", null) != null ? WeaponType.valueOf(xmlElement.get("WeaponType").toUpperCase()) : weaponType;
 	}
@@ -231,20 +285,20 @@ public class Item extends GameEventHandler
 	@Override
 	public String getName()
 	{
-		return Name;
+		return name;
 	}
 
 	//----------------------------------------------------------------------
 	@Override
 	public String getDescription()
 	{
-		return Description;
+		return description;
 	}
 
 	//----------------------------------------------------------------------
 	@Override
 	public Sprite getIcon()
 	{
-		return Icon;
+		return icon;
 	}
 }

@@ -1,14 +1,14 @@
 <Level>
 	<Ambient>
-		<Red>0.5</Red>
-		<Green>0.75</Green>
-		<Blue>0.3</Blue>
-		<Alpha>0.4</Alpha>
+		<Red>0.8</Red>
+		<Green>0.95</Green>
+		<Blue>0.4</Blue>
+		<Alpha>1</Alpha>
 	</Ambient>
 	
 	<Factions>
 		<Major>
-			<Fungi>1</Fungi>
+			<Spriggan>1</Spriggan>
 		</Major>
 		<Minor>
 			<Toad>1</Toad>

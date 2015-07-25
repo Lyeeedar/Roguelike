@@ -1,0 +1,22 @@
+<Entity>
+	<Name>Spriggan Grunt</Name>
+
+	<Sprite>
+		<Name>dc-mon/spriggan/spriggan</Name>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Spriggan</Faction>
+	</Factions>
+	
+	<Statistics>
+		<MaxHP>300</MaxHP>
+		<Range>5</<Range>
+		
+		<Wood_Atk>25</Wood_Atk>
+	</Statistics>
+	
+</Entity>

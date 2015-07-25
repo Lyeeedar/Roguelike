@@ -62,28 +62,28 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	
 	public int[] addObject(GameEntity obj)
 	{
-		int[] oldPos = null;
-		
-		if (obj.tile != null)
-		{
-			obj.tile.entity = null;
-			
-			oldPos = new int[]{obj.tile.x * RoguelikeGame.TileSize, obj.tile.y * RoguelikeGame.TileSize};
-		}
+		GameTile oldTile = obj.tile;
 		
 		entity = obj;
 		obj.tile = this;
 		
-		if (oldPos != null)
+		if (oldTile != null)
 		{
-			int[] newPos = {obj.tile.x * RoguelikeGame.TileSize, obj.tile.y * RoguelikeGame.TileSize};
-			
-			int[] diff = {oldPos[0] - newPos[0], oldPos[1] - newPos[1]};
-			
-			return diff;
+			oldTile.entity = null;
+			return getPosDiff(oldTile);
 		}
 		
 		return new int[]{0, 0};
+	}
+	
+	public int[] getPosDiff(GameTile prevTile)
+	{
+		int[] oldPos = new int[]{prevTile.x * RoguelikeGame.TileSize, prevTile.y * RoguelikeGame.TileSize};		
+		int[] newPos = {x * RoguelikeGame.TileSize, y * RoguelikeGame.TileSize};
+		
+		int[] diff = {oldPos[0] - newPos[0], oldPos[1] - newPos[1]};
+		
+		return diff;
 	}
 	
 	@Override
@@ -94,7 +94,7 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 			 return true;
 		}
 		
-		return tileData.Opaque;
+		return tileData.opaque;
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	public boolean getPassable(HashSet<String> factions)
 	{
 		if (environmentEntity != null && !environmentEntity.passable) { return false; }
-		if (!tileData.Passable) { return false; }
+		if (!tileData.passable) { return false; }
 		
 		return entity != null ? !entity.isAllies(factions) : true ;
 	}

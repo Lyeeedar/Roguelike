@@ -69,7 +69,7 @@ public class Inventory
 	{
 		if (m_items.contains(item, true))
 		{
-			item.Count++;
+			item.count++;
 		}
 		else
 		{
@@ -99,14 +99,14 @@ public class Inventory
 	
 	public void equip(Item item)
 	{
-		if (item.Slot == null) { return; }
+		if (item.slot == null) { return; }
 		
-		m_equipment.put(item.Slot, item);	
+		m_equipment.put(item.slot, item);	
 	}
 	
 	public void unequip(Item item)
 	{
-		m_equipment.remove(item.Slot);	
+		m_equipment.remove(item.slot);	
 	}
 	
 	public void toggleEquip(Item item)
@@ -128,7 +128,7 @@ public class Inventory
 	
 	public boolean isEquipped(Item item)
 	{
-		return m_equipment.get(item.Slot) == item;
+		return m_equipment.get(item.slot) == item;
 	}
 	
 	public Iterator<Item> iterator(ItemType type)
@@ -155,7 +155,7 @@ public class Inventory
 			{
 				Item i = itr.next();
 				
-				if (type == ItemType.ALL || i.Type == type)
+				if (type == ItemType.ALL || i.type == type)
 				{
 					queued = i;
 					break;

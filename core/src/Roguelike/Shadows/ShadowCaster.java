@@ -247,6 +247,9 @@ public class ShadowCaster
 	private boolean isOpaque(int x, int y, int octant)
 	{
 		int[] pos = TranslateOctant(new int[] { x, y }, octant);
+		
+		if (pos[0] == startX && pos[1] == startY) { return false; } // hack to prevent start tile from blocking sight
+		
 		return grid[pos[0]][pos[1]].GetOpaque();
 	}
 }

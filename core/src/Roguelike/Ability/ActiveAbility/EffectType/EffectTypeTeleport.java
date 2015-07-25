@@ -53,12 +53,12 @@ public class EffectTypeTeleport extends AbstractEffectType
 			if (style == Style.CHARGE)
 			{
 				int distMoved = ( Math.abs(diff[0]) + Math.abs(diff[1]) ) / RoguelikeGame.TileSize;
-				entityToMove.sprite.SpriteAnimation = new MoveAnimation(0.025f * distMoved, diff, MoveEquation.EXPONENTIAL);
+				entityToMove.sprite.spriteAnimation = new MoveAnimation(0.025f * distMoved, diff, MoveEquation.EXPONENTIAL);
 			}
 			else if (style == Style.LEAP)
 			{
 				int distMoved = ( Math.abs(diff[0]) + Math.abs(diff[1]) ) / RoguelikeGame.TileSize;
-				entityToMove.sprite.SpriteAnimation = new MoveAnimation(0.025f * distMoved, diff, MoveEquation.LEAP);
+				entityToMove.sprite.spriteAnimation = new MoveAnimation(0.025f * distMoved, diff, MoveEquation.LEAP);
 			}
 		}
 	}
