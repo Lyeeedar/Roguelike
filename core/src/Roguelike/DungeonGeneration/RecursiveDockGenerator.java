@@ -159,17 +159,17 @@ public class RecursiveDockGenerator
 
 		connectRooms();
 
-		{
-			Symbol[][] symbolGrid = new Symbol[width][height];
-			for (int x = 0; x < width; x++)
-			{
-				for (int y = 0; y < height; y++)
-				{
-					symbolGrid[x][y] = tiles[x][y].symbol;
-				}
-			}
-			ImageUtils.writeSymbolGridToFile(symbolGrid, "beforeFeatures.png", 8);
-		}
+//		{
+//			Symbol[][] symbolGrid = new Symbol[width][height];
+//			for (int x = 0; x < width; x++)
+//			{
+//				for (int y = 0; y < height; y++)
+//				{
+//					symbolGrid[x][y] = tiles[x][y].symbol;
+//				}
+//			}
+//			ImageUtils.writeSymbolGridToFile(symbolGrid, "beforeFeatures.png", 8);
+//		}
 
 
 		// place factions
@@ -265,17 +265,17 @@ public class RecursiveDockGenerator
 
 		//	connectRooms();
 
-		{
-			Symbol[][] symbolGrid = new Symbol[width][height];
-			for (int x = 0; x < width; x++)
-			{
-				for (int y = 0; y < height; y++)
-				{
-					symbolGrid[x][y] = tiles[x][y].symbol;
-				}
-			}
-			ImageUtils.writeSymbolGridToFile(symbolGrid, "afterFeatures.png", 8);
-		}
+//		{
+//			Symbol[][] symbolGrid = new Symbol[width][height];
+//			for (int x = 0; x < width; x++)
+//			{
+//				for (int y = 0; y < height; y++)
+//				{
+//					symbolGrid[x][y] = tiles[x][y].symbol;
+//				}
+//			}
+//			ImageUtils.writeSymbolGridToFile(symbolGrid, "afterFeatures.png", 8);
+//		}
 	}
 
 	//----------------------------------------------------------------------

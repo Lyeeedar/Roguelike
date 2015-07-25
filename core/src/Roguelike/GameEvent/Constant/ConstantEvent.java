@@ -21,7 +21,7 @@ import exp4j.Operators.BooleanOperators;
 public class ConstantEvent
 {
 	private EnumMap<Statistics, String> equations = new EnumMap<Statistics, String>(Statistics.class);
-	private String[] reliesOn;
+	private String[] reliesOn = new String[0];
 	
 	public void parse(Element xml)
 	{
@@ -68,6 +68,11 @@ public class ConstantEvent
 		int val = (int)exp.evaluate();
 		
 		return val;
+	}
+	
+	public void putStatistic(Statistics stat, String eqn)
+	{
+		equations.put(stat, eqn);
 	}
 	
 	public static ConstantEvent load(Element xml)

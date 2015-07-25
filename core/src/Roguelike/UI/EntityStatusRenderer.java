@@ -22,7 +22,7 @@ public class EntityStatusRenderer
 	private static BitmapFont font;
 	static
 	{
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/SDS_8x8.ttf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = 8;
 		parameter.borderWidth = 1;

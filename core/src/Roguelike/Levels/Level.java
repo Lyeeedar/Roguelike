@@ -139,7 +139,7 @@ public class Level
 					
 					for (Item i : tile.items)
 					{
-						s.History.add(new SeenHistoryItem(i.icon, "A " + i.name));
+						s.History.add(new SeenHistoryItem(i.getIcon(), "A " + i.name));
 					}
 				}
 			}
@@ -620,6 +620,8 @@ public class Level
 									Grid[x][y].items.add(i);
 								}
 							}
+							
+							Grid[x][y].items.add(Item.generateRandomItem());
 						}
 					}
 				}
@@ -670,7 +672,7 @@ public class Level
 				
 				for (Item i : tile.items)
 				{
-					sprites.add(i.icon);
+					sprites.add(i.getIcon());
 				}
 			}
 		}

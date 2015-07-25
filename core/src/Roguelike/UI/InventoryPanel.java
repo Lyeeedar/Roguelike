@@ -138,7 +138,7 @@ public class InventoryPanel extends Widget
 										
 					tileBackground.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
 					
-					item.icon.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+					item.getIcon().render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
 					
 					if (entity.getInventory().isEquipped(item))
 					{
@@ -172,7 +172,7 @@ public class InventoryPanel extends Widget
 			if (itr.hasNext())
 			{
 				Item item = itr.next();				
-				item.icon.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+				item.getIcon().render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
 			}
 		}
 		

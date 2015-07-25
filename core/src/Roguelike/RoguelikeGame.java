@@ -275,7 +275,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					
 					for (Item i : gtile.items)
 					{
-						i.icon.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
+						i.getIcon().render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
 					}
 					
 					GameEntity entity = gtile.entity;
