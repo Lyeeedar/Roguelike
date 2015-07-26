@@ -24,10 +24,43 @@ import Roguelike.Tiles.GameTile;
 
 public class TaskMove extends AbstractTask
 {
-	Direction dir;		
+	Direction dir;
 	public TaskMove(Direction dir)
 	{
 		this.dir = dir;
+	}
+	
+	public boolean checkHitSomething(GameEntity obj)
+	{
+		// Collect data
+		GameTile oldTile = obj.tile;
+
+		int newX = oldTile.x+dir.GetX();
+		int newY = oldTile.y+dir.GetY();
+
+		GameTile newTile = oldTile.level.getGameTile(newX, newY);
+
+		Item wep = obj.getInventory().getEquip(EquipmentSlot.MAINWEAPON);
+
+		Array<GameTile> hitTiles = getHitTiles(oldTile, newTile, obj, wep);
+
+		// Check if should attack something
+		boolean hitSomething = false;
+		for (GameTile tile : hitTiles)
+		{
+			if (tile.entity != null && !tile.entity.isAllies(obj))
+			{
+				hitSomething = true;
+				break;
+			}
+		}
+
+		if (newTile.environmentEntity != null && !newTile.environmentEntity.passable)
+		{
+			hitSomething = true;
+		}
+		
+		return hitSomething;
 	}
 	
 	@Override

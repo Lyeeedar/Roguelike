@@ -1,11 +1,11 @@
 <Recipe>
 
-	<Name>Sword</Name>
+	<Name>Helm</Name>
 	
 	<Slots>
 	
 		<DamageDefense>
-			<Scale>1.25</Scale>
+			<Scale>0.2</Scale>
 		</DamageDefense>
 		
 		<PierceHardiness>
@@ -15,9 +15,8 @@
 	</Slots>
 	
 	<ItemTemplate>	
-		<Slot>MainWeapon</Slot>
-		<Type>Weapon</Type>
-		<WeaponType>Sword</WeaponType>	
+		<Slot>Head</Slot>
+		<Type>Armour</Type>
 	</ItemTemplate>
 	
 </Recipe>

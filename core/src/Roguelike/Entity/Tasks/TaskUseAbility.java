@@ -29,7 +29,7 @@ public class TaskUseAbility extends AbstractTask
 			obj.tile.level.addActiveAbility(aa);
 		}
 		
-		return 1.5f;
+		return 1;
 	}
 
 }

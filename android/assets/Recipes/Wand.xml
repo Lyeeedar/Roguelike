@@ -1,11 +1,11 @@
 <Recipe>
 
-	<Name>Sword</Name>
+	<Name>Wand</Name>
 	
 	<Slots>
 	
 		<DamageDefense>
-			<Scale>1.25</Scale>
+			<Scale>0.8</Scale>
 		</DamageDefense>
 		
 		<PierceHardiness>
@@ -17,7 +17,7 @@
 	<ItemTemplate>	
 		<Slot>MainWeapon</Slot>
 		<Type>Weapon</Type>
-		<WeaponType>Sword</WeaponType>	
+		<WeaponType>Wand</WeaponType>	
 	</ItemTemplate>
 	
 </Recipe>

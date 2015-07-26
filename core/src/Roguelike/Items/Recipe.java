@@ -7,6 +7,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
@@ -45,7 +46,39 @@ public class Recipe
 			}
 		}
 		
-		output.name = name;
+		output.icon = output.getIcon().copy();
+		output.icon.colour = new Color(Color.WHITE);
+		
+		Item mainMat = null;
+		int max = 0;
+		EnumMap<Tier1Element, Integer> totalElements = Tier1Element.getElementBlock();
+		
+		for (Item mat : materials)
+		{
+			int total = 0;
+			for (Tier1Element el : Tier1Element.values())
+			{
+				total += mat.elementalStats.get(el);
+				totalElements.put(el, totalElements.get(el) + mat.elementalStats.get(el));
+			}
+			
+			if (total > max)
+			{
+				max = total;
+				mainMat = mat;
+			}
+		}
+		
+		for (Tier1Element el : Tier1Element.values())
+		{
+			int val = totalElements.get(el);
+			
+			Color col = new Color(Color.WHITE).lerp(el.Colour, (float)val/1000.0f);
+			
+			output.icon.colour.mul(col);
+		}
+		
+		output.name = mainMat.name + " " + name;
 		
 		return output;
 	}
@@ -221,6 +254,24 @@ public class Recipe
 		item.itemType = ItemType.MATERIAL;
 		item.materialType = MaterialType.values()[MathUtils.random(MaterialType.values().length-1)];
 		
+		String[] names = {
+				"Wyvern",
+				"Cutting",
+				"Obsidian",
+				"Chitin",
+				"Nature",
+				"Ironfur",
+				"Kelt",
+				"Avonwrath",
+				"Leviathan",
+				"Polt",
+				"Static"
+		};
+		item.name = names[MathUtils.random(names.length-1)] + " " + element.toString().toLowerCase();
+		 
+		item.icon = item.materialType.icon.copy();
+		item.icon.colour = element.Colour;
+		
 		item.elementalStats.put(element, power);
 		
 		return item;
@@ -228,7 +279,14 @@ public class Recipe
 	
 	private static final Recipe[] Recipes = 
 	{
-		Recipe.load("Sword")
+		Recipe.load("Sword"),
+		Recipe.load("Axe"),
+		Recipe.load("Spear"),
+		Recipe.load("Bow"),
+		Recipe.load("Wand"),
+		Recipe.load("Helm"),
+		Recipe.load("Cuirass"),
+		Recipe.load("Greaves")
 	};
 	public static Recipe getRandomRecipe()
 	{

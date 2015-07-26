@@ -10,6 +10,7 @@ import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.EnvironmentEntity.ActivationAction;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
@@ -568,7 +569,17 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 				{
 					if (x >= 0 && x < level.width && y >= 0 && y < level.height && level.getSeenTile(x, y).seen)
 					{
-						level.player.AI.setData("ClickPos", new int[]{x, y});
+						// check if should be an attack
+						Direction dir = Direction.getDirection(level.player.tile, level.getGameTile(x, y));
+						TaskMove task = new TaskMove(dir);
+						if (task.checkHitSomething(level.player))
+						{
+							level.player.tasks.add(task);
+						}
+						else
+						{
+							level.player.AI.setData("ClickPos", new int[]{x, y});
+						}
 					}
 				}
 			}

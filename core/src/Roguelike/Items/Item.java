@@ -28,6 +28,14 @@ import Roguelike.Global.Tier1Element;
 
 public class Item extends GameEventHandler
 {
+	/*
+	IDEAS:
+	
+	Unlock extra power after condition (absorb x essence, kill x enemy)
+	
+	
+	 */
+	
 	//----------------------------------------------------------------------
 	public enum WeaponType
 	{
@@ -118,7 +126,7 @@ public class Item extends GameEventHandler
 	
 	public String name = "";
 	public String description = "";
-	private Sprite icon;
+	public Sprite icon;
 	public Sprite hitEffect;
 	
 	public WeaponType weaponType = WeaponType.NONE;
@@ -138,10 +146,11 @@ public class Item extends GameEventHandler
 		
 		int numMats = recipe.slots.length;
 		Item[] materials = new Item[numMats];
+		Item mat = Recipe.generateMaterial((int)(MathUtils.randomTriangular(0.5f, 1.5f)*150));
 		
 		for (int i = 0; i < numMats; i++)
 		{
-			materials[i] = Recipe.generateMaterial((int)(MathUtils.randomTriangular(0.5f, 1.5f)*150));
+			materials[i] = mat;
 		}
 		
 		return recipe.generate(materials);
@@ -207,7 +216,7 @@ public class Item extends GameEventHandler
 		
 		Table table = new Table();
 		
-		table.add(new Label(name, skin)).expandX().left();
+		table.add(new Label(getName(), skin)).expandX().left();
 		table.row();
 		
 		Label descLabel = new Label(description, skin);
@@ -444,6 +453,11 @@ public class Item extends GameEventHandler
 	@Override
 	public String getName()
 	{
+		if (itemType == ItemType.MATERIAL)
+		{
+			return name + " " + StringUtils.capitalize(materialType.toString().toLowerCase());
+		}
+		
 		return name;
 	}
 
