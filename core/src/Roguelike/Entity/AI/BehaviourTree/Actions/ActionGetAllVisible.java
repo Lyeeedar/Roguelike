@@ -2,7 +2,7 @@ package Roguelike.Entity.AI.BehaviourTree.Actions;
 
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Shadows.ShadowCaster;
 import Roguelike.Tiles.GameTile;
 
@@ -26,7 +26,7 @@ public class ActionGetAllVisible extends AbstractAction
 	{
 		Array<int[]> output = new Array<int[]>();
 		
-		ShadowCaster shadower = new ShadowCaster(entity.tile.level.getGrid(), entity.getStatistic(Statistics.RANGE));
+		ShadowCaster shadower = new ShadowCaster(entity.tile.level.getGrid(), entity.getStatistic(Statistic.RANGE));
 		shadower.ComputeFOV(entity.tile.x, entity.tile.y, output);
 		
 		Array<GameTile> visibleTiles = new Array<GameTile>();

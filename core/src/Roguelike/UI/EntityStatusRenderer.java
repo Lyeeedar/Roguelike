@@ -1,7 +1,7 @@
 package Roguelike.UI;
 
 import Roguelike.AssetManager;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.Entity.StatusEffectStack;
 import Roguelike.Entity.GameEntity;
@@ -33,7 +33,7 @@ public class EntityStatusRenderer
 	
 	public static void draw(Entity entity, Batch batch, int x, int y, int width, int height, float heightScale)
 	{		
-		float val = (float)entity.HP / (float)entity.getStatistic(Statistics.MAXHP);
+		float val = (float)entity.HP / (float)entity.getStatistic(Statistic.MAXHP);
 		float barheight = height * heightScale;
 		drawHpBar(val, batch, x, y, width, height, heightScale);
 		

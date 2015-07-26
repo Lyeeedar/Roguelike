@@ -17,6 +17,7 @@ import Roguelike.UI.MessageStack.Message;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.XmlReader.Element;
+import com.sun.xml.internal.ws.util.StringUtils;
 
 import exp4j.Functions.RandomFunction;
 import exp4j.Helpers.EquationHelper;
@@ -143,7 +144,7 @@ public class Global
 	}
 
 	//----------------------------------------------------------------------
-	public enum Statistics
+	public enum Statistic
 	{
 		// Basic stats
 		MAXHP,
@@ -179,11 +180,11 @@ public class Global
 		FIRE_HARDINESS		
 		;
 
-		public static HashMap<String, Integer> statsBlockToVariableBlock(EnumMap<Statistics, Integer> stats)
+		public static HashMap<String, Integer> statsBlockToVariableBlock(EnumMap<Statistic, Integer> stats)
 		{
 			HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
 
-			for (Statistics key : stats.keySet())
+			for (Statistic key : stats.keySet())
 			{
 				variableMap.put(key.toString(), stats.get(key));
 			}
@@ -191,11 +192,11 @@ public class Global
 			return variableMap;
 		}
 
-		public static EnumMap<Statistics, Integer> getStatisticsBlock()
+		public static EnumMap<Statistic, Integer> getStatisticsBlock()
 		{
-			EnumMap<Statistics, Integer> stats = new EnumMap<Statistics, Integer>(Statistics.class);
+			EnumMap<Statistic, Integer> stats = new EnumMap<Statistic, Integer>(Statistic.class);
 
-			for (Statistics stat : Statistics.values())
+			for (Statistic stat : Statistic.values())
 			{
 				stats.put(stat, 0);
 			}
@@ -203,20 +204,18 @@ public class Global
 			return stats;
 		}
 
-		public static EnumMap<Statistics, Integer> load(Element xml, EnumMap<Statistics, Integer> values)
+		public static EnumMap<Statistic, Integer> load(Element xml, EnumMap<Statistic, Integer> values)
 		{
 			for (int i = 0; i < xml.getChildCount(); i++)
 			{
 
 				Element el = xml.getChild(i);
 
-				Statistics stat = Statistics.valueOf(el.getName().toUpperCase());
+				Statistic stat = Statistic.valueOf(el.getName().toUpperCase());
 				String eqn = el.getText();				
 				int newVal = values.get(stat);
 
-				ExpressionBuilder expB = new ExpressionBuilder(eqn);
-				BooleanOperators.applyOperators(expB);
-				expB.function(new RandomFunction());
+				ExpressionBuilder expB = EquationHelper.createEquationBuilder(eqn);
 				expB.variable("Value");
 
 				Expression exp = EquationHelper.tryBuild(expB);
@@ -232,16 +231,30 @@ public class Global
 			return values;
 		}
 
-		public static EnumMap<Statistics, Integer> copy(EnumMap<Statistics, Integer> stats)
+		public static EnumMap<Statistic, Integer> copy(EnumMap<Statistic, Integer> map)
 		{
-			EnumMap<Statistics, Integer> map = new EnumMap<Statistics, Integer>(Statistics.class);
-			for (Statistics e : Statistics.values())
+			EnumMap<Statistic, Integer> newMap = new EnumMap<Statistic, Integer>(Statistic.class);
+			for (Statistic e : Statistic.values())
 			{
-				map.put(e, stats.get(e));
+				newMap.put(e, map.get(e));
 			}			
-			return map;
+			return newMap;
 		}
 
+		public static String formatString(String input)
+		{
+			String[] words = input.split("_");
+			
+			String output = "";
+			
+			for (String word : words)
+			{
+				word = StringUtils.capitalize(word.toLowerCase());
+				output += word + " ";
+			}
+				
+			return output.trim();
+		}
 	}
 
 	//----------------------------------------------------------------------
@@ -256,10 +269,10 @@ public class Global
 		public Tier1Element Weakness;
 		public Tier1Element Strength;
 
-		public Statistics Attack;
-		public Statistics Pierce;
-		public Statistics Defense;
-		public Statistics Hardiness;
+		public Statistic Attack;
+		public Statistic Pierce;
+		public Statistic Defense;
+		public Statistic Hardiness;
 
 		public Color Colour;
 
@@ -285,10 +298,10 @@ public class Global
 		{
 			this.Colour = colour;
 
-			Attack = Statistics.valueOf(toString()+"_ATK");
-			Pierce = Statistics.valueOf(toString()+"_PIERCE");
-			Defense = Statistics.valueOf(toString()+"_DEF");
-			Hardiness = Statistics.valueOf(toString()+"_HARDINESS");
+			Attack = Statistic.valueOf(toString()+"_ATK");
+			Pierce = Statistic.valueOf(toString()+"_PIERCE");
+			Defense = Statistic.valueOf(toString()+"_DEF");
+			Hardiness = Statistic.valueOf(toString()+"_HARDINESS");
 		}
 
 		public static EnumMap<Tier1Element, Integer> getElementBlock()
@@ -301,6 +314,42 @@ public class Global
 			}
 
 			return map;
+		}
+		
+		public static EnumMap<Tier1Element, Integer> load(Element xml, EnumMap<Tier1Element, Integer> values)
+		{
+			for (int i = 0; i < xml.getChildCount(); i++)
+			{
+				Element el = xml.getChild(i);
+
+				Tier1Element elem = Tier1Element.valueOf(el.getName().toUpperCase());
+				String eqn = el.getText();				
+				int newVal = values.get(elem);
+
+				ExpressionBuilder expB = EquationHelper.createEquationBuilder(eqn);
+				expB.variable("Value");
+
+				Expression exp = EquationHelper.tryBuild(expB);
+				if (exp != null)
+				{
+					exp.setVariable("Value", newVal);
+					newVal = (int)exp.evaluate();
+				}
+
+				values.put(elem, newVal);
+			}
+
+			return values;
+		}
+		
+		public static EnumMap<Tier1Element, Integer> copy(EnumMap<Tier1Element, Integer> map)
+		{
+			EnumMap<Tier1Element, Integer> newMap = new EnumMap<Tier1Element, Integer>(Tier1Element.class);
+			for (Tier1Element e : Tier1Element.values())
+			{
+				newMap.put(e, map.get(e));
+			}			
+			return newMap;
 		}
 	}
 

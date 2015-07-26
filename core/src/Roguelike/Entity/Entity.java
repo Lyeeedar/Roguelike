@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import Roguelike.AssetManager;
 import Roguelike.GameEvent.GameEventHandler;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
@@ -21,7 +21,7 @@ public abstract class Entity
 	public abstract void update(float delta);
 	
 	//----------------------------------------------------------------------
-	public abstract int getStatistic(Statistics stat);
+	public abstract int getStatistic(Statistic stat);
 	
 	//----------------------------------------------------------------------
 	protected abstract void internalLoad(String file);
@@ -44,17 +44,17 @@ public abstract class Entity
 		Element statElement = xml.getChildByName("Statistics");
 		if (statElement != null)
 		{
-			Statistics.load(statElement, statistics);
-			HP = getStatistic(Statistics.MAXHP);
+			Statistic.load(statElement, statistics);
+			HP = getStatistic(Statistic.MAXHP);
 		}
 	}
 
 	//----------------------------------------------------------------------
-	public EnumMap<Statistics, Integer> getStatistics()
+	public EnumMap<Statistic, Integer> getStatistics()
 	{
-		EnumMap<Statistics, Integer> newMap = new EnumMap<Statistics, Integer>(Statistics.class);
+		EnumMap<Statistic, Integer> newMap = new EnumMap<Statistic, Integer>(Statistic.class);
 
-		for (Statistics stat : Statistics.values())
+		for (Statistic stat : Statistic.values())
 		{
 			newMap.put(stat, getStatistic(stat));
 		}
@@ -67,7 +67,7 @@ public abstract class Entity
 	{
 		HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
 
-		for (Statistics s : Statistics.values())
+		for (Statistic s : Statistic.values())
 		{
 			variableMap.put(s.toString().toLowerCase(), getStatistic(s));
 		}
@@ -87,7 +87,7 @@ public abstract class Entity
 	{
 		HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
 
-		for (Statistics s : Statistics.values())
+		for (Statistic s : Statistic.values())
 		{
 			variableMap.put(s.toString().toLowerCase(), statistics.get(s));
 		}
@@ -119,7 +119,7 @@ public abstract class Entity
 	//----------------------------------------------------------------------
 	public void applyHealing(int heal)
 	{
-		HP = Math.min(HP+heal, getStatistic(Statistics.MAXHP));
+		HP = Math.min(HP+heal, getStatistic(Statistic.MAXHP));
 
 	}
 
@@ -165,7 +165,7 @@ public abstract class Entity
 	public int damageAccumulator = 0;
 
 	//----------------------------------------------------------------------
-	public EnumMap<Statistics, Integer> statistics = Statistics.getStatisticsBlock();
+	public EnumMap<Statistic, Integer> statistics = Statistic.getStatisticsBlock();
 	public Array<StatusEffect> statusEffects = new Array<StatusEffect>(false, 16);
 	public Array<StatusEffectStack> stacks = new Array<StatusEffectStack>();
 

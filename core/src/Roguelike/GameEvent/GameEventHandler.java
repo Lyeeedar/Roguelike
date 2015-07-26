@@ -2,7 +2,7 @@ package Roguelike.GameEvent;
 
 import java.util.EnumMap;
 
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
@@ -16,12 +16,12 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public abstract class GameEventHandler implements IGameObject
 {
-	protected Array<AbstractOnTurnEvent> onTurnEvents = new Array<AbstractOnTurnEvent>();
-	protected ConstantEvent constantEvent;
-	protected Array<AbstractOnDamageEvent> onDealDamageEvents = new Array<AbstractOnDamageEvent>();
-	protected Array<AbstractOnDamageEvent> onReceiveDamageEvents = new Array<AbstractOnDamageEvent>();
+	public Array<AbstractOnTurnEvent> onTurnEvents = new Array<AbstractOnTurnEvent>();
+	public ConstantEvent constantEvent;
+	public Array<AbstractOnDamageEvent> onDealDamageEvents = new Array<AbstractOnDamageEvent>();
+	public Array<AbstractOnDamageEvent> onReceiveDamageEvents = new Array<AbstractOnDamageEvent>();
 	
-	public int getStatistic(Entity entity, Statistics s)
+	public int getStatistic(Entity entity, Statistic s)
 	{
 		int val = 0;
 		
@@ -33,16 +33,21 @@ public abstract class GameEventHandler implements IGameObject
 		return val;
 	}
 	
-	public EnumMap<Statistics, Integer> getStatistics(Entity entity)
+	public EnumMap<Statistic, Integer> getStatistics(Entity entity)
 	{
-		EnumMap<Statistics, Integer> newMap = new EnumMap<Statistics, Integer>(Statistics.class);
+		EnumMap<Statistic, Integer> newMap = new EnumMap<Statistic, Integer>(Statistic.class);
 		
-		for (Statistics stat : Statistics.values())
+		for (Statistic stat : Statistic.values())
 		{
 			newMap.put(stat, getStatistic(entity, stat));
 		}
 		
 		return newMap;
+	}
+	
+	public EnumMap<Statistic, String> getStatisticsObject()
+	{
+		return constantEvent.equations;
 	}
 		
 	public void onTurn(Entity entity, float cost)

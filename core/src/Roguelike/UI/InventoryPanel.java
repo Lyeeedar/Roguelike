@@ -71,6 +71,7 @@ public class InventoryPanel extends Widget
 		headers.put(ItemType.ARMOUR, AssetManager.loadSprite("GUI/Armour"));
 		headers.put(ItemType.JEWELRY, AssetManager.loadSprite("GUI/Jewelry"));
 		headers.put(ItemType.TREASURE, AssetManager.loadSprite("GUI/Treasure"));
+		headers.put(ItemType.MATERIAL, AssetManager.loadSprite("GUI/Ingot"));
 		headers.put(ItemType.MISC, AssetManager.loadSprite("GUI/Misc"));
 		headers.put(ItemType.ALL, AssetManager.loadSprite("GUI/All"));
 				
@@ -218,7 +219,7 @@ public class InventoryPanel extends Widget
 			{
 				if (tileX < entity.tile.items.size)
 				{
-					Table t = entity.tile.items.get(tileX).createTable(skin, entity.getInventory());
+					Table t = entity.tile.items.get(tileX).createTable(skin, entity);
 					
 					tooltip = new Tooltip(t, skin, stage);
 					tooltip.show(event, x, y);
@@ -257,7 +258,7 @@ public class InventoryPanel extends Widget
 				
 				if (item != null)
 				{
-					Table t = item.createTable(skin, entity.getInventory());
+					Table t = item.createTable(skin, entity);
 					
 					tooltip = new Tooltip(t, skin, stage);
 					tooltip.show(event, x, y);

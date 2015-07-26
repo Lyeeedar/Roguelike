@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
@@ -20,7 +20,7 @@ import exp4j.Operators.BooleanOperators;
 
 public class ConstantEvent
 {
-	private EnumMap<Statistics, String> equations = new EnumMap<Statistics, String>(Statistics.class);
+	public EnumMap<Statistic, String> equations = new EnumMap<Statistic, String>(Statistic.class);
 	private String[] reliesOn = new String[0];
 	
 	public void parse(Element xml)
@@ -31,12 +31,55 @@ public class ConstantEvent
 		{
 			Element sEl = xml.getChild(i);
 			
-			Statistics el = Statistics.valueOf(sEl.getName().toUpperCase());
-			equations.put(el, sEl.getText().toLowerCase());
+			if (sEl.getName().toUpperCase().equals("ATK"))
+			{
+				for (Tier1Element el : Tier1Element.values())
+				{
+					String expanded = sEl.getText().toLowerCase();
+					expanded = expanded.replaceAll("(?<!_)atk", el.Attack.toString().toLowerCase());
+					
+					equations.put(el.Attack, expanded);
+				}
+			}
+			else if (sEl.getName().toUpperCase().equals("DEF"))
+			{
+				for (Tier1Element el : Tier1Element.values())
+				{
+					String expanded = sEl.getText().toLowerCase();
+					expanded = expanded.replaceAll("(?<!_)def", el.Defense.toString().toLowerCase());
+					
+					equations.put(el.Defense, expanded);
+				}
+			}
+			else if (sEl.getName().toUpperCase().equals("PIERCE"))
+			{
+				for (Tier1Element el : Tier1Element.values())
+				{
+					String expanded = sEl.getText().toLowerCase();
+					expanded = expanded.replaceAll("(?<!_)pierce", el.Pierce.toString().toLowerCase());
+					
+					equations.put(el.Pierce, expanded);
+				}
+			}
+			else if (sEl.getName().toUpperCase().equals("HARDINESS"))
+			{
+				for (Tier1Element el : Tier1Element.values())
+				{
+					String expanded = sEl.getText().toLowerCase();
+					expanded = expanded.replaceAll("(?<!_)hardiness", el.Hardiness.toString().toLowerCase());
+					
+					equations.put(el.Hardiness, expanded);
+				}
+			}
+			else
+			{
+				Statistic el = Statistic.valueOf(sEl.getName().toUpperCase());
+				equations.put(el, sEl.getText().toLowerCase());
+			}
 		}
 	}
 	
-	public int getStatistic(Entity entity, Statistics stat)
+	public int getStatistic(Entity entity, Statistic stat)
 	{
 		String eqn = equations.get(stat);
 		
@@ -70,7 +113,7 @@ public class ConstantEvent
 		return val;
 	}
 	
-	public void putStatistic(Statistics stat, String eqn)
+	public void putStatistic(Statistic stat, String eqn)
 	{
 		equations.put(stat, eqn);
 	}

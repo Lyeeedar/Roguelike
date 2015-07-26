@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import Roguelike.AssetManager;
 import Roguelike.Global.Direction;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.RoguelikeGame;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator;
@@ -58,7 +58,7 @@ public class EnvironmentEntity extends Entity
 	}
 	
 	@Override
-	public int getStatistic(Statistics stat)
+	public int getStatistic(Statistic stat)
 	{
 		int val = statistics.get(stat);
 

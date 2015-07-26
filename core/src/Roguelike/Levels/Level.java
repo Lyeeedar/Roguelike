@@ -3,7 +3,7 @@ package Roguelike.Levels;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.RoguelikeGame;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
@@ -169,7 +169,7 @@ public class Level
 	
 	private void calculateSingleLight(Light l)
 	{
-		if (Math.max(Math.abs(player.tile.x - l.lx), Math.abs(player.tile.y - l.ly)) > player.getStatistic(Statistics.RANGE)+(int)Math.ceil(l.actualIntensity))
+		if (Math.max(Math.abs(player.tile.x - l.lx), Math.abs(player.tile.y - l.ly)) > player.getStatistic(Statistic.RANGE)+(int)Math.ceil(l.actualIntensity))
 		{
 			return; // too far away
 		}
@@ -324,7 +324,7 @@ public class Level
 		}
 		
 		Array<int[]> output = new Array<int[]>();
-		ShadowCaster shadow = new ShadowCaster(Grid, player.getStatistic(Statistics.RANGE));
+		ShadowCaster shadow = new ShadowCaster(Grid, player.getStatistic(Statistic.RANGE));
 		shadow.ComputeFOV(player.tile.x, player.tile.y, output);
 		
 		for (int[] tilePos : output)

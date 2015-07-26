@@ -33,11 +33,7 @@
 	
 	<Effect>
 		<Damage>
-			<Metal_ATK>ceil(0)+METAL_ATK*1.5</Metal_ATK>
-			<Wood_ATK>WOOD_ATK*1.5</Wood_ATK>
-			<Air_ATK>AIR_ATK*1.5</Air_ATK>
-			<Water_ATK>WATER_ATK*1.5</Water_ATK>
-			<Fire_ATK>FIRE_ATK*1.5</Fire_ATK>
+			<Atk>ATK*1.5</Atk>
 		</Damage>
 	</Effect>
 	

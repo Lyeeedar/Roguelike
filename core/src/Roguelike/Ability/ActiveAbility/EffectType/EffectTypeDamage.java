@@ -7,7 +7,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
@@ -24,7 +24,7 @@ import exp4j.Operators.BooleanOperators;
 
 public class EffectTypeDamage extends AbstractEffectType
 {
-	private EnumMap<Statistics, String> equations = new EnumMap<Statistics, String>(Statistics.class);
+	private EnumMap<Statistic, String> equations = new EnumMap<Statistic, String>(Statistic.class);
 	private String[] reliesOn;
 	
 	@Override
@@ -36,8 +36,21 @@ public class EffectTypeDamage extends AbstractEffectType
 		{
 			Element sEl = xml.getChild(i);
 			
-			Statistics el = Statistics.valueOf(sEl.getName().toUpperCase());
-			equations.put(el, sEl.getText().toLowerCase());
+			if (sEl.getName().toUpperCase().equals("ATK"))
+			{
+				for (Tier1Element el : Tier1Element.values())
+				{
+					String expanded = sEl.getText().toLowerCase();
+					expanded = expanded.replaceAll("(?<!_)atk", el.Attack.toString().toLowerCase());
+					
+					equations.put(el.Attack, expanded);
+				}
+			}
+			else
+			{
+				Statistic stat = Statistic.valueOf(sEl.getName().toUpperCase());
+				equations.put(stat, sEl.getText().toLowerCase());
+			}
 		}
 	}
 
@@ -73,9 +86,9 @@ public class EffectTypeDamage extends AbstractEffectType
 			}
 		}
 		
-		EnumMap<Statistics, Integer> stats = Statistics.getStatisticsBlock();
+		EnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
 		
-		for (Statistics stat : Statistics.values())
+		for (Statistic stat : Statistic.values())
 		{
 			if (equations.containsKey(stat))
 			{
@@ -98,7 +111,7 @@ public class EffectTypeDamage extends AbstractEffectType
 			}
 		}
 		
-		Global.calculateDamage(aa.caster, target, Statistics.statsBlockToVariableBlock(stats), true);			
+		Global.calculateDamage(aa.caster, target, Statistic.statsBlockToVariableBlock(stats), true);			
 		target.spriteEffects.add(new SpriteEffect(aa.getHitSprite().copy(), Direction.CENTER, l));
 	}
 	

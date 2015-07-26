@@ -8,7 +8,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 
 public class DamageObject

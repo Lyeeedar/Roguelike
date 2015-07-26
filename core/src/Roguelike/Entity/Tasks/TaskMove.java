@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import Roguelike.Global.Direction;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Items.Item.WeaponType;
@@ -223,7 +223,7 @@ public class TaskMove extends AbstractTask
 		{
 			type = weapon.weaponType;
 			
-			range = weapon.getStatistic(entity, Statistics.RANGE);
+			range = weapon.getStatistic(entity, Statistic.RANGE);
 			if (range == 0) 
 			{ 
 				if (type == WeaponType.SPEAR)

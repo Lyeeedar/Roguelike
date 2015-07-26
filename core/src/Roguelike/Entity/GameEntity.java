@@ -12,7 +12,7 @@ import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.Global.Direction;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
@@ -155,7 +155,7 @@ public class GameEntity extends Entity
 
 		e.internalLoad(name);
 
-		e.HP = e.getStatistic(Statistics.MAXHP);
+		e.HP = e.getStatistic(Statistic.MAXHP);
 
 		return e;
 	}
@@ -240,7 +240,7 @@ public class GameEntity extends Entity
 	}
 
 	//----------------------------------------------------------------------
-	public int getStatistic(Statistics stat)
+	public int getStatistic(Statistic stat)
 	{
 		int val = statistics.get(stat);
 
@@ -265,8 +265,8 @@ public class GameEntity extends Entity
 	//----------------------------------------------------------------------
 	public float getActionDelay()
 	{
-		int speed = getStatistic(Statistics.SPEED);
-		int weight = getStatistic(Statistics.WEIGHT);
+		int speed = getStatistic(Statistic.SPEED);
+		int weight = getStatistic(Statistic.WEIGHT);
 
 		return 1;//(float) weight / (float) speed;
 	}

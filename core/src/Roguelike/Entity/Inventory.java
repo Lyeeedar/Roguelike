@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import Roguelike.AssetManager;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.RoguelikeGame;
 import Roguelike.Items.Item;
@@ -82,7 +82,7 @@ public class Inventory
 		m_items.removeValue(item, true);
 	}
 	
-	public int getStatistic(GameEntity entity, Statistics stat)
+	public int getStatistic(GameEntity entity, Statistic stat)
 	{
 		int val = 0;
 		
@@ -155,7 +155,7 @@ public class Inventory
 			{
 				Item i = itr.next();
 				
-				if (type == ItemType.ALL || i.type == type)
+				if (type == ItemType.ALL || i.itemType == type)
 				{
 					queued = i;
 					break;

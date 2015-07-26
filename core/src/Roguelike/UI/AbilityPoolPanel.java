@@ -6,9 +6,13 @@ import Roguelike.RoguelikeGame;
 import Roguelike.Ability.AbilityPool;
 import Roguelike.Ability.AbilityPool.AbilityLine;
 import Roguelike.Ability.AbilityPool.AbilityLine.Ability;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.PassiveAbility.PassiveAbility;
+import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -18,6 +22,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,6 +31,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Array;
 
@@ -188,11 +196,158 @@ public class AbilityPoolPanel extends Widget
 		
 		//----------------------------------------------------------------------
 		@Override
-		public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+		public void touchUp (InputEvent event, float x, float y, int pointer, int mousebutton)
 		{
+			RoguelikeGame.Instance.clearContextMenu();
+			
+			if (x < getPrefWidth())
+			{
+				int ypos = 0;
+				float ycursor = getHeight() - y;
+				
+				Array<Ability[]> abilityLine = abilityPool.abilityLines.get(selectedAbilityLine).abilityTiers;
+				for (int i = 0; i < abilityLine.size; i++)
+				{
+					if (ycursor < ypos + TileSize/2)
+					{
+						// over tier
+						break;
+					}
+					ypos += TileSize * 0.5f;
+					
+					if (ycursor < ypos + TileSize)
+					{
+						// over tiles
+						
+						int xindex = (int)((x - MaxLineWidth - TileSize) / TileSize);
+						if (xindex < 5 && xindex >= 0)
+						{
+							final Ability a = abilityLine.get(i)[xindex];
+							
+							if (a.unlocked)
+							{
+								if (a.ability instanceof ActiveAbility)
+								{
+									Table table = new Table();
+									
+									for (int ii = 0; ii < Global.NUM_ABILITY_SLOTS; ii++)
+									{
+										ActiveAbility equipped = RoguelikeGame.Instance.level.player.getSlottedActiveAbilities()[ii];
+										final int index = ii;
+										
+										Table row = new Table();
+										
+										String text = ii + ".";
+										if (equipped != null)
+										{
+											text += "  " + equipped.getName();
+										}
+																			
+										row.add(new Label(text, skin)).expand().fill();
+										
+										row.addListener(new InputListener()
+										{
+											@Override
+											public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+											{	
+												RoguelikeGame.Instance.level.player.slotActiveAbility((ActiveAbility)a.ability, index);
+												RoguelikeGame.Instance.clearContextMenu();
+												
+												return true;
+											}
+										});
+
+										table.add(row).width(Value.percentWidth(1, table));
+										table.row();
+									}
+									
+									table.pack();
+									
+									RoguelikeGame.Instance.contextMenu = new Tooltip(table, skin, stage);
+									RoguelikeGame.Instance.contextMenu.show(event, x, y-RoguelikeGame.Instance.contextMenu.getHeight()/2);
+								}
+								else if (a.ability instanceof PassiveAbility)
+								{
+									Table table = new Table();
+									
+									for (int ii = 0; ii < Global.NUM_ABILITY_SLOTS; ii++)
+									{
+										PassiveAbility equipped = RoguelikeGame.Instance.level.player.getSlottedPassiveAbilities()[ii];
+										final int index = ii;
+										
+										Table row = new Table();
+										
+										String text = ii + ".";
+										if (equipped != null)
+										{
+											text += "  " + equipped.getName();
+										}
+																			
+										row.add(new Label(text, skin)).expand().fill();
+										
+										row.addListener(new InputListener()
+										{
+											@Override
+											public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+											{	
+												RoguelikeGame.Instance.level.player.slotPassiveAbility((PassiveAbility)a.ability, index);
+												RoguelikeGame.Instance.clearContextMenu();
+												
+												return true;
+											}
+										});
+
+										table.add(row).width(Value.percentWidth(1, table));
+										table.row();
+									}
+									
+									table.pack();
+									
+									RoguelikeGame.Instance.contextMenu = new Tooltip(table, skin, stage);
+									RoguelikeGame.Instance.contextMenu.show(event, x, y-RoguelikeGame.Instance.contextMenu.getHeight()/2);
+								}
+							}
+							else
+							{
+								Table table = new Table();
+								
+								table.add(new Label("Unlock for " + a.cost + " essence?", skin)).width(Value.percentWidth(1, table));
+								
+								table.addListener(new InputListener()
+								{
+									@Override
+									public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+									{	
+										a.unlocked = true;
+										RoguelikeGame.Instance.clearContextMenu();
+										
+										return true;
+									}
+								});
+											
+								table.pack();
+								
+								RoguelikeGame.Instance.contextMenu = new Tooltip(table, skin, stage);
+								RoguelikeGame.Instance.contextMenu.show(event, x, y);
+							}
+						}
+						
+						break;
+					}
+					ypos += TileSize;
+					
+					if (ycursor < ypos + TileSize*1.5f)
+					{
+						// over blank space
+						break;
+					}
+					ypos += TileSize * 0.5f;
+				}
+			}
+			
 			if (RoguelikeGame.Instance.dragDropPayload != null)
 			{
-				RoguelikeGame.Instance.touchUp((int)event.getStageX(), Gdx.graphics.getHeight() - (int)event.getStageY(), pointer, button);
+				RoguelikeGame.Instance.touchUp((int)event.getStageX(), Gdx.graphics.getHeight() - (int)event.getStageY(), pointer, mousebutton);
 			}
 		}
 		
@@ -310,31 +465,6 @@ public class AbilityPoolPanel extends Widget
 							if (a.unlocked)
 							{
 								RoguelikeGame.Instance.dragDropPayload = new DragDropPayload(a.ability, a.ability.getIcon(), x-16, getHeight() - y - 16);
-							}
-							else
-							{
-								Dialog dialog = new Dialog("Unlock Ability?", skin)
-								{
-									public void result(Object obj)
-									{
-										if (obj != null)
-										{
-											a.unlocked = true;
-										}
-									}
-								};
-								
-								dialog.text("Unlock '"+a.ability.getName()+"' for "+a.cost+" essence?");
-								dialog.button("Unlock", a);
-								dialog.button("Cancel");
-								dialog.pack();
-								
-								Vector2 tmp = new Vector2(x, y);
-								event.getListenerActor().localToStageCoordinates(tmp);
-								
-								dialog.setPosition(tmp.x-dialog.getWidth(), tmp.y);
-								
-								stage.addActor(dialog);
 							}
 						}
 						

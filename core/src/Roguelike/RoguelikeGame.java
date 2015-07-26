@@ -1,7 +1,7 @@
 package Roguelike;
 
 import Roguelike.Global.Direction;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Ability.AbilityPool;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
@@ -95,6 +95,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 		parameter.kerning = true;
 		parameter.borderColor = Color.BLACK;
 		font = fgenerator.generateFont(parameter); // font size 12 pixels
+		font.getData().markupEnabled = true;
 		fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
 		
 		blank = AssetManager.loadTexture("Sprites/blank.png");
@@ -267,7 +268,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					{ 
 						gtile.environmentEntity.sprite.render(batch, x*TileSize + offsetx, y*TileSize + offsety, TileSize, TileSize);
 						
-						if (gtile.environmentEntity.HP < gtile.environmentEntity.statistics.get(Statistics.MAXHP) || gtile.environmentEntity.stacks.size > 0)
+						if (gtile.environmentEntity.HP < gtile.environmentEntity.statistics.get(Statistic.MAXHP) || gtile.environmentEntity.stacks.size > 0)
 						{
 							hpBars.add(gtile.environmentEntity);
 						}
@@ -586,16 +587,13 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button)
 	{
-		if (dragDropPayload != null)
+		if (dragDropPayload != null && dragDropPayload.shouldDraw())
 		{
 			if (isInBounds(screenX, screenY, abilityPanel))
 			{
-				if (dragDropPayload.shouldDraw())
-				{
-					Vector2 tmp = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
-					tmp = abilityPanel.stageToLocalCoordinates(tmp);
-					abilityPanel.handleDrop(tmp.x, tmp.y);
-				}
+				Vector2 tmp = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+				tmp = abilityPanel.stageToLocalCoordinates(tmp);
+				abilityPanel.handleDrop(tmp.x, tmp.y);
 			}
 			else
 			{
@@ -834,9 +832,8 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 						{	
 							aa.activate(entity);
 							level.player.tasks.add(new TaskWait());
-							contextMenu.remove();
-							contextMenu = null;
-
+							clearContextMenu();
+							
 							return true;
 						}
 					});
@@ -870,8 +867,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 					public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 					{	
 						prepareAbility(aa);
-						contextMenu.remove();
-						contextMenu = null;
+						clearContextMenu();
 						
 						return true;
 					}
@@ -893,7 +889,7 @@ public class RoguelikeGame extends ApplicationAdapter implements InputProcessor
 	//region Data
 	
 	//----------------------------------------------------------------------
-	private Tooltip contextMenu;
+	public Tooltip contextMenu;
 	
 	//----------------------------------------------------------------------
 	public static int TileSize = 32;

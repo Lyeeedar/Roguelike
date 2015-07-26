@@ -11,16 +11,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
+import com.sun.xml.internal.ws.util.StringUtils;
 
 import Roguelike.AssetManager;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Inventory;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 
 public class Item extends GameEventHandler
@@ -71,82 +74,77 @@ public class Item extends GameEventHandler
 		WEAPON,
 		JEWELRY,
 		TREASURE,
+		MATERIAL,
 		MISC,
 		
 		ALL
 	}
 	
 	//----------------------------------------------------------------------
-	private Item()
+	public enum MaterialType
+	{
+		FABRIC("GUI/Fabric"),
+		HIDE("GUI/Hide"),
+		LEATHER("GUI/Leather"),
+		ORE("GUI/Ore"),
+		INGOT("GUI/Ingot"),
+		LOG("GUI/Log"),
+		PLANK("GUI/Plank"),
+		BONE("GUI/Bone"),
+		CLAW("GUI/Claw"),
+		FANG("GUI/Fang"),
+		SCALE("GUI/Scale"),
+		FEATHER("GUI/Feather"),
+		SHELL("GUI/Shell"),
+		VIAL("GUI/Vial"),
+		SAC("GUI/Sac"),
+		POWDER("GUI/Powder"),
+		CRYSTAL("GUI/Crystal"),
+		GEM("GUI/Gem");
+		
+		public Sprite icon;
+		
+		private MaterialType(String path)
+		{
+			icon = AssetManager.loadSprite(path);
+		}
+	}
+	
+	//----------------------------------------------------------------------
+	public Item()
 	{
 		
 	}
 	
-	public String name;
-	public String description;
+	public String name = "";
+	public String description = "";
 	private Sprite icon;
 	public Sprite hitEffect;
+	
 	public WeaponType weaponType = WeaponType.NONE;
 	public EquipmentSlot slot;
-	public ItemType type;
+	public ItemType itemType;
+	public MaterialType materialType;
+	
 	public int count;
 	public Light light;
 	public boolean canDrop = true;
-	
+	public EnumMap<Tier1Element, Integer> elementalStats = Tier1Element.getElementBlock();
+		
 	//----------------------------------------------------------------------
 	public static Item generateRandomItem()
 	{
-		Item item = new Item();
+		Recipe recipe = Recipe.getRandomRecipe();
 		
-		if (MathUtils.randomBoolean())
+		int numMats = recipe.slots.length;
+		Item[] materials = new Item[numMats];
+		
+		for (int i = 0; i < numMats; i++)
 		{
-			// Generate weapon
-			item.type = ItemType.WEAPON;
-			item.slot = EquipmentSlot.MAINWEAPON;
-			
-			int type = MathUtils.random(5);
-			
-			if (type == 0) { item.weaponType = WeaponType.SWORD; }
-			else if (type == 1) { item.weaponType = WeaponType.SPEAR; }
-			else if (type == 2) { item.weaponType = WeaponType.AXE; }
-			else if (type == 3) { item.weaponType = WeaponType.BOW; }
-			else if (type == 4) { item.weaponType = WeaponType.WAND; }
-			
-			ConstantEvent stats = new ConstantEvent();
-			item.constantEvent = stats;
-			
-			for (Tier1Element el : Tier1Element.values())
-			{
-				stats.putStatistic(el.Attack, ""+MathUtils.random(150));
-				stats.putStatistic(el.Pierce, ""+MathUtils.random(20));
-			}
-			
-			item.name = item.weaponType.toString().toLowerCase();
-		}
-		else
-		{
-			// Generate armour
-			item.type = ItemType.ARMOUR;
-			
-			int type = MathUtils.random(3);
-			
-			if (type == 0) { item.slot = EquipmentSlot.HEAD; }
-			else if (type == 1) { item.slot = EquipmentSlot.BODY; }
-			else if (type == 2) { item.slot = EquipmentSlot.LEGS; }
-			
-			ConstantEvent stats = new ConstantEvent();
-			item.constantEvent = stats;
-			
-			for (Tier1Element el : Tier1Element.values())
-			{
-				stats.putStatistic(el.Defense, ""+MathUtils.random(20));
-				stats.putStatistic(el.Hardiness, ""+MathUtils.random(50));
-			}
-			
-			item.name = item.type.toString().toLowerCase();
+			materials[i] = Recipe.generateMaterial((int)(MathUtils.randomTriangular(0.5f, 1.5f)*150));
 		}
 		
-		return item;
+		return recipe.generate(materials);
 	}
 	
 	//----------------------------------------------------------------------
@@ -196,8 +194,17 @@ public class Item extends GameEventHandler
 	}
 	
 	//----------------------------------------------------------------------
-	public Table createTable(Skin skin, Inventory inventory)
+	public Table createTable(Skin skin, GameEntity entity)
 	{
+		Inventory inventory = entity.getInventory();
+		
+		if (slot == EquipmentSlot.MAINWEAPON)
+		{
+			Item other = inventory.getEquip(slot);
+			
+			return createWeaponTable(other, entity, skin);
+		}
+		
 		Table table = new Table();
 		
 		table.add(new Label(name, skin)).expandX().left();
@@ -214,10 +221,10 @@ public class Item extends GameEventHandler
 			
 			if (other != null)
 			{
-				for (Statistics stat : Statistics.values())
+				for (Statistic stat : Statistic.values())
 				{
-					int oldval = 1;//other.getStatistic(stat);
-					int newval = 1;//getStatistic(stat);
+					int oldval = other.getStatistic(entity, stat);
+					int newval = getStatistic(entity, stat);
 					
 					if (oldval != 0 || newval != 0)
 					{
@@ -226,7 +233,7 @@ public class Item extends GameEventHandler
 						table.add(row).expandX().left();
 						table.row();
 						
-						row.add(new Label(stat.toString() + ": " + oldval + " -> ", skin));
+						row.add(new Label(Statistic.formatString(stat.toString()) + ": " + oldval + " -> ", skin));
 						Label nval = new Label("" + newval, skin);
 						
 						if (newval < oldval)
@@ -245,9 +252,9 @@ public class Item extends GameEventHandler
 			}
 			else
 			{
-				for (Statistics stat : Statistics.values())
+				for (Statistic stat : Statistic.values())
 				{
-					int val = 1;//getStatistic(stat);
+					int val = getStatistic(entity, stat);
 					
 					if (val != 0)
 					{
@@ -255,12 +262,92 @@ public class Item extends GameEventHandler
 						table.add(row).expandX().left();
 						table.row();
 						
-						row.add(new Label(stat.toString() + ": 0 -> ", skin));
+						row.add(new Label(Statistic.formatString(stat.toString()) + ": 0 -> ", skin));
 						Label nval = new Label(""+val, skin);
 						nval.setColor(Color.GREEN);
 						row.add(nval);
 					}
 				}
+			}
+		}
+		
+		return table;
+	}
+	
+	//----------------------------------------------------------------------
+	private Table createWeaponTable(Item other, GameEntity entity, Skin skin)
+	{
+		Table table = new Table();
+		
+		table.add(new Label(name, skin)).expandX().left();
+		
+		{
+			Label label = new Label(StringUtils.capitalize(weaponType.toString().toLowerCase()), skin);
+			label.setFontScale(0.7f);
+			table.add(label).expandX().right();
+		}
+		
+		table.row();
+		
+		Label descLabel = new Label(description, skin);
+		descLabel.setWrap(true);
+		table.add(descLabel).expand().left().width(com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth(1, table));
+		table.row();
+		
+		int oldDam = 0;
+		int newDam = 0;
+		for (Tier1Element el : Tier1Element.values())
+		{
+			int oldval = other == null ? 0 : other.getStatistic(entity, el.Attack);
+			int newval = getStatistic(entity, el.Attack);
+			
+			oldDam += oldval;
+			newDam += newval;
+		}
+		
+		String damText = "Damage: " + newDam;
+		if (newDam != oldDam)
+		{
+			int diff = newDam - oldDam;
+			
+			if (diff > 0)
+			{
+				damText += "   [GREEN]+"+diff;
+			}
+			else
+			{
+				damText += "   [RED]"+diff;
+			}
+		}
+		
+		table.add(new Label(damText, skin)).expandX().left();
+		table.row();
+		
+		for (Statistic stat : Statistic.values())
+		{
+			int oldval = other == null ? 0 : other.getStatistic(entity, stat);
+			int newval = getStatistic(entity, stat);
+			
+			if (oldval != 0 || newval != 0)
+			{
+				String statText = Statistic.formatString(stat.toString()) + ": " + newval;
+				
+				if (newval != oldval)
+				{
+					int diff = newval - oldval;
+					
+					if (diff > 0)
+					{
+						damText += "   [GREEN]+"+diff;
+					}
+					else
+					{
+						damText += "   [RED]"+diff;
+					}
+				}
+				
+				table.add(new Label(statText, skin)).expandX().left();
+				table.row();
 			}
 		}
 		
@@ -307,8 +394,7 @@ public class Item extends GameEventHandler
 		
 	//----------------------------------------------------------------------
 	private void internalLoad(Element xmlElement)
-	{
-		
+	{		
 		String extendsElement = xmlElement.getAttribute("Extends", null);
 		if (extendsElement != null)
 		{
@@ -336,12 +422,22 @@ public class Item extends GameEventHandler
 			super.parse(eventsElement);
 		}
 		
-		if (xmlElement.getChildByName("Light") != null) { light = Light.load(xmlElement.getChildByName("Light")); }
+		Element elementElement = xmlElement.getChildByName("Elements");
+		if (elementElement != null)
+		{
+			Tier1Element.load(elementElement, elementalStats);
+		}
+		
+		Element lightElement = xmlElement.getChildByName("Light");
+		if (lightElement != null) 
+		{ 
+			light = Light.load(lightElement); 
+		}
 		
 		slot = xmlElement.get("Slot", null) != null ? EquipmentSlot.valueOf(xmlElement.get("Slot").toUpperCase()) : slot;
-		type = xmlElement.get("Type", null) != null ? ItemType.valueOf(xmlElement.get("Type").toUpperCase()) : type;
-		
+		itemType = xmlElement.get("Type", null) != null ? ItemType.valueOf(xmlElement.get("Type").toUpperCase()) : itemType;		
 		weaponType = xmlElement.get("WeaponType", null) != null ? WeaponType.valueOf(xmlElement.get("WeaponType").toUpperCase()) : weaponType;
+		materialType = xmlElement.get("MaterialType", null) != null ? MaterialType.valueOf(xmlElement.get("MaterialType").toUpperCase()) : materialType;
 	}
 	
 	//----------------------------------------------------------------------
@@ -401,6 +497,10 @@ public class Item extends GameEventHandler
 		else if (slot == EquipmentSlot.LEGS)
 		{
 			return AssetManager.loadSprite("GUI/Legs");
+		}
+		else if (itemType == ItemType.MATERIAL)
+		{
+			return materialType.icon;
 		}
 		
 		return AssetManager.loadSprite("white");

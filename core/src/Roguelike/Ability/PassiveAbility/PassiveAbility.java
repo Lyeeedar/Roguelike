@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import Roguelike.AssetManager;
 import Roguelike.Ability.IAbility;
 import Roguelike.GameEvent.GameEventHandler;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Sprite.Sprite;
 

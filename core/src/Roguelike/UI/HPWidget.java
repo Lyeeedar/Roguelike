@@ -2,7 +2,7 @@ package Roguelike.UI;
 
 import Roguelike.AssetManager;
 import Roguelike.Entity.GameEntity;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -29,7 +29,7 @@ public class HPWidget extends Widget
 	{
 		super.draw(batch, parentAlpha);
 		
-		float hp = (float)entity.HP / (float)entity.getStatistic(Statistics.MAXHP);
+		float hp = (float)entity.HP / (float)entity.getStatistic(Statistic.MAXHP);
 		
 		batch.setColor(Color.RED);
 		batch.draw(white, getX(), getY(), getWidth(), getHeight());
@@ -37,6 +37,6 @@ public class HPWidget extends Widget
 		batch.setColor(Color.GREEN);
 		batch.draw(white, getX(), getY(), getWidth() * hp, getHeight());
 		
-		font.draw(batch, entity.HP + " / " + entity.getStatistic(Statistics.MAXHP), getX() + getWidth()/2, getY() + getHeight()/2);
+		font.draw(batch, entity.HP + " / " + entity.getStatistic(Statistic.MAXHP), getX() + getWidth()/2, getY() + getHeight()/2);
 	}
 }

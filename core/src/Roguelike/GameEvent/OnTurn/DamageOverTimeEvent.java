@@ -6,7 +6,7 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
-import Roguelike.Global.Statistics;
+import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -16,7 +16,7 @@ import exp4j.Helpers.EquationHelper;
 public class DamageOverTimeEvent extends AbstractOnTurnEvent
 {
 	private String condition;	
-	private EnumMap<Statistics, String> equations = new EnumMap<Statistics, String>(Statistics.class);
+	private EnumMap<Statistic, String> equations = new EnumMap<Statistic, String>(Statistic.class);
 	private String[] reliesOn;
 	
 	private float accumulator;
@@ -60,9 +60,9 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 			}
 		}
 		
-		EnumMap<Statistics, Integer> stats = Statistics.getStatisticsBlock();
+		EnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
 		
-		for (Statistics stat : Statistics.values())
+		for (Statistic stat : Statistic.values())
 		{
 			if (equations.containsKey(stat))
 			{
@@ -89,7 +89,7 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 		{
 			accumulator -= 1;
 			
-			Global.calculateDamage(entity, entity, Statistics.statsBlockToVariableBlock(stats), false);	
+			Global.calculateDamage(entity, entity, Statistic.statsBlockToVariableBlock(stats), false);	
 		}
 		
 		return true;
@@ -106,7 +106,7 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 		{
 			Element sEl = xml.getChild(i);
 			
-			Statistics el = Statistics.valueOf(sEl.getName().toUpperCase());
+			Statistic el = Statistic.valueOf(sEl.getName().toUpperCase());
 			equations.put(el, sEl.getText().toLowerCase());
 		}
 	}

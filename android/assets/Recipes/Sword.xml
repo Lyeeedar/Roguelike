@@ -1,0 +1,23 @@
+<Recipe>
+
+	<Name>Sword</Name>
+	
+	<Slots>
+	
+		<DamageDefense>
+			<Scale>1</Scale>
+		</DamageDefense>
+		
+		<PierceHardiness>
+			<Scale>0.05</Scale>
+		</PierceHardiness>
+	
+	</Slots>
+	
+	<ItemTemplate>	
+		<Slot>MainWeapon</Slot>
+		<Type>Weapon</Type>
+		<WeaponType>Sword</WeaponType>	
+	</ItemTemplate>
+	
+</Recipe>
