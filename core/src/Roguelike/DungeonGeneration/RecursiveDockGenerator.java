@@ -159,17 +159,18 @@ public class RecursiveDockGenerator
 
 		connectRooms();
 
-//		{
-//			Symbol[][] symbolGrid = new Symbol[width][height];
-//			for (int x = 0; x < width; x++)
-//			{
-//				for (int y = 0; y < height; y++)
-//				{
-//					symbolGrid[x][y] = tiles[x][y].symbol;
-//				}
-//			}
-//			ImageUtils.writeSymbolGridToFile(symbolGrid, "beforeFeatures.png", 8);
-//		}
+		if (DEBUG_OUTPUT)
+		{
+			Symbol[][] symbolGrid = new Symbol[width][height];
+			for (int x = 0; x < width; x++)
+			{
+				for (int y = 0; y < height; y++)
+				{
+					symbolGrid[x][y] = tiles[x][y].symbol;
+				}
+			}
+			ImageUtils.writeSymbolGridToFile(symbolGrid, "beforeFeatures.png", DEBUG_SIZE);
+		}
 
 
 		// place factions
@@ -265,17 +266,18 @@ public class RecursiveDockGenerator
 
 		//	connectRooms();
 
-//		{
-//			Symbol[][] symbolGrid = new Symbol[width][height];
-//			for (int x = 0; x < width; x++)
-//			{
-//				for (int y = 0; y < height; y++)
-//				{
-//					symbolGrid[x][y] = tiles[x][y].symbol;
-//				}
-//			}
-//			ImageUtils.writeSymbolGridToFile(symbolGrid, "afterFeatures.png", 8);
-//		}
+		if (DEBUG_OUTPUT)
+		{
+			Symbol[][] symbolGrid = new Symbol[width][height];
+			for (int x = 0; x < width; x++)
+			{
+				for (int y = 0; y < height; y++)
+				{
+					symbolGrid[x][y] = tiles[x][y].symbol;
+				}
+			}
+			ImageUtils.writeSymbolGridToFile(symbolGrid, "afterFeatures.png", DEBUG_SIZE);
+		}
 	}
 
 	//----------------------------------------------------------------------
@@ -789,6 +791,9 @@ public class RecursiveDockGenerator
 	//endregion Private Methods
 	//####################################################################//
 	//region Data
+	
+	private static final boolean DEBUG_OUTPUT = true;
+	private static final int DEBUG_SIZE = 16;
 
 	private GenerationTile[][] tiles;
 	private Random ran = new Random();
@@ -971,6 +976,15 @@ public class RecursiveDockGenerator
 		//----------------------------------------------------------------------
 		public void addFeatures(Random ran, DungeonFileParser dfp, FactionParser faction, int influence)
 		{
+			Symbol[][] roomCopy = new Symbol[width][height];
+			for (int x  = 0; x < width; x++)
+			{
+				for (int y = 0; y < height; y++)
+				{
+					roomCopy[x][y] = roomContents[x][y];
+				}
+			}
+			
 			// find all the entrances
 			Array<int[]> doorArr = new Array<int[]>();
 			for (int x  = 0; x < width; x++)
@@ -988,48 +1002,16 @@ public class RecursiveDockGenerator
 			}
 			int[][] doors = doorArr.toArray(int[].class);
 
-			// separate floor tiles into lists
-			Array<int[]> anyList = new Array<int[]>();
-			PriorityQueue<FeatureTile> furthestList = new PriorityQueue<FeatureTile>();
-			Array<int[]> wallList = new Array<int[]>();
-			Array<int[]> centreList = new Array<int[]>();
-
+			// build the any list
+			Array<int[]> validList = new Array<int[]>();
 			for (int x = 1; x < width-1; x++)
 			{
 				for (int y = 1; y < height-1; y++)
 				{
-					if (roomContents[x][y].isPassable() && !roomContents[x][y].hasEnvironmentEntity())
+					if (roomContents[x][y].isPassable())
 					{
 						int[] pos = {x, y};
-
-						anyList.add(pos);
-
-						boolean isWall = false;
-						for (Direction d : Direction.values())
-						{
-							int nx = x + d.GetX();
-							int ny = y + d.GetY();
-
-							if (nx >= 0 && nx < width && ny >= 0 && ny < height)
-							{
-								if (!roomContents[nx][ny].isPassable())
-								{
-									isWall = true;
-									break;
-								}
-							}
-						}
-
-						if (isWall)
-						{
-							wallList.add(pos);
-						}
-						else
-						{
-							centreList.add(pos);
-						}
-
-						furthestList.add(new FeatureTile(pos, doors));
+						validList.add(pos);
 					}
 				}
 			}
@@ -1037,7 +1019,6 @@ public class RecursiveDockGenerator
 			// start placing features
 
 			// Do furthest
-			if (furthestList.size() > 0)
 			{
 				Array<Feature> features = faction.features.get(FeaturePlacementType.FURTHEST);
 
@@ -1048,8 +1029,21 @@ public class RecursiveDockGenerator
 					{
 						continue;
 					}
+					
+					// Build list
+					PriorityQueue<FeatureTile> furthestList = new PriorityQueue<FeatureTile>();
+					for (int[] tile : validList)
+					{
+						int x = tile[0];
+						int y = tile[1];
+						
+						if (roomContents[x][y].getTileData().canFeature && roomContents[x][y].isPassable() && (f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity()))
+						{
+							furthestList.add(new FeatureTile(tile, doors));
+						}
+					}
 
-					// Skip if no valid tiles left
+					// Skip if no valid tiles
 					if (furthestList.size() == 0)
 					{
 						break;
@@ -1062,9 +1056,6 @@ public class RecursiveDockGenerator
 					for (int i = 0; i < numTilesToPlace; i++)
 					{
 						int[] pos = furthestList.poll().pos;
-						anyList.removeValue(pos, true);
-						wallList.removeValue(pos, true);
-						centreList.removeValue(pos, true);
 
 						roomContents[pos[0]][pos[1]] = f.getAsSymbol(roomContents[pos[0]][pos[1]]);
 
@@ -1074,7 +1065,6 @@ public class RecursiveDockGenerator
 			}
 
 			// Do wall		
-			if (wallList.size > 0)
 			{
 				Array<Feature> features = faction.features.get(FeaturePlacementType.WALL);
 
@@ -1085,6 +1075,38 @@ public class RecursiveDockGenerator
 						continue;
 					}
 
+					// Build list
+					Array<int[]> wallList = new Array<int[]>();
+					for (int[] tile : validList)
+					{
+						int x = tile[0];
+						int y = tile[1];
+						
+						if (roomContents[x][y].getTileData().canFeature && roomContents[x][y].isPassable() && (f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity()))
+						{
+							boolean isWall = false;
+							for (Direction d : Direction.values())
+							{
+								int nx = x + d.GetX();
+								int ny = y + d.GetY();
+
+								if (nx >= 0 && nx < width && ny >= 0 && ny < height)
+								{
+									if (!roomContents[nx][ny].isPassable())
+									{
+										isWall = true;
+										break;
+									}
+								}
+							}
+
+							if (isWall)
+							{
+								wallList.add(tile);
+							}
+						}
+					}
+					
 					if (wallList.size == 0)
 					{
 						break;
@@ -1095,8 +1117,6 @@ public class RecursiveDockGenerator
 					for (int i = 0; i < numTilesToPlace; i++)
 					{
 						int[] pos = wallList.removeIndex(ran.nextInt(wallList.size));
-						anyList.removeValue(pos, true);
-						centreList.removeValue(pos, true);
 
 						roomContents[pos[0]][pos[1]] = f.getAsSymbol(roomContents[pos[0]][pos[1]]);
 
@@ -1106,7 +1126,6 @@ public class RecursiveDockGenerator
 			}
 
 			// Do centre
-			if (centreList.size > 0)
 			{
 				Array<Feature> features = faction.features.get(FeaturePlacementType.CENTRE);
 
@@ -1115,6 +1134,38 @@ public class RecursiveDockGenerator
 					if (influence < f.minRange || influence > f.maxRange)
 					{
 						continue;
+					}
+					
+					// Build list
+					Array<int[]> centreList = new Array<int[]>();
+					for (int[] tile : validList)
+					{
+						int x = tile[0];
+						int y = tile[1];
+						
+						if (roomContents[x][y].getTileData().canFeature && roomContents[x][y].isPassable() && (f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity()))
+						{
+							boolean isWall = false;
+							for (Direction d : Direction.values())
+							{
+								int nx = x + d.GetX();
+								int ny = y + d.GetY();
+
+								if (nx >= 0 && nx < width && ny >= 0 && ny < height)
+								{
+									if (!roomContents[nx][ny].isPassable())
+									{
+										isWall = true;
+										break;
+									}
+								}
+							}
+
+							if (!isWall)
+							{
+								centreList.add(tile);
+							}
+						}
 					}
 
 					if (centreList.size == 0)
@@ -1127,7 +1178,6 @@ public class RecursiveDockGenerator
 					for (int i = 0; i < numTilesToPlace; i++)
 					{
 						int[] pos = centreList.removeIndex(ran.nextInt(centreList.size));
-						anyList.removeValue(pos, true);
 
 						roomContents[pos[0]][pos[1]] = f.getAsSymbol(roomContents[pos[0]][pos[1]]);
 
@@ -1137,7 +1187,6 @@ public class RecursiveDockGenerator
 			}
 
 			// Do any
-			if (anyList.size > 0)
 			{
 				Array<Feature> features = faction.features.get(FeaturePlacementType.ANY);
 
@@ -1146,6 +1195,18 @@ public class RecursiveDockGenerator
 					if (influence < f.minRange || influence > f.maxRange)
 					{
 						continue;
+					}
+					
+					Array<int[]> anyList = new Array<int[]>();
+					for (int[] tile : validList)
+					{
+						int x = tile[0];
+						int y = tile[1];
+						
+						if (roomContents[x][y].getTileData().canFeature && roomContents[x][y].isPassable() && (f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity()))
+						{
+							anyList.add(tile);
+						}
 					}
 
 					if (anyList.size == 0)
@@ -1179,23 +1240,39 @@ public class RecursiveDockGenerator
 
 					for (int[] point : path)
 					{
-						roomContents[point[0]][point[1]] = dfp.sharedSymbolMap.get('.');
+						roomContents[point[0]][point[1]] = roomCopy[point[0]][point[1]];
 					}
 				}
 			}
-
-			// place mobs
-			Encounter enc = faction.getEncounter(ran, influence);
-
-			for (String mob : enc.mobs)
+			
+			// Do spawn
 			{
-				if (anyList.size == 0) { break; }
+				// get valid spawn tiles
+				Array<int[]> spawnList = new Array<int[]>();
+				for (int[] tile : validList)
+				{
+					int x = tile[0];
+					int y = tile[1];
+					
+					if (roomContents[x][y].getTileData().canSpawn && roomContents[x][y].isPassable() && !roomContents[x][y].hasGameEntity())
+					{
+						spawnList.add(tile);
+					}
+				}
 
-				int[] pos = anyList.removeIndex(ran.nextInt(anyList.size));
+				// place mobs
+				Encounter enc = faction.getEncounter(ran, influence);
 
-				roomContents[pos[0]][pos[1]] = roomContents[pos[0]][pos[1]].copy();
-				roomContents[pos[0]][pos[1]].entityData = mob;
-			}
+				for (String mob : enc.getMobsToPlace(influence, spawnList.size))
+				{
+					if (spawnList.size == 0) { break; }
+
+					int[] pos = spawnList.removeIndex(ran.nextInt(spawnList.size));
+
+					roomContents[pos[0]][pos[1]] = roomContents[pos[0]][pos[1]].copy();
+					roomContents[pos[0]][pos[1]].entityData = mob;
+				}
+			}			
 		}
 
 		//----------------------------------------------------------------------

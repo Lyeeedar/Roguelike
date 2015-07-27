@@ -17,6 +17,9 @@ public class TileData
 	
 	public String description;
 	
+	public boolean canFeature = true;
+	public boolean canSpawn = true;
+	
 	public TileData()
 	{
 		
@@ -45,6 +48,9 @@ public class TileData
 		if (xml.getChildByName("Light") != null) { data.light = Light.load(xml.getChildByName("Light")); }
 		data.opaque = xml.getBoolean("Opaque", false);
 		data.passable = xml.getBoolean("Passable", true);
+		
+		data.canFeature = xml.getBoolean("CanFeature", true);
+		data.canSpawn = xml.getBoolean("CanSpawn", true);
 		
 		return data;
 	}

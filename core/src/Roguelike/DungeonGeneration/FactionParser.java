@@ -102,9 +102,10 @@ public class FactionParser
 			
 			enc.minRange = encounter.getInt("RangeMin", 0);
 			enc.maxRange = encounter.getInt("RangeMax", 100);
+			enc.coverage = encounter.getInt("Coverage", 5);
 			enc.weight = encounter.getInt("Weight", 1);
 			
-			Array<String> mobs = new Array<String>();
+			Array<Mob> mobs = new Array<Mob>();
 			
 			Element mobsElement = encounter.getChildByName("Mobs");
 			
@@ -112,20 +113,18 @@ public class FactionParser
 			{
 				Element encEl = mobsElement.getChild(i);
 				
-				int count = 0;
+				int weight = 0;
 				
 				try
 				{
-					count = Integer.parseInt(encEl.getText());
+					weight = Integer.parseInt(encEl.getText());
 				} catch (Exception e) {}
 				
-				for (int ii = 0; ii < count; ii++)
-				{
-					mobs.add("Enemies/"+name+"/"+encEl.getName());
-				}
+				mobs.add(new Mob("Enemies/"+name+"/"+encEl.getName(), weight));
+				enc.totalMobWeight += weight;
 			}
 			
-			enc.mobs = mobs.toArray(String.class);
+			enc.mobs = mobs.toArray(Mob.class);
 			
 			encounters.add(enc);
 		}		
@@ -147,12 +146,51 @@ public class FactionParser
 	
 	public static class Encounter
 	{
-		public String[] mobs;
+		public Mob[] mobs;
+		public int totalMobWeight;
 		
 		public int minRange;
 		public int maxRange;
 		
+		public int coverage;
+		
 		public int weight;
+		
+		public Array<String> getMobsToPlace(int influence, int numValidTiles)
+		{
+			float currentInfluence = (float)(influence - minRange) / (float)(maxRange - minRange);
+			float currentCoverage = ((float)coverage * currentInfluence) / 100;
+			int numMobsToPlace = (int)Math.ceil(numValidTiles * currentCoverage);
+			
+			float factor = (float)numMobsToPlace / (float)totalMobWeight;
+			
+			Array<String> mobArr = new Array<String>();
+			
+			for (Mob mob : mobs)
+			{
+				float scaledNum = (float)mob.weight * factor;
+				int num = (int)Math.ceil(scaledNum);
+				
+				for (int i = 0; i < num; i++)
+				{
+					mobArr.add(mob.enemy);
+				}
+			}
+			
+			return mobArr;
+		}
+	}
+	
+	public static class Mob
+	{
+		public final String enemy;
+		public final int weight;
+		
+		public Mob(String enemy, int weight)
+		{
+			this.enemy = enemy;
+			this.weight = weight;
+		}
 	}
 	
 	public static class Feature
@@ -181,9 +219,7 @@ public class FactionParser
 			float currentInfluence = (float)(influence - minRange) / (float)(maxRange - minRange);
 			float currentCoverage = ((float)coverage * currentInfluence) / 100;
 			int numTilesToPlace = (int)Math.ceil(numValidTiles * currentCoverage);
-			
-			System.out.println("Influence: " + influence + " Num Valid Tiles: " + numValidTiles + " Tiles to place: " + numTilesToPlace);
-			
+						
 			return numTilesToPlace;
 		}
 	}
