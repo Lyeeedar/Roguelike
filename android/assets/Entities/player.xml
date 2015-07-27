@@ -1,4 +1,4 @@
-<Entity Extends="human">
+<Entity>
 	<Name>Player</Name>
 	
 	<Factions>

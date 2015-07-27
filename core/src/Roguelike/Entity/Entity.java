@@ -47,6 +47,12 @@ public abstract class Entity
 			Statistic.load(statElement, statistics);
 			HP = getStatistic(Statistic.MAXHP);
 		}
+		
+		Element inventoryElement = xml.getChildByName("Inventory");
+		if (inventoryElement != null)
+		{
+			inventory.load(inventoryElement);
+		}
 	}
 
 	//----------------------------------------------------------------------
@@ -102,6 +108,12 @@ public abstract class Entity
 		return variableMap;
 	}
 
+	//----------------------------------------------------------------------
+	public Inventory getInventory()
+	{
+		return inventory;
+	}
+	
 	//----------------------------------------------------------------------
 	public void applyDamage(int dam, Entity damager)
 	{
@@ -167,7 +179,8 @@ public abstract class Entity
 	//----------------------------------------------------------------------
 	public EnumMap<Statistic, Integer> statistics = Statistic.getStatisticsBlock();
 	public Array<StatusEffect> statusEffects = new Array<StatusEffect>(false, 16);
-	public Array<StatusEffectStack> stacks = new Array<StatusEffectStack>();
+	public Array<StatusEffectStack> stacks = new Array<StatusEffectStack>();	
+	public Inventory inventory = new Inventory();
 
 	//----------------------------------------------------------------------
 	public String name;

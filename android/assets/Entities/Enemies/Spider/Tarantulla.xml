@@ -1,0 +1,22 @@
+<Entity>
+	<Name>Tarantulla</Name>
+
+	<Sprite>
+		<Name>dc-mon/animals/tarantella</Name>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Spider</Faction>
+	</Factions>
+	
+	<Statistics>
+		<MaxHP>300</MaxHP>
+		<Range>5</<Range>
+		
+		<Wood_Atk>33</Wood_Atk>
+	</Statistics>
+	
+</Entity>

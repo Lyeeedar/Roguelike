@@ -1,0 +1,97 @@
+<Faction>
+	<Name>Spider</Name>
+	
+	<Features>
+	
+		<Feature>
+			<Name>Spiderweb</Name>
+			<Placement>Wall</Placement>
+			<EnvironmentData>
+				<Passable>false</Passable>
+				<Opaque>false</Opaque>
+				<Sprite>
+					<Name>spider/spiderweb</Name>
+				</Sprite>
+				
+				<Statistics>
+					<MaxHP>200</MaxHP>
+				</Statistics>
+			</EnvironmentData>
+			<Coverage>50</Coverage>
+
+		</Feature>
+		
+		<Feature>
+			<Name>Spiderweb</Name>
+			<Placement>Any</Placement>
+			<EnvironmentData>
+				<Passable>false</Passable>
+				<Opaque>false</Opaque>
+				<Sprite>
+					<Name>spider/spiderweb</Name>
+				</Sprite>
+				
+				<Statistics>
+					<MaxHP>200</MaxHP>
+				</Statistics>
+			</EnvironmentData>
+			<Coverage>5</Coverage>
+		</Feature>
+		
+		<Feature>
+			<Name>Cocoon</Name>
+			<Placement>Any</Placement>
+			<Coverage>10</Coverage>
+			
+			<EnvironmentData>
+				<Sprite>
+					<Name>spider/cocoon</Name>
+				</Sprite>
+				<Passable>false</Passable>
+				
+				<Statistics>
+					<MaxHP>200</MaxHP>
+				</Statistics>
+				
+				<Inventory>
+				    
+				    <Item DropChance="rnd(6)<1">
+				        <Type>Material</Type>
+					    <Name>Rusted Iron</Name>
+					    <MaterialType>Ingot</MaterialType>
+					    <Elements>
+					        <Metal>50+rnd(50)</Metal>
+					        <Wood>50+rnd(50)</Wood>
+					    </Elements>
+				    </Item>
+				    
+				</Inventory>
+			</EnvironmentData>
+		</Feature>
+		
+	</Features>
+	
+	<Encounters>
+		<Encounter>
+			<Mobs>
+				<TrapdoorSpider>2</TrapdoorSpider>
+			</Mobs>
+		</Encounter>
+		<Encounter>
+			<Mobs>
+				<Tarantulla>3</Tarantulla>
+			</Mobs>
+		</Encounter>
+		<Encounter>
+			<Mobs>
+				<JumpingSpider>2</JumpingSpider>
+			</Mobs>
+		</Encounter>
+		<Encounter>
+			<Mobs>
+				<RedbackSpider>3</RedbackSpider>
+			</Mobs>
+		</Encounter>
+	</Encounters>
+
+</Faction>

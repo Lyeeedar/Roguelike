@@ -23,6 +23,8 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class EnvironmentEntity extends Entity
 {
+	
+	
 	public boolean passable;
 	public boolean opaque;
 

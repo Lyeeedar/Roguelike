@@ -646,7 +646,24 @@ public class Level
 						
 						if (e != player && e.HP <= 0 && !hasActiveEffects(e))
 						{
-							e.tile.environmentEntity = null;							
+							e.tile.environmentEntity = null;		
+							
+							for (Item i : e.getInventory().m_items)
+							{
+								if (i.canDrop && i.shouldDrop())
+								{
+									if (i.itemType == ItemType.MATERIAL)
+									{
+										Grid[x][y].items.add(Recipe.generateItemForMaterial(i));
+									}
+									else
+									{
+										Grid[x][y].items.add(i);
+									}
+									
+									RoguelikeGame.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " drops " + i.getName())));
+								}
+							}
 						}
 					}
 				}

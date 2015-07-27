@@ -231,12 +231,6 @@ public class GameEntity extends Entity
 				slottedPassiveAbilities[i] = ab;
 			}
 		}
-
-		Element inventoryElement = xmlElement.getChildByName("Inventory");
-		if (inventoryElement != null)
-		{
-			inventory.load(inventoryElement);
-		}
 	}
 
 	//----------------------------------------------------------------------
@@ -269,12 +263,6 @@ public class GameEntity extends Entity
 		int weight = getStatistic(Statistic.WEIGHT);
 
 		return 1;//(float) weight / (float) speed;
-	}
-
-	//----------------------------------------------------------------------
-	public Inventory getInventory()
-	{
-		return inventory;
 	}
 
 	//----------------------------------------------------------------------
@@ -406,7 +394,6 @@ public class GameEntity extends Entity
 	//----------------------------------------------------------------------
 	private PassiveAbility[] slottedPassiveAbilities = new PassiveAbility[Global.NUM_ABILITY_SLOTS];
 	private ActiveAbility[] slottedActiveAbilities = new ActiveAbility[Global.NUM_ABILITY_SLOTS];
-	private Inventory inventory = new Inventory();
 
 	//----------------------------------------------------------------------
 	public Sprite defaultHitEffect = AssetManager.loadSprite("strike/strike", 0.1f);
