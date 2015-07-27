@@ -1,0 +1,32 @@
+<AbilityLine>
+	<Name>Lancer</Name>
+	<Description>Agile dealer of death, leaping around the battlefield striking from the skies.</Description>
+	<Tiers>
+		<Tier>
+			<ActiveAbility>
+				<Name>Lancer/Tier1/JumpStrike</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Lancer/Tier1/HeavyThrust</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Lancer/Tier1/ElusiveAttack</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Lancer/Tier1/PiercingSpike</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Lancer/Tier1/PiercingSpike</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+		</Tier>
+	</Tiers>
+</AbilityLine>

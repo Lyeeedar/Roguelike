@@ -23,7 +23,6 @@
 					<Wood_Atk>30</Wood_Atk>
 				</Damage>
 				<Teleport>
-					<Mode>CasterToTarget</Mode>
 					<Style>Leap</Style>
 				</Teleport>
 			</Effect>

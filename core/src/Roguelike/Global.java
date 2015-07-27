@@ -16,6 +16,7 @@ import Roguelike.UI.MessageStack.Message;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.sun.xml.internal.ws.util.StringUtils;
 
@@ -140,6 +141,71 @@ public class Global
 		public static Direction getDirection(GameTile t1, GameTile t2)
 		{
 			return getDirection(t2.x - t1.x, t2.y - t1.y);
+		}
+	
+		public static Array<int[]> buildCone(Direction dir, int[] start, int range)
+		{
+			Array<int[]> hitTiles = new Array<int[]>();
+			
+			Direction anticlockwise = dir.GetAnticlockwise();
+			Direction clockwise = dir.GetClockwise();
+			
+			int[] acwOffset = { dir.GetX() - anticlockwise.GetX(), dir.GetY() - anticlockwise.GetY() };
+			int[] cwOffset = { dir.GetX() - clockwise.GetX(), dir.GetY() - clockwise.GetY() };
+			
+			hitTiles.add(new int[]{
+					start[0] + anticlockwise.GetX(), 
+					start[1] + anticlockwise.GetY()}
+			);
+			
+			hitTiles.add(new int[]{
+					start[0] + dir.GetX(), 
+					start[1] + dir.GetY()}
+			);
+			
+			hitTiles.add(new int[]{
+					start[0] + clockwise.GetX(), 
+					start[1] + clockwise.GetY()}
+			);
+			
+			for (int i = 2; i <= range; i++)
+			{
+				int acx = start[0] + anticlockwise.GetX()*i;
+				int acy = start[1] + anticlockwise.GetY()*i;
+				
+				int nx = start[0] + dir.GetX()*i;
+				int ny = start[1] + dir.GetY()*i;
+				
+				int cx = start[0] + clockwise.GetX()*i;
+				int cy = start[1]+ clockwise.GetY()*i;
+				
+				// add base tiles
+				hitTiles.add(new int[]{acx, acy});
+				hitTiles.add(new int[]{nx, ny});
+				hitTiles.add(new int[]{cx, cy});
+				
+				// add anticlockwise - mid
+				int acwdiff = Math.max(Math.abs(acx - nx), Math.abs(acy - ny));
+				for (int ii = 1; ii < acwdiff; ii++)
+				{
+					int px = nx + acwOffset[0] * ii;
+					int py = ny + acwOffset[1] * ii;
+					
+					hitTiles.add(new int[]{px, py});
+				}
+				
+				// add mid - clockwise
+				int cwdiff = Math.max(Math.abs(cx - nx), Math.abs(cy - ny));
+				for (int ii = 1; ii < cwdiff; ii++)
+				{
+					int px = nx + cwOffset[0] * ii;
+					int py = ny + cwOffset[1] * ii;
+					
+					hitTiles.add(new int[]{px, py});
+				}
+			}
+			
+			return hitTiles;
 		}
 	}
 

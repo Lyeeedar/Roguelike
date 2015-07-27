@@ -102,7 +102,7 @@ public class FactionParser
 			
 			enc.minRange = encounter.getInt("RangeMin", 0);
 			enc.maxRange = encounter.getInt("RangeMax", 100);
-			enc.coverage = encounter.getInt("Coverage", 5);
+			enc.coverage = encounter.getInt("Coverage", 1);
 			enc.weight = encounter.getInt("Weight", 1);
 			
 			Array<Mob> mobs = new Array<Mob>();

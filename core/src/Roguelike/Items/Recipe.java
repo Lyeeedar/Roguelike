@@ -5,6 +5,10 @@ import java.util.EnumMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global.Tier1Element;
+import Roguelike.GameEvent.Constant.ConstantEvent;
+import Roguelike.Items.Item.ItemType;
+import Roguelike.Items.Item.MaterialType;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -16,11 +20,6 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import exp4j.Functions.RandomFunction;
 import exp4j.Helpers.EquationHelper;
 import exp4j.Operators.BooleanOperators;
-import Roguelike.Global.Statistic;
-import Roguelike.Global.Tier1Element;
-import Roguelike.GameEvent.Constant.ConstantEvent;
-import Roguelike.Items.Item.ItemType;
-import Roguelike.Items.Item.MaterialType;
 
 public class Recipe
 {
@@ -246,6 +245,7 @@ public class Recipe
 		}		
 	}
 
+	//---------- DEBUG STUFF
 	public static Item generateMaterial(int power)
 	{
 		Tier1Element element = Tier1Element.values()[MathUtils.random(Tier1Element.values().length-1)];
@@ -277,6 +277,38 @@ public class Recipe
 		return item;
 	}
 	
+	public static Item generateItemForMaterial(Item mat)
+	{
+		Recipe recipe = Recipe.getRandomRecipe();
+		
+		int numMats = recipe.slots.length;
+		Item[] materials = new Item[numMats];
+		
+		for (int i = 0; i < numMats; i++)
+		{
+			materials[i] = mat;
+		}
+		
+		return recipe.generate(materials);
+	}
+	
+	//----------------------------------------------------------------------
+	public static Item generateRandomItem()
+	{
+		Recipe recipe = Recipe.getRandomRecipe();
+
+		int numMats = recipe.slots.length;
+		Item[] materials = new Item[numMats];
+		Item mat = Recipe.generateMaterial((int)(MathUtils.randomTriangular(0.5f, 1.5f)*150));
+
+		for (int i = 0; i < numMats; i++)
+		{
+			materials[i] = mat;
+		}
+
+		return recipe.generate(materials);
+	}
+	
 	private static final Recipe[] Recipes = 
 	{
 		Recipe.load("Sword"),
@@ -292,4 +324,5 @@ public class Recipe
 	{
 		return Recipes[MathUtils.random(Recipes.length-1)];
 	}
+
 }

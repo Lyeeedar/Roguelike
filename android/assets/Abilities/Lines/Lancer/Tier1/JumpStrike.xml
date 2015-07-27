@@ -1,0 +1,30 @@
+<ActiveAbility>
+
+	<Name>Jump Strike</Name>
+	<Description>Leap through the air to strike at your target.</Description>
+	
+	<Cooldown>15</Cooldown>
+	<Range>4</Range>
+	
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Targeting>
+		<Entity Type="Enemy"></<Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite></Smite>
+	</Movement>
+	
+	<Effect>
+		<Teleport>
+		    <Style>Leap</Style>
+		</Teleport>
+		<Damage>
+		    <Atk>Atk*1.3</Atk>
+		</Damage>
+	</Effect>
+	
+</ActiveAbility>

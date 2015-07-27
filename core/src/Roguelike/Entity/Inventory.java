@@ -40,6 +40,7 @@ public class Inventory
 				}
 				
 				item.canDrop = el.getBooleanAttribute("Drop", true);
+				item.dropChanceEqn = el.getAttribute("DropChance", null);
 				
 				addItem(item);
 				equip(item);
@@ -60,6 +61,7 @@ public class Inventory
 			}
 			
 			item.canDrop = el.getBooleanAttribute("Drop", true);
+			item.dropChanceEqn = el.getAttribute("DropChance", null);
 			
 			addItem(item);
 		}

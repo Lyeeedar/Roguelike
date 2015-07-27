@@ -24,6 +24,18 @@
 				</Events>
 			</Lance>
 		</Equipment>
+		
+		<Item DropChance="rnd(6)<=1">
+		    <Type>Material</Type>
+		    <Name>Bat Wing</Name>
+		    <MaterialType>Leather</MaterialType>
+		    <Elements>
+		        <Metal>rnd(20)</Metal>
+		        <Wood>50+rnd(30)</Wood>
+		        <Air>30+rnd(30)</Air>
+		    </Elements>
+		</Item>
+		
 	</Inventory>
 	
 	<ActiveAbilities>
@@ -37,7 +49,6 @@
 					<Air_Atk>30</Air_Atk>
 				</Damage>
 				<Teleport>
-					<Mode>CasterToTarget</Mode>
 					<Style>Leap</Style>
 				</Teleport>
 			</Effect>

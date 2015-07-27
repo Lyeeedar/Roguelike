@@ -3,6 +3,9 @@ package Roguelike.Items;
 import java.io.IOException;
 import java.util.EnumMap;
 
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,6 +19,7 @@ import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.sun.xml.internal.ws.util.StringUtils;
 
+import exp4j.Helpers.EquationHelper;
 import Roguelike.AssetManager;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Inventory;
@@ -137,23 +141,25 @@ public class Item extends GameEventHandler
 	public int count;
 	public Light light;
 	public boolean canDrop = true;
+	public String dropChanceEqn;
 	public EnumMap<Tier1Element, Integer> elementalStats = Tier1Element.getElementBlock();
-		
+	
 	//----------------------------------------------------------------------
-	public static Item generateRandomItem()
+	public boolean shouldDrop()
 	{
-		Recipe recipe = Recipe.getRandomRecipe();
+		if (dropChanceEqn == null) { return true; }
 		
-		int numMats = recipe.slots.length;
-		Item[] materials = new Item[numMats];
-		Item mat = Recipe.generateMaterial((int)(MathUtils.randomTriangular(0.5f, 1.5f)*150));
-		
-		for (int i = 0; i < numMats; i++)
+		ExpressionBuilder expB = EquationHelper.createEquationBuilder(dropChanceEqn);
+				
+		Expression exp = EquationHelper.tryBuild(expB);
+		if (exp == null)
 		{
-			materials[i] = mat;
+			return false;
 		}
-		
-		return recipe.generate(materials);
+				
+		double conditionVal = exp.evaluate();
+
+		return conditionVal == 1;
 	}
 	
 	//----------------------------------------------------------------------
@@ -347,11 +353,11 @@ public class Item extends GameEventHandler
 					
 					if (diff > 0)
 					{
-						damText += "   [GREEN]+"+diff;
+						statText += "   [GREEN]+"+diff;
 					}
 					else
 					{
-						damText += "   [RED]"+diff;
+						statText += "   [RED]"+diff;
 					}
 				}
 				

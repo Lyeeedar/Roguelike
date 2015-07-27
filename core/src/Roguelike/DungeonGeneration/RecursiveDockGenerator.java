@@ -792,7 +792,7 @@ public class RecursiveDockGenerator
 	//####################################################################//
 	//region Data
 	
-	private static final boolean DEBUG_OUTPUT = true;
+	private static final boolean DEBUG_OUTPUT = false;
 	private static final int DEBUG_SIZE = 16;
 
 	private GenerationTile[][] tiles;

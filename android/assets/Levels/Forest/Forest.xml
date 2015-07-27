@@ -63,6 +63,7 @@
 			<TileData>
 				<Opaque>false</Opaque>
 				<Passable>true</Passable>
+				<CanFeature>false</CanFeature>
 				<Sprite>
 					<Name>dc-dngn/floor/marble_floor1</Name>
 				</Sprite>

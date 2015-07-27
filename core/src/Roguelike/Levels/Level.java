@@ -11,6 +11,8 @@ import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.Items.Item;
+import Roguelike.Items.Item.ItemType;
+import Roguelike.Items.Recipe;
 import Roguelike.Lights.Light;
 import Roguelike.Shadows.ShadowCaster;
 import Roguelike.Sprite.BumpAnimation;
@@ -615,13 +617,20 @@ public class Level
 							
 							for (Item i : e.getInventory().m_items)
 							{
-								if (i.canDrop)
+								if (i.canDrop && i.shouldDrop())
 								{
-									Grid[x][y].items.add(i);
+									if (i.itemType == ItemType.MATERIAL)
+									{
+										Grid[x][y].items.add(Recipe.generateItemForMaterial(i));
+									}
+									else
+									{
+										Grid[x][y].items.add(i);
+									}
+									
+									RoguelikeGame.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " drops " + i.getName())));
 								}
-							}
-							
-							Grid[x][y].items.add(Item.generateRandomItem());
+							}						
 						}
 					}
 				}

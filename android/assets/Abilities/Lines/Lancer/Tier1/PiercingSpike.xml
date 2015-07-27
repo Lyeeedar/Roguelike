@@ -1,0 +1,28 @@
+<ActiveAbility>
+
+	<Name>Piercing Spike</Name>
+	<Description>Blast a spike of energy from your weapon, piercing through the foes foolish enough to stand in your way.</Description>
+	
+	<Cooldown>15</Cooldown>
+	<Range>3</Range>
+	
+	<Icon>
+		<Name>Skills/PowerStrike</Name>
+	</Icon>
+	
+	<Targeting>
+		<Direction></Direction>
+	</Targeting>
+	
+	<Movement>
+		<Ray>
+		</Ray>
+	</Movement>
+	
+	<Effect>
+		<Damage>
+			<Atk>ATK*1.5</Atk>
+		</Damage>
+	</Effect>
+	
+</ActiveAbility>

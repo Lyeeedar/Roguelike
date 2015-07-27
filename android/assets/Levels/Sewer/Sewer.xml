@@ -5,6 +5,15 @@
 		<Blue>0.3</Blue>
 		<Alpha>1</Alpha>
 	</Ambient>
+	
+	<Factions>
+		<Major>
+			<Fungi>1</Fungi>
+		</Major>
+		<Minor>
+			<Toad>1</Toad>
+		</Minor>
+	</Factions>
 
 	<Symbols>
 	

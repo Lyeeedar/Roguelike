@@ -9,14 +9,29 @@ import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.MoveAnimation.MoveEquation;
 import Roguelike.Tiles.GameTile;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class EffectTypeTeleport extends AbstractEffectType
 {
-	public enum Mode
+	public enum ToMove
 	{
-		CASTERTOTARGET,
-		TARGETTOCASTER
+		CASTER,
+		TARGET
+	}
+	
+	public enum MoveType
+	{
+		TOWARDS,
+		AWAY
+	}
+	
+	public enum DestinationType
+	{
+		EXACT,
+		LINE,
+		CONE
 	}
 	
 	public enum Style
@@ -26,7 +41,11 @@ public class EffectTypeTeleport extends AbstractEffectType
 		LEAP
 	}
 	
-	private Mode mode;
+	private ToMove toMove;
+	private MoveType moveType;
+	private DestinationType destinationType;
+	private int distance = 1;
+	
 	private Style style;
 	
 	@Override
@@ -35,75 +54,98 @@ public class EffectTypeTeleport extends AbstractEffectType
 		GameTile destination = null;
 		GameEntity entityToMove = null;
 		
-		if (mode == Mode.CASTERTOTARGET)
+		if (toMove == ToMove.CASTER)
 		{
-			destination = getDestination(aa.caster.tile, tile, style);			
+			destination = getDestination(aa.caster.tile, tile);			
 			entityToMove = aa.caster;
 		}
-		else if (mode == Mode.TARGETTOCASTER)
+		else if (toMove == ToMove.TARGET)
 		{
-			destination = getDestination(tile, aa.caster.tile, style);			
+			destination = getDestination(tile, aa.caster.tile);			
 			entityToMove = tile.entity;
 		}
 				
-		if (destination != null && entityToMove != null)
+		if (destination != null && entityToMove != null && entityToMove.tile != destination)
 		{
 			int[] diff = destination.addObject(entityToMove);
 			
 			if (style == Style.CHARGE)
 			{
 				int distMoved = ( Math.abs(diff[0]) + Math.abs(diff[1]) ) / RoguelikeGame.TileSize;
-				entityToMove.sprite.spriteAnimation = new MoveAnimation(0.025f * distMoved, diff, MoveEquation.EXPONENTIAL);
+				entityToMove.sprite.spriteAnimation = new MoveAnimation(0.02f * distMoved, diff, MoveEquation.EXPONENTIAL);
 			}
 			else if (style == Style.LEAP)
 			{
 				int distMoved = ( Math.abs(diff[0]) + Math.abs(diff[1]) ) / RoguelikeGame.TileSize;
-				entityToMove.sprite.spriteAnimation = new MoveAnimation(0.025f * distMoved, diff, MoveEquation.LEAP);
+				entityToMove.sprite.spriteAnimation = new MoveAnimation(0.045f * distMoved, diff, MoveEquation.LEAP);
 			}
 		}
 	}
 	
-	private GameTile getDestination(GameTile src, GameTile target, Style style)
+	private GameTile getDestination(GameTile src, GameTile target)
 	{
-		GameTile destination = null;
+		Direction dir = null;
 		
-		if (target.getPassable(null) && target.entity == null)
+		if (moveType == MoveType.TOWARDS)
 		{
-			destination = target;
+			dir = Direction.getDirection(src, target);
 		}
 		else
 		{
-			if (style == Style.CHARGE)
+			dir = Direction.getDirection(target, src);
+		}
+		
+		GameTile destination = null;
+		
+		if (destinationType == DestinationType.EXACT)
+		{
+			destination = target;
+		}
+		else if (destinationType == DestinationType.LINE)
+		{
+			destination = src.level.getGameTile(src.x + dir.GetX() * distance, src.y + dir.GetY() * distance);
+		}
+		else
+		{
+			Array<int[]> possibleTiles = Direction.buildCone(dir, new int[]{src.x,  src.y}, distance);
+			int[] pos = possibleTiles.get(MathUtils.random(possibleTiles.size-1));
+			
+			destination = src.level.getGameTile(pos);
+		}
+			
+		if (style != Style.CHARGE)
+		{
+			if (destination.getPassable(null) && destination.entity == null)
 			{
-				int[][] possibleTiles = BresenhamLine.lineNoDiag(src.x, src.y, target.x, target.y);
-				
-				for (int i = possibleTiles.length-1; i >= 0; i--)
-				{
-					GameTile tile = target.level.getGameTile(possibleTiles[i]);
-					
-					if (tile.getPassable(null) && tile.entity == null)
-					{
-						destination = tile;
-						break;
-					}
-				}
+				return destination;
 			}
 			else
 			{
 				for (Direction d : Direction.values())
 				{
-					GameTile tile = getTile(target, d);
+					GameTile tile = getTile(destination, d);
 					
 					if (tile.getPassable(null) && tile.entity == null)
 					{
-						destination = tile;
-						break;
+						return tile;
 					}
 				}
 			}
 		}
 		
-		return destination;
+		int[][] possibleTiles = BresenhamLine.lineNoDiag(src.x, src.y, destination.x, destination.y);
+		
+		for (int i = possibleTiles.length-1; i >= 0; i--)
+		{
+			GameTile tile = src.level.getGameTile(possibleTiles[i]);
+			
+			if (tile.getPassable(null) && tile.entity == null)
+			{
+				return tile;
+			}
+		}
+		
+		return src;
 	}
 	
 	private GameTile getTile(GameTile current, Direction dir)
@@ -117,15 +159,24 @@ public class EffectTypeTeleport extends AbstractEffectType
 	@Override
 	public void parse(Element xml)
 	{
-		mode = Mode.valueOf(xml.get("Mode", "CasterToTarget").toUpperCase());
-		style = Style.valueOf(xml.get("Style", "Charge").toUpperCase());
+		toMove = ToMove.valueOf(xml.get("Move", "Caster").toUpperCase());
+		moveType = MoveType.valueOf(xml.get("Direction", "Towards").toUpperCase());
+		destinationType = DestinationType.valueOf(xml.get("Type", "Exact").toUpperCase());
+		distance = xml.getInt("Distance", 1);
+		
+		style = Style.valueOf(xml.get("Style", "Blink").toUpperCase());
 	}
 
 	@Override
 	public AbstractEffectType copy()
 	{
 		EffectTypeTeleport effect = new EffectTypeTeleport();
-		effect.mode = mode;
+		effect.toMove = toMove;
+		effect.moveType = moveType;
+		effect.destinationType = destinationType;
+		
+		effect.distance = distance;
+		
 		effect.style = style;
 		
 		return effect;

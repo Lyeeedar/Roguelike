@@ -1,0 +1,34 @@
+<ActiveAbility>
+
+	<Name>Elusive Attack</Name>
+	<Description>Strike and hop backwards.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Targeting>
+		<Entity Type="Enemy"></<Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite></Smite>
+	</Movement>
+	
+	<Effect>
+	    <Damage>
+		    <Atk>Atk*1.1</Atk>
+		</Damage>
+		<Teleport>
+		    <Move>Caster</Move>
+		    <Direction>Away</Direction>
+		    <Type>Line</Type>
+		    <Distance>2</Distance>
+		    <Style>Leap</Style>
+		</Teleport>
+	</Effect>
+	
+</ActiveAbility>

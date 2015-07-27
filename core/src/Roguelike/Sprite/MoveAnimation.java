@@ -46,7 +46,7 @@ public class MoveAnimation extends SpriteAnimation
 		
 		if (eqn == MoveEquation.LEAP)
 		{
-			offset[1] += (RoguelikeGame.TileSize*2) * (0.5f - Math.abs(alpha - 0.5f));
+			offset[1] += (RoguelikeGame.TileSize*3) * (0.5f - Math.abs(alpha - 0.5f));
 		}
 	}
 

@@ -10,6 +10,7 @@ import Roguelike.Ability.ActiveAbility.MovementType.AbstractMovementType;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeBolt;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeSmite;
 import Roguelike.Ability.ActiveAbility.TargetingType.AbstractTargetingType;
+import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeSelf;
 import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeTile;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
@@ -40,7 +41,6 @@ public class ActiveAbility implements IAbility, IGameObject
 	public float cooldownAccumulator;
 	public float cooldown = 1;
 	
-	private AbstractAbilityType abilityType;
 	private AbstractTargetingType targetingType = new TargetingTypeTile();
 	private AbstractMovementType movementType = new MovementTypeSmite();
 	public Array<AbstractEffectType> effectTypes = new Array<AbstractEffectType>();

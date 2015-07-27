@@ -47,5 +47,6 @@ public abstract class AbstractMovementType
 	{
 		ClassMap.put("SMITE", MovementTypeSmite.class);
 		ClassMap.put("BOLT", MovementTypeBolt.class);
+		ClassMap.put("RAY", MovementTypeRay.class);
 	}
 }

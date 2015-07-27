@@ -9,14 +9,9 @@
 	<Icon>
 		<Name>Skills/Burning</Name>
 	</Icon>
-	
-	<Type>
-		<Helpful>
-		</Helpful>
-	</Type>
-	
+
 	<Targeting>
-		<Tile></<Tile>>
+		<Tile></<Tile>
 	</Targeting>
 	
 	<Movement>
