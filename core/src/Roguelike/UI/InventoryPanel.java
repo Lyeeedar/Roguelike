@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import Roguelike.AssetManager;
+import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.ItemType;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.Input.Buttons;
@@ -48,15 +50,11 @@ public class InventoryPanel extends Widget
 	private final Sprite buttonDown;
 	
 	private final HashMap<ItemType, Sprite> headers = new HashMap<ItemType, Sprite>();
-	
-	private final GameEntity entity;
-	
+		
 	private ItemType selectedFilter = ItemType.ALL;
 		
-	public InventoryPanel(GameEntity entity, Skin skin, Stage stage)
-	{
-		this.entity = entity;
-		
+	public InventoryPanel(Skin skin, Stage stage)
+	{		
 		this.TileSize = 32;
 		this.skin = skin;
 		this.stage = stage;
@@ -103,7 +101,7 @@ public class InventoryPanel extends Widget
 	{
 		batch.setColor(Color.WHITE);
 		
-		Iterator<Item> itr = entity.getInventory().iterator(selectedFilter);
+		Iterator<Item> itr = Global.CurrentLevel.player.getInventory().iterator(selectedFilter);
 		
 		int xOffset = (int)getX();
 		
@@ -141,7 +139,7 @@ public class InventoryPanel extends Widget
 					
 					item.getIcon().render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
 					
-					if (entity.getInventory().isEquipped(item))
+					if (Global.CurrentLevel.player.getInventory().isEquipped(item))
 					{
 						batch.setColor(Color.GREEN);
 					}
@@ -160,7 +158,7 @@ public class InventoryPanel extends Widget
 			}
 		}
 				
-		itr = entity.tile.items.iterator();
+		itr = Global.CurrentLevel.player.tile.items.iterator();
 		y = NumTilesHeight;
 		for (x = 0; x < NumTilesWidth; x++)
 		{
@@ -204,7 +202,9 @@ public class InventoryPanel extends Widget
 	{
 		@Override
 		public boolean mouseMoved (InputEvent event, float x, float y)
-		{			
+		{	
+			GameEntity entity = Global.CurrentLevel.player;
+			
 			int tileX = (int)(x / TileSize);
 			int tileY = (int)((getHeight() - y) / TileSize);
 			
@@ -271,7 +271,8 @@ public class InventoryPanel extends Widget
 		@Override
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 		{
-			RoguelikeGame.Instance.clearContextMenu();
+			GameScreen.Instance.clearContextMenu();
+			GameEntity entity = Global.CurrentLevel.player;
 			
 			int tileX = (int)(x / TileSize);
 			int tileY = (int)((getHeight() - y) / TileSize);

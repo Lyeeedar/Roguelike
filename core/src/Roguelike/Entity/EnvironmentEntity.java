@@ -3,6 +3,7 @@ package Roguelike.Entity;
 import java.util.Iterator;
 
 import Roguelike.AssetManager;
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
 import Roguelike.RoguelikeGame;
@@ -11,6 +12,7 @@ import Roguelike.DungeonGeneration.RecursiveDockGenerator;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Levels.Level;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationMode;
 import Roguelike.StatusEffect.StatusEffect;
@@ -148,7 +150,7 @@ public class EnvironmentEntity extends Entity
 				connectedLevel.updateVisibleTiles();
 				
 				// switch out levels
-				RoguelikeGame.Instance.level = connectedLevel;
+				Global.CurrentLevel = connectedLevel;
 			}
 		};
 		entranceEntity.actions.add(entranceAA);
@@ -167,7 +169,7 @@ public class EnvironmentEntity extends Entity
 				connectedLevel.updateVisibleTiles();
 				
 				// switch out levels
-				RoguelikeGame.Instance.level = connectedLevel;
+				Global.CurrentLevel = connectedLevel;
 			}
 		};
 		exitEntity.actions.add(exitAA);

@@ -24,6 +24,14 @@ public class Symbol implements PathfindingTile
 
 	public String metaValue;
 	
+	//----------------------------------------------------------------------
+	private Element processedEnvironmentData;
+	private Element processedTileData;
+	
+	private boolean eePassable;
+	private boolean tilePassable;	
+	//----------------------------------------------------------------------
+	
 	public Symbol copy()
 	{
 		Symbol s = new Symbol();
@@ -50,12 +58,35 @@ public class Symbol implements PathfindingTile
 		
 		if (environmentData != null)
 		{
-			return EnvironmentEntity.load(environmentData);
+			EnvironmentEntity ee = EnvironmentEntity.load(environmentData);
+			
+			processedEnvironmentData = environmentData;
+			eePassable = ee.passable;
+			
+			return ee;
 		}
+		
+		processedEnvironmentData = null;
+		eePassable = true;
 		
 		return null;
 	}
 
+	public boolean getEnvironmentEntityPassable()
+	{
+		if (environmentEntityObject != null)
+		{
+			return environmentEntityObject.passable;
+		}
+		
+		if (environmentData != null)
+		{
+			return environmentData.getBoolean("Passable", true);
+		}
+		
+		return true;
+	}
+	
 	public boolean hasGameEntity()
 	{
 		return entityData != null;
@@ -68,7 +99,12 @@ public class Symbol implements PathfindingTile
 	
 	public TileData getTileData()
 	{
-		return TileData.parse(tileData);
+		TileData data = TileData.parse(tileData);
+		
+		processedTileData = tileData;
+		tilePassable = data.passable;
+		
+		return data;
 	}
 
 	public static Symbol parse(Element xml, HashMap<Character, Symbol> sharedSymbolMap, HashMap<Character, Symbol> localSymbolMap)
@@ -118,7 +154,12 @@ public class Symbol implements PathfindingTile
 
 	public boolean isPassable()
 	{
-		return getTileData().passable;
+		if (processedTileData != tileData)
+		{
+			getTileData();
+		}
+		
+		return tilePassable;
 	}
 
 	@Override
@@ -140,7 +181,7 @@ public class Symbol implements PathfindingTile
 		{
 			if (hasEnvironmentEntity())
 			{
-				if (!getEnvironmentEntity().passable)
+				if (!getEnvironmentEntityPassable())
 				{
 					return 100;
 				}

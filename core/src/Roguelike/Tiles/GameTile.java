@@ -2,6 +2,7 @@ package Roguelike.Tiles;
 
 import java.util.HashSet;
 
+import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
@@ -78,8 +79,8 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	
 	public int[] getPosDiff(GameTile prevTile)
 	{
-		int[] oldPos = new int[]{prevTile.x * RoguelikeGame.TileSize, prevTile.y * RoguelikeGame.TileSize};		
-		int[] newPos = {x * RoguelikeGame.TileSize, y * RoguelikeGame.TileSize};
+		int[] oldPos = new int[]{prevTile.x * Global.TileSize, prevTile.y * Global.TileSize};		
+		int[] newPos = {x * Global.TileSize, y * Global.TileSize};
 		
 		int[] diff = {oldPos[0] - newPos[0], oldPos[1] - newPos[1]};
 		

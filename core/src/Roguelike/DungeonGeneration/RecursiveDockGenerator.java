@@ -88,9 +88,9 @@ public class RecursiveDockGenerator
 
 				actualTiles[x][y] = newTile;
 
-				System.out.print(symbol.character);
+				//System.out.print(symbol.character);
 			}
-			System.out.print("\n");
+			//System.out.print("\n");
 		}
 
 		return level;
@@ -917,7 +917,7 @@ public class RecursiveDockGenerator
 				}
 				else
 				{
-					System.out.println("Not enough room tiles filled ("+count+" / " + (width*height) + ").");
+					//System.out.println("Not enough room tiles filled ("+count+" / " + (width*height) + ").");
 				}
 			}						
 
@@ -1240,7 +1240,18 @@ public class RecursiveDockGenerator
 
 					for (int[] point : path)
 					{
-						roomContents[point[0]][point[1]] = roomCopy[point[0]][point[1]];
+						Symbol s = roomContents[point[0]][point[1]];
+						
+						if (!s.getTileData().passable)
+						{
+							roomContents[point[0]][point[1]].tileData = roomCopy[point[0]][point[1]].tileData;
+						}
+						
+						if (s.hasEnvironmentEntity() && !s.getEnvironmentEntity().passable)
+						{
+							roomContents[point[0]][point[1]].environmentData = roomCopy[point[0]][point[1]].environmentData;
+							roomContents[point[0]][point[1]].environmentEntityObject = null;
+						}
 					}
 				}
 			}

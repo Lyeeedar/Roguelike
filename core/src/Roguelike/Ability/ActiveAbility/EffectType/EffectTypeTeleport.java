@@ -1,5 +1,6 @@
 package Roguelike.Ability.ActiveAbility.EffectType;
 
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.RoguelikeGame;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
@@ -71,13 +72,13 @@ public class EffectTypeTeleport extends AbstractEffectType
 			
 			if (style == Style.CHARGE)
 			{
-				int distMoved = ( Math.abs(diff[0]) + Math.abs(diff[1]) ) / RoguelikeGame.TileSize;
+				int distMoved = ( Math.abs(diff[0]) + Math.abs(diff[1]) ) / Global.TileSize;
 				entityToMove.sprite.spriteAnimation = new MoveAnimation(0.02f * distMoved, diff, MoveEquation.EXPONENTIAL);
 			}
 			else if (style == Style.LEAP)
 			{
-				int distMoved = ( Math.abs(diff[0]) + Math.abs(diff[1]) ) / RoguelikeGame.TileSize;
-				entityToMove.sprite.spriteAnimation = new MoveAnimation(0.045f * distMoved, diff, MoveEquation.LEAP);
+				int distMoved = (( Math.abs(diff[0]) + Math.abs(diff[1]) ) / Global.TileSize) / 3;
+				entityToMove.sprite.spriteAnimation = new MoveAnimation(0.1f * distMoved, diff, MoveEquation.LEAP);
 			}
 		}
 	}

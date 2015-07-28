@@ -12,6 +12,39 @@
 		<Faction>Spider</Faction>
 	</Factions>
 	
+	<Inventory>
+	    
+	    <Equipment>
+	        
+	        <Fangs Drop="false">
+	            <Slot>MainWeapon</Slot>            
+	            <Events>	                
+	                <OnDealDamage>	                    
+	                    <Status>	                        
+	                        <Defender>	                            
+	                            <Name>Redback Poison</Name>
+								<Description>Burning pain emanates from your veins.</Description>
+                                <Duration>5</Duration>
+                                <Icon>
+									<Name>Skills/SpikeTrap</Name>
+								</Icon>
+                                <Events>
+									<OnTurn>
+										<DOT>
+											<Wood_Atk>5</Wood_Atk>
+										</DOT>
+									</OnTurn>
+								</Events>	                            
+	                        </Defender>	                        
+	                    </Status>	                    
+	                </OnDealDamage>	                
+	            </Events>	            
+	        </Fangs>
+	        
+	    </Equipment>
+	    
+	</Inventory>
+	
 	<Statistics>
 		<MaxHP>300</MaxHP>
 		<Range>5</<Range>

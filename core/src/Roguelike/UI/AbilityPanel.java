@@ -2,10 +2,10 @@ package Roguelike.UI;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
-import Roguelike.RoguelikeGame;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.Gdx;
@@ -28,24 +28,20 @@ public class AbilityPanel extends Widget
 		
 	private BitmapFont font;
 	private Texture white;
-	
-	private final GameEntity entity;
-	
+		
 	private final Sprite tileBackground;
 	private final Sprite tileBorder;
 	
 	private final Skin skin;
 	private final Stage stage;
 	
-	public AbilityPanel(GameEntity entity, Skin skin, Stage stage)
+	public AbilityPanel(Skin skin, Stage stage)
 	{
 		this.tileBackground = AssetManager.loadSprite("GUI/TileBackground");	
 		this.tileBorder = AssetManager.loadSprite("GUI/TileBorder");
 		this.font = new BitmapFont();
 		this.white = AssetManager.loadTexture("Sprites/white.png");
-				
-		this.entity = entity;
-		
+						
 		this.skin = skin;
 		this.stage = stage;
 				
@@ -61,8 +57,10 @@ public class AbilityPanel extends Widget
 		int xoffset = (int)getX();		
 		int top = (int)(getY()+getHeight());
 		
-		boolean aaDragged = RoguelikeGame.Instance.dragDropPayload != null && RoguelikeGame.Instance.dragDropPayload.shouldDraw() && RoguelikeGame.Instance.dragDropPayload.obj instanceof ActiveAbility;
-		boolean paDragged = RoguelikeGame.Instance.dragDropPayload != null && RoguelikeGame.Instance.dragDropPayload.shouldDraw() && RoguelikeGame.Instance.dragDropPayload.obj instanceof PassiveAbility;
+		boolean aaDragged = GameScreen.Instance.dragDropPayload != null && GameScreen.Instance.dragDropPayload.shouldDraw() && GameScreen.Instance.dragDropPayload.obj instanceof ActiveAbility;
+		boolean paDragged = GameScreen.Instance.dragDropPayload != null && GameScreen.Instance.dragDropPayload.shouldDraw() && GameScreen.Instance.dragDropPayload.obj instanceof PassiveAbility;
+		
+		GameEntity entity = Global.CurrentLevel.player;
 		
 		float x = 0;
 		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
@@ -91,7 +89,7 @@ public class AbilityPanel extends Widget
 			}
 			
 			// border
-			if (aa != null && aa == RoguelikeGame.Instance.preparedAbility)
+			if (aa != null && aa == GameScreen.Instance.preparedAbility)
 			{
 				batch.setColor(Color.CYAN);
 			}
@@ -143,8 +141,9 @@ public class AbilityPanel extends Widget
 	
 	public void handleDrop(float x, float y)
 	{
-		boolean aaDragged = RoguelikeGame.Instance.dragDropPayload != null && RoguelikeGame.Instance.dragDropPayload.obj instanceof ActiveAbility;
-		boolean paDragged = RoguelikeGame.Instance.dragDropPayload != null && RoguelikeGame.Instance.dragDropPayload.obj instanceof PassiveAbility;
+		GameEntity entity = Global.CurrentLevel.player;
+		boolean aaDragged = GameScreen.Instance.dragDropPayload != null && GameScreen.Instance.dragDropPayload.obj instanceof ActiveAbility;
+		boolean paDragged = GameScreen.Instance.dragDropPayload != null && GameScreen.Instance.dragDropPayload.obj instanceof PassiveAbility;
 		
 		if (aaDragged || paDragged)
 		{
@@ -159,14 +158,14 @@ public class AbilityPanel extends Widget
 				{
 					if (aaDragged)
 					{
-						entity.slotActiveAbility((ActiveAbility)RoguelikeGame.Instance.dragDropPayload.obj, xIndex);
+						entity.slotActiveAbility((ActiveAbility)GameScreen.Instance.dragDropPayload.obj, xIndex);
 					}
 				}
 				else
 				{
 					if (paDragged)
 					{
-						entity.slotPassiveAbility((PassiveAbility)RoguelikeGame.Instance.dragDropPayload.obj, xIndex);
+						entity.slotPassiveAbility((PassiveAbility)GameScreen.Instance.dragDropPayload.obj, xIndex);
 					}					
 				}
 			}
@@ -179,17 +178,18 @@ public class AbilityPanel extends Widget
 		@Override
 		public void touchDragged (InputEvent event, float x, float y, int pointer)
 		{
-			if (RoguelikeGame.Instance.dragDropPayload != null)
+			if (GameScreen.Instance.dragDropPayload != null)
 			{
-				RoguelikeGame.Instance.dragDropPayload.x = event.getStageX() - 16;
-				RoguelikeGame.Instance.dragDropPayload.y = event.getStageY() - 16;				
+				GameScreen.Instance.dragDropPayload.x = event.getStageX() - 16;
+				GameScreen.Instance.dragDropPayload.y = event.getStageY() - 16;				
 			}			
 		}
 		
 		@Override
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 		{
-			RoguelikeGame.Instance.clearContextMenu();
+			GameEntity entity = Global.CurrentLevel.player;
+			GameScreen.Instance.clearContextMenu();
 			
 			int xIndex = (int) (x / TileSize);
 			int yIndex = (int) ((getHeight() - y) / TileSize);
@@ -204,7 +204,7 @@ public class AbilityPanel extends Widget
 					
 					if (aa != null && aa.cooldownAccumulator <= 0)
 					{
-						RoguelikeGame.Instance.dragDropPayload = new DragDropPayload(aa, aa.getIcon(), x-16, getHeight() - y - 16);
+						GameScreen.Instance.dragDropPayload = new DragDropPayload(aa, aa.getIcon(), x-16, getHeight() - y - 16);
 					}
 				}
 				else if (yIndex == 1)
@@ -213,7 +213,7 @@ public class AbilityPanel extends Widget
 					
 					if (pa != null)
 					{
-						RoguelikeGame.Instance.dragDropPayload = new DragDropPayload(pa, pa.getIcon(), x-16, getHeight() - y - 16);
+						GameScreen.Instance.dragDropPayload = new DragDropPayload(pa, pa.getIcon(), x-16, getHeight() - y - 16);
 					}
 				}
 			}	
@@ -224,9 +224,10 @@ public class AbilityPanel extends Widget
 		@Override
 		public void touchUp (InputEvent event, float x, float y, int pointer, int button)
 		{
-			if (RoguelikeGame.Instance.dragDropPayload != null)
+			GameEntity entity = Global.CurrentLevel.player;
+			if (GameScreen.Instance.dragDropPayload != null)
 			{
-				RoguelikeGame.Instance.touchUp((int)event.getStageX(), Gdx.graphics.getHeight() - (int)event.getStageY(), pointer, button);
+				GameScreen.Instance.touchUp((int)event.getStageX(), Gdx.graphics.getHeight() - (int)event.getStageY(), pointer, button);
 			}
 			
 			int xIndex = (int) (x / TileSize);
@@ -242,7 +243,7 @@ public class AbilityPanel extends Widget
 					
 					if (aa != null && aa.cooldownAccumulator <= 0)
 					{
-						RoguelikeGame.Instance.prepareAbility(aa);
+						GameScreen.Instance.prepareAbility(aa);
 					}
 				}
 			}	
@@ -251,6 +252,7 @@ public class AbilityPanel extends Widget
 		@Override
 		public boolean mouseMoved (InputEvent event, float x, float y)
 		{	
+			GameEntity entity = Global.CurrentLevel.player;
 			int xIndex = (int) (x / TileSize);
 			int yIndex = (int) ((getHeight() - y) / TileSize);
 			

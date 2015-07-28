@@ -2,13 +2,13 @@ package Roguelike.UI;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
-import Roguelike.RoguelikeGame;
 import Roguelike.Ability.AbilityPool;
 import Roguelike.Ability.AbilityPool.AbilityLine;
 import Roguelike.Ability.AbilityPool.AbilityLine.Ability;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Entity.Tasks.TaskWait;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.Gdx;
@@ -187,10 +187,10 @@ public class AbilityPoolPanel extends Widget
 		@Override
 		public void touchDragged (InputEvent event, float x, float y, int pointer)
 		{
-			if (RoguelikeGame.Instance.dragDropPayload != null)
+			if (GameScreen.Instance.dragDropPayload != null)
 			{
-				RoguelikeGame.Instance.dragDropPayload.x = event.getStageX() - 16;
-				RoguelikeGame.Instance.dragDropPayload.y = event.getStageY() - 16;				
+				GameScreen.Instance.dragDropPayload.x = event.getStageX() - 16;
+				GameScreen.Instance.dragDropPayload.y = event.getStageY() - 16;				
 			}			
 		}
 		
@@ -198,7 +198,7 @@ public class AbilityPoolPanel extends Widget
 		@Override
 		public void touchUp (InputEvent event, float x, float y, int pointer, int mousebutton)
 		{
-			RoguelikeGame.Instance.clearContextMenu();
+			GameScreen.Instance.clearContextMenu();
 			
 			if (x < getPrefWidth())
 			{
@@ -232,7 +232,7 @@ public class AbilityPoolPanel extends Widget
 									
 									for (int ii = 0; ii < Global.NUM_ABILITY_SLOTS; ii++)
 									{
-										ActiveAbility equipped = RoguelikeGame.Instance.level.player.getSlottedActiveAbilities()[ii];
+										ActiveAbility equipped = Global.CurrentLevel.player.getSlottedActiveAbilities()[ii];
 										final int index = ii;
 										
 										Table row = new Table();
@@ -250,8 +250,8 @@ public class AbilityPoolPanel extends Widget
 											@Override
 											public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 											{	
-												RoguelikeGame.Instance.level.player.slotActiveAbility((ActiveAbility)a.ability, index);
-												RoguelikeGame.Instance.clearContextMenu();
+												Global.CurrentLevel.player.slotActiveAbility((ActiveAbility)a.ability, index);
+												GameScreen.Instance.clearContextMenu();
 												
 												return true;
 											}
@@ -263,8 +263,8 @@ public class AbilityPoolPanel extends Widget
 									
 									table.pack();
 									
-									RoguelikeGame.Instance.contextMenu = new Tooltip(table, skin, stage);
-									RoguelikeGame.Instance.contextMenu.show(event, x, y-RoguelikeGame.Instance.contextMenu.getHeight()/2);
+									GameScreen.Instance.contextMenu = new Tooltip(table, skin, stage);
+									GameScreen.Instance.contextMenu.show(event, x, y-GameScreen.Instance.contextMenu.getHeight()/2);
 								}
 								else if (a.ability instanceof PassiveAbility)
 								{
@@ -272,7 +272,7 @@ public class AbilityPoolPanel extends Widget
 									
 									for (int ii = 0; ii < Global.NUM_ABILITY_SLOTS; ii++)
 									{
-										PassiveAbility equipped = RoguelikeGame.Instance.level.player.getSlottedPassiveAbilities()[ii];
+										PassiveAbility equipped = Global.CurrentLevel.player.getSlottedPassiveAbilities()[ii];
 										final int index = ii;
 										
 										Table row = new Table();
@@ -290,8 +290,8 @@ public class AbilityPoolPanel extends Widget
 											@Override
 											public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 											{	
-												RoguelikeGame.Instance.level.player.slotPassiveAbility((PassiveAbility)a.ability, index);
-												RoguelikeGame.Instance.clearContextMenu();
+												Global.CurrentLevel.player.slotPassiveAbility((PassiveAbility)a.ability, index);
+												GameScreen.Instance.clearContextMenu();
 												
 												return true;
 											}
@@ -303,8 +303,8 @@ public class AbilityPoolPanel extends Widget
 									
 									table.pack();
 									
-									RoguelikeGame.Instance.contextMenu = new Tooltip(table, skin, stage);
-									RoguelikeGame.Instance.contextMenu.show(event, x, y-RoguelikeGame.Instance.contextMenu.getHeight()/2);
+									GameScreen.Instance.contextMenu = new Tooltip(table, skin, stage);
+									GameScreen.Instance.contextMenu.show(event, x, y-GameScreen.Instance.contextMenu.getHeight()/2);
 								}
 							}
 							else
@@ -319,7 +319,7 @@ public class AbilityPoolPanel extends Widget
 									public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 									{	
 										a.unlocked = true;
-										RoguelikeGame.Instance.clearContextMenu();
+										GameScreen.Instance.clearContextMenu();
 										
 										return true;
 									}
@@ -327,8 +327,8 @@ public class AbilityPoolPanel extends Widget
 											
 								table.pack();
 								
-								RoguelikeGame.Instance.contextMenu = new Tooltip(table, skin, stage);
-								RoguelikeGame.Instance.contextMenu.show(event, x, y);
+								GameScreen.Instance.contextMenu = new Tooltip(table, skin, stage);
+								GameScreen.Instance.contextMenu.show(event, x, y);
 							}
 						}
 						
@@ -345,9 +345,9 @@ public class AbilityPoolPanel extends Widget
 				}
 			}
 			
-			if (RoguelikeGame.Instance.dragDropPayload != null)
+			if (GameScreen.Instance.dragDropPayload != null)
 			{
-				RoguelikeGame.Instance.touchUp((int)event.getStageX(), Gdx.graphics.getHeight() - (int)event.getStageY(), pointer, mousebutton);
+				GameScreen.Instance.touchUp((int)event.getStageX(), Gdx.graphics.getHeight() - (int)event.getStageY(), pointer, mousebutton);
 			}
 		}
 		
@@ -427,7 +427,7 @@ public class AbilityPoolPanel extends Widget
 		@Override
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 		{
-			RoguelikeGame.Instance.clearContextMenu();
+			GameScreen.Instance.clearContextMenu();
 			
 			if (x < MaxLineWidth)
 			{
@@ -464,7 +464,7 @@ public class AbilityPoolPanel extends Widget
 							
 							if (a.unlocked)
 							{
-								RoguelikeGame.Instance.dragDropPayload = new DragDropPayload(a.ability, a.ability.getIcon(), x-16, getHeight() - y - 16);
+								GameScreen.Instance.dragDropPayload = new DragDropPayload(a.ability, a.ability.getIcon(), x-16, getHeight() - y - 16);
 							}
 						}
 						

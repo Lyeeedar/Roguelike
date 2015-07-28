@@ -5,11 +5,15 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.DungeonGeneration.RecursiveDockGenerator;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
+import Roguelike.Items.Item;
+import Roguelike.Levels.Level;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Tiles.GameTile;
 import Roguelike.UI.MessageStack.Line;
 import Roguelike.UI.MessageStack.Message;
@@ -26,7 +30,14 @@ import exp4j.Operators.BooleanOperators;
 
 public class Global
 {
+	//----------------------------------------------------------------------
 	public static final int NUM_ABILITY_SLOTS = 8;
+	
+	//----------------------------------------------------------------------
+	public static int TileSize = 32;
+	
+	//----------------------------------------------------------------------
+	public static Level CurrentLevel;
 
 	//----------------------------------------------------------------------
 	public enum Direction
@@ -462,6 +473,46 @@ public class Global
 	}
 
 	//----------------------------------------------------------------------
+	public static void newGame()
+	{
+		RecursiveDockGenerator generator = new RecursiveDockGenerator("Forest");
+		//VillageGenerator generator = new VillageGenerator(100, 100);
+		generator.generate();
+		CurrentLevel = generator.getLevel();
+
+		boolean exit = false;
+		for (int x = 0; x < CurrentLevel.width; x++)
+		{
+			for (int y = 0; y < CurrentLevel.height; y++)
+			{
+				GameTile tile = CurrentLevel.getGameTile(x, y);
+				if (tile.metaValue != null && tile.metaValue.equals("PlayerSpawn"))
+				{
+					CurrentLevel.player = GameEntity.load("player");
+
+					for (int i = 0; i < 40; i++)
+					{
+						//Global.CurrentLevel.player.Inventory.Items.add(AssetManager.loadItem("Jewelry/Necklace/GoldNecklace"));
+					}
+					CurrentLevel.player.getInventory().m_items.add(Item.load("Weapon/MainWeapon/sword"));
+					CurrentLevel.player.getInventory().m_items.add(Item.load("Weapon/OffWeapon/shield"));
+					CurrentLevel.player.getInventory().m_items.add(Item.load("Armour/Body/WoodArmour"));
+					CurrentLevel.player.getInventory().m_items.add(Item.load("Jewelry/Necklace/GoldNecklace"));
+
+					tile.addObject(CurrentLevel.player);
+
+					exit = true;
+					break;
+				}
+			}
+			if (exit) { break;} 
+		}
+
+		CurrentLevel.updateVisibleTiles();
+		//Global.CurrentLevel.revealWholeGlobal.CurrentLevel();
+	}
+	
+	//----------------------------------------------------------------------
 	public static void calculateDamage(Entity attacker, Entity defender, HashMap<String, Integer> additionalAttack, boolean doEvents)
 	{
 		DamageObject damObj = new DamageObject(attacker, defender, additionalAttack);
@@ -540,7 +591,7 @@ public class Global
 
 		if (damObj.getTotalDamage() > 0)
 		{
-			RoguelikeGame.Instance.addConsoleMessage(line);
+			GameScreen.Instance.addConsoleMessage(line);
 		}
 	}
 }

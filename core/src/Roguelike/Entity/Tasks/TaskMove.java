@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
 import Roguelike.Items.Item;
@@ -107,7 +108,7 @@ public class TaskMove extends AbstractTask
 			}
 			
 			// do graphics stuff
-			obj.sprite.spriteAnimation = new BumpAnimation(0.1f, dir, RoguelikeGame.TileSize);
+			obj.sprite.spriteAnimation = new BumpAnimation(0.1f, dir, Global.TileSize);
 		}
 		else
 		{
@@ -231,7 +232,7 @@ public class TaskMove extends AbstractTask
 			Sprite sprite = hitEffect.copy();
 			
 			int[] diff = bestTarget.getPosDiff(entity.tile);
-			float distMoved = (float)Math.sqrt(diff[0]*diff[0] + diff[1]*diff[1]) / (float)RoguelikeGame.TileSize;
+			float distMoved = (float)Math.sqrt(diff[0]*diff[0] + diff[1]*diff[1]) / (float)Global.TileSize;
 			
 			sprite.spriteAnimation = new MoveAnimation(0.025f * distMoved, diff, MoveEquation.LINEAR);
 			SpriteEffect e = new SpriteEffect(sprite, Direction.CENTER, null);

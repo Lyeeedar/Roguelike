@@ -55,7 +55,7 @@
 				
 				<Inventory>
 				    
-				    <Item DropChance="rnd(6)<1">
+				    <Item DropChance="rnd(4)<1">
 				        <Type>Material</Type>
 					    <Name>Rusted Iron</Name>
 					    <MaterialType>Ingot</MaterialType>

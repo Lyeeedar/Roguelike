@@ -14,6 +14,7 @@ import Roguelike.Items.Item;
 import Roguelike.Items.Item.ItemType;
 import Roguelike.Items.Recipe;
 import Roguelike.Lights.Light;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Shadows.ShadowCaster;
 import Roguelike.Sprite.BumpAnimation;
 import Roguelike.Sprite.Sprite;
@@ -148,7 +149,7 @@ public class Level
 		}
 	}
 	
-	public void calculateLight(float delta)
+	public void calculateLight(float delta, Array<Light> lights)
 	{
 		Color acol = new Color(Ambient);
 		acol.mul(acol.a);
@@ -162,7 +163,7 @@ public class Level
 			}
 		}
 		
-		for (Light l : getAllLights())
+		for (Light l : lights)
 		{
 			l.update(delta);
 			calculateSingleLight(l);
@@ -196,14 +197,16 @@ public class Level
 	}
 	
 	public Array<ActiveAbility> ActiveAbilities = new Array<ActiveAbility>(false, 16);
-	Array<ActiveAbility> NewActiveAbilities = new Array<ActiveAbility>(false, 16);
+	private Array<ActiveAbility> NewActiveAbilities = new Array<ActiveAbility>(false, 16);
 	public void addActiveAbility(ActiveAbility aa)
 	{
 		NewActiveAbilities.add(aa);
 	}
 	
-	public Array<GameEntity> visibleList = new Array<GameEntity>(false, 16);
-	public Array<GameEntity> invisibleList = new Array<GameEntity>(false, 16);
+	private Array<GameEntity> visibleList = new Array<GameEntity>(false, 16);
+	private Array<GameEntity> invisibleList = new Array<GameEntity>(false, 16);
+	
+	private Array<Light> lightList = new Array<Light>(false, 16);
 	
 	private float updateDeltaStep = 0.05f;
 	private float updateAccumulator;
@@ -253,53 +256,210 @@ public class Level
 		}
 		
 		updateVisibleTiles();
-		calculateLight(delta);	
-		
-		for (Sprite s : getAllSprites())
-		{
-			s.update(delta);
-		}
+		lightList.clear();
 		
 		for (int x = 0; x < width; x++)
 		{
 			for (int y = 0; y < height; y++)
 			{
-				Iterator<SpriteEffect> itr = Grid[x][y].spriteEffects.iterator();
-				while (itr.hasNext())
-				{
-					SpriteEffect e = itr.next();
-					boolean finished = e.Sprite.update(delta);
-					
-					if (finished) { itr.remove(); }
-				}
+				GameTile tile = Grid[x][y];
 				
-				if (Grid[x][y].entity != null)
-				{
-					itr = Grid[x][y].entity.spriteEffects.iterator();
-					while (itr.hasNext())
-					{
-						SpriteEffect e = itr.next();
-						boolean finished = e.Sprite.update(delta);
-						
-						if ( finished) { itr.remove(); }
-					}
-				}
+				updateSpritesForTile(tile, delta);
+				updateSpriteEffectsForTile(tile, delta);
+				getLightsForTile(tile, lightList);
 				
-				if (Grid[x][y].environmentEntity != null)
+				cleanUpDeadForTile(tile);
+			}
+		}
+		
+		for (ActiveAbility aa : ActiveAbilities)
+		{
+			aa.getSprite().update(delta);
+		}
+		
+		calculateLight(delta, lightList);
+	}
+	
+	private void cleanUpDeadForTile(GameTile tile)
+	{
+		{
+			GameEntity e = tile.entity;
+			if (e != null)
+			{
+				if (e.damageAccumulator > 0 && tile.GetVisible())
 				{
-					itr = Grid[x][y].environmentEntity.spriteEffects.iterator();
-					while (itr.hasNext())
+					GameScreen.Instance.addActorDamageAction(e);
+				}
+
+				if (e != player && e.HP <= 0 && !hasActiveEffects(e))
+				{
+					e.tile.entity = null;
+
+					GameScreen.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " dies!")));
+
+					for (Item i : e.getInventory().m_items)
 					{
-						SpriteEffect e = itr.next();
-						boolean finished = e.Sprite.update(delta);
-						
-						if ( finished) { itr.remove(); }
+						if (i.canDrop && i.shouldDrop())
+						{
+							if (i.itemType == ItemType.MATERIAL)
+							{
+								tile.items.add(Recipe.generateItemForMaterial(i));
+							}
+							else
+							{
+								tile.items.add(i);
+							}
+
+							GameScreen.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " drops " + i.getName())));
+						}
+					}						
+				}
+			}
+		}
+
+		{
+			Entity e = tile.environmentEntity;
+			if (e != null)
+			{
+				if (e.damageAccumulator > 0 && tile.GetVisible())
+				{
+					GameScreen.Instance.addActorDamageAction(e);
+				}
+
+				if (e != player && e.HP <= 0 && !hasActiveEffects(e))
+				{
+					e.tile.environmentEntity = null;		
+
+					for (Item i : e.getInventory().m_items)
+					{
+						if (i.canDrop && i.shouldDrop())
+						{
+							if (i.itemType == ItemType.MATERIAL)
+							{
+								tile.items.add(Recipe.generateItemForMaterial(i));
+							}
+							else
+							{
+								tile.items.add(i);
+							}
+
+							GameScreen.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " drops " + i.getName())));
+						}
 					}
 				}
 			}
 		}
+	}
+	
+	private void updateSpriteEffectsForTile(GameTile tile, float delta)
+	{
+		Iterator<SpriteEffect> itr =tile.spriteEffects.iterator();
+		while (itr.hasNext())
+		{
+			SpriteEffect e = itr.next();
+			boolean finished = e.Sprite.update(delta);
+			
+			if (finished) { itr.remove(); }
+		}
 		
-		cleanUpDead();
+		if (tile.entity != null)
+		{
+			itr = tile.entity.spriteEffects.iterator();
+			while (itr.hasNext())
+			{
+				SpriteEffect e = itr.next();
+				boolean finished = e.Sprite.update(delta);
+				
+				if ( finished) { itr.remove(); }
+			}
+		}
+		
+		if (tile.environmentEntity != null)
+		{
+			itr = tile.environmentEntity.spriteEffects.iterator();
+			while (itr.hasNext())
+			{
+				SpriteEffect e = itr.next();
+				boolean finished = e.Sprite.update(delta);
+				
+				if ( finished) { itr.remove(); }
+			}
+		}
+	}
+	
+	private void updateSpritesForTile(GameTile tile, float delta)
+	{
+		for (Sprite sprite : tile.tileData.sprites)
+		{
+			sprite.update(delta);
+		}
+		
+		if (tile.environmentEntity != null)
+		{
+			tile.environmentEntity.sprite.update(delta);
+		}
+		
+		if (tile.entity != null)
+		{
+			tile.entity.sprite.update(delta);
+		}
+		
+		for (Item i : tile.items)
+		{
+			i.getIcon().update(delta);
+		}
+	}
+	
+	private void getLightsForTile(GameTile tile, Array<Light> output)
+	{
+		int x = tile.x;
+		int y = tile.y;
+		
+		if (tile.tileData.light != null)
+		{
+			Light l = tile.tileData.light.copy();
+			l.lx = x;
+			l.ly = y;
+			output.add(l);
+		}
+		
+		if (tile.environmentEntity != null && tile.environmentEntity.light != null)
+		{
+			tile.environmentEntity.light.lx = x;
+			tile.environmentEntity.light.ly = y;
+			output.add(tile.environmentEntity.light);
+		}
+		
+		for (SpriteEffect se : tile.spriteEffects)
+		{
+			if (se.light != null)
+			{
+				se.light.lx = x;
+				se.light.ly = y;
+				output.add(se.light);
+			}
+		}
+		
+		if (tile.entity != null)
+		{
+			Array<Light> lights = tile.entity.getLight();
+			for (Light l : lights)
+			{
+				l.lx = x;
+				l.ly = y;
+				output.add(l);
+			}
+			
+			for (SpriteEffect se : tile.entity.spriteEffects)
+			{
+				if (se.light != null)
+				{
+					se.light.lx = x;
+					se.light.ly = y;
+					output.add(se.light);
+				}
+			}
+		}
 	}
 	
 	private boolean hasAbilitiesToUpdate()
@@ -593,123 +753,6 @@ public class Level
 			aa.updateAccumulators(cost);
 		}
 	}
-	
-	public void cleanUpDead()
-	{
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{
-				{
-					GameEntity e = Grid[x][y].entity;
-					if (e != null)
-					{
-						if (e.damageAccumulator > 0 && Grid[x][y].GetVisible())
-						{
-							RoguelikeGame.Instance.addActorDamageAction(e);
-						}
-						
-						if (e != player && e.HP <= 0 && !hasActiveEffects(e))
-						{
-							e.tile.entity = null;
-							
-							RoguelikeGame.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " dies!")));
-							
-							for (Item i : e.getInventory().m_items)
-							{
-								if (i.canDrop && i.shouldDrop())
-								{
-									if (i.itemType == ItemType.MATERIAL)
-									{
-										Grid[x][y].items.add(Recipe.generateItemForMaterial(i));
-									}
-									else
-									{
-										Grid[x][y].items.add(i);
-									}
-									
-									RoguelikeGame.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " drops " + i.getName())));
-								}
-							}						
-						}
-					}
-				}
-				
-				{
-					Entity e = Grid[x][y].environmentEntity;
-					if (e != null)
-					{
-						if (e.damageAccumulator > 0 && Grid[x][y].GetVisible())
-						{
-							RoguelikeGame.Instance.addActorDamageAction(e);
-						}
-						
-						if (e != player && e.HP <= 0 && !hasActiveEffects(e))
-						{
-							e.tile.environmentEntity = null;		
-							
-							for (Item i : e.getInventory().m_items)
-							{
-								if (i.canDrop && i.shouldDrop())
-								{
-									if (i.itemType == ItemType.MATERIAL)
-									{
-										Grid[x][y].items.add(Recipe.generateItemForMaterial(i));
-									}
-									else
-									{
-										Grid[x][y].items.add(i);
-									}
-									
-									RoguelikeGame.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " drops " + i.getName())));
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	public HashSet<Sprite> getAllSprites()
-	{
-		HashSet<Sprite> sprites = new HashSet<Sprite>();
-		
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{
-				GameTile tile = Grid[x][y];
-				
-				for (Sprite sprite : tile.tileData.sprites)
-				{
-					sprites.add(sprite);
-				}
-				
-				if (tile.environmentEntity != null)
-				{
-					sprites.add(tile.environmentEntity.sprite);
-				}
-				
-				if (tile.entity != null)
-				{
-					sprites.add(tile.entity.sprite);
-				}
-				
-				for (Item i : tile.items)
-				{
-					sprites.add(i.getIcon());
-				}
-			}
-		}
-		
-		for (ActiveAbility aa : ActiveAbilities)
-		{
-			sprites.add(aa.getSprite());
-		}
-		
-		return sprites;
-	}
 		
 	public Array<GameEntity> getAllEntities()
 	{
@@ -740,90 +783,6 @@ public class Level
 				if (Grid[x][y].environmentEntity != null)
 				{
 					list.add(Grid[x][y].environmentEntity);
-				}
-			}
-		}
-		
-		return list;
-	}
-	
-	public Array<Light> getAllLights()
-	{
-		Array<Light> list = new Array<Light>();
-		
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{
-				GameTile tile = Grid[x][y];
-				
-				if (tile.tileData.light != null)
-				{
-					Light l = tile.tileData.light.copy();
-					l.lx = x;
-					l.ly = y;
-					list.add(l);
-				}
-				
-				if (tile.environmentEntity != null && tile.environmentEntity.light != null)
-				{
-					tile.environmentEntity.light.lx = x;
-					tile.environmentEntity.light.ly = y;
-					list.add(tile.environmentEntity.light);
-				}
-				
-				for (SpriteEffect se : tile.spriteEffects)
-				{
-					if (se.light != null)
-					{
-						se.light.lx = x;
-						se.light.ly = y;
-						list.add(se.light);
-					}
-				}
-				
-				if (tile.entity != null)
-				{
-					Array<Light> lights = tile.entity.getLight();
-					for (Light l : lights)
-					{
-						l.lx = x;
-						l.ly = y;
-						list.add(l);
-					}
-					
-					for (SpriteEffect se : tile.entity.spriteEffects)
-					{
-						if (se.light != null)
-						{
-							se.light.lx = x;
-							se.light.ly = y;
-							list.add(se.light);
-						}
-					}
-				}
-			}
-		}
-		
-		for (ActiveAbility aa : ActiveAbilities)
-		{
-			if (aa.light != null)
-			{
-				if (aa.AffectedTiles.size == 1)
-				{
-					aa.light.lx = aa.AffectedTiles.peek().x;
-					aa.light.ly = aa.AffectedTiles.peek().y;
-					list.add(aa.light);
-				}
-				else
-				{
-					for (GameTile tile : aa.AffectedTiles)
-					{
-						Light l = aa.light.copy();
-						l.lx = tile.x;
-						l.ly = tile.y;
-						list.add(l);
-					}
 				}
 			}
 		}

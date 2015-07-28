@@ -24,6 +24,7 @@ import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.StatusEffect.StatusEffect;
@@ -69,7 +70,7 @@ public class GameEntity extends Entity
 
 				if (gtz && a.cooldownAccumulator <= 0 && tile.level.player == this)
 				{
-					RoguelikeGame.Instance.addAbilityAvailabilityAction(a.Icon);
+					GameScreen.Instance.addAbilityAvailabilityAction(a.Icon);
 				}
 			}
 		}

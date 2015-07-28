@@ -1,5 +1,6 @@
 package Roguelike.Sprite;
 
+import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 
 import com.badlogic.gdx.math.MathUtils;
@@ -46,7 +47,7 @@ public class MoveAnimation extends SpriteAnimation
 		
 		if (eqn == MoveEquation.LEAP)
 		{
-			offset[1] += (RoguelikeGame.TileSize*3) * (0.5f - Math.abs(alpha - 0.5f));
+			offset[1] += (Global.TileSize*3) * (0.5f - Math.abs(alpha - 0.5f));
 		}
 	}
 

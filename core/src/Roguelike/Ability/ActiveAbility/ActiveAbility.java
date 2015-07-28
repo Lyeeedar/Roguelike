@@ -102,7 +102,17 @@ public class ActiveAbility implements IAbility, IGameObject
 	{
 		if (hitSprite != null) { return hitSprite; }
 		Item wep = caster.getInventory().getEquip(EquipmentSlot.MAINWEAPON);
-		if (wep != null && wep.hitEffect != null) { return wep.hitEffect; }
+		if (wep != null)
+		{
+			if (wep.hitEffect != null) 
+			{ 
+				return wep.hitEffect; 
+			}
+			else
+			{
+				return wep.weaponType.hitSprite;
+			}
+		}
 		return caster.defaultHitEffect;
 	}
 	

@@ -1,5 +1,6 @@
 package Roguelike.Sprite;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -133,46 +134,37 @@ public class Sprite
 	}
 	
 	private void drawTexture(Batch batch, Texture texture, int x, int y, int width, int height, AnimationState animationState)
-	{		
+	{	
 		if (animationState.mode == AnimationMode.SHRINK && animationState.isShrunk)
 		{
-			batch.draw(
-					texture,
-					x, y,
-					width/2, height/2, // origin x, y
-					width, height * 0.9f, // width, height
-					1, 1, // scale
-					rotation, // rotation
-					tileBounds[0], tileBounds[1], tileBounds[2], tileBounds[3],
-					false, false // flip x, y
-					);
+			height *= 0.9f;
 		}
 		else if (animationState.mode == AnimationMode.SINE)
 		{
-			batch.draw(
-					texture,
-					x, y+(height/20)*animationState.sinOffset,
-					width/2, height/2, // origin x, y
-					width, height, // width, height
-					1, 1, // scale
-					rotation, // rotation
-					tileBounds[0], tileBounds[1], tileBounds[2], tileBounds[3],
-					false, false // flip x, y
-					);
+			y += (height / 20) * animationState.sinOffset;
 		}
-		else
+		
+		// Check if not onscreen
+		if (
+				x + width < 0 ||
+				y + height < 0 ||
+				x > Gdx.graphics.getWidth() ||
+				y > Gdx.graphics.getHeight()
+			)
 		{
-			batch.draw(
-					texture,
-					x, y,
-					width/2, height/2, // origin x, y
-					width, height, // width, height
-					1, 1, // scale
-					rotation, // rotation
-					tileBounds[0], tileBounds[1], tileBounds[2], tileBounds[3],
-					false, false // flip x, y
-					);
+			return; // skip drawing
 		}
+		
+		batch.draw(
+				texture,
+				x, y,
+				width / 2.0f, height / 2.0f,
+				width, height, // width, height
+				1, 1, // scale
+				rotation, // rotation
+				tileBounds[0], tileBounds[1], tileBounds[2], tileBounds[3],
+				false, false // flip x, y
+		);
 	}
 
 	public Texture getCurrentTexture()

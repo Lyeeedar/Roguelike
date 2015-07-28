@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -25,10 +26,14 @@ public class AssetManager
 		FileHandle file = Gdx.files.internal(path);
 		if (!file.exists())
 		{
+			loadedTextures.put(path, null);
 			return null;
 		}
 		
-		Texture tex = new Texture(file);
+		Texture tex = new Texture(file, true);
+		
+		tex.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
+		
 		loadedTextures.put(path, tex);
 		
 		return tex;

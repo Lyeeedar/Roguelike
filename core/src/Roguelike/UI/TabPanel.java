@@ -2,6 +2,7 @@ package Roguelike.UI;
 
 import Roguelike.AssetManager;
 import Roguelike.RoguelikeGame;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -71,7 +72,7 @@ public class TabPanel extends Widget
 		stage.setScrollFocus(selectedTab.body);
 	}
 	
-	public void addTab(Sprite header, Widget body)
+	public Tab addTab(Sprite header, Widget body)
 	{
 		final Tab tab = new Tab(header, body);
 		tabs.add(tab);
@@ -79,6 +80,8 @@ public class TabPanel extends Widget
 		body.setVisible(false);
 		
 		selectTab(tab);
+		
+		return tab;
 	}
 	
 	public void selectTab(Tab tab)
@@ -103,7 +106,7 @@ public class TabPanel extends Widget
 		return Math.max(getHeight(), selectedTab.body.getPrefHeight());
 	}
 	
-	private class Tab
+	public class Tab
 	{
 		Sprite header;
 		Widget body;
@@ -119,7 +122,7 @@ public class TabPanel extends Widget
 	{
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 		{
-			RoguelikeGame.Instance.clearContextMenu();
+			GameScreen.Instance.clearContextMenu();
 			
 			if (x < tabHeaderSize)
 			{
