@@ -130,7 +130,7 @@ public class DungeonFileParser
 					if (s == null) { s = sharedSymbolMap.get(c); }
 					if (s == null) 
 					{ 
-						System.out.println("Failed to find symbol for character '" + c +"'! Falling back to using '.'");
+						//System.out.println("Failed to find symbol for character '" + c +"'! Falling back to using '.'");
 						s = sharedSymbolMap.get('.'); 
 					}
 					

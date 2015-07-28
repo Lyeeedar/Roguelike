@@ -1247,7 +1247,7 @@ public class RecursiveDockGenerator
 							roomContents[point[0]][point[1]].tileData = roomCopy[point[0]][point[1]].tileData;
 						}
 						
-						if (s.hasEnvironmentEntity() && !s.getEnvironmentEntity().passable)
+						if (s.hasEnvironmentEntity() && !s.getEnvironmentEntityPassable())
 						{
 							roomContents[point[0]][point[1]].environmentData = roomCopy[point[0]][point[1]].environmentData;
 							roomContents[point[0]][point[1]].environmentEntityObject = null;

@@ -353,7 +353,7 @@ public class Level
 	
 	private void updateSpriteEffectsForTile(GameTile tile, float delta)
 	{
-		Iterator<SpriteEffect> itr =tile.spriteEffects.iterator();
+		Iterator<SpriteEffect> itr = tile.spriteEffects.iterator();
 		while (itr.hasNext())
 		{
 			SpriteEffect e = itr.next();

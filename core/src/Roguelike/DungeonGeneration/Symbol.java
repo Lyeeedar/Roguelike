@@ -38,6 +38,7 @@ public class Symbol implements PathfindingTile
 		s.character = character;
 		s.tileData = tileData;
 		s.environmentData = environmentData;
+		s.environmentEntityObject = environmentEntityObject;
 		s.entityData = entityData;
 		s.metaValue = metaValue;
 		
