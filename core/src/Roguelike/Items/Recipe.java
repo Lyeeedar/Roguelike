@@ -239,7 +239,7 @@ public class Recipe
 				}
 				else
 				{
-					targetItem.getStatisticsObject().put(el.Hardiness, values.get(el).toString());
+					targetItem.getStatisticsObject().put(el.Hardiness, "50");
 				}
 			}
 		}		
@@ -279,7 +279,7 @@ public class Recipe
 	
 	public static Item generateItemForMaterial(Item mat)
 	{
-		Recipe recipe = Recipe.getRandomRecipe();
+		Recipe recipe = Recipe.getRandomRecipe(mat.materialType.suitableForWeapon, mat.materialType.suitableForArmour);
 		
 		int numMats = recipe.slots.length;
 		Item[] materials = new Item[numMats];
@@ -292,37 +292,46 @@ public class Recipe
 		return recipe.generate(materials);
 	}
 	
-	//----------------------------------------------------------------------
-	public static Item generateRandomItem()
-	{
-		Recipe recipe = Recipe.getRandomRecipe();
-
-		int numMats = recipe.slots.length;
-		Item[] materials = new Item[numMats];
-		Item mat = Recipe.generateMaterial((int)(MathUtils.randomTriangular(0.5f, 1.5f)*150));
-
-		for (int i = 0; i < numMats; i++)
-		{
-			materials[i] = mat;
-		}
-
-		return recipe.generate(materials);
-	}
-	
-	private static final Recipe[] Recipes = 
+	private static final Recipe[] WeaponRecipes = 
 	{
 		Recipe.load("Sword"),
 		Recipe.load("Axe"),
 		Recipe.load("Spear"),
 		Recipe.load("Bow"),
 		Recipe.load("Wand"),
+	};
+	private static final Recipe[] ArmourRecipes = 
+	{
 		Recipe.load("Helm"),
 		Recipe.load("Cuirass"),
 		Recipe.load("Greaves")
 	};
-	public static Recipe getRandomRecipe()
+	public static Recipe getRandomRecipe(boolean weapon, boolean armour)
 	{
-		return Recipes[MathUtils.random(Recipes.length-1)];
+		int max = 0;
+		if (weapon) { max += WeaponRecipes.length; }
+		if (armour) { max += ArmourRecipes.length; }
+		
+		int val = MathUtils.random(max-1);
+		
+		if (weapon)
+		{
+			if (val < WeaponRecipes.length)
+			{
+				return WeaponRecipes[val];
+			}
+			else
+			{
+				val -= WeaponRecipes.length;
+			}
+		}
+		
+		if (armour)
+		{
+			return ArmourRecipes[val];
+		}
+		
+		return null;
 	}
 
 }

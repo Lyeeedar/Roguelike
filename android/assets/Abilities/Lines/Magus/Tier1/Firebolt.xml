@@ -30,9 +30,8 @@
 	</Targeting>
 	
 	<Movement>
-		<Bolt>
-			<Speed>5</Speed>
-		</Bolt>
+		<Smite>
+		</Smite>
 	</Movement>
 	
 	<Effect>

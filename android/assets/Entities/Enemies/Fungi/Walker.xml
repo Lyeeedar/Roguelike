@@ -16,7 +16,7 @@
 		<MaxHP>300</MaxHP>
 		<Range>5</<Range>
 		
-		<Wood_Atk>20</Wood_Atk>
+		<Wood_Atk>40</Wood_Atk>
 	</Statistics>
 	
 </Entity>

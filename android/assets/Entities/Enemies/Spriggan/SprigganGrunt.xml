@@ -13,10 +13,10 @@
 	</Factions>
 	
 	<Statistics>
-		<MaxHP>300</MaxHP>
+		<MaxHP>250</MaxHP>
 		<Range>5</<Range>
 		
-		<Wood_Atk>25</Wood_Atk>
+		<Wood_Atk>45</Wood_Atk>
 	</Statistics>
 	
 </Entity>

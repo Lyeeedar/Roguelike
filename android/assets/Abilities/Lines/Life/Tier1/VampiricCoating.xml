@@ -31,7 +31,7 @@
 				<Events>
 					<OnDealDamage>
 					    <Heal>
-					    	<Attacker>DAMAGE*0.2</Attacker>
+					    	<Attacker>DAMAGE*0.1</Attacker>
 					    </Heal>
 					</OnDealDamage>
 				</Events>

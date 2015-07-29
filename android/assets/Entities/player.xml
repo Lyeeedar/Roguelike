@@ -6,6 +6,7 @@
 	</Factions>
 	
 	<AI>player</AI>
+	<Essence>400</Essence>
 	
 	<CanSwap>true</CanSwap>
 	
@@ -21,11 +22,74 @@
 		<Speed>5</<Speed>
 		<Weight>1</Weight>
 		
-		<Wood_Atk>50</Wood_Atk>
+		<Wood_Atk>20</Wood_Atk>
 	</Statistics>
 	
 	<Inventory>
 		<Equipment>
+		    
+		    <Dagger>
+		        <Name>Iron Dagger</Name>
+		        <Description>A small metal knife. Cheap and mass produced by those looking to increase their smithing skills.</Description>
+		        
+		        <Slot>MainWeapon</Slot>
+				<Type>Weapon</Type>
+				<WeaponType>Sword</WeaponType>
+			
+				<Events>
+					<Constant>
+						<Metal_Atk>50</Metal_Atk>
+					</Constant>
+				</Events>
+		    </Dagger>
+		    
+		    <Torch>
+		        
+		        <Name>Torch</Name>
+		        <Description>A burning torch. You can deliver a fiery prod with this.</Description>
+		        <Slot>OffWeapon</Slot>
+		        <Type>Weapon</Type>
+		        
+		        <Events>
+					<Constant>
+						<Fire_Atk>10</Fire_Atk>
+					</Constant>
+				</Events>
+		        
+		    </Torch>
+		    
+		    <Top>
+		        
+		        <Name>Padded Shirt</Name>
+		        <Description>A thick padded shirt. Can keep you warm in the cold nights and protect you from small amounts of stabbing.</Description>
+		        <Slot>Body</Slot>
+		        <Type>Armour</Type>
+		        
+		        <Events>
+					<Constant>
+						<Def>5</Def>
+						<Hardiness>25</Hardiness>
+					</Constant>
+				</Events>
+		        
+		    </Top>
+		    
+		     <Leg>
+		        
+		        <Name>Padded Trousers</Name>
+		        <Description>Is that a large amount of protective insulation in your pocket, or are you just happy to see me?</Description>
+		        <Slot>Legs</Slot>
+		        <Type>Armour</Type>
+		        
+		        <Events>
+					<Constant>
+						<Def>5</Def>
+						<Hardiness>25</Hardiness>
+					</Constant>
+				</Events>
+		        
+		    </Leg>
+		    
 			<Item>Misc/BasicLantern</Item>
 		</Equipment>
 	</Inventory>

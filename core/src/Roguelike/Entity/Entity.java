@@ -195,7 +195,7 @@ public abstract class Entity
 
 	//----------------------------------------------------------------------
 	public int HP = 1;
-	public int essence = 100;
+	public int essence = 0;
 
 	//----------------------------------------------------------------------
 	public static class StatusEffectStack

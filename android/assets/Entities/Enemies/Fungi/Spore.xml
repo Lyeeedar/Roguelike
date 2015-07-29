@@ -13,7 +13,7 @@
 	</Factions>
 	
 	<Statistics>
-		<MaxHP>300</MaxHP>
+		<MaxHP>150</MaxHP>
 		<Range>5</<Range>
 		
 		<Wood_Atk>20</Wood_Atk>

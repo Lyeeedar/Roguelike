@@ -20,7 +20,7 @@
 			<Movement><Smite/></Movement>
 			<Effect>
 				<Damage>
-					<Wood_Atk>30</Wood_Atk>
+					<Atk>Atk*0.7</Atk>
 				</Damage>
 				<Teleport>
 					<Move>Target</Move>
@@ -30,15 +30,32 @@
 		</Pull>
 	</ActiveAbilities>
 	
+	<Inventory>
+	    
+	    <Hide DropChance="rnd(10)<1">
+	        
+	        <Type>Material</Type>
+		    <Name>Toad Skin</Name>
+		    <MaterialType>Leather</MaterialType>
+		    <Elements>
+		        <Metal>20</Metal>
+		        <Wood>20+rnd(30)</Wood>
+		        <Water>20+rnd(30)</Water>
+		    </Elements>
+	        
+	    </Hide>
+	    
+	</Inventory>
+	
 	<Statistics>
-		<MaxHP>500</MaxHP>
+		<MaxHP>300</MaxHP>
 		<Range>5</<Range>
 		
 		<Wood_Atk>33</Wood_Atk>
 		<Water_Atk>33</Water_Atk>
 		
-		<Wood_Def>50</Wood_Def>
-		<Wood_Hardiness>10</Wood_Hardiness>
+		<Wood_Def>20</Wood_Def>
+		<Wood_Hardiness>50</Wood_Hardiness>
 		
 		<Water_Def>66</Water_Def>
 		<Water_Hardiness>80</Water_Hardiness>

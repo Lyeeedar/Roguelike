@@ -175,6 +175,30 @@ public class AbilityPoolPanel extends Widget
 					
 					locked.render(batch, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
 				}
+				else
+				{
+					int index = -1;
+					if (ab.ability instanceof ActiveAbility)
+					{
+						index = Global.CurrentLevel.player.getActiveAbilityIndex((ActiveAbility)ab.ability);
+					}
+					else
+					{
+						index = Global.CurrentLevel.player.getPassiveAbilityIndex((PassiveAbility)ab.ability);
+					}
+					
+					if (index >= 0)
+					{
+						int cx = (int)(xoff + TileSize*ii);
+						int cy = (int)y-TileSize;
+						
+						cx += TileSize / 2;
+						cy += TileSize / 2;
+						
+						font.draw(batch, ""+index, cx, cy);
+					}
+
+				}
 			}
 			
 			y -= TileSize*1.5f;
@@ -257,7 +281,7 @@ public class AbilityPoolPanel extends Widget
 											}
 										});
 
-										table.add(row).width(Value.percentWidth(1, table));
+										table.add(row).width(Value.percentWidth(1, table)).pad(2);
 										table.row();
 									}
 									
@@ -297,7 +321,7 @@ public class AbilityPoolPanel extends Widget
 											}
 										});
 
-										table.add(row).width(Value.percentWidth(1, table));
+										table.add(row).width(Value.percentWidth(1, table)).pad(2);
 										table.row();
 									}
 									
@@ -311,20 +335,40 @@ public class AbilityPoolPanel extends Widget
 							{
 								Table table = new Table();
 								
-								table.add(new Label("Unlock for " + a.cost + " essence?", skin)).width(Value.percentWidth(1, table));
-								
-								table.addListener(new InputListener()
+								if (Global.CurrentLevel.player.essence >= a.cost)
 								{
-									@Override
-									public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-									{	
-										a.unlocked = true;
-										GameScreen.Instance.clearContextMenu();
-										
-										return true;
-									}
-								});
+									table.add(new Label("Unlock for " + a.cost + " essence?\nYou have " + Global.CurrentLevel.player.essence + " essence.", skin)).width(Value.percentWidth(1, table)).pad(2);
+									
+									table.addListener(new InputListener()
+									{
+										@Override
+										public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+										{	
+											Global.CurrentLevel.player.essence -= a.cost;
 											
+											a.unlocked = true;
+											GameScreen.Instance.clearContextMenu();
+											
+											return true;
+										}
+									});							
+								}
+								else
+								{
+									table.add(new Label("Not enough essence " + Global.CurrentLevel.player.essence + " / " + a.cost + ".\nGo kill more things", skin)).width(Value.percentWidth(1, table)).pad(2);
+									
+									table.addListener(new InputListener()
+									{
+										@Override
+										public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+										{	
+											GameScreen.Instance.clearContextMenu();
+											
+											return true;
+										}
+									});												
+								}
+								
 								table.pack();
 								
 								GameScreen.Instance.contextMenu = new Tooltip(table, skin, stage);

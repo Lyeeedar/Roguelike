@@ -7,7 +7,7 @@
 	
 	<Events>
 		<Constant>
-			<Fire_Atk>rnd(50)</Fire_Atk>
+			<Fire_Atk>rnd(20)</Fire_Atk>
 		</Constant>
 	</Events>
 	

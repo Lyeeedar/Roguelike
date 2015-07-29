@@ -493,15 +493,6 @@ public class Global
 				{
 					CurrentLevel.player = GameEntity.load("player");
 
-					for (int i = 0; i < 40; i++)
-					{
-						//Global.CurrentLevel.player.Inventory.Items.add(AssetManager.loadItem("Jewelry/Necklace/GoldNecklace"));
-					}
-					CurrentLevel.player.getInventory().m_items.add(Item.load("Weapon/MainWeapon/sword"));
-					CurrentLevel.player.getInventory().m_items.add(Item.load("Weapon/OffWeapon/shield"));
-					CurrentLevel.player.getInventory().m_items.add(Item.load("Armour/Body/WoodArmour"));
-					CurrentLevel.player.getInventory().m_items.add(Item.load("Jewelry/Necklace/GoldNecklace"));
-
 					tile.addObject(CurrentLevel.player);
 
 					exit = true;

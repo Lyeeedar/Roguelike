@@ -10,11 +10,6 @@
 		<Name>Skills/PowerStrike</Name>
 	</Icon>
 	
-	<HitSprite>
-		<Name>strike/strike</Name>
-		<UpdateRate>0.1</UpdateRate>
-	</HitSprite>
-	
 	<Type>
 		<Harmful>
 		</Harmful>

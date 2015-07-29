@@ -12,7 +12,7 @@
 	
 		<OnTurn>
 			<HOT>
-				<Heal>5</Heal>
+				<Heal>2</Heal>
 			</HOT>
 		</OnTurn>
 	</Events>

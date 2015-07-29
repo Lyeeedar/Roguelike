@@ -188,6 +188,7 @@ public class GameEntity extends Entity
 		AI = xmlElement.getChildByName("AI") != null ? BehaviourTree.load(Gdx.files.internal("AI/" + xmlElement.get("AI") + ".xml")) : AI;
 		canSwap = xmlElement.getBoolean("CanSwap", false);
 		canMove = xmlElement.getBoolean("CanMove", true);
+		essence = xmlElement.getInt("Essence", 20);
 
 		Element factionElement = xmlElement.getChildByName("Factions");
 		if (factionElement != null)

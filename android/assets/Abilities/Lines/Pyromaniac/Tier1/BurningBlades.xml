@@ -30,7 +30,7 @@
 				<Duration>10</Duration>
 				<Events>
 					<Constant>
-						<Fire_Atk>100</Fire_Atk>
+						<Fire_Atk>50</Fire_Atk>
 					</Constant>
 				</Events>
 			</Attacker>

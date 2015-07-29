@@ -102,7 +102,6 @@
 		<Encounter>
 			<Mobs>
 				<Shooter>2</Shooter>
-				<Cloud>2</Cloud>
 			</Mobs>
 			<RangeMin>60</RangeMin>
 			<RangeMax>80</RangeMax>
@@ -110,8 +109,8 @@
 		
 		<Encounter>
 			<Mobs>
-				<Cloud>3</Cloud>
 				<Spore>3</Spore>
+				<Shooter>1</Shooter>
 			</Mobs>
 			<RangeMin>70</RangeMin>
 			<RangeMax>90</RangeMax>
@@ -129,7 +128,7 @@
 		<Encounter>
 			<Mobs>
 				<Mother>1</Mother>
-				<Spore>4</Spore>
+				<Spore>6</Spore>
 			</Mobs>
 			<RangeMin>100</RangeMin>
 		</Encounter>

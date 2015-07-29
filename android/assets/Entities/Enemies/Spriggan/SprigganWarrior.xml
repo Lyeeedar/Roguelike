@@ -13,13 +13,13 @@
 	</Factions>
 	
 	<Statistics>
-		<MaxHP>400</MaxHP>
+		<MaxHP>300</MaxHP>
 		<Range>5</<Range>
 		
 		<Wood_Atk>45</Wood_Atk>
 		
-		<Metal_Def>15</Metal_Def>
-		<Metal_Hardiness>30</Metal_Hardiness>
+		<Metal_Def>20</Metal_Def>
+		<Metal_Hardiness>50</Metal_Hardiness>
 		
 		<Wood_Def>30</Wood_Def>
 		<Wood_Hardiness>50</Wood_Hardiness>

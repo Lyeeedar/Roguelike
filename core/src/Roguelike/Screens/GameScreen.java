@@ -838,8 +838,11 @@ public class GameScreen implements Screen, InputProcessor
 					table.row();
 				}
 
-				table.add(new Label("-------------", skin));
-				table.row();
+				if (entity.actions.size > 0)
+				{
+					table.add(new Label("-------------", skin));
+					table.row();
+				}
 			}
 
 			for (final ActiveAbility aa : available)

@@ -42,8 +42,8 @@
 			
 			<Effect>
 				<Damage>
-					<Air_ATK>25</Air_ATK>
-					<Water_ATK>25</Water_ATK>
+					<Air_ATK>30</Air_ATK>
+					<Water_ATK>30</Water_ATK>
 				</Damage>
 			</Effect>
 		</MagicMissile>
@@ -52,12 +52,15 @@
 	
 	<Inventory>
 		<Equipment>
-			<Wand Drop="false">
+			<Wand DropChance="rnd(3)<=1">
+			    <Name>Spriggan Wand</Name>
+			    <Description>A small rod with a glowing tip.</Description>
 				<Slot>MainWeapon</Slot>
 				<WeaponType>Wand</WeaponType>
 				<Events>
 					<Constant>
-						<Air_Atk>10</Air_Atk>
+					    <Wood_Atk>35</Wood_Atk>
+						<Air_Atk>45</Air_Atk>
 					</Constant>
 				</Events>
 			</Wand>
@@ -65,16 +68,17 @@
 	</Inventory>
 	
 	<Statistics>
-		<MaxHP>350</MaxHP>
+		<MaxHP>300</MaxHP>
 		<Range>5</<Range>
 		
-		<Wood_Atk>35</Wood_Atk>
+		<Wood_Atk>-15</Wood_Atk>
+		<Air_Atk>-20</Air_Atk>
 		
-		<Metal_Def>5</Metal_Def>
-		<Metal_Hardiness>15</Metal_Hardiness>
+		<Metal_Def>15</Metal_Def>
+		<Metal_Hardiness>50</Metal_Hardiness>
 		
-		<Wood_Def>15</Wood_Def>
-		<Wood_Hardiness>30</Wood_Hardiness>
+		<Wood_Def>35</Wood_Def>
+		<Wood_Hardiness>50</Wood_Hardiness>
 	</Statistics>
 	
 </Entity>

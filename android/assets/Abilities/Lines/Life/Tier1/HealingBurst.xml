@@ -3,7 +3,7 @@
 	<Name>Healing Burst</Name>
 	<Description>A blast of healing energy surges from within you.</Description>
 	
-	<Cooldown>10</Cooldown>
+	<Cooldown>25</Cooldown>
 	<Range>1</Range>
 	<AOE>1</AOE>
 	
@@ -26,7 +26,7 @@
 	</Movement>
 	
 	<Effect>
-		<Heal>500</Heal>
+		<Heal>200</Heal>
 	</Effect>
 	
 </ActiveAbility>

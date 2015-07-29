@@ -11,11 +11,49 @@
 		<Faction>Fungi</Faction>
 	</Factions>
 	
+	<ActiveAbilities>
+		
+		<Heal>
+			<Cooldown>15</Cooldown>
+			<Range>3</Range>
+			<Targeting><Entity Type="Ally"/></Targeting>
+			<Movement><Smite /></Movement>
+			<Effect>
+				<Heal>100</Heal>
+			</Effect>
+		</Heal>
+		
+		<MagicMissile>
+			<Cooldown>5</Cooldown>
+			<Range>4</Range>
+					
+			<HitSprite>
+				<Name>Fireburst/Fireburst</Name>
+				<UpdateRate>0.1</UpdateRate>
+			</HitSprite>
+			
+			<MovementSprite>
+				<Name>firebolt/firebolt</Name>
+				<UpdateRate>0.1</UpdateRate>
+			</MovementSprite>		
+			<Targeting><Entity Type="Enemy"/></Targeting>	
+			<Movement><Bolt><Speed>5</Speed></Bolt></Movement>
+			
+			<Effect>
+				<Damage>
+					<Air_ATK>30</Air_ATK>
+					<Water_ATK>30</Water_ATK>
+				</Damage>
+			</Effect>
+		</MagicMissile>
+	
+	</ActiveAbilities>
+	
 	<Statistics>
-		<MaxHP>300</MaxHP>
+		<MaxHP>900</MaxHP>
 		<Range>5</<Range>
 		
-		<Wood_Atk>20</Wood_Atk>
+		<Wood_Atk>40</Wood_Atk>
 	</Statistics>
 	
 </Entity>

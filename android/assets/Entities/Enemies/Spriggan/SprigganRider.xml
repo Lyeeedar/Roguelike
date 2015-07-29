@@ -14,12 +14,14 @@
 	
 	<Inventory>
 		<Equipment>
-			<Lance Drop="false">
+			<Lance DropChance="rnd(3)<=1">
+			    <Name>Spriggan Lance</Name>
+			    <Description>A short wooden lance. Its smooth surface makes it seem grown, not cut.</Description>
 				<Slot>MainWeapon</Slot>
 				<WeaponType>Spear</WeaponType>
 				<Events>
 					<Constant>
-						<Wood_Atk>55</Wood_Atk>
+						<Wood_Atk>100</Wood_Atk>
 					</Constant>
 				</Events>
 			</Lance>
@@ -46,6 +48,7 @@
 			<Movement><Smite/></Movement>
 			<Effect>
 				<Damage>
+				    <Atk>Atk*0.7</Atk>
 					<Air_Atk>30</Air_Atk>
 				</Damage>
 				<Teleport>
@@ -59,7 +62,7 @@
 		<MaxHP>300</MaxHP>
 		<Range>5</<Range>
 		
-		<Wood_Atk>25</Wood_Atk>
+		<Wood_Atk>-35</Wood_Atk>
 	</Statistics>
 	
 </Entity>

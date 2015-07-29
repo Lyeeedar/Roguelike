@@ -17,7 +17,8 @@
 	
 	<Factions>
 		<Major>
-			<Spider>1</Spider>
+		    <Spriggan>3</Spriggan>
+			<Fungi>1</Fungi>
 		</Major>
 		<Minor>
 			<Toad>1</Toad>
