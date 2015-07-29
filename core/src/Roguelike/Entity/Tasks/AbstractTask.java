@@ -5,5 +5,8 @@ import Roguelike.Tiles.GameTile;
 
 public abstract class AbstractTask
 {
-	public abstract float processTask(GameEntity obj);
+	public boolean cancel = false;
+	public float cost = 1;
+	
+	public abstract void processTask(GameEntity obj);
 }

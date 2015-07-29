@@ -6,9 +6,11 @@ import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.GameEvent.Damage.AbstractOnDamageEvent;
 import Roguelike.GameEvent.Damage.DamageObject;
+import Roguelike.GameEvent.OnTask.AbstractOnTaskEvent;
 import Roguelike.GameEvent.OnTurn.AbstractOnTurnEvent;
 
 import com.badlogic.gdx.utils.Array;
@@ -19,7 +21,8 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnTurnEvent> onTurnEvents = new Array<AbstractOnTurnEvent>();
 	public ConstantEvent constantEvent;
 	public Array<AbstractOnDamageEvent> onDealDamageEvents = new Array<AbstractOnDamageEvent>();
-	public Array<AbstractOnDamageEvent> onReceiveDamageEvents = new Array<AbstractOnDamageEvent>();
+	public Array<AbstractOnDamageEvent> onReceiveDamageEvents = new Array<AbstractOnDamageEvent>();	
+	public Array<AbstractOnTaskEvent> onMoveEvents = new Array<AbstractOnTaskEvent>();
 	
 	public int getStatistic(Entity entity, Statistic s)
 	{
@@ -74,6 +77,14 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 	
+	public void onMove(Entity entity, TaskMove task)
+	{
+		for (AbstractOnTaskEvent event : onMoveEvents)
+		{
+			event.handle(entity, task);
+		}
+	}
+	
 	protected void parse(Element xml)
 	{
 		Element onTurnElements = xml.getChildByName("OnTurn");
@@ -109,6 +120,16 @@ public abstract class GameEventHandler implements IGameObject
 			{
 				Element onReceiveDamageElement = onReceiveDamageElements.getChild(i);
 				onReceiveDamageEvents.add(AbstractOnDamageEvent.load(onReceiveDamageElement));
+			}
+		}
+		
+		Element onMoveElements = xml.getChildByName("OnMove");
+		if (onMoveElements != null)
+		{
+			for (int i = 0; i < onMoveElements.getChildCount(); i++)
+			{
+				Element onMoveElement = onMoveElements.getChild(i);
+				onMoveEvents.add(AbstractOnTaskEvent.load(onMoveElement));
 			}
 		}
 	}

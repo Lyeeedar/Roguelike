@@ -38,7 +38,7 @@
 				<UpdateRate>0.1</UpdateRate>
 			</MovementSprite>		
 			<Targeting><Entity Type="Enemy"/></Targeting>	
-			<Movement><Bolt><Speed>5</Speed></Bolt></Movement>
+			<Movement><Smite/></Movement>
 			
 			<Effect>
 				<Damage>

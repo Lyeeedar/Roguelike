@@ -5,9 +5,8 @@ import Roguelike.Entity.GameEntity;
 public class TaskWait extends AbstractTask
 {
 	@Override
-	public float processTask(GameEntity obj)
+	public void processTask(GameEntity obj)
 	{
-		return 1;
+		
 	}
-
 }

@@ -1,0 +1,41 @@
+<ActiveAbility>
+
+	<Name>Pin</Name>
+	<Description>Pin an enemy to the ground.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>2</Range>
+	
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Targeting>
+		<Entity Type="Enemy"></<Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite></Smite>
+	</Movement>
+	
+	<Effect>
+	    <Damage>
+		    <Atk>Atk</Atk>
+		</Damage>
+		<Status>
+		    
+		    <Defender>
+		        
+		        <Duration>4</Duration>
+		        <Events>
+		            
+		            <OnMove><Cancel/></OnMove>
+		            
+		        </Events>
+		        
+		    </Defender>
+		    
+		</Status>
+	</Effect>
+	
+</ActiveAbility>

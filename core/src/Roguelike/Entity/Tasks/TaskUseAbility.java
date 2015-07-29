@@ -15,7 +15,7 @@ public class TaskUseAbility extends AbstractTask
 	}
 	
 	@Override
-	public float processTask(GameEntity obj)
+	public void processTask(GameEntity obj)
 	{	
 		ability.cooldownAccumulator = ability.cooldown;
 		
@@ -28,8 +28,6 @@ public class TaskUseAbility extends AbstractTask
 		{
 			obj.tile.level.addActiveAbility(aa);
 		}
-		
-		return 1;
 	}
 
 }

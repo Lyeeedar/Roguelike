@@ -3,6 +3,7 @@ package Roguelike.Levels;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Global.Statistic;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
@@ -12,6 +13,7 @@ import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
+import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.ItemType;
 import Roguelike.Items.Recipe;
@@ -515,7 +517,17 @@ public class Level
 		if (player.tasks.size > 0)
 		{
 			AbstractTask task = player.tasks.removeIndex(0);
-			float actionCost = task.processTask(player) * player.getActionDelay();
+			for (GameEventHandler handler : player.getAllHandlers())
+			{
+				if (task instanceof TaskMove)
+				{
+					handler.onMove(player, (TaskMove)task);
+				}
+			}
+			
+			if (!task.cancel) { task.processTask(player); }
+			
+			float actionCost = task.cost * player.getActionDelay();
 			
 			Global.AUT += actionCost;
 			
@@ -567,7 +579,18 @@ public class Level
 				// If a task is queued, process it
 				if (e.tasks.size > 0)
 				{
-					float actionCost = e.tasks.removeIndex(0).processTask(e);
+					AbstractTask task = e.tasks.removeIndex(0);
+					for (GameEventHandler handler : e.getAllHandlers())
+					{
+						if (task instanceof TaskMove)
+						{
+							handler.onMove(e, (TaskMove)task);
+						}
+					}
+					
+					if (!task.cancel) { task.processTask(e); }
+					
+					float actionCost = task.cost * e.getActionDelay();					
 					e.actionDelayAccumulator -= actionCost * e.getActionDelay();
 				}
 				else
@@ -618,7 +641,18 @@ public class Level
 					// If a task is queued, process it
 					if (e.tasks.size > 0)
 					{
-						float actionCost = e.tasks.removeIndex(0).processTask(e);
+						AbstractTask task = e.tasks.removeIndex(0);
+						for (GameEventHandler handler : e.getAllHandlers())
+						{
+							if (task instanceof TaskMove)
+							{
+								handler.onMove(e, (TaskMove)task);
+							}
+						}
+						
+						if (!task.cancel) { task.processTask(e); }
+						
+						float actionCost = task.cost * e.getActionDelay();					
 						e.actionDelayAccumulator -= actionCost * e.getActionDelay();
 					}
 					else

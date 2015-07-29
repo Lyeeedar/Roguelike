@@ -65,7 +65,7 @@ public class TaskMove extends AbstractTask
 	}
 	
 	@Override
-	public float processTask(GameEntity obj)
+	public void processTask(GameEntity obj)
 	{		
 		// Collect data
 		GameTile oldTile = obj.tile;
@@ -134,8 +134,6 @@ public class TaskMove extends AbstractTask
 				obj.sprite.spriteAnimation = new MoveAnimation(0.05f, diff, MoveEquation.SMOOTHSTEP);
 			}
 		}
-		
-		return 1;
 	}
 	
 	private void doNormalAttack(Array<GameTile> hitTiles, GameEntity entity, Item weapon)
