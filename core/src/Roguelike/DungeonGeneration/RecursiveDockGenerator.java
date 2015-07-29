@@ -8,7 +8,9 @@ import PaulChew.Pnt;
 import PaulChew.Triangle;
 import PaulChew.Triangulation;
 import Roguelike.Global.Direction;
+import Roguelike.DungeonGeneration.DungeonFileParser.CorridorStyle.PathStyle;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
+import Roguelike.DungeonGeneration.DungeonFileParser.RoomGeneratorType;
 import Roguelike.DungeonGeneration.FactionParser.Encounter;
 import Roguelike.DungeonGeneration.FactionParser.Feature;
 import Roguelike.DungeonGeneration.FactionParser.FeaturePlacementType;
@@ -29,9 +31,10 @@ public class RecursiveDockGenerator
 	//region Constructor
 
 	//----------------------------------------------------------------------
-	public RecursiveDockGenerator(String level)
+	public RecursiveDockGenerator(String level, int depth)
 	{
-		dfp = DungeonFileParser.load(level+"/"+level); 
+		dfp = DungeonFileParser.load(level+"/"+level);
+		this.depth = depth;
 	}
 
 	//endregion Constructor
@@ -92,14 +95,16 @@ public class RecursiveDockGenerator
 			}
 			//System.out.print("\n");
 		}
-
+		
+		level.depth = depth;
+		
 		return level;
 	}
 
 	//----------------------------------------------------------------------
 	public void generate() 
 	{
-		for (DFPRoom r : dfp.requiredRooms)
+		for (DFPRoom r : dfp.getRequiredRooms(depth))
 		{
 			Room room = new Room();
 			r.fillRoom(room);
@@ -125,6 +130,15 @@ public class RecursiveDockGenerator
 				for (int y = 0; y < height; y++)
 				{
 					tiles[x][y] = new GenerationTile();
+					
+					if (dfp.corridorStyle.pathStyle == PathStyle.STRAIGHT)
+					{
+						tiles[x][y].influence = 100;
+					}
+					else if (dfp.corridorStyle.pathStyle == PathStyle.WANDERING)
+					{
+						tiles[x][y].influence = ran.nextInt(500)+100;
+					}
 
 					if (x == 0 || y == 0 || x == width-1 || y == height-1)
 					{						
@@ -792,6 +806,8 @@ public class RecursiveDockGenerator
 	//####################################################################//
 	//region Data
 	
+	public int depth;
+	
 	private static final boolean DEBUG_OUTPUT = false;
 	private static final int DEBUG_SIZE = 16;
 
@@ -894,7 +910,20 @@ public class RecursiveDockGenerator
 
 			while (true)
 			{
-				CellularAutomata.process(roomContents, floor, wall, ran);
+				RoomGeneratorType type = dfp.getRoomGenerator(ran);
+				
+				if (type == RoomGeneratorType.OVERLAPPINGRECTS)
+				{
+					OverlappingRects.process(roomContents, floor, wall, ran);
+				}
+				else if (type == RoomGeneratorType.CELLULARAUTOMATA)
+				{
+					CellularAutomata.process(roomContents, floor, wall, ran);
+				}
+				else if (type == RoomGeneratorType.STARBURST)
+				{
+					Starburst.process(roomContents, floor, wall, ran);
+				}
 
 				int count = 0;
 				// Ensure solid outer wall and count floor
@@ -1326,6 +1355,8 @@ public class RecursiveDockGenerator
 	public static class GenerationTile implements PathfindingTile
 	{
 		public Symbol symbol;
+		
+		public int influence;
 
 		public PathfindType pathfindType = PathfindType.NONE;
 
@@ -1346,7 +1377,7 @@ public class RecursiveDockGenerator
 			}
 			else
 			{
-				return 100;
+				return influence;
 			}
 		}
 

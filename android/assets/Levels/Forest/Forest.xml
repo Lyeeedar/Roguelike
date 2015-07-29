@@ -6,6 +6,15 @@
 		<Alpha>1</Alpha>
 	</Ambient>
 	
+	<RoomGenerators>
+	    <CellularAutomata>3</CellularAutomata>
+	    <Starburst>1</Starburst>
+	</RoomGenerators>
+	
+	<CorridorStyle>
+	    <PathStyle>Wandering</PathStyle>
+	</CorridorStyle>
+	
 	<Factions>
 		<Major>
 			<Spider>1</Spider>
@@ -100,7 +109,7 @@
 			
 		</PlayerSpawn>
 	
-		<Transition>
+		<Transition Min="0" Max="3">
 			<Symbols>
 			
 				<Symbol Extends=",">
@@ -110,6 +119,8 @@
 						<Destination>Sewer</Destination>
 						
 						<ExitRoom>
+						    <Faction>none</Faction>
+						    
 							<Symbols>
 								<Symbol Extends=".">
 									<Char>^</Char>

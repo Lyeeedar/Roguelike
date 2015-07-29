@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import Roguelike.Global.Statistic;
+import Roguelike.Global;
 import Roguelike.RoguelikeGame;
+import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
@@ -32,6 +34,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class Level
 {
+	public int depth;
+	
 	public GameEntity player;
 	
 	public Color Ambient = new Color(0.1f, 0.1f, 0.3f, 1.0f);
@@ -314,6 +318,10 @@ public class Level
 						}
 					}						
 				}
+				else if (e == player && e.HP <= 0 && !hasActiveEffects(e))
+				{
+					RoguelikeGame.Instance.switchScreen(ScreenEnum.GAMEOVER);
+				}
 			}
 		}
 
@@ -508,6 +516,8 @@ public class Level
 		{
 			AbstractTask task = player.tasks.removeIndex(0);
 			float actionCost = task.processTask(player) * player.getActionDelay();
+			
+			Global.AUT += actionCost;
 			
 			player.update(actionCost);
 			

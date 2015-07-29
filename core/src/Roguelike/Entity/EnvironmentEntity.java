@@ -119,7 +119,7 @@ public class EnvironmentEntity extends Entity
 				// generate new level if required
 				if (connectedLevel == null)
 				{
-					RecursiveDockGenerator generator = new RecursiveDockGenerator(data.get("Destination"));
+					RecursiveDockGenerator generator = new RecursiveDockGenerator(data.get("Destination"), entranceEntity.tile.level.depth+1);
 					
 					DFPRoom dfpRoom = DFPRoom.parse(data.getChildByName("ExitRoom"), generator.dfp.sharedSymbolMap);
 					final Room room = new Room();

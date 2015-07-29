@@ -38,6 +38,9 @@ public class Global
 	
 	//----------------------------------------------------------------------
 	public static Level CurrentLevel;
+	
+	//----------------------------------------------------------------------
+	public static float AUT = 0;
 
 	//----------------------------------------------------------------------
 	public enum Direction
@@ -475,7 +478,7 @@ public class Global
 	//----------------------------------------------------------------------
 	public static void newGame()
 	{
-		RecursiveDockGenerator generator = new RecursiveDockGenerator("Forest");
+		RecursiveDockGenerator generator = new RecursiveDockGenerator("Forest", 0);
 		//VillageGenerator generator = new VillageGenerator(100, 100);
 		generator.generate();
 		CurrentLevel = generator.getLevel();

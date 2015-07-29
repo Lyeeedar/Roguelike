@@ -19,6 +19,7 @@ import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.Pathfinder;
+import Roguelike.Screens.GameOverScreen;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Screens.MainMenuScreen;
 import Roguelike.Sprite.MoveAnimation;
@@ -82,7 +83,8 @@ public class RoguelikeGame extends Game
 	public enum ScreenEnum 
 	{
 		MAINMENU,
-		GAME
+		GAME,
+		GAMEOVER
 	}
 	
 	public final HashMap<ScreenEnum, Screen> screens = new HashMap<ScreenEnum, Screen>();
@@ -92,6 +94,7 @@ public class RoguelikeGame extends Game
 	{
 		screens.put(ScreenEnum.GAME, new GameScreen());
 		screens.put(ScreenEnum.MAINMENU, new MainMenuScreen());
+		screens.put(ScreenEnum.GAMEOVER, new GameOverScreen());
 				
 		switchScreen(ScreenEnum.MAINMENU);
 	}

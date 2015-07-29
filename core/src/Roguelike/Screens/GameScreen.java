@@ -151,12 +151,14 @@ public class GameScreen implements Screen, InputProcessor
 	//endregion Create
 	//####################################################################//
 
+	//----------------------------------------------------------------------
 	@Override
 	public void show()
 	{
 		Gdx.input.setInputProcessor(inputMultiplexer);	
 	}
 
+	//----------------------------------------------------------------------
 	@Override
 	public void render(float delta)
 	{
@@ -252,7 +254,7 @@ public class GameScreen implements Screen, InputProcessor
 						else
 						{								
 							e.Sprite.render(batch, x*Global.TileSize + offsetx + tileSize3*(e.Corner.GetX()*-1+1), y*Global.TileSize + offsety + tileSize3*(e.Corner.GetY()*-1+1), tileSize3, tileSize3);
-						}
+						}					
 					}
 				}
 			}
@@ -321,7 +323,7 @@ public class GameScreen implements Screen, InputProcessor
 				else
 				{								
 					e.Sprite.render(batch, cx + tileSize3*(e.Corner.GetX()*-1+1), cy + tileSize3*(e.Corner.GetY()*-1+1), tileSize3, tileSize3);
-				}
+				}				
 			}
 
 			batch.setColor(Color.WHITE);
@@ -440,6 +442,7 @@ public class GameScreen implements Screen, InputProcessor
 		batch.end();
 	}
 
+	//----------------------------------------------------------------------
 	@Override
 	public void resize(int width, int height)
 	{
@@ -447,21 +450,25 @@ public class GameScreen implements Screen, InputProcessor
 		stage.getViewport().update(width, height, true);
 	}
 
+	//----------------------------------------------------------------------
 	@Override
 	public void pause()
 	{
 	}
 
+	//----------------------------------------------------------------------
 	@Override
 	public void resume()
 	{
 	}
 
+	//----------------------------------------------------------------------
 	@Override
 	public void hide()
 	{
 	}
 
+	//----------------------------------------------------------------------
 	@Override
 	public void dispose()
 	{

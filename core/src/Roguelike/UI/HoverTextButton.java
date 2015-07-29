@@ -125,7 +125,7 @@ public class HoverTextButton extends Widget
 	}
 	
 	private class HoverTextButtonListener extends InputListener
-	{
+	{		
 		public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) 
 		{
 			isHighlighted = true;

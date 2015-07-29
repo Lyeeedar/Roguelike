@@ -20,6 +20,40 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public class DungeonFileParser
 {
 	//----------------------------------------------------------------------
+	public enum RoomGeneratorType
+	{
+		OVERLAPPINGRECTS,
+		CELLULARAUTOMATA,
+		STARBURST
+	}
+	
+	//----------------------------------------------------------------------
+	public static class CorridorStyle
+	{
+		public enum PathStyle
+		{
+			STRAIGHT,
+			WANDERING
+		}
+		public PathStyle pathStyle = PathStyle.STRAIGHT;
+		
+		public int width = 2;
+		
+		public void parse(Element xml)
+		{
+			pathStyle = PathStyle.valueOf(xml.get("PathStyle", "Straight").toUpperCase());
+			width = xml.getInt("Width", 1);
+		}
+	}
+	
+	//----------------------------------------------------------------------
+	public static class RoomGenerator
+	{
+		public RoomGeneratorType type;
+		public int weight;
+	}
+	
+	//----------------------------------------------------------------------
 	public static class Faction
 	{
 		public String name;
@@ -35,6 +69,9 @@ public class DungeonFileParser
 	//----------------------------------------------------------------------
 	public static class DFPRoom
 	{
+		public int minDepth = 0;
+		public int maxDepth = Integer.MAX_VALUE;
+		
 		public int width;
 		public int height;
 		public HashMap<Character, Symbol> localSymbolMap = new HashMap<Character, Symbol>();
@@ -46,6 +83,9 @@ public class DungeonFileParser
 		{
 			DFPRoom room = new DFPRoom();
 			room.sharedSymbolMap = sharedSymbolMap;
+			
+			room.minDepth = xml.getIntAttribute("Min", room.minDepth);
+			room.maxDepth = xml.getIntAttribute("Max", room.maxDepth);
 			
 			room.faction = xml.get("Faction", null);
 			
@@ -164,6 +204,28 @@ public class DungeonFileParser
 	public Color ambient;
 	
 	//----------------------------------------------------------------------
+	public Array<RoomGenerator> roomGenerators = new Array<RoomGenerator>();
+	
+	//----------------------------------------------------------------------
+	public CorridorStyle corridorStyle = new CorridorStyle();
+	
+	//----------------------------------------------------------------------
+	public Array<DFPRoom> getRequiredRooms(int depth)
+	{
+		Array<DFPRoom> rooms = new Array<DFPRoom>();
+		
+		for (DFPRoom room : requiredRooms)
+		{
+			if (room.minDepth <= depth && room.maxDepth >= depth)
+			{
+				rooms.add(room);
+			}
+		}
+		
+		return rooms;
+	}
+	
+	//----------------------------------------------------------------------
 	public String getMajorFaction(Random ran)
 	{
 		int totalWeight = 0;
@@ -214,6 +276,31 @@ public class DungeonFileParser
 	}
 	
 	//----------------------------------------------------------------------
+	public RoomGeneratorType getRoomGenerator(Random ran)
+	{
+		int totalWeight = 0;
+		for (RoomGenerator rg : roomGenerators)
+		{
+			totalWeight += rg.weight;
+		}
+		
+		int target = ran.nextInt(totalWeight);
+		int current = 0;
+	
+		for (RoomGenerator rg : roomGenerators)
+		{
+			current += rg.weight;
+			
+			if (current >= target)
+			{
+				return rg.type;
+			}
+		}
+		
+		return RoomGeneratorType.OVERLAPPINGRECTS;
+	}
+	
+	//----------------------------------------------------------------------
 	private void internalLoad(String name)
 	{
 		XmlReader xml = new XmlReader();
@@ -226,6 +313,35 @@ public class DungeonFileParser
 		catch (IOException e)
 		{
 			e.printStackTrace();
+		}
+		
+		Element roomGenElement = xmlElement.getChildByName("RoomGenerators");
+		if (roomGenElement != null)
+		{
+			for (int i = 0; i < roomGenElement.getChildCount(); i++)
+			{
+				Element roomGen = roomGenElement.getChild(i);
+				
+				RoomGenerator gen = new RoomGenerator();
+				gen.type = RoomGeneratorType.valueOf(roomGen.getName().toUpperCase());
+				gen.weight = Integer.parseInt(roomGen.getText());
+				
+				roomGenerators.add(gen);
+			}
+		}
+		else
+		{
+			RoomGenerator gen = new RoomGenerator();
+			gen.type = RoomGeneratorType.OVERLAPPINGRECTS;
+			gen.weight = 1;
+			
+			roomGenerators.add(gen);
+		}
+		
+		Element corridorElement = xmlElement.getChildByName("CorridorStyle");
+		if (corridorElement != null)
+		{
+			corridorStyle.parse(corridorElement);
 		}
 		
 		Element factionsElement = xmlElement.getChildByName("Factions");
