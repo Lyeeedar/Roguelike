@@ -23,6 +23,9 @@ public class ActionUseAbility extends AbstractAction
 			return State;
 		}
 		
+		ability.caster = entity;
+		ability.source = entity.tile;
+		
 		int[][] validTargets = ability.getValidTargets();
 		
 		if (validTargets.length == 0)

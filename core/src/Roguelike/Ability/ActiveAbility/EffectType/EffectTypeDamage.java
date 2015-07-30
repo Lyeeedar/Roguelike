@@ -76,7 +76,7 @@ public class EffectTypeDamage extends AbstractEffectType
 
 	private void applyToEntity(Entity target, ActiveAbility aa, Light l)
 	{
-		HashMap<String, Integer> variableMap = aa.caster.getVariableMap();
+		HashMap<String, Integer> variableMap = aa.variableMap;
 		
 		for (String name : reliesOn)
 		{

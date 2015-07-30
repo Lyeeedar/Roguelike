@@ -3,6 +3,7 @@ package Roguelike.Entity.AI.BehaviourTree.Selectors;
 import java.util.Iterator;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader.Element;
 
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
@@ -54,6 +55,11 @@ public class SelectorAny extends AbstractSelector
 			}
 		}
 		
+		if (reset)
+		{
+			runningList.clear();
+		}
+		
 		this.State = state;
 		return state;
 	}
@@ -69,4 +75,15 @@ public class SelectorAny extends AbstractSelector
 		runningList.clear();
 	}
 
+	//----------------------------------------------------------------------
+	@Override
+	public void parse(Element xmlElement)
+	{
+		super.parse(xmlElement);
+
+		reset = xmlElement.getBooleanAttribute("Reset", false);
+	}
+	
+	//----------------------------------------------------------------------
+	public boolean reset = false;
 }

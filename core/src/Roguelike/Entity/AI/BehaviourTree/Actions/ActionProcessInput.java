@@ -67,8 +67,10 @@ public class ActionProcessInput extends AbstractAction
 			{
 				setData("Pos", targetPos);
 			}
-		}		
-		
+			
+			setData("Rest", null);
+		}
+
 		return targetPos != null ? BehaviourTreeState.SUCCEEDED : BehaviourTreeState.FAILED;
 	}
 

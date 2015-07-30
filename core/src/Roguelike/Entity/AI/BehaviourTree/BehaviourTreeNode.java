@@ -13,6 +13,7 @@ import Roguelike.Entity.AI.BehaviourTree.Actions.ActionMoveTo;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionPickClosest;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionPickRandom;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionProcessInput;
+import Roguelike.Entity.AI.BehaviourTree.Actions.ActionRest;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionSetValue;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionUseAbility;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionWait;
@@ -95,6 +96,7 @@ public abstract class BehaviourTreeNode
 		ClassMap.put("PICKCLOSEST", ActionPickClosest.class);
 		ClassMap.put("PICKRANDOM", ActionPickRandom.class);
 		ClassMap.put("PROCESSINPUT", ActionProcessInput.class);
+		ClassMap.put("REST", ActionRest.class);
 		ClassMap.put("SETVALUE", ActionSetValue.class);
 		ClassMap.put("USEABILITY", ActionUseAbility.class);
 		ClassMap.put("WAIT", ActionWait.class);

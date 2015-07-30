@@ -218,7 +218,6 @@ public class GameEntity extends Entity
 				}
 
 				slottedActiveAbilities[i] = ab;
-				ab.caster = this;
 			}
 		}
 
@@ -334,8 +333,6 @@ public class GameEntity extends Entity
 
 			if (aa != null)
 			{
-				aa.caster = this;
-
 				for (int i = 0; i < 3; i++)
 				{
 					tasks.add(new TaskWait());

@@ -40,7 +40,7 @@ public class EffectTypeHeal extends AbstractEffectType
 
 	private void applyToEntity(Entity e, ActiveAbility aa)
 	{
-		HashMap<String, Integer> variableMap = aa.caster.getVariableMap();
+		HashMap<String, Integer> variableMap = aa.variableMap;
 		
 		for (String name : reliesOn)
 		{

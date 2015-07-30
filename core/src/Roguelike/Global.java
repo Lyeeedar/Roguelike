@@ -266,7 +266,7 @@ public class Global
 
 			for (Statistic key : stats.keySet())
 			{
-				variableMap.put(key.toString(), stats.get(key));
+				variableMap.put(key.toString().toLowerCase(), stats.get(key));
 			}
 
 			return variableMap;
@@ -538,15 +538,29 @@ public class Global
 			float attack = damObj.attackerVariableMap.get(el.Attack.toString().toLowerCase());
 			float pierce = damObj.attackerVariableMap.get(el.Pierce.toString().toLowerCase());
 
-			float defense = damObj.defenderVariableMap.get(el.Defense.toString().toLowerCase());
-			float hardiness = 1.0f - damObj.defenderVariableMap.get(el.Hardiness.toString().toLowerCase()) / 100.0f;
+			float accumulatedReduction = 0;
+			{
+				float defense = damObj.defender.statistics.get(el.Defense);
+				float hardiness = 1.0f - damObj.defender.statistics.get(el.Hardiness) / 100.0f;
 
-			float maxReduction = attack * hardiness;
+				float maxReduction = attack * hardiness;
 
-			float reduction = defense - pierce;
-			reduction = Math.min(reduction, maxReduction);
+				float reduction = defense - pierce;
+				accumulatedReduction += Math.min(reduction, maxReduction);
+			}
+			
+			for (GameEventHandler handler : damObj.defender.getAllHandlers())
+			{
+				float defense = handler.getStatistic(damObj.defender, el.Defense);
+				float hardiness = 1.0f - handler.getStatistic(damObj.defender, el.Hardiness) / 100.0f;
 
-			attack -= reduction;
+				float maxReduction = attack * hardiness;
+
+				float reduction = defense - pierce;
+				accumulatedReduction += Math.min(reduction, maxReduction);
+			}
+			
+			attack -= accumulatedReduction;
 			attack = Math.max(attack, 0);
 
 			damObj.damageMap.put(el, (int)MathUtils.ceil(attack));

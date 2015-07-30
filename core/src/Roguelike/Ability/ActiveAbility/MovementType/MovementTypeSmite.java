@@ -23,7 +23,7 @@ public class MovementTypeSmite extends AbstractMovementType
 	public void init(ActiveAbility ab, int endx, int endy)
 	{
 		ab.AffectedTiles.clear();
-		ab.AffectedTiles.add(ab.caster.tile.level.getGameTile(endx, endy));
+		ab.AffectedTiles.add(ab.source.level.getGameTile(endx, endy));
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class MovementTypeSmite extends AbstractMovementType
 			
 			GameTile tile = ab.AffectedTiles.get(0);
 			
-			int[] diff = tile.getPosDiff(ab.caster.tile);
+			int[] diff = tile.getPosDiff(ab.source);
 			int distMoved = ( Math.abs(diff[0]) + Math.abs(diff[1]) ) / Global.TileSize;
 			
 			effect.Sprite.spriteAnimation = new MoveAnimation(0.05f * distMoved, diff, MoveEquation.LINEAR);

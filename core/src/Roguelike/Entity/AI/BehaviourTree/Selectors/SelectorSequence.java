@@ -1,5 +1,7 @@
 package Roguelike.Entity.AI.BehaviourTree.Selectors;
 
+import com.badlogic.gdx.utils.XmlReader.Element;
+
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
@@ -35,6 +37,11 @@ public class SelectorSequence extends AbstractSelector
 			i = 0;
 		}
 		
+		if (reset)
+		{
+			i = 0;
+		}
+		
 		this.State = state;
 		return state;
 	}
@@ -49,10 +56,22 @@ public class SelectorSequence extends AbstractSelector
 		}
 		i = 0;
 	}
-		
+	
+	//----------------------------------------------------------------------
+	@Override
+	public void parse(Element xmlElement)
+	{
+		super.parse(xmlElement);
+
+		reset = xmlElement.getBooleanAttribute("Reset", false);
+	}
+	
 	//endregion Public Methods
 	//####################################################################//
 	//region Data
+	
+	//----------------------------------------------------------------------
+	public boolean reset = false;
 	
 	//----------------------------------------------------------------------
 	private int i = 0;

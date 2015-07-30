@@ -1,6 +1,13 @@
-<Any>
+<Any Reset="true">
 	<ProcessInput></ProcessInput>
 	<Priority>
+	    
+	    <Sequence Reset="true">
+	        <CheckValue Key="Rest"/>
+	        <Rest></Rest>
+	        <ClearValue Key="Rest"/>
+	    </Sequence>
+	    
 		<Attack Key="Pos"></Attack>
 		<Until State="Running">		    
 			<MoveTo Key="Pos"></MoveTo>

@@ -20,6 +20,9 @@ public class ActionGetAllAbilities extends AbstractAction
 		{
 			if (ab != null && ab.cooldownAccumulator <= 0)
 			{
+				ab.caster = entity;
+				ab.source = entity.tile;
+				
 				if (ab.getValidTargets().length > 0)
 				{
 					abilities.add(ab);

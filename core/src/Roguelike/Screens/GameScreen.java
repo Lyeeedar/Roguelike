@@ -713,10 +713,10 @@ public class GameScreen implements Screen, InputProcessor
 	{
 		preparedAbility = aa;
 		preparedAbility.caster = Global.CurrentLevel.player;
+		preparedAbility.source = Global.CurrentLevel.player.tile;
 
 		abilityTiles = preparedAbility.getValidTargets();
 	}
-
 
 	//----------------------------------------------------------------------
 	public void addConsoleMessage(Line line)
@@ -805,11 +805,35 @@ public class GameScreen implements Screen, InputProcessor
 					Math.abs(Global.CurrentLevel.player.tile.x - tile.x) <= 1 &&
 					Math.abs(Global.CurrentLevel.player.tile.y - tile.y) <= 1;
 		}
+		
+		Table table = new Table();
+		
+		{
+			Table row = new Table();
+
+			row.add(new Label("Rest a while", skin)).expand().fill();
+
+			row.addListener(new InputListener()
+			{
+				@Override
+				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+				{	
+					Global.CurrentLevel.player.AI.setData("Rest", true);
+					clearContextMenu();
+
+					return true;
+				}
+			});
+
+			table.add(row).width(Value.percentWidth(1, table));
+			table.row();
+			
+			table.add(new Label("-------------", skin));
+			table.row();
+		}
 
 		if (available.size > 0 || entityWithinRange)
 		{
-			Table table = new Table();
-
 			if (tile != null && tile.environmentEntity != null)
 			{
 				final EnvironmentEntity entity = tile.environmentEntity;
@@ -876,12 +900,12 @@ public class GameScreen implements Screen, InputProcessor
 				table.add(row).width(Value.percentWidth(1, table));
 				table.row();
 			}
-
-			table.pack();
-
-			contextMenu = new Tooltip(table, skin, stage);
-			contextMenu.show(screenX-contextMenu.getWidth()/2, screenY-contextMenu.getHeight());
 		}
+		
+		table.pack();
+
+		contextMenu = new Tooltip(table, skin, stage);
+		contextMenu.show(screenX-contextMenu.getWidth()/2, screenY-contextMenu.getHeight());
 	}
 
 	//endregion Private Methods

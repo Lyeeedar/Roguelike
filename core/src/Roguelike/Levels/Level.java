@@ -555,11 +555,13 @@ public class Level
 			{
 				// Clear pending moves
 				player.AI.setData("Pos", null);
+				player.AI.setData("Rest", null);
 			}
 			
 			if (player.sprite.spriteAnimation instanceof BumpAnimation)
 			{
 				player.AI.setData("Pos", null);
+				player.AI.setData("Rest", null);
 			}
 		}
 	}

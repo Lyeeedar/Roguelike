@@ -1,6 +1,7 @@
 package Roguelike.Ability.ActiveAbility;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import Roguelike.AssetManager;
 import Roguelike.Ability.IAbility;
@@ -46,7 +47,9 @@ public class ActiveAbility implements IAbility, IGameObject
 	public Array<AbstractEffectType> effectTypes = new Array<AbstractEffectType>();
 	public Array<GameTile> AffectedTiles = new Array<GameTile>();
 	
+	public GameTile source;
 	public GameEntity caster;
+	public HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
 	
 	//----------------------------------------------------------------------
 	// rendering
@@ -77,8 +80,6 @@ public class ActiveAbility implements IAbility, IGameObject
 		{
 			aa.AffectedTiles.add(tile);
 		}
-		
-		aa.caster = caster;
 		
 		aa.light = light != null ? light.copy() : null;
 		aa.Icon = Icon != null ? Icon.copy() : null;
@@ -156,12 +157,12 @@ public class ActiveAbility implements IAbility, IGameObject
 		Array<int[]> validTargets = new Array<int[]>();
 		
 		Array<int[]> output = new Array<int[]>();
-		ShadowCaster shadow = new ShadowCaster(caster.tile.level.getGrid(), range);
-		shadow.ComputeFOV(caster.tile.x, caster.tile.y, output);
+		ShadowCaster shadow = new ShadowCaster(source.level.getGrid(), range);
+		shadow.ComputeFOV(source.x, source.y, output);
 		
 		for (int[] tilePos : output)
 		{
-			GameTile tile = caster.tile.level.getGameTile(tilePos);
+			GameTile tile = source.level.getGameTile(tilePos);
 			
 			if (targetingType.isTargetValid(this, tile))
 			{

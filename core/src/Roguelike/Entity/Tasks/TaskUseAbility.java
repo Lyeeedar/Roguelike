@@ -19,7 +19,12 @@ public class TaskUseAbility extends AbstractTask
 	{	
 		ability.cooldownAccumulator = ability.cooldown;
 		
-		ActiveAbility aa = ability.copy();		
+		ActiveAbility aa = ability.copy();
+		
+		aa.caster = obj;
+		aa.source = obj.tile;
+		aa.variableMap = obj.getVariableMap();
+		
 		aa.lockTarget(obj.tile.level.getGameTile(target));
 		
 		boolean finished = aa.update();
