@@ -267,7 +267,7 @@ public class EnvironmentEntity extends Entity
 							
 							GameTile ntile = tile.level.getGameTile(nx, ny);
 							
-							if (ntile != null && ntile.getPassable(null) && ntile.entity == null)
+							if (ntile != null && ntile.getPassable() && ntile.entity == null)
 							{
 								spawnTile = ntile;
 								break;

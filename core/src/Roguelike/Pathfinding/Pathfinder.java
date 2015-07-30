@@ -12,7 +12,7 @@ public class Pathfinder
 	private boolean canMoveDiagonal;
 	private HashSet<String> factions;
 	
-	public Pathfinder(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, HashSet<String> factions)
+	public Pathfinder(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal)
 	{
 		this.startx = startx;
 		this.starty = starty;
@@ -25,12 +25,12 @@ public class Pathfinder
 	
 	public int[][] getPath()
 	{
-		AStarPathfind astar = new AStarPathfind(Grid, startx, starty, endx, endy, canMoveDiagonal, factions);
+		AStarPathfind astar = new AStarPathfind(Grid, startx, starty, endx, endy, canMoveDiagonal);
 		int[][] path = astar.getPath();
 		
 		if (path == null)
 		{
-			path = BresenhamLine.line(startx, starty, endx, endy, Grid, true, false, factions);
+			path = BresenhamLine.line(startx, starty, endx, endy, Grid, true, false);
 		}
 		
 		return path;
@@ -45,7 +45,7 @@ public class Pathfinder
 			public boolean passable = true;
 			
 			@Override
-			public boolean getPassable(HashSet<String> factions)
+			public boolean getPassable()
 			{
 				return passable;
 			}
@@ -171,7 +171,7 @@ public class Pathfinder
 		
 		private static void path(TestTile[][] grid, int startx, int starty, int endx, int endy)
 		{
-			AStarPathfind astar = new AStarPathfind(grid, startx, starty, endx, endy, true, new HashSet<String>());
+			AStarPathfind astar = new AStarPathfind(grid, startx, starty, endx, endy, true);
 			int[][] path = astar.getPath();
 			
 			for (int[] step : path)

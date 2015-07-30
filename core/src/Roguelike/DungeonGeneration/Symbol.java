@@ -170,7 +170,7 @@ public class Symbol implements PathfindingTile
 	}
 
 	@Override
-	public boolean getPassable(HashSet<String> factions)
+	public boolean getPassable()
 	{
 		return isPassable();
 	}

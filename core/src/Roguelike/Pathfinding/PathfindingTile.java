@@ -4,6 +4,6 @@ import java.util.HashSet;
 
 public interface PathfindingTile
 {
-	public boolean getPassable(HashSet<String> factions);
+	public boolean getPassable();
 	public int getInfluence();
 }

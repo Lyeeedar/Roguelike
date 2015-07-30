@@ -16,7 +16,7 @@ public class MovementTypeRay extends AbstractMovementType
 	@Override
 	public void init(ActiveAbility ab, int endx, int endy)
 	{
-		int[][] path = BresenhamLine.line(ab.caster.tile.x, ab.caster.tile.y, endx, endy, ab.caster.tile.level.getGrid(), true, false, null);
+		int[][] path = BresenhamLine.line(ab.caster.tile.x, ab.caster.tile.y, endx, endy, ab.caster.tile.level.getGrid(), true, false);
 		
 		ab.AffectedTiles.clear();
 		

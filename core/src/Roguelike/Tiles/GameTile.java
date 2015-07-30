@@ -111,12 +111,12 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	}
 
 	@Override
-	public boolean getPassable(HashSet<String> factions)
+	public boolean getPassable()
 	{
 		if (environmentEntity != null && !environmentEntity.passable) { return false; }
 		if (!tileData.passable) { return false; }
 		
-		return entity != null ? !entity.isAllies(factions) : true ;
+		return entity == null;
 	}
 
 	

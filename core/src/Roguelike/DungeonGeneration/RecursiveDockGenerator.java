@@ -651,7 +651,7 @@ public class RecursiveDockGenerator
 			int y1 = (int)p[0].coord(1);
 			int x2 = (int)p[1].coord(0);
 			int y2 = (int)p[1].coord(1);
-			Pathfinder pathFind = new Pathfinder(tiles, x1, y1, x2, y2, false, null);
+			Pathfinder pathFind = new Pathfinder(tiles, x1, y1, x2, y2, false);
 
 			int[][] path = pathFind.getPath();
 			if (path[0][0] != x1 || path[0][1] != y1 || path[path.length-1][0] != x2 || path[path.length-1][1] != y2)
@@ -1264,7 +1264,7 @@ public class RecursiveDockGenerator
 				{
 					if (door == otherDoor) { continue; }
 
-					AStarPathfind pathfind = new AStarPathfind(roomContents, door[0], door[1], otherDoor[0], otherDoor[1], true, null);
+					AStarPathfind pathfind = new AStarPathfind(roomContents, door[0], door[1], otherDoor[0], otherDoor[1], true);
 					int[][] path = pathfind.getPath();
 
 					for (int[] point : path)
@@ -1362,7 +1362,7 @@ public class RecursiveDockGenerator
 
 		//----------------------------------------------------------------------
 		@Override
-		public boolean getPassable(HashSet<String> factions)
+		public boolean getPassable()
 		{
 			return pathfindType != PathfindType.WALL;
 		}

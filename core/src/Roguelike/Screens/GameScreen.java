@@ -51,6 +51,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -545,17 +546,17 @@ public class GameScreen implements Screen, InputProcessor
 				{
 					if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height && Global.CurrentLevel.getSeenTile(x, y).seen)
 					{
-						// check if should be an attack
-						Direction dir = Direction.getDirection(Global.CurrentLevel.player.tile, Global.CurrentLevel.getGameTile(x, y));
-						TaskMove task = new TaskMove(dir);
-						if (task.checkHitSomething(Global.CurrentLevel.player))
-						{
-							Global.CurrentLevel.player.tasks.add(task);
-						}
-						else
-						{
-							Global.CurrentLevel.player.AI.setData("ClickPos", new int[]{x, y});
-						}
+						Global.CurrentLevel.player.AI.setData("ClickPos", new int[]{x, y});
+					}
+					else
+					{
+						x = MathUtils.clamp(x, -1, 1);
+						y = MathUtils.clamp(y, -1, 1);
+						
+						x += Global.CurrentLevel.player.tile.x;
+						y += Global.CurrentLevel.player.tile.y;
+						
+						Global.CurrentLevel.player.AI.setData("ClickPos", new int[]{x, y});
 					}
 				}
 			}

@@ -13,7 +13,9 @@ import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
+import Roguelike.Entity.Tasks.TaskAttack;
 import Roguelike.Entity.Tasks.TaskMove;
+import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.ItemType;
 import Roguelike.Items.Recipe;
@@ -522,6 +524,14 @@ public class Level
 				if (task instanceof TaskMove)
 				{
 					handler.onMove(player, (TaskMove)task);
+				}
+				else if (task instanceof TaskAttack)
+				{
+					handler.onAttack(player, (TaskAttack)task);
+				}
+				else if (task instanceof TaskWait)
+				{
+					handler.onWait(player, (TaskWait)task);
 				}
 			}
 			

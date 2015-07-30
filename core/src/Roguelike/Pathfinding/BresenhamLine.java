@@ -35,7 +35,7 @@ public class BresenhamLine
 	    return path.toArray(int[].class);
 	}
 	
-	public static int[][] line (int x, int y, int x2, int y2, PathfindingTile[][] Grid, boolean checkPassable, boolean toInfinity, HashSet<String> factions) 
+	public static int[][] line (int x, int y, int x2, int y2, PathfindingTile[][] Grid, boolean checkPassable, boolean toInfinity) 
 	{
 		x = MathUtils.clamp(x, 0, Grid.length-1);
 		x2 = MathUtils.clamp(x2, 0, Grid.length-1);
@@ -97,7 +97,7 @@ public class BresenhamLine
 	        	y < 0 ||
 	        	x >= Grid.length-1 ||
 	        	y >= Grid[0].length-1 ||
-	        	(checkPassable && !Grid[x][y].getPassable(factions))
+	        	(checkPassable && !Grid[x][y].getPassable())
 	        	) 
 	        { 
 	        	break; 

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
+import Roguelike.Entity.AI.BehaviourTree.Actions.ActionAttack;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionClearValue;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionConvertTo;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionGetAllAbilities;
@@ -85,6 +86,7 @@ public abstract class BehaviourTreeNode
 		ClassMap.put("CHECKVALUE", ConditionalCheckValue.class);
 		
 		//Actions
+		ClassMap.put("ATTACK", ActionAttack.class);
 		ClassMap.put("CLEARVALUE", ActionClearValue.class);
 		ClassMap.put("CONVERTTO", ActionConvertTo.class);
 		ClassMap.put("GETALLVISIBLE", ActionGetAllVisible.class);

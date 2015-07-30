@@ -5,9 +5,12 @@
 			<PickClosest InputKey="Enemies" OutputKey="Enemy"></PickClosest>
 			<ConvertTo InputKey="Enemy" OutputKey="Pos" Type="Position"></ConvertTo>
 		</Sequence>
-		<Until State="Running">
-			<MoveTo Key="Pos"></MoveTo>
-			<ClearValue Key="Pos"></ClearValue>
-		</Until>
+		<Priority>
+		    <Attack Key="Pos"></Attack>
+		    <Until State="Running">		    
+				<MoveTo Key="Pos"></MoveTo>
+				<ClearValue Key="Pos"></ClearValue>
+			</Until>
+		</Priority>	
 	</Any>
 </DataScope>

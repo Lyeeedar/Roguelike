@@ -50,9 +50,7 @@ public class AStarPathfind
 	
 	private PriorityQueue<Node> openList = new PriorityQueue<Node>();
 	
-	private HashSet<String> factions;
-
-	public AStarPathfind(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, HashSet<String> factions)
+	public AStarPathfind(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal)
 	{
 		this.grid = grid;
 		this.width = grid.length;
@@ -65,8 +63,6 @@ public class AStarPathfind
 		this.currenty = starty;
 		this.endx = endx;
 		this.endy = endy;
-		
-		this.factions = factions;
 	}
 	
 	private void path()
@@ -114,7 +110,7 @@ public class AStarPathfind
 			return;
 		}
 		
-		if (!isStart(x, y) && !isEnd(x, y) && !grid[x][y].getPassable(factions)) { return; }
+		if (!isStart(x, y) && !isEnd(x, y) && !grid[x][y].getPassable()) { return; }
 		
 		int heuristic = 0;
 		
@@ -176,7 +172,7 @@ public class AStarPathfind
 						}
 						else if (nodes[x][y] == null)
 						{
-							System.out.print(grid[x][y].getPassable(factions) ? ".," : "#,");
+							System.out.print(grid[x][y].getPassable() ? ".," : "#,");
 						}
 						else
 						{

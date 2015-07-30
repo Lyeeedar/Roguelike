@@ -6,7 +6,9 @@ import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Entity.Tasks.TaskAttack;
 import Roguelike.Entity.Tasks.TaskMove;
+import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.GameEvent.Damage.AbstractOnDamageEvent;
 import Roguelike.GameEvent.Damage.DamageObject;
@@ -23,6 +25,8 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnDamageEvent> onDealDamageEvents = new Array<AbstractOnDamageEvent>();
 	public Array<AbstractOnDamageEvent> onReceiveDamageEvents = new Array<AbstractOnDamageEvent>();	
 	public Array<AbstractOnTaskEvent> onMoveEvents = new Array<AbstractOnTaskEvent>();
+	public Array<AbstractOnTaskEvent> onAttackEvents = new Array<AbstractOnTaskEvent>();
+	public Array<AbstractOnTaskEvent> onWaitEvents = new Array<AbstractOnTaskEvent>();
 	
 	public int getStatistic(Entity entity, Statistic s)
 	{
@@ -85,6 +89,22 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 	
+	public void onAttack(Entity entity, TaskAttack task)
+	{
+		for (AbstractOnTaskEvent event : onAttackEvents)
+		{
+			event.handle(entity, task);
+		}
+	}
+	
+	public void onWait(Entity entity, TaskWait task)
+	{
+		for (AbstractOnTaskEvent event : onWaitEvents)
+		{
+			event.handle(entity, task);
+		}
+	}
+	
 	protected void parse(Element xml)
 	{
 		Element onTurnElements = xml.getChildByName("OnTurn");
@@ -130,6 +150,26 @@ public abstract class GameEventHandler implements IGameObject
 			{
 				Element onMoveElement = onMoveElements.getChild(i);
 				onMoveEvents.add(AbstractOnTaskEvent.load(onMoveElement));
+			}
+		}
+		
+		Element onAttackElements = xml.getChildByName("OnAttack");
+		if (onAttackElements != null)
+		{
+			for (int i = 0; i < onAttackElements.getChildCount(); i++)
+			{
+				Element onAttackElement = onAttackElements.getChild(i);
+				onAttackEvents.add(AbstractOnTaskEvent.load(onAttackElement));
+			}
+		}
+		
+		Element onWaitElements = xml.getChildByName("OnWait");
+		if (onWaitElements != null)
+		{
+			for (int i = 0; i < onWaitElements.getChildCount(); i++)
+			{
+				Element onWaitElement = onWaitElements.getChild(i);
+				onWaitEvents.add(AbstractOnTaskEvent.load(onWaitElement));
 			}
 		}
 	}

@@ -117,7 +117,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 			
 		if (style != Style.CHARGE)
 		{
-			if (destination.getPassable(null) && destination.entity == null)
+			if (destination.getPassable() && destination.entity == null)
 			{
 				return destination;
 			}
@@ -127,7 +127,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 				{
 					GameTile tile = getTile(destination, d);
 					
-					if (tile.getPassable(null) && tile.entity == null)
+					if (tile.getPassable() && tile.entity == null)
 					{
 						return tile;
 					}
@@ -141,7 +141,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 		{
 			GameTile tile = src.level.getGameTile(possibleTiles[i]);
 			
-			if (tile.getPassable(null) && tile.entity == null)
+			if (tile.getPassable() && tile.entity == null)
 			{
 				return tile;
 			}
