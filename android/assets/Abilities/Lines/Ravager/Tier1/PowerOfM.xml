@@ -2,7 +2,8 @@
 	<Name>Power of M</Name>
 	<Description>Being hurt only adds to your strength, sending you into a blood fury.</Description>
 	<Icon>
-		<Name>Skills/Bloodlust</Name>
+		<Name>Abilities/Ravager/PowerOfM</Name>
+		<Colour><RGB>178,34,34</RGB></Colour>
 	</Icon>
 	
 	<Events>

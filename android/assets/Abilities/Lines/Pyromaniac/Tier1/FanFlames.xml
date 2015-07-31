@@ -7,13 +7,14 @@
 	<Range>1</Range>
 	
 	<Icon>
-		<Name>Skills/Enrage</Name>
+		<Name>Abilities/Pyromaniac/FanFlames</Name>
+		<Colour><RGB>255,165,0</RGB></Colour>
 	</Icon>
 	
-	<Type>
-		<Helpful>
-		</Helpful>
-	</Type>
+	<HitSprite>
+		<Name>AbilitySprites/FireBurst/FireBurst</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</HitSprite>
 	
 	<Targeting>
 		<Entity><NotSelf/></Entity>

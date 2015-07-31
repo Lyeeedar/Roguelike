@@ -1,0 +1,39 @@
+<ActiveAbility>
+
+	<Name>Lightning Bolt</Name>
+	<Description>A bolt of lightning pierces through your enemies in a line.</Description>
+	
+	<Cooldown>22</Cooldown>
+	<Range>5</Range>
+	
+	<Icon>
+		<Name>Abilities/Magus/LightningBolt</Name>
+		<Colour><RGB>160,32,240</RGB></Colour>
+	</Icon>
+	
+	<HitSprite>
+		<Name>AbilitySprites/LightningBurst/LightningBurst</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</HitSprite>
+	
+	<MovementSprite>
+		<Name>AbilitySprites/LightningBoltMove/LightningBolt</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</MovementSprite>
+	
+	<Targeting>
+		<Direction />
+	</Targeting>
+	
+	<Movement>
+		<Ray/>
+	</Movement>
+	
+	<Effect>
+		<Damage>
+		    <Air_Atk>75+Air_Atk*0.5</Air_Atk>
+			<Fire_ATK>75+FIRE_ATK*0.5</Fire_ATK>
+		</Damage>
+	</Effect>
+	
+</ActiveAbility>

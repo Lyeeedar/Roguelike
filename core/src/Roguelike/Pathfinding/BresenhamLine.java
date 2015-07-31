@@ -35,7 +35,7 @@ public class BresenhamLine
 	    return path.toArray(int[].class);
 	}
 	
-	public static int[][] line (int x, int y, int x2, int y2, PathfindingTile[][] Grid, boolean checkPassable, boolean toInfinity) 
+	public static int[][] line (int x, int y, int x2, int y2, PathfindingTile[][] Grid, boolean checkPassable, int range) 
 	{
 		x = MathUtils.clamp(x, 0, Grid.length-1);
 		x2 = MathUtils.clamp(x2, 0, Grid.length-1);
@@ -67,11 +67,7 @@ public class BresenhamLine
 	    
 	    int numerator = longest >> 1 ;
 	    
-	    int dist = longest;
-	    if (toInfinity)
-	    {
-	    	dist = Integer.MAX_VALUE;
-	    }
+	    int dist = range;
 	    
 	    Array<int[]> path = new Array<int[]>();
 	    

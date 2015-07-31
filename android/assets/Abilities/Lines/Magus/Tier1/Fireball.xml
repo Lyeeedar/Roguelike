@@ -1,23 +1,24 @@
 <ActiveAbility>
 
-	<Name>Ball Lightning</Name>
-	<Description>A ball of crackling lightning.</Description>
+	<Name>Fireball</Name>
+	<Description>A orb of fiery explosiveness.</Description>
 	
 	<Cooldown>10</Cooldown>
 	<AOE>2</AOE>
 	<Range>5</Range>
 	
 	<Icon>
-		<Name>Skills/Burning</Name>
+		<Name>Abilities/Magus/Fireball</Name>
+		<Colour><RGB>160,32,240</RGB></Colour>
 	</Icon>
 	
 	<HitSprite>
-		<Name>Fireburst/Fireburst</Name>
+		<Name>AbilitySprites/FireBurst/FireBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
 	</HitSprite>
 	
 	<MovementSprite>
-		<Name>firebolt/firebolt</Name>
+		<Name>AbilitySprites/FireBoltMove/FireBoltMove</Name>
 		<UpdateRate>0.1</UpdateRate>
 	</MovementSprite>
 	
@@ -38,8 +39,7 @@
 	
 	<Effect>
 		<Damage>
-			<Air_Atk>75</Air_Atk>
-			<Fire_ATK>75</Fire_ATK>
+			<Fire_ATK>100+Fire_Atk*0.5</Fire_ATK>
 		</Damage>
 	</Effect>
 	

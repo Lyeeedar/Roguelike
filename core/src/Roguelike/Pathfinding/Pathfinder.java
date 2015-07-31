@@ -30,7 +30,7 @@ public class Pathfinder
 		
 		if (path == null)
 		{
-			path = BresenhamLine.line(startx, starty, endx, endy, Grid, true, false);
+			path = BresenhamLine.line(startx, starty, endx, endy, Grid, true, Integer.MAX_VALUE);
 		}
 		
 		return path;

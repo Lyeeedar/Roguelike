@@ -238,29 +238,6 @@ public class GameScreen implements Screen, InputProcessor
 			}
 		}
 
-		for (int x = 0; x < Global.CurrentLevel.width; x++)
-		{
-			for (int y = 0; y < Global.CurrentLevel.height; y++)
-			{
-				GameTile gtile = Global.CurrentLevel.getGameTile(x, y);
-
-				if (gtile.GetVisible())
-				{
-					for (SpriteEffect e : gtile.spriteEffects)
-					{
-						if (e.Corner == Direction.CENTER)
-						{
-							e.Sprite.render(batch, x*Global.TileSize + offsetx, y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
-						}
-						else
-						{								
-							e.Sprite.render(batch, x*Global.TileSize + offsetx + tileSize3*(e.Corner.GetX()*-1+1), y*Global.TileSize + offsety + tileSize3*(e.Corner.GetY()*-1+1), tileSize3, tileSize3);
-						}					
-					}
-				}
-			}
-		}
-
 		if (!mouseOverUI)
 		{					
 			if (
@@ -359,6 +336,29 @@ public class GameScreen implements Screen, InputProcessor
 					aa.getSprite().render(batch, tile.x*Global.TileSize + offsetx, tile.y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
 				}
 			}			
+		}
+		
+		for (int x = 0; x < Global.CurrentLevel.width; x++)
+		{
+			for (int y = 0; y < Global.CurrentLevel.height; y++)
+			{
+				GameTile gtile = Global.CurrentLevel.getGameTile(x, y);
+
+				if (gtile.GetVisible())
+				{
+					for (SpriteEffect e : gtile.spriteEffects)
+					{
+						if (e.Corner == Direction.CENTER)
+						{
+							e.Sprite.render(batch, x*Global.TileSize + offsetx, y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
+						}
+						else
+						{								
+							e.Sprite.render(batch, x*Global.TileSize + offsetx + tileSize3*(e.Corner.GetX()*-1+1), y*Global.TileSize + offsety + tileSize3*(e.Corner.GetY()*-1+1), tileSize3, tileSize3);
+						}					
+					}
+				}
+			}
 		}
 
 		if (preparedAbility != null)

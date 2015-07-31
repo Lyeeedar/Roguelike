@@ -12,6 +12,7 @@ import Roguelike.Ability.ActiveAbility.AbilityType.AbstractAbilityType;
 import Roguelike.Ability.ActiveAbility.EffectType.AbstractEffectType;
 import Roguelike.Ability.ActiveAbility.MovementType.AbstractMovementType;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeBolt;
+import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeRay;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeSmite;
 import Roguelike.Ability.ActiveAbility.TargetingType.AbstractTargetingType;
 import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeSelf;
@@ -204,7 +205,11 @@ public class ActiveAbility implements IAbility, IGameObject
 		{
 			GameTile epicenter = AffectedTiles.peek();
 			
-			if (aoe > 0)
+			if (movementType instanceof MovementTypeRay)
+			{
+				epicenter = AffectedTiles.first();
+			}
+			else if (aoe > 0)
 			{
 				Array<int[]> output = new Array<int[]>();
 				
@@ -272,7 +277,7 @@ public class ActiveAbility implements IAbility, IGameObject
 			{
 				for (AbstractEffectType effect : effectTypes)
 				{
-					effect.update(this, 1, tile, epicenter);
+					effect.update(this, 1, tile);
 				}
 				
 				if (getHitSprite() != null)

@@ -7,7 +7,8 @@
 	<Range>3</Range>
 	
 	<Icon>
-		<Name>Skills/PowerStrike</Name>
+		<Name>Abilities/Lancer/PiercingStrike</Name>
+		<Colour><RGB>30,144,255</RGB></Colour>
 	</Icon>
 	
 	<Targeting>

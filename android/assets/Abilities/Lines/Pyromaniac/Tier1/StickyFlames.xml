@@ -2,7 +2,8 @@
 	<Name>Sticky Flames</Name>
 	<Description>Your fire attacks ignite your foes.</Description>
 	<Icon>
-		<Name>Skills/Burning</Name>
+		<Name>Abilities/Pyromaniac/StickyFlames</Name>
+		<Colour><RGB>255,165,0</RGB></Colour>
 	</Icon>
 	
 	<Events>

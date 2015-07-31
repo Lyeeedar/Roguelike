@@ -119,16 +119,34 @@ public class AssetManager
 
 	public static Sprite loadSprite(Element xml)
 	{
+		Element colourElement = xml.getChildByName("Colour");
+		Color colour = Color.WHITE;
+		if (colourElement != null)
+		{
+			colour = new Color();
+			colour.a = 1;
+			
+			String rgb = colourElement.get("RGB", null);
+			if (rgb != null)
+			{
+				String[] cols = rgb.split(",");
+				colour.r = Float.parseFloat(cols[0]) / 255.0f;
+				colour.g = Float.parseFloat(cols[1]) / 255.0f;
+				colour.b = Float.parseFloat(cols[2]) / 255.0f;
+			}
+			
+			colour.r = colourElement.getFloat("Red", colour.r);
+			colour.g = colourElement.getFloat("Green", colour.g);
+			colour.b = colourElement.getFloat("Blue", colour.b);
+			colour.a = colourElement.getFloat("Alpha", colour.a);
+		}
+		
 		return loadSprite(
 				xml.get("Name"),
 				xml.getFloat("UpdateRate", 0),
 				new int[]{xml.getInt("Width", xml.getInt("Size", 0)), xml.getInt("Height", xml.getInt("Size", 0))},
 				new int[]{xml.getInt("IndexX", 0), xml.getInt("IndexY", 0)},
-				xml.getChildByName("Colour") != null ? new Color(
-						xml.getChildByName("Colour").getFloat("Red", 0), 
-						xml.getChildByName("Colour").getFloat("Green", 0), 
-						xml.getChildByName("Colour").getFloat("Blue", 0), 
-						xml.getChildByName("Colour").getFloat("Alpha", 1)) : Color.WHITE,
+				colour,
 				AnimationMode.valueOf(xml.get("AnimationMode", "Texture").toUpperCase())
 				);
 	}

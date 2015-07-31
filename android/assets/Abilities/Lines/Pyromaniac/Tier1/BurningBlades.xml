@@ -7,13 +7,9 @@
 	<Range>1</Range>
 	
 	<Icon>
-		<Name>Skills/Burning</Name>
+		<Name>Abilities/Pyromaniac/BurningBlades</Name>
+		<Colour><RGB>255,165,0</RGB></Colour>
 	</Icon>
-	
-	<Type>
-		<Helpful>
-		</Helpful>
-	</Type>
 	
 	<Targeting>
 		<Self></Self>

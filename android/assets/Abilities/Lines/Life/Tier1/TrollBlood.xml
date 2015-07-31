@@ -2,7 +2,8 @@
 	<Name>Troll Blood</Name>
 	<Description>Troll blood runs in your veins, giving you regeneration but making you weaker to fire.</Description>
 	<Icon>
-		<Name>Skills/Burning</Name>
+		<Name>Abilities/Life/TrollBlood</Name>
+		<Colour><RGB>175,255,47</RGB></Colour>
 	</Icon>
 	
 	<Events>

@@ -7,18 +7,14 @@
 	<Range>5</Range>
 	
 	<Icon>
-		<Name>Skills/Burning</Name>
+		<Name>Abilities/Pyromaniac/Flamestrike</Name>
+		<Colour><RGB>255,165,0</RGB></Colour>
 	</Icon>
 	
 	<HitSprite>
-		<Name>Fireburst/Fireburst</Name>
+		<Name>AbilitySprites/FireBurst/FireBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
 	</HitSprite>
-	
-	<Type>
-		<Harmful>
-		</Harmful>
-	</Type>
 	
 	<Targeting>
 		<Entity></Entity>

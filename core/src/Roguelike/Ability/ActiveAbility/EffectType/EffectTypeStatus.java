@@ -22,7 +22,7 @@ public class EffectTypeStatus extends AbstractEffectType
 	}
 
 	@Override
-	public void update(ActiveAbility aa, float time, GameTile tile, GameTile epicenter)
+	public void update(ActiveAbility aa, float time, GameTile tile)
 	{		
 		if (tile.entity != null)
 		{

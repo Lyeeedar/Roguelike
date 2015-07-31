@@ -7,13 +7,15 @@
 	<Range>1</Range>
 	
 	<Icon>
-		<Name>Skills/Burning</Name>
+		<Name>Abilities/Life/KnitWounds</Name>
+		<Colour><RGB>175,255,47</RGB></Colour>
 	</Icon>
 	
-	<Type>
-		<Helpful>
-		</Helpful>
-	</Type>
+	<HitSprite>
+	    <Name>AbilitySprites/Heal/Heal</Name>
+	    <UpdateRate>0.1</UpdateRate>
+	    <Colour><RGB>175,255,47</RGB></Colour>
+	</HitSprite>
 	
 	<Targeting>
 		<Self></Self>

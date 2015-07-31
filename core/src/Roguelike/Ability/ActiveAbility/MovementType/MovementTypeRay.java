@@ -2,6 +2,7 @@ package Roguelike.Ability.ActiveAbility.MovementType;
 
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Pathfinding.BresenhamLine;
+import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -16,14 +17,18 @@ public class MovementTypeRay extends AbstractMovementType
 	@Override
 	public void init(ActiveAbility ab, int endx, int endy)
 	{
-		int[][] path = BresenhamLine.line(ab.source.x, ab.source.y, endx, endy, ab.source.level.getGrid(), true, false);
+		int[][] path = BresenhamLine.line(ab.source.x, ab.source.y, endx, endy, ab.source.level.getGrid(), false, ab.range);
 		
 		ab.AffectedTiles.clear();
 		
 		for (int i = 1; i < path.length; i++)
 		{
 			int[] p = path[i];
-			ab.AffectedTiles.add(ab.source.level.getGameTile(p[0], p[1]));
+			GameTile tile = ab.source.level.getGameTile(p[0], p[1]);
+			
+			if (tile.GetOpaque()) { break; }
+			
+			ab.AffectedTiles.add(tile);
 		}	
 	}
 

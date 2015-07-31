@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 public abstract class AbstractEffectType
 {
-	public abstract void update(ActiveAbility aa, float time, GameTile tile, GameTile epicenter);
+	public abstract void update(ActiveAbility aa, float time, GameTile tile);
 	public abstract void parse(Element xml);
 	public abstract AbstractEffectType copy();
 	

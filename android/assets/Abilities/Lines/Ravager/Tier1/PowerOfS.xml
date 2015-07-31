@@ -2,7 +2,8 @@
 	<Name>Power of S</Name>
 	<Description>Dealing damage fills you with sadistic joy, sending you into a blood fury.</Description>
 	<Icon>
-		<Name>Skills/Bloodlust</Name>
+		<Name>Abilities/Ravager/PowerOfS</Name>
+		<Colour><RGB>178,34,34</RGB></Colour>
 	</Icon>
 	
 	<Events>

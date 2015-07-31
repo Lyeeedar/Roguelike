@@ -50,7 +50,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 	private Style style;
 	
 	@Override
-	public void update(ActiveAbility aa, float time, GameTile tile, GameTile epicenter)
+	public void update(ActiveAbility aa, float time, GameTile tile)
 	{
 		GameTile destination = null;
 		GameEntity entityToMove = null;
