@@ -56,6 +56,26 @@
 				</Teleport>
 			</Effect>
 		</Leap>
+		
+		<Retreat>
+			<Cooldown>20</Cooldown>
+			<Range>1</Range>
+			<Targeting><Entity Type="Enemy"/></Targeting>
+			<Movement><Smite/></Movement>
+			<Effect>
+				<Damage>
+				    <Atk>Atk*0.7</Atk>
+					<Air_Atk>30</Air_Atk>
+				</Damage>
+				<Teleport>
+				    <Move>Caster</Move>
+				    <Direction>Away</Direction>
+				    <Type>Cone</Type>
+				    <Distance>3</Distance>
+					<Style>Leap</Style>
+				</Teleport>
+			</Effect>
+		</Retreat>
 	</ActiveAbilities>
 	
 	<Statistics>

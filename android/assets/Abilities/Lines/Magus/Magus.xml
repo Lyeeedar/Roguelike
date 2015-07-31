@@ -18,10 +18,10 @@
 				<Cost>100</Cost>
 			</ActiveAbility>
 			
-			<ActiveAbility>
-				<Name>Magus/Tier1/IronSpike</Name>
+			<PassiveAbility>
+				<Name>Magus/Tier1/Meditate</Name>
 				<Cost>100</Cost>
-			</ActiveAbility>
+			</PassiveAbility>
 			
 			<ActiveAbility>
 				<Name>Magus/Tier1/MagicMissile</Name>

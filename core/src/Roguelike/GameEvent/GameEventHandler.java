@@ -85,7 +85,7 @@ public abstract class GameEventHandler implements IGameObject
 	{
 		for (AbstractOnTaskEvent event : onMoveEvents)
 		{
-			event.handle(entity, task);
+			event.handle(entity, task, this);
 		}
 	}
 	
@@ -93,7 +93,7 @@ public abstract class GameEventHandler implements IGameObject
 	{
 		for (AbstractOnTaskEvent event : onAttackEvents)
 		{
-			event.handle(entity, task);
+			event.handle(entity, task, this);
 		}
 	}
 	
@@ -101,7 +101,7 @@ public abstract class GameEventHandler implements IGameObject
 	{
 		for (AbstractOnTaskEvent event : onWaitEvents)
 		{
-			event.handle(entity, task);
+			event.handle(entity, task, this);
 		}
 	}
 	

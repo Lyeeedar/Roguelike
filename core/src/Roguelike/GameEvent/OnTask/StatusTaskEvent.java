@@ -6,6 +6,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.Tasks.AbstractTask;
+import Roguelike.GameEvent.IGameObject;
 import Roguelike.StatusEffect.StatusEffect;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -20,7 +21,7 @@ public class StatusTaskEvent extends AbstractOnTaskEvent
 	public Element status;
 	
 	@Override
-	public boolean handle(Entity entity, AbstractTask task)
+	public boolean handle(Entity entity, AbstractTask task, IGameObject parent)
 	{
 		HashMap<String, Integer> variableMap = entity.getVariableMap();
 		for (String name : reliesOn)
@@ -70,7 +71,7 @@ public class StatusTaskEvent extends AbstractOnTaskEvent
 		
 		for (int i = 0; i < stacks; i++)
 		{
-			entity.addStatusEffect(StatusEffect.load(status, null));
+			entity.addStatusEffect(StatusEffect.load(status, parent));
 		}
 		
 		return true;

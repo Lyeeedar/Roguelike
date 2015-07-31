@@ -9,10 +9,11 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
+import Roguelike.GameEvent.IGameObject;
 
 public abstract class AbstractOnTaskEvent
 {
-	public abstract boolean handle(Entity entity, AbstractTask task);
+	public abstract boolean handle(Entity entity, AbstractTask task, IGameObject parent);
 	public abstract void parse(Element xml);
 	
 	public static AbstractOnTaskEvent load(Element xml)

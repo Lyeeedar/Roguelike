@@ -1,0 +1,25 @@
+<PassiveAbility>
+	<Name>Meditation</Name>
+	<Description>Replace waiting with meditating, granting you a temporary bonus to damage.</Description>
+	<Icon>
+		<Name>Skills/Burning</Name>
+	</Icon>
+	
+	<Events>
+		<OnWait>
+			<Status Condition="focus < 5" ReliesOn="Focus">
+				<Status>
+				    <Name>Focus</Name>
+				    <Description>Your mind is focused, giving you a damage buff.</Description>
+				    <Duration>10</Duration>
+				    <Events>
+				        <Constant>
+				            <Atk>1+Atk*0.2</Atk>
+				        </Constant>
+				    </Events>
+				</Status>
+			</Status>
+		</OnWait>
+	</Events>
+	
+</PassiveAbility>

@@ -7,10 +7,28 @@ import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 public class DecoratorSetState extends AbstractDecorator
 {
+	private BehaviourTreeState succeed;
+	private BehaviourTreeState failed;
+	private BehaviourTreeState running;
+	
 	@Override
 	public BehaviourTreeState evaluate(GameEntity entity)
 	{
-		node.evaluate(entity);
+		BehaviourTreeState retState = node.evaluate(entity);
+		
+		if (retState == BehaviourTreeState.SUCCEEDED)
+		{
+			State = succeed;
+		}
+		else if (retState == BehaviourTreeState.RUNNING)
+		{
+			State = running;
+		}
+		else if (retState == BehaviourTreeState.FAILED)
+		{
+			State = failed;
+		}
+		
 		return State;
 	}
 
@@ -19,6 +37,10 @@ public class DecoratorSetState extends AbstractDecorator
 	{
 		super.parse(xmlElement);
 		
-		State = BehaviourTreeState.valueOf(xmlElement.getAttribute("State").toUpperCase());
+		succeed = failed = running = BehaviourTreeState.valueOf(xmlElement.getAttribute("State").toUpperCase());
+		
+		if (xmlElement.get("Succeed", null) != null) { succeed = BehaviourTreeState.valueOf(xmlElement.getAttribute("Succeed").toUpperCase()); }
+		if (xmlElement.get("Running", null) != null) { running = BehaviourTreeState.valueOf(xmlElement.getAttribute("Running").toUpperCase()); }
+		if (xmlElement.get("Failed", null) != null) { failed = BehaviourTreeState.valueOf(xmlElement.getAttribute("Failed").toUpperCase()); }
 	}
 }

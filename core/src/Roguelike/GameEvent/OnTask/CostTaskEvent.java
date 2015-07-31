@@ -6,6 +6,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.Tasks.AbstractTask;
+import Roguelike.GameEvent.IGameObject;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -18,7 +19,7 @@ public class CostTaskEvent extends AbstractOnTaskEvent
 	private String costEqn;
 	
 	@Override
-	public boolean handle(Entity entity, AbstractTask task)
+	public boolean handle(Entity entity, AbstractTask task, IGameObject parent)
 	{
 		HashMap<String, Integer> variableMap = entity.getVariableMap();
 		for (String name : reliesOn)

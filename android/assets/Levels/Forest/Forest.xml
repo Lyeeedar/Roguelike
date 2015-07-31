@@ -110,7 +110,7 @@
 			
 		</PlayerSpawn>
 	
-		<Transition Min="0" Max="3">
+		<Sewer Min="4" Max="4">
 			<Symbols>
 			
 				<Symbol Extends=",">
@@ -145,6 +145,52 @@
 			</Symbols>
 				
 			<Rows>Levels/Forest/village</Rows>
+
+		</Sewer>
+		
+		<Transition Min="0" Max="3">
+		    
+		    <Faction>none</Faction>
+		    
+			<Symbols>
+			
+				<Symbol Extends=",">
+					<Char>v</Char>
+					<EnvironmentData>
+						<Type>Transition</Type>
+						<Destination>Forest</Destination>
+						
+						<ExitRoom>
+						    <Faction>none</Faction>
+						    
+							<Symbols>
+								<Symbol Extends=".">
+									<Char>^</Char>
+									<EnvironmentData>
+										<Type>Transition</Type>
+										<Destination>this</Destination>
+									</EnvironmentData>
+								</Symbol>
+							</Symbols>
+						
+							<Rows>
+								<Row>#####</Row>
+								<Row>##.##</Row>
+								<Row>#.^##</Row>
+								<Row>#..##</Row>
+								<Row>##.##</Row>
+							</Rows>
+						</ExitRoom>
+					</EnvironmentData>
+				</Symbol>
+			</Symbols>
+				
+			<Rows>
+				<Row>#####</Row>
+				<Row>##v##</Row>
+				<Row>#..##</Row>
+				<Row>##.##</Row>
+			</Rows>
 
 		</Transition>
 		

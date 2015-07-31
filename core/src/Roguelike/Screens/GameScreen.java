@@ -807,30 +807,6 @@ public class GameScreen implements Screen, InputProcessor
 		}
 		
 		Table table = new Table();
-		
-		{
-			Table row = new Table();
-
-			row.add(new Label("Rest a while", skin)).expand().fill();
-
-			row.addListener(new InputListener()
-			{
-				@Override
-				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-				{	
-					Global.CurrentLevel.player.AI.setData("Rest", true);
-					clearContextMenu();
-
-					return true;
-				}
-			});
-
-			table.add(row).width(Value.percentWidth(1, table));
-			table.row();
-			
-			table.add(new Label("-------------", skin));
-			table.row();
-		}
 
 		if (available.size > 0 || entityWithinRange)
 		{
@@ -900,6 +876,30 @@ public class GameScreen implements Screen, InputProcessor
 				table.add(row).width(Value.percentWidth(1, table));
 				table.row();
 			}
+			
+			table.add(new Label("-------------", skin));
+			table.row();
+		}
+		
+		{
+			Table row = new Table();
+
+			row.add(new Label("Rest a while", skin)).expand().fill();
+
+			row.addListener(new InputListener()
+			{
+				@Override
+				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+				{	
+					Global.CurrentLevel.player.AI.setData("Rest", true);
+					clearContextMenu();
+
+					return true;
+				}
+			});
+
+			table.add(row).width(Value.percentWidth(1, table));
+			table.row();
 		}
 		
 		table.pack();
