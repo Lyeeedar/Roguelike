@@ -12,6 +12,7 @@ import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Lights.Light;
+import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
@@ -55,26 +56,20 @@ public class EffectTypeDamage extends AbstractEffectType
 	}
 
 	@Override
-	public void update(ActiveAbility aa, float time, GameTile tile)
-	{
-		Light l = aa.light != null ? aa.light.copy() : null;
-		
+	public void update(ActiveAbility aa, float time, GameTile tile, GameTile epicenter)
+	{		
 		if (tile.entity != null)
 		{
-			applyToEntity(tile.entity, aa, l);
+			applyToEntity(tile.entity, aa);
 		}
 		
 		if (tile.environmentEntity != null)
 		{
-			applyToEntity(tile.environmentEntity, aa, l);
-		}
-		
-		{
-			tile.spriteEffects.add(new SpriteEffect(aa.getHitSprite().copy(), Direction.CENTER, l));
+			applyToEntity(tile.environmentEntity, aa);
 		}
 	}
 
-	private void applyToEntity(Entity target, ActiveAbility aa, Light l)
+	private void applyToEntity(Entity target, ActiveAbility aa)
 	{
 		HashMap<String, Integer> variableMap = aa.variableMap;
 		
@@ -112,7 +107,6 @@ public class EffectTypeDamage extends AbstractEffectType
 		}
 		
 		Global.calculateDamage(aa.caster, target, Statistic.statsBlockToVariableBlock(stats), true);			
-		target.spriteEffects.add(new SpriteEffect(aa.getHitSprite().copy(), Direction.CENTER, l));
 	}
 	
 	@Override

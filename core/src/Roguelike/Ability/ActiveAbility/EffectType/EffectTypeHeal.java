@@ -6,6 +6,9 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
+import Roguelike.Global.Direction;
+import Roguelike.Lights.Light;
+import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -25,8 +28,8 @@ public class EffectTypeHeal extends AbstractEffectType
 	}
 
 	@Override
-	public void update(ActiveAbility aa, float time, GameTile tile)
-	{
+	public void update(ActiveAbility aa, float time, GameTile tile, GameTile epicenter)
+	{		
 		if (tile.entity != null)
 		{
 			applyToEntity(tile.entity, aa);

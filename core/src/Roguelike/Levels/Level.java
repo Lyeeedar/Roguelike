@@ -294,9 +294,22 @@ public class Level
 			GameEntity e = tile.entity;
 			if (e != null)
 			{
-				if (e.damageAccumulator > 0 && tile.GetVisible())
+				if (tile.GetVisible())
 				{
-					GameScreen.Instance.addActorDamageAction(e);
+					if (e.damageAccumulator > 0)
+					{
+						GameScreen.Instance.addActorDamageAction(e);
+					}
+					
+					if (e.healingAccumulator > 0)
+					{
+						GameScreen.Instance.addActorHealingAction(e);
+					}
+				}
+				else
+				{
+					e.damageAccumulator = 0;
+					e.healingAccumulator = 0;
 				}
 
 				if (e != player && e.HP <= 0 && !hasActiveEffects(e))

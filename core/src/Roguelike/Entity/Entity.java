@@ -131,8 +131,10 @@ public abstract class Entity
 	//----------------------------------------------------------------------
 	public void applyHealing(int heal)
 	{
-		HP = Math.min(HP+heal, getStatistic(Statistic.MAXHP));
+		int appliedHeal = Math.min(heal, getStatistic(Statistic.MAXHP) - HP);
+		HP += appliedHeal;
 
+		healingAccumulator += appliedHeal;
 	}
 
 	//----------------------------------------------------------------------
@@ -175,6 +177,7 @@ public abstract class Entity
 
 	//----------------------------------------------------------------------
 	public int damageAccumulator = 0;
+	public int healingAccumulator = 0;
 
 	//----------------------------------------------------------------------
 	public EnumMap<Statistic, Integer> statistics = Statistic.getStatisticsBlock();

@@ -15,6 +15,7 @@ import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class GameTile implements ShadowCastTile, PathfindingTile
@@ -85,6 +86,11 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 		int[] diff = {oldPos[0] - newPos[0], oldPos[1] - newPos[1]};
 		
 		return diff;
+	}
+	
+	public float getDist(GameTile prevTile)
+	{				
+		return Vector2.dst(prevTile.x, prevTile.y, x, y);
 	}
 	
 	@Override

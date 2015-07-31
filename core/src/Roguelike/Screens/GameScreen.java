@@ -761,6 +761,31 @@ public class GameScreen implements Screen, InputProcessor
 
 		entity.damageAccumulator = 0;
 	}
+	
+	//----------------------------------------------------------------------
+	public void addActorHealingAction(Entity entity)
+	{
+		int offsetx = Gdx.graphics.getWidth() / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+		int offsety = Gdx.graphics.getHeight() / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+
+		int x = entity.tile.x;
+		int y = entity.tile.y;
+
+		int cx = x*Global.TileSize + offsetx;
+		int cy = y*Global.TileSize + offsety;
+
+		Label label = new Label("+"+entity.healingAccumulator, skin);
+		label.setColor(Color.GREEN);
+
+		label.addAction(new SequenceAction(
+				Actions.moveTo(cx, cy+Global.TileSize/2+Global.TileSize/2, 0.5f),
+				Actions.removeActor()));		
+		label.setPosition(cx, cy+Global.TileSize/2);		
+		stage.addActor(label);	
+		label.setVisible(true);
+
+		entity.healingAccumulator = 0;
+	}
 
 	//----------------------------------------------------------------------
 	public boolean isInBounds(float x, float y, Widget actor)

@@ -199,21 +199,19 @@ public class Global
 				hitTiles.add(new int[]{cx, cy});
 				
 				// add anticlockwise - mid
-				int acwdiff = Math.max(Math.abs(acx - nx), Math.abs(acy - ny));
-				for (int ii = 1; ii < acwdiff; ii++)
+				for (int ii = 1; ii <= range; ii++)
 				{
-					int px = nx + acwOffset[0] * ii;
-					int py = ny + acwOffset[1] * ii;
+					int px = acx + acwOffset[0] * ii;
+					int py = acy + acwOffset[1] * ii;
 					
 					hitTiles.add(new int[]{px, py});
 				}
 				
 				// add mid - clockwise
-				int cwdiff = Math.max(Math.abs(cx - nx), Math.abs(cy - ny));
-				for (int ii = 1; ii < cwdiff; ii++)
+				for (int ii = 1; ii <= range; ii++)
 				{
-					int px = nx + cwOffset[0] * ii;
-					int py = ny + cwOffset[1] * ii;
+					int px = cx + cwOffset[0] * ii;
+					int py = cy + cwOffset[1] * ii;
 					
 					hitTiles.add(new int[]{px, py});
 				}

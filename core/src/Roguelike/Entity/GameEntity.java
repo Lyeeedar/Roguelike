@@ -48,6 +48,15 @@ public class GameEntity extends Entity
 	//endregion Constructor
 	//####################################################################//
 	//region Public Methods
+	
+	//----------------------------------------------------------------------
+	@Override
+	public void applyDamage(int dam, Entity damager)
+	{
+		super.applyDamage(dam, damager);
+		
+		AI.setData("EnemyPos", new int[]{damager.tile.x, damager.tile.y});
+	}
 
 	//----------------------------------------------------------------------
 	public void attack(Entity other, Direction dir)

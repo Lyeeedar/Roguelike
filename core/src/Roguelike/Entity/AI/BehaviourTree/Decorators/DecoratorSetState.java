@@ -7,9 +7,9 @@ import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
 public class DecoratorSetState extends AbstractDecorator
 {
-	private BehaviourTreeState succeed;
-	private BehaviourTreeState failed;
-	private BehaviourTreeState running;
+	private BehaviourTreeState succeed = BehaviourTreeState.SUCCEEDED;
+	private BehaviourTreeState failed = BehaviourTreeState.FAILED;
+	private BehaviourTreeState running = BehaviourTreeState.RUNNING;
 	
 	@Override
 	public BehaviourTreeState evaluate(GameEntity entity)

@@ -2,8 +2,11 @@ package Roguelike.Ability.ActiveAbility;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import Roguelike.AssetManager;
+import Roguelike.Global.Direction;
 import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.AbilityType.AbstractAbilityType;
 import Roguelike.Ability.ActiveAbility.EffectType.AbstractEffectType;
@@ -21,6 +24,7 @@ import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
 import Roguelike.Shadows.ShadowCaster;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.Gdx;
@@ -36,6 +40,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	private String name;
 	private String description;
 	
+	private int cone = 0;
 	private int aoe = 0;
 	public int range = 1;
 			
@@ -66,8 +71,8 @@ public class ActiveAbility implements IAbility, IGameObject
 		aa.description = description;
 		aa.aoe = aoe;
 		aa.range = range;
+		aa.cone = cone;
 		
-		//aa.abilityType = abilityType.copy();
 		aa.targetingType = targetingType.copy();
 		aa.movementType = movementType.copy();
 		
@@ -197,24 +202,69 @@ public class ActiveAbility implements IAbility, IGameObject
 		
 		if (finished)
 		{
+			GameTile epicenter = AffectedTiles.peek();
+			
 			if (aoe > 0)
 			{
-				GameTile epicenter = AffectedTiles.peek();
-				
 				Array<int[]> output = new Array<int[]>();
 				
 				ShadowCaster shadow = new ShadowCaster(epicenter.level.getGrid(), aoe);
 				shadow.ComputeFOV(epicenter.x, epicenter.y, output);
 				
-				AffectedTiles.clear();
 				for (int[] tilePos : output)
 				{
 					GameTile tile = epicenter.level.getGameTile(tilePos);
 					
-					if (tile.tileData.passable)
+					AffectedTiles.add(tile);
+				}
+			}
+			else if (cone > 0)
+			{
+				Direction dir = Direction.getDirection(source, epicenter);
+				Array<int[]> cone = Direction.buildCone(dir, new int[]{epicenter.x, epicenter.y}, this.cone);
+				
+				Array<int[]> output = new Array<int[]>();
+				
+				ShadowCaster shadow = new ShadowCaster(epicenter.level.getGrid(), this.cone);
+				shadow.ComputeFOV(epicenter.x, epicenter.y, output);
+				
+				for (int[] tilePos : cone)
+				{
+					GameTile tile = epicenter.level.getGameTile(tilePos);
+					
+					boolean canAdd = false;
+					for (int[] visPos : output)
+					{
+						GameTile visTile = epicenter.level.getGameTile(visPos);
+						
+						if (tile == visTile)
+						{
+							canAdd = true;
+							break;
+						}
+					}
+					
+					if (canAdd)
 					{
 						AffectedTiles.add(tile);
 					}
+				}
+			}
+			
+			// minimise list
+			HashSet<GameTile> added = new HashSet<GameTile>();
+			Iterator<GameTile> itr = AffectedTiles.iterator();
+			while (itr.hasNext())
+			{
+				GameTile tile = itr.next();
+				
+				if (!added.contains(tile))
+				{
+					added.add(tile);
+				}
+				else
+				{
+					itr.remove();
 				}
 			}
 			
@@ -222,7 +272,16 @@ public class ActiveAbility implements IAbility, IGameObject
 			{
 				for (AbstractEffectType effect : effectTypes)
 				{
-					effect.update(this, 1, tile);
+					effect.update(this, 1, tile, epicenter);
+				}
+				
+				if (getHitSprite() != null)
+				{
+					Light l = light != null ? light.copy() : null;
+					Sprite s = getHitSprite().copy();
+					s.render = false;
+					s.animationAccumulator = -s.animationDelay * tile.getDist(epicenter) + s.animationDelay;
+					tile.spriteEffects.add(new SpriteEffect(s, Direction.CENTER, l));
 				}
 			}
 		}
@@ -259,6 +318,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		this.name = xmlElement.get("Name", this.name);
 		description = xmlElement.get("Description", description);
 		aoe = xmlElement.getInt("AOE", aoe);
+		cone = xmlElement.getInt("Cone", cone);
 		range = xmlElement.getInt("Range", range);
 		cooldown = xmlElement.getFloat("Cooldown", cooldown);
 		

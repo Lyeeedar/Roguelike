@@ -1,7 +1,13 @@
 package Roguelike.Entity.AI.BehaviourTree.Conditionals;
 
+import java.util.HashMap;
+
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+
 import com.badlogic.gdx.utils.XmlReader.Element;
 
+import exp4j.Helpers.EquationHelper;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 
@@ -14,54 +20,56 @@ public class ConditionalCheckValue extends AbstractConditional
 	@Override
 	public BehaviourTreeState evaluate(GameEntity entity)
 	{
-		Object storedValue = getData(key, null);
-		
-		if (storedValue == null) { State = fail; }
-		else if (comparator == Comparator.EXISTS) { State = succeed; }
-		else 
-		{			
-			boolean check = false;
-			int comparison = 0;
+		float keyVal = 0;		
+		if (key != null)
+		{
+			Object storedValue = getData(key, null);
 			
-			if (storedValue instanceof Integer)
+			if (condition == null)
 			{
-				Integer sVal = (Integer)storedValue;
-				Integer cVal = Integer.parseInt(value);
-				
-				comparison = cVal.compareTo(sVal);
+				State = storedValue != null ? succeed : fail;
+				return State;
 			}
-			else if (storedValue instanceof Float)
+			else
 			{
-				Float sVal = (Float)storedValue;
-				Float cVal = Float.parseFloat(value);
-				
-				comparison = cVal.compareTo(sVal);
+				if (storedValue instanceof Boolean)
+				{
+					keyVal = (Boolean)storedValue ? 1 : 0;
+				}
+				else if (storedValue instanceof Integer)
+				{
+					keyVal = (Integer)storedValue;
+				}
+				else if (storedValue instanceof Float)
+				{
+					keyVal = (Float)storedValue;
+				}
+				else
+				{
+					keyVal = storedValue != null ? 1 : 0;
+				}
 			}
-			else if (storedValue instanceof Boolean)
-			{
-				Boolean sVal = (Boolean)storedValue;
-				Boolean cVal = Boolean.parseBoolean(value);
-				
-				comparison = cVal.compareTo(sVal);
-			}
-			else if (storedValue instanceof String)
-			{
-				String sVal = (String)storedValue;
-				String cVal = value;
-				
-				comparison = cVal.compareTo(sVal);
-			}
-			
-			if (comparator == Comparator.EQ) { check = comparison == 0; }
-			else if (comparator == Comparator.NE) { check = comparison != 0; }
-			else if (comparator == Comparator.LT) { check = comparison < 0; }
-			else if (comparator == Comparator.LE) { check = comparison <= 0; }
-			else if (comparator == Comparator.GT) { check = comparison > 0; }
-			else if (comparator == Comparator.GE) { check = comparison >= 0; }
-						
-			State = check ? succeed : fail ; 
 		}
 		
+		HashMap<String, Integer> variableMap = entity.getVariableMap();
+		
+		ExpressionBuilder expB = EquationHelper.createEquationBuilder(condition);
+		EquationHelper.setVariableNames(expB, variableMap, "");		
+		if (key != null) { expB.variable(key.toLowerCase()); }
+
+		Expression exp = EquationHelper.tryBuild(expB);
+		if (exp == null)
+		{
+			State = fail;
+			return State;
+		}
+		
+		EquationHelper.setVariableValues(exp, variableMap, "");
+		if (key != null) { exp.setVariable(key.toLowerCase(), keyVal); }
+					
+		double conditionVal = exp.evaluate();
+		
+		State = conditionVal == 1 ? succeed : fail;
 		return State;
 	}
 
@@ -76,44 +84,12 @@ public class ConditionalCheckValue extends AbstractConditional
 	@Override
 	public void parse(Element xml)
 	{
-		this.key = xml.getAttribute("Key");
-		this.value = xml.getAttribute("Value", "");
+		this.key = xml.getAttribute("Key", null);
 		this.succeed = BehaviourTreeState.valueOf(xml.getAttribute("Success", "SUCCEEDED").toUpperCase());
 		this.fail = BehaviourTreeState.valueOf(xml.getAttribute("Failure", "FAILED").toUpperCase());
 		
-		String comparator = xml.getAttribute("Comparator", "exists");
-		if (comparator.equals("==") || comparator.equalsIgnoreCase("eq"))
-		{
-			this.comparator = Comparator.EQ;
-		}
-		else if (comparator.equals("!=") || comparator.equalsIgnoreCase("ne"))
-		{
-			this.comparator = Comparator.NE;
-		}
-		else if (comparator.equals("<") || comparator.equalsIgnoreCase("lt"))
-		{
-			this.comparator = Comparator.LT;
-		}
-		else if (comparator.equals("<=") || comparator.equalsIgnoreCase("le"))
-		{
-			this.comparator = Comparator.LE;
-		}
-		else if (comparator.equals(">") || comparator.equalsIgnoreCase("gt"))
-		{
-			this.comparator = Comparator.GT;
-		}
-		else if (comparator.equals(">=") || comparator.equalsIgnoreCase("ge"))
-		{
-			this.comparator = Comparator.GE;
-		}
-		else if (comparator.equalsIgnoreCase("exists"))
-		{
-			this.comparator = Comparator.EXISTS;
-		}
-		else
-		{
-			throw new RuntimeException("Unsupported comparator type: " + comparator + "!");
-		}
+		this.condition = xml.getAttribute("Condition", null);
+		if (this.condition != null) { this.condition = this.condition.toLowerCase(); }
 	}
 	
 	//endregion Public Methods
@@ -121,25 +97,10 @@ public class ConditionalCheckValue extends AbstractConditional
 	//region Data
 
 	//----------------------------------------------------------------------
-	private enum Comparator
-	{
-		EQ,
-		NE,
-		LT,
-		LE,
-		GT,
-		GE,
-		EXISTS
-	}
-
-	//----------------------------------------------------------------------
-	protected Comparator comparator;
-
-	//----------------------------------------------------------------------
 	public String key;
 	
 	//----------------------------------------------------------------------
-	public String value;
+	public String condition;
 
 	//----------------------------------------------------------------------
 	public BehaviourTreeState succeed;

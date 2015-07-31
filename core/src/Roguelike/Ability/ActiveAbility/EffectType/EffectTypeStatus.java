@@ -3,6 +3,9 @@ package Roguelike.Ability.ActiveAbility.EffectType;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.GameEvent.Damage.StatusEvent;
+import Roguelike.Global.Direction;
+import Roguelike.Lights.Light;
+import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -19,7 +22,7 @@ public class EffectTypeStatus extends AbstractEffectType
 	}
 
 	@Override
-	public void update(ActiveAbility aa, float time, GameTile tile)
+	public void update(ActiveAbility aa, float time, GameTile tile, GameTile epicenter)
 	{		
 		if (tile.entity != null)
 		{

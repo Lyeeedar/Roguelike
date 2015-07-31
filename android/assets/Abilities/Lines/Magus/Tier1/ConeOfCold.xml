@@ -1,26 +1,32 @@
 <ActiveAbility>
 
-	<Name>Pin</Name>
-	<Description>Pin an enemy to the ground.</Description>
+	<Name>Cone of Cold</Name>
+	<Description>A cone of freezing magic blasts from your hands.</Description>
 	
-	<Cooldown>20</Cooldown>
-	<Range>2</Range>
+	<Cooldown>10</Cooldown>
+	<Cone>2</Cone>
+	<Range>1</Range>
 	
 	<Icon>
 		<Name>Skills/Burning</Name>
 	</Icon>
 	
+	<HitSprite>
+		<Name>Fireburst/Fireburst</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</HitSprite>
+	
 	<Targeting>
-		<Entity Type="Enemy"></<Entity>
+		<Direction></Direction>
 	</Targeting>
 	
 	<Movement>
-		<Smite></Smite>
+		<Smite />
 	</Movement>
 	
 	<Effect>
-	    <Damage>
-		    <Atk>Atk</Atk>
+		<Damage>
+			<Water_ATK>75</Fire_ATK>
 		</Damage>
 		<Status>	    
 		    <Defender>	        

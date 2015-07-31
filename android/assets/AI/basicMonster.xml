@@ -1,6 +1,10 @@
 <Priority>
 	<Import Path="useAbility.xml"></Import>
 	<Import Path="attackClosest.xml"></Import>
+	<Sequence>
+	    <CheckValue Condition="hp<maxhp" />
+	    <Rest />
+	</Sequence>
 	<Random>
 		<Wait></Wait>
 		<Import Path="wander.xml"></Import>
