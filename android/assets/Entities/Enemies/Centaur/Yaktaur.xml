@@ -1,0 +1,44 @@
+<Entity>
+	<Name>Yaktaur</Name>
+
+	<Sprite>
+		<Name>dc-mon/yaktaur</Name>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Centaur</Faction>
+	</Factions>
+	
+	<ActiveAbilities>
+		<Charge>
+			<Cooldown>20</Cooldown>
+			<Range>4</Range>
+			<Targeting><Entity Type="Enemy"/></Targeting>
+			<Movement><Smite/></Movement>
+			<Effect>
+				<Damage>
+				    <Atk>Atk*0.7</Atk>
+				</Damage>
+				<Teleport>
+				    <Move>Target</Move>
+				    <Distance>1</Distance>
+				    <Style>Leap</Style>
+				</Teleport>
+				<Teleport>
+					<Style>Charge</Style>
+				</Teleport>
+			</Effect>
+		</Charge>
+	</ActiveAbilities>
+	
+	<Statistics>
+		<MaxHP>650</MaxHP>
+		<Range>5</<Range>
+		
+		<Wood_Atk>80</Wood_Atk>
+	</Statistics>
+	
+</Entity>

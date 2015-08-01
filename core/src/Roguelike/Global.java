@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Ability.AbilityPool;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
@@ -14,6 +15,7 @@ import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Screens.GameScreen;
+import Roguelike.Sound.Mixer;
 import Roguelike.Tiles.GameTile;
 import Roguelike.UI.MessageStack.Line;
 import Roguelike.UI.MessageStack.Message;
@@ -40,7 +42,13 @@ public class Global
 	public static Level CurrentLevel;
 	
 	//----------------------------------------------------------------------
+	public static Mixer BGM;
+	
+	//----------------------------------------------------------------------
 	public static float AUT = 0;
+	
+	//----------------------------------------------------------------------
+	public static AbilityPool abilityPool = new AbilityPool();
 
 	//----------------------------------------------------------------------
 	public enum Direction
@@ -476,10 +484,12 @@ public class Global
 	//----------------------------------------------------------------------
 	public static void newGame()
 	{
+		abilityPool.reset();
+		
 		RecursiveDockGenerator generator = new RecursiveDockGenerator("Forest", 0);
 		//VillageGenerator generator = new VillageGenerator(100, 100);
 		generator.generate();
-		CurrentLevel = generator.getLevel();
+		ChangeLevel(generator.getLevel());
 
 		boolean exit = false;
 		for (int x = 0; x < CurrentLevel.width; x++)
@@ -502,6 +512,21 @@ public class Global
 
 		CurrentLevel.updateVisibleTiles();
 		//Global.CurrentLevel.revealWholeGlobal.CurrentLevel();
+	}
+	
+	//----------------------------------------------------------------------
+	public static void ChangeLevel(Level level)
+	{
+		CurrentLevel = level;
+		
+		if (BGM != null)
+		{
+			BGM.mix(level.bgmName, 1);
+		}
+		else
+		{
+			BGM = new Mixer(level.bgmName, 1);
+		}
 	}
 	
 	//----------------------------------------------------------------------

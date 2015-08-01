@@ -14,6 +14,9 @@
 	<HitSprite>
 		<Name>AbilitySprites/FireBurst/FireBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
+		<Sound>
+		    <Name>fire_torch_pass_by_large_heavy_with_crackle_2</Name>
+		</Sound>
 	</HitSprite>
 	
 	<Targeting>

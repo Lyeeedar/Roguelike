@@ -2,6 +2,11 @@ package Roguelike.Entity.Tasks;
 
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Global.Direction;
+import Roguelike.Lights.Light;
+import Roguelike.Sound.SoundInstance;
+import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.SpriteEffect;
 
 public class TaskUseAbility extends AbstractTask
 {
@@ -32,6 +37,16 @@ public class TaskUseAbility extends AbstractTask
 		if (!finished)
 		{
 			obj.tile.level.addActiveAbility(aa);
+		}
+		
+		if (aa.getUseSprite() != null)
+		{
+			Light l = aa.light != null ? aa.light.copy() : null;
+			Sprite s = aa.getUseSprite().copy();
+			obj.tile.spriteEffects.add(new SpriteEffect(s, Direction.CENTER, l));
+			
+			SoundInstance sound = s.sound;
+			if (sound != null) { sound.play(obj.tile); }
 		}
 	}
 

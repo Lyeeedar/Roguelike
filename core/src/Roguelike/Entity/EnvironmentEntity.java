@@ -25,7 +25,8 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class EnvironmentEntity extends Entity
 {
-	
+	public Direction location = Direction.CENTER;
+	public boolean attachToWall = false;
 	
 	public boolean passable;
 	public boolean opaque;
@@ -179,8 +180,8 @@ public class EnvironmentEntity extends Entity
 	
 	private static EnvironmentEntity CreateDoor()
 	{
-		final Sprite doorClosed = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Door0.png")}, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE, AnimationMode.NONE);
-		final Sprite doorOpen = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Door1.png")}, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE, AnimationMode.NONE);
+		final Sprite doorClosed = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Door0.png")}, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE, AnimationMode.NONE, null);
+		final Sprite doorOpen = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Door1.png")}, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE, AnimationMode.NONE, null);
 		
 		ActivationAction open = new ActivationAction("Open")
 		{
@@ -322,6 +323,7 @@ public class EnvironmentEntity extends Entity
 		EnvironmentEntity entity = new EnvironmentEntity();
 		entity.passable = xml.getBoolean("Passable", true);
 		entity.opaque = xml.getBoolean("Opaque", false);
+		entity.attachToWall = xml.getBoolean("AttachToWall", false);
 		
 		entity.baseInternalLoad(xml);
 		

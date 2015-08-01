@@ -6,6 +6,7 @@
 	<Cooldown>25</Cooldown>
 	<Range>1</Range>
 	<AOE>1</AOE>
+	<ScreenShake>4</ScreenShake>
 	
 	<Icon>
 		<Name>Abilities/Life/HealingBurst</Name>
@@ -16,6 +17,7 @@
 	    <Name>AbilitySprites/Heal/Heal</Name>
 	    <UpdateRate>0.1</UpdateRate>
 	    <Colour><RGB>175,255,47</RGB></Colour>
+	    <Sound><Name>whoosh</Name></Sound>
 	</HitSprite>
 	
 	<Targeting>

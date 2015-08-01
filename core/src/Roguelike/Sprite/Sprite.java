@@ -1,5 +1,7 @@
 package Roguelike.Sprite;
 
+import Roguelike.Sound.SoundInstance;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -36,17 +38,20 @@ public class Sprite
 	
 	public AnimationState animationState;
 	
- 	public Sprite(float animationDelay, Array<Texture> textures, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode)
+	public SoundInstance sound;
+	
+ 	public Sprite(float animationDelay, Array<Texture> textures, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode, SoundInstance sound)
 	{
-		this(animationDelay, (Texture[])textures.toArray(Texture.class), tileSize, tileIndex, colour, mode);
+		this(animationDelay, (Texture[])textures.toArray(Texture.class), tileSize, tileIndex, colour, mode, sound);
 	}
 	
-	public Sprite(float animationDelay, Texture[] textures, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode)
+	public Sprite(float animationDelay, Texture[] textures, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode, SoundInstance sound)
 	{
 		this.textures = textures;
 		this.animationDelay = animationDelay;
 		this.tileSize = tileSize;
 		this.tileIndex = tileIndex;
+		this.sound = sound;
 		
 		animationState = new AnimationState();
 		animationState.mode = mode;
@@ -179,7 +184,7 @@ public class Sprite
 	
 	public Sprite copy()
 	{
-		return new Sprite(animationDelay, textures, tileSize, tileIndex, colour, animationState.mode);
+		return new Sprite(animationDelay, textures, tileSize, tileIndex, colour, animationState.mode, sound);
 	}
 	
 	public static class AnimationState

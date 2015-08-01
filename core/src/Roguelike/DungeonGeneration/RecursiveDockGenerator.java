@@ -1,5 +1,6 @@
 package Roguelike.DungeonGeneration;
 
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Random;
@@ -14,6 +15,7 @@ import Roguelike.DungeonGeneration.DungeonFileParser.RoomGeneratorType;
 import Roguelike.DungeonGeneration.FactionParser.Encounter;
 import Roguelike.DungeonGeneration.FactionParser.Feature;
 import Roguelike.DungeonGeneration.FactionParser.FeaturePlacementType;
+import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.AStarPathfind;
@@ -79,7 +81,47 @@ public class RecursiveDockGenerator
 
 				if (symbol.hasEnvironmentEntity())
 				{
-					newTile.addEnvironmentEntity(symbol.getEnvironmentEntity());
+					EnvironmentEntity entity = symbol.getEnvironmentEntity();
+					
+					if (entity.attachToWall)
+					{
+						Direction location = Direction.CENTER;
+						
+						// get direction
+						HashSet<Direction> validDirections = new HashSet<Direction>();
+						for (Direction dir : Direction.values())
+						{
+							boolean passable = symbolGrid[x+dir.GetX()][y+dir.GetY()].isPassable();
+							if (!passable) { validDirections.add(dir); }
+						}
+						
+						if (validDirections.size() > 0)
+						{
+							// look for direction with full surround
+							for (Direction dir : Direction.values())
+							{
+								boolean acwvalid = validDirections.contains(dir.GetAnticlockwise());
+								boolean valid = validDirections.contains(dir);
+								boolean cwvalid = validDirections.contains(dir.GetClockwise());
+								
+								if (acwvalid && valid && cwvalid)
+								{
+									location = dir;
+									break;
+								}
+							}
+							
+							// else pick random
+							if (location == Direction.CENTER)
+							{
+								location = validDirections.toArray(new Direction[validDirections.size()])[ran.nextInt(validDirections.size())];
+							}
+						}
+						
+						entity.location = location;
+					}
+					
+					newTile.addEnvironmentEntity(entity);
 				}
 
 				if (symbol.hasGameEntity())

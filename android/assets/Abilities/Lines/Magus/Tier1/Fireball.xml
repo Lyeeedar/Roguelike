@@ -6,6 +6,7 @@
 	<Cooldown>10</Cooldown>
 	<AOE>2</AOE>
 	<Range>5</Range>
+	<ScreenShake>30</ScreenShake>
 	
 	<Icon>
 		<Name>Abilities/Magus/Fireball</Name>
@@ -15,6 +16,9 @@
 	<HitSprite>
 		<Name>AbilitySprites/FireBurst/FireBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
+		<Sound>
+		    <Name>explosion_with_reverse_intro</Name>
+		</Sound>
 	</HitSprite>
 	
 	<MovementSprite>

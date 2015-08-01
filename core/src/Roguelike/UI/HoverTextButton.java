@@ -26,8 +26,8 @@ public class HoverTextButton extends Widget
 		RIGHT
 	}
 	
-	private final float hPad = 15;
-	private final float vPad = 15;
+	private float hPad = 15;
+	private float vPad = 15;
 	
 	private final BitmapFont normalFont;
 	private final BitmapFont highlightFont;
@@ -57,6 +57,13 @@ public class HoverTextButton extends Widget
 		calculateWidth();
 	}
 	
+	public void changePadding(float horizontal, float vertical)
+	{
+		hPad = horizontal;
+		vPad = vertical;
+		calculateWidth();
+	}
+	
 	private void calculateWidth()
 	{				
 		layout.setText(highlightFont, text);
@@ -69,17 +76,13 @@ public class HoverTextButton extends Widget
 	}
 	
 	public float getPrefWidth () 
-	{
-		float width = isHighlighted ? highlightLineWidth : normalLineWidth;
-		
-		return width + hPad * 2;
+	{		
+		return highlightLineWidth + hPad * 2;
 	}
 
 	public float getPrefHeight () 
-	{
-		float height = isHighlighted ? highlightLineHeight : normalLineHeight;
-		
-		return height + vPad * 2;
+	{		
+		return highlightLineHeight + vPad * 2;
 	}
 	
 	public void draw (Batch batch, float parentAlpha) 
@@ -125,7 +128,13 @@ public class HoverTextButton extends Widget
 	}
 	
 	private class HoverTextButtonListener extends InputListener
-	{		
+	{	
+		public boolean mouseMoved (InputEvent event, float x, float y)
+		{
+			isHighlighted = true;
+			return true;
+		}
+		
 		public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) 
 		{
 			isHighlighted = true;

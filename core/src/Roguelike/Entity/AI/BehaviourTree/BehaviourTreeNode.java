@@ -15,6 +15,7 @@ import Roguelike.Entity.AI.BehaviourTree.Actions.ActionPickRandom;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionProcessInput;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionRest;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionSetValue;
+import Roguelike.Entity.AI.BehaviourTree.Actions.ActionShout;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionUseAbility;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionWait;
 import Roguelike.Entity.AI.BehaviourTree.Conditionals.ConditionalCheckValue;
@@ -98,6 +99,7 @@ public abstract class BehaviourTreeNode
 		ClassMap.put("PROCESSINPUT", ActionProcessInput.class);
 		ClassMap.put("REST", ActionRest.class);
 		ClassMap.put("SETVALUE", ActionSetValue.class);
+		ClassMap.put("SHOUT", ActionShout.class);
 		ClassMap.put("USEABILITY", ActionUseAbility.class);
 		ClassMap.put("WAIT", ActionWait.class);
 	}

@@ -28,6 +28,7 @@ import Roguelike.UI.AbilityPoolPanel;
 import Roguelike.UI.DragDropPayload;
 import Roguelike.UI.EntityStatusRenderer;
 import Roguelike.UI.HPWidget;
+import Roguelike.UI.HoverTextButton;
 import Roguelike.UI.InventoryPanel;
 import Roguelike.UI.MessageStack;
 import Roguelike.UI.SpriteWidget;
@@ -82,15 +83,41 @@ public class GameScreen implements Screen, InputProcessor
 	{
 		batch = new SpriteBatch();
 
-		FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = 12;
-		parameter.borderWidth = 1;
-		parameter.kerning = true;
-		parameter.borderColor = Color.BLACK;
-		font = fgenerator.generateFont(parameter); // font size 12 pixels
-		font.getData().markupEnabled = true;
-		fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
+		{
+			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
+			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+			parameter.size = 12;
+			parameter.borderWidth = 1;
+			parameter.kerning = true;
+			parameter.borderColor = Color.BLACK;
+			font = fgenerator.generateFont(parameter); // font size 12 pixels
+			font.getData().markupEnabled = true;
+			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
+		}
+		
+		{
+			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
+			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+			parameter.size = 12;
+			parameter.borderWidth = 1;
+			parameter.kerning = true;
+			parameter.borderColor = Color.BLACK;
+			contextMenuNormalFont = fgenerator.generateFont(parameter);
+			contextMenuNormalFont.getData().markupEnabled = true;
+			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
+		}
+		
+		{
+			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
+			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+			parameter.size = 14;
+			parameter.borderWidth = 1;
+			parameter.kerning = true;
+			parameter.borderColor = Color.BLACK;
+			contextMenuHilightFont = fgenerator.generateFont(parameter);
+			contextMenuHilightFont.getData().markupEnabled = true;
+			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
+		}
 
 		blank = AssetManager.loadTexture("Sprites/blank.png");
 		white = AssetManager.loadTexture("Sprites/white.png");
@@ -123,7 +150,7 @@ public class GameScreen implements Screen, InputProcessor
 
 		abilityPanel = new AbilityPanel(skin, stage);
 
-		abilityPoolPanel = new AbilityPoolPanel(new AbilityPool(), skin, stage);
+		abilityPoolPanel = new AbilityPoolPanel(Global.abilityPool, skin, stage);
 		inventoryPanel = new InventoryPanel(skin, stage);
 		messageStack = new MessageStack();
 		messageStack.addLine(new Line(new Message("Welcome to the DUNGEON!")));
@@ -169,7 +196,7 @@ public class GameScreen implements Screen, InputProcessor
 		{
 			fps = (int)(1.0f / frametime);
 			fpsAccumulator = 0;
-		}
+		}		
 
 		Global.CurrentLevel.update(delta);
 
@@ -182,6 +209,21 @@ public class GameScreen implements Screen, InputProcessor
 
 			offsetx -= offset[0];
 			offsety -= offset[1];
+		}
+		
+		// do screen shake
+		if (screenShakeRadius > 2)
+		{
+			screenShakeAccumulator += delta;
+			while (screenShakeAccumulator >= ScreenShakeSpeed)
+			{
+				screenShakeAccumulator -= ScreenShakeSpeed;				
+				screenShakeAngle += (150 + MathUtils.random()*60);
+				screenShakeRadius *= 0.9f;
+			}
+			
+			offsetx += Math.sin(screenShakeAngle) * screenShakeRadius;
+			offsety += Math.cos(screenShakeAngle) * screenShakeRadius;
 		}
 
 		int mousex = (mousePosX - offsetx) / Global.TileSize;
@@ -213,7 +255,18 @@ public class GameScreen implements Screen, InputProcessor
 
 					if (gtile.environmentEntity != null) 
 					{ 
-						gtile.environmentEntity.sprite.render(batch, x*Global.TileSize + offsetx, y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
+						int cx = x*Global.TileSize + offsetx;
+						int cy = y*Global.TileSize + offsety;
+						
+						if (gtile.environmentEntity.location == Direction.CENTER)
+						{
+							gtile.environmentEntity.sprite.render(batch, cx, cy, Global.TileSize, Global.TileSize);
+						}
+						else
+						{
+							Direction dir = gtile.environmentEntity.location;
+							gtile.environmentEntity.sprite.render(batch, cx + tileSize3*(dir.GetX()+1), cy + tileSize3*(dir.GetY()+1), tileSize3, tileSize3);
+						}
 
 						if (gtile.environmentEntity.HP < gtile.environmentEntity.statistics.get(Statistic.MAXHP) || gtile.environmentEntity.stacks.size > 0)
 						{
@@ -844,8 +897,10 @@ public class GameScreen implements Screen, InputProcessor
 					if (!aa.visible) { continue; }
 
 					Table row = new Table();
-
-					row.add(new Label(aa.name, skin)).expand().fill();
+					
+					HoverTextButton button = new HoverTextButton(aa.name, contextMenuNormalFont, contextMenuHilightFont);
+					button.changePadding(5, 5);					
+					row.add(button).expand().fill();
 
 					row.addListener(new InputListener()
 					{
@@ -876,7 +931,10 @@ public class GameScreen implements Screen, InputProcessor
 				Table row = new Table();
 
 				row.add(new SpriteWidget(aa.Icon));
-				row.add(new Label(aa.getName(), skin)).expand().fill();
+				
+				HoverTextButton button = new HoverTextButton(aa.getName(), contextMenuNormalFont, contextMenuHilightFont);
+				button.changePadding(5, 5);
+				row.add(button).expand().fill();
 
 				row.addListener(new InputListener()
 				{
@@ -909,7 +967,9 @@ public class GameScreen implements Screen, InputProcessor
 		{
 			Table row = new Table();
 
-			row.add(new Label("Rest a while", skin)).expand().fill();
+			HoverTextButton button = new HoverTextButton("Rest a while", contextMenuNormalFont, contextMenuHilightFont);
+			button.changePadding(5, 5);			
+			row.add(button).expand().fill();
 
 			row.addListener(new InputListener()
 			{
@@ -945,9 +1005,19 @@ public class GameScreen implements Screen, InputProcessor
 	private float fpsAccumulator;
 	private float frametime;
 	private BitmapFont font;
+	
+	//----------------------------------------------------------------------
+	private BitmapFont contextMenuNormalFont;
+	private BitmapFont contextMenuHilightFont;
 
 	//----------------------------------------------------------------------
 	public DragDropPayload dragDropPayload;
+	
+	//----------------------------------------------------------------------
+	private static final float ScreenShakeSpeed = 0.02f;
+	public float screenShakeRadius;
+	public float screenShakeAngle;
+	private float screenShakeAccumulator;	
 
 	//----------------------------------------------------------------------
 	InventoryPanel inventoryPanel;

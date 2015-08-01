@@ -2,10 +2,12 @@ package Roguelike;
 
 import java.util.HashMap;
 
+import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationMode;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,6 +17,33 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class AssetManager
 {
+	private static HashMap<String, Sound> loadedSounds = new HashMap<String, Sound>();
+	public static Sound loadSound(String path)
+	{
+		if (loadedSounds.containsKey(path))
+		{
+			return loadedSounds.get(path);
+		}
+		
+		FileHandle file = Gdx.files.internal("Sound/"+path+".mp3");
+		if (!file.exists())
+		{
+			file = Gdx.files.internal("Sound/"+path+".ogg");
+			
+			if (!file.exists())
+			{
+				loadedSounds.put(path, null);
+				return null;
+			}
+		}
+		
+		Sound sound = Gdx.audio.newSound(file);
+		
+		loadedSounds.put(path, sound);
+		
+		return sound;
+	}
+	
 	private static HashMap<String, Texture> loadedTextures = new HashMap<String, Texture>();
 	public static Texture loadTexture(String path)
 	{
@@ -41,20 +70,20 @@ public class AssetManager
 	
 	public static Sprite loadSprite(String name)
 	{
-		return loadSprite(name, 0.5f, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE, AnimationMode.TEXTURE);
+		return loadSprite(name, 0.5f, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE, AnimationMode.TEXTURE, null);
 	}
 	
 	public static Sprite loadSprite(String name, int size)
 	{
-		return loadSprite(name, 0.5f, new int[]{size, size}, new int[]{0, 0}, Color.WHITE, AnimationMode.TEXTURE);
+		return loadSprite(name, 0.5f, new int[]{size, size}, new int[]{0, 0}, Color.WHITE, AnimationMode.TEXTURE, null);
 	}
 	
 	public static Sprite loadSprite(String name, float updateTime)
 	{
-		return loadSprite(name, updateTime, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE, AnimationMode.TEXTURE);
+		return loadSprite(name, updateTime, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE, AnimationMode.TEXTURE, null);
 	}
 	
-	public static Sprite loadSprite(String name, float updateTime, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode)
+	public static Sprite loadSprite(String name, float updateTime, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode, SoundInstance sound)
 	{
 		Array<Texture> textures = new Array<Texture>();
 		
@@ -112,7 +141,7 @@ public class AssetManager
 			}
 		}
 		
-		Sprite sprite = new Sprite(updateTime, textures, tileSize, tileIndex, colour, mode);
+		Sprite sprite = new Sprite(updateTime, textures, tileSize, tileIndex, colour, mode, sound);
 		
 		return sprite;
 	}
@@ -141,13 +170,21 @@ public class AssetManager
 			colour.a = colourElement.getFloat("Alpha", colour.a);
 		}
 		
+		Element soundElement = xml.getChildByName("Sound");
+		SoundInstance sound = null;
+		if (soundElement != null)
+		{
+			sound = SoundInstance.load(soundElement);
+		}
+		
 		return loadSprite(
 				xml.get("Name"),
 				xml.getFloat("UpdateRate", 0),
 				new int[]{xml.getInt("Width", xml.getInt("Size", 0)), xml.getInt("Height", xml.getInt("Size", 0))},
 				new int[]{xml.getInt("IndexX", 0), xml.getInt("IndexY", 0)},
 				colour,
-				AnimationMode.valueOf(xml.get("AnimationMode", "Texture").toUpperCase())
+				AnimationMode.valueOf(xml.get("AnimationMode", "Texture").toUpperCase()),
+				sound
 				);
 	}
 

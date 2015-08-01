@@ -1,0 +1,61 @@
+<Faction>
+    
+    <Features>
+        
+        <Feature>
+			<Name>Tree Stump</Name>
+			<Placement>Any</Placement>
+			<RangeMin>30</RangeMin>
+			<Coverage>10</Coverage>
+			
+			<EnvironmentData>
+				<Sprite>
+					<Name>centaur/stump</Name>
+				</Sprite>
+				<Passable>false</Passable>
+				<Opaque>false</Opaque>
+			</EnvironmentData>
+		</Feature>
+		
+    </Features>
+
+    <Encounters>
+        
+        <Encounter>
+            <Mobs>
+                <CentaurWarrior>1</CentaurWarrior>
+                <CentaurArcher>3</CentaurArcher>
+            </Mobs>
+        </Encounter>
+        
+        <Encounter>
+            <Mobs>
+                <CentaurWarrior>2</CentaurWarrior>
+                <CentaurWarriorArcher>2</CentaurWarriorArcher>
+            </Mobs>
+        </Encounter>
+        
+        <Encounter>
+            <Mobs>
+                <Yaktaur>1</Yaktaur>
+                <CentaurWarriorArcher>3</CentaurWarriorArcher>
+            </Mobs>
+        </Encounter>
+        
+        <Encounter>
+            <Mobs>
+                <Yaktaur>3</Yaktaur>
+            </Mobs>
+        </Encounter>
+        
+        <Encounter>
+            <Mobs>
+                <YaktaurCaptain>1</YaktaurCaptain>
+                <Yaktaur>2</Yaktaur>
+                <CentaurWarriorArcher>2</CentaurWarriorArcher>
+            </Mobs>
+        </Encounter>
+        
+    </Encounters>
+    
+</Faction>

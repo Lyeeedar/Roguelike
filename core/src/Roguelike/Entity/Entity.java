@@ -6,6 +6,7 @@ import java.util.HashMap;
 import Roguelike.AssetManager;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Global.Statistic;
+import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
@@ -79,6 +80,11 @@ public abstract class Entity
 		}
 
 		variableMap.put("hp", HP);
+		
+		if (inventory.getEquip(EquipmentSlot.MAINWEAPON) != null)
+		{
+			variableMap.put(inventory.getEquip(EquipmentSlot.MAINWEAPON).weaponType.toString().toLowerCase(), 1);
+		}
 
 		for (StatusEffectStack s : stacks)
 		{
@@ -99,6 +105,11 @@ public abstract class Entity
 		}
 
 		variableMap.put("hp", HP);
+		
+		if (inventory.getEquip(EquipmentSlot.MAINWEAPON) != null)
+		{
+			variableMap.put(inventory.getEquip(EquipmentSlot.MAINWEAPON).weaponType.toString().toLowerCase(), 1);
+		}
 
 		for (StatusEffectStack s : stacks)
 		{

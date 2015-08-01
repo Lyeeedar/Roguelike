@@ -14,6 +14,7 @@ import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Items.Item.WeaponType;
 import Roguelike.Shadows.ShadowCaster;
+import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.BumpAnimation;
 import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.Sprite;
@@ -111,6 +112,9 @@ public class TaskAttack extends AbstractTask
 			e.Sprite.rotation = dir.GetAngle();
 
 			tile.spriteEffects.add(e);
+			
+			SoundInstance sound = hitEffect.sound;
+			if (sound != null) { sound.play(tile); }
 		}
 	}
 
@@ -170,6 +174,9 @@ public class TaskAttack extends AbstractTask
 			e.Sprite.rotation = (float) Math.atan2(det, dot) * MathUtils.radiansToDegrees;
 
 			bestTarget.spriteEffects.add(e);
+			
+			SoundInstance sound = hitEffect.sound;
+			if (sound != null) { sound.play(bestTarget); }
 		}
 	}
 

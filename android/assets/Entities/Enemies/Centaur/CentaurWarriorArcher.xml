@@ -1,0 +1,40 @@
+<Entity>
+	<Name>Centaur Warrior Archer</Name>
+
+	<Sprite>
+		<Name>dc-mon/centaur_warrior</Name>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Centaur</Faction>
+	</Factions>
+	
+	<Inventory>
+		<Equipment>
+			<Wep DropChance="rnd(3)<=1">
+			    <Name>Centaur Bow</Name>
+			    <Description>A short bow.</Description>
+				<Slot>MainWeapon</Slot>
+				<WeaponType>Bow</WeaponType>
+				<Events>
+					<Constant>
+					    <Wood_Atk>30</Wood_Atk>
+						<Metal_Atk>60</Metal_Atk>
+					</Constant>
+				</Events>
+			</Wep>
+		</Equipment>
+	</Inventory>
+	
+	<Statistics>
+		<MaxHP>400</MaxHP>
+		<Range>5</<Range>
+		
+		<Wood_Atk>-10</Wood_Atk>
+		<Metal_Atk>-10</Metal_Atk>
+	</Statistics>
+	
+</Entity>

@@ -25,10 +25,9 @@ public class MovementTypeRay extends AbstractMovementType
 		{
 			int[] p = path[i];
 			GameTile tile = ab.source.level.getGameTile(p[0], p[1]);
+			ab.AffectedTiles.add(tile);
 			
 			if (tile.GetOpaque()) { break; }
-			
-			ab.AffectedTiles.add(tile);
 		}	
 	}
 

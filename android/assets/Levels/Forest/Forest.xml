@@ -18,10 +18,13 @@
 	<Factions>
 		<Major>
 		    <Spriggan>3</Spriggan>
-			<Fungi>1</Fungi>
+		    <Centaur>3</Centaur>
 		</Major>
 		<Minor>
-			<Toad>1</Toad>
+			<Toad>4</Toad>
+			<Spriggan>1</Spriggan>
+			<Centaur>1</Centaur>
+			<Fungi>1</Fungi>
 		</Minor>
 	</Factions>
 

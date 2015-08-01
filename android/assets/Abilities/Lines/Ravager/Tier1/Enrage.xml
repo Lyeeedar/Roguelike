@@ -15,6 +15,7 @@
 	    <Name>AbilitySprites/Shout/Shout</Name>
 	    <UpdateRate>0.1</UpdateRate>
 	    <Colour><RGB>178,34,34</RGB></Colour>
+	    <Sound><Name>roar</Name></Sound>
 	</HitSprite>
 	
 	<Targeting>

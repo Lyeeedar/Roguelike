@@ -9,9 +9,12 @@
 	<Factions>
 		<Major>
 			<Fungi>1</Fungi>
+			<Spider>1</Spider>
 		</Major>
 		<Minor>
 			<Toad>1</Toad>
+			<Fungi>1</Fungi>
+			<Spider>1</Spider>
 		</Minor>
 	</Factions>
 
@@ -103,7 +106,7 @@
 					<Char>v</Char>
 					<EnvironmentData>
 						<Type>Transition</Type>
-						<Destination>Lake</Destination>
+						<Destination>Sewer</Destination>
 						
 						<ExitRoom>
 							<Symbols>
@@ -131,26 +134,6 @@
 			<Rows>Levels/Forest/village</Rows>
 
 		</Transition>
-		
-		<BossRoom>
-			<Symbols>
-				
-				<Symbol>
-					<Char>-</Char>
-					<TileData>
-						<Opaque>false</Opaque>
-						<Passable>false</Passable>
-						<Sprite>
-							<Name>dc-dngn/dngn_unseen</Name>
-						</Sprite>
-					</TileData>
-				</Symbol>
-
-				
-			</Symbols>
-		
-			<Rows>Levels/Sewer/pit</Rows>
-		</BossRoom>
 		
 	</Required>
 

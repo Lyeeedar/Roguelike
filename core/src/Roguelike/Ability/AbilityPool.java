@@ -25,6 +25,20 @@ public class AbilityPool
 		loadAbilityLine("Lancer/Lancer");
 	}
 	
+	public void reset()
+	{
+		for (AbilityLine line : abilityLines)
+		{
+			for (Ability[] abl : line.abilityTiers)
+			{
+				for (Ability ab : abl)
+				{
+					ab.unlocked = false;
+				}
+			}
+		}
+	}
+	
 	public void loadAbilityLine(String name)
 	{
 		XmlReader xml = new XmlReader();

@@ -1,0 +1,38 @@
+<Entity>
+	<Name>Centaur Warrior</Name>
+
+	<Sprite>
+		<Name>dc-mon/centaur_warrior-melee</Name>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Centaur</Faction>
+	</Factions>
+	
+	<Inventory>
+		<Equipment>
+			<Wep DropChance="rnd(3)<=1">
+			    <Name>Centaur Scimitar</Name>
+			    <Description>A sharp scimitar.</Description>
+				<Slot>MainWeapon</Slot>
+				<WeaponType>Sword</WeaponType>
+				<Events>
+					<Constant>
+						<Metal_Atk>110</Metal_Atk>
+					</Constant>
+				</Events>
+			</Weps>
+		</Equipment>
+	</Inventory>
+	
+	<Statistics>
+		<MaxHP>450</MaxHP>
+		<Range>5</<Range>
+		
+		<Metal_Atk>-40</Metal_Atk>
+	</Statistics>
+	
+</Entity>

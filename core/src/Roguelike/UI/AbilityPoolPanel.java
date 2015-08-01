@@ -60,6 +60,10 @@ public class AbilityPoolPanel extends Widget
 	private Tooltip tooltip;
 	
 	private int selectedAbilityLine = 0;
+	
+	//----------------------------------------------------------------------
+	private BitmapFont contextMenuNormalFont;
+	private BitmapFont contextMenuHilightFont;
 		
 	private final GlyphLayout layout = new GlyphLayout();
 	
@@ -69,13 +73,39 @@ public class AbilityPoolPanel extends Widget
 		this.skin = skin;
 		this.stage = stage;
 		
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = 10;
-		parameter.borderWidth = 1;
-		parameter.borderColor = Color.BLACK;
-		font = generator.generateFont(parameter); // font size 12 pixels
-		generator.dispose(); // don't forget to dispose to avoid memory leaks!
+		{
+			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
+			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+			parameter.size = 10;
+			parameter.borderWidth = 1;
+			parameter.borderColor = Color.BLACK;
+			font = generator.generateFont(parameter); // font size 12 pixels
+			generator.dispose(); // don't forget to dispose to avoid memory leaks!
+		}
+		
+		{
+			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
+			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+			parameter.size = 12;
+			parameter.borderWidth = 1;
+			parameter.kerning = true;
+			parameter.borderColor = Color.BLACK;
+			contextMenuNormalFont = fgenerator.generateFont(parameter);
+			contextMenuNormalFont.getData().markupEnabled = true;
+			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
+		}
+		
+		{
+			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
+			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+			parameter.size = 14;
+			parameter.borderWidth = 1;
+			parameter.kerning = true;
+			parameter.borderColor = Color.BLACK;
+			contextMenuHilightFont = fgenerator.generateFont(parameter);
+			contextMenuHilightFont.getData().markupEnabled = true;
+			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
+		}
 		
 		this.white = AssetManager.loadTexture("Sprites/white.png");
 		this.locked = AssetManager.loadSprite("GUI/locked");
@@ -266,8 +296,10 @@ public class AbilityPoolPanel extends Widget
 										{
 											text += "  " + equipped.getName();
 										}
-																			
-										row.add(new Label(text, skin)).expand().fill();
+															
+										HoverTextButton button = new HoverTextButton(text, contextMenuNormalFont, contextMenuHilightFont);
+										button.changePadding(5, 5);					
+										row.add(button).expand().fill();
 										
 										row.addListener(new InputListener()
 										{
@@ -307,7 +339,9 @@ public class AbilityPoolPanel extends Widget
 											text += "  " + equipped.getName();
 										}
 																			
-										row.add(new Label(text, skin)).expand().fill();
+										HoverTextButton button = new HoverTextButton(text, contextMenuNormalFont, contextMenuHilightFont);
+										button.changePadding(5, 5);					
+										row.add(button).expand().fill();
 										
 										row.addListener(new InputListener()
 										{
@@ -337,7 +371,9 @@ public class AbilityPoolPanel extends Widget
 								
 								if (Global.CurrentLevel.player.essence >= a.cost)
 								{
-									table.add(new Label("Unlock for " + a.cost + " essence?\nYou have " + Global.CurrentLevel.player.essence + " essence.", skin)).width(Value.percentWidth(1, table)).pad(2);
+									HoverTextButton button = new HoverTextButton("Unlock for " + a.cost + " essence?\nYou have " + Global.CurrentLevel.player.essence + " essence.", contextMenuNormalFont, contextMenuHilightFont);
+									button.changePadding(5, 5);					
+									table.add(button).width(Value.percentWidth(1, table)).pad(2);
 									
 									table.addListener(new InputListener()
 									{

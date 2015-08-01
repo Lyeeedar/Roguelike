@@ -26,6 +26,7 @@ import Roguelike.Entity.Inventory;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.Lights.Light;
+import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
@@ -43,18 +44,24 @@ public class Item extends GameEventHandler
 	//----------------------------------------------------------------------
 	public enum WeaponType
 	{
-		NONE("strike/strike"),
-		SWORD("slash/slash"),
-		SPEAR("thrust/thrust"),
-		AXE("slash/slash"),
-		BOW("arrow"),
-		WAND("bolt");
+		NONE("strike/strike", "knife_stab"),
+		SWORD("slash/slash", "knife_stab"),
+		SPEAR("thrust/thrust", "knife_stab"),
+		AXE("slash/slash", "knife_stab"),
+		BOW("arrow", "arrow_approaching_and_hitting_target"),
+		WAND("bolt", "arrow_approaching_and_hitting_target");
 
 		public final Sprite hitSprite;
 
 		private WeaponType(String hit)
 		{
 			hitSprite = hit != null ? AssetManager.loadSprite(hit, 0.1f) : null;
+		}
+		
+		private WeaponType(String hit, String sound)
+		{
+			hitSprite = hit != null ? AssetManager.loadSprite(hit, 0.1f) : null;
+			hitSprite.sound = new SoundInstance(AssetManager.loadSound(sound));
 		}
 	}
 

@@ -23,12 +23,16 @@ import Roguelike.GameEvent.IGameObject;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Shadows.ShadowCaster;
+import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -44,6 +48,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	private int cone = 0;
 	private int aoe = 0;
 	public int range = 1;
+	private float screenshake = 0;
 			
 	public float cooldownAccumulator;
 	public float cooldown = 1;
@@ -63,6 +68,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	public Sprite Icon;
 	private Sprite movementSprite;
 	private Sprite hitSprite;
+	private Sprite useSprite;
 	
 	public ActiveAbility copy()
 	{
@@ -73,6 +79,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		aa.aoe = aoe;
 		aa.range = range;
 		aa.cone = cone;
+		aa.screenshake = screenshake;
 		
 		aa.targetingType = targetingType.copy();
 		aa.movementType = movementType.copy();
@@ -91,6 +98,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		aa.Icon = Icon != null ? Icon.copy() : null;
 		aa.movementSprite = movementSprite != null ? movementSprite.copy() : null;
 		aa.hitSprite = hitSprite != null ? hitSprite.copy() : null;
+		aa.useSprite = useSprite != null ? useSprite.copy() : null;
 		
 		return aa;
 	}
@@ -121,6 +129,11 @@ public class ActiveAbility implements IAbility, IGameObject
 			}
 		}
 		return caster.defaultHitEffect;
+	}
+	
+	public Sprite getUseSprite()
+	{
+		return useSprite;
 	}
 	
 	//----------------------------------------------------------------------
@@ -287,8 +300,28 @@ public class ActiveAbility implements IAbility, IGameObject
 					s.render = false;
 					s.animationAccumulator = -s.animationDelay * tile.getDist(epicenter) + s.animationDelay;
 					tile.spriteEffects.add(new SpriteEffect(s, Direction.CENTER, l));
+					
+					SoundInstance sound = s.sound;
+					if (sound != null) { sound.play(tile); }
 				}
 			}
+			
+			if (screenshake > 0)
+			{
+				// check distance for screenshake
+				float dist = Vector2.dst(epicenter.x, epicenter.y,  epicenter.level.player.tile.x,  epicenter.level.player.tile.y);
+				float shakeRadius = screenshake;
+				if (dist > aoe)
+				{
+					shakeRadius *= (dist-aoe) / (aoe*2);
+				}
+				
+				if (shakeRadius > 2)
+				{
+					GameScreen.Instance.screenShakeRadius = shakeRadius;
+					GameScreen.Instance.screenShakeAngle = MathUtils.random() * 360;
+				}
+			}			
 		}
 		
 		return finished;
@@ -326,10 +359,12 @@ public class ActiveAbility implements IAbility, IGameObject
 		cone = xmlElement.getInt("Cone", cone);
 		range = xmlElement.getInt("Range", range);
 		cooldown = xmlElement.getFloat("Cooldown", cooldown);
+		screenshake = xmlElement.getFloat("ScreenShake", screenshake);
 		
 		Icon = xmlElement.getChildByName("Icon") != null ? AssetManager.loadSprite(xmlElement.getChildByName("Icon")) : Icon;
 		movementSprite = xmlElement.getChildByName("MovementSprite") != null ? AssetManager.loadSprite(xmlElement.getChildByName("MovementSprite")) : movementSprite;
 		hitSprite = xmlElement.getChildByName("HitSprite") != null ? AssetManager.loadSprite(xmlElement.getChildByName("HitSprite")) : hitSprite;
+		useSprite = xmlElement.getChildByName("UseSprite") != null ? AssetManager.loadSprite(xmlElement.getChildByName("UseSprite")) : useSprite;
 		
 		Element lightElement = xmlElement.getChildByName("Light");
 		if (lightElement != null)

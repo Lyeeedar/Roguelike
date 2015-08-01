@@ -38,6 +38,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class Level
 {
+	public String bgmName = "Music/Heroic Age.mp3";
+	
 	public int depth;
 	
 	public GameEntity player;

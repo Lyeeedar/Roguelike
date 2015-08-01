@@ -52,8 +52,8 @@ public class TaskMove extends AbstractTask
 					int[] diff1 = oldTile.addObject(newTile.entity);
 					int[] diff2 = newTile.addObject(obj);
 					
-					newTile.entity.sprite.spriteAnimation = new MoveAnimation(0.05f, diff1, MoveEquation.SMOOTHSTEP);
-					obj.sprite.spriteAnimation = new MoveAnimation(0.05f, diff2, MoveEquation.SMOOTHSTEP);
+					newTile.entity.sprite.spriteAnimation = new MoveAnimation(0.1f, diff1, MoveEquation.SMOOTHSTEP);
+					obj.sprite.spriteAnimation = new MoveAnimation(0.1f, diff2, MoveEquation.SMOOTHSTEP);
 				}
 			}
 		}
@@ -61,7 +61,7 @@ public class TaskMove extends AbstractTask
 		{
 			int[] diff = newTile.addObject(obj);
 			
-			obj.sprite.spriteAnimation = new MoveAnimation(0.05f, diff, MoveEquation.SMOOTHSTEP);
+			obj.sprite.spriteAnimation = new MoveAnimation(0.1f, diff, MoveEquation.SMOOTHSTEP);
 		}
 	}
 }
