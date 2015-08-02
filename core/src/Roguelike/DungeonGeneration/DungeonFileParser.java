@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+import Roguelike.DungeonGeneration.FactionParser.Feature;
+import Roguelike.DungeonGeneration.FactionParser.FeaturePlacementType;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Pathfinding.PathfindingTile;
@@ -24,7 +26,8 @@ public class DungeonFileParser
 	{
 		OVERLAPPINGRECTS,
 		CELLULARAUTOMATA,
-		STARBURST
+		STARBURST,
+		NONE
 	}
 	
 	//----------------------------------------------------------------------
@@ -39,10 +42,61 @@ public class DungeonFileParser
 		
 		public int width;
 		
+		public CorridorFeature centralConstant;
+		public CorridorFeature centralRecurring;
+		public CorridorFeature sideRecurring;
+		
 		public void parse(Element xml)
 		{
 			pathStyle = PathStyle.valueOf(xml.get("PathStyle", "Straight").toUpperCase());
 			width = xml.getInt("Width", 2);
+			
+			Element centralConstantElement = xml.getChildByName("CentralConstant");
+			if (centralConstantElement != null)
+			{
+				centralConstant = CorridorFeature.load(centralConstantElement);
+			}
+			
+			Element centralRecurringElement = xml.getChildByName("CentralRecurring");
+			if (centralRecurringElement != null)
+			{
+				centralRecurring = CorridorFeature.load(centralRecurringElement);
+			}
+			
+			Element sideRecurringElement = xml.getChildByName("SideRecurring");
+			if (sideRecurringElement != null)
+			{
+				sideRecurring = CorridorFeature.load(sideRecurringElement);
+			}
+		}
+	}
+	
+	public static class CorridorFeature
+	{
+		public Element tileData;		
+		public Element environmentData;
+		
+		public int interval;
+		
+		public static CorridorFeature load(Element xml)
+		{
+			CorridorFeature feature = new CorridorFeature();	
+			
+			feature.interval = xml.getInt("Interval", 0);
+			feature.tileData = xml.getChildByName("TileData");
+			feature.environmentData = xml.getChildByName("EnvironmentData");			
+			
+			return feature;
+		}
+		
+		public Symbol getAsSymbol(Symbol current)
+		{
+			Symbol symbol = current.copy();
+			symbol.character = 'F';
+			symbol.tileData = tileData != null ? tileData : current.tileData;
+			symbol.environmentData = environmentData != null ? environmentData : current.environmentData;
+			
+			return symbol;
 		}
 	}
 	

@@ -78,8 +78,6 @@ public class GameScreen implements Screen, InputProcessor
 		Instance = this;
 		
 		create();
-		
-		Pathfinder.PathfinderTest.runTests();
 	}
 	
 	private void create()
@@ -268,7 +266,7 @@ public class GameScreen implements Screen, InputProcessor
 						else
 						{
 							Direction dir = gtile.environmentEntity.location;
-							gtile.environmentEntity.sprite.render(batch, cx + tileSize3*(dir.GetX()+1), cy + tileSize3*(dir.GetY()+1), tileSize3, tileSize3);
+							gtile.environmentEntity.sprite.render(batch, cx + tileSize3*(dir.GetX()*-1+1), cy + tileSize3*(dir.GetY()*-1+1), tileSize3, tileSize3);
 						}
 
 						if (gtile.environmentEntity.HP < gtile.environmentEntity.statistics.get(Statistic.MAXHP) || gtile.environmentEntity.stacks.size > 0)

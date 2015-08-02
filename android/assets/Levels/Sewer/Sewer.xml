@@ -3,7 +3,7 @@
 		<Red>0.5</Red>
 		<Green>0.75</Green>
 		<Blue>0.3</Blue>
-		<Alpha>1</Alpha>
+		<Alpha>0.4</Alpha>
 	</Ambient>
 	
 	<RoomGenerators>
@@ -15,17 +15,48 @@
 	    <Width>3</Width>
 	    
 	    <CentralConstant>
-	        <Feature>
-				<Name>Sewage</Name>
-				<TileData>
-					<Passable>false</Passable>
-					<Opaque>false</Opaque>
-					<Sprite>
-						<Name>dc-dngn/water/dngn_shallow_water</Name>
-					</Sprite>
-				</TileData>
-			</Feature>
+	        <Name>Sewage</Name>
+			<TileData>
+				<Passable>false</Passable>
+				<Opaque>false</Opaque>
+				<Sprite>
+					<Name>dc-dngn/water/dngn_shallow_water</Name>
+				</Sprite>
+			</TileData>
 	    </CentralConstant>
+	    
+	    <CentralRecurring>
+	        <Interval>15</Interval>
+	        <Name>Bridge</Name>
+			<TileData>
+				<Opaque>false</Opaque>
+				<Passable>true</Passable>
+				<Sprite>
+					<Name>dc-dngn/floor/mesh0</Name>
+				</Sprite>
+			</TileData>
+	    </CentralRecurring>
+	    
+	    <SideRecurring>
+	        <Interval>5</Interval>
+	        <Name>Torch</Name>
+	        <EnvironmentData>
+	            <AttachToWall>true</AttachToWall>
+				<Sprite>
+					<Name>torch</Name>
+				</Sprite>
+				<Passable>true</Passable>
+				<Light>
+					<Colour>
+						<Green>0.8</Green>
+						<Red>1</Red>
+					</Colour>
+					<Intensity>5</Intensity>
+					<Flicker>2</Flicker>
+					<FlickerPeriod>0.5</FlickerPeriod>
+				</Light>
+			</EnvironmentData>
+	    </SideRecurring>
 	    
 	</CorridorStyle>
 	

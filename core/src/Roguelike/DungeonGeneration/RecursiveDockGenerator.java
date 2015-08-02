@@ -95,7 +95,7 @@ public class RecursiveDockGenerator
 						HashSet<Direction> validDirections = new HashSet<Direction>();
 						for (Direction dir : Direction.values())
 						{
-							boolean passable = symbolGrid[x+dir.GetX()][y+dir.GetY()].isPassable();
+							boolean passable = symbolGrid[x+dir.GetX()][y+dir.GetY()] == dfp.sharedSymbolMap.get('#');
 							if (!passable) { validDirections.add(dir); }
 						}
 						
@@ -123,6 +123,7 @@ public class RecursiveDockGenerator
 						}
 						
 						entity.location = location;
+						entity.sprite.rotation = location.GetAngle();
 					}
 					
 					newTile.addEnvironmentEntity(entity);
@@ -724,6 +725,9 @@ public class RecursiveDockGenerator
 	//----------------------------------------------------------------------
 	protected void carveCorridor(int[][] path)
 	{	
+		int centralCount = 0;
+		int sideCount = 0;
+		
 		for (int[] pos : path)
 		{
 			GenerationTile t = tiles[pos[0]][pos[1]];	
@@ -742,9 +746,59 @@ public class RecursiveDockGenerator
 				}
 			}
 			
-			t = tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]+dfp.corridorStyle.width/2];
-			t.symbol = dfp.sharedSymbolMap.get(',');
+			if (dfp.corridorStyle.centralConstant != null)
+			{
+				t = tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]+dfp.corridorStyle.width/2];
+				t.symbol = dfp.corridorStyle.centralConstant.getAsSymbol(t.symbol);
+			}
 			
+			if (dfp.corridorStyle.centralRecurring != null)
+			{
+				centralCount++;
+				
+				if (centralCount == dfp.corridorStyle.centralRecurring.interval)
+				{
+					t = tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]+dfp.corridorStyle.width/2];
+					t.symbol = dfp.corridorStyle.centralRecurring.getAsSymbol(t.symbol);
+					
+					centralCount = 0;
+				}
+			}
+			
+			if (dfp.corridorStyle.sideRecurring != null)
+			{
+				sideCount++;
+				
+				if (sideCount == dfp.corridorStyle.sideRecurring.interval)
+				{
+					Symbol wall = dfp.sharedSymbolMap.get('#');
+					if (tiles[pos[0]-1][pos[1]+dfp.corridorStyle.width/2].symbol == wall)
+					{
+						t = tiles[pos[0]][pos[1]+dfp.corridorStyle.width/2];
+						t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
+					}
+					
+					if (tiles[pos[0]+dfp.corridorStyle.width][pos[1]+dfp.corridorStyle.width/2].symbol == wall)
+					{
+						t = tiles[pos[0]+dfp.corridorStyle.width-1][pos[1]+dfp.corridorStyle.width/2];
+						t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
+					}
+					
+					if (tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]-1].symbol == wall)
+					{
+						t = tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]];
+						t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
+					}
+					
+					if (tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]+dfp.corridorStyle.width].symbol == wall)
+					{
+						t = tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]+dfp.corridorStyle.width-1];
+						t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
+					}
+					
+					sideCount = 0;
+				}
+			}
 		}		
 	}
 
@@ -879,7 +933,7 @@ public class RecursiveDockGenerator
 	
 	public int depth;
 	
-	private static final boolean DEBUG_OUTPUT = true;
+	private static final boolean DEBUG_OUTPUT = false;
 	private static final int DEBUG_SIZE = 16;
 
 	private GenerationTile[][] tiles;

@@ -82,16 +82,8 @@ public class FactionParser
 		Element featuresElement = xmlElement.getChildByName("Features");
 		for (Element featureElement : featuresElement.getChildrenByName("Feature"))
 		{
-			Feature feature = new Feature();
-			feature.minRange = featureElement.getInt("RangeMin", 0);
-			feature.maxRange = featureElement.getInt("RangeMax", 100);
-			feature.coverage = featureElement.getInt("Coverage", 50);
-			feature.tileData = featureElement.getChildByName("TileData");
-			feature.environmentData = featureElement.getChildByName("EnvironmentData");
-			
-			FeaturePlacementType type = FeaturePlacementType.valueOf(featureElement.get("Placement").toUpperCase());
-			
-			features.get(type).add(feature);
+			Feature feature = Feature.load(featureElement);			
+			features.get(feature.type).add(feature);
 		}
 			
 		Element encounterElement = xmlElement.getChildByName("Encounters");
@@ -202,6 +194,21 @@ public class FactionParser
 		public int maxRange;
 		
 		public int coverage;
+		
+		public FeaturePlacementType type;
+		
+		public static Feature load(Element xml)
+		{
+			Feature feature = new Feature();
+			feature.minRange = xml.getInt("RangeMin", 0);
+			feature.maxRange = xml.getInt("RangeMax", 100);
+			feature.coverage = xml.getInt("Coverage", 50);
+			feature.tileData = xml.getChildByName("TileData");
+			feature.environmentData = xml.getChildByName("EnvironmentData");			
+			feature.type = FeaturePlacementType.valueOf(xml.get("Placement").toUpperCase());
+			
+			return feature;
+		}
 		
 		public Symbol getAsSymbol(Symbol current)
 		{
