@@ -1,5 +1,7 @@
 package Roguelike.Sound;
 
+import java.util.HashSet;
+
 import Roguelike.AssetManager;
 import Roguelike.Pathfinding.AStarPathfind;
 import Roguelike.Tiles.GameTile;
@@ -9,7 +11,6 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class SoundInstance
 {
-	
 	public Sound sound;
 	
 	public float pitch = 1;
@@ -18,6 +19,7 @@ public class SoundInstance
 	public int range = 10;
 	public int falloffMin = 5;
 	
+	public HashSet<String> shoutFaction;
 	public String key;
 	public Object value;
 	
@@ -43,6 +45,9 @@ public class SoundInstance
 	{
 		// calculate data propogation
 		float playerDist = Integer.MAX_VALUE;
+		int[] shoutSource = {tile.x, tile.y};
+		
+		int maxAudibleDist = (range/4)*3;
 		
 		if (key != null)
 		{
@@ -56,20 +61,22 @@ public class SoundInstance
 						
 						if (t.entity != null)
 						{
-							AStarPathfind astar = new AStarPathfind(tile.level.getGrid(), tile.x, tile.y, x, y, true);
+							AStarPathfind astar = new AStarPathfind(tile.level.getGrid(), tile.x, tile.y, x, y, true, false);
 							int[][] path = astar.getPath();
-							
-							int dist = path.length;
-							
-							if (dist < range)
+														
+							if (path != null && path.length < maxAudibleDist)
 							{
 								if (t.entity == tile.level.player)
 								{
-									playerDist = dist;
+									playerDist = path.length;
+								}
+								else if (tile.entity.isAllies(shoutFaction))
+								{
+									t.entity.AI.setData(key, value);
 								}
 								else
 								{
-									t.entity.AI.setData(key, value);
+									t.entity.AI.setData("EnemyPos", shoutSource);
 								}
 							}
 						}
@@ -79,7 +86,7 @@ public class SoundInstance
 		}
 		else
 		{
-			AStarPathfind astar = new AStarPathfind(tile.level.getGrid(), tile.x, tile.y, tile.level.player.tile.x, tile.level.player.tile.y, true);
+			AStarPathfind astar = new AStarPathfind(tile.level.getGrid(), tile.x, tile.y, tile.level.player.tile.x, tile.level.player.tile.y, true, false);
 			int[][] path = astar.getPath();
 			
 			if (path != null) { playerDist = path.length; }

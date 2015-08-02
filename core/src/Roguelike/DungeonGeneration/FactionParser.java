@@ -195,8 +195,7 @@ public class FactionParser
 	
 	public static class Feature
 	{
-		public Element tileData;
-		
+		public Element tileData;		
 		public Element environmentData;
 		
 		public int minRange;

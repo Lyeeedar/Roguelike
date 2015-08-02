@@ -1,8 +1,8 @@
 <Level>
 	<Ambient>
-		<Red>0.8</Red>
-		<Green>0.95</Green>
-		<Blue>0.4</Blue>
+		<Red>1</Red>
+		<Green>1</Green>
+		<Blue>1</Blue>
 		<Alpha>1</Alpha>
 	</Ambient>
 	
@@ -13,6 +13,7 @@
 	
 	<CorridorStyle>
 	    <PathStyle>Wandering</PathStyle>
+	    <Width>2</Width>
 	</CorridorStyle>
 	
 	<Factions>
@@ -108,7 +109,7 @@
 				<Row>##.##</Row>
 				<Row>#.S.#</Row>
 				<Row>#..##</Row>
-				<Row>##.##</Row>
+				<Row>.....</Row>
 			</Rows>
 			
 		</PlayerSpawn>
@@ -140,7 +141,7 @@
 								<Row>#...#</Row>
 								<Row>#.^.#</Row>
 								<Row>#...#</Row>
-								<Row>##.##</Row>
+								<Row>.....</Row>
 							</Rows>
 						</ExitRoom>
 					</EnvironmentData>
@@ -181,7 +182,7 @@
 								<Row>##.##</Row>
 								<Row>#.^##</Row>
 								<Row>#..##</Row>
-								<Row>##.##</Row>
+								<Row>.....</Row>
 							</Rows>
 						</ExitRoom>
 					</EnvironmentData>
@@ -192,7 +193,7 @@
 				<Row>#####</Row>
 				<Row>##v##</Row>
 				<Row>#..##</Row>
-				<Row>##.##</Row>
+				<Row>.....</Row>
 			</Rows>
 
 		</Transition>

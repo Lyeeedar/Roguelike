@@ -25,7 +25,7 @@ public class Pathfinder
 	
 	public int[][] getPath()
 	{
-		AStarPathfind astar = new AStarPathfind(Grid, startx, starty, endx, endy, canMoveDiagonal);
+		AStarPathfind astar = new AStarPathfind(Grid, startx, starty, endx, endy, canMoveDiagonal, false);
 		int[][] path = astar.getPath();
 		
 		if (path == null)
@@ -47,13 +47,13 @@ public class Pathfinder
 			@Override
 			public boolean getPassable()
 			{
-				return passable;
+				return true;
 			}
 
 			@Override
 			public int getInfluence()
 			{
-				return 0;//passable ? 0 : 200;
+				return passable ? 0 : 1000;
 			}
 		}
 		
@@ -171,7 +171,7 @@ public class Pathfinder
 		
 		private static void path(TestTile[][] grid, int startx, int starty, int endx, int endy)
 		{
-			AStarPathfind astar = new AStarPathfind(grid, startx, starty, endx, endy, true);
+			AStarPathfind astar = new AStarPathfind(grid, startx, starty, endx, endy, false, true);
 			int[][] path = astar.getPath();
 			
 			for (int[] step : path)

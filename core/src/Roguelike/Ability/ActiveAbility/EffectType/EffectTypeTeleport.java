@@ -78,8 +78,8 @@ public class EffectTypeTeleport extends AbstractEffectType
 			}
 			else if (style == Style.LEAP)
 			{
-				int distMoved = (( Math.abs(diff[0]) + Math.abs(diff[1]) ) / Global.TileSize) / 3;
-				entityToMove.sprite.spriteAnimation = new MoveAnimation(0.2f * distMoved, diff, MoveEquation.LEAP);
+				float distMoved = (( Math.abs(diff[0]) + Math.abs(diff[1]) ) / Global.TileSize) / 3;
+				entityToMove.sprite.spriteAnimation = new MoveAnimation(0.25f, diff, MoveEquation.LEAP);
 			}
 		}
 	}

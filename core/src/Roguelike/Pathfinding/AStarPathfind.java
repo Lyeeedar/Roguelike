@@ -33,15 +33,17 @@ public class AStarPathfind
 		{ +1, +1 }
 	};
 	
-	private PathfindingTile[][] grid;
-	private int width;
-	private int height;
-	private boolean canMoveDiagonal;
+	private final PathfindingTile[][] grid;
+	private final int width;
+	private final int height;
+	private final boolean canMoveDiagonal;
+	private final int actorSize;
+	private final boolean findOptimal;
 	
-	private int startx;
-	private int starty;
-	private int endx;
-	private int endy;
+	private final int startx;
+	private final int starty;
+	private final int endx;
+	private final int endy;
 	private int currentx;
 	private int currenty;
 	private Node[][] nodes;
@@ -50,12 +52,19 @@ public class AStarPathfind
 	
 	private PriorityQueue<Node> openList = new PriorityQueue<Node>();
 	
-	public AStarPathfind(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal)
+	public AStarPathfind(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, boolean findOptimal)
+	{
+		this(grid, startx, starty, endx, endy, canMoveDiagonal, findOptimal, 1);
+	}
+	
+	public AStarPathfind(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, boolean findOptimal, int actorSize)
 	{
 		this.grid = grid;
 		this.width = grid.length;
 		this.height = grid[0].length;
 		this.canMoveDiagonal = canMoveDiagonal;
+		this.actorSize = actorSize;
+		this.findOptimal = findOptimal;
 		
 		this.startx = startx;
 		this.starty = starty;
@@ -76,16 +85,18 @@ public class AStarPathfind
 		
 		for (int[] offset : NormalOffsets)
 		{
-			addNodeToOpenList(current.x + offset[0], current.y + offset[1], current.distance, current.cost);
+			addNodeToOpenList(current.x + offset[0], current.y + offset[1], current);
 		}
 		
 		if (canMoveDiagonal)
 		{
 			for (int[] offset : DiagonalOffsets)
 			{
-				addNodeToOpenList(current.x + offset[0], current.y + offset[1], current.distance, current.cost);
+				addNodeToOpenList(current.x + offset[0], current.y + offset[1], current);
 			}
 		}
+		
+		current.processed = true;
 	}
 	
 	private boolean isStart(int x, int y)
@@ -98,94 +109,90 @@ public class AStarPathfind
 		return x == endx && y == endy;
 	}
 	
-	private void addNodeToOpenList(int x, int y, int distance, int prevCost)
+	private void addNodeToOpenList(int x, int y, Node parent)
+	{
+		if (!isStart(x, y) && !isEnd(x, y))
+		{
+			for (int ix = 0; ix < actorSize; ix++)
+			{
+				for (int iy = 0; iy < actorSize; iy++)
+				{
+					if (isColliding(x+ix, y+iy))
+					{
+						return;
+					}
+				}
+			}
+		}
+		
+		int heuristic = Math.abs(x-endx) + Math.abs(y-endy);				
+		int cost = heuristic + (parent != null ? parent.cost : 0);
+		
+		cost += grid[x][y].getInfluence();
+		
+		// 3 possible conditions
+		
+		Node node = nodes[x][y];
+		
+		// not added to open list yet, so add it
+		if (node == null)
+		{
+			node = new Node(x, y);
+			node.cost = cost;
+			node.parent = parent;
+			openList.add(node);
+			
+			nodes[x][y] = node;
+		}
+		
+		// not yet processed, if lower cost update the values and reposition in list
+		else if (!node.processed)
+		{
+			if (cost < node.cost)
+			{
+				node.cost = cost;
+				node.parent = parent;
+				
+				openList.remove(node);
+				openList.add(node);
+			}
+		}
+		
+		// processed, if lower cost then update parent and cost
+		else
+		{
+			if (cost < node.cost)
+			{
+				node.cost = cost;
+				node.parent = parent;
+			}
+		}
+	}
+
+	public boolean isColliding(int x, int y)
 	{
 		if (
 			x < 0 ||
 			y < 0 ||
 			x >= width ||
-			y >= height
+			y >= height ||
+			!grid[x][y].getPassable()
 			)
 		{
-			return;
+			return true;
 		}
-		
-		if (!isStart(x, y) && !isEnd(x, y) && !grid[x][y].getPassable()) { return; }
-		
-		int heuristic = 0;
-		
-//		if (canMoveDiagonal)
-//		{
-//			heuristic = (int) Math.max(Math.abs(x-endx), Math.abs(y-endy));
-//		}
-//		else
-//		{
-//			heuristic = Math.abs(x-endx) + Math.abs(y-endy);
-//		}
-		
-		heuristic = Math.abs(x-endx) + Math.abs(y-endy);
-				
-		int cost = heuristic + (distance+1) + grid[x][y].getInfluence() + prevCost;
-		
-		if (nodes[x][y] == null)
-		{
-			nodes[x][y] = new Node(x, y);
-		}
-		else
-		{
-			if (nodes[x][y].cost <= cost)
-			{
-				return;
-			}
-		}
-		
-		nodes[x][y].cost = cost;
-		nodes[x][y].distance = distance+1;
-		
-		openList.remove(nodes[x][y]);
-		openList.add(nodes[x][y]);
+		return false;
 	}
-	
+
 	public int[][] getPath()
 	{
 		nodes = new Node[width][height];
 		
-		addNodeToOpenList(startx, starty, -1, 0);
+		addNodeToOpenList(startx, starty, null);
 				
-		while(!isEnd(currentx, currenty) && openList.size() > 0)
+		while((findOptimal || !isEnd(currentx, currenty)) && openList.size() > 0)
 		{
 			path();
-			
-			if (debug)
-			{
-				for (int x = 0; x < width; x++)
-				{
-					for (int y = 0; y < height; y++)
-					{
-						if (x == startx && y == starty)
-						{
-							System.out.print("S,");
-						}
-						else if (x == endx && y == endy)
-						{
-							System.out.print("E,");
-						}
-						else if (nodes[x][y] == null)
-						{
-							System.out.print(grid[x][y].getPassable() ? ".," : "#,");
-						}
-						else
-						{
-							System.out.print(nodes[x][y].distance+",");
-						}
-						
-					}
-					System.out.print("\n");
-				}
-				
-				System.out.print("\n");
-				System.out.print("\n");
-			}
 		}
 		
 		if (nodes[endx][endy] == null)
@@ -194,63 +201,17 @@ public class AStarPathfind
 		}
 		else
 		{
-			Array<int[]> path = new Array<int[]>(nodes[endx][endy].distance+1);
+			Array<int[]> path = new Array<int[]>();
 
 			path.add(new int[]{endx, endy});
 			
-			int cx = endx;
-			int cy = endy;
+			Node node = nodes[endx][endy];
 			
-			while (cx != startx || cy != starty)
+			while (node != null)
 			{
-				Node n = null;
-				int minCost = Integer.MAX_VALUE;
+				path.add(new int[]{node.x, node.y});
 				
-				if (canMoveDiagonal)
-				{
-					for (int[] offset : DiagonalOffsets)
-					{
-						int nx = cx + offset[0];
-						int ny = cy + offset[1];
-						
-						if (
-							nx >= 0 &&
-							nx <= width-1 &&
-							ny >= 0 &&
-							ny <= height-1 &&
-							nodes[nx][ny] != null &&
-							nodes[nx][ny].cost < minCost
-							)
-						{
-							n = nodes[nx][ny];
-							minCost = n.cost;
-						}
-					}
-				}
-				
-				for (int[] offset : NormalOffsets)
-				{
-					int nx = cx + offset[0];
-					int ny = cy + offset[1];
-					
-					if (
-						nx >= 0 &&
-						nx <= width-1 &&
-						ny >= 0 &&
-						ny <= height-1 &&
-						nodes[nx][ny] != null &&
-						nodes[nx][ny].cost < minCost
-						)
-					{
-						n = nodes[nx][ny];
-						minCost = n.cost;
-					}
-				}
-				
-				path.add(new int[]{n.x, n.y});
-				
-				cx = n.x;
-				cy = n.y;
+				node = node.parent;
 			}
 			
 			path.reverse();
@@ -264,7 +225,9 @@ public class AStarPathfind
 		public int x;
 		public int y;
 		public int cost;
-		public int distance;
+		public Node parent;
+		
+		public boolean processed = false;
 
 		public Node(int x, int y)
 		{

@@ -37,12 +37,12 @@ public class DungeonFileParser
 		}
 		public PathStyle pathStyle = PathStyle.STRAIGHT;
 		
-		public int width = 2;
+		public int width;
 		
 		public void parse(Element xml)
 		{
 			pathStyle = PathStyle.valueOf(xml.get("PathStyle", "Straight").toUpperCase());
-			width = xml.getInt("Width", 1);
+			width = xml.getInt("Width", 2);
 		}
 	}
 	

@@ -4,12 +4,18 @@
 			<GetAllVisible Type="Enemies" Key="Enemies"></GetAllVisible>
 			<PickClosest InputKey="Enemies" OutputKey="Enemy"></PickClosest>
 			<ConvertTo InputKey="Enemy" OutputKey="EnemyPos" Type="Position"></ConvertTo>
+			<Sequence>
+			    <CheckValue Key="ShoutedEnemyPos" Condition="ShoutedEnemyPos != 1" />
+			    <SetValue Key="ShoutedEnemyPos" Value="true" />
+			    <Shout Key="EnemyPos"><Sound><Name>roar</Name></Sound></Shout>
+			</Sequence>
 		</Sequence>
 		<Priority>
 		    <Attack Key="EnemyPos"></Attack>
 		    <Until State="Running">		    
 				<MoveTo Key="EnemyPos"></MoveTo>
 				<ClearValue Key="EnemyPos"></ClearValue>
+				<ClearValue Key="ShoutedEnemyPos"></ClearValue>
 			</Until>
 		</Priority>	
 	</Any>

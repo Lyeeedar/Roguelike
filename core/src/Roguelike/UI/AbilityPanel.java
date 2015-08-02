@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -34,6 +35,8 @@ public class AbilityPanel extends Widget
 	
 	private final Skin skin;
 	private final Stage stage;
+	
+	private final GlyphLayout layout = new GlyphLayout();
 	
 	public AbilityPanel(Skin skin, Stage stage)
 	{
@@ -80,11 +83,14 @@ public class AbilityPanel extends Widget
 				
 				if (aa.cooldownAccumulator > 0)
 				{
-					batch.setColor(0.5f, 0.5f, 0.5f, 0.5f);
+					String text = "" + (int)Math.ceil(aa.cooldownAccumulator);
+					layout.setText(font, text);
+					
+					batch.setColor(0.4f, 0.4f, 0.4f, 0.4f);
 					batch.draw(white, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
 					batch.setColor(Color.WHITE);
 					
-					font.draw(batch, ""+aa.cooldownAccumulator, (int)(xoffset + x) + TileSize/2, (top - TileSize) + TileSize/2);
+					font.draw(batch, text, (int)(xoffset + x) + TileSize/2 - layout.width/2, (top - TileSize) + TileSize/2 + layout.height/2);
 				}
 			}
 			

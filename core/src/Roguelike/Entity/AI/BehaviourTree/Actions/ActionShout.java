@@ -22,6 +22,7 @@ public class ActionShout extends AbstractAction
 			return State;
 		}
 		
+		sound.shoutFaction = entity.factions;
 		sound.key = key;
 		sound.value = value;
 		

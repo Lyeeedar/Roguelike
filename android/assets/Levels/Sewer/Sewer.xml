@@ -6,6 +6,29 @@
 		<Alpha>1</Alpha>
 	</Ambient>
 	
+	<RoomGenerators>
+	    <OverlappingRects>1</OverlappingRects>
+	</RoomGenerators>
+	
+	<CorridorStyle>
+	    <PathStyle>Straight</PathStyle>
+	    <Width>3</Width>
+	    
+	    <CentralConstant>
+	        <Feature>
+				<Name>Sewage</Name>
+				<TileData>
+					<Passable>false</Passable>
+					<Opaque>false</Opaque>
+					<Sprite>
+						<Name>dc-dngn/water/dngn_shallow_water</Name>
+					</Sprite>
+				</TileData>
+			</Feature>
+	    </CentralConstant>
+	    
+	</CorridorStyle>
+	
 	<Factions>
 		<Major>
 			<Fungi>1</Fungi>
@@ -32,6 +55,17 @@
 		</Symbol>
 		
 		<Symbol>
+			<Char>,</Char>
+			<TileData>
+				<Opaque>false</Opaque>
+				<Passable>true</Passable>
+				<Sprite>
+					<Name>dc-dngn/water/dngn_shallow_water_disturbance</Name>
+				</Sprite>
+			</TileData>
+		</Symbol>
+		
+		<Symbol>
 			<Char>#</Char>
 			<TileData>
 				<Opaque>true</Opaque>
@@ -40,31 +74,6 @@
 					<Name>dc-dngn/wall/brick_dark0</Name>
 				</Sprite>
 			</TileData>
-		</Symbol>
-						
-		<Symbol Extends=".">
-			<Char>0</Char>
-			<EntityData>Enemies/Dog/nibbler</EntityData>
-		</Symbol>
-		
-		<Symbol Extends=".">
-			<Char>1</Char>
-			<EntityData>Enemies/Dog/crunch</EntityData>
-		</Symbol>
-		
-		<Symbol Extends=".">
-			<Char>2</Char>
-			<EntityData>Enemies/Dog/ghost</EntityData>
-		</Symbol>
-		
-		<Symbol Extends=".">
-			<Char>3</Char>
-			<EntityData>Enemies/Dog/churchill</EntityData>
-		</Symbol>
-		
-		<Symbol Extends=".">
-			<Char>4</Char>
-			<EntityData>Enemies/Dog/cerberus</EntityData>
 		</Symbol>
 		
 		<Symbol>
@@ -99,6 +108,27 @@
 	</Symbols>
 	
 	<Required>
+	    
+	    <PlayerSpawn>
+			<Faction>none</Faction>
+		
+			<Symbols>
+				<Symbol Extends=".">
+					<Char>S</Char>
+					<MetaValue>PlayerSpawn</MetaValue>
+				</Symbol>
+			</Symbols>
+			
+			<Rows>
+				<Row>#####</Row>
+				<Row>#...#</Row>
+				<Row>#.S.#</Row>
+				<Row>#...#</Row>
+				<Row>#...#</Row>
+			</Rows>
+			
+		</PlayerSpawn>
+	    
 		<Transition>
 			<Symbols>
 			
@@ -124,14 +154,19 @@
 								<Row>#...#</Row>
 								<Row>#.^.#</Row>
 								<Row>#...#</Row>
-								<Row>##.##</Row>
+								<Row>#...#</Row>
 							</Rows>
 						</ExitRoom>
 					</EnvironmentData>
 				</Symbol>
 			</Symbols>
 				
-			<Rows>Levels/Forest/village</Rows>
+			<Rows>
+				<Row>#####</Row>
+				<Row>#.v.#</Row>
+				<Row>#...#</Row>
+				<Row>#...#</Row>
+			</Rows>
 
 		</Transition>
 		

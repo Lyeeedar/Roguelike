@@ -37,6 +37,10 @@ public class RecursiveDockGenerator
 	{
 		dfp = DungeonFileParser.load(level+"/"+level);
 		this.depth = depth;
+		
+		minPadding = (dfp.corridorStyle.width/2)+1;
+		maxPadding += minPadding;
+		paddedMinRoom = minRoomSize + minPadding*2;
 	}
 
 	//endregion Constructor
@@ -126,7 +130,7 @@ public class RecursiveDockGenerator
 
 				if (symbol.hasGameEntity())
 				{
-					newTile.addObject(symbol.getGameEntity());
+					//newTile.addObject(symbol.getGameEntity());
 				}
 
 				newTile.metaValue = symbol.metaValue;
@@ -175,16 +179,20 @@ public class RecursiveDockGenerator
 					
 					if (dfp.corridorStyle.pathStyle == PathStyle.STRAIGHT)
 					{
-						tiles[x][y].influence = 100;
+						tiles[x][y].influence = width+height;
 					}
 					else if (dfp.corridorStyle.pathStyle == PathStyle.WANDERING)
 					{
-						tiles[x][y].influence = ran.nextInt(500)+100;
+						tiles[x][y].influence = ran.nextInt((width+height)/2)+(width+height)/2;
 					}
 
 					if (x == 0 || y == 0 || x == width-1 || y == height-1)
 					{						
-						tiles[x][y].pathfindType = PathfindType.WALL;
+						tiles[x][y].passable = false;
+					}
+					else
+					{
+						tiles[x][y].passable = true;
 					}
 
 					tiles[x][y].symbol = dfp.sharedSymbolMap.get('#');
@@ -209,6 +217,11 @@ public class RecursiveDockGenerator
 
 				System.out.println("Failed to place all rooms. Retrying");
 			}
+		}
+		
+		for (Room room : placedRooms)
+		{
+			room.findDoors(ran, dfp);
 		}
 
 		markRooms();
@@ -651,19 +664,22 @@ public class RecursiveDockGenerator
 
 		for (Room room : placedRooms)
 		{
-			for (int x = 0; x < room.width; x++)
+			for (RoomDoor door : room.doors)
 			{
-				for (int y = 0; y < room.height; y++)
+				int x = door.pos[0]+room.x;
+				int y = door.pos[1]+room.y;
+				
+				if (door.side == Direction.WEST)
 				{
-					if (x == 0 || x == room.width-1 || y == 0 || y == room.height-1)
-					{
-						if (room.roomContents[x][y] == dfp.sharedSymbolMap.get('.'))
-						{
-							Pnt p = new Pnt(x+room.x, y+room.y);
-							roomPnts.add(p);							
-						}
-					}
+					x -= dfp.corridorStyle.width - 1;
 				}
+				else if (door.side == Direction.NORTH)
+				{
+					y -= dfp.corridorStyle.width - 1;
+				}
+				
+				Pnt p = new Pnt(x, y);
+				roomPnts.add(p);
 			}
 		}
 
@@ -693,9 +709,9 @@ public class RecursiveDockGenerator
 			int y1 = (int)p[0].coord(1);
 			int x2 = (int)p[1].coord(0);
 			int y2 = (int)p[1].coord(1);
-			Pathfinder pathFind = new Pathfinder(tiles, x1, y1, x2, y2, false);
-
+			AStarPathfind pathFind = new AStarPathfind(tiles, x1, y1, x2, y2, false, true, dfp.corridorStyle.width);
 			int[][] path = pathFind.getPath();
+						
 			if (path[0][0] != x1 || path[0][1] != y1 || path[path.length-1][0] != x2 || path[path.length-1][1] != y2)
 			{
 				System.out.println("Path failed to find route!!!!");
@@ -707,16 +723,28 @@ public class RecursiveDockGenerator
 
 	//----------------------------------------------------------------------
 	protected void carveCorridor(int[][] path)
-	{		
+	{	
 		for (int[] pos : path)
 		{
 			GenerationTile t = tiles[pos[0]][pos[1]];	
-
-			if (t.pathfindType == PathfindType.NONE)
+			t.isCorridor = true;
+			
+			for (int x = 0; x < dfp.corridorStyle.width; x++)
 			{
-				t.pathfindType = PathfindType.CORRIDOR;
-				t.symbol = dfp.sharedSymbolMap.get('.');
+				for (int y = 0; y < dfp.corridorStyle.width; y++)
+				{
+					t = tiles[pos[0]+x][pos[1]+y];	
+
+					if (t.symbol == dfp.sharedSymbolMap.get('#'))
+					{
+						t.symbol = dfp.sharedSymbolMap.get('.');
+					}
+				}
 			}
+			
+			t = tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]+dfp.corridorStyle.width/2];
+			t.symbol = dfp.sharedSymbolMap.get(',');
+			
 		}		
 	}
 
@@ -837,8 +865,9 @@ public class RecursiveDockGenerator
 					GenerationTile tile = tiles[room.x+x][room.y+y];
 					Symbol symbol = room.roomContents[x][y];
 
-					tile.pathfindType = symbol.isPassable() ? PathfindType.CORRIDOR : PathfindType.WALL ;
+					tile.passable = symbol.isPassable();
 					tile.symbol = symbol;
+					tile.isRoom = true;
 				}
 			}
 		}
@@ -850,22 +879,22 @@ public class RecursiveDockGenerator
 	
 	public int depth;
 	
-	private static final boolean DEBUG_OUTPUT = false;
+	private static final boolean DEBUG_OUTPUT = true;
 	private static final int DEBUG_SIZE = 16;
 
 	private GenerationTile[][] tiles;
-	private Random ran = new Random();
+	private Random ran = new Random(0);
 
-	private int width = 75;
-	private int height = 75;
+	private int width = 100;
+	private int height = 100;
 
 	private int minPadding = 1;
-	private int maxPadding = 4;
+	private int maxPadding = 3;
 
 	private int minRoomSize = 7;
 	private int maxRoomSize = 25;
 
-	private int paddedMinRoom = minRoomSize + minPadding*2;
+	private int paddedMinRoom;
 
 	public Array<Room> toBePlaced = new Array<Room>();
 
@@ -887,6 +916,9 @@ public class RecursiveDockGenerator
 		//----------------------------------------------------------------------
 		public int x;
 		public int y;
+		
+		//----------------------------------------------------------------------
+		public Array<RoomDoor> doors = new Array<RoomDoor>();
 
 		//----------------------------------------------------------------------
 		public Symbol[][] roomContents;
@@ -966,6 +998,16 @@ public class RecursiveDockGenerator
 				{
 					Starburst.process(roomContents, floor, wall, ran);
 				}
+				else
+				{
+					for (int x = 0; x < width; x++)
+					{
+						for (int y = 0; y < height; y++)
+						{
+							roomContents[x][y] = floor;
+						}
+					}
+				}
 
 				int count = 0;
 				// Ensure solid outer wall and count floor
@@ -1003,42 +1045,73 @@ public class RecursiveDockGenerator
 			// 0 2
 			//  3
 
-			int numDoors = (int)(Math.max(0, ran.nextGaussian())*2) + 1;
+			int numDoors = (int)(Math.max(0, ran.nextGaussian())*3) + 1;
 			for (int i = 0; i < numDoors; i++)
 			{
 				int doorSide = ran.nextInt(4);
 
 				int x = 0;
 				int y = 0;
-
+				
 				if (doorSide == 0)
 				{
 					x = 0;
-					y = 1 + ran.nextInt(height-2);
+					y = 1 + ran.nextInt(height-(1+dfp.corridorStyle.width));
+					
+					for (int c = 0; c < dfp.corridorStyle.width; c++)
+					{
+						roomContents[x][y+c] = floor;
+					}
 				}
 				else if (doorSide == 1)
 				{
-					x = 1 + ran.nextInt(width-2);
-					y = 0;					
+					x = 1 + ran.nextInt(width-(1+dfp.corridorStyle.width));
+					y = 0;
+					
+					for (int c = 0; c < dfp.corridorStyle.width; c++)
+					{
+						roomContents[x+c][y] = floor;
+					}
 				}
 				else if (doorSide == 2)
 				{
 					x = width-1;
-					y = 1 + ran.nextInt(height-2);					
+					y = 1 + ran.nextInt(height-(1+dfp.corridorStyle.width));	
+					
+					for (int c = 0; c < dfp.corridorStyle.width; c++)
+					{
+						roomContents[x][y+c] = floor;
+					}
 				}
 				else if (doorSide == 3)
 				{
-					x = 1 + ran.nextInt(width-2);
-					y = height-1;					
+					x = 1 + ran.nextInt(width-(1+dfp.corridorStyle.width));
+					y = height-1;
+					
+					for (int c = 0; c < dfp.corridorStyle.width; c++)
+					{
+						roomContents[x+c][y] = floor;
+					}
 				}
-
-				roomContents[x][y] = floor;
 
 				int[][] path = BresenhamLine.lineNoDiag(width/2, height/2, x, y);
 				for (int[] pos : path)
 				{
-					roomContents[pos[0]][pos[1]] = floor;
+					for (int ix = 0; ix < dfp.corridorStyle.width; ix++)
+					{
+						for (int iy = 0; iy < dfp.corridorStyle.width; iy++)
+						{
+							int nx = pos[0]+ix;
+							int ny = pos[1]+iy;
+							
+							if (nx < width && ny < height)
+							{
+								roomContents[nx][ny] = floor;
+							}
+						}
+					}
 				}
+				
 			}
 
 
@@ -1055,23 +1128,6 @@ public class RecursiveDockGenerator
 					roomCopy[x][y] = roomContents[x][y];
 				}
 			}
-			
-			// find all the entrances
-			Array<int[]> doorArr = new Array<int[]>();
-			for (int x  = 0; x < width; x++)
-			{
-				for (int y = 0; y < height; y++)
-				{
-					if (x == 0 || y == 0 || x == width-1 || y == height-1)
-					{
-						if (roomContents[x][y].isPassable())
-						{
-							doorArr.add(new int[]{x, y});
-						}
-					}
-				}
-			}
-			int[][] doors = doorArr.toArray(int[].class);
 
 			// build the any list
 			Array<int[]> validList = new Array<int[]>();
@@ -1300,13 +1356,15 @@ public class RecursiveDockGenerator
 			}
 
 			// Ensure connectivity
-			for (int[] door : doors)
+			for (int i = 0; i < doors.size; i++)
 			{
-				for (int[] otherDoor : doors)
+				RoomDoor door = doors.get(i);
+				for (int ii = 0; ii < doors.size; ii++)
 				{
+					RoomDoor otherDoor = doors.get(ii);
 					if (door == otherDoor) { continue; }
 
-					AStarPathfind pathfind = new AStarPathfind(roomContents, door[0], door[1], otherDoor[0], otherDoor[1], true);
+					AStarPathfind pathfind = new AStarPathfind(roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false);
 					int[][] path = pathfind.getPath();
 
 					for (int[] point : path)
@@ -1356,24 +1414,124 @@ public class RecursiveDockGenerator
 				}
 			}			
 		}
+		
+		private void addDoor(int pos, int space, Direction dir, Random ran, DungeonFileParser dfp)
+		{			
+			if (space >= dfp.corridorStyle.width)
+			{
+				int offset = space > dfp.corridorStyle.width ? ran.nextInt(space - dfp.corridorStyle.width) : 0;
+				
+				if (dir == Direction.WEST)
+				{
+					doors.add(new RoomDoor(Direction.WEST, new int[]{0, pos+offset}));
+				}
+				else if (dir == Direction.EAST)
+				{
+					doors.add(new RoomDoor(Direction.EAST, new int[]{width-1, pos+offset}));
+				}
+				else if (dir == Direction.NORTH)
+				{
+					doors.add(new RoomDoor(Direction.NORTH, new int[]{pos+offset, 0}));
+				}
+				else if (dir == Direction.SOUTH)
+				{
+					doors.add(new RoomDoor(Direction.SOUTH, new int[]{pos+offset, height-1}));
+				}
+			}
+		}
+		
+		private void processSide(Direction dir, Random ran, DungeonFileParser dfp)
+		{
+			int range = (dir == Direction.WEST || dir == Direction.EAST) ? height : width;
+			
+			int blockStart = -1;
+			for (int pos = 0; pos < range; pos++)
+			{
+				int x = 0;
+				int y = 0;
+				
+				if (dir == Direction.WEST)
+				{
+					x = 0;
+					y = pos;
+				}
+				else if (dir == Direction.EAST)
+				{
+					x = width-1;
+					y = pos;
+				}
+				else if (dir == Direction.NORTH)
+				{
+					x = pos;
+					y = 0;
+				}
+				else
+				{
+					x = pos;
+					y = height-1;
+				}
+				
+				if (blockStart >= 0)
+				{
+					if (!roomContents[x][y].isPassable())
+					{						
+						addDoor(blockStart, pos - blockStart, dir, ran, dfp);						
+						blockStart = -1;
+					}
+				}
+				else
+				{
+					if (roomContents[x][y].isPassable()) { blockStart = pos; }
+				}
+			}
+			
+			if (blockStart >= 0)
+			{
+				int pos = range - 1;
+				addDoor(blockStart, pos - blockStart, dir, ran, dfp);
+			}
+		}
 
+		//----------------------------------------------------------------------
+		public void findDoors(Random ran, DungeonFileParser dfp)
+		{			
+			// Sides
+			//  1
+			// 0 2
+			//  3
+			
+			// Side 0
+			processSide(Direction.WEST, ran, dfp);
+
+			// Side 2
+			processSide(Direction.EAST, ran, dfp);
+			
+			// Side 1
+			processSide(Direction.NORTH, ran, dfp);
+			
+			// Side 3
+			processSide(Direction.SOUTH, ran, dfp);
+		}
+		
 		//----------------------------------------------------------------------
 		private class FeatureTile implements Comparable<FeatureTile>
 		{
 			public int[] pos;
 			public int dist;
 
-			public FeatureTile(int[] pos, int[][] doors)
+			public FeatureTile(int[] pos, Array<RoomDoor> doors)
 			{
 				this.pos = pos;
 
 				int d = 0;
-				for (int[] door : doors)
+				for (RoomDoor door : doors)
 				{
-					d += Math.abs(pos[0] - door[0]) + Math.abs(pos[1] - door[1]);
+					d += Math.abs(pos[0] - door.pos[0]) + Math.abs(pos[1] - door.pos[1]);
 				}
 
-				d /= doors.length;
+				d /= doors.size;
+				
+				dist = d;
 			}
 
 			@Override
@@ -1385,6 +1543,18 @@ public class RecursiveDockGenerator
 		}
 	}
 
+	public static class RoomDoor
+	{
+		public final Direction side;
+		public final int[] pos;
+		
+		public RoomDoor(Direction side, int[] pos)
+		{
+			this.side = side;
+			this.pos = pos;
+		}
+	}
+	
 	//----------------------------------------------------------------------
 	public enum PathfindType
 	{
@@ -1396,24 +1566,25 @@ public class RecursiveDockGenerator
 	//----------------------------------------------------------------------
 	public static class GenerationTile implements PathfindingTile
 	{
-		public Symbol symbol;
-		
+		public Symbol symbol;		
 		public int influence;
-
-		public PathfindType pathfindType = PathfindType.NONE;
-
+		
+		public boolean passable;
+		public boolean isCorridor = false;
+		public boolean isRoom = false;
+		
 		//----------------------------------------------------------------------
 		@Override
 		public boolean getPassable()
 		{
-			return pathfindType != PathfindType.WALL;
+			return passable;
 		}
 
 		//----------------------------------------------------------------------
 		@Override
 		public int getInfluence()
 		{
-			if (pathfindType == PathfindType.CORRIDOR)
+			if (isCorridor)
 			{
 				return 0;
 			}

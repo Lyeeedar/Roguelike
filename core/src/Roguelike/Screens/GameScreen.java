@@ -17,6 +17,7 @@ import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
+import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
@@ -77,6 +78,8 @@ public class GameScreen implements Screen, InputProcessor
 		Instance = this;
 		
 		create();
+		
+		Pathfinder.PathfinderTest.runTests();
 	}
 	
 	private void create()

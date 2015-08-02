@@ -486,7 +486,7 @@ public class Global
 	{
 		abilityPool.reset();
 		
-		RecursiveDockGenerator generator = new RecursiveDockGenerator("Forest", 0);
+		RecursiveDockGenerator generator = new RecursiveDockGenerator("Sewer", 0);
 		//VillageGenerator generator = new VillageGenerator(100, 100);
 		generator.generate();
 		ChangeLevel(generator.getLevel());
