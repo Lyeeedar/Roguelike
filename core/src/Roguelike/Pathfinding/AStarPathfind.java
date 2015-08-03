@@ -10,8 +10,9 @@
  ******************************************************************************/
 package Roguelike.Pathfinding;
 
-import java.util.HashSet;
 import java.util.PriorityQueue;
+
+import Roguelike.Global.Passability;
 
 import com.badlogic.gdx.utils.Array;
 
@@ -39,6 +40,7 @@ public class AStarPathfind
 	private final boolean canMoveDiagonal;
 	private final int actorSize;
 	private final boolean findOptimal;
+	private final Array<Passability> travelType;
 	
 	private final int startx;
 	private final int starty;
@@ -52,12 +54,12 @@ public class AStarPathfind
 	
 	private PriorityQueue<Node> openList = new PriorityQueue<Node>();
 	
-	public AStarPathfind(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, boolean findOptimal)
+	public AStarPathfind(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, boolean findOptimal, Array<Passability> travelType)
 	{
-		this(grid, startx, starty, endx, endy, canMoveDiagonal, findOptimal, 1);
+		this(grid, startx, starty, endx, endy, canMoveDiagonal, findOptimal, 1, travelType);
 	}
 	
-	public AStarPathfind(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, boolean findOptimal, int actorSize)
+	public AStarPathfind(PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, boolean findOptimal, int actorSize, Array<Passability> travelType)
 	{
 		this.grid = grid;
 		this.width = grid.length;
@@ -65,6 +67,7 @@ public class AStarPathfind
 		this.canMoveDiagonal = canMoveDiagonal;
 		this.actorSize = actorSize;
 		this.findOptimal = findOptimal;
+		this.travelType = travelType;
 		
 		this.startx = startx;
 		this.starty = starty;
@@ -176,7 +179,7 @@ public class AStarPathfind
 			y < 0 ||
 			x >= width ||
 			y >= height ||
-			!grid[x][y].getPassable()
+			!grid[x][y].getPassable(travelType)
 			)
 		{
 			return true;

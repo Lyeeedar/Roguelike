@@ -1,39 +1,34 @@
 package Roguelike.Tiles;
 
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.XmlReader.Element;
+import java.util.EnumSet;
+import java.util.HashSet;
 
 import Roguelike.AssetManager;
+import Roguelike.Global.Passability;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
+
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class TileData
 {
 	public Sprite[] sprites;
 	public Light light;
 	
+	public EnumSet<Passability> passableBy;
 	public boolean opaque;
-	public boolean passable;
 	
 	public String description;
 	
 	public boolean canFeature = true;
 	public boolean canSpawn = true;
 	
-	public TileData()
+	private TileData()
 	{
 		
 	}
-	
-	public TileData(Sprite[] sprites, Light light, boolean opaque, boolean passable, String description)
-	{
-		this.sprites = sprites;
-		this.light = light;
-		this.opaque = opaque;
-		this.passable = passable;
-		this.description = description;
-	}
-	
+		
 	public static TileData parse(Element xml)
 	{
 		TileData data = new TileData();
@@ -47,7 +42,12 @@ public class TileData
 		
 		if (xml.getChildByName("Light") != null) { data.light = Light.load(xml.getChildByName("Light")); }
 		data.opaque = xml.getBoolean("Opaque", false);
-		data.passable = xml.getBoolean("Passable", true);
+		
+		Element passableElement = xml.getChildByName("Passable");
+		if (passableElement != null) 
+		{ 
+			data.passableBy = Passability.parse(passableElement); 
+		}
 		
 		data.canFeature = xml.getBoolean("CanFeature", true);
 		data.canSpawn = xml.getBoolean("CanSpawn", true);

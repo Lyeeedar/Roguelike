@@ -4,8 +4,9 @@ import java.util.EnumMap;
 import java.util.HashMap;
 
 import Roguelike.AssetManager;
-import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
+import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
@@ -18,6 +19,12 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public abstract class Entity
 {
+	//----------------------------------------------------------------------
+	public Array<Passability> getTravelType()
+	{
+		return Passability.statsToTravelType(getStatistics());
+	}
+	
 	//----------------------------------------------------------------------
 	public abstract void update(float delta);
 	
@@ -47,6 +54,8 @@ public abstract class Entity
 		{
 			Statistic.load(statElement, statistics);
 			HP = getStatistic(Statistic.MAXHP);
+			
+			statistics.put(Statistic.WALK, 1);
 		}
 		
 		Element inventoryElement = xml.getChildByName("Inventory");

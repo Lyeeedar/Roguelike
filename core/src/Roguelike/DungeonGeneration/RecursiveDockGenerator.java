@@ -9,6 +9,7 @@ import PaulChew.Pnt;
 import PaulChew.Triangle;
 import PaulChew.Triangulation;
 import Roguelike.Global.Direction;
+import Roguelike.Global.Passability;
 import Roguelike.DungeonGeneration.DungeonFileParser.CorridorStyle.PathStyle;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.DungeonFileParser.RoomGeneratorType;
@@ -717,7 +718,7 @@ public class RecursiveDockGenerator
 			int y1 = (int)p[0].coord(1);
 			int x2 = (int)p[1].coord(0);
 			int y2 = (int)p[1].coord(1);
-			AStarPathfind pathFind = new AStarPathfind(tiles, x1, y1, x2, y2, false, true, dfp.corridorStyle.width);
+			AStarPathfind pathFind = new AStarPathfind(tiles, x1, y1, x2, y2, false, true, dfp.corridorStyle.width, GeneratorPassability);
 			int[][] path = pathFind.getPath();
 						
 			if (path[0][0] != x1 || path[0][1] != y1 || path[path.length-1][0] != x2 || path[path.length-1][1] != y2)
@@ -957,7 +958,7 @@ public class RecursiveDockGenerator
 					GenerationTile tile = tiles[room.x+x][room.y+y];
 					Symbol symbol = room.roomContents[x][y];
 
-					tile.passable = symbol.isPassable();
+					tile.passable = symbol.isPassable(GeneratorPassability);
 					tile.symbol = symbol;
 					tile.isRoom = true;
 				}
@@ -968,6 +969,9 @@ public class RecursiveDockGenerator
 	//endregion Private Methods
 	//####################################################################//
 	//region Data
+	
+	//----------------------------------------------------------------------
+	public static final Array<Passability> GeneratorPassability = new Array<Passability>(new Passability[]{Passability.WALK});
 	
 	public int depth;
 	
@@ -1227,7 +1231,7 @@ public class RecursiveDockGenerator
 			{
 				for (int y = 1; y < height-1; y++)
 				{
-					if (roomContents[x][y].isPassable())
+					if (roomContents[x][y].isPassable(GeneratorPassability))
 					{
 						int[] pos = {x, y};
 						validList.add(pos);
@@ -1256,7 +1260,7 @@ public class RecursiveDockGenerator
 						int x = tile[0];
 						int y = tile[1];
 						
-						if (roomContents[x][y].getTileData().canFeature && roomContents[x][y].isPassable() && (f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity()))
+						if (roomContents[x][y].getTileData().canFeature && roomContents[x][y].isPassable(GeneratorPassability) && (f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity()))
 						{
 							furthestList.add(new FeatureTile(tile, doors));
 						}
@@ -1301,7 +1305,7 @@ public class RecursiveDockGenerator
 						int x = tile[0];
 						int y = tile[1];
 						
-						if (roomContents[x][y].getTileData().canFeature && roomContents[x][y].isPassable() && (f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity()))
+						if (roomContents[x][y].getTileData().canFeature && roomContents[x][y].isPassable(GeneratorPassability) && (f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity()))
 						{
 							boolean isWall = false;
 							for (Direction d : Direction.values())
@@ -1311,7 +1315,7 @@ public class RecursiveDockGenerator
 
 								if (nx >= 0 && nx < width && ny >= 0 && ny < height)
 								{
-									if (!roomContents[nx][ny].isPassable())
+									if (!roomContents[nx][ny].isPassable(GeneratorPassability))
 									{
 										isWall = true;
 										break;
@@ -1362,7 +1366,7 @@ public class RecursiveDockGenerator
 						int x = tile[0];
 						int y = tile[1];
 						
-						if (roomContents[x][y].getTileData().canFeature && roomContents[x][y].isPassable() && (f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity()))
+						if (roomContents[x][y].getTileData().canFeature && roomContents[x][y].isPassable(GeneratorPassability) && (f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity()))
 						{
 							boolean isWall = false;
 							for (Direction d : Direction.values())
@@ -1372,7 +1376,7 @@ public class RecursiveDockGenerator
 
 								if (nx >= 0 && nx < width && ny >= 0 && ny < height)
 								{
-									if (!roomContents[nx][ny].isPassable())
+									if (!roomContents[nx][ny].isPassable(GeneratorPassability))
 									{
 										isWall = true;
 										break;
@@ -1422,7 +1426,7 @@ public class RecursiveDockGenerator
 						int x = tile[0];
 						int y = tile[1];
 						
-						if (roomContents[x][y].getTileData().canFeature && roomContents[x][y].isPassable() && (f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity()))
+						if (roomContents[x][y].getTileData().canFeature && roomContents[x][y].isPassable(GeneratorPassability) && (f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity()))
 						{
 							anyList.add(tile);
 						}
@@ -1456,14 +1460,14 @@ public class RecursiveDockGenerator
 					RoomDoor otherDoor = doors.get(ii);
 					if (door == otherDoor) { continue; }
 
-					AStarPathfind pathfind = new AStarPathfind(roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false);
+					AStarPathfind pathfind = new AStarPathfind(roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false, GeneratorPassability);
 					int[][] path = pathfind.getPath();
 
 					for (int[] point : path)
 					{
 						Symbol s = roomContents[point[0]][point[1]];
 						
-						if (!s.getTileData().passable)
+						if (!s.isPassable(GeneratorPassability))
 						{
 							roomContents[point[0]][point[1]].tileData = roomCopy[point[0]][point[1]].tileData;
 						}
@@ -1486,7 +1490,7 @@ public class RecursiveDockGenerator
 					int x = tile[0];
 					int y = tile[1];
 					
-					if (roomContents[x][y].getTileData().canSpawn && roomContents[x][y].isPassable() && !roomContents[x][y].hasGameEntity())
+					if (roomContents[x][y].getTileData().canSpawn && roomContents[x][y].isPassable(GeneratorPassability) && !roomContents[x][y].hasGameEntity())
 					{
 						spawnList.add(tile);
 					}
@@ -1565,7 +1569,7 @@ public class RecursiveDockGenerator
 				
 				if (blockStart >= 0)
 				{
-					if (!roomContents[x][y].isPassable())
+					if (!roomContents[x][y].isPassable(GeneratorPassability))
 					{						
 						addDoor(blockStart, pos - blockStart, dir, ran, dfp);						
 						blockStart = -1;
@@ -1573,7 +1577,7 @@ public class RecursiveDockGenerator
 				}
 				else
 				{
-					if (roomContents[x][y].isPassable()) { blockStart = pos; }
+					if (roomContents[x][y].isPassable(GeneratorPassability)) { blockStart = pos; }
 				}
 			}
 			
@@ -1668,7 +1672,7 @@ public class RecursiveDockGenerator
 		
 		//----------------------------------------------------------------------
 		@Override
-		public boolean getPassable()
+		public boolean getPassable(Array<Passability> travelType)
 		{
 			return passable;
 		}

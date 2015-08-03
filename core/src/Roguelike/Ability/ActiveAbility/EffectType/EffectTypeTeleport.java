@@ -57,13 +57,13 @@ public class EffectTypeTeleport extends AbstractEffectType
 		
 		if (toMove == ToMove.CASTER)
 		{
-			destination = getDestination(aa.source, tile);			
 			entityToMove = aa.caster;
+			destination = getDestination(aa.source, tile, entityToMove);				
 		}
 		else if (toMove == ToMove.TARGET)
 		{
-			destination = getDestination(tile, aa.source);			
 			entityToMove = tile.entity;
+			destination = getDestination(tile, aa.source, entityToMove);			
 		}
 				
 		if (destination != null && entityToMove != null && entityToMove.tile != destination)
@@ -84,7 +84,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 		}
 	}
 	
-	private GameTile getDestination(GameTile src, GameTile target)
+	private GameTile getDestination(GameTile src, GameTile target, GameEntity entity)
 	{
 		Direction dir = null;
 		
@@ -117,7 +117,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 			
 		if (style != Style.CHARGE)
 		{
-			if (destination.getPassable() && destination.entity == null)
+			if (destination.getPassable(entity.getTravelType()) && destination.entity == null)
 			{
 				return destination;
 			}
@@ -127,7 +127,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 				{
 					GameTile tile = getTile(destination, d);
 					
-					if (tile.getPassable() && tile.entity == null)
+					if (tile.getPassable(entity.getTravelType()) && tile.entity == null)
 					{
 						return tile;
 					}
@@ -141,7 +141,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 		{
 			GameTile tile = src.level.getGameTile(possibleTiles[i]);
 			
-			if (tile.getPassable() && tile.entity == null)
+			if (tile.getPassable(entity.getTravelType()) && tile.entity == null)
 			{
 				return tile;
 			}

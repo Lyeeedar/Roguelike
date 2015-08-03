@@ -3,6 +3,7 @@ package Roguelike.Ability.ActiveAbility.MovementType;
 import java.util.HashSet;
 
 import Roguelike.Global.Direction;
+import Roguelike.Global.Passability;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Pathfinding.BresenhamLine;
 import Roguelike.Tiles.GameTile;
@@ -12,6 +13,8 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class MovementTypeBolt extends AbstractMovementType
 {
+	private static final Array<Passability> BoltPassability = new Array<Passability>(new Passability[]{Passability.LEVITATE});
+	
 	private float accumulator = 1;
 	private int speed;
 
@@ -27,7 +30,7 @@ public class MovementTypeBolt extends AbstractMovementType
 	@Override
 	public void init(ActiveAbility ab, int endx, int endy)
 	{
-		int[][] fullpath = BresenhamLine.line(ab.source.x, ab.source.y, endx, endy, ab.source.level.getGrid(), false, ab.range+1);
+		int[][] fullpath = BresenhamLine.line(ab.source.x, ab.source.y, endx, endy, ab.source.level.getGrid(), false, ab.range+1, BoltPassability);
 		
 		Array<int[]> actualpath = new Array<int[]>(fullpath.length);
 		for (int i = 1; i < ab.range+1 && i < fullpath.length; i++)
@@ -57,7 +60,7 @@ public class MovementTypeBolt extends AbstractMovementType
 				GameTile nextTile = ab.AffectedTiles.peek().level.getGameTile(path[i+1]);				
 				direction = Direction.getDirection(ab.AffectedTiles.peek(), nextTile);								
 								
-				if (!nextTile.tileData.passable)
+				if (!Passability.isPassable(nextTile.tileData.passableBy, BoltPassability))
 				{
 					i = path.length;
 					return true;

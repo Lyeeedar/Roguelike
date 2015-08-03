@@ -1,18 +1,18 @@
 package Roguelike;
 
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Ability.AbilityPool;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator;
 import Roguelike.Entity.Entity;
-import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
-import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.Mixer;
@@ -26,9 +26,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.sun.xml.internal.ws.util.StringUtils;
 
-import exp4j.Functions.RandomFunction;
 import exp4j.Helpers.EquationHelper;
-import exp4j.Operators.BooleanOperators;
 
 public class Global
 {
@@ -230,6 +228,92 @@ public class Global
 	}
 
 	//----------------------------------------------------------------------
+	public enum Passability
+	{
+		WALK(Statistic.WALK),
+		LEVITATE(Statistic.LEVITATE);
+		
+		public final Statistic stat;
+		
+		private Passability(Statistic stat)
+		{
+			this.stat = stat;
+		}
+		
+		public static Array<Passability> statsToTravelType(EnumMap<Statistic, Integer> stats)
+		{
+			Array<Passability> travelType = new Array<Passability>();
+			
+			for (Passability p : Passability.values())
+			{
+				if (stats.containsKey(p.stat))
+				{
+					int val = stats.get(p.stat);
+					
+					if (val > 0)
+					{
+						travelType.add(p);
+					}
+				}
+			}
+			
+			return travelType;
+		}
+		
+		public static EnumSet<Passability> parse(Element xml)
+		{
+			EnumSet<Passability> passableBy = EnumSet.noneOf(Passability.class);
+			
+			String passable = xml.getText();
+			if (passable != null)
+			{
+				if (passable.equalsIgnoreCase("true"))
+				{
+					// all
+					for (Passability p : Passability.values())
+					{
+						passableBy.add(p);
+					}
+				}
+				else if (passable.equalsIgnoreCase("false"))
+				{
+					// none
+				}
+				else
+				{
+					String[] split = passable.split(",");
+					for (String p : split)
+					{
+						passableBy.add(Passability.valueOf(p.toUpperCase()));
+					}
+				}
+			}
+			
+			return passableBy;
+		}
+		
+		public static boolean isPassable(EnumSet<Passability> passableBy, Array<Passability> travelType)
+		{
+//			if (passableBy == null || travelType == null)
+//			{
+//				return false;
+//			}
+			
+			boolean passable = false;
+			for (Passability p : travelType)
+			{
+				if (passableBy.contains(p))
+				{
+					passable = true;
+					break;
+				}
+			}
+			
+			return passable;
+		}
+	}
+	
+	//----------------------------------------------------------------------
 	public enum Statistic
 	{
 		// Basic stats
@@ -239,7 +323,12 @@ public class Global
 		WEIGHT,
 		CARRYLIMIT,
 		COOLDOWN,
+		
+		// Passability
+		WALK,
+		LEVITATE,
 
+		// Elemental stats
 		METAL_ATK,
 		METAL_PIERCE,
 		METAL_DEF,

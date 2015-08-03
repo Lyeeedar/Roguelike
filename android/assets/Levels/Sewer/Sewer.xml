@@ -17,7 +17,7 @@
 	    <CentralConstant>
 	        <Name>Sewage</Name>
 			<TileData>
-				<Passable>false</Passable>
+				<Passable>Levitate</Passable>
 				<Opaque>false</Opaque>
 				<Sprite>
 					<Name>dc-dngn/water/dngn_shallow_water</Name>

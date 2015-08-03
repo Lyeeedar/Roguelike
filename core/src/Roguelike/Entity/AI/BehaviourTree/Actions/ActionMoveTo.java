@@ -34,7 +34,7 @@ public class ActionMoveTo extends AbstractAction
 		}
 						
 		Pathfinder pathFinder = new Pathfinder(entity.tile.level.getGrid(), entity.tile.x, entity.tile.y, target[0], target[1], true);
-		int[][] path = pathFinder.getPath();
+		int[][] path = pathFinder.getPath(entity.getTravelType());
 		
 		// if couldnt find a valid path, fail
 		if (path.length < 2)
@@ -44,7 +44,7 @@ public class ActionMoveTo extends AbstractAction
 		}
 		
 		// if next step is impassable and not an environment entity then fail
-		if (entity.tile.level.getGameTile(path[1]).environmentEntity == null && !entity.tile.level.getGameTile(path[1]).getPassable())
+		if (entity.tile.level.getGameTile(path[1]).environmentEntity == null && !entity.tile.level.getGameTile(path[1]).getPassable(entity.getTravelType()))
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;

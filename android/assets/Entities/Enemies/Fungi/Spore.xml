@@ -17,6 +17,7 @@
 		<Range>5</<Range>
 		
 		<Wood_Atk>20</Wood_Atk>
+		<Levitate>1</Levitate>
 	</Statistics>
 	
 </Entity>

@@ -1,14 +1,17 @@
 package Roguelike.DungeonGeneration;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import Roguelike.Global.Direction;
+import Roguelike.Global.Passability;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Tiles.TileData;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 //----------------------------------------------------------------------
@@ -31,7 +34,7 @@ public class Symbol implements PathfindingTile
 	private Element processedTileData;
 	
 	private boolean eePassable;
-	private boolean tilePassable;	
+	private EnumSet<Passability> tilePassable;	
 	//----------------------------------------------------------------------
 	
 	public Symbol copy()
@@ -105,7 +108,7 @@ public class Symbol implements PathfindingTile
 		TileData data = TileData.parse(tileData);
 		
 		processedTileData = tileData;
-		tilePassable = data.passable;
+		tilePassable = data.passableBy;
 		
 		return data;
 	}
@@ -155,14 +158,14 @@ public class Symbol implements PathfindingTile
 		return symbol;
 	}
 
-	public boolean isPassable()
+	public boolean isPassable(Array<Passability> travelType)
 	{
 		if (processedTileData != tileData)
 		{
 			getTileData();
 		}
 		
-		return tilePassable;
+		return Passability.isPassable(tilePassable, travelType);
 	}
 
 	@Override
@@ -172,9 +175,9 @@ public class Symbol implements PathfindingTile
 	}
 
 	@Override
-	public boolean getPassable()
+	public boolean getPassable(Array<Passability> travelType)
 	{
-		return isPassable();
+		return isPassable(travelType);
 	}
 
 	@Override

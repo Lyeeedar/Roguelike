@@ -57,7 +57,7 @@ public class TaskMove extends AbstractTask
 				}
 			}
 		}
-		else if (obj.canMove && newTile.getPassable())
+		else if (obj.canMove && newTile.getPassable(obj.getTravelType()))
 		{
 			int[] diff = newTile.addObject(obj);
 			

@@ -1,17 +1,13 @@
 package Roguelike.Tiles;
 
-import java.util.HashSet;
-
 import Roguelike.Global;
-import Roguelike.RoguelikeGame;
+import Roguelike.Global.Passability;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Shadows.ShadowCastTile;
-import Roguelike.Sprite.MoveAnimation;
-import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 
 import com.badlogic.gdx.graphics.Color;
@@ -117,10 +113,13 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	}
 
 	@Override
-	public boolean getPassable()
+	public boolean getPassable(Array<Passability> travelType)
 	{
 		if (environmentEntity != null && !environmentEntity.passable) { return false; }
-		if (!tileData.passable) { return false; }
+		
+		boolean passable = Passability.isPassable(tileData.passableBy, travelType);
+		
+		if (!passable) { return false; }
 		
 		return entity == null;
 	}

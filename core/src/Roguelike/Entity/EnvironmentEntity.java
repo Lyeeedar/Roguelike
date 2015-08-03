@@ -256,6 +256,8 @@ public class EnvironmentEntity extends Entity
 					
 					if (accumulator <= 0)
 					{
+						GameEntity ge = GameEntity.load(entityName);
+						
 						GameTile tile = entity.tile;
 						int x = tile.x;
 						int y = tile.y;
@@ -269,7 +271,7 @@ public class EnvironmentEntity extends Entity
 							
 							GameTile ntile = tile.level.getGameTile(nx, ny);
 							
-							if (ntile != null && ntile.getPassable() && ntile.entity == null)
+							if (ntile != null && ntile.getPassable(ge.getTravelType()) && ntile.entity == null)
 							{
 								spawnTile = ntile;
 								break;
@@ -277,9 +279,7 @@ public class EnvironmentEntity extends Entity
 						}
 						
 						if (spawnTile != null)
-						{							
-							GameEntity ge = GameEntity.load(entityName);
-							
+						{														
 							for (int i = 0; i < entities.length; i++)
 							{
 								if (entities[i] == null)

@@ -2,22 +2,19 @@ package Roguelike.Screens;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
-import Roguelike.Ability.AbilityPool;
+import Roguelike.Global.Direction;
+import Roguelike.Global.Passability;
+import Roguelike.Global.Statistic;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
-import Roguelike.DungeonGeneration.RecursiveDockGenerator;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
-import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.EnvironmentEntity.ActivationAction;
-import Roguelike.Entity.Tasks.TaskMove;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
-import Roguelike.Global.Direction;
-import Roguelike.Global.Statistic;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
-import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
@@ -32,18 +29,17 @@ import Roguelike.UI.HPWidget;
 import Roguelike.UI.HoverTextButton;
 import Roguelike.UI.InventoryPanel;
 import Roguelike.UI.MessageStack;
-import Roguelike.UI.SpriteWidget;
-import Roguelike.UI.TabPanel;
-import Roguelike.UI.TabPanel.Tab;
-import Roguelike.UI.Tooltip;
 import Roguelike.UI.MessageStack.Line;
 import Roguelike.UI.MessageStack.Message;
+import Roguelike.UI.SpriteWidget;
+import Roguelike.UI.TabPanel;
+import Roguelike.UI.Tooltip;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -311,7 +307,8 @@ public class GameScreen implements Screen, InputProcessor
 			}
 			else
 			{
-				if (Global.CurrentLevel.getGameTile(mousex, mousey).tileData.passable)
+				GameTile mouseTile = Global.CurrentLevel.getGameTile(mousex, mousey);
+				if (Passability.isPassable(mouseTile.tileData.passableBy, Global.CurrentLevel.player.getTravelType()))
 				{
 					batch.setColor(Color.GREEN);
 				}
@@ -511,7 +508,7 @@ public class GameScreen implements Screen, InputProcessor
 			{
 				if (
 						!Global.CurrentLevel.getSeenTile(mousex, mousey).seen ||
-						!Global.CurrentLevel.getGameTile(mousex, mousey).tileData.passable)
+						!Passability.isPassable(Global.CurrentLevel.getGameTile(mousex, mousey).tileData.passableBy, Global.CurrentLevel.player.getTravelType()))
 				{
 					batch.setColor(Color.RED);
 				}

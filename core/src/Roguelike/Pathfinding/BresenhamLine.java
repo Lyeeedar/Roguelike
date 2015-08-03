@@ -1,6 +1,6 @@
 package Roguelike.Pathfinding;
 
-import java.util.HashSet;
+import Roguelike.Global.Passability;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -35,7 +35,7 @@ public class BresenhamLine
 	    return path.toArray(int[].class);
 	}
 	
-	public static int[][] line (int x, int y, int x2, int y2, PathfindingTile[][] Grid, boolean checkPassable, int range) 
+	public static int[][] line (int x, int y, int x2, int y2, PathfindingTile[][] Grid, boolean checkPassable, int range, Array<Passability> travelType) 
 	{
 		x = MathUtils.clamp(x, 0, Grid.length-1);
 		x2 = MathUtils.clamp(x2, 0, Grid.length-1);
@@ -93,7 +93,7 @@ public class BresenhamLine
 	        	y < 0 ||
 	        	x >= Grid.length-1 ||
 	        	y >= Grid[0].length-1 ||
-	        	(checkPassable && !Grid[x][y].getPassable())
+	        	(checkPassable && !Grid[x][y].getPassable(travelType))
 	        	) 
 	        { 
 	        	break; 

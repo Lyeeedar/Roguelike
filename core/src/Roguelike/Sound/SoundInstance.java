@@ -3,14 +3,18 @@ package Roguelike.Sound;
 import java.util.HashSet;
 
 import Roguelike.AssetManager;
+import Roguelike.Global.Passability;
 import Roguelike.Pathfinding.AStarPathfind;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class SoundInstance
 {
+	private static final Array<Passability> SoundPassability = new Array<Passability>(new Passability[]{Passability.LEVITATE});
+	
 	public Sound sound;
 	
 	public float pitch = 1;
@@ -61,7 +65,7 @@ public class SoundInstance
 						
 						if (t.entity != null)
 						{
-							AStarPathfind astar = new AStarPathfind(tile.level.getGrid(), tile.x, tile.y, x, y, true, false);
+							AStarPathfind astar = new AStarPathfind(tile.level.getGrid(), tile.x, tile.y, x, y, true, false, SoundPassability);
 							int[][] path = astar.getPath();
 														
 							if (path != null && path.length < maxAudibleDist)
@@ -86,7 +90,7 @@ public class SoundInstance
 		}
 		else
 		{
-			AStarPathfind astar = new AStarPathfind(tile.level.getGrid(), tile.x, tile.y, tile.level.player.tile.x, tile.level.player.tile.y, true, false);
+			AStarPathfind astar = new AStarPathfind(tile.level.getGrid(), tile.x, tile.y, tile.level.player.tile.x, tile.level.player.tile.y, true, false, SoundPassability);
 			int[][] path = astar.getPath();
 			
 			if (path != null) { playerDist = path.length; }

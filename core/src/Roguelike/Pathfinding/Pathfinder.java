@@ -2,6 +2,10 @@ package Roguelike.Pathfinding;
 
 import java.util.HashSet;
 
+import Roguelike.Global.Passability;
+
+import com.badlogic.gdx.utils.Array;
+
 public class Pathfinder
 {
 	private int startx;
@@ -23,14 +27,14 @@ public class Pathfinder
 		this.factions = factions;
 	}
 	
-	public int[][] getPath()
+	public int[][] getPath(Array<Passability> travelType)
 	{
-		AStarPathfind astar = new AStarPathfind(Grid, startx, starty, endx, endy, canMoveDiagonal, false);
+		AStarPathfind astar = new AStarPathfind(Grid, startx, starty, endx, endy, canMoveDiagonal, false, travelType);
 		int[][] path = astar.getPath();
 		
 		if (path == null)
 		{
-			path = BresenhamLine.line(startx, starty, endx, endy, Grid, true, Integer.MAX_VALUE);
+			path = BresenhamLine.line(startx, starty, endx, endy, Grid, true, Integer.MAX_VALUE, travelType);
 		}
 		
 		return path;
@@ -45,7 +49,7 @@ public class Pathfinder
 			public boolean passable = true;
 			
 			@Override
-			public boolean getPassable()
+			public boolean getPassable(Array<Passability> travelType)
 			{
 				return true;
 			}
@@ -171,7 +175,7 @@ public class Pathfinder
 		
 		private static void path(TestTile[][] grid, int startx, int starty, int endx, int endy)
 		{
-			AStarPathfind astar = new AStarPathfind(grid, startx, starty, endx, endy, false, true);
+			AStarPathfind astar = new AStarPathfind(grid, startx, starty, endx, endy, false, true, new Array<Passability>());
 			int[][] path = astar.getPath();
 			
 			for (int[] step : path)
