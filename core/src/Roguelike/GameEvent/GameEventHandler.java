@@ -1,6 +1,7 @@
 package Roguelike.GameEvent;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 
 import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
@@ -28,25 +29,25 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnTaskEvent> onAttackEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnTaskEvent> onWaitEvents = new Array<AbstractOnTaskEvent>();
 	
-	public int getStatistic(Entity entity, Statistic s)
+	public int getStatistic(HashMap<String, Integer> variableMap, Statistic s)
 	{
 		int val = 0;
 		
 		if (constantEvent != null)
 		{
-			val += constantEvent.getStatistic(entity, s);
+			val += constantEvent.getStatistic(variableMap, s);
 		}
 		
 		return val;
 	}
 	
-	public EnumMap<Statistic, Integer> getStatistics(Entity entity)
+	public EnumMap<Statistic, Integer> getStatistics(HashMap<String, Integer> variableMap)
 	{
 		EnumMap<Statistic, Integer> newMap = new EnumMap<Statistic, Integer>(Statistic.class);
 		
 		for (Statistic stat : Statistic.values())
 		{
-			newMap.put(stat, getStatistic(entity, stat));
+			newMap.put(stat, getStatistic(variableMap, stat));
 		}
 		
 		return newMap;

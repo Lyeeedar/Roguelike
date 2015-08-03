@@ -619,9 +619,9 @@ public class Global
 	}
 	
 	//----------------------------------------------------------------------
-	public static void calculateDamage(Entity attacker, Entity defender, HashMap<String, Integer> additionalAttack, boolean doEvents)
+	public static void calculateDamage(Entity attacker, Entity defender, HashMap<String, Integer> attackerVariableMap, boolean doEvents)
 	{
-		DamageObject damObj = new DamageObject(attacker, defender, additionalAttack);
+		DamageObject damObj = new DamageObject(attacker, defender, attackerVariableMap);
 		runEquations(damObj);
 
 		if (doEvents)
@@ -661,10 +661,11 @@ public class Global
 				accumulatedReduction += Math.min(reduction, maxReduction);
 			}
 			
+			HashMap<String, Integer> defenderVariableMap = damObj.defender.getBaseVariableMap();
 			for (GameEventHandler handler : damObj.defender.getAllHandlers())
 			{
-				float defense = handler.getStatistic(damObj.defender, el.Defense);
-				float hardiness = 1.0f - handler.getStatistic(damObj.defender, el.Hardiness) / 100.0f;
+				float defense = handler.getStatistic(defenderVariableMap, el.Defense);
+				float hardiness = 1.0f - handler.getStatistic(defenderVariableMap, el.Hardiness) / 100.0f;
 
 				float maxReduction = attack * hardiness;
 

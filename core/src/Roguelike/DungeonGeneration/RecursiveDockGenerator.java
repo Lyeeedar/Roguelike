@@ -140,7 +140,7 @@ public class RecursiveDockGenerator
 
 				if (symbol.hasGameEntity())
 				{
-					//newTile.addObject(symbol.getGameEntity());
+					newTile.addObject(symbol.getGameEntity());
 				}
 
 				newTile.metaValue = symbol.metaValue;

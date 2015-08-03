@@ -1,6 +1,7 @@
 package Roguelike.Entity;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import Roguelike.AssetManager;
@@ -69,10 +70,12 @@ public class EnvironmentEntity extends Entity
 	public int getStatistic(Statistic stat)
 	{
 		int val = statistics.get(stat);
+		
+		HashMap<String, Integer> variableMap = getBaseVariableMap();
 
 		for (StatusEffect se : statusEffects)
 		{
-			val += se.getStatistic(this, stat);
+			val += se.getStatistic(variableMap, stat);
 		}
 		
 		return val;

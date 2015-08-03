@@ -6,6 +6,7 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
+import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
@@ -71,7 +72,7 @@ public class EffectTypeDamage extends AbstractEffectType
 
 	private void applyToEntity(Entity target, ActiveAbility aa)
 	{
-		HashMap<String, Integer> variableMap = aa.variableMap;
+		HashMap<String, Integer> variableMap = aa.caster.getBaseVariableMap();
 		
 		for (String name : reliesOn)
 		{
@@ -106,7 +107,19 @@ public class EffectTypeDamage extends AbstractEffectType
 			}
 		}
 		
-		Global.calculateDamage(aa.caster, target, Statistic.statsBlockToVariableBlock(stats), true);			
+		variableMap = Statistic.statsBlockToVariableBlock(stats);
+		
+		for (GameEventHandler handler : aa.caster.getAllHandlers())
+		{
+			for (Statistic s : Statistic.values())
+			{
+				int val = handler.getStatistic(variableMap, s);
+				
+				variableMap.put(s.toString().toLowerCase(), variableMap.get(s.toString().toLowerCase())+val);
+			}			
+		}
+		
+		Global.calculateDamage(aa.caster, target, variableMap, true);			
 	}
 	
 	@Override

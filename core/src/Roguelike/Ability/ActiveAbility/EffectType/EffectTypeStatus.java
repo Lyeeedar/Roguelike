@@ -26,13 +26,13 @@ public class EffectTypeStatus extends AbstractEffectType
 	{		
 		if (tile.entity != null)
 		{
-			DamageObject ao = new DamageObject(aa.caster, tile.entity, null);			
+			DamageObject ao = new DamageObject(aa.caster, tile.entity, aa.variableMap);			
 			statusEvent.handle(ao, aa);
 		}
 		
 		if (tile.environmentEntity != null)
 		{
-			DamageObject ao = new DamageObject(aa.caster, tile.environmentEntity, null);			
+			DamageObject ao = new DamageObject(aa.caster, tile.environmentEntity, aa.variableMap);			
 			statusEvent.handle(ao, aa);
 		}
 	}

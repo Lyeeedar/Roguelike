@@ -84,7 +84,7 @@ public class Inventory
 		m_items.removeValue(item, true);
 	}
 	
-	public int getStatistic(GameEntity entity, Statistic stat)
+	public int getStatistic(HashMap<String, Integer> variableMap, Statistic stat)
 	{
 		int val = 0;
 		
@@ -92,7 +92,7 @@ public class Inventory
 		{
 			if (m_equipment.containsKey(slot))
 			{
-				val += m_equipment.get(slot).getStatistic(entity, stat);
+				val += m_equipment.get(slot).getStatistic(variableMap, stat);
 			}
 		}
 		

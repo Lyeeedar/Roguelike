@@ -79,7 +79,7 @@ public class ConstantEvent
 		}
 	}
 	
-	public int getStatistic(Entity entity, Statistic stat)
+	public int getStatistic(HashMap<String, Integer> variableMap, Statistic stat)
 	{
 		String eqn = equations.get(stat);
 		
@@ -88,7 +88,6 @@ public class ConstantEvent
 			return 0;
 		}
 		
-		HashMap<String, Integer> variableMap = entity.getBaseVariableMap();
 		for (String name : reliesOn)
 		{
 			if (!variableMap.containsKey(name.toLowerCase()))

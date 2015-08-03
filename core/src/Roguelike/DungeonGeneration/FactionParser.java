@@ -5,6 +5,7 @@ import java.util.EnumMap;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -90,34 +91,7 @@ public class FactionParser
 		
 		for (Element encounter : encounterElement.getChildrenByName("Encounter"))
 		{
-			Encounter enc = new Encounter();
-			
-			enc.minRange = encounter.getInt("RangeMin", 0);
-			enc.maxRange = encounter.getInt("RangeMax", 100);
-			enc.coverage = encounter.getInt("Coverage", 1);
-			enc.weight = encounter.getInt("Weight", 1);
-			
-			Array<Mob> mobs = new Array<Mob>();
-			
-			Element mobsElement = encounter.getChildByName("Mobs");
-			
-			for (int i = 0; i < mobsElement.getChildCount(); i++)
-			{
-				Element encEl = mobsElement.getChild(i);
-				
-				int weight = 0;
-				
-				try
-				{
-					weight = Integer.parseInt(encEl.getText());
-				} catch (Exception e) {}
-				
-				mobs.add(new Mob("Enemies/"+name+"/"+encEl.getName(), weight));
-				enc.totalMobWeight += weight;
-			}
-			
-			enc.mobs = mobs.toArray(Mob.class);
-			
+			Encounter enc = Encounter.load(encounter, name);			
 			encounters.add(enc);
 		}		
 	}
@@ -146,6 +120,9 @@ public class FactionParser
 		
 		public int coverage;
 		
+		public int minCoverage;
+		public int maxCoverage;
+		
 		public int weight;
 		
 		public Array<String> getMobsToPlace(int influence, int numValidTiles)
@@ -153,6 +130,8 @@ public class FactionParser
 			float currentInfluence = (float)(influence - minRange) / (float)(maxRange - minRange);
 			float currentCoverage = ((float)coverage * currentInfluence) / 100;
 			int numMobsToPlace = (int)Math.ceil(numValidTiles * currentCoverage);
+			
+			numMobsToPlace = MathUtils.clamp(numMobsToPlace, minCoverage, maxCoverage);
 			
 			float factor = (float)numMobsToPlace / (float)totalMobWeight;
 			
@@ -170,6 +149,40 @@ public class FactionParser
 			}
 			
 			return mobArr;
+		}
+	
+		public static Encounter load(Element xml, String name)
+		{
+			Encounter enc = new Encounter();
+			enc.minRange = xml.getInt("RangeMin", 0);
+			enc.maxRange = xml.getInt("RangeMax", 100);
+			enc.coverage = xml.getInt("Coverage", 5);
+			enc.weight = xml.getInt("Weight", 1);
+			enc.minCoverage = xml.getInt("MinCoverage", 0);
+			enc.maxCoverage = xml.getInt("MaxCoverage", Integer.MAX_VALUE);
+						
+			Array<Mob> mobs = new Array<Mob>();
+			
+			Element mobsElement = xml.getChildByName("Mobs");
+			
+			for (int i = 0; i < mobsElement.getChildCount(); i++)
+			{
+				Element encEl = mobsElement.getChild(i);
+				
+				int weight = 0;
+				
+				try
+				{
+					weight = Integer.parseInt(encEl.getText());
+				} catch (Exception e) {}
+				
+				mobs.add(new Mob("Enemies/"+name+"/"+encEl.getName(), weight));
+				enc.totalMobWeight += weight;
+			}
+			
+			enc.mobs = mobs.toArray(Mob.class);
+			
+			return enc;
 		}
 	}
 	
@@ -195,6 +208,10 @@ public class FactionParser
 		
 		public int coverage;
 		
+		public int minCoverage;
+		public int maxCoverage;
+		
+		
 		public FeaturePlacementType type;
 		
 		public static Feature load(Element xml)
@@ -203,6 +220,8 @@ public class FactionParser
 			feature.minRange = xml.getInt("RangeMin", 0);
 			feature.maxRange = xml.getInt("RangeMax", 100);
 			feature.coverage = xml.getInt("Coverage", 50);
+			feature.minCoverage = xml.getInt("MinCoverage", 0);
+			feature.maxCoverage = xml.getInt("MaxCoverage", Integer.MAX_VALUE);
 			feature.tileData = xml.getChildByName("TileData");
 			feature.environmentData = xml.getChildByName("EnvironmentData");			
 			feature.type = FeaturePlacementType.valueOf(xml.get("Placement").toUpperCase());
@@ -225,6 +244,8 @@ public class FactionParser
 			float currentInfluence = (float)(influence - minRange) / (float)(maxRange - minRange);
 			float currentCoverage = ((float)coverage * currentInfluence) / 100;
 			int numTilesToPlace = (int)Math.ceil(numValidTiles * currentCoverage);
+			
+			numTilesToPlace = MathUtils.clamp(numTilesToPlace, minCoverage, maxCoverage);
 						
 			return numTilesToPlace;
 		}

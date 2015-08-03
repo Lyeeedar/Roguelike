@@ -190,7 +190,7 @@ public class TaskAttack extends AbstractTask
 		{
 			type = weapon.weaponType;
 
-			range = weapon.getStatistic(entity, Statistic.RANGE);
+			range = weapon.getStatistic(entity.getBaseVariableMap(), Statistic.RANGE);
 			if (range == 0) 
 			{ 
 				if (type == WeaponType.SPEAR)

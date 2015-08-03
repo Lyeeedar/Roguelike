@@ -22,22 +22,13 @@ public class DamageObject
 	public final EnumMap<Tier1Element, Integer> damageMap = Tier1Element.getElementBlock();
 	public final HashMap<String, Integer> damageVariableMap = new HashMap<String, Integer>();
 	
-	public DamageObject(Entity attacker, Entity defender, HashMap<String, Integer> additionalValues)
+	public DamageObject(Entity attacker, Entity defender, HashMap<String, Integer> attackerVariableMap)
 	{
 		this.attacker = attacker;
 		this.defender = defender;
 		
-		defenderVariableMap = defender.getVariableMap();
-		attackerVariableMap = attacker.getVariableMap();
-		
-		if (additionalValues != null)
-		{
-			for (String key : additionalValues.keySet())
-			{
-				int val = additionalValues.get(key);
-				attackerVariableMap.put(key, val);
-			}
-		}
+		this.defenderVariableMap = defender.getVariableMap();
+		this.attackerVariableMap = attackerVariableMap;
 	}
 	
 	public void setDamageVariables()

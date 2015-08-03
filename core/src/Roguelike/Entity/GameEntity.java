@@ -61,7 +61,7 @@ public class GameEntity extends Entity
 	//----------------------------------------------------------------------
 	public void attack(Entity other, Direction dir)
 	{
-		Global.calculateDamage(this, other, null, true);
+		Global.calculateDamage(this, other, getVariableMap(), true);
 	}
 
 	//----------------------------------------------------------------------
@@ -248,20 +248,22 @@ public class GameEntity extends Entity
 	{
 		int val = statistics.get(stat);
 
+		HashMap<String, Integer> variableMap = getBaseVariableMap();
+		
 		for (PassiveAbility passive : slottedPassiveAbilities)
 		{
 			if (passive != null)
 			{
-				val += passive.getStatistic(this, stat);
+				val += passive.getStatistic(variableMap, stat);
 			}
 		}
 
 		for (StatusEffect se : statusEffects)
 		{
-			val += se.getStatistic(this, stat);
+			val += se.getStatistic(variableMap, stat);
 		}
 
-		val += inventory.getStatistic(this, stat);
+		val += inventory.getStatistic(variableMap, stat);
 
 		return val;
 	}

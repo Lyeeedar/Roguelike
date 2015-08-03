@@ -265,8 +265,8 @@ public class Item extends GameEventHandler
 
 		for (Statistic stat : Statistic.values())
 		{
-			int oldval = other == null ? 0 : other.getStatistic(entity, stat);
-			int newval = getStatistic(entity, stat);
+			int oldval = other == null ? 0 : other.getStatistic(entity.getBaseVariableMap(), stat);
+			int newval = getStatistic(entity.getBaseVariableMap(), stat);
 
 			if (oldval != 0 || newval != 0)
 			{
@@ -318,8 +318,8 @@ public class Item extends GameEventHandler
 		int newDam = 0;
 		for (Tier1Element el : Tier1Element.values())
 		{
-			int oldval = other == null ? 0 : other.getStatistic(entity, el.Attack);
-			int newval = getStatistic(entity, el.Attack);
+			int oldval = other == null ? 0 : other.getStatistic(entity.getBaseVariableMap(), el.Attack);
+			int newval = getStatistic(entity.getBaseVariableMap(), el.Attack);
 
 			oldDam += oldval;
 			newDam += newval;
@@ -345,8 +345,8 @@ public class Item extends GameEventHandler
 
 		for (Statistic stat : Statistic.values())
 		{
-			int oldval = other == null ? 0 : other.getStatistic(entity, stat);
-			int newval = getStatistic(entity, stat);
+			int oldval = other == null ? 0 : other.getStatistic(entity.getBaseVariableMap(), stat);
+			int newval = getStatistic(entity.getBaseVariableMap(), stat);
 
 			if (oldval != 0 || newval != 0)
 			{
