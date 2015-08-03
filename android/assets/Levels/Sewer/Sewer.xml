@@ -42,6 +42,7 @@
 	        <Name>Torch</Name>
 	        <EnvironmentData>
 	            <AttachToWall>true</AttachToWall>
+	            <OverHead>true</OverHead>
 				<Sprite>
 					<Name>torch</Name>
 				</Sprite>

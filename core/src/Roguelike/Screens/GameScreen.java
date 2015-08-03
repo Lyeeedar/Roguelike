@@ -238,6 +238,7 @@ public class GameScreen implements Screen, InputProcessor
 
 		toBeDrawn.clear();
 		hpBars.clear();
+		overHead.clear();
 
 		for (int x = 0; x < Global.CurrentLevel.width; x++)
 		{
@@ -256,22 +257,29 @@ public class GameScreen implements Screen, InputProcessor
 
 					if (gtile.environmentEntity != null) 
 					{ 
-						int cx = x*Global.TileSize + offsetx;
-						int cy = y*Global.TileSize + offsety;
-						
-						if (gtile.environmentEntity.location == Direction.CENTER)
+						if (gtile.environmentEntity.overHead)
 						{
-							gtile.environmentEntity.sprite.render(batch, cx, cy, Global.TileSize, Global.TileSize);
+							overHead.add(gtile.environmentEntity);
 						}
 						else
 						{
-							Direction dir = gtile.environmentEntity.location;
-							gtile.environmentEntity.sprite.render(batch, cx + tileSize3*(dir.GetX()*-1+1), cy + tileSize3*(dir.GetY()*-1+1), tileSize3, tileSize3);
-						}
+							int cx = x*Global.TileSize + offsetx;
+							int cy = y*Global.TileSize + offsety;
+							
+							if (gtile.environmentEntity.location == Direction.CENTER)
+							{
+								gtile.environmentEntity.sprite.render(batch, cx, cy, Global.TileSize, Global.TileSize);
+							}
+							else
+							{
+								Direction dir = gtile.environmentEntity.location;
+								gtile.environmentEntity.sprite.render(batch, cx + tileSize3*(dir.GetX()*-1+1), cy + tileSize3*(dir.GetY()*-1+1), tileSize3, tileSize3);
+							}
 
-						if (gtile.environmentEntity.HP < gtile.environmentEntity.statistics.get(Statistic.MAXHP) || gtile.environmentEntity.stacks.size > 0)
-						{
-							hpBars.add(gtile.environmentEntity);
+							if (gtile.environmentEntity.HP < gtile.environmentEntity.statistics.get(Statistic.MAXHP) || gtile.environmentEntity.stacks.size > 0)
+							{
+								hpBars.add(gtile.environmentEntity);
+							}
 						}
 					}
 
@@ -367,7 +375,28 @@ public class GameScreen implements Screen, InputProcessor
 				cy += offset[1];
 			}
 
-			EntityStatusRenderer.draw(entity, batch, cx, cy, Global.TileSize, Global.TileSize, 1.0f/8.0f);
+			hpBars.add(entity);
+		}
+		
+		for (EnvironmentEntity ee : overHead)
+		{
+			int cx = ee.tile.x*Global.TileSize + offsetx;
+			int cy = ee.tile.y*Global.TileSize + offsety;
+			
+			if (ee.location == Direction.CENTER)
+			{
+				ee.sprite.render(batch, cx, cy, Global.TileSize, Global.TileSize);
+			}
+			else
+			{
+				Direction dir = ee.location;
+				ee.sprite.render(batch, cx + tileSize3*(dir.GetX()*-1+1), cy + tileSize3*(dir.GetY()*-1+1), tileSize3, tileSize3);
+			}
+
+			if (ee.HP < ee.statistics.get(Statistic.MAXHP) || ee.stacks.size > 0)
+			{
+				hpBars.add(ee);
+			}
 		}
 
 		for (Entity e : hpBars)
@@ -377,6 +406,13 @@ public class GameScreen implements Screen, InputProcessor
 
 			int cx = x*Global.TileSize + offsetx;
 			int cy = y*Global.TileSize + offsety;
+			
+			if (e.sprite.spriteAnimation != null)
+			{
+				int[] offset = e.sprite.spriteAnimation.getRenderOffset();
+				cx += offset[0];
+				cy += offset[1];
+			}
 
 			EntityStatusRenderer.draw(e, batch, cx, cy, Global.TileSize, Global.TileSize, 1.0f/8.0f);
 		}
@@ -438,7 +474,18 @@ public class GameScreen implements Screen, InputProcessor
 
 					for (SeenHistoryItem hist : stile.History)
 					{
-						hist.sprite.render(batch, x*Global.TileSize + offsetx, y*Global.TileSize + offsety, Global.TileSize, Global.TileSize, hist.animationState);
+						int cx = x*Global.TileSize + offsetx;
+						int cy = y*Global.TileSize + offsety;
+						
+						if (hist.location != Direction.CENTER)
+						{
+							Direction dir = hist.location;
+							hist.sprite.render(batch, cx + tileSize3*(dir.GetX()*-1+1), cy + tileSize3*(dir.GetY()*-1+1), tileSize3, tileSize3);
+						}
+						else
+						{
+							hist.sprite.render(batch, cx, cy, Global.TileSize, Global.TileSize, hist.animationState);
+						}
 					}				
 
 					batch.setColor(Color.WHITE);				
@@ -1041,6 +1088,7 @@ public class GameScreen implements Screen, InputProcessor
 
 	//----------------------------------------------------------------------
 	Array<GameEntity> toBeDrawn = new Array<GameEntity>();
+	Array<EnvironmentEntity> overHead = new Array<EnvironmentEntity>();
 	Array<Entity> hpBars = new Array<Entity>();
 
 	//----------------------------------------------------------------------

@@ -142,7 +142,9 @@ public class Level
 					
 					if (tile.environmentEntity != null)
 					{
-						s.History.add(new SeenHistoryItem(tile.environmentEntity.sprite, ""));
+						SeenHistoryItem shi = new SeenHistoryItem(tile.environmentEntity.sprite, "");
+						shi.location = tile.environmentEntity.location;
+						s.History.add(shi);
 					}
 										
 					if (tile.entity != null)

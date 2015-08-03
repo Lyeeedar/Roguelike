@@ -1,5 +1,7 @@
 package Roguelike.Tiles;
 
+import Roguelike.Global;
+import Roguelike.Global.Direction;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationState;
 
@@ -45,15 +47,18 @@ public class SeenTile
 	{
 		public Sprite sprite;
 		public AnimationState animationState;
+		public Direction location = Direction.CENTER;
 		
 		String description;
-		int turn;
+		float turn;
 		
 		public SeenHistoryItem(Sprite sprite, String desc)
 		{
 			this.sprite = sprite;
 			this.animationState = sprite.animationState.copy();
 			this.description = desc;
+			
+			turn = Global.AUT;
 		}
 	}
 }

@@ -91,34 +91,41 @@ public class RecursiveDockGenerator
 					{
 						Direction location = Direction.CENTER;
 						
-						// get direction
-						HashSet<Direction> validDirections = new HashSet<Direction>();
-						for (Direction dir : Direction.values())
+						if (symbol.attachLocation != null)
 						{
-							boolean passable = symbolGrid[x+dir.GetX()][y+dir.GetY()] == dfp.sharedSymbolMap.get('#');
-							if (!passable) { validDirections.add(dir); }
+							location = symbol.attachLocation;
 						}
-						
-						if (validDirections.size() > 0)
+						else
 						{
-							// look for direction with full surround
+							// get direction
+							HashSet<Direction> validDirections = new HashSet<Direction>();
 							for (Direction dir : Direction.values())
 							{
-								boolean acwvalid = validDirections.contains(dir.GetAnticlockwise());
-								boolean valid = validDirections.contains(dir);
-								boolean cwvalid = validDirections.contains(dir.GetClockwise());
-								
-								if (acwvalid && valid && cwvalid)
-								{
-									location = dir;
-									break;
-								}
+								boolean passable = symbolGrid[x+dir.GetX()][y+dir.GetY()] == dfp.sharedSymbolMap.get('#');
+								if (!passable) { validDirections.add(dir); }
 							}
 							
-							// else pick random
-							if (location == Direction.CENTER)
+							if (validDirections.size() > 0)
 							{
-								location = validDirections.toArray(new Direction[validDirections.size()])[ran.nextInt(validDirections.size())];
+								// look for direction with full surround
+								for (Direction dir : Direction.values())
+								{
+									boolean acwvalid = validDirections.contains(dir.GetAnticlockwise());
+									boolean valid = validDirections.contains(dir);
+									boolean cwvalid = validDirections.contains(dir.GetClockwise());
+									
+									if (acwvalid && valid && cwvalid)
+									{
+										location = dir;
+										break;
+									}
+								}
+								
+								// else pick random
+								if (location == Direction.CENTER)
+								{
+									location = validDirections.toArray(new Direction[validDirections.size()])[ran.nextInt(validDirections.size())];
+								}
 							}
 						}
 						
@@ -728,8 +735,10 @@ public class RecursiveDockGenerator
 		int centralCount = 0;
 		int sideCount = 0;
 		
-		for (int[] pos : path)
+		for (int i = 0; i < path.length; i++)
 		{
+			int[] pos = path[i];
+			
 			GenerationTile t = tiles[pos[0]][pos[1]];	
 			t.isCorridor = true;
 			
@@ -743,6 +752,20 @@ public class RecursiveDockGenerator
 					{
 						t.symbol = dfp.sharedSymbolMap.get('.');
 					}
+					
+					// Wipe out all features not placed by this path
+					if (t.placerHashCode != path.hashCode())
+					{
+						t.symbol.environmentData = null;
+						t.symbol.environmentEntityObject = null;
+					}
+					
+					// Wipe out all features in the central square
+					if (x > 0 && x < dfp.corridorStyle.width-1 && y > 0 && y < dfp.corridorStyle.width-1)
+					{
+						t.symbol.environmentData = null;
+						t.symbol.environmentEntityObject = null;
+					}
 				}
 			}
 			
@@ -750,6 +773,7 @@ public class RecursiveDockGenerator
 			{
 				t = tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]+dfp.corridorStyle.width/2];
 				t.symbol = dfp.corridorStyle.centralConstant.getAsSymbol(t.symbol);
+				t.placerHashCode = path.hashCode();
 			}
 			
 			if (dfp.corridorStyle.centralRecurring != null)
@@ -760,6 +784,7 @@ public class RecursiveDockGenerator
 				{
 					t = tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]+dfp.corridorStyle.width/2];
 					t.symbol = dfp.corridorStyle.centralRecurring.getAsSymbol(t.symbol);
+					t.placerHashCode = path.hashCode();
 					
 					centralCount = 0;
 				}
@@ -769,31 +794,44 @@ public class RecursiveDockGenerator
 			{
 				sideCount++;
 				
-				if (sideCount == dfp.corridorStyle.sideRecurring.interval)
+				if (sideCount == dfp.corridorStyle.sideRecurring.interval && i > 0)
 				{
 					Symbol wall = dfp.sharedSymbolMap.get('#');
-					if (tiles[pos[0]-1][pos[1]+dfp.corridorStyle.width/2].symbol == wall)
+					if (path[i-1][0] != pos[0])
 					{
-						t = tiles[pos[0]][pos[1]+dfp.corridorStyle.width/2];
-						t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
+						if (tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]-1].symbol == wall)
+						{
+							t = tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]];
+							t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
+							t.symbol.attachLocation = Direction.NORTH;
+							t.placerHashCode = path.hashCode();
+						}
+						
+						if (tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]+dfp.corridorStyle.width].symbol == wall)
+						{
+							t = tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]+dfp.corridorStyle.width-1];
+							t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
+							t.symbol.attachLocation = Direction.SOUTH;
+							t.placerHashCode = path.hashCode();
+						}
 					}
-					
-					if (tiles[pos[0]+dfp.corridorStyle.width][pos[1]+dfp.corridorStyle.width/2].symbol == wall)
+					else
 					{
-						t = tiles[pos[0]+dfp.corridorStyle.width-1][pos[1]+dfp.corridorStyle.width/2];
-						t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
-					}
-					
-					if (tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]-1].symbol == wall)
-					{
-						t = tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]];
-						t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
-					}
-					
-					if (tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]+dfp.corridorStyle.width].symbol == wall)
-					{
-						t = tiles[pos[0]+dfp.corridorStyle.width/2][pos[1]+dfp.corridorStyle.width-1];
-						t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
+						if (tiles[pos[0]-1][pos[1]+dfp.corridorStyle.width/2].symbol == wall)
+						{
+							t = tiles[pos[0]][pos[1]+dfp.corridorStyle.width/2];
+							t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
+							t.symbol.attachLocation = Direction.EAST;
+							t.placerHashCode = path.hashCode();
+						}
+						
+						if (tiles[pos[0]+dfp.corridorStyle.width][pos[1]+dfp.corridorStyle.width/2].symbol == wall)
+						{
+							t = tiles[pos[0]+dfp.corridorStyle.width-1][pos[1]+dfp.corridorStyle.width/2];
+							t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
+							t.symbol.attachLocation = Direction.WEST;
+							t.placerHashCode = path.hashCode();
+						}
 					}
 					
 					sideCount = 0;
@@ -1622,6 +1660,7 @@ public class RecursiveDockGenerator
 	{
 		public Symbol symbol;		
 		public int influence;
+		public long placerHashCode;
 		
 		public boolean passable;
 		public boolean isCorridor = false;

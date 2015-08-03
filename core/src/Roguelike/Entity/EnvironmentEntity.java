@@ -27,6 +27,7 @@ public class EnvironmentEntity extends Entity
 {
 	public Direction location = Direction.CENTER;
 	public boolean attachToWall = false;
+	public boolean overHead = false;
 	
 	public boolean passable;
 	public boolean opaque;
@@ -324,6 +325,7 @@ public class EnvironmentEntity extends Entity
 		entity.passable = xml.getBoolean("Passable", true);
 		entity.opaque = xml.getBoolean("Opaque", false);
 		entity.attachToWall = xml.getBoolean("AttachToWall", false);
+		entity.overHead = xml.getBoolean("OverHead", false);
 		
 		entity.baseInternalLoad(xml);
 		

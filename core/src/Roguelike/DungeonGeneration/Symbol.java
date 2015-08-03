@@ -3,6 +3,7 @@ package Roguelike.DungeonGeneration;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import Roguelike.Global.Direction;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Pathfinding.PathfindingTile;
@@ -19,6 +20,7 @@ public class Symbol implements PathfindingTile
 
 	public Element environmentData;
 	public EnvironmentEntity environmentEntityObject;
+	public Direction attachLocation;
 
 	public String entityData;
 
