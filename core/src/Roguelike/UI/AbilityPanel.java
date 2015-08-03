@@ -81,7 +81,7 @@ public class AbilityPanel extends Widget
 			{
 				aa.Icon.render(batch, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
 				
-				if (aa.cooldownAccumulator > 0)
+				if (!aa.isAvailable())
 				{
 					String text = "" + (int)Math.ceil(aa.cooldownAccumulator);
 					layout.setText(font, text);
@@ -208,7 +208,7 @@ public class AbilityPanel extends Widget
 				{
 					ActiveAbility aa = entity.getSlottedActiveAbilities()[xIndex];
 					
-					if (aa != null && aa.cooldownAccumulator <= 0)
+					if (aa != null && aa.isAvailable())
 					{
 						GameScreen.Instance.dragDropPayload = new DragDropPayload(aa, aa.getIcon(), x-16, getHeight() - y - 16);
 					}

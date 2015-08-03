@@ -338,6 +338,7 @@ public class GameEntity extends Entity
 		}
 		else
 		{
+			aa.caster = this;
 			slottedActiveAbilities[index] = aa;
 
 			if (aa != null)

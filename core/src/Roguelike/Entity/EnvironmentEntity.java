@@ -1,10 +1,12 @@
 package Roguelike.Entity;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
+import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.RoguelikeGame;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
@@ -29,7 +31,7 @@ public class EnvironmentEntity extends Entity
 	public boolean attachToWall = false;
 	public boolean overHead = false;
 	
-	public boolean passable;
+	public EnumSet<Passability> passableBy;
 	public boolean opaque;
 
 	public Array<ActivationAction> actions = new Array<ActivationAction>();
@@ -102,12 +104,12 @@ public class EnvironmentEntity extends Entity
 		final Sprite stairup = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_up");
 		
 		final EnvironmentEntity entranceEntity = new EnvironmentEntity();
-		entranceEntity.passable = true;
+		entranceEntity.passableBy = Passability.parse("true");
 		entranceEntity.opaque = false;
 		entranceEntity.sprite = stairdown;
 		
 		final EnvironmentEntity exitEntity = new EnvironmentEntity();
-		exitEntity.passable = true;
+		exitEntity.passableBy = Passability.parse("true");
 		exitEntity.opaque = false;
 		exitEntity.sprite = stairup;
 		
@@ -188,7 +190,7 @@ public class EnvironmentEntity extends Entity
 		{
 			public void activate(EnvironmentEntity entity)
 			{
-				entity.passable = true;
+				entity.passableBy = Passability.parse("true");
 				entity.opaque = false;				
 				entity.sprite = doorOpen;
 				
@@ -206,7 +208,7 @@ public class EnvironmentEntity extends Entity
 					return;
 				}
 				
-				entity.passable = false;
+				entity.passableBy = Passability.parse("false");;
 				entity.opaque = true;				
 				entity.sprite = doorClosed;
 				
@@ -217,7 +219,7 @@ public class EnvironmentEntity extends Entity
 		close.visible = false;
 		
 		EnvironmentEntity entity = new EnvironmentEntity();
-		entity.passable = false;
+		entity.passableBy = Passability.parse("false");
 		entity.opaque = true;
 		entity.sprite = doorClosed;
 		entity.actions.add(open);
@@ -229,7 +231,7 @@ public class EnvironmentEntity extends Entity
 	private static EnvironmentEntity CreateSpawner(Element xml)
 	{
 		EnvironmentEntity entity = new EnvironmentEntity();
-		entity.passable = xml.getBoolean("Passable", true);
+		entity.passableBy = Passability.parse(xml.get("Passable"));
 		entity.opaque = xml.getBoolean("Opaque", false);
 		
 		entity.baseInternalLoad(xml);
@@ -322,10 +324,11 @@ public class EnvironmentEntity extends Entity
 	private static EnvironmentEntity CreateBasic(Element xml)
 	{
 		EnvironmentEntity entity = new EnvironmentEntity();
-		entity.passable = xml.getBoolean("Passable", true);
+		entity.passableBy = Passability.parse(xml.get("Passable", "false"));
 		entity.opaque = xml.getBoolean("Opaque", false);
 		entity.attachToWall = xml.getBoolean("AttachToWall", false);
 		entity.overHead = xml.getBoolean("OverHead", false);
+		entity.canTakeDamage = xml.getChildByName("Statistics") != null;
 		
 		entity.baseInternalLoad(xml);
 		

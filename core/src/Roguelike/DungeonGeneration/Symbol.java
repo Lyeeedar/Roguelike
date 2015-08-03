@@ -30,10 +30,7 @@ public class Symbol implements PathfindingTile
 	public String metaValue;
 	
 	//----------------------------------------------------------------------
-	private Element processedEnvironmentData;
-	private Element processedTileData;
-	
-	private boolean eePassable;
+	private Element processedTileData;	
 	private EnumSet<Passability> tilePassable;	
 	//----------------------------------------------------------------------
 	
@@ -65,29 +62,23 @@ public class Symbol implements PathfindingTile
 		if (environmentData != null)
 		{
 			EnvironmentEntity ee = EnvironmentEntity.load(environmentData);
-			
-			processedEnvironmentData = environmentData;
-			eePassable = ee.passable;
-			
+						
 			return ee;
 		}
-		
-		processedEnvironmentData = null;
-		eePassable = true;
 		
 		return null;
 	}
 
-	public boolean getEnvironmentEntityPassable()
+	public boolean getEnvironmentEntityPassable(Array<Passability> travelType)
 	{
 		if (environmentEntityObject != null)
 		{
-			return environmentEntityObject.passable;
+			return Passability.isPassable(environmentEntityObject.passableBy, travelType);
 		}
 		
 		if (environmentData != null)
 		{
-			return environmentData.getBoolean("Passable", true);
+			return Passability.isPassable(Passability.parse(environmentData.get("Passable", "true")), travelType);
 		}
 		
 		return true;
@@ -180,6 +171,7 @@ public class Symbol implements PathfindingTile
 		return isPassable(travelType);
 	}
 
+	private static final Array<Passability> InfluencePassable = new Array<Passability>(new Passability[]{Passability.WALK});
 	@Override
 	public int getInfluence()
 	{
@@ -187,7 +179,7 @@ public class Symbol implements PathfindingTile
 		{
 			if (hasEnvironmentEntity())
 			{
-				if (!getEnvironmentEntityPassable())
+				if (!getEnvironmentEntityPassable(InfluencePassable))
 				{
 					return 100;
 				}

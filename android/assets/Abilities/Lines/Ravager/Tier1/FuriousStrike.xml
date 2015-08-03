@@ -16,10 +16,11 @@
 		<UpdateRate>0.1</UpdateRate>
 	</HitSprite>
 	
-	<Type>
-		<Harmful>
-		</Harmful>
-	</Type>
+	<Cost>
+	    <Status ReliesOn="Bloodlust">
+	        <Bloodlust>Bloodlust</Bloodlust>
+	    </Status>
+	</Cost>
 	
 	<Targeting>
 		<Entity>
@@ -34,11 +35,11 @@
 	
 	<Effect>
 		<Damage ReliesOn="Bloodlust">
-			<Metal_Atk>METAL_ATK*(1+0.15*BLOODLUST)</Metal_Atk>
-			<Wood_Atk>WOOD_ATK*(1+0.15*BLOODLUST)</Wood_Atk>
-			<Air_Atk>AIR_ATK*(1+0.15*BLOODLUST)</Air_Atk>
-			<Water_Atk>WATER_ATK*(1+0.15*BLOODLUST)</Water_Atk>
-			<Fire_Atk>FIRE_ATK*(1+0.15*BLOODLUST)</Fire_Atk>
+			<Metal_Atk>METAL_ATK*(1+0.25*BLOODLUST)</Metal_Atk>
+			<Wood_Atk>WOOD_ATK*(1+0.25*BLOODLUST)</Wood_Atk>
+			<Air_Atk>AIR_ATK*(1+0.25*BLOODLUST)</Air_Atk>
+			<Water_Atk>WATER_ATK*(1+0.25*BLOODLUST)</Water_Atk>
+			<Fire_Atk>FIRE_ATK*(1+0.25*BLOODLUST)</Fire_Atk>
 		</Damage>
 	</Effect>
 	

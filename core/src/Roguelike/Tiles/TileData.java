@@ -43,11 +43,7 @@ public class TileData
 		if (xml.getChildByName("Light") != null) { data.light = Light.load(xml.getChildByName("Light")); }
 		data.opaque = xml.getBoolean("Opaque", false);
 		
-		Element passableElement = xml.getChildByName("Passable");
-		if (passableElement != null) 
-		{ 
-			data.passableBy = Passability.parse(passableElement); 
-		}
+		data.passableBy = Passability.parse(xml.get("Passable", "false"));
 		
 		data.canFeature = xml.getBoolean("CanFeature", true);
 		data.canSpawn = xml.getBoolean("CanSpawn", true);

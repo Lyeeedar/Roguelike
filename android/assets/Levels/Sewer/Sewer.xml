@@ -38,6 +38,7 @@
 	    </CentralRecurring>
 	    
 	    <SideRecurring>
+	        <PlacementMode>Alternate</PlacementMode>
 	        <Interval>5</Interval>
 	        <Name>Torch</Name>
 	        <EnvironmentData>

@@ -8,16 +8,18 @@ import Roguelike.Pathfinding.AStarPathfind;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class SoundInstance
 {
-	private static final Array<Passability> SoundPassability = new Array<Passability>(new Passability[]{Passability.LEVITATE});
+	private static final Array<Passability> SoundPassability = new Array<Passability>(new Passability[]{Passability.LEVITATE, Passability.ENTITY});
 	
 	public Sound sound;
 	
-	public float pitch = 1;
+	public float minPitch = 0.8f;
+	public float maxPitch = 1.2f;
 	public float volume = 1;
 		
 	public int range = 10;
@@ -107,7 +109,7 @@ public class SoundInstance
 				vol *= alpha;
 			}
 						
-			sound.play(vol, pitch, 0);
+			sound.play(vol, minPitch+MathUtils.random()*(maxPitch-minPitch), 0);
 		}
 	}
 }

@@ -115,13 +115,13 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 	@Override
 	public boolean getPassable(Array<Passability> travelType)
 	{
-		if (environmentEntity != null && !environmentEntity.passable) { return false; }
+		if (environmentEntity != null && !Passability.isPassable(environmentEntity.passableBy, travelType)) { return false; }
 		
 		boolean passable = Passability.isPassable(tileData.passableBy, travelType);
 		
 		if (!passable) { return false; }
 		
-		return entity == null;
+		return travelType.contains(Passability.ENTITY, true) || entity == null;
 	}
 
 	

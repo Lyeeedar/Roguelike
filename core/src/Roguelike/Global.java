@@ -231,7 +231,8 @@ public class Global
 	public enum Passability
 	{
 		WALK(Statistic.WALK),
-		LEVITATE(Statistic.LEVITATE);
+		LEVITATE(Statistic.LEVITATE),
+		ENTITY(null);
 		
 		public final Statistic stat;
 		
@@ -260,11 +261,10 @@ public class Global
 			return travelType;
 		}
 		
-		public static EnumSet<Passability> parse(Element xml)
+		public static EnumSet<Passability> parse(String passable)
 		{
 			EnumSet<Passability> passableBy = EnumSet.noneOf(Passability.class);
 			
-			String passable = xml.getText();
 			if (passable != null)
 			{
 				if (passable.equalsIgnoreCase("true"))

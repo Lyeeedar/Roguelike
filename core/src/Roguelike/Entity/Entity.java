@@ -137,6 +137,8 @@ public abstract class Entity
 	//----------------------------------------------------------------------
 	public void applyDamage(int dam, Entity damager)
 	{
+		if (!canTakeDamage) { return; }
+		
 		HP = Math.max(HP-dam, 0);
 
 		if (HP == 0)
@@ -151,6 +153,8 @@ public abstract class Entity
 	//----------------------------------------------------------------------
 	public void applyHealing(int heal)
 	{
+		if (!canTakeDamage) { return; }
+		
 		int appliedHeal = Math.min(heal, getStatistic(Statistic.MAXHP) - HP);
 		HP += appliedHeal;
 
@@ -191,8 +195,30 @@ public abstract class Entity
 	//----------------------------------------------------------------------
 	public void addStatusEffect(StatusEffect se)
 	{
+		if (!canTakeDamage) { return; }
+		
 		se.attachedTo = this;
 		statusEffects.add(se);
+	}
+	
+	//----------------------------------------------------------------------
+	public void removeStatusEffect(StatusEffect se)
+	{
+		se.attachedTo = null;
+		statusEffects.removeValue(se, true);
+	}
+	
+	//----------------------------------------------------------------------
+	public void removeStatusEffect(String se)
+	{
+		for (int i = 0; i < statusEffects.size; i++)
+		{
+			if (statusEffects.get(i).name.equals(se))
+			{
+				statusEffects.removeIndex(i);
+				break;
+			}
+		}
 	}
 
 	//----------------------------------------------------------------------
@@ -219,6 +245,9 @@ public abstract class Entity
 	//----------------------------------------------------------------------
 	public int HP = 1;
 	public int essence = 0;
+	
+	//----------------------------------------------------------------------
+	public boolean canTakeDamage = true;
 
 	//----------------------------------------------------------------------
 	public static class StatusEffectStack

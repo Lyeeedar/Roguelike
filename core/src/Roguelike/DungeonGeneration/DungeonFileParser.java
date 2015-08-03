@@ -40,7 +40,8 @@ public class DungeonFileParser
 		}
 		public PathStyle pathStyle = PathStyle.STRAIGHT;
 		
-		public int width;
+		public int minWidth;
+		public int maxWidth;
 		
 		public CorridorFeature centralConstant;
 		public CorridorFeature centralRecurring;
@@ -49,7 +50,13 @@ public class DungeonFileParser
 		public void parse(Element xml)
 		{
 			pathStyle = PathStyle.valueOf(xml.get("PathStyle", "Straight").toUpperCase());
-			width = xml.getInt("Width", 2);
+			
+			if (xml.getInt("Width", -1) != -1)
+			{
+				minWidth = maxWidth = xml.getInt("Width");
+			}
+			minWidth = xml.getInt("MinWidth", minWidth);
+			maxWidth = xml.getInt("MaxWidth", maxWidth);
 			
 			Element centralConstantElement = xml.getChildByName("CentralConstant");
 			if (centralConstantElement != null)
@@ -73,16 +80,27 @@ public class DungeonFileParser
 	
 	public static class CorridorFeature
 	{
+		public enum PlacementMode
+		{
+			BOTH,
+			TOP,
+			BOTTOM,
+			ALTERNATE
+		}
+		
 		public Element tileData;		
 		public Element environmentData;
 		
 		public int interval;
+		
+		public PlacementMode placementMode;
 		
 		public static CorridorFeature load(Element xml)
 		{
 			CorridorFeature feature = new CorridorFeature();	
 			
 			feature.interval = xml.getInt("Interval", 0);
+			feature.placementMode = PlacementMode.valueOf(xml.get("PlacementMode", "Both").toUpperCase());
 			feature.tileData = xml.getChildByName("TileData");
 			feature.environmentData = xml.getChildByName("EnvironmentData");			
 			

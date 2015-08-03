@@ -9,6 +9,7 @@ import Roguelike.AssetManager;
 import Roguelike.Global.Direction;
 import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.AbilityType.AbstractAbilityType;
+import Roguelike.Ability.ActiveAbility.CostType.AbstractCostType;
 import Roguelike.Ability.ActiveAbility.EffectType.AbstractEffectType;
 import Roguelike.Ability.ActiveAbility.MovementType.AbstractMovementType;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeBolt;
@@ -53,8 +54,9 @@ public class ActiveAbility implements IAbility, IGameObject
 	public float cooldownAccumulator;
 	public float cooldown = 1;
 	
-	private AbstractTargetingType targetingType = new TargetingTypeTile();
-	private AbstractMovementType movementType = new MovementTypeSmite();
+	public Array<AbstractCostType> costTypes = new Array<AbstractCostType>();
+	public AbstractTargetingType targetingType = new TargetingTypeTile();
+	public AbstractMovementType movementType = new MovementTypeSmite();
 	public Array<AbstractEffectType> effectTypes = new Array<AbstractEffectType>();
 	public Array<GameTile> AffectedTiles = new Array<GameTile>();
 	
@@ -70,6 +72,22 @@ public class ActiveAbility implements IAbility, IGameObject
 	private Sprite hitSprite;
 	private Sprite useSprite;
 	
+	private boolean spentCost = false;
+	
+	//----------------------------------------------------------------------
+	public boolean isAvailable()
+	{
+		if (cooldownAccumulator > 0) { return false; }
+		
+		for (AbstractCostType cost : costTypes)
+		{
+			if (!cost.isCostAvailable(this)) { return false; }
+		}
+		
+		return true;
+	}
+	
+	//----------------------------------------------------------------------
 	public ActiveAbility copy()
 	{
 		ActiveAbility aa = new ActiveAbility();
@@ -83,6 +101,11 @@ public class ActiveAbility implements IAbility, IGameObject
 		
 		aa.targetingType = targetingType.copy();
 		aa.movementType = movementType.copy();
+		
+		for (AbstractCostType cost : costTypes)
+		{
+			aa.costTypes.add(cost.copy());
+		}
 		
 		for (AbstractEffectType effect : effectTypes)
 		{
@@ -103,16 +126,19 @@ public class ActiveAbility implements IAbility, IGameObject
 		return aa;
 	}
 	
+	//----------------------------------------------------------------------
 	public Array<GameTile> getAffectedTiles()
 	{
 		return AffectedTiles;
 	}
 	
+	//----------------------------------------------------------------------
 	public Sprite getSprite()
 	{
 		return movementSprite;
 	}
 	
+	//----------------------------------------------------------------------
 	public Sprite getHitSprite()
 	{
 		if (hitSprite != null) { return hitSprite; }
@@ -131,6 +157,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		return caster.defaultHitEffect;
 	}
 	
+	//----------------------------------------------------------------------
 	public Sprite getUseSprite()
 	{
 		return useSprite;
@@ -158,6 +185,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		return table;
 	}
 
+	//----------------------------------------------------------------------
 	public boolean isTargetValid(GameTile tile, int[][] valid)
 	{
 		for (int[] validTile : valid)
@@ -171,6 +199,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		return false;
 	}
 	
+	//----------------------------------------------------------------------
 	public int[][] getValidTargets()
 	{		
 		Array<int[]> validTargets = new Array<int[]>();
@@ -192,16 +221,19 @@ public class ActiveAbility implements IAbility, IGameObject
 		return validTargets.toArray(int[].class);
 	}
 	
+	//----------------------------------------------------------------------
 	public void lockTarget(GameTile tile)
 	{
 		movementType.init(this, tile.x, tile.y);
 	}
 	
+	//----------------------------------------------------------------------
 	public void updateAccumulators(float cost)
 	{
 		movementType.updateAccumulators(cost);
 	}
 	
+	//----------------------------------------------------------------------
 	public boolean needsUpdate()
 	{
 		if (movementType.needsUpdate()) { return true; }
@@ -209,8 +241,18 @@ public class ActiveAbility implements IAbility, IGameObject
 		return false;
 	}
 	
+	//----------------------------------------------------------------------
 	public boolean update()
 	{
+		if (!spentCost)
+		{
+			for (AbstractCostType cost : costTypes)
+			{
+				cost.spendCost(this);
+			}
+			spentCost = true;
+		}
+		
 		boolean finished = movementType.update(this);
 		if (movementSprite != null) { movementSprite.rotation = movementType.direction.GetAngle(); }
 		
@@ -327,6 +369,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		return finished;
 	}
 	
+	//----------------------------------------------------------------------
 	private void internalLoad(String name)
 	{
 		XmlReader xml = new XmlReader();
@@ -344,6 +387,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		internalLoad(xmlElement);
 	}
 	
+	//----------------------------------------------------------------------
 	private void internalLoad(Element xmlElement)
 	{
 		
@@ -372,11 +416,15 @@ public class ActiveAbility implements IAbility, IGameObject
 			light = Roguelike.Lights.Light.load(lightElement);
 		}
 		
-//		Element typeElement = xmlElement.getChildByName("Type");
-//		if (typeElement != null)
-//		{
-//			abilityType = AbstractAbilityType.load(typeElement.getChild(0));
-//		}
+		Element costsElement = xmlElement.getChildByName("Cost");
+		if (costsElement != null)
+		{
+			for (int i = 0; i < costsElement.getChildCount(); i++)
+			{
+				Element costElement = costsElement.getChild(i);
+				costTypes.add(AbstractCostType.load(costElement));
+			}
+		}
 		
 		Element targetingElement = xmlElement.getChildByName("Targeting");
 		if (targetingElement != null)
@@ -401,6 +449,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		}
 	}
 	
+	//----------------------------------------------------------------------
 	public static ActiveAbility load(String name)
 	{
 		ActiveAbility ab = new ActiveAbility();
@@ -410,6 +459,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		return ab;
 	}
 	
+	//----------------------------------------------------------------------
 	public static ActiveAbility load(Element xml)
 	{
 		ActiveAbility ab = new ActiveAbility();
@@ -419,12 +469,14 @@ public class ActiveAbility implements IAbility, IGameObject
 		return ab;
 	}
 	
+	//----------------------------------------------------------------------
 	@Override
 	public String getName()
 	{
 		return name;
 	}
 
+	//----------------------------------------------------------------------
 	@Override
 	public String getDescription()
 	{

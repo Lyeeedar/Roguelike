@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import Roguelike.Global;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Global.Direction;
+import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
@@ -56,7 +57,7 @@ public class TaskAttack extends AbstractTask
 			}
 		}
 
-		if (newTile.environmentEntity != null && !newTile.environmentEntity.passable)
+		if (newTile.environmentEntity != null && !Passability.isPassable(newTile.environmentEntity.passableBy, obj.getTravelType()))
 		{
 			hitSomething = true;
 		}
@@ -73,7 +74,7 @@ public class TaskAttack extends AbstractTask
 			{
 				entity.attack(tile.entity, dir);
 			}
-			else if (tile.environmentEntity != null && !tile.environmentEntity.passable)
+			else if (tile.environmentEntity != null && !Passability.isPassable(tile.environmentEntity.passableBy, entity.getTravelType()))
 			{
 				entity.attack(tile.environmentEntity, dir);
 			}
@@ -151,7 +152,7 @@ public class TaskAttack extends AbstractTask
 			{
 				entity.attack(bestTarget.entity, dir);
 			}
-			else if (bestTarget.environmentEntity != null && !bestTarget.environmentEntity.passable)
+			else if (bestTarget.environmentEntity != null && !Passability.isPassable(bestTarget.environmentEntity.passableBy, entity.getTravelType()))
 			{
 				entity.attack(bestTarget.environmentEntity, dir);
 			}
@@ -329,7 +330,7 @@ public class TaskAttack extends AbstractTask
 			}
 		}
 
-		if (newTile.environmentEntity != null && !newTile.environmentEntity.passable)
+		if (newTile.environmentEntity != null && !Passability.isPassable(newTile.environmentEntity.passableBy, obj.getTravelType()))
 		{
 			hitSomething = true;
 		}
