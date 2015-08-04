@@ -69,6 +69,7 @@ public class GameScreen implements Screen, InputProcessor
 	//####################################################################//
 	//region Create
 
+	//----------------------------------------------------------------------
 	public GameScreen()
 	{
 		Instance = this;
@@ -76,6 +77,7 @@ public class GameScreen implements Screen, InputProcessor
 		create();
 	}
 	
+	//----------------------------------------------------------------------
 	private void create()
 	{
 		batch = new SpriteBatch();
@@ -137,6 +139,8 @@ public class GameScreen implements Screen, InputProcessor
 		skin.addRegions(new TextureAtlas(Gdx.files.internal("GUI/uiskin.atlas")));
 		skin.add("default-font", font, BitmapFont.class);
 		skin.load(Gdx.files.internal("GUI/uiskin.json"));
+		
+		Global.skin = skin;
 
 		stage = new Stage(new ScreenViewport());
 
@@ -835,6 +839,28 @@ public class GameScreen implements Screen, InputProcessor
 		table.setVisible(true);
 	}
 
+	//----------------------------------------------------------------------
+	public void addPopupBubble(Entity entity)
+	{
+		int offsetx = Gdx.graphics.getWidth() / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+		int offsety = Gdx.graphics.getHeight() / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+
+		int x = entity.tile.x;
+		int y = entity.tile.y;
+
+		int cx = x*Global.TileSize + offsetx;
+		int cy = y*Global.TileSize + offsety;
+
+		entity.popup.addAction(new SequenceAction(
+				Actions.fadeOut(2),
+				Actions.removeActor()));		
+		entity.popup.setPosition(cx, cy+Global.TileSize/2);		
+		stage.addActor(entity.popup);	
+		entity.popup.setVisible(true);
+		
+		entity.popup = null;
+	}
+	
 	//----------------------------------------------------------------------
 	public void addActorDamageAction(Entity entity)
 	{

@@ -22,6 +22,7 @@ import Roguelike.UI.MessageStack.Message;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.sun.xml.internal.ws.util.StringUtils;
@@ -30,6 +31,9 @@ import exp4j.Helpers.EquationHelper;
 
 public class Global
 {
+	//----------------------------------------------------------------------
+	public static Skin skin;
+	
 	//----------------------------------------------------------------------
 	public static final int NUM_ABILITY_SLOTS = 8;
 	

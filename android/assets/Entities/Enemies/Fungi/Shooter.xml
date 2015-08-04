@@ -7,7 +7,7 @@
 	
 	<AI>basicMonster</AI>
 	
-	<CanMove>false</CanMove>
+	<CanMove>true</CanMove>
 	
 	<Factions>
 		<Faction>Fungi</Faction>

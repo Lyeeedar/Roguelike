@@ -10,6 +10,7 @@ import Roguelike.Entity.AI.BehaviourTree.Actions.ActionConvertTo;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionGetAllAbilities;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionGetAllVisible;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionMoveTo;
+import Roguelike.Entity.AI.BehaviourTree.Actions.ActionMoveToAttack;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionPickClosest;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionPickRandom;
 import Roguelike.Entity.AI.BehaviourTree.Actions.ActionProcessInput;
@@ -94,6 +95,7 @@ public abstract class BehaviourTreeNode
 		ClassMap.put("GETALLVISIBLE", ActionGetAllVisible.class);
 		ClassMap.put("GETALLABILITIES", ActionGetAllAbilities.class);
 		ClassMap.put("MOVETO", ActionMoveTo.class);
+		ClassMap.put("MOVETOATTACK", ActionMoveToAttack.class);
 		ClassMap.put("PICKCLOSEST", ActionPickClosest.class);
 		ClassMap.put("PICKRANDOM", ActionPickRandom.class);
 		ClassMap.put("PROCESSINPUT", ActionProcessInput.class);

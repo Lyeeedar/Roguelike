@@ -309,6 +309,11 @@ public class Level
 					{
 						GameScreen.Instance.addActorHealingAction(e);
 					}
+					
+					if (e.popup != null)
+					{
+						GameScreen.Instance.addPopupBubble(e);
+					}
 				}
 				else
 				{

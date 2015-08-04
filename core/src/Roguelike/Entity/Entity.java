@@ -14,6 +14,8 @@ import Roguelike.Sprite.SpriteEffect;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -233,6 +235,9 @@ public abstract class Entity
 
 	//----------------------------------------------------------------------
 	public String name;
+	
+	//----------------------------------------------------------------------
+	public Actor popup;
 
 	//----------------------------------------------------------------------
 	public Sprite sprite;
