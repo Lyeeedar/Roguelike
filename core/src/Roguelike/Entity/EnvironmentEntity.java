@@ -129,7 +129,7 @@ public class EnvironmentEntity extends Entity
 					
 					DFPRoom dfpRoom = DFPRoom.parse(data.getChildByName("ExitRoom"), generator.dfp.sharedSymbolMap);
 					final Room room = new Room();
-					dfpRoom.fillRoom(room);
+					dfpRoom.fillRoom(room, generator.ran, generator.dfp);
 					
 					for (int x = 0; x < room.width; x++)
 					{

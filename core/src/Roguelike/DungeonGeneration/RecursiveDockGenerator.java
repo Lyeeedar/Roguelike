@@ -1,6 +1,5 @@
 package Roguelike.DungeonGeneration;
 
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Random;
@@ -23,7 +22,6 @@ import Roguelike.Items.Recipe;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.AStarPathfind;
 import Roguelike.Pathfinding.BresenhamLine;
-import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Util.ImageUtils;
@@ -172,7 +170,7 @@ public class RecursiveDockGenerator
 		for (DFPRoom r : dfp.getRequiredRooms(depth))
 		{
 			Room room = new Room();
-			r.fillRoom(room);
+			r.fillRoom(room, ran, dfp);
 			toBePlaced.add(room);
 		}
 
@@ -180,7 +178,7 @@ public class RecursiveDockGenerator
 		{
 			DFPRoom r = dfp.optionalRooms.get(ran.nextInt(dfp.optionalRooms.size));
 			Room room = new Room();
-			r.fillRoom(room);
+			r.fillRoom(room, ran, dfp);
 			toBePlaced.add(room);
 		}
 
@@ -1012,7 +1010,7 @@ public class RecursiveDockGenerator
 	private static final int DEBUG_SIZE = 16;
 
 	private GenerationTile[][] tiles;
-	private Random ran = new Random(0);
+	public Random ran = new Random(0);
 
 	private int width = 100;
 	private int height = 100;
@@ -1104,17 +1102,12 @@ public class RecursiveDockGenerator
 		}
 
 		//----------------------------------------------------------------------
-		public void generateRoomContents(Random ran, DungeonFileParser dfp)
+		public void generateRoomContents(Random ran, DungeonFileParser dfp, Symbol floor, Symbol wall, RoomGeneratorType type)
 		{
 			roomContents = new Symbol[width][height];
 
-			Symbol floor = dfp.sharedSymbolMap.get('.');
-			Symbol wall = dfp.sharedSymbolMap.get('#');
-
-			while (true)
+			for (int i = 0; i < 20; i++)
 			{
-				RoomGeneratorType type = dfp.getRoomGenerator(ran);
-				
 				if (type == RoomGeneratorType.OVERLAPPINGRECTS)
 				{
 					OverlappingRects.process(roomContents, floor, wall, ran);
@@ -1242,8 +1235,17 @@ public class RecursiveDockGenerator
 				}
 				
 			}
-
-
+		}
+		
+		//----------------------------------------------------------------------
+		public void generateRoomContents(Random ran, DungeonFileParser dfp)
+		{
+			Symbol floor = dfp.sharedSymbolMap.get('.');
+			Symbol wall = dfp.sharedSymbolMap.get('#');
+			
+			RoomGeneratorType type = dfp.getRoomGenerator(ran);
+			
+			generateRoomContents(ran, dfp, floor, wall, type);
 		}
 
 		//----------------------------------------------------------------------
@@ -1544,6 +1546,7 @@ public class RecursiveDockGenerator
 			}			
 		}
 		
+		//----------------------------------------------------------------------
 		private void addDoor(int pos, int space, Direction dir, Random ran, DungeonFileParser dfp)
 		{			
 			if (space >= dfp.corridorStyle.minWidth)
@@ -1569,6 +1572,7 @@ public class RecursiveDockGenerator
 			}
 		}
 		
+		//----------------------------------------------------------------------
 		private void processSide(Direction dir, Random ran, DungeonFileParser dfp)
 		{
 			int range = (dir == Direction.WEST || dir == Direction.EAST) ? height : width;
@@ -1672,6 +1676,7 @@ public class RecursiveDockGenerator
 		}
 	}
 
+	//----------------------------------------------------------------------
 	public static class RoomDoor
 	{
 		public final Direction side;

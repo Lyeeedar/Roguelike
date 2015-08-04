@@ -151,7 +151,8 @@ public class DungeonFileParser
 		public HashMap<Character, Symbol> localSymbolMap = new HashMap<Character, Symbol>();
 		public HashMap<Character, Symbol> sharedSymbolMap;
 		public char[][] roomDef;
-		public String faction;
+		public String faction;		
+		public RoomGeneratorType generator;
 		
 		public static DFPRoom parse(Element xml, HashMap<Character, Symbol> sharedSymbolMap)
 		{
@@ -164,56 +165,63 @@ public class DungeonFileParser
 			room.faction = xml.get("Faction", null);
 			
 			Element rowsElement = xml.getChildByName("Rows");
-			if (rowsElement.getChildCount() > 0)
+			
+			if (rowsElement != null)
 			{
-				// Rows defined here
-				room.height = rowsElement.getChildCount();
-				for (int i = 0; i < room.height; i++)
+				if (rowsElement.getChildCount() > 0)
 				{
-					if (rowsElement.getChild(i).getText().length() > room.width)
+					// Rows defined here
+					room.height = rowsElement.getChildCount();
+					for (int i = 0; i < room.height; i++)
 					{
-						room.width = rowsElement.getChild(i).getText().length();
+						if (rowsElement.getChild(i).getText().length() > room.width)
+						{
+							room.width = rowsElement.getChild(i).getText().length();
+						}
+					}
+					
+					room.roomDef = new char[room.width][room.height];
+					for (int x = 0; x < room.width; x++)
+					{
+						for (int y = 0; y < room.height; y++)
+						{
+							room.roomDef[x][y] = rowsElement.getChild(y).getText().charAt(x);
+						}
 					}
 				}
-				
-				room.roomDef = new char[room.width][room.height];
-				for (int x = 0; x < room.width; x++)
+				else
 				{
-					for (int y = 0; y < room.height; y++)
+					// Rows in seperate csv file
+					String fileName = rowsElement.getText();
+					FileHandle handle = Gdx.files.internal(fileName+".csv");
+					String content = handle.readString();
+					
+					String[] lines = content.split(System.getProperty("line.separator"));
+					room.height = lines.length;
+					
+					String[][] rows = new String[lines.length][];				
+					for (int i = 0; i < lines.length; i++)
 					{
-						room.roomDef[x][y] = rowsElement.getChild(y).getText().charAt(x);
+						rows[i] = lines[i].split(" ");
+						
+						room.width = rows[i].length;
+					}
+					
+					room.roomDef = new char[room.width][room.height];
+					for (int x = 0; x < room.width; x++)
+					{
+						for (int y = 0; y < room.height; y++)
+						{
+							room.roomDef[x][y] = rows[x][y].charAt(0);
+						}
 					}
 				}
 			}
 			else
 			{
-				// Rows in seperate csv file
-				String fileName = rowsElement.getText();
-				FileHandle handle = Gdx.files.internal(fileName+".csv");
-				String content = handle.readString();
-				
-				String[] lines = content.split(System.getProperty("line.separator"));
-				room.height = lines.length;
-				
-				String[][] rows = new String[lines.length][];				
-				for (int i = 0; i < lines.length; i++)
-				{
-					rows[i] = lines[i].split(" ");
-					
-					room.width = rows[i].length;
-				}
-				
-				room.roomDef = new char[room.width][room.height];
-				for (int x = 0; x < room.width; x++)
-				{
-					for (int y = 0; y < room.height; y++)
-					{
-						room.roomDef[x][y] = rows[x][y].charAt(0);
-					}
-				}
-			}
-						
-			
+				Element generatorElement = xml.getChildByName("Generator");
+				room.generator = RoomGeneratorType.valueOf(generatorElement.getText().toUpperCase());				
+			}			
 			
 			Element symbolsElement = xml.getChildByName("Symbols");
 			if (symbolsElement != null)
@@ -228,32 +236,46 @@ public class DungeonFileParser
 			return room;
 		}
 		
-		public void fillRoom(Room room)
+		private Symbol getSymbol(char c)
+		{
+			Symbol s = localSymbolMap.get(c);
+			if (s == null) { s = sharedSymbolMap.get(c); }
+			if (s == null) 
+			{ 
+				//System.out.println("Failed to find symbol for character '" + c +"'! Falling back to using '.'");
+				s = sharedSymbolMap.get('.'); 
+			}
+			
+			if (s == null)
+			{
+				s = sharedSymbolMap.get('.'); 
+			}
+			
+			return s;
+		}
+		
+		public void fillRoom(Room room, Random ran, DungeonFileParser dfp)
 		{
 			room.width = width;
 			room.height = height;
 			room.roomContents = new Symbol[width][height];
 			room.faction = faction;
 			
-			for (int x = 0; x < width; x++)
+			if (generator != null)
 			{
-				for (int y = 0; y < height; y++)
+				Symbol floor = getSymbol('.');
+				Symbol wall = getSymbol('#');
+				
+				room.generateRoomContents(ran, dfp, floor, wall, generator);
+			}
+			else
+			{
+				for (int x = 0; x < width; x++)
 				{
-					char c = roomDef[x][y];
-					Symbol s = localSymbolMap.get(c);
-					if (s == null) { s = sharedSymbolMap.get(c); }
-					if (s == null) 
-					{ 
-						//System.out.println("Failed to find symbol for character '" + c +"'! Falling back to using '.'");
-						s = sharedSymbolMap.get('.'); 
-					}
-					
-					if (s == null)
+					for (int y = 0; y < height; y++)
 					{
-						s = sharedSymbolMap.get('.'); 
+						room.roomContents[x][y] = getSymbol(roomDef[x][y]);
 					}
-					
-					room.roomContents[x][y] = s;
 				}
 			}
 		}

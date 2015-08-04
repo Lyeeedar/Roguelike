@@ -13,6 +13,8 @@ public class ActionRest extends AbstractAction
 {
 	private HashSet<String> interestedValues = new HashSet<String>();	
 	private HashSet<String> tempValues = new HashSet<String>();
+	
+	int restedTurns = 0;
 
 	@Override
 	public BehaviourTreeState evaluate(GameEntity entity)
@@ -44,12 +46,15 @@ public class ActionRest extends AbstractAction
 		
 		if (hasRestingToDo)
 		{
-			entity.tasks.add(new TaskWait());
+			entity.tasks.add(new TaskWait(2+restedTurns/5));
 			State =  BehaviourTreeState.RUNNING;
+			
+			restedTurns++;
 		}
 		else
 		{
 			State =  BehaviourTreeState.SUCCEEDED;
+			restedTurns = 0;
 		}
 		
 		return State;
@@ -59,6 +64,8 @@ public class ActionRest extends AbstractAction
 	public void cancel()
 	{
 		interestedValues.clear();
+		
+		restedTurns = 0;
 	}
 
 	@Override
