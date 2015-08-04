@@ -33,7 +33,6 @@ public class EnvironmentEntity extends Entity
 	public boolean overHead = false;
 	
 	public EnumSet<Passability> passableBy;
-	public boolean opaque;
 
 	public Array<ActivationAction> actions = new Array<ActivationAction>();
 	
@@ -108,12 +107,12 @@ public class EnvironmentEntity extends Entity
 		
 		final EnvironmentEntity entranceEntity = new EnvironmentEntity();
 		entranceEntity.passableBy = Passability.parse("true");
-		entranceEntity.opaque = false;
+		entranceEntity.passableBy.add(Passability.LIGHT);
 		entranceEntity.sprite = stairdown;
 		
 		final EnvironmentEntity exitEntity = new EnvironmentEntity();
 		exitEntity.passableBy = Passability.parse("true");
-		exitEntity.opaque = false;
+		entranceEntity.passableBy.add(Passability.LIGHT);
 		exitEntity.sprite = stairup;
 		
 		ActivationAction entranceAA = new ActivationAction("Change Level")
@@ -194,7 +193,7 @@ public class EnvironmentEntity extends Entity
 			public void activate(EnvironmentEntity entity)
 			{
 				entity.passableBy = Passability.parse("true");
-				entity.opaque = false;				
+				entity.passableBy.add(Passability.LIGHT);				
 				entity.sprite = doorOpen;
 				
 				entity.actions.get(1).visible = true;
@@ -212,7 +211,7 @@ public class EnvironmentEntity extends Entity
 				}
 				
 				entity.passableBy = Passability.parse("false");;
-				entity.opaque = true;				
+				entity.passableBy.remove(Passability.LIGHT);				
 				entity.sprite = doorClosed;
 				
 				entity.actions.get(0).visible = true;
@@ -223,7 +222,7 @@ public class EnvironmentEntity extends Entity
 		
 		EnvironmentEntity entity = new EnvironmentEntity();
 		entity.passableBy = Passability.parse("false");
-		entity.opaque = true;
+		entity.passableBy.remove(Passability.LIGHT);
 		entity.sprite = doorClosed;
 		entity.actions.add(open);
 		entity.actions.add(close);
@@ -235,7 +234,20 @@ public class EnvironmentEntity extends Entity
 	{
 		EnvironmentEntity entity = new EnvironmentEntity();
 		entity.passableBy = Passability.parse(xml.get("Passable"));
-		entity.opaque = xml.getBoolean("Opaque", false);
+		
+		if (xml.get("Opaque", null) != null)
+		{
+			boolean opaque = xml.getBoolean("Opaque", false);
+			
+			if (opaque)
+			{
+				entity.passableBy.remove(Passability.LIGHT);
+			}
+			else
+			{
+				entity.passableBy.add(Passability.LIGHT);
+			}
+		}
 		
 		entity.baseInternalLoad(xml);
 		
@@ -328,7 +340,21 @@ public class EnvironmentEntity extends Entity
 	{
 		EnvironmentEntity entity = new EnvironmentEntity();
 		entity.passableBy = Passability.parse(xml.get("Passable", "false"));
-		entity.opaque = xml.getBoolean("Opaque", false);
+		
+		if (xml.get("Opaque", null) != null)
+		{
+			boolean opaque = xml.getBoolean("Opaque", false);
+			
+			if (opaque)
+			{
+				entity.passableBy.remove(Passability.LIGHT);
+			}
+			else
+			{
+				entity.passableBy.add(Passability.LIGHT);
+			}
+		}
+		
 		entity.attachToWall = xml.getBoolean("AttachToWall", false);
 		entity.overHead = xml.getBoolean("OverHead", false);
 		entity.canTakeDamage = xml.getChildByName("Statistics") != null;

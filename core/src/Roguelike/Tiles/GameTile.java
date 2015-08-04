@@ -7,14 +7,13 @@ import Roguelike.Entity.GameEntity;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.PathfindingTile;
-import Roguelike.Shadows.ShadowCastTile;
 import Roguelike.Sprite.SpriteEffect;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-public class GameTile implements ShadowCastTile, PathfindingTile
+public class GameTile implements PathfindingTile
 {
 	public int x;
 	public int y;
@@ -89,24 +88,11 @@ public class GameTile implements ShadowCastTile, PathfindingTile
 		return Vector2.dst(prevTile.x, prevTile.y, x, y);
 	}
 	
-	@Override
-	public boolean GetOpaque()
-	{
-		if (environmentEntity != null && environmentEntity.opaque)
-		{
-			 return true;
-		}
-		
-		return tileData.opaque;
-	}
-
-	@Override
 	public boolean GetVisible()
 	{
 		return visible;
 	}
 	
-	@Override
 	public void SetVisible(boolean visible)
 	{
 		this.visible = visible;

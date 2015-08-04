@@ -19,7 +19,7 @@ public class Mixer
 		this.musicName = musicName;
 		this.volume = volume;
 		
-		music = Gdx.audio.newMusic(Gdx.files.internal(musicName));
+		music = Gdx.audio.newMusic(Gdx.files.internal("Music/"+musicName+".mp3"));
 		music.play();
 		music.setLooping(true);
 		music.setVolume(volume);

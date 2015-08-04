@@ -20,7 +20,8 @@ public class Sprite
 	
 	public Color colour = new Color(Color.WHITE);
 	
-	public boolean render = true;
+	public float renderDelay = -1;
+	
 	public float animationDelay;
 	public float animationAccumulator;
 	
@@ -66,14 +67,22 @@ public class Sprite
 	}
 	
 	public boolean update(float delta)
-	{		
+	{
+		if (renderDelay > 0)
+		{
+			renderDelay -= delta;
+			
+			if (renderDelay > 0)
+			{
+				return false;
+			}
+		}
+		
 		boolean looped = false;
 		animationAccumulator += delta;
 		
 		while (animationAccumulator >= animationDelay)
-		{
-			render = true;
-			
+		{			
 			animationAccumulator -= animationDelay;
 			
 			if (animationState.mode == AnimationMode.TEXTURE)
@@ -143,7 +152,7 @@ public class Sprite
 	
 	private void drawTexture(Batch batch, Texture texture, int x, int y, int width, int height, AnimationState animationState)
 	{	
-		if (!render) { return; }
+		if (renderDelay > 0) { return; }
 		
 		if (animationState.mode == AnimationMode.SHRINK && animationState.isShrunk)
 		{

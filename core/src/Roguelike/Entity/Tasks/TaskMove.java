@@ -14,7 +14,7 @@ import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Items.Item.WeaponType;
 import Roguelike.RoguelikeGame;
 import Roguelike.Entity.GameEntity;
-import Roguelike.Shadows.ShadowCaster;
+import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.Sprite.BumpAnimation;
 import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.Sprite;

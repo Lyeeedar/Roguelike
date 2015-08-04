@@ -8,28 +8,41 @@
  * Contributors:
  *     Philip Collin - initial API and implementation
  ******************************************************************************/
-package Roguelike.Shadows;
+package Roguelike.Pathfinding;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
+
+import Roguelike.Global.Passability;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
 public class ShadowCaster
 {
+	private final Array<Passability> ShadowPassability = new Array<Passability>(new Passability[]{Passability.LIGHT, Passability.ENTITY});
+	
 	private final HashSet<String> tileLookup = new HashSet<String>(); 
 	
 	private final int range;
-	private final ShadowCastTile[][] grid;
+	private final PathfindingTile[][] grid;
+	private final Array<Passability> travelType;
 
 	private int startX;
 	private int startY;
 
-	public ShadowCaster(ShadowCastTile[][] grid, int range)
+	public ShadowCaster(PathfindingTile[][] grid, int range)
 	{
 		this.grid = grid;
 		this.range = range;
+		this.travelType = ShadowPassability;
+	}
+	
+	public ShadowCaster(PathfindingTile[][] grid, int range, Array<Passability> travelType)
+	{
+		this.grid = grid;
+		this.range = range;
+		this.travelType = travelType;
 	}
 
 	// Takes a circle in the form of a center point and radius, and a function
@@ -250,7 +263,7 @@ public class ShadowCaster
 		
 		if (pos[0] == startX && pos[1] == startY) { return false; } // hack to prevent start tile from blocking sight
 		
-		return grid[pos[0]][pos[1]].GetOpaque();
+		return !grid[pos[0]][pos[1]].getPassable(travelType);
 	}
 }
 

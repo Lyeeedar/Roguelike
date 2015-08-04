@@ -58,6 +58,7 @@ public abstract class Entity
 			HP = getStatistic(Statistic.MAXHP);
 			
 			statistics.put(Statistic.WALK, 1);
+			statistics.put(Statistic.ENTITY, 1);
 		}
 		
 		Element inventoryElement = xml.getChildByName("Inventory");
@@ -150,6 +151,7 @@ public abstract class Entity
 		}
 
 		damageAccumulator += dam;
+		hasDamage = true;
 	}
 
 	//----------------------------------------------------------------------
@@ -226,6 +228,7 @@ public abstract class Entity
 	//----------------------------------------------------------------------
 	public int damageAccumulator = 0;
 	public int healingAccumulator = 0;
+	public boolean hasDamage = false;
 
 	//----------------------------------------------------------------------
 	public EnumMap<Statistic, Integer> statistics = Statistic.getStatisticsBlock();

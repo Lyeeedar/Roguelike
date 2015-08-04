@@ -10,6 +10,7 @@ import Roguelike.DungeonGeneration.FactionParser.FeaturePlacementType;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Pathfinding.PathfindingTile;
+import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Tiles.TileData;
 
 import com.badlogic.gdx.Gdx;
@@ -78,6 +79,7 @@ public class DungeonFileParser
 		}
 	}
 	
+	//----------------------------------------------------------------------
 	public static class CorridorFeature
 	{
 		public enum PlacementMode
@@ -276,6 +278,12 @@ public class DungeonFileParser
 	public Color ambient;
 	
 	//----------------------------------------------------------------------
+	public String BGM;
+	
+	//----------------------------------------------------------------------
+	public Array<RepeatingSoundEffect> ambientSounds = new Array<RepeatingSoundEffect>();
+	
+	//----------------------------------------------------------------------
 	public Array<RoomGenerator> roomGenerators = new Array<RoomGenerator>();
 	
 	//----------------------------------------------------------------------
@@ -470,6 +478,14 @@ public class DungeonFileParser
 		
 		Element ae = xmlElement.getChildByName("Ambient");
 		ambient = new Color(ae.getFloat("Red"), ae.getFloat("Blue"), ae.getFloat("Green"), ae.getFloat("Alpha"));
+		
+		Element soundElement = xmlElement.getChildByName("Sound");
+		BGM = soundElement.get("BGM");
+		
+		for (Element ambientSound : soundElement.getChildByName("Ambient").getChildrenByName("Sound"))
+		{
+			ambientSounds.add(RepeatingSoundEffect.parse(ambientSound));
+		}
 	}
 	
 	//----------------------------------------------------------------------

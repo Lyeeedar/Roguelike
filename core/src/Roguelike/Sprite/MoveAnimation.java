@@ -3,7 +3,9 @@ package Roguelike.Sprite;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 
+import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector;
 
 public class MoveAnimation extends SpriteAnimation
 {	
@@ -17,6 +19,8 @@ public class MoveAnimation extends SpriteAnimation
 	
 	private int[] diff;
 	private MoveEquation eqn;
+	
+	public int leapHeight = 3;
 	
 	private int[] offset = {0, 0};
 	
@@ -47,7 +51,9 @@ public class MoveAnimation extends SpriteAnimation
 		
 		if (eqn == MoveEquation.LEAP)
 		{
-			offset[1] += (Global.TileSize*3) * (0.5f - Math.abs(alpha - 0.5f));
+			//B2(t) = (1 - t) * (1 - t) * p0 + 2 * (1-t) * t * p1 + t*t*p2
+			alpha = (1 - alpha) * (1 - alpha) * 0 + 2 * (1 - alpha) * alpha * 1 + alpha * alpha * 0;
+			offset[1] += (Global.TileSize*leapHeight) * alpha;
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import Roguelike.AssetManager;
 import Roguelike.Global.Direction;
+import Roguelike.Global.Passability;
 import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.AbilityType.AbstractAbilityType;
 import Roguelike.Ability.ActiveAbility.CostType.AbstractCostType;
@@ -24,8 +25,8 @@ import Roguelike.GameEvent.IGameObject;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
+import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.Screens.GameScreen;
-import Roguelike.Shadows.ShadowCaster;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
@@ -63,6 +64,8 @@ public class ActiveAbility implements IAbility, IGameObject
 	public GameTile source;
 	public GameEntity caster;
 	public HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
+	
+	public Array<Passability> abilityPassability = new Array<Passability>(new Passability[]{Passability.LEVITATE});
 	
 	//----------------------------------------------------------------------
 	// rendering
@@ -268,7 +271,7 @@ public class ActiveAbility implements IAbility, IGameObject
 			{
 				Array<int[]> output = new Array<int[]>();
 				
-				ShadowCaster shadow = new ShadowCaster(epicenter.level.getGrid(), aoe);
+				ShadowCaster shadow = new ShadowCaster(epicenter.level.getGrid(), aoe, abilityPassability);
 				shadow.ComputeFOV(epicenter.x, epicenter.y, output);
 				
 				for (int[] tilePos : output)
@@ -285,7 +288,7 @@ public class ActiveAbility implements IAbility, IGameObject
 				
 				Array<int[]> output = new Array<int[]>();
 				
-				ShadowCaster shadow = new ShadowCaster(epicenter.level.getGrid(), this.cone);
+				ShadowCaster shadow = new ShadowCaster(epicenter.level.getGrid(), this.cone, abilityPassability);
 				shadow.ComputeFOV(epicenter.x, epicenter.y, output);
 				
 				for (int[] tilePos : cone)
@@ -339,8 +342,7 @@ public class ActiveAbility implements IAbility, IGameObject
 				{
 					Light l = light != null ? light.copy() : null;
 					Sprite s = getHitSprite().copy();
-					s.render = false;
-					s.animationAccumulator = -s.animationDelay * tile.getDist(epicenter) + s.animationDelay;
+					s.renderDelay = s.animationDelay * tile.getDist(epicenter) + s.animationDelay;
 					tile.spriteEffects.add(new SpriteEffect(s, Direction.CENTER, l));
 					
 					SoundInstance sound = s.sound;
@@ -446,6 +448,12 @@ public class ActiveAbility implements IAbility, IGameObject
 				Element effectElement = effectsElement.getChild(i);
 				effectTypes.add(AbstractEffectType.load(effectElement));
 			}
+		}
+		
+		Element passabilityElement = xmlElement.getChildByName("Passability");
+		if (passabilityElement != null)
+		{
+			abilityPassability = Passability.parseArray(passabilityElement.getText());
 		}
 	}
 	

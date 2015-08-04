@@ -4,14 +4,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
+import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Entity.Inventory;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.Entity.Tasks.TaskAttack;
 import Roguelike.Entity.Tasks.TaskMove;
@@ -21,10 +24,12 @@ import Roguelike.Items.Item.ItemType;
 import Roguelike.Items.Recipe;
 import Roguelike.Lights.Light;
 import Roguelike.Screens.GameScreen;
-import Roguelike.Shadows.ShadowCaster;
+import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Sprite.BumpAnimation;
+import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
+import Roguelike.Sprite.MoveAnimation.MoveEquation;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.SeenTile;
@@ -33,12 +38,16 @@ import Roguelike.UI.MessageStack.Line;
 import Roguelike.UI.MessageStack.Message;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class Level
 {
-	public String bgmName = "Music/Heroic Age.mp3";
+	private static final Array<Passability> ItemDropPassability = new Array<Passability>(new Passability[]{Passability.WALK, Passability.ENTITY});
+	
+	public Array<RepeatingSoundEffect> ambientSounds = new Array<RepeatingSoundEffect>();
+	public String bgmName;
 	
 	public int depth;
 	
@@ -290,6 +299,11 @@ public class Level
 		}
 		
 		calculateLight(delta, lightList);
+		
+		for (RepeatingSoundEffect sound : ambientSounds)
+		{
+			sound.update(delta);
+		}
 	}
 	
 	private void cleanUpDeadForTile(GameTile tile)
@@ -300,9 +314,10 @@ public class Level
 			{
 				if (tile.GetVisible())
 				{
-					if (e.damageAccumulator > 0)
+					if (e.hasDamage)
 					{
 						GameScreen.Instance.addActorDamageAction(e);
+						e.hasDamage = false;
 					}
 					
 					if (e.healingAccumulator > 0)
@@ -325,24 +340,7 @@ public class Level
 				{
 					e.tile.entity = null;
 
-					GameScreen.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " dies!")));
-
-					for (Item i : e.getInventory().m_items)
-					{
-						if (i.canDrop && i.shouldDrop())
-						{
-							if (i.itemType == ItemType.MATERIAL)
-							{
-								tile.items.add(Recipe.generateItemForMaterial(i));
-							}
-							else
-							{
-								tile.items.add(i);
-							}
-
-							GameScreen.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " drops " + i.getName())));
-						}
-					}						
+					dropItems(e.getInventory(), e.tile);						
 				}
 				else if (e == player && e.HP <= 0 && !hasActiveEffects(e))
 				{
@@ -362,25 +360,56 @@ public class Level
 
 				if (e != player && e.HP <= 0 && !hasActiveEffects(e))
 				{
-					e.tile.environmentEntity = null;		
-
-					for (Item i : e.getInventory().m_items)
-					{
-						if (i.canDrop && i.shouldDrop())
-						{
-							if (i.itemType == ItemType.MATERIAL)
-							{
-								tile.items.add(Recipe.generateItemForMaterial(i));
-							}
-							else
-							{
-								tile.items.add(i);
-							}
-
-							GameScreen.Instance.addConsoleMessage(new Line(new Message("The " + e.name + " drops " + i.getName())));
-						}
-					}
+					e.tile.environmentEntity = null;
+					
+					dropItems(e.getInventory(), e.tile);
 				}
+			}
+		}
+	}
+	
+	private void dropItems(Inventory inventory, GameTile source)
+	{
+		Array<int[]> possibleTiles = new Array<int[]>();
+		ShadowCaster sc = new ShadowCaster(Grid, 5, ItemDropPassability);
+		sc.ComputeFOV(source.x, source.y, possibleTiles);
+		
+		// remove nonpassable tiles
+		Iterator<int[]> itr = possibleTiles.iterator();
+		while (itr.hasNext())
+		{
+			int[] pos = itr.next();
+			
+			GameTile tile = getGameTile(pos);
+			
+			if (!tile.getPassable(ItemDropPassability))
+			{
+				itr.remove();
+			}
+		}
+		
+		float delay = 0;
+		for (Item i : inventory.m_items)
+		{
+			if (i.canDrop && i.shouldDrop())
+			{
+				if (i.itemType == ItemType.MATERIAL)
+				{
+					i = Recipe.generateItemForMaterial(i);
+				}
+
+				int[] target = possibleTiles.get(MathUtils.random(possibleTiles.size-1));
+				GameTile tile = getGameTile(target);
+				
+				tile.items.add(i);
+				
+				int[] diff = tile.getPosDiff(source);
+				
+				MoveAnimation anim = new MoveAnimation(0.4f, diff, MoveEquation.LEAP);
+				anim.leapHeight = 6;
+				i.icon.spriteAnimation = anim;				
+				i.icon.renderDelay = delay;
+				delay += 0.02f;
 			}
 		}
 	}

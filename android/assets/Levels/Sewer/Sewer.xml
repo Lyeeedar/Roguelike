@@ -6,6 +6,18 @@
 		<Alpha>0.4</Alpha>
 	</Ambient>
 	
+	<Sound>
+	    <BGM>Disturbed</BGM>
+	    <Ambient>
+	        <Sound>
+	            <Name>groan</Name>
+	            <Type>Interval</Type>
+	            <RepeatMin>10</RepeatMin>
+	            <RepeatMax>30</RepeatMax>
+	        </Sound>
+	    </Ambient>
+	</Sound>
+	
 	<RoomGenerators>
 	    <OverlappingRects>1</OverlappingRects>
 	</RoomGenerators>

@@ -19,6 +19,7 @@ import Roguelike.DungeonGeneration.FactionParser.Feature;
 import Roguelike.DungeonGeneration.FactionParser.FeaturePlacementType;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Items.Recipe;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.AStarPathfind;
 import Roguelike.Pathfinding.BresenhamLine;
@@ -71,6 +72,8 @@ public class RecursiveDockGenerator
 		GameTile[][] actualTiles = new GameTile[width][height];
 		Level level = new Level(actualTiles);
 		level.Ambient = dfp.ambient;
+		level.bgmName = dfp.BGM;
+		level.ambientSounds.addAll(dfp.ambientSounds);
 
 		for (int x = 0; x < width; x++)
 		{
@@ -140,7 +143,13 @@ public class RecursiveDockGenerator
 
 				if (symbol.hasGameEntity())
 				{
-					newTile.addObject(symbol.getGameEntity());
+					GameEntity e = symbol.getGameEntity();
+					newTile.addObject(e);
+					
+					for (int i = 0; i < 10; i++)
+					{
+						e.inventory.addItem(Recipe.generateMaterial(100));
+					}
 				}
 
 				newTile.metaValue = symbol.metaValue;

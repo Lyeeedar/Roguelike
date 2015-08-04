@@ -3,7 +3,7 @@ package Roguelike.Entity.AI.BehaviourTree.Actions;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Global.Statistic;
-import Roguelike.Shadows.ShadowCaster;
+import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.Array;

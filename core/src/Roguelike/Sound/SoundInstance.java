@@ -20,7 +20,7 @@ public class SoundInstance
 	
 	public float minPitch = 0.8f;
 	public float maxPitch = 1.2f;
-	public float volume = 1;
+	public float volume = 0.5f;
 		
 	public int range = 10;
 	public int falloffMin = 5;

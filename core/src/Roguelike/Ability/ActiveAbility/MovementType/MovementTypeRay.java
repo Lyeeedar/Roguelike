@@ -30,7 +30,7 @@ public class MovementTypeRay extends AbstractMovementType
 			GameTile tile = ab.source.level.getGameTile(p[0], p[1]);
 			ab.AffectedTiles.add(tile);
 			
-			if (tile.GetOpaque()) { break; }
+			if (!tile.getPassable(RayPassability)) { break; }
 		}	
 	}
 

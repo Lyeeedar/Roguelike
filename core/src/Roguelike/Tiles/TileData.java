@@ -17,7 +17,6 @@ public class TileData
 	public Light light;
 	
 	public EnumSet<Passability> passableBy;
-	public boolean opaque;
 	
 	public String description;
 	
@@ -41,9 +40,22 @@ public class TileData
 		data.sprites = sprites.toArray(Sprite.class);
 		
 		if (xml.getChildByName("Light") != null) { data.light = Light.load(xml.getChildByName("Light")); }
-		data.opaque = xml.getBoolean("Opaque", false);
 		
 		data.passableBy = Passability.parse(xml.get("Passable", "false"));
+		
+		if (xml.get("Opaque", null) != null)
+		{
+			boolean opaque = xml.getBoolean("Opaque", false);
+			
+			if (opaque)
+			{
+				data.passableBy.remove(Passability.LIGHT);
+			}
+			else
+			{
+				data.passableBy.add(Passability.LIGHT);
+			}
+		}
 		
 		data.canFeature = xml.getBoolean("CanFeature", true);
 		data.canSpawn = xml.getBoolean("CanSpawn", true);

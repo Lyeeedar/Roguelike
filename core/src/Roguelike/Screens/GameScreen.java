@@ -283,11 +283,6 @@ public class GameScreen implements Screen, InputProcessor
 						}
 					}
 
-					for (Item i : gtile.items)
-					{
-						i.getIcon().render(batch, x*Global.TileSize + offsetx, y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
-					}
-
 					GameEntity entity = gtile.entity;
 
 					if (entity != null)
@@ -296,6 +291,24 @@ public class GameScreen implements Screen, InputProcessor
 					}
 
 					batch.setColor(Color.WHITE);
+				}
+			}
+		}
+		
+		for (int x = 0; x < Global.CurrentLevel.width; x++)
+		{
+			for (int y = 0; y < Global.CurrentLevel.height; y++)
+			{
+				GameTile gtile = Global.CurrentLevel.getGameTile(x, y);
+
+				if (gtile.GetVisible())
+				{
+					batch.setColor(gtile.light);
+					
+					for (Item i : gtile.items)
+					{
+						i.getIcon().render(batch, x*Global.TileSize + offsetx, y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
+					}
 				}
 			}
 		}

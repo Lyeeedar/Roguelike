@@ -16,6 +16,7 @@ import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.Levels.Level;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.Mixer;
+import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.UI.MessageStack.Line;
 import Roguelike.UI.MessageStack.Message;
@@ -236,7 +237,8 @@ public class Global
 	{
 		WALK(Statistic.WALK),
 		LEVITATE(Statistic.LEVITATE),
-		ENTITY(null);
+		LIGHT(Statistic.LIGHT),
+		ENTITY(Statistic.ENTITY);
 		
 		public final Statistic stat;
 		
@@ -296,6 +298,38 @@ public class Global
 			return passableBy;
 		}
 		
+		public static Array<Passability> parseArray(String passable)
+		{
+			Array<Passability> passableBy = new Array<Passability>();
+			
+			if (passable != null)
+			{
+				if (passable.equalsIgnoreCase("true"))
+				{
+					// all
+					for (Passability p : Passability.values())
+					{
+						passableBy.add(p);
+					}
+				}
+				else if (passable.equalsIgnoreCase("false"))
+				{
+					// none
+				}
+				else
+				{
+					String[] split = passable.split(",");
+					for (String p : split)
+					{
+						passableBy.add(Passability.valueOf(p.toUpperCase()));
+					}
+				}
+			}
+			
+			return passableBy;
+		}
+		
+		
 		public static boolean isPassable(EnumSet<Passability> passableBy, Array<Passability> travelType)
 		{
 //			if (passableBy == null || travelType == null)
@@ -331,6 +365,8 @@ public class Global
 		// Passability
 		WALK,
 		LEVITATE,
+		LIGHT,
+		ENTITY,
 
 		// Elemental stats
 		METAL_ATK,
@@ -610,6 +646,14 @@ public class Global
 	//----------------------------------------------------------------------
 	public static void ChangeLevel(Level level)
 	{
+		if (CurrentLevel != null)
+		{
+			for (RepeatingSoundEffect sound : CurrentLevel.ambientSounds)
+			{
+				sound.stop();
+			}
+		}
+		
 		CurrentLevel = level;
 		
 		if (BGM != null)
@@ -618,7 +662,7 @@ public class Global
 		}
 		else
 		{
-			BGM = new Mixer(level.bgmName, 1);
+			BGM = new Mixer(level.bgmName, 0.1f);
 		}
 	}
 	
