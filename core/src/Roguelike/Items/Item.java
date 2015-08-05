@@ -302,7 +302,7 @@ public class Item extends GameEventHandler
 		table.add(new Label(name, skin)).expandX().left();
 
 		{
-			Label label = new Label(StringUtils.capitalize(weaponType.toString().toLowerCase()), skin);
+			Label label = new Label(weaponType.toString().toLowerCase(), skin);
 			label.setFontScale(0.7f);
 			table.add(label).expandX().right();
 		}
@@ -466,7 +466,7 @@ public class Item extends GameEventHandler
 	{
 		if (itemType == ItemType.MATERIAL)
 		{
-			return name + " " + StringUtils.capitalize(materialType.toString().toLowerCase());
+			return name + " " + materialType.toString().toLowerCase();
 		}
 
 		return name;

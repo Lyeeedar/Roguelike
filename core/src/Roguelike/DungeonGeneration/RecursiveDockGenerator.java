@@ -1012,8 +1012,8 @@ public class RecursiveDockGenerator
 	private GenerationTile[][] tiles;
 	public Random ran = new Random(0);
 
-	private int width = 100;
-	private int height = 100;
+	private int width = 10;
+	private int height = 10;
 
 	private int minPadding = 1;
 	private int maxPadding = 3;

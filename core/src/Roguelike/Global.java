@@ -464,7 +464,7 @@ public class Global
 			
 			for (String word : words)
 			{
-				word = StringUtils.capitalize(word.toLowerCase());
+				word = word.toLowerCase();
 				output += word + " ";
 			}
 				
