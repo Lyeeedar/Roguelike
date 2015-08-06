@@ -57,7 +57,7 @@ public class TaskAttack extends AbstractTask
 			}
 		}
 
-		if (newTile.environmentEntity != null && !Passability.isPassable(newTile.environmentEntity.passableBy, obj.getTravelType()))
+		if (newTile.environmentEntity != null && newTile.environmentEntity.canTakeDamage && !Passability.isPassable(newTile.environmentEntity.passableBy, obj.getTravelType()))
 		{
 			hitSomething = true;
 		}

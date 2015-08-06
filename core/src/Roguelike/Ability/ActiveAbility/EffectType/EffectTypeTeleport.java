@@ -68,7 +68,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 				
 		if (destination != null && entityToMove != null && entityToMove.tile != destination)
 		{
-			int[] diff = destination.addObject(entityToMove);
+			int[] diff = destination.addGameEntity(entityToMove);
 			entityToMove.actionDelayAccumulator = 0;
 			
 			if (style == Style.CHARGE)

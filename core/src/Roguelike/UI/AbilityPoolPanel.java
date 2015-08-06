@@ -42,7 +42,6 @@ public class AbilityPoolPanel extends Widget
 	private final int TileSize = 32;
 	private float MaxLineWidth;
 	
-	private final AbilityPool abilityPool;
 	private final BitmapFont font;
 	private final Texture white;
 	
@@ -67,9 +66,8 @@ public class AbilityPoolPanel extends Widget
 		
 	private final GlyphLayout layout = new GlyphLayout();
 	
-	public AbilityPoolPanel(AbilityPool abilityPool, Skin skin, Stage stage)
+	public AbilityPoolPanel(Skin skin, Stage stage)
 	{
-		this.abilityPool = abilityPool;
 		this.skin = skin;
 		this.stage = stage;
 		
@@ -116,8 +114,6 @@ public class AbilityPoolPanel extends Widget
 		this.buttonUp = AssetManager.loadSprite("GUI/ButtonUp");
 		this.buttonDown = AssetManager.loadSprite("GUI/ButtonDown");
 		
-		calculateWidth();
-		
 		addListener(new AbilityPoolPanelListener());
 	}
 	
@@ -125,7 +121,7 @@ public class AbilityPoolPanel extends Widget
 	{		
 		float maxLineWidth = 0;
 		
-		for (AbilityLine line : abilityPool.abilityLines)
+		for (AbilityLine line : Global.abilityPool.abilityLines)
 		{
 			layout.setText(font, line.name);
 			float temp = layout.width+30;
@@ -147,13 +143,15 @@ public class AbilityPoolPanel extends Widget
 	@Override
 	public float getPrefHeight()
 	{
-		return abilityPool.abilityLines.size * ButtonHeight;
+		return Global.abilityPool.abilityLines.size * ButtonHeight;
 	}
 	
 	@Override
 	public void draw (Batch batch, float parentAlpha)
 	{
-		AbilityLine selectedLine = abilityPool.abilityLines.get(selectedAbilityLine);
+		calculateWidth();
+		
+		AbilityLine selectedLine = Global.abilityPool.abilityLines.get(selectedAbilityLine);
 		
 		batch.setColor(0.6f, 0.6f, 0.6f, 0.5f);
 		batch.draw(white, getX(), getY(), MaxLineWidth, getHeight());
@@ -161,7 +159,7 @@ public class AbilityPoolPanel extends Widget
 		
 		float y = getY() + getHeight();
 		
-		for (AbilityLine line : abilityPool.abilityLines)
+		for (AbilityLine line : Global.abilityPool.abilityLines)
 		{
 			if (line == selectedLine)
 			{
@@ -259,7 +257,7 @@ public class AbilityPoolPanel extends Widget
 				int ypos = 0;
 				float ycursor = getHeight() - y;
 				
-				Array<Ability[]> abilityLine = abilityPool.abilityLines.get(selectedAbilityLine).abilityTiers;
+				Array<Ability[]> abilityLine = Global.abilityPool.abilityLines.get(selectedAbilityLine).abilityTiers;
 				for (int i = 0; i < abilityLine.size; i++)
 				{
 					if (ycursor < ypos + TileSize/2)
@@ -427,7 +425,7 @@ public class AbilityPoolPanel extends Widget
 			
 			if (GameScreen.Instance.dragDropPayload != null)
 			{
-				GameScreen.Instance.touchUp((int)event.getStageX(), Gdx.graphics.getHeight() - (int)event.getStageY(), pointer, mousebutton);
+				GameScreen.Instance.touchUp((int)event.getStageX(), Global.Resolution[1] - (int)event.getStageY(), pointer, mousebutton);
 			}
 		}
 		
@@ -440,10 +438,10 @@ public class AbilityPoolPanel extends Widget
 			{
 				int yindex = (int)((getHeight() - y) / ButtonHeight);
 				
-				if (yindex >= 0 && yindex < abilityPool.abilityLines.size)
+				if (yindex >= 0 && yindex < Global.abilityPool.abilityLines.size)
 				{
 					Table t = new Table();
-					t.add(new Label(abilityPool.abilityLines.get(yindex).name, skin));
+					t.add(new Label(Global.abilityPool.abilityLines.get(yindex).name, skin));
 					tooltip = new Tooltip(t, skin, stage);
 					tooltip.show(event, x, y);
 				}				
@@ -453,7 +451,7 @@ public class AbilityPoolPanel extends Widget
 				int ypos = 0;
 				float ycursor = getHeight() - y;
 				
-				Array<Ability[]> abilityLine = abilityPool.abilityLines.get(selectedAbilityLine).abilityTiers;
+				Array<Ability[]> abilityLine = Global.abilityPool.abilityLines.get(selectedAbilityLine).abilityTiers;
 				for (int i = 0; i < abilityLine.size; i++)
 				{
 					if (ycursor < ypos + TileSize/2)
@@ -513,7 +511,7 @@ public class AbilityPoolPanel extends Widget
 			{
 				int yindex = (int)((getHeight() - y) / ButtonHeight);
 				
-				if (yindex >= 0 && yindex < abilityPool.abilityLines.size)
+				if (yindex >= 0 && yindex < Global.abilityPool.abilityLines.size)
 				{
 					selectedAbilityLine = yindex;
 				}
@@ -523,7 +521,7 @@ public class AbilityPoolPanel extends Widget
 				int ypos = 0;
 				float ycursor = getHeight() - y;
 				
-				Array<Ability[]> abilityLine = abilityPool.abilityLines.get(selectedAbilityLine).abilityTiers;
+				Array<Ability[]> abilityLine = Global.abilityPool.abilityLines.get(selectedAbilityLine).abilityTiers;
 				for (int i = 0; i < abilityLine.size; i++)
 				{
 					if (ycursor < ypos + TileSize/2)

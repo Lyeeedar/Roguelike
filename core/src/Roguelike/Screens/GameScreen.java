@@ -15,6 +15,8 @@ import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
+import Roguelike.Save.SaveFile;
+import Roguelike.Save.SaveLevel;
 import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
@@ -37,11 +39,13 @@ import Roguelike.UI.Tooltip;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -50,7 +54,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -151,7 +157,7 @@ public class GameScreen implements Screen, InputProcessor
 
 		abilityPanel = new AbilityPanel(skin, stage);
 
-		abilityPoolPanel = new AbilityPoolPanel(Global.abilityPool, skin, stage);
+		abilityPoolPanel = new AbilityPoolPanel(skin, stage);
 		inventoryPanel = new InventoryPanel(skin, stage);
 		messageStack = new MessageStack();
 		messageStack.addLine(new Line(new Message("Welcome to the DUNGEON!")));
@@ -172,7 +178,14 @@ public class GameScreen implements Screen, InputProcessor
 		
 		tabPane.selectTab(tab);
 
-		mainUITable.add(tabPane).width(Value.percentWidth(0.5f, mainUITable)).height(Value.percentHeight(0.3f, mainUITable)).expand().bottom().left().pad(10);
+		if (Global.ANDROID)
+		{
+			mainUITable.add(tabPane).width(Value.percentWidth(0.5f, mainUITable)).expand().top().left().pad(10);
+		}
+		else
+		{
+			mainUITable.add(tabPane).width(Value.percentWidth(0.5f, mainUITable)).height(Value.percentHeight(0.3f, mainUITable)).expand().bottom().left().pad(10);
+		}
 
 		mainUITable.add(abilityPanel).expand().bottom().right().pad(20);
 	}
@@ -201,8 +214,8 @@ public class GameScreen implements Screen, InputProcessor
 
 		Global.CurrentLevel.update(delta);
 
-		int offsetx = Gdx.graphics.getWidth() / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-		int offsety = Gdx.graphics.getHeight() / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
 
 		if (Global.CurrentLevel.player.sprite.spriteAnimation instanceof MoveAnimation)
 		{
@@ -294,6 +307,40 @@ public class GameScreen implements Screen, InputProcessor
 				}
 			}
 		}
+		
+		batch.setShader(GrayscaleShader.Instance);
+		for (int x = 0; x < Global.CurrentLevel.width; x++)
+		{
+			for (int y = 0; y < Global.CurrentLevel.height; y++)
+			{
+				GameTile gtile = Global.CurrentLevel.getGameTile(x, y);
+				SeenTile stile = Global.CurrentLevel.getSeenTile(x, y);
+
+				if (!gtile.GetVisible() && stile.seen)
+				{					
+					batch.setColor(Global.CurrentLevel.Ambient);
+
+					for (SeenHistoryItem hist : stile.History)
+					{
+						int cx = x*Global.TileSize + offsetx;
+						int cy = y*Global.TileSize + offsety;
+						
+						if (hist.location != Direction.CENTER)
+						{
+							Direction dir = hist.location;
+							hist.sprite.render(batch, cx + tileSize3*(dir.GetX()*-1+1), cy + tileSize3*(dir.GetY()*-1+1), tileSize3, tileSize3);
+						}
+						else
+						{
+							hist.sprite.render(batch, cx, cy, Global.TileSize, Global.TileSize, hist.animationState);
+						}
+					}				
+
+					batch.setColor(Color.WHITE);				
+				}
+			}
+		}
+		batch.setShader(null);
 		
 		for (int x = 0; x < Global.CurrentLevel.width; x++)
 		{
@@ -474,72 +521,7 @@ public class GameScreen implements Screen, InputProcessor
 			}
 		}
 
-		batch.setShader(GrayscaleShader.Instance);
-		for (int x = 0; x < Global.CurrentLevel.width; x++)
-		{
-			for (int y = 0; y < Global.CurrentLevel.height; y++)
-			{
-				GameTile gtile = Global.CurrentLevel.getGameTile(x, y);
-				SeenTile stile = Global.CurrentLevel.getSeenTile(x, y);
-
-				if (!gtile.GetVisible() && stile.seen)
-				{					
-					batch.setColor(Global.CurrentLevel.Ambient);
-
-					for (SeenHistoryItem hist : stile.History)
-					{
-						int cx = x*Global.TileSize + offsetx;
-						int cy = y*Global.TileSize + offsety;
-						
-						if (hist.location != Direction.CENTER)
-						{
-							Direction dir = hist.location;
-							hist.sprite.render(batch, cx + tileSize3*(dir.GetX()*-1+1), cy + tileSize3*(dir.GetY()*-1+1), tileSize3, tileSize3);
-						}
-						else
-						{
-							hist.sprite.render(batch, cx, cy, Global.TileSize, Global.TileSize, hist.animationState);
-						}
-					}				
-
-					batch.setColor(Color.WHITE);				
-				}
-				else if (!gtile.GetVisible())
-				{
-					batch.setColor(Color.BLACK);
-
-					batch.draw(white, x*Global.TileSize + offsetx, y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
-
-					batch.setColor(Color.WHITE);
-				}
-			}
-		}
-		batch.setShader(null);
-
-		if (!mouseOverUI)
-		{	
-			if (
-					mousex >= 0 && mousex < Global.CurrentLevel.width &&
-					mousey >= 0 && mousey < Global.CurrentLevel.height &&
-					!Global.CurrentLevel.getGameTile(mousex, mousey).GetVisible())
-			{
-				if (
-						!Global.CurrentLevel.getSeenTile(mousex, mousey).seen ||
-						!Passability.isPassable(Global.CurrentLevel.getGameTile(mousex, mousey).tileData.passableBy, Global.CurrentLevel.player.getTravelType()))
-				{
-					batch.setColor(Color.RED);
-				}
-				else
-				{
-					batch.setColor(Color.GREEN);
-				}
-
-				border.render(batch, mousex*Global.TileSize + offsetx, mousey*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
-				batch.setColor(Color.WHITE);
-			}
-		}
-
-		EntityStatusRenderer.draw(Global.CurrentLevel.player, batch, 20, Gdx.graphics.getHeight() - 120, Gdx.graphics.getWidth()/4, 100, 1.0f/4.0f);
+		EntityStatusRenderer.draw(Global.CurrentLevel.player, batch, 20, Global.Resolution[1] - 120, Global.Resolution[0]/4, 100, 1.0f/4.0f);
 
 		batch.end();
 
@@ -553,7 +535,7 @@ public class GameScreen implements Screen, InputProcessor
 			dragDropPayload.sprite.render(batch, (int)dragDropPayload.x, (int)dragDropPayload.y, 32, 32);
 		}
 
-		font.draw(batch, "FPS: "+fps, Gdx.graphics.getWidth()-100, Gdx.graphics.getHeight() - 20);
+		font.draw(batch, "FPS: "+fps, Global.Resolution[0]-100, Global.Resolution[1] - 20);
 
 		batch.end();
 	}
@@ -562,8 +544,35 @@ public class GameScreen implements Screen, InputProcessor
 	@Override
 	public void resize(int width, int height)
 	{
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
-		stage.getViewport().update(width, height, true);
+		Global.ScreenSize[0] = width;
+		Global.ScreenSize[1] = height;
+
+        float w = (float)Global.TargetResolution[0];
+        float h = (float)Global.TargetResolution[1];
+        
+        if (width < height)
+        {
+        	h = w * ((float)height/(float)width);
+        }
+        else
+        {
+        	w = h * ((float)width/(float)height);
+        }
+        
+        Global.Resolution[0] = (int)w;
+        Global.Resolution[1] = (int)h;	
+		
+		camera = new OrthographicCamera(Global.Resolution[0], Global.Resolution[1]);
+		camera.translate(Global.Resolution[0] / 2, Global.Resolution[1] / 2);
+		camera.setToOrtho(false, Global.Resolution[0], Global.Resolution[1]);
+		camera.update();
+		
+		batch.setProjectionMatrix(camera.combined);
+		stage.getViewport().setCamera(camera);
+		stage.getViewport().setWorldWidth(Global.Resolution[0]);
+		stage.getViewport().setWorldHeight(Global.Resolution[1]);
+		stage.getViewport().setScreenWidth(Global.ScreenSize[0]);
+		stage.getViewport().setScreenHeight(Global.ScreenSize[1]);
 	}
 
 	//----------------------------------------------------------------------
@@ -597,6 +606,20 @@ public class GameScreen implements Screen, InputProcessor
 	@Override
 	public boolean keyDown(int keycode)
 	{	
+		if (keycode == Keys.S)
+		{
+			SaveFile save = new SaveFile();
+			save.level = new SaveLevel();
+			save.level.store(Global.CurrentLevel);
+			save.save();
+		}
+		else if (keycode == Keys.L)
+		{
+			SaveFile save = new SaveFile();
+			save.load();
+			Global.ChangeLevel(save.level.create());
+		}
+		
 		return false;
 	}
 
@@ -622,13 +645,16 @@ public class GameScreen implements Screen, InputProcessor
 		{
 			clearContextMenu();
 
-			screenY = Gdx.graphics.getHeight() - screenY;
+			Vector3 mousePos = camera.unproject(new Vector3(screenX, screenY, 0));
+			
+			int mousePosX = (int) mousePos.x;
+			int mousePosY = (int) mousePos.y;
 
-			int offsetx = Gdx.graphics.getWidth() / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-			int offsety = Gdx.graphics.getHeight() / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+			int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+			int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
 
-			int x = (screenX - offsetx) / Global.TileSize;
-			int y = (screenY - offsety) / Global.TileSize;
+			int x = (mousePosX - offsetx) / Global.TileSize;
+			int y = (mousePosY - offsety) / Global.TileSize;
 
 			if (preparedAbility != null)
 			{
@@ -655,7 +681,7 @@ public class GameScreen implements Screen, InputProcessor
 						tile = Global.CurrentLevel.getGameTile(x, y);
 					}
 
-					createContextMenu(screenX, screenY, tile);
+					createContextMenu(mousePosX, mousePosY, tile);
 				}
 				else
 				{
@@ -694,7 +720,7 @@ public class GameScreen implements Screen, InputProcessor
 		{
 			if (isInBounds(screenX, screenY, abilityPanel))
 			{
-				Vector2 tmp = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+				Vector2 tmp = new Vector2(screenX, Global.Resolution[1] - screenY);
 				tmp = abilityPanel.stageToLocalCoordinates(tmp);
 				abilityPanel.handleDrop(tmp.x, tmp.y);
 			}
@@ -731,7 +757,7 @@ public class GameScreen implements Screen, InputProcessor
 		if (dragDropPayload != null)
 		{
 			dragDropPayload.x = screenX - 16;
-			dragDropPayload.y = Gdx.graphics.getHeight() - screenY - 16;
+			dragDropPayload.y = Global.Resolution[1] - screenY - 16;
 		}
 
 		return false;
@@ -760,18 +786,20 @@ public class GameScreen implements Screen, InputProcessor
 		{
 			mouseOverUI = false;
 
-			mousePosX = screenX;
-			mousePosY = Gdx.graphics.getHeight() - screenY;
+			Vector3 mousePos = camera.unproject(new Vector3(screenX, screenY, 0));
+			
+			mousePosX = (int) mousePos.x;
+			mousePosY = (int) mousePos.y;
 
 			stage.setScrollFocus(null);
 
-			screenY = Gdx.graphics.getHeight() - screenY;
+			//screenY = Global.Resolution[1] - screenY;
 
-			int offsetx = Gdx.graphics.getWidth() / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-			int offsety = Gdx.graphics.getHeight() / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+			int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+			int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
 
-			int x = (screenX - offsetx) / Global.TileSize;
-			int y = (screenY - offsety) / Global.TileSize;
+			int x = (mousePosX - offsetx) / Global.TileSize;
+			int y = (mousePosY - offsety) / Global.TileSize;
 
 			if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height)
 			{
@@ -779,23 +807,23 @@ public class GameScreen implements Screen, InputProcessor
 
 				if (tile.entity != null)
 				{
-					Table table = EntityStatusRenderer.getMouseOverTable(tile.entity, x*Global.TileSize+offsetx, y*Global.TileSize+offsety, Global.TileSize, Global.TileSize, 1.0f/8.0f, screenX, screenY, skin);
+					Table table = EntityStatusRenderer.getMouseOverTable(tile.entity, x*Global.TileSize+offsetx, y*Global.TileSize+offsety, Global.TileSize, Global.TileSize, 1.0f/8.0f, mousePosX, mousePosY, skin);
 
 					if (table != null)
 					{
 						tooltip = new Tooltip(table, skin, stage);
-						tooltip.show(screenX, screenY);
+						tooltip.show(mousePosX, mousePosY);
 					}					
 				}
 			}
 
 			{
-				Table table = EntityStatusRenderer.getMouseOverTable(Global.CurrentLevel.player, 20, Gdx.graphics.getHeight() - 120, Gdx.graphics.getWidth()/4, 100, 1.0f/4.0f, screenX, screenY, skin);
+				Table table = EntityStatusRenderer.getMouseOverTable(Global.CurrentLevel.player, 20, Global.Resolution[1] - 120, Global.Resolution[0]/4, 100, 1.0f/4.0f, mousePosX, mousePosY, skin);
 
 				if (table != null)
 				{
 					tooltip = new Tooltip(table, skin, stage);
-					tooltip.show(screenX, screenY);
+					tooltip.show(mousePosX, mousePosY);
 				}	
 			}
 		}
@@ -845,9 +873,9 @@ public class GameScreen implements Screen, InputProcessor
 		Table table = new Table();
 		table.add(new SpriteWidget(sprite)).size(Global.TileSize/2);
 		table.addAction(new SequenceAction(
-				Actions.moveTo(Gdx.graphics.getWidth()/2+Global.TileSize/2, Gdx.graphics.getHeight()/2+Global.TileSize+Global.TileSize/2, 1),
+				Actions.moveTo(Global.Resolution[0]/2+Global.TileSize/2, Global.Resolution[1]/2+Global.TileSize+Global.TileSize/2, 1),
 				Actions.removeActor()));		
-		table.setPosition(Gdx.graphics.getWidth()/2+Global.TileSize/2, Gdx.graphics.getHeight()/2+Global.TileSize);		
+		table.setPosition(Global.Resolution[0]/2+Global.TileSize/2, Global.Resolution[1]/2+Global.TileSize);		
 		stage.addActor(table);	
 		table.setVisible(true);
 	}
@@ -855,8 +883,8 @@ public class GameScreen implements Screen, InputProcessor
 	//----------------------------------------------------------------------
 	public void addPopupBubble(Entity entity)
 	{
-		int offsetx = Gdx.graphics.getWidth() / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-		int offsety = Gdx.graphics.getHeight() / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
 
 		int x = entity.tile.x;
 		int y = entity.tile.y;
@@ -877,8 +905,8 @@ public class GameScreen implements Screen, InputProcessor
 	//----------------------------------------------------------------------
 	public void addActorDamageAction(Entity entity)
 	{
-		int offsetx = Gdx.graphics.getWidth() / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-		int offsety = Gdx.graphics.getHeight() / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
 
 		int x = entity.tile.x;
 		int y = entity.tile.y;
@@ -902,8 +930,8 @@ public class GameScreen implements Screen, InputProcessor
 	//----------------------------------------------------------------------
 	public void addActorHealingAction(Entity entity)
 	{
-		int offsetx = Gdx.graphics.getWidth() / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-		int offsety = Gdx.graphics.getHeight() / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
 
 		int x = entity.tile.x;
 		int y = entity.tile.y;
@@ -927,7 +955,7 @@ public class GameScreen implements Screen, InputProcessor
 	//----------------------------------------------------------------------
 	public boolean isInBounds(float x, float y, Widget actor)
 	{
-		Vector2 tmp = new Vector2(x, Gdx.graphics.getHeight() - y);
+		Vector2 tmp = new Vector2(x, Global.ScreenSize[1] - y);
 		tmp = actor.stageToLocalCoordinates(tmp);
 		return tmp.x >= 0 && tmp.x <= actor.getPrefWidth() && tmp.y >= 0 && tmp.y <= actor.getPrefHeight();
 	}
@@ -1081,6 +1109,8 @@ public class GameScreen implements Screen, InputProcessor
 	//####################################################################//
 	//region Data
 
+	public OrthographicCamera camera;
+	
 	//----------------------------------------------------------------------
 	public Tooltip contextMenu;
 

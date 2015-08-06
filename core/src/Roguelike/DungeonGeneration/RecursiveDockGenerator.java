@@ -1,5 +1,6 @@
 package Roguelike.DungeonGeneration;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Random;
@@ -7,6 +8,7 @@ import java.util.Random;
 import PaulChew.Pnt;
 import PaulChew.Triangle;
 import PaulChew.Triangulation;
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.DungeonGeneration.DungeonFileParser.CorridorFeature.PlacementMode;
@@ -34,14 +36,19 @@ public class RecursiveDockGenerator
 	//region Constructor
 
 	//----------------------------------------------------------------------
-	public RecursiveDockGenerator(String level, int depth)
+	public RecursiveDockGenerator(String level, int depth, long seed, boolean createDynamics)
 	{
 		dfp = DungeonFileParser.load(level+"/"+level);
 		this.depth = depth;
+		this.fileName = level;
+		this.seed = seed;
+		this.createDynamics = createDynamics;
 		
 		minPadding = (dfp.corridorStyle.minWidth/2)+1;
 		maxPadding += minPadding;
 		paddedMinRoom = minRoomSize + minPadding*2;
+		
+		ran = new Random(seed);
 	}
 
 	//endregion Constructor
@@ -72,6 +79,11 @@ public class RecursiveDockGenerator
 		level.Ambient = dfp.ambient;
 		level.bgmName = dfp.BGM;
 		level.ambientSounds.addAll(dfp.ambientSounds);
+		
+		level.depth = depth;
+		level.fileName = fileName;
+		level.seed = seed;
+		level.requiredRooms = additionalRooms;
 
 		for (int x = 0; x < width; x++)
 		{
@@ -90,59 +102,62 @@ public class RecursiveDockGenerator
 				{
 					EnvironmentEntity entity = symbol.getEnvironmentEntity();
 					
-					if (entity.attachToWall)
-					{
-						Direction location = Direction.CENTER;
-						
-						if (symbol.attachLocation != null)
+					if (createDynamics || !entity.canTakeDamage)
+					{		
+						if (entity.attachToWall)
 						{
-							location = symbol.attachLocation;
-						}
-						else
-						{
-							// get direction
-							HashSet<Direction> validDirections = new HashSet<Direction>();
-							for (Direction dir : Direction.values())
-							{
-								boolean passable = symbolGrid[x+dir.GetX()][y+dir.GetY()] == dfp.sharedSymbolMap.get('#');
-								if (!passable) { validDirections.add(dir); }
-							}
+							Direction location = Direction.CENTER;
 							
-							if (validDirections.size() > 0)
+							if (symbol.attachLocation != null)
 							{
-								// look for direction with full surround
+								location = symbol.attachLocation;
+							}
+							else
+							{
+								// get direction
+								HashSet<Direction> validDirections = new HashSet<Direction>();
 								for (Direction dir : Direction.values())
 								{
-									boolean acwvalid = validDirections.contains(dir.GetAnticlockwise());
-									boolean valid = validDirections.contains(dir);
-									boolean cwvalid = validDirections.contains(dir.GetClockwise());
-									
-									if (acwvalid && valid && cwvalid)
-									{
-										location = dir;
-										break;
-									}
+									boolean passable = symbolGrid[x+dir.GetX()][y+dir.GetY()] == dfp.sharedSymbolMap.get('#');
+									if (!passable) { validDirections.add(dir); }
 								}
 								
-								// else pick random
-								if (location == Direction.CENTER)
+								if (validDirections.size() > 0)
 								{
-									location = validDirections.toArray(new Direction[validDirections.size()])[ran.nextInt(validDirections.size())];
+									// look for direction with full surround
+									for (Direction dir : Direction.values())
+									{
+										boolean acwvalid = validDirections.contains(dir.GetAnticlockwise());
+										boolean valid = validDirections.contains(dir);
+										boolean cwvalid = validDirections.contains(dir.GetClockwise());
+										
+										if (acwvalid && valid && cwvalid)
+										{
+											location = dir;
+											break;
+										}
+									}
+									
+									// else pick random
+									if (location == Direction.CENTER)
+									{
+										location = validDirections.toArray(new Direction[validDirections.size()])[ran.nextInt(validDirections.size())];
+									}
 								}
 							}
+							
+							entity.location = location;
+							entity.sprite.rotation = location.GetAngle();
 						}
 						
-						entity.location = location;
-						entity.sprite.rotation = location.GetAngle();
+						newTile.addEnvironmentEntity(entity);
 					}
-					
-					newTile.addEnvironmentEntity(entity);
 				}
 
-				if (symbol.hasGameEntity())
+				if (createDynamics && symbol.hasGameEntity())
 				{
 					GameEntity e = symbol.getGameEntity();
-					newTile.addObject(e);
+					newTile.addGameEntity(e);
 					
 					for (int i = 0; i < 10; i++)
 					{
@@ -167,6 +182,13 @@ public class RecursiveDockGenerator
 	//----------------------------------------------------------------------
 	public void generate() 
 	{
+		for (DFPRoom r : additionalRooms)
+		{
+			Room room = new Room();
+			r.fillRoom(room, ran, dfp);
+			toBePlaced.add(room);
+		}
+		
 		for (DFPRoom r : dfp.getRequiredRooms(depth))
 		{
 			Room room = new Room();
@@ -314,7 +336,7 @@ public class RecursiveDockGenerator
 				
 				if (fp != null)
 				{
-					room.addFeatures(ran, dfp, fp, influence);
+					room.addFeatures(ran, dfp, fp, influence, createDynamics);
 				}	
 			}
 		}
@@ -338,13 +360,13 @@ public class RecursiveDockGenerator
 
 				influence = 100 - influence;
 
-				pair.room.addFeatures(ran, dfp, majorFaction, influence);
+				pair.room.addFeatures(ran, dfp, majorFaction, influence, createDynamics);
 			}
 			else
 			{
 				int influence = ran.nextInt(80) + 10;
 
-				pair.room.addFeatures(ran, dfp, FactionParser.load(dfp.getMinorFaction(ran)), influence);
+				pair.room.addFeatures(ran, dfp, FactionParser.load(dfp.getMinorFaction(ran)), influence, createDynamics);
 			}
 		}
 
@@ -714,25 +736,28 @@ public class RecursiveDockGenerator
 		Array<Pnt[]> ignoredPaths = new Array<Pnt[]>();
 		Array<Pnt[]> addedPaths = new Array<Pnt[]>();
 		Array<Pnt[]> paths = new Array<Pnt[]>();
-
+		
+		Array<Triangle> tris = new Array<Triangle>();
 		for (Triangle tri : dt)
+		{
+			tris.add(tri);
+		}
+		tris.sort();
+		
+		for (Triangle tri : tris)
 		{
 			calculatePaths(paths, tri, ignoredPaths, addedPaths);
 		}
-
+		
 		for (Pnt[] p : paths)
 		{
 			int x1 = (int)p[0].coord(0);
 			int y1 = (int)p[0].coord(1);
 			int x2 = (int)p[1].coord(0);
 			int y2 = (int)p[1].coord(1);
+						
 			AStarPathfind pathFind = new AStarPathfind(tiles, x1, y1, x2, y2, false, true, dfp.corridorStyle.minWidth, GeneratorPassability);
 			int[][] path = pathFind.getPath();
-						
-			if (path[0][0] != x1 || path[0][1] != y1 || path[path.length-1][0] != x2 || path[path.length-1][1] != y2)
-			{
-				System.out.println("Path failed to find route!!!!");
-			}
 
 			carveCorridor(path);
 		}
@@ -1005,15 +1030,18 @@ public class RecursiveDockGenerator
 	public static final Array<Passability> GeneratorPassability = new Array<Passability>(new Passability[]{Passability.WALK});
 	
 	public int depth;
+	public long seed;
+	public String fileName;
+	public boolean createDynamics;
 	
 	private static final boolean DEBUG_OUTPUT = false;
 	private static final int DEBUG_SIZE = 16;
 
 	private GenerationTile[][] tiles;
-	public Random ran = new Random(0);
+	public Random ran;
 
-	private int width = 10;
-	private int height = 10;
+	private int width = 50;
+	private int height = 50;
 
 	private int minPadding = 1;
 	private int maxPadding = 3;
@@ -1023,6 +1051,7 @@ public class RecursiveDockGenerator
 
 	private int paddedMinRoom;
 
+	public Array<DFPRoom> additionalRooms = new Array<DFPRoom>();
 	public Array<Room> toBePlaced = new Array<Room>();
 
 	private Array<Room> placedRooms = new Array<Room>();
@@ -1249,7 +1278,7 @@ public class RecursiveDockGenerator
 		}
 
 		//----------------------------------------------------------------------
-		public void addFeatures(Random ran, DungeonFileParser dfp, FactionParser faction, int influence)
+		public void addFeatures(Random ran, DungeonFileParser dfp, FactionParser faction, int influence, boolean createDynamics)
 		{
 			Symbol[][] roomCopy = new Symbol[width][height];
 			for (int x  = 0; x < width; x++)

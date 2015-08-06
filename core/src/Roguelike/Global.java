@@ -33,6 +33,18 @@ import exp4j.Helpers.EquationHelper;
 public class Global
 {
 	//----------------------------------------------------------------------
+	public static boolean ANDROID = false;
+	
+	//----------------------------------------------------------------------
+	public static int[] ScreenSize = {600, 400};
+	
+	//----------------------------------------------------------------------
+	public static int[] Resolution = {600, 400};
+	
+	//----------------------------------------------------------------------
+	public static int[] TargetResolution = {600, 400};
+	
+	//----------------------------------------------------------------------
 	public static Skin skin;
 	
 	//----------------------------------------------------------------------
@@ -51,7 +63,7 @@ public class Global
 	public static float AUT = 0;
 	
 	//----------------------------------------------------------------------
-	public static AbilityPool abilityPool = new AbilityPool();
+	public static AbilityPool abilityPool;
 
 	//----------------------------------------------------------------------
 	public enum Direction
@@ -613,10 +625,9 @@ public class Global
 	//----------------------------------------------------------------------
 	public static void newGame()
 	{
-		abilityPool.reset();
+		abilityPool = new AbilityPool();
 		
-		RecursiveDockGenerator generator = new RecursiveDockGenerator("Sewer", 0);
-		//VillageGenerator generator = new VillageGenerator(100, 100);
+		RecursiveDockGenerator generator = new RecursiveDockGenerator("Sewer", 0, MathUtils.random(Long.MAX_VALUE-1), true);
 		generator.generate();
 		ChangeLevel(generator.getLevel());
 
@@ -630,7 +641,7 @@ public class Global
 				{
 					CurrentLevel.player = GameEntity.load("player");
 
-					tile.addObject(CurrentLevel.player);
+					tile.addGameEntity(CurrentLevel.player);
 
 					exit = true;
 					break;
@@ -640,7 +651,6 @@ public class Global
 		}
 
 		CurrentLevel.updateVisibleTiles();
-		//Global.CurrentLevel.revealWholeGlobal.CurrentLevel();
 	}
 	
 	//----------------------------------------------------------------------

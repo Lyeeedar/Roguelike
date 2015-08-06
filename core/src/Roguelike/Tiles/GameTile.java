@@ -57,7 +57,7 @@ public class GameTile implements PathfindingTile
 		entity.tile = this;
 	}
 	
-	public int[] addObject(GameEntity obj)
+	public int[] addGameEntity(GameEntity obj)
 	{
 		GameTile oldTile = obj.tile;
 		

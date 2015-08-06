@@ -11,6 +11,7 @@ import Roguelike.RoguelikeGame;
 import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
@@ -49,7 +50,10 @@ public class Level
 	public Array<RepeatingSoundEffect> ambientSounds = new Array<RepeatingSoundEffect>();
 	public String bgmName;
 	
+	public String fileName;
 	public int depth;
+	public long seed;
+	public Array<DFPRoom> requiredRooms;
 	
 	public GameEntity player;
 	

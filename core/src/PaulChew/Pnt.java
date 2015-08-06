@@ -32,7 +32,7 @@ package PaulChew;
  *
  * Modified Novemeber 2007.  Minor clean up.
  */
-public class Pnt {
+public class Pnt implements Comparable<Pnt> {
 
     private double[] coordinates;          // The point's coordinates
 
@@ -466,4 +466,16 @@ public class Pnt {
         System.out.println("Circumcenter of " + toString(vs) + " is " +
                 circumcenter(vs));
     }
+
+	
+    @Override
+	public int compareTo(Pnt o)
+	{
+    	int val = Double.compare(coordinates[0], o.coordinates[0]);
+    	if (val != 0) { return val; }
+    	
+    	val = Double.compare(coordinates[1], o.coordinates[1]);
+    	
+		return val;
+	}
 }

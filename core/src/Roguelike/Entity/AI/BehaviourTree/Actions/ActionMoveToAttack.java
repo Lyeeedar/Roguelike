@@ -100,7 +100,8 @@ public class ActionMoveToAttack extends AbstractAction
 			
 			if (path.length > 1 && path.length < bestDist)
 			{
-				if (entity.tile.level.getGameTile(path[1]).environmentEntity != null || entity.tile.level.getGameTile(path[1]).getPassable(entity.getTravelType()))
+				if ((entity.tile.level.getGameTile(path[1]).environmentEntity == null || !entity.tile.level.getGameTile(path[1]).environmentEntity.canTakeDamage) &&
+					!entity.tile.level.getGameTile(path[1]).getPassable(entity.getTravelType()))
 				{
 					bestDist = path.length;
 					bestPath = path;

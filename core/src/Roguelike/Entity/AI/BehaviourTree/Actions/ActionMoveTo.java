@@ -43,8 +43,9 @@ public class ActionMoveTo extends AbstractAction
 			return State;
 		}
 		
-		// if next step is impassable and not an environment entity then fail
-		if (entity.tile.level.getGameTile(path[1]).environmentEntity == null && !entity.tile.level.getGameTile(path[1]).getPassable(entity.getTravelType()))
+		// if next step is impassable and not an immortal environment entity then fail
+		if ((entity.tile.level.getGameTile(path[1]).environmentEntity == null || !entity.tile.level.getGameTile(path[1]).environmentEntity.canTakeDamage) &&
+			!entity.tile.level.getGameTile(path[1]).getPassable(entity.getTravelType()))
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;

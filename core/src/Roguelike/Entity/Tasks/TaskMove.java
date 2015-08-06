@@ -49,8 +49,8 @@ public class TaskMove extends AbstractTask
 			{
 				if (obj.canSwap && obj.canMove && newTile.entity.canMove)
 				{
-					int[] diff1 = oldTile.addObject(newTile.entity);
-					int[] diff2 = newTile.addObject(obj);
+					int[] diff1 = oldTile.addGameEntity(newTile.entity);
+					int[] diff2 = newTile.addGameEntity(obj);
 					
 					newTile.entity.sprite.spriteAnimation = new MoveAnimation(0.1f, diff1, MoveEquation.SMOOTHSTEP);
 					obj.sprite.spriteAnimation = new MoveAnimation(0.1f, diff2, MoveEquation.SMOOTHSTEP);
@@ -59,7 +59,7 @@ public class TaskMove extends AbstractTask
 		}
 		else if (obj.canMove && newTile.getPassable(obj.getTravelType()))
 		{
-			int[] diff = newTile.addObject(obj);
+			int[] diff = newTile.addGameEntity(obj);
 			
 			obj.sprite.spriteAnimation = new MoveAnimation(0.1f, diff, MoveEquation.SMOOTHSTEP);
 		}

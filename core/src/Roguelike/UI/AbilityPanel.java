@@ -233,7 +233,7 @@ public class AbilityPanel extends Widget
 			GameEntity entity = Global.CurrentLevel.player;
 			if (GameScreen.Instance.dragDropPayload != null)
 			{
-				GameScreen.Instance.touchUp((int)event.getStageX(), Gdx.graphics.getHeight() - (int)event.getStageY(), pointer, button);
+				GameScreen.Instance.touchUp((int)event.getStageX(), Global.Resolution[1] - (int)event.getStageY(), pointer, button);
 			}
 			
 			int xIndex = (int) (x / TileSize);

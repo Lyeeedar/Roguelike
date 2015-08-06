@@ -15,6 +15,13 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();	
-		initialize(new RoguelikeGame());
+		config.disableAudio = false;
+		
+		Global.TargetResolution[0] = 480;
+		Global.TargetResolution[1] = 360;
+		
+		Global.ANDROID = true;
+		
+		initialize(new RoguelikeGame(), config);
 	}
 }

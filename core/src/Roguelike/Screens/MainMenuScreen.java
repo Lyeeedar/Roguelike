@@ -163,7 +163,7 @@ public class MainMenuScreen implements Screen
 		
 		batch.begin();
 		
-		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.draw(background, 0, 0, Global.Resolution[0], Global.Resolution[1]);
 		
 		batch.end();
 		

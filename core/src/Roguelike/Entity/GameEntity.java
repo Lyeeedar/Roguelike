@@ -162,6 +162,7 @@ public class GameEntity extends Entity
 	public static GameEntity load(String name)
 	{
 		GameEntity e = new GameEntity();
+		e.fileName = name;
 
 		e.internalLoad(name);
 
@@ -401,6 +402,8 @@ public class GameEntity extends Entity
 	//endregion Public Methods
 	//####################################################################//
 	//region Data
+	
+	public String fileName;
 
 	//----------------------------------------------------------------------
 	private PassiveAbility[] slottedPassiveAbilities = new PassiveAbility[Global.NUM_ABILITY_SLOTS];

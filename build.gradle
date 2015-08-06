@@ -96,6 +96,7 @@ project(":core") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        compile "com.esotericsoftware:kryo:3.0.3"
 
         compile fileTree(dir: 'libs', include: '*.jar')
     }

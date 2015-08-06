@@ -1,5 +1,6 @@
 package Roguelike.Sprite;
 
+import Roguelike.Global;
 import Roguelike.Sound.SoundInstance;
 
 import com.badlogic.gdx.Gdx;
@@ -167,8 +168,8 @@ public class Sprite
 		if (
 				x + width < 0 ||
 				y + height < 0 ||
-				x > Gdx.graphics.getWidth() ||
-				y > Gdx.graphics.getHeight()
+				x > Global.Resolution[0] ||
+				y > Global.Resolution[1]
 			)
 		{
 			return; // skip drawing

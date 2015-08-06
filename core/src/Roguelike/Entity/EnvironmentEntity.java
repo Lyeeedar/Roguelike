@@ -23,6 +23,7 @@ import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -38,6 +39,7 @@ public class EnvironmentEntity extends Entity
 	
 	public OnTurnAction onTurnAction;
 	
+	//----------------------------------------------------------------------
 	@Override
 	public void update(float cost)
 	{
@@ -65,6 +67,7 @@ public class EnvironmentEntity extends Entity
 		stacks = stackStatusEffects();
 	}
 	
+	//----------------------------------------------------------------------
 	@Override
 	public int getStatistic(Statistic stat)
 	{
@@ -80,6 +83,7 @@ public class EnvironmentEntity extends Entity
 		return val;
 	}
 	
+	//----------------------------------------------------------------------
 	@Override
 	protected void internalLoad(String file)
 	{
@@ -100,6 +104,7 @@ public class EnvironmentEntity extends Entity
 		return handlers;
 	}
 	
+	//----------------------------------------------------------------------
 	private static EnvironmentEntity CreateTransition(final Element data)
 	{
 		final Sprite stairdown = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_down");
@@ -109,11 +114,13 @@ public class EnvironmentEntity extends Entity
 		entranceEntity.passableBy = Passability.parse("true");
 		entranceEntity.passableBy.add(Passability.LIGHT);
 		entranceEntity.sprite = stairdown;
+		entranceEntity.canTakeDamage = false;
 		
 		final EnvironmentEntity exitEntity = new EnvironmentEntity();
 		exitEntity.passableBy = Passability.parse("true");
-		entranceEntity.passableBy.add(Passability.LIGHT);
+		exitEntity.passableBy.add(Passability.LIGHT);
 		exitEntity.sprite = stairup;
+		exitEntity.canTakeDamage = false;
 		
 		ActivationAction entranceAA = new ActivationAction("Change Level")
 		{
@@ -125,32 +132,30 @@ public class EnvironmentEntity extends Entity
 				// generate new level if required
 				if (connectedLevel == null)
 				{
-					RecursiveDockGenerator generator = new RecursiveDockGenerator(data.get("Destination"), entranceEntity.tile.level.depth+1);
+					RecursiveDockGenerator generator = new RecursiveDockGenerator(data.get("Destination"), entranceEntity.tile.level.depth+1, MathUtils.random(Long.MAX_VALUE), true);
 					
 					DFPRoom dfpRoom = DFPRoom.parse(data.getChildByName("ExitRoom"), generator.dfp.sharedSymbolMap);
-					final Room room = new Room();
-					dfpRoom.fillRoom(room, generator.ran, generator.dfp);
+										
+//					for (int x = 0; x < dfpRoom.width; x++)
+//					{
+//						for (int y = 0; y < dfpRoom.height; y++)
+//						{
+//							if (dfpRoom.roomContents[x][y].environmentData != null)
+//							{
+//								if (dfpRoom.roomContents[x][y].environmentData.get("Destination", "").equals("this"))
+//								{
+//									dfpRoom.roomContents[x][y].environmentEntityObject = exitEntity;
+//								}
+//							}
+//						}
+//					}
 					
-					for (int x = 0; x < room.width; x++)
-					{
-						for (int y = 0; y < room.height; y++)
-						{
-							if (room.roomContents[x][y].environmentData != null)
-							{
-								if (room.roomContents[x][y].environmentData.get("Destination", "").equals("this"))
-								{
-									room.roomContents[x][y].environmentEntityObject = exitEntity;
-								}
-							}
-						}
-					}
-					
-					generator.toBePlaced.add(room);
+					generator.additionalRooms.add(dfpRoom);
 					generator.generate();
 					connectedLevel = generator.getLevel();
 				}
 				
-				exit.tile.addObject(entity.tile.level.player);
+				exit.tile.addGameEntity(entity.tile.level.player);
 				connectedLevel.player = entity.tile.level.player;
 				
 				connectedLevel.updateVisibleTiles();
@@ -169,7 +174,7 @@ public class EnvironmentEntity extends Entity
 			{
 				Level connectedLevel = entranceEntity.tile.level;
 				
-				exit.tile.addObject(entity.tile.level.player);
+				exit.tile.addGameEntity(entity.tile.level.player);
 				connectedLevel.player = entity.tile.level.player;
 				
 				connectedLevel.updateVisibleTiles();
@@ -183,6 +188,7 @@ public class EnvironmentEntity extends Entity
 		return entranceEntity;
 	}
 	
+	//----------------------------------------------------------------------
 	private static EnvironmentEntity CreateDoor()
 	{
 		final Sprite doorClosed = new Sprite(1, new Texture[]{AssetManager.loadTexture("Sprites/Objects/Door0.png")}, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE, AnimationMode.NONE, null);
@@ -230,6 +236,7 @@ public class EnvironmentEntity extends Entity
 		return entity;
 	}
 	
+	//----------------------------------------------------------------------
 	private static EnvironmentEntity CreateSpawner(Element xml)
 	{
 		EnvironmentEntity entity = new EnvironmentEntity();
@@ -306,7 +313,7 @@ public class EnvironmentEntity extends Entity
 								}
 							}
 							
-							spawnTile.addObject(ge);
+							spawnTile.addGameEntity(ge);
 						}
 					}
 				}
@@ -336,6 +343,7 @@ public class EnvironmentEntity extends Entity
 		return entity;
 	}
 	
+	//----------------------------------------------------------------------
 	private static EnvironmentEntity CreateBasic(Element xml)
 	{
 		EnvironmentEntity entity = new EnvironmentEntity();
@@ -364,6 +372,7 @@ public class EnvironmentEntity extends Entity
 		return entity;
 	}
 	
+	//----------------------------------------------------------------------
 	public static EnvironmentEntity load(Element xml)
 	{
 		String type = xml.get("Type", "");
@@ -385,6 +394,7 @@ public class EnvironmentEntity extends Entity
 		}
 	}
 
+	//----------------------------------------------------------------------
 	public static abstract class ActivationAction
 	{
 		public String name;
@@ -398,6 +408,7 @@ public class EnvironmentEntity extends Entity
 		public abstract void activate(EnvironmentEntity entity);
 	}
 
+	//----------------------------------------------------------------------
 	public static abstract class OnTurnAction
 	{
 		public abstract void update(EnvironmentEntity entity, float delta);

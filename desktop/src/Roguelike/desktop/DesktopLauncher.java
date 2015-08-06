@@ -2,6 +2,8 @@ package Roguelike.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
+import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 
 public class DesktopLauncher {
@@ -10,6 +12,10 @@ public class DesktopLauncher {
 		config.foregroundFPS = 0;
 		config.width = 800;
 		config.height = 600;
+		
+		Global.TargetResolution[0] = 800;
+		Global.TargetResolution[1] = 600;
+		
 		new LwjglApplication(new RoguelikeGame(), config);
 	}
 }
