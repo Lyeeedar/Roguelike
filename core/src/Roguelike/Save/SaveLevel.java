@@ -5,6 +5,7 @@ import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Tiles.GameTile;
 
@@ -22,6 +23,7 @@ public class SaveLevel extends SaveableObject<Level>
 	public Array<DFPRoom> requiredRooms = new Array<DFPRoom>();
 	
 	public Array<SaveGameEntity> gameEntities = new Array<SaveGameEntity>();
+	public Array<SaveLevelItem> items = new Array<SaveLevelItem>();
 	//public Array<SaveEnvironmentEntity> environmentEntities = new Array<SaveEnvironmentEntity>();
 
 	@Override
@@ -42,6 +44,18 @@ public class SaveLevel extends SaveableObject<Level>
 			if (entity == obj.player)
 			{
 				saveObj.isPlayer = true;
+			}
+		}
+		
+		for (int x = 0; x < obj.width; x++)
+		{
+			for (int y = 0; y < obj.height; y++)
+			{
+				GameTile tile = obj.getGameTile(x, y);
+				for (Item item : tile.items)
+				{
+					items.add(new SaveLevelItem(tile, item));
+				}
 			}
 		}
 		
@@ -84,6 +98,12 @@ public class SaveLevel extends SaveableObject<Level>
 			}
 		}
 		
+		for (SaveLevelItem item : items)
+		{
+			GameTile tile = level.getGameTile(item.pos);
+			tile.items.add(item.item);
+		}
+		
 //		for (SaveEnvironmentEntity entity : environmentEntities)
 //		{
 //			GameTile tile = level.getGameTile(entity.pos);
@@ -91,5 +111,22 @@ public class SaveLevel extends SaveableObject<Level>
 //		}
 		
 		return level;
+	}
+	
+	public static class SaveLevelItem
+	{
+		public int[] pos;
+		public Item item;
+		
+		public SaveLevelItem()
+		{
+			
+		}
+		
+		public SaveLevelItem(GameTile tile, Item item)
+		{
+			pos = new int[]{tile.x, tile.y};
+			this.item = item;
+		}
 	}
 }

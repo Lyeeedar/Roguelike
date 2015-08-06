@@ -22,7 +22,6 @@ import com.sun.xml.internal.ws.util.StringUtils;
 import exp4j.Helpers.EquationHelper;
 import Roguelike.AssetManager;
 import Roguelike.Entity.GameEntity;
-import Roguelike.Entity.Inventory;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.Lights.Light;

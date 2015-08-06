@@ -16,7 +16,7 @@ public class ActionGetAllAbilities extends AbstractAction
 	{
 		Array<ActiveAbility> abilities = new Array<ActiveAbility>();
 		
-		for (ActiveAbility ab : entity.getSlottedActiveAbilities())
+		for (ActiveAbility ab : entity.slottedActiveAbilities)
 		{
 			if (ab != null && ab.cooldownAccumulator <= 0)
 			{

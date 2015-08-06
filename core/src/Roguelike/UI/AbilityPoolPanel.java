@@ -2,17 +2,14 @@ package Roguelike.UI;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
-import Roguelike.Ability.AbilityPool;
+import Roguelike.Ability.AbilityPool.Ability;
 import Roguelike.Ability.AbilityPool.AbilityLine;
-import Roguelike.Ability.AbilityPool.AbilityLine.Ability;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
-import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -20,18 +17,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Array;
@@ -208,11 +200,11 @@ public class AbilityPoolPanel extends Widget
 					int index = -1;
 					if (ab.ability instanceof ActiveAbility)
 					{
-						index = Global.CurrentLevel.player.getActiveAbilityIndex((ActiveAbility)ab.ability);
+						index = Global.abilityPool.getActiveAbilityIndex((ActiveAbility)ab.ability);
 					}
 					else
 					{
-						index = Global.CurrentLevel.player.getPassiveAbilityIndex((PassiveAbility)ab.ability);
+						index = Global.abilityPool.getPassiveAbilityIndex((PassiveAbility)ab.ability);
 					}
 					
 					if (index >= 0)
@@ -284,7 +276,7 @@ public class AbilityPoolPanel extends Widget
 									
 									for (int ii = 0; ii < Global.NUM_ABILITY_SLOTS; ii++)
 									{
-										ActiveAbility equipped = Global.CurrentLevel.player.getSlottedActiveAbilities()[ii];
+										ActiveAbility equipped = Global.abilityPool.slottedActiveAbilities[ii];
 										final int index = ii;
 										
 										Table row = new Table();
@@ -304,7 +296,7 @@ public class AbilityPoolPanel extends Widget
 											@Override
 											public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 											{	
-												Global.CurrentLevel.player.slotActiveAbility((ActiveAbility)a.ability, index);
+												Global.abilityPool.slotActiveAbility((ActiveAbility)a.ability, index);
 												GameScreen.Instance.clearContextMenu();
 												
 												return true;
@@ -326,7 +318,7 @@ public class AbilityPoolPanel extends Widget
 									
 									for (int ii = 0; ii < Global.NUM_ABILITY_SLOTS; ii++)
 									{
-										PassiveAbility equipped = Global.CurrentLevel.player.getSlottedPassiveAbilities()[ii];
+										PassiveAbility equipped = Global.abilityPool.slottedPassiveAbilities[ii];
 										final int index = ii;
 										
 										Table row = new Table();
@@ -346,7 +338,7 @@ public class AbilityPoolPanel extends Widget
 											@Override
 											public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 											{	
-												Global.CurrentLevel.player.slotPassiveAbility((PassiveAbility)a.ability, index);
+												Global.abilityPool.slotPassiveAbility((PassiveAbility)a.ability, index);
 												GameScreen.Instance.clearContextMenu();
 												
 												return true;

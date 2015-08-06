@@ -742,7 +742,14 @@ public class RecursiveDockGenerator
 		{
 			tris.add(tri);
 		}
-		tris.sort();
+		tris.sort(new Comparator<Triangle>()
+		{
+
+			@Override
+			public int compare(Triangle arg0, Triangle arg1)
+			{
+				return arg0.compareTo(arg1);
+		}});
 		
 		for (Triangle tri : tris)
 		{

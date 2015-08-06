@@ -15,6 +15,7 @@ import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
+import Roguelike.Save.SaveAbilityPool;
 import Roguelike.Save.SaveFile;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Sprite.MoveAnimation;
@@ -609,15 +610,22 @@ public class GameScreen implements Screen, InputProcessor
 		if (keycode == Keys.S)
 		{
 			SaveFile save = new SaveFile();
+			
 			save.level = new SaveLevel();
 			save.level.store(Global.CurrentLevel);
+			
+			save.abilityPool = new SaveAbilityPool();
+			save.abilityPool.store(Global.abilityPool);
+			
 			save.save();
 		}
 		else if (keycode == Keys.L)
 		{
 			SaveFile save = new SaveFile();
 			save.load();
+			
 			Global.ChangeLevel(save.level.create());
+			Global.abilityPool = save.abilityPool.create();
 		}
 		
 		return false;
@@ -728,18 +736,18 @@ public class GameScreen implements Screen, InputProcessor
 			{
 				if (dragDropPayload.obj instanceof ActiveAbility)
 				{
-					int index = Global.CurrentLevel.player.getActiveAbilityIndex((ActiveAbility)dragDropPayload.obj);
+					int index = Global.abilityPool.getActiveAbilityIndex((ActiveAbility)dragDropPayload.obj);
 					if (index != -1)
 					{
-						Global.CurrentLevel.player.slotActiveAbility(null, index);
+						Global.abilityPool.slotActiveAbility(null, index);
 					}
 				}
 				else if (dragDropPayload.obj instanceof PassiveAbility)
 				{
-					int index = Global.CurrentLevel.player.getPassiveAbilityIndex((PassiveAbility)dragDropPayload.obj);
+					int index = Global.abilityPool.getPassiveAbilityIndex((PassiveAbility)dragDropPayload.obj);
 					if (index != -1)
 					{
-						Global.CurrentLevel.player.slotPassiveAbility(null, index);
+						Global.abilityPool.slotPassiveAbility(null, index);
 					}
 				}
 			}
@@ -981,7 +989,7 @@ public class GameScreen implements Screen, InputProcessor
 
 		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
 		{
-			ActiveAbility aa = Global.CurrentLevel.player.getSlottedActiveAbilities()[i];
+			ActiveAbility aa = Global.abilityPool.slottedActiveAbilities[i];
 			if (aa != null && aa.cooldownAccumulator <= 0)
 			{
 				available.add(aa);

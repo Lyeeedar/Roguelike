@@ -3,6 +3,14 @@ package Roguelike.Save;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.EnumMap;
+import java.util.EnumSet;
+
+import kryo.EnumMapSerializer;
+import kryo.EnumSetSerializer;
+import Roguelike.AssetManager;
+import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.Sprite.AnimationMode;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
@@ -14,6 +22,7 @@ import com.esotericsoftware.kryo.io.Output;
 public class SaveFile
 {
 	public SaveLevel level;
+	public SaveAbilityPool abilityPool;
 	
 	public void save()
 	{
@@ -30,6 +39,7 @@ public class SaveFile
 		}
 		
 		kryo.writeObject(output, level);
+		kryo.writeObject(output, abilityPool);
 
 		output.close();
 	}
@@ -49,12 +59,17 @@ public class SaveFile
 		}
 		
 		level = kryo.readObject(input, SaveLevel.class);
+		abilityPool = kryo.readObject(input, SaveAbilityPool.class);
 
 		input.close();
 	}
 	
 	private void registerSerializers(Kryo kryo)
 	{
+		kryo.register(EnumMap.class, new EnumMapSerializer());
+		
+		kryo.register(EnumSet.class, new EnumSetSerializer());
+		
 		kryo.register(Array.class, new Serializer<Array>() 
 		{
 		    {
@@ -136,6 +151,33 @@ public class SaveFile
 		    {
 		        output.writeInt(Color.rgba8888(color));
 		    }
+		});
+		
+		kryo.register(Sprite.class, new Serializer<Sprite>() 
+		{
+			public Sprite read (Kryo kryo, Input input, Class<Sprite> type) 
+			{
+				String fileName = input.readString();
+				float animDelay = input.readFloat();
+				int[] tileSize = input.readInts(2);
+				int[] tileIndex = input.readInts(2);
+				Color color = kryo.readObject(input, Color.class);
+				int modeVal = input.readInt();
+				AnimationMode mode = AnimationMode.values()[modeVal];
+				
+				Sprite sprite = AssetManager.loadSprite(fileName, animDelay, tileSize, tileIndex, color, mode, null);
+				return sprite;
+			}
+
+			public void write (Kryo kryo, Output output, Sprite sprite) 
+			{
+				output.writeString(sprite.fileName);
+				output.writeFloat(sprite.animationDelay);
+				output.writeInts(sprite.tileSize);
+				output.writeInts(sprite.tileIndex);
+				kryo.writeObject(output, sprite.colour);
+				output.writeInt(sprite.animationState.mode.ordinal());
+			}
 		});
 	}
 }

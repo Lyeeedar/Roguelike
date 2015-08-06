@@ -72,16 +72,7 @@ public class GameEntity extends Entity
 
 		for (ActiveAbility a : slottedActiveAbilities)
 		{
-			if (a != null)
-			{
-				boolean gtz = a.cooldownAccumulator > 0;
-				a.cooldownAccumulator -= cost;
-
-				if (gtz && a.cooldownAccumulator <= 0 && tile.level.player == this)
-				{
-					GameScreen.Instance.addAbilityAvailabilityAction(a.Icon);
-				}
-			}
+			a.cooldownAccumulator -= cost;
 		}
 
 		for (GameEventHandler h : getAllHandlers())
@@ -227,7 +218,8 @@ public class GameEntity extends Entity
 					ab = ActiveAbility.load(abEl.getText());
 				}
 
-				slottedActiveAbilities[i] = ab;
+				ab.caster = this;
+				slottedActiveAbilities.add(ab);
 			}
 		}
 
@@ -239,7 +231,7 @@ public class GameEntity extends Entity
 				Element abEl = passiveAbilityElement.getChild(i);
 
 				PassiveAbility ab = PassiveAbility.load(abEl.getText());
-				slottedPassiveAbilities[i] = ab;
+				slottedPassiveAbilities.add(ab);
 			}
 		}
 	}
@@ -279,107 +271,6 @@ public class GameEntity extends Entity
 	}
 
 	//----------------------------------------------------------------------
-	public int getActiveAbilityIndex(ActiveAbility aa)
-	{
-		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
-		{
-			if (slottedActiveAbilities[i] == aa)
-			{
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
-	//----------------------------------------------------------------------
-	public int getPassiveAbilityIndex(PassiveAbility pa)
-	{
-		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
-		{
-			if (slottedPassiveAbilities[i] == pa)
-			{
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
-	//----------------------------------------------------------------------
-	public ActiveAbility[] getSlottedActiveAbilities()
-	{
-		return slottedActiveAbilities;
-	}
-
-	//----------------------------------------------------------------------
-	public void slotActiveAbility(ActiveAbility aa, int index)
-	{
-		// if the target index is on cooldown, then cant swap
-		if (slottedActiveAbilities[index] != null && slottedActiveAbilities[index].cooldownAccumulator > 0)
-		{
-			return;
-		}
-
-		// check if aa is currently slotted
-		int currentIndex = -1;
-		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
-		{
-			if (slottedActiveAbilities[i] == aa)
-			{
-				currentIndex = i;
-				break;
-			}
-		}
-
-		// if is equipped, then swap the abilities without any waits
-		if (currentIndex >= 0)
-		{
-			ActiveAbility temp = slottedActiveAbilities[index];
-			slottedActiveAbilities[index] = aa;
-			slottedActiveAbilities[currentIndex] = temp;
-		}
-		else
-		{
-			aa.caster = this;
-			slottedActiveAbilities[index] = aa;
-
-			if (aa != null)
-			{
-				for (int i = 0; i < 3; i++)
-				{
-					tasks.add(new TaskWait());
-				}
-			}
-		}
-	}
-
-	//----------------------------------------------------------------------
-	public PassiveAbility[] getSlottedPassiveAbilities()
-	{
-		return slottedPassiveAbilities;
-	}
-
-	//----------------------------------------------------------------------
-	public void slotPassiveAbility(PassiveAbility pa, int index)
-	{
-		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
-		{
-			if (slottedPassiveAbilities[i] == pa)
-			{
-				slottedPassiveAbilities[i] = null;
-			}
-		}
-
-		slottedPassiveAbilities[index] = pa;
-
-		for (int i = 0; i < 3; i++)
-		{
-			tasks.add(new TaskWait());
-		}
-	}
-
-	//----------------------------------------------------------------------
 	public Array<Light> getLight()
 	{
 		Array<Light> lights = new Array<Light>();
@@ -406,8 +297,8 @@ public class GameEntity extends Entity
 	public String fileName;
 
 	//----------------------------------------------------------------------
-	private PassiveAbility[] slottedPassiveAbilities = new PassiveAbility[Global.NUM_ABILITY_SLOTS];
-	private ActiveAbility[] slottedActiveAbilities = new ActiveAbility[Global.NUM_ABILITY_SLOTS];
+	public Array<PassiveAbility> slottedPassiveAbilities = new Array<PassiveAbility>();
+	public Array<ActiveAbility> slottedActiveAbilities = new Array<ActiveAbility>();
 
 	//----------------------------------------------------------------------
 	public Sprite defaultHitEffect = AssetManager.loadSprite("strike/strike", 0.1f);

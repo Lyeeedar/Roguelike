@@ -68,8 +68,8 @@ public class AbilityPanel extends Widget
 		float x = 0;
 		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
 		{
-			ActiveAbility aa = entity.getSlottedActiveAbilities()[i];
-			PassiveAbility pa = entity.getSlottedPassiveAbilities()[i];
+			ActiveAbility aa = Global.abilityPool.slottedActiveAbilities[i];
+			PassiveAbility pa = Global.abilityPool.slottedPassiveAbilities[i];
 			
 			// Draw active
 			
@@ -164,14 +164,14 @@ public class AbilityPanel extends Widget
 				{
 					if (aaDragged)
 					{
-						entity.slotActiveAbility((ActiveAbility)GameScreen.Instance.dragDropPayload.obj, xIndex);
+						Global.abilityPool.slotActiveAbility((ActiveAbility)GameScreen.Instance.dragDropPayload.obj, xIndex);
 					}
 				}
 				else
 				{
 					if (paDragged)
 					{
-						entity.slotPassiveAbility((PassiveAbility)GameScreen.Instance.dragDropPayload.obj, xIndex);
+						Global.abilityPool.slotPassiveAbility((PassiveAbility)GameScreen.Instance.dragDropPayload.obj, xIndex);
 					}					
 				}
 			}
@@ -206,7 +206,7 @@ public class AbilityPanel extends Widget
 			{
 				if (yIndex == 0)
 				{
-					ActiveAbility aa = entity.getSlottedActiveAbilities()[xIndex];
+					ActiveAbility aa = Global.abilityPool.slottedActiveAbilities[xIndex];
 					
 					if (aa != null && aa.isAvailable())
 					{
@@ -215,7 +215,7 @@ public class AbilityPanel extends Widget
 				}
 				else if (yIndex == 1)
 				{
-					PassiveAbility pa = entity.getSlottedPassiveAbilities()[xIndex];
+					PassiveAbility pa = Global.abilityPool.slottedPassiveAbilities[xIndex];
 					
 					if (pa != null)
 					{
@@ -245,7 +245,7 @@ public class AbilityPanel extends Widget
 			{
 				if (yIndex == 0)
 				{
-					ActiveAbility aa = entity.getSlottedActiveAbilities()[xIndex];
+					ActiveAbility aa = Global.abilityPool.slottedActiveAbilities[xIndex];
 					
 					if (aa != null && aa.cooldownAccumulator <= 0)
 					{
@@ -268,7 +268,7 @@ public class AbilityPanel extends Widget
 			{
 				if (yIndex == 0)
 				{
-					ActiveAbility aa = entity.getSlottedActiveAbilities()[xIndex];
+					ActiveAbility aa = Global.abilityPool.slottedActiveAbilities[xIndex];
 					
 					if (aa != null)
 					{
@@ -278,7 +278,7 @@ public class AbilityPanel extends Widget
 				}
 				else
 				{
-					PassiveAbility aa = entity.getSlottedPassiveAbilities()[xIndex];
+					PassiveAbility aa = Global.abilityPool.slottedPassiveAbilities[xIndex];
 					
 					if (aa != null)
 					{

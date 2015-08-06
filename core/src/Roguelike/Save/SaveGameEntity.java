@@ -1,13 +1,11 @@
 package Roguelike.Save;
 
-import Roguelike.Global;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Items.Inventory;
 import Roguelike.StatusEffect.StatusEffect;
 
 import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
 
 public class SaveGameEntity extends SaveableObject<GameEntity>
 {
@@ -15,7 +13,9 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 	public int hp;
 	public int[] pos = new int[2];
 	public boolean isPlayer = false;
-	//public Array<SaveStatusEffect> statuses = new Array<SaveStatusEffect>();
+	public Array<StatusEffect> statuses = new Array<StatusEffect>();
+	public Array<CooldownWrapper> abilityCooldown = new Array<CooldownWrapper>();
+	public Inventory inventory;
 	// need to save ai
 
 	@Override
@@ -24,13 +24,16 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 		fileName = obj.fileName;
 		hp = obj.HP;
 		pos = new int[]{obj.tile.x, obj.tile.y};
-//		for (StatusEffect status : obj.statusEffects)
-//		{
-//			SaveStatusEffect saveStatus = new SaveStatusEffect();
-//			saveStatus.store(status);
-//			
-//			statuses.add(saveStatus);
-//		}
+		for (StatusEffect status : obj.statusEffects)
+		{			
+			statuses.add(status);
+		}
+		inventory = obj.inventory;
+		
+		for (ActiveAbility aa : obj.slottedActiveAbilities)
+		{
+			abilityCooldown.add(new CooldownWrapper(aa.cooldownAccumulator));
+		}
 	}
 
 	@Override
@@ -39,13 +42,33 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 		GameEntity entity = GameEntity.load(fileName);
 		
 		entity.HP = hp;
-//		for (SaveStatusEffect saveStatus : statuses)
-//		{
-//			entity.addStatusEffect(saveStatus.create());
-//		}
+		for (StatusEffect saveStatus : statuses)
+		{
+			entity.addStatusEffect(saveStatus);
+		}
+		entity.inventory = inventory;
+		
+		for (int i = 0; i < abilityCooldown.size; i++)
+		{
+			entity.slottedActiveAbilities.get(i).cooldownAccumulator = abilityCooldown.get(i).val;
+		}
 		
 		return entity;
 	}
 
-
+	// Neccessary due to Kryo issue with boxed primitives.
+	public static class CooldownWrapper
+	{
+		public float val;
+		
+		public CooldownWrapper()
+		{
+		
+		}
+		
+		public CooldownWrapper(float val)
+		{
+			this.val = val;
+		}
+	}
 }

@@ -1,4 +1,4 @@
-package Roguelike.Entity;
+package Roguelike.Items;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,7 +7,6 @@ import Roguelike.AssetManager;
 import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.RoguelikeGame;
-import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Items.Item.ItemType;
 

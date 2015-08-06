@@ -23,7 +23,6 @@ public class StatusEffect extends GameEventHandler
 	
 	public Sprite icon;
 	public float duration;
-	public Entity attachedTo;
 	
 	@Override
 	public void onTurn(Entity entity, float cost)

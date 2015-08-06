@@ -15,11 +15,11 @@ import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
-import Roguelike.Entity.Inventory;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.Entity.Tasks.TaskAttack;
 import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.Entity.Tasks.TaskWait;
+import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.ItemType;
 import Roguelike.Items.Recipe;
@@ -595,6 +595,8 @@ public class Level
 			float actionCost = task.cost * player.getActionDelay();
 			
 			Global.AUT += actionCost;
+			
+			Global.abilityPool.update(actionCost);
 			
 			player.update(actionCost);
 			

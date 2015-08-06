@@ -19,6 +19,8 @@ public class Sprite
 		SINE
 	}
 	
+	public String fileName;
+	
 	public Color colour = new Color(Color.WHITE);
 	
 	public float renderDelay = -1;
@@ -32,7 +34,7 @@ public class Sprite
 	public int[] tileIndex;
 	public int[] tileBounds;
 	
-	public Texture[] textures;
+	public Array<Texture> textures;
 	
 	public Array<Texture> extraLayers = new Array<Texture>();
 	
@@ -42,13 +44,9 @@ public class Sprite
 	
 	public SoundInstance sound;
 	
- 	public Sprite(float animationDelay, Array<Texture> textures, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode, SoundInstance sound)
-	{
-		this(animationDelay, (Texture[])textures.toArray(Texture.class), tileSize, tileIndex, colour, mode, sound);
-	}
-	
-	public Sprite(float animationDelay, Texture[] textures, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode, SoundInstance sound)
-	{
+ 	public Sprite(String fileName, float animationDelay, Array<Texture> textures, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode, SoundInstance sound)
+	{		
+ 		this.fileName = fileName;
 		this.textures = textures;
 		this.animationDelay = animationDelay;
 		this.tileSize = tileSize;
@@ -89,7 +87,7 @@ public class Sprite
 			if (animationState.mode == AnimationMode.TEXTURE)
 			{
 				animationState.texIndex++;
-				if (animationState.texIndex >= textures.length)
+				if (animationState.texIndex >= textures.size)
 				{
 					animationState.texIndex = 0;
 					looped = true;
@@ -141,7 +139,7 @@ public class Sprite
 		Color col = new Color(oldCol).mul(colour);
 		batch.setColor(col);
 		
-		drawTexture(batch, textures[animationState.texIndex], x, y, width, height, animationState);
+		drawTexture(batch, textures.get(animationState.texIndex), x, y, width, height, animationState);
 		
 		for (Texture tex : extraLayers)
 		{
@@ -189,12 +187,12 @@ public class Sprite
 
 	public Texture getCurrentTexture()
 	{
-		return textures[animationState.texIndex];
+		return textures.get(animationState.texIndex);
 	}
 	
 	public Sprite copy()
 	{
-		return new Sprite(animationDelay, textures, tileSize, tileIndex, colour, animationState.mode, sound);
+		return new Sprite(fileName, animationDelay, textures, tileSize, tileIndex, colour, animationState.mode, sound);
 	}
 	
 	public static class AnimationState

@@ -7,6 +7,7 @@ import Roguelike.AssetManager;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.Items.Inventory;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
@@ -201,14 +202,12 @@ public abstract class Entity
 	{
 		if (!canTakeDamage) { return; }
 		
-		se.attachedTo = this;
 		statusEffects.add(se);
 	}
 	
 	//----------------------------------------------------------------------
 	public void removeStatusEffect(StatusEffect se)
 	{
-		se.attachedTo = null;
 		statusEffects.removeValue(se, true);
 	}
 	

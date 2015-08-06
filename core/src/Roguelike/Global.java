@@ -625,7 +625,7 @@ public class Global
 	//----------------------------------------------------------------------
 	public static void newGame()
 	{
-		abilityPool = new AbilityPool();
+		abilityPool = AbilityPool.createDefaultAbilityPool();
 		
 		RecursiveDockGenerator generator = new RecursiveDockGenerator("Sewer", 0, MathUtils.random(Long.MAX_VALUE-1), true);
 		generator.generate();

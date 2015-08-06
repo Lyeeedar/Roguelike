@@ -141,7 +141,7 @@ public class AssetManager
 			}
 		}
 		
-		Sprite sprite = new Sprite(updateTime, textures, tileSize, tileIndex, colour, mode, sound);
+		Sprite sprite = new Sprite(name, updateTime, textures, tileSize, tileIndex, colour, mode, sound);
 		
 		return sprite;
 	}
