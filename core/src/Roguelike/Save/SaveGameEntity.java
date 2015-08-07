@@ -16,6 +16,7 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 	public Array<StatusEffect> statuses = new Array<StatusEffect>();
 	public Array<CooldownWrapper> abilityCooldown = new Array<CooldownWrapper>();
 	public Inventory inventory;
+	public String UID;
 	// need to save ai
 
 	@Override
@@ -34,6 +35,8 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 		{
 			abilityCooldown.add(new CooldownWrapper(aa.cooldownAccumulator));
 		}
+		
+		UID = obj.UID;
 	}
 
 	@Override
@@ -52,6 +55,8 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 		{
 			entity.slottedActiveAbilities.get(i).cooldownAccumulator = abilityCooldown.get(i).val;
 		}
+		
+		entity.UID = UID;
 		
 		return entity;
 	}

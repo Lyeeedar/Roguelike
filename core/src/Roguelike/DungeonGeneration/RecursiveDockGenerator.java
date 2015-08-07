@@ -36,13 +36,14 @@ public class RecursiveDockGenerator
 	//region Constructor
 
 	//----------------------------------------------------------------------
-	public RecursiveDockGenerator(String level, int depth, long seed, boolean createDynamics)
+	public RecursiveDockGenerator(String level, int depth, long seed, boolean createDynamics, String levelUID)
 	{
 		dfp = DungeonFileParser.load(level+"/"+level);
 		this.depth = depth;
 		this.fileName = level;
 		this.seed = seed;
 		this.createDynamics = createDynamics;
+		this.levelUID = levelUID;
 		
 		minPadding = (dfp.corridorStyle.minWidth/2)+1;
 		maxPadding += minPadding;
@@ -100,7 +101,7 @@ public class RecursiveDockGenerator
 
 				if (symbol.hasEnvironmentEntity())
 				{
-					EnvironmentEntity entity = symbol.getEnvironmentEntity();
+					EnvironmentEntity entity = symbol.getEnvironmentEntity(levelUID);
 					
 					if (createDynamics || !entity.canTakeDamage)
 					{		
@@ -175,7 +176,8 @@ public class RecursiveDockGenerator
 		}
 		
 		level.depth = depth;
-		
+		level.UID = levelUID;
+				
 		return level;
 	}
 
@@ -1040,6 +1042,7 @@ public class RecursiveDockGenerator
 	public long seed;
 	public String fileName;
 	public boolean createDynamics;
+	public String levelUID;
 	
 	private static final boolean DEBUG_OUTPUT = false;
 	private static final int DEBUG_SIZE = 16;

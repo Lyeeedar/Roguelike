@@ -67,6 +67,8 @@ public abstract class Entity
 		{
 			inventory.load(inventoryElement);
 		}
+		
+		UID = getClass().getSimpleName() + " " + name + ": ID " + hashCode();
 	}
 
 	//----------------------------------------------------------------------
@@ -255,6 +257,8 @@ public abstract class Entity
 	
 	//----------------------------------------------------------------------
 	public boolean canTakeDamage = true;
+	
+	public String UID;
 
 	//----------------------------------------------------------------------
 	public static class StatusEffectStack

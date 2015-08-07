@@ -14,9 +14,8 @@ public class SeenTile
 {
 	public boolean seen = false;
 	public Array<SeenHistoryItem> History = new Array<SeenHistoryItem>();
-		
 	public GameTile GameTile;
-	
+			
 	public Table createTable(Skin skin)
 	{
 		Table table = new Table();
@@ -51,6 +50,11 @@ public class SeenTile
 		
 		String description;
 		float turn;
+		
+		public SeenHistoryItem()
+		{
+			
+		}
 		
 		public SeenHistoryItem(Sprite sprite, String desc)
 		{

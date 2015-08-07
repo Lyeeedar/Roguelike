@@ -42,7 +42,7 @@ public class ImageUtils
 				
 				if (s.hasEnvironmentEntity())
 				{
-					Pixmap src = TextureToPixmap(s.getEnvironmentEntity().sprite.getCurrentTexture());
+					Pixmap src = TextureToPixmap(s.getEnvironmentEntity("").sprite.getCurrentTexture());
 					pixmap.drawPixmap(src, 
 							0, 0, src.getWidth(), src.getHeight(),
 							x*tileSize, y*tileSize, tileSize, tileSize);

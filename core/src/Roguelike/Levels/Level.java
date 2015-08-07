@@ -54,12 +54,13 @@ public class Level
 	public int depth;
 	public long seed;
 	public Array<DFPRoom> requiredRooms;
+	public String UID;
 	
 	public GameEntity player;
 	
 	public Color Ambient = new Color(0.1f, 0.1f, 0.3f, 1.0f);
 	
-	private SeenTile[][] SeenGrid;
+	public SeenTile[][] SeenGrid;
 	private GameTile[][] Grid;
 	public int width;
 	public int height;
@@ -219,6 +220,29 @@ public class Level
 			
 			tile.light.add(lcol);
 		}
+	}
+	
+	public Entity getEntityWithUID(String UID)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				GameTile tile = getGameTile(x, y);
+				
+				if (tile.environmentEntity != null)
+				{
+					if (tile.environmentEntity.UID.equals(UID)) { return tile.environmentEntity; }
+				}
+				
+				if (tile.entity != null)
+				{
+					if (tile.entity.UID.equals(UID)) { return tile.entity; }
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	public Array<ActiveAbility> ActiveAbilities = new Array<ActiveAbility>(false, 16);

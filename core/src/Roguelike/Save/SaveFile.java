@@ -14,6 +14,8 @@ import Roguelike.Sprite.Sprite.AnimationMode;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.utils.XmlReader.Element;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
@@ -177,6 +179,23 @@ public class SaveFile
 				output.writeInts(sprite.tileIndex);
 				kryo.writeObject(output, sprite.colour);
 				output.writeInt(sprite.animationState.mode.ordinal());
+			}
+		});
+		
+		kryo.register(Element.class, new Serializer<Element>() 
+		{
+			public Element read (Kryo kryo, Input input, Class<Element> type) 
+			{
+				String xml = input.readString();
+				
+				XmlReader reader = new XmlReader();
+				Element element = reader.parse(xml);
+				return element;
+			}
+
+			public void write (Kryo kryo, Output output, Element element) 
+			{
+				output.writeString(element.toString());
 			}
 		});
 	}

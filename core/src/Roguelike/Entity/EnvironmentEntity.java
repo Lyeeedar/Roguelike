@@ -11,10 +11,13 @@ import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.RoguelikeGame;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
+import Roguelike.DungeonGeneration.DungeonFileParser;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
+import Roguelike.DungeonGeneration.Symbol;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Levels.Level;
+import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationMode;
@@ -38,6 +41,9 @@ public class EnvironmentEntity extends Entity
 	public Array<ActivationAction> actions = new Array<ActivationAction>();
 	
 	public OnTurnAction onTurnAction;
+	
+	public Element creationData;
+	public HashMap<String, Object> data = new HashMap<String, Object>();
 	
 	//----------------------------------------------------------------------
 	@Override
@@ -105,87 +111,85 @@ public class EnvironmentEntity extends Entity
 	}
 	
 	//----------------------------------------------------------------------
-	private static EnvironmentEntity CreateTransition(final Element data)
+	private static EnvironmentEntity CreateTransition(final Element data, String levelUID)
 	{
-		final Sprite stairdown = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_down");
-		final Sprite stairup = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_up");
+		String destination = data.get("Destination");
+						
+		DungeonFileParser dfp = DungeonFileParser.load(destination+"/"+destination);
 		
-		final EnvironmentEntity entranceEntity = new EnvironmentEntity();
-		entranceEntity.passableBy = Passability.parse("true");
-		entranceEntity.passableBy.add(Passability.LIGHT);
-		entranceEntity.sprite = stairdown;
-		entranceEntity.canTakeDamage = false;
+		DFPRoom exitRoom = DFPRoom.parse(data.getChildByName("ExitRoom"), dfp.sharedSymbolMap);
 		
-		final EnvironmentEntity exitEntity = new EnvironmentEntity();
-		exitEntity.passableBy = Passability.parse("true");
-		exitEntity.passableBy.add(Passability.LIGHT);
-		exitEntity.sprite = stairup;
-		exitEntity.canTakeDamage = false;
+		final SaveLevel destinationLevel = new SaveLevel(destination, 0, null, MathUtils.random(Long.MAX_VALUE));		
+		destinationLevel.requiredRooms.add(exitRoom);
 		
-		ActivationAction entranceAA = new ActivationAction("Change Level")
-		{
-			Level connectedLevel;
-			EnvironmentEntity exit = exitEntity;
-			
+		ActivationAction action = new ActivationAction("Change Level")
+		{			
 			public void activate(EnvironmentEntity entity)
 			{
-				// generate new level if required
-				if (connectedLevel == null)
+				Level current = entity.tile.level;
+				SaveLevel save = Global.getLevel((SaveLevel)entity.data.get("Destination"));
+				Level level = save.create();
+				
+				level.player = current.player;
+				
+				for (EnvironmentEntity ee : current.getAllEnvironmentEntities())
 				{
-					RecursiveDockGenerator generator = new RecursiveDockGenerator(data.get("Destination"), entranceEntity.tile.level.depth+1, MathUtils.random(Long.MAX_VALUE), true);
-					
-					DFPRoom dfpRoom = DFPRoom.parse(data.getChildByName("ExitRoom"), generator.dfp.sharedSymbolMap);
-										
-//					for (int x = 0; x < dfpRoom.width; x++)
-//					{
-//						for (int y = 0; y < dfpRoom.height; y++)
-//						{
-//							if (dfpRoom.roomContents[x][y].environmentData != null)
-//							{
-//								if (dfpRoom.roomContents[x][y].environmentData.get("Destination", "").equals("this"))
-//								{
-//									dfpRoom.roomContents[x][y].environmentEntityObject = exitEntity;
-//								}
-//							}
-//						}
-//					}
-					
-					generator.additionalRooms.add(dfpRoom);
-					generator.generate();
-					connectedLevel = generator.getLevel();
+					if (ee.data.containsKey("Destination") && ((SaveLevel)ee.data.get("Destination")).UID.equals(current.UID))
+					{
+						ee.tile.addGameEntity(level.player);
+						
+						break;
+					}
 				}
 				
-				exit.tile.addGameEntity(entity.tile.level.player);
-				connectedLevel.player = entity.tile.level.player;
-				
-				connectedLevel.updateVisibleTiles();
-				
-				// switch out levels
-				Global.CurrentLevel = connectedLevel;
+				Global.ChangeLevel(level);
+				level.updateVisibleTiles();
 			}
 		};
-		entranceEntity.actions.add(entranceAA);
 		
-		ActivationAction exitAA = new ActivationAction("Change Level")
+		// Make stairs up and place in room
 		{
-			EnvironmentEntity exit = entranceEntity;
+			final Sprite stairs = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_up");
 			
-			public void activate(EnvironmentEntity entity)
+			final EnvironmentEntity entity = new EnvironmentEntity();
+			entity.passableBy = Passability.parse("true");
+			entity.passableBy.add(Passability.LIGHT);
+			entity.sprite = stairs;
+			entity.canTakeDamage = false;
+			entity.actions.add(action);
+			entity.data.put("Destination", new SaveLevel(levelUID));
+			entity.UID = "EnvironmentEntity UpStair: ID " + entity.hashCode();
+			
+			// Place in symbol
+			for (Symbol symbol : exitRoom.localSymbolMap.values())
 			{
-				Level connectedLevel = entranceEntity.tile.level;
-				
-				exit.tile.addGameEntity(entity.tile.level.player);
-				connectedLevel.player = entity.tile.level.player;
-				
-				connectedLevel.updateVisibleTiles();
-				
-				// switch out levels
-				Global.CurrentLevel = connectedLevel;
+				if (symbol.environmentData != null)
+				{
+					if (symbol.environmentData.get("Type").equals("Transition") && symbol.environmentData.get("Destination").equals("this"))
+					{
+						symbol.environmentEntityObject = entity;
+						
+						break;
+					}
+				}
 			}
-		};
-		exitEntity.actions.add(exitAA);
+		}
 		
-		return entranceEntity;
+		// Make stairs down and return
+		{
+			final Sprite stairs = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_down");
+			
+			final EnvironmentEntity entity = new EnvironmentEntity();
+			entity.passableBy = Passability.parse("true");
+			entity.passableBy.add(Passability.LIGHT);
+			entity.sprite = stairs;
+			entity.canTakeDamage = false;
+			entity.actions.add(action);
+			entity.data.put("Destination", destinationLevel);
+			entity.UID = "EnvironmentEntity DownStair: ID " + entity.hashCode();
+			
+			return entity;
+		}
 	}
 	
 	//----------------------------------------------------------------------
@@ -194,44 +198,35 @@ public class EnvironmentEntity extends Entity
 		final Sprite doorClosed = AssetManager.loadSprite("Objects/Door0", 1, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE, AnimationMode.NONE, null);
 		final Sprite doorOpen = AssetManager.loadSprite("Objects/Door1", 1, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE, AnimationMode.NONE, null);
 		
-		ActivationAction open = new ActivationAction("Open")
+		ActivationAction action = new ActivationAction("Open")
 		{
 			public void activate(EnvironmentEntity entity)
 			{
-				entity.passableBy = Passability.parse("true");
-				entity.passableBy.add(Passability.LIGHT);				
-				entity.sprite = doorOpen;
-				
-				entity.actions.get(1).visible = true;
-				visible = false;
-			}
-		};
-		
-		ActivationAction close = new ActivationAction("Close")
-		{
-			public void activate(EnvironmentEntity entity)
-			{
-				if (entity.tile.entity != null)
+				boolean closed = entity.data.get("State").equals("Closed");
+				if (closed)
 				{
-					return;
+					entity.passableBy = Passability.parse("true");
+					entity.passableBy.add(Passability.LIGHT);				
+					entity.sprite = doorOpen;
+					name = "Close";
 				}
-				
-				entity.passableBy = Passability.parse("false");;
-				entity.passableBy.remove(Passability.LIGHT);				
-				entity.sprite = doorClosed;
-				
-				entity.actions.get(0).visible = true;
-				visible = false;
+				else
+				{
+					entity.passableBy = Passability.parse("false");;
+					entity.passableBy.remove(Passability.LIGHT);				
+					entity.sprite = doorClosed;
+					name = "Open";
+				}
 			}
 		};
-		close.visible = false;
 		
 		EnvironmentEntity entity = new EnvironmentEntity();
+		entity.data.put("State", "Closed");
 		entity.passableBy = Passability.parse("false");
 		entity.passableBy.remove(Passability.LIGHT);
 		entity.sprite = doorClosed;
-		entity.actions.add(open);
-		entity.actions.add(close);
+		entity.actions.add(action);
+		entity.UID = "EnvironmentEntity Door: ID " + entity.hashCode();
 		
 		return entity;
 	}
@@ -261,19 +256,46 @@ public class EnvironmentEntity extends Entity
 		final int count = xml.getInt("Count", 1);
 		final String name = xml.get("Entity");
 		final int respawn = xml.getInt("Respawn", 50);
-
+		
+		entity.data.put("Accumulator", 0.0f);
 		
 		entity.onTurnAction = new OnTurnAction()
 		{
 			String entityName = name;
 			float cooldown = respawn;
 			
-			GameEntity[] entities = new GameEntity[count];
+			GameEntity[] entities;
 			float accumulator;
 			
 			@Override
 			public void update(EnvironmentEntity entity, float delta)
 			{
+				// reload data
+				if (entities == null)
+				{
+					entities = new GameEntity[count];
+					
+					for (int i = 0; i < count; i++)
+					{
+						String key = "Entity"+i;
+						if (entity.data.containsKey(key))
+						{
+							String UID = (String)entity.data.get(key);
+							
+							GameEntity ge = (GameEntity)entity.tile.level.getEntityWithUID(UID);
+							
+							if (ge == null)
+							{
+								System.out.println("Failed to find entity with UID: " + UID);
+							}
+							
+							entities[i] = ge;
+						}
+					}
+					
+					accumulator = (Float)entity.data.get("Accumulator");
+				}
+				
 				if (accumulator > 0)
 				{
 					accumulator -= delta;
@@ -309,6 +331,8 @@ public class EnvironmentEntity extends Entity
 								if (entities[i] == null)
 								{
 									entities[i] = ge;
+									
+									entity.data.put("Entity"+i, ge.UID);
 									break;
 								}
 							}
@@ -327,6 +351,8 @@ public class EnvironmentEntity extends Entity
 						if (ge == null || ge.HP <= 0)
 						{
 							entities[i] = null;
+							entity.data.remove("Entity"+i);
+							
 							needsSpawn = true;
 						}
 					}
@@ -336,6 +362,8 @@ public class EnvironmentEntity extends Entity
 						accumulator = cooldown;
 					}
 				}
+				
+				entity.data.put("Accumulator", accumulator);
 			}
 			
 		};
@@ -347,6 +375,7 @@ public class EnvironmentEntity extends Entity
 	private static EnvironmentEntity CreateBasic(Element xml)
 	{
 		EnvironmentEntity entity = new EnvironmentEntity();
+		
 		entity.passableBy = Passability.parse(xml.get("Passable", "false"));
 		
 		if (xml.get("Opaque", null) != null)
@@ -373,25 +402,31 @@ public class EnvironmentEntity extends Entity
 	}
 	
 	//----------------------------------------------------------------------
-	public static EnvironmentEntity load(Element xml)
+	public static EnvironmentEntity load(Element xml, String levelUID)
 	{
+		EnvironmentEntity entity = null;
+		
 		String type = xml.get("Type", "");
+		
 		if (type.equalsIgnoreCase("Door"))
 		{
-			return CreateDoor();
+			entity = CreateDoor();
 		}
 		else if (type.equalsIgnoreCase("Transition"))
 		{
-			return CreateTransition(xml);
+			entity = CreateTransition(xml, levelUID);
 		}
 		else if (type.equalsIgnoreCase("Spawner"))
 		{
-			return CreateSpawner(xml);
+			entity = CreateSpawner(xml);
 		}
 		else
 		{
-			return CreateBasic(xml);
+			entity = CreateBasic(xml);
 		}
+		
+		entity.creationData = xml;
+		return entity;
 	}
 
 	//----------------------------------------------------------------------

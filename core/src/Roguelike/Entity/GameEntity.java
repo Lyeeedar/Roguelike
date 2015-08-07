@@ -312,7 +312,7 @@ public class GameEntity extends Entity
 	//----------------------------------------------------------------------
 	public HashSet<String> factions = new HashSet<String>();		
 	public BehaviourTree AI;
-
+	
 	//endregion Data
 	//####################################################################//
 }

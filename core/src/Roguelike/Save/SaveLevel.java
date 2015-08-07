@@ -19,19 +19,45 @@ public class SaveLevel extends SaveableObject<Level>
 	public String fileName;
 	public int depth;
 	public long seed;
+	public String UID;
+	public boolean created = false;
 	
 	public Array<DFPRoom> requiredRooms = new Array<DFPRoom>();
 	
 	public Array<SaveGameEntity> gameEntities = new Array<SaveGameEntity>();
 	public Array<SaveLevelItem> items = new Array<SaveLevelItem>();
-	//public Array<SaveEnvironmentEntity> environmentEntities = new Array<SaveEnvironmentEntity>();
+	public Array<SaveEnvironmentEntity> environmentEntities = new Array<SaveEnvironmentEntity>();
+	
+	public SaveSeenTile[][] seenTiles;
 
+	public SaveLevel()
+	{
+		
+	}
+	
+	public SaveLevel(String UID)
+	{
+		this.UID = UID;
+	}
+	
+	public SaveLevel(String fileName, int depth, Array<DFPRoom> requiredRooms, long seed)
+	{
+		this.fileName = fileName;
+		this.depth = depth;
+		if (requiredRooms != null) { this.requiredRooms = requiredRooms; }
+		this.seed = seed;
+		
+		createUID();
+	}
+	
 	@Override
 	public void store(Level obj)
 	{
+		created = true;
 		fileName = obj.fileName;
 		depth = obj.depth;
 		seed = obj.seed;
+		UID = obj.UID;
 		
 		requiredRooms = obj.requiredRooms;
 		
@@ -59,21 +85,34 @@ public class SaveLevel extends SaveableObject<Level>
 			}
 		}
 		
-//		for (EnvironmentEntity entity : obj.getAllEnvironmentEntities())
-//		{
-//			if (entity.canTakeDamage)
-//			{
-//				SaveEnvironmentEntity saveObj = new SaveEnvironmentEntity();
-//				saveObj.store(entity);
-//				environmentEntities.store(saveObj);
-//			}
-//		}
+		for (EnvironmentEntity entity : obj.getAllEnvironmentEntities())
+		{
+			if (entity.canTakeDamage)
+			{
+				SaveEnvironmentEntity saveObj = new SaveEnvironmentEntity();
+				saveObj.store(entity);
+				environmentEntities.add(saveObj);
+			}
+		}
+		
+		seenTiles = new SaveSeenTile[obj.width][obj.height];
+		for (int x = 0; x < obj.width; x++)
+		{
+			for (int y = 0; y < obj.height; y++)
+			{
+				SaveSeenTile save = new SaveSeenTile();
+				save.store(obj.getSeenTile(x, y));
+				
+				seenTiles[x][y] = save;
+			}
+		}
 	}
 	
 	@Override
 	public Level create()
 	{
-		RecursiveDockGenerator generator = new RecursiveDockGenerator(fileName, depth, seed, false);
+		RecursiveDockGenerator generator = new RecursiveDockGenerator(fileName, depth, seed, !created, UID);
+		created = true;
 		
 		for (DFPRoom dfpRoom : requiredRooms)
 		{
@@ -104,13 +143,29 @@ public class SaveLevel extends SaveableObject<Level>
 			tile.items.add(item.item);
 		}
 		
-//		for (SaveEnvironmentEntity entity : environmentEntities)
-//		{
-//			GameTile tile = level.getGameTile(entity.pos);
-//			tile.addEnvironmentEntity(entity.create());
-//		}
+		for (SaveEnvironmentEntity entity : environmentEntities)
+		{
+			GameTile tile = level.getGameTile(entity.pos);
+			tile.addEnvironmentEntity(entity.create());
+		}
+		
+		if (seenTiles != null)
+		{
+			for (int x = 0; x < level.width; x++)
+			{
+				for (int y = 0; y < level.height; y++)
+				{
+					level.SeenGrid[x][y] = seenTiles[x][y].create();
+				}
+			}
+		}
 		
 		return level;
+	}
+	
+	public void createUID()
+	{
+		UID = "Level " + fileName + ": Depth " + depth + ": ID " + this.hashCode();
 	}
 	
 	public static class SaveLevelItem

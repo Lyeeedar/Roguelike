@@ -52,7 +52,7 @@ public class Symbol implements PathfindingTile
 		return environmentEntityObject != null || environmentData != null;
 	}
 	
-	public EnvironmentEntity getEnvironmentEntity()
+	public EnvironmentEntity getEnvironmentEntity(String levelUID)
 	{
 		if (environmentEntityObject != null)
 		{
@@ -61,7 +61,7 @@ public class Symbol implements PathfindingTile
 		
 		if (environmentData != null)
 		{
-			EnvironmentEntity ee = EnvironmentEntity.load(environmentData);
+			EnvironmentEntity ee = EnvironmentEntity.load(environmentData, levelUID);
 						
 			return ee;
 		}

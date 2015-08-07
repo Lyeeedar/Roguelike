@@ -14,6 +14,7 @@ import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.Levels.Level;
+import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.Mixer;
 import Roguelike.Sound.RepeatingSoundEffect;
@@ -55,6 +56,9 @@ public class Global
 	
 	//----------------------------------------------------------------------
 	public static Level CurrentLevel;
+	
+	//----------------------------------------------------------------------
+	public static HashMap<String, SaveLevel> AllLevels = new HashMap<String, SaveLevel>();
 	
 	//----------------------------------------------------------------------
 	public static Mixer BGM;
@@ -626,10 +630,12 @@ public class Global
 	public static void newGame()
 	{
 		abilityPool = AbilityPool.createDefaultAbilityPool();
+		AllLevels.clear();
 		
-		RecursiveDockGenerator generator = new RecursiveDockGenerator("Sewer", 0, MathUtils.random(Long.MAX_VALUE-1), true);
-		generator.generate();
-		ChangeLevel(generator.getLevel());
+		SaveLevel firstLevel = new SaveLevel("Sewer", 0, null, MathUtils.random(Long.MAX_VALUE-1));
+		firstLevel = getLevel(firstLevel);
+		
+		ChangeLevel(firstLevel.create());
 
 		boolean exit = false;
 		for (int x = 0; x < CurrentLevel.width; x++)
@@ -662,6 +668,11 @@ public class Global
 			{
 				sound.stop();
 			}
+			
+			// Save
+			SaveLevel save = new SaveLevel();
+			save.store(CurrentLevel);
+			AllLevels.put(save.UID, save);
 		}
 		
 		CurrentLevel = level;
@@ -674,6 +685,17 @@ public class Global
 		{
 			BGM = new Mixer(level.bgmName, 0.1f);
 		}
+	}
+	
+	//----------------------------------------------------------------------
+	public static SaveLevel getLevel(SaveLevel level)
+	{
+		if (!AllLevels.containsKey(level.UID))
+		{
+			AllLevels.put(level.UID, level);
+		}
+		
+		return AllLevels.get(level.UID);
 	}
 	
 	//----------------------------------------------------------------------
