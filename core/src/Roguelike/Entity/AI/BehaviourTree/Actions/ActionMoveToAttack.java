@@ -74,8 +74,10 @@ public class ActionMoveToAttack extends AbstractAction
 				{
 					break;
 				}
-				
-				possibleTiles.add(newPos);
+				if (tile.getPassable(entity.getTravelType()))
+				{
+					possibleTiles.add(newPos);
+				}
 			}
 		}
 		
@@ -90,18 +92,12 @@ public class ActionMoveToAttack extends AbstractAction
 				return State;
 			}
 			
-			if (!entity.tile.level.getGameTile(pos).getPassable(entity.getTravelType()))
-			{
-				continue;
-			}
-			
 			Pathfinder pathFinder = new Pathfinder(entity.tile.level.getGrid(), entity.tile.x, entity.tile.y, pos[0], pos[1], true);
 			int[][] path = pathFinder.getPath(entity.getTravelType());
 			
 			if (path.length > 1 && path.length < bestDist)
 			{
-				if ((entity.tile.level.getGameTile(path[1]).environmentEntity == null || !entity.tile.level.getGameTile(path[1]).environmentEntity.canTakeDamage) &&
-					!entity.tile.level.getGameTile(path[1]).getPassable(entity.getTravelType()))
+				if (entity.tile.level.getGameTile(path[1]).getPassable(entity.getTravelType()))
 				{
 					bestDist = path.length;
 					bestPath = path;

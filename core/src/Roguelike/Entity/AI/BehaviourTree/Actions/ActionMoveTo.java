@@ -5,6 +5,7 @@ import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.Pathfinding.Pathfinder;
+import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -43,9 +44,9 @@ public class ActionMoveTo extends AbstractAction
 			return State;
 		}
 		
-		// if next step is impassable and not an immortal environment entity then fail
-		if ((entity.tile.level.getGameTile(path[1]).environmentEntity == null || !entity.tile.level.getGameTile(path[1]).environmentEntity.canTakeDamage) &&
-			!entity.tile.level.getGameTile(path[1]).getPassable(entity.getTravelType()))
+		GameTile nextTile = entity.tile.level.getGameTile(path[1]);
+		// if next step is impassable then fail
+		if (!nextTile.getPassable(entity.getTravelType()))
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;

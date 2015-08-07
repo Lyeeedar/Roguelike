@@ -171,20 +171,32 @@ public class MathUtilFunctions
 		}
 	}
 	
+	private final static RoundFunction round = new RoundFunction();
+	private final static ClampFunction clamp = new ClampFunction();
+	
+	private final static MinFunction min = new MinFunction();
+	private final static Min3Function min3 = new Min3Function();
+	private final static Min4Function min4 = new Min4Function();
+	private final static Min5Function min5 = new Min5Function();
+	
+	private final static MaxFunction max = new MaxFunction();
+	private final static Max3Function max3 = new Max3Function();
+	private final static Max4Function max4 = new Max4Function();
+	private final static Max5Function max5 = new Max5Function();
+	
 	public static void applyFunctions(ExpressionBuilder expB)
 	{
-		expB.function(new RoundFunction());
+		expB.function(round);
+		expB.function(clamp);
 		
-		expB.function(new MinFunction());
-		expB.function(new Min3Function());
-		expB.function(new Min4Function());
-		expB.function(new Min5Function());
+		expB.function(min);
+		expB.function(min3);
+		expB.function(min4);
+		expB.function(min5);
 		
-		expB.function(new MaxFunction());
-		expB.function(new Max3Function());
-		expB.function(new Max4Function());
-		expB.function(new Max5Function());
-		
-		expB.function(new ClampFunction());
+		expB.function(max);
+		expB.function(max3);
+		expB.function(max4);
+		expB.function(max5);
 	}
 }

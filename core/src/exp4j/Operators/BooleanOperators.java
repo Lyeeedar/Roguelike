@@ -123,18 +123,30 @@ public class BooleanOperators
 		}
 	}
 
+	private static final LessThanOperator lessThan = new LessThanOperator();
+	private static final LessThanOrEqualOperator lessThanOrEqual = new LessThanOrEqualOperator();
+	
+	private static final GreaterThanOperator greaterThan = new GreaterThanOperator();
+	private static final GreaterThanOrEqualOperator greaterThanOrEqual = new GreaterThanOrEqualOperator();
+	
+	private static final EqualsOperator equal = new EqualsOperator();
+	private static final NotEqualsOperator notEqual = new NotEqualsOperator();
+	
+	private static final AndOperator and = new AndOperator();
+	private static final OrOperator or = new OrOperator();
+	
 	public static void applyOperators(ExpressionBuilder expB)
 	{
-		expB.operator(new LessThanOperator());
-		expB.operator(new LessThanOrEqualOperator());
+		expB.operator(lessThan);
+		expB.operator(lessThanOrEqual);
 		
-		expB.operator(new GreaterThanOperator());
-		expB.operator(new GreaterThanOrEqualOperator());
+		expB.operator(greaterThan);
+		expB.operator(greaterThanOrEqual);
 		
-		expB.operator(new EqualsOperator());
-		expB.operator(new NotEqualsOperator());
+		expB.operator(equal);
+		expB.operator(notEqual);
 		
-		expB.operator(new AndOperator());
-		expB.operator(new OrOperator());
+		expB.operator(and);
+		expB.operator(or);
 	}
 }

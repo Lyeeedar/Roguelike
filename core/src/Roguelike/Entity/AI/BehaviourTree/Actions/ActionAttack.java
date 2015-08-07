@@ -4,6 +4,7 @@ import Roguelike.Global.Direction;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskAttack;
+import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -24,7 +25,15 @@ public class ActionAttack extends AbstractAction
 		}
 		
 		TaskAttack task = new TaskAttack(Direction.getDirection(target[0]-entity.tile.x, target[1]-entity.tile.y));
-		if (task.checkHitSomething(entity))
+		GameTile targetTile = entity.tile.level.getGameTile(target);
+		if (targetTile.environmentEntity != null && targetTile.environmentEntity.canTakeDamage)
+		{
+			entity.tasks.add(task);
+			
+			State = BehaviourTreeState.SUCCEEDED;
+			return State;
+		}
+		else if (task.checkHitSomething(entity))
 		{
 			entity.tasks.add(task);
 			

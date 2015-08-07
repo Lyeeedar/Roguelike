@@ -113,14 +113,8 @@ public class SaveLevel extends SaveableObject<Level>
 	{
 		RecursiveDockGenerator generator = new RecursiveDockGenerator(fileName, depth, seed, !created, UID);
 		created = true;
-		
-		for (DFPRoom dfpRoom : requiredRooms)
-		{
-			final Room room = new Room();
-			dfpRoom.fillRoom(room, generator.ran, generator.dfp);
-			
-			generator.toBePlaced.add(room);
-		}
+
+		generator.additionalRooms = requiredRooms;
 				
 		generator.generate();
 		Level level = generator.getLevel();

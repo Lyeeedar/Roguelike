@@ -113,15 +113,6 @@ public class EnvironmentEntity extends Entity
 	//----------------------------------------------------------------------
 	private static EnvironmentEntity CreateTransition(final Element data, String levelUID)
 	{
-		String destination = data.get("Destination");
-						
-		DungeonFileParser dfp = DungeonFileParser.load(destination+"/"+destination);
-		
-		DFPRoom exitRoom = DFPRoom.parse(data.getChildByName("ExitRoom"), dfp.sharedSymbolMap);
-		
-		final SaveLevel destinationLevel = new SaveLevel(destination, 0, null, MathUtils.random(Long.MAX_VALUE));		
-		destinationLevel.requiredRooms.add(exitRoom);
-		
 		ActivationAction action = new ActivationAction("Change Level")
 		{			
 			public void activate(EnvironmentEntity entity)
@@ -132,7 +123,7 @@ public class EnvironmentEntity extends Entity
 				
 				level.player = current.player;
 				
-				for (EnvironmentEntity ee : current.getAllEnvironmentEntities())
+				for (EnvironmentEntity ee : level.getAllEnvironmentEntities())
 				{
 					if (ee.data.containsKey("Destination") && ((SaveLevel)ee.data.get("Destination")).UID.equals(current.UID))
 					{
@@ -147,18 +138,14 @@ public class EnvironmentEntity extends Entity
 			}
 		};
 		
-		// Make stairs up and place in room
+		String destination = data.get("Destination");		
+		final SaveLevel destinationLevel = new SaveLevel(destination, 0, null, MathUtils.random(Long.MAX_VALUE));	
+		
+		if (!destination.equals("this"))
 		{
-			final Sprite stairs = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_up");
-			
-			final EnvironmentEntity entity = new EnvironmentEntity();
-			entity.passableBy = Passability.parse("true");
-			entity.passableBy.add(Passability.LIGHT);
-			entity.sprite = stairs;
-			entity.canTakeDamage = false;
-			entity.actions.add(action);
-			entity.data.put("Destination", new SaveLevel(levelUID));
-			entity.UID = "EnvironmentEntity UpStair: ID " + entity.hashCode();
+			DungeonFileParser dfp = DungeonFileParser.load(destination+"/"+destination);		
+			DFPRoom exitRoom = DFPRoom.parse(data.getChildByName("ExitRoom"), dfp.sharedSymbolMap);
+			destinationLevel.requiredRooms.add(exitRoom);
 			
 			// Place in symbol
 			for (Symbol symbol : exitRoom.localSymbolMap.values())
@@ -167,7 +154,9 @@ public class EnvironmentEntity extends Entity
 				{
 					if (symbol.environmentData.get("Type").equals("Transition") && symbol.environmentData.get("Destination").equals("this"))
 					{
-						symbol.environmentEntityObject = entity;
+						HashMap<String, Object> eedata = new HashMap<String, Object>();
+						eedata.put("Destination", new SaveLevel(levelUID));
+						symbol.environmentEntityData = eedata;
 						
 						break;
 					}
@@ -177,7 +166,15 @@ public class EnvironmentEntity extends Entity
 		
 		// Make stairs down and return
 		{
-			final Sprite stairs = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_down");
+			Sprite stairs = null;			
+			if (destination.equals("this"))
+			{
+				stairs = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_up");
+			}
+			else
+			{
+				stairs = AssetManager.loadSprite("dc-dngn/gateways/stone_stairs_down");
+			}
 			
 			final EnvironmentEntity entity = new EnvironmentEntity();
 			entity.passableBy = Passability.parse("true");
@@ -227,6 +224,18 @@ public class EnvironmentEntity extends Entity
 		entity.sprite = doorClosed;
 		entity.actions.add(action);
 		entity.UID = "EnvironmentEntity Door: ID " + entity.hashCode();
+		
+		entity.statistics.put(Statistic.METAL_DEF, 50);
+		entity.statistics.put(Statistic.METAL_HARDINESS, 50);
+		
+		entity.statistics.put(Statistic.WOOD_DEF, 50);
+		entity.statistics.put(Statistic.WOOD_HARDINESS, 75);
+		
+		entity.statistics.put(Statistic.AIR_DEF, 50);
+		entity.statistics.put(Statistic.AIR_HARDINESS, 50);
+		
+		entity.statistics.put(Statistic.WATER_DEF, 50);
+		entity.statistics.put(Statistic.WATER_HARDINESS, 50);
 		
 		return entity;
 	}

@@ -22,7 +22,7 @@ public class Symbol implements PathfindingTile
 	public Element tileData;
 
 	public Element environmentData;
-	public EnvironmentEntity environmentEntityObject;
+	public HashMap<String, Object> environmentEntityData;
 	public Direction attachLocation;
 
 	public String entityData;
@@ -40,7 +40,7 @@ public class Symbol implements PathfindingTile
 		s.character = character;
 		s.tileData = tileData;
 		s.environmentData = environmentData;
-		s.environmentEntityObject = environmentEntityObject;
+		s.environmentEntityData = environmentEntityData;
 		s.entityData = entityData;
 		s.metaValue = metaValue;
 		
@@ -49,19 +49,27 @@ public class Symbol implements PathfindingTile
 	
 	public boolean hasEnvironmentEntity()
 	{
-		return environmentEntityObject != null || environmentData != null;
+		return environmentData != null;
 	}
 	
 	public EnvironmentEntity getEnvironmentEntity(String levelUID)
 	{
-		if (environmentEntityObject != null)
-		{
-			return environmentEntityObject;
-		}
-		
 		if (environmentData != null)
 		{
 			EnvironmentEntity ee = EnvironmentEntity.load(environmentData, levelUID);
+			
+			if (ee.creationData.get("Type", "").equals("Transition"))
+			{
+				if (environmentEntityData != null)
+				{
+					ee.data = environmentEntityData;					
+				}
+				else
+				{
+					environmentEntityData = ee.data;
+				}
+				
+			}
 						
 			return ee;
 		}
@@ -71,11 +79,6 @@ public class Symbol implements PathfindingTile
 
 	public boolean getEnvironmentEntityPassable(Array<Passability> travelType)
 	{
-		if (environmentEntityObject != null)
-		{
-			return Passability.isPassable(environmentEntityObject.passableBy, travelType);
-		}
-		
 		if (environmentData != null)
 		{
 			return Passability.isPassable(Passability.parse(environmentData.get("Passable", "true")), travelType);

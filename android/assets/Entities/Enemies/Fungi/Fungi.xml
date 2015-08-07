@@ -14,6 +14,7 @@
 					<Name>mushroom/glowing</Name>
 				</Sprite>
 				<Passable>false</Passable>
+				<Opaque>false</Opaque>
 				<Light>
 					<Colour>
 						<Green>0.8</Green>
@@ -37,6 +38,7 @@
 			<EnvironmentData>
 				<Sprite>
 					<Name>mushroom/cluster</Name>
+					<Opaque>false</Opaque>
 				</Sprite>
 			</EnvironmentData>
 			
@@ -54,6 +56,7 @@
 					<Name>mushroom/spawner</Name>
 				</Sprite>
 				<Passable>false</Passable>
+				<Opaque>false</Opaque>
 				<Type>Spawner</Type>
 				<Count>1</Count>
 				<Entity>Enemies/Fungi/Spore</Entity>

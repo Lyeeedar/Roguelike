@@ -184,6 +184,42 @@ public class RecursiveDockGenerator
 	//----------------------------------------------------------------------
 	public void generate() 
 	{
+		for (DFPRoom r : dfp.getRequiredRooms(depth))
+		{
+			if (r.isTransition)
+			{
+				if (createDynamics)
+				{
+					additionalRooms.add(r);
+				}
+			}
+			else
+			{
+				Room room = new Room();
+				r.fillRoom(room, ran, dfp);
+				toBePlaced.add(room);
+			}
+		}
+
+		if (dfp.optionalRooms.size > 0)
+		{
+			DFPRoom r = dfp.optionalRooms.get(ran.nextInt(dfp.optionalRooms.size));
+			
+			if (r.isTransition)
+			{
+				if (createDynamics)
+				{
+					additionalRooms.add(r);
+				}
+			}
+			else
+			{
+				Room room = new Room();
+				r.fillRoom(room, ran, dfp);
+				toBePlaced.add(room);
+			}
+		}
+		
 		for (DFPRoom r : additionalRooms)
 		{
 			Room room = new Room();
@@ -191,20 +227,14 @@ public class RecursiveDockGenerator
 			toBePlaced.add(room);
 		}
 		
-		for (DFPRoom r : dfp.getRequiredRooms(depth))
+		toBePlaced.sort(new Comparator<Room>()
 		{
-			Room room = new Room();
-			r.fillRoom(room, ran, dfp);
-			toBePlaced.add(room);
-		}
-
-		if (dfp.optionalRooms.size > 0)
-		{
-			DFPRoom r = dfp.optionalRooms.get(ran.nextInt(dfp.optionalRooms.size));
-			Room room = new Room();
-			r.fillRoom(room, ran, dfp);
-			toBePlaced.add(room);
-		}
+			@Override
+			public int compare(Room arg0, Room arg1)
+			{
+				return arg0.comparisonString().compareTo(arg1.comparisonString());
+			}
+		});
 
 		Array<Room> requiredRooms = new Array<Room>();
 		requiredRooms.addAll(toBePlaced);
@@ -803,14 +833,14 @@ public class RecursiveDockGenerator
 					if (t.placerHashCode != path.hashCode())
 					{
 						t.symbol.environmentData = null;
-						t.symbol.environmentEntityObject = null;
+						t.symbol.environmentEntityData = null;
 					}
 					
 					// Wipe out all features in the central square
 					if (x > 0 && x < width-1 && y > 0 && y < width-1)
 					{
 						t.symbol.environmentData = null;
-						t.symbol.environmentEntityObject = null;
+						t.symbol.environmentEntityData = null;
 					}
 				}
 			}
@@ -1091,6 +1121,26 @@ public class RecursiveDockGenerator
 		
 		//----------------------------------------------------------------------
 		public String faction;
+		
+		//----------------------------------------------------------------------
+		private String comparisonString;
+		public String comparisonString()
+		{
+			if (comparisonString == null)
+			{
+				comparisonString = "";
+				
+				for (int x = 0; x < width; x++)
+				{
+					for (int y = 0; y < height; y++)
+					{
+						comparisonString += roomContents[x][y].character;
+					}
+				}
+			}
+			
+			return comparisonString;
+		}
 
 		//----------------------------------------------------------------------
 		public void rotate()
@@ -1549,7 +1599,7 @@ public class RecursiveDockGenerator
 						if (s.hasEnvironmentEntity() && !s.getEnvironmentEntityPassable(GeneratorPassability))
 						{
 							roomContents[point[0]][point[1]].environmentData = roomCopy[point[0]][point[1]].environmentData;
-							roomContents[point[0]][point[1]].environmentEntityObject = null;
+							roomContents[point[0]][point[1]].environmentEntityData = null;
 						}
 					}
 				}

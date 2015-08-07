@@ -143,6 +143,8 @@ public class DungeonFileParser
 	//----------------------------------------------------------------------
 	public static class DFPRoom
 	{
+		public boolean isTransition;
+		
 		public int minDepth = 0;
 		public int maxDepth = Integer.MAX_VALUE;
 		
@@ -230,6 +232,11 @@ public class DungeonFileParser
 				{
 					Symbol symbol = Symbol.parse(symbolsElement.getChild(i), sharedSymbolMap, room.localSymbolMap);
 					room.localSymbolMap.put(symbol.character, symbol);
+					
+					if (symbol.environmentData != null && symbol.environmentData.get("Type", "").equals("Transition"))
+					{
+						room.isTransition = true;
+					}
 				}
 			}
 			

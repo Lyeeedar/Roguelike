@@ -843,6 +843,11 @@ public class Level
 	
 	public boolean hasActiveEffects(Entity e)
 	{
+		if (e.tile.spriteEffects.size > 0)
+		{
+			return true;
+		}
+		
 		boolean activeEffects = false;
 		
 		if (e.sprite.spriteAnimation != null)
