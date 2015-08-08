@@ -5,6 +5,7 @@ import Roguelike.RoguelikeGame;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -51,6 +52,8 @@ public class TabPanel extends Widget
 		
 		selectedTab.body.draw(batch, parentAlpha);
 		
+		batch.setColor(Color.WHITE);
+		
 		for (Tab tab : tabs)
 		{
 			if (tab == selectedTab)
@@ -72,7 +75,7 @@ public class TabPanel extends Widget
 		stage.setScrollFocus(selectedTab.body);
 	}
 	
-	public Tab addTab(Sprite header, Widget body)
+	public Tab addTab(Sprite header, Actor body)
 	{
 		final Tab tab = new Tab(header, body);
 		tabs.add(tab);
@@ -96,22 +99,46 @@ public class TabPanel extends Widget
 		selectedTab.body.setVisible(true);
 	}
 	
+	public void selectTab(Actor body)
+	{
+		for (Tab tab : tabs)
+		{
+			if (tab.body == body)
+			{
+				selectTab(tab);
+				break;
+			}
+		}
+	}
+	
+	public void toggleTab(Actor body)
+	{
+		if (selectedTab.body == body)
+		{
+			selectTab(tabs.get(0));
+		}
+		else
+		{
+			selectTab(body);
+		}
+	}
+	
 	public float getPrefWidth()
 	{
-		return tabHeaderSize + selectedTab.body.getPrefWidth();
+		return tabHeaderSize + selectedTab.body.getWidth();
 	}
 
 	public float getPrefHeight()
 	{
-		return Math.max(getHeight(), selectedTab.body.getPrefHeight());
+		return Math.max(getHeight(), selectedTab.body.getHeight());
 	}
 	
 	public class Tab
 	{
 		Sprite header;
-		Widget body;
+		Actor body;
 		
-		public Tab(Sprite header, Widget body)
+		public Tab(Sprite header, Actor body)
 		{
 			this.header = header;
 			this.body = body;
@@ -119,7 +146,7 @@ public class TabPanel extends Widget
 	}
 	
 	private class TabPanelListener extends InputListener
-	{
+	{		
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 		{
 			GameScreen.Instance.clearContextMenu();
@@ -135,8 +162,10 @@ public class TabPanel extends Widget
 					Tab tab = tabs.get(index);
 					selectTab(tab);
 				}
+				
+				return true;
 			}
-			
+						
 			return false;
 		}
 	}

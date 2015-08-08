@@ -1,6 +1,10 @@
 <AbilityLine>
 	<Name>Magus</Name>
 	<Description>Control the elements, shaping them into devastating attacks.</Description>
+	<Icon>
+		<Name>Abilities/Magus/Meditate</Name>
+		<Colour><RGB>160,32,240</RGB></Colour>
+	</Icon>
 	<Tiers>
 		<Tier>
 			<ActiveAbility>

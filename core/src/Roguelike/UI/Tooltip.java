@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class Tooltip extends Table
 {	
+	private static Tooltip openTooltip;
+	
 	public Table Content;
 	private TooltipStyle m_style;
 	
@@ -46,6 +48,13 @@ public class Tooltip extends Table
 	
 	public void show(float x, float y)
 	{
+		if (openTooltip != null)
+		{
+			openTooltip.setVisible(false);
+			openTooltip.remove();
+			openTooltip = null;
+		}
+		
 		setVisible(true);
 		
 		Vector2 tmp = new Vector2(x, y);
@@ -74,7 +83,9 @@ public class Tooltip extends Table
 		}
 		
 		setPosition(tmp.x, tmp.y);
-		toFront();		
+		toFront();
+		
+		//openTooltip = this;
 	}
 	
 	public static class TooltipStyle

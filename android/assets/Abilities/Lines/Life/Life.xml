@@ -1,6 +1,10 @@
 <AbilityLine>
 	<Name>Life</Name>
 	<Description>The art of infusing healing energies into the body.</Description>
+	<Icon>
+		<Name>Abilities/Life/KnitWounds</Name>
+		<Colour><RGB>175,255,47</RGB></Colour>
+	</Icon>
 	<Tiers>
 		<Tier>
 			<ActiveAbility>

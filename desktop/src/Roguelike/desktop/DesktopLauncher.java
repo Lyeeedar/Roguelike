@@ -12,6 +12,7 @@ public class DesktopLauncher {
 		config.foregroundFPS = 0;
 		config.width = 800;
 		config.height = 600;
+		config.samples = 8;
 		
 		Global.TargetResolution[0] = 800;
 		Global.TargetResolution[1] = 600;

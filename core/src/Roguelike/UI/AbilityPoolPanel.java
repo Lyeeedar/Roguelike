@@ -28,13 +28,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Array;
 
-public class AbilityPoolPanel extends Widget
+public class AbilityPoolPanel extends Table
 {
 	private final int ButtonHeight = 32;
 	private final int TileSize = 32;
 	private float MaxLineWidth;
 	
-	private final BitmapFont font;
 	private final Texture white;
 	
 	private final Sprite locked;
@@ -47,32 +46,21 @@ public class AbilityPoolPanel extends Widget
 	
 	private final Skin skin;
 	private final Stage stage;
-	
-	private Tooltip tooltip;
-	
+		
 	private int selectedAbilityLine = 0;
 	
 	//----------------------------------------------------------------------
 	private BitmapFont contextMenuNormalFont;
 	private BitmapFont contextMenuHilightFont;
-		
-	private final GlyphLayout layout = new GlyphLayout();
 	
+	private AbilityLineList abilityLine;
+	private AbilityList abilityList;
+			
 	public AbilityPoolPanel(Skin skin, Stage stage)
 	{
 		this.skin = skin;
 		this.stage = stage;
-		
-		{
-			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-			parameter.size = 10;
-			parameter.borderWidth = 1;
-			parameter.borderColor = Color.BLACK;
-			font = generator.generateFont(parameter); // font size 12 pixels
-			generator.dispose(); // don't forget to dispose to avoid memory leaks!
-		}
-		
+
 		{
 			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
 			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -106,469 +94,280 @@ public class AbilityPoolPanel extends Widget
 		this.buttonUp = AssetManager.loadSprite("GUI/ButtonUp");
 		this.buttonDown = AssetManager.loadSprite("GUI/ButtonDown");
 		
-		addListener(new AbilityPoolPanelListener());
+		abilityLine = new AbilityLineList(skin, stage, buttonUp, tileBorder, 32);
+		abilityList = new AbilityList(skin, stage, tileBackground, tileBorder, 32);
+		
+		add(abilityLine).expandY().fillY();
+		add(abilityList).expand().fill();
 	}
 	
-	private void calculateWidth()
-	{		
-		float maxLineWidth = 0;
-		
-		for (AbilityLine line : Global.abilityPool.abilityLines)
+	public class AbilityLineList extends TilePanel
+	{
+
+		public AbilityLineList(Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize)
 		{
-			layout.setText(font, line.name);
-			float temp = layout.width+30;
-			if (temp > maxLineWidth)
+			super(skin, stage, tileBackground, tileBorder, 1, 1, tileSize, true);
+		}
+
+		@Override
+		public void populateTileData()
+		{
+			tileData.clear();
+			
+			for (AbilityLine line : Global.abilityPool.abilityLines)
 			{
-				maxLineWidth = temp;
+				tileData.add(line);
 			}
 		}
+
+		@Override
+		public Sprite getSpriteForData(Object data)
+		{
+			return ((AbilityLine)data).icon;
+		}
+
+		@Override
+		public void handleDataClicked(Object data, InputEvent event, float x, float y)
+		{
+			selectedAbilityLine = Global.abilityPool.abilityLines.indexOf((AbilityLine)data, true);
+		}
+
+		@Override
+		public Table getToolTipForData(Object data)
+		{
+			Table table = new Table();
+			table.add(new Label(((AbilityLine)data).name, skin)).width(Value.percentWidth(1, table));
+			
+			return table;
+		}
+
+		@Override
+		public Color getColourForData(Object data)
+		{
+			AbilityLine line = (AbilityLine)data;
+			int index = Global.abilityPool.abilityLines.indexOf(line, true);
+			
+			return selectedAbilityLine == index ? Color.LIGHT_GRAY : null;
+		}
+
+		@Override
+		public void onDrawItemBackground(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+
+		@Override
+		public void onDrawItem(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+
+		@Override
+		public void onDrawItemForeground(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
 		
-		MaxLineWidth = maxLineWidth;
-	}
-	
-	@Override
-	public float getPrefWidth()
-	{
-		return MaxLineWidth + 7 * TileSize;
 	}
 
-	@Override
-	public float getPrefHeight()
+	public class AbilityList extends TilePanel
 	{
-		return Global.abilityPool.abilityLines.size * ButtonHeight;
-	}
-	
-	@Override
-	public void draw (Batch batch, float parentAlpha)
-	{
-		calculateWidth();
-		
-		AbilityLine selectedLine = Global.abilityPool.abilityLines.get(selectedAbilityLine);
-		
-		batch.setColor(0.6f, 0.6f, 0.6f, 0.5f);
-		batch.draw(white, getX(), getY(), MaxLineWidth, getHeight());
-		batch.setColor(Color.WHITE);
-		
-		float y = getY() + getHeight();
-		
-		for (AbilityLine line : Global.abilityPool.abilityLines)
+
+		public AbilityList(Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize)
 		{
-			if (line == selectedLine)
-			{
-				buttonDown.render(batch, (int)getX(), (int)y-ButtonHeight, (int)(MaxLineWidth), ButtonHeight);
-			}
-			else
-			{
-				buttonUp.render(batch, (int)getX(), (int)y-ButtonHeight, (int)(MaxLineWidth), ButtonHeight);
-			}
-			
-			font.draw(batch, line.name, getX()+15, y-ButtonHeight/4);			
-			y -= ButtonHeight;
+			super(skin, stage, tileBackground, tileBorder, 5, 1, tileSize, true);
 		}
-		
-		batch.setColor(0.3f, 0.3f, 0.3f, 0.5f);
-		batch.draw(white, getX() + MaxLineWidth, getY(), getPrefWidth() - MaxLineWidth, getHeight());
-		batch.setColor(Color.WHITE);
-		
-		Array<Ability[]> tiers = selectedLine.abilityTiers;
-		
-		float xoff = getX() + MaxLineWidth + TileSize;
-		y = getY() + getHeight();
-		for (int i = 0; i < tiers.size; i++)
+
+		@Override
+		public void populateTileData()
 		{
-			font.draw(batch, "Tier "+(i+1), xoff, y);
-			y -= TileSize/2;
+			tileData.clear();
 			
-			for (int ii = 0; ii < 5; ii++)
+			AbilityLine selected = Global.abilityPool.abilityLines.get(selectedAbilityLine);
+			
+			for (Ability[] tier : selected.abilityTiers)
 			{
-				Ability ab = tiers.get(i)[ii];
-				
-				tileBackground.render(batch, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
-				ab.ability.getIcon().render(batch, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
-				tileBorder.render(batch, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
-				
-				if (!ab.unlocked)
+				for (Ability a : tier)
 				{
-					batch.setColor(0.5f, 0.5f, 0.5f, 0.5f);
-					batch.draw(white, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
-					batch.setColor(Color.WHITE);
+					tileData.add(a);
+				}
+			}
+		}
+
+		@Override
+		public Sprite getSpriteForData(Object data)
+		{
+			return ((Ability)data).ability.getIcon();
+		}
+
+		@Override
+		public void handleDataClicked(Object data, InputEvent event, float x, float y)
+		{
+			final Ability a = (Ability)data;
+			
+			Table table = new Table();
+			if (!a.unlocked)
+			{
+				if (Global.CurrentLevel.player.essence >= a.cost)
+				{
+					HoverTextButton button = new HoverTextButton("Unlock for " + a.cost + " essence?\nYou have " + Global.CurrentLevel.player.essence + " essence.", contextMenuNormalFont, contextMenuHilightFont);
+					button.changePadding(5, 5);					
+					table.add(button).width(Value.percentWidth(1, table)).pad(2);
 					
-					locked.render(batch, (int)(xoff + TileSize*ii), (int)y-TileSize, TileSize, TileSize);
+					table.addListener(new InputListener()
+					{
+						@Override
+						public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+						{	
+							Global.CurrentLevel.player.essence -= a.cost;
+							
+							a.unlocked = true;
+							GameScreen.Instance.clearContextMenu();
+							
+							return true;
+						}
+					});							
 				}
 				else
 				{
-					int index = -1;
-					if (ab.ability instanceof ActiveAbility)
-					{
-						index = Global.abilityPool.getActiveAbilityIndex((ActiveAbility)ab.ability);
-					}
-					else
-					{
-						index = Global.abilityPool.getPassiveAbilityIndex((PassiveAbility)ab.ability);
-					}
+					table.add(new Label("Not enough essence " + Global.CurrentLevel.player.essence + " / " + a.cost + ".\nGo kill more things", skin)).width(Value.percentWidth(1, table)).pad(2);
 					
-					if (index >= 0)
+					table.addListener(new InputListener()
 					{
-						int cx = (int)(xoff + TileSize*ii);
-						int cy = (int)y-TileSize;
-						
-						cx += TileSize / 2;
-						cy += TileSize / 2;
-						
-						font.draw(batch, ""+index, cx, cy);
-					}
-
+						@Override
+						public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+						{	
+							GameScreen.Instance.clearContextMenu();
+							
+							return true;
+						}
+					});												
 				}
 			}
-			
-			y -= TileSize*1.5f;
-		}
-	}
-	
-	private class AbilityPoolPanelListener extends InputListener
-	{
-		//----------------------------------------------------------------------
-		@Override
-		public void touchDragged (InputEvent event, float x, float y, int pointer)
-		{
-			if (GameScreen.Instance.dragDropPayload != null)
+			else
 			{
-				GameScreen.Instance.dragDropPayload.x = event.getStageX() - 16;
-				GameScreen.Instance.dragDropPayload.y = event.getStageY() - 16;				
-			}			
-		}
-		
-		//----------------------------------------------------------------------
-		@Override
-		public void touchUp (InputEvent event, float x, float y, int pointer, int mousebutton)
-		{
-			GameScreen.Instance.clearContextMenu();
-			
-			if (x < getPrefWidth())
-			{
-				int ypos = 0;
-				float ycursor = getHeight() - y;
-				
-				Array<Ability[]> abilityLine = Global.abilityPool.abilityLines.get(selectedAbilityLine).abilityTiers;
-				for (int i = 0; i < abilityLine.size; i++)
-				{
-					if (ycursor < ypos + TileSize/2)
+				if (a.ability instanceof ActiveAbility)
+				{					
+					for (int ii = 0; ii < Global.NUM_ABILITY_SLOTS; ii++)
 					{
-						// over tier
-						break;
-					}
-					ypos += TileSize * 0.5f;
-					
-					if (ycursor < ypos + TileSize)
-					{
-						// over tiles
+						ActiveAbility equipped = Global.abilityPool.slottedActiveAbilities[ii];
+						final int index = ii;
 						
-						int xindex = (int)((x - MaxLineWidth - TileSize) / TileSize);
-						if (xindex < 5 && xindex >= 0)
+						Table row = new Table();
+						
+						String text = ii + ".";
+						if (equipped != null)
 						{
-							final Ability a = abilityLine.get(i)[xindex];
-							
-							if (a.unlocked)
-							{
-								if (a.ability instanceof ActiveAbility)
-								{
-									Table table = new Table();
-									
-									for (int ii = 0; ii < Global.NUM_ABILITY_SLOTS; ii++)
-									{
-										ActiveAbility equipped = Global.abilityPool.slottedActiveAbilities[ii];
-										final int index = ii;
-										
-										Table row = new Table();
-										
-										String text = ii + ".";
-										if (equipped != null)
-										{
-											text += "  " + equipped.getName();
-										}
+							text += "  " + equipped.getName();
+						}
+											
+						HoverTextButton button = new HoverTextButton(text, contextMenuNormalFont, contextMenuHilightFont);
+						button.changePadding(5, 5);					
+						row.add(button).expand().fill();
+						
+						row.addListener(new InputListener()
+						{
+							@Override
+							public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+							{	
+								Global.abilityPool.slotActiveAbility((ActiveAbility)a.ability, index);
+								GameScreen.Instance.clearContextMenu();
+								
+								return true;
+							}
+						});
+
+						table.add(row).width(Value.percentWidth(1, table)).pad(2);
+						table.row();
+					}					
+				}
+				else if (a.ability instanceof PassiveAbility)
+				{					
+					for (int ii = 0; ii < Global.NUM_ABILITY_SLOTS; ii++)
+					{
+						PassiveAbility equipped = Global.abilityPool.slottedPassiveAbilities[ii];
+						final int index = ii;
+						
+						Table row = new Table();
+						
+						String text = ii + ".";
+						if (equipped != null)
+						{
+							text += "  " + equipped.getName();
+						}
 															
-										HoverTextButton button = new HoverTextButton(text, contextMenuNormalFont, contextMenuHilightFont);
-										button.changePadding(5, 5);					
-										row.add(button).expand().fill();
-										
-										row.addListener(new InputListener()
-										{
-											@Override
-											public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-											{	
-												Global.abilityPool.slotActiveAbility((ActiveAbility)a.ability, index);
-												GameScreen.Instance.clearContextMenu();
-												
-												return true;
-											}
-										});
-
-										table.add(row).width(Value.percentWidth(1, table)).pad(2);
-										table.row();
-									}
-									
-									table.pack();
-									
-									GameScreen.Instance.contextMenu = new Tooltip(table, skin, stage);
-									GameScreen.Instance.contextMenu.show(event, x, y-GameScreen.Instance.contextMenu.getHeight()/2);
-								}
-								else if (a.ability instanceof PassiveAbility)
-								{
-									Table table = new Table();
-									
-									for (int ii = 0; ii < Global.NUM_ABILITY_SLOTS; ii++)
-									{
-										PassiveAbility equipped = Global.abilityPool.slottedPassiveAbilities[ii];
-										final int index = ii;
-										
-										Table row = new Table();
-										
-										String text = ii + ".";
-										if (equipped != null)
-										{
-											text += "  " + equipped.getName();
-										}
-																			
-										HoverTextButton button = new HoverTextButton(text, contextMenuNormalFont, contextMenuHilightFont);
-										button.changePadding(5, 5);					
-										row.add(button).expand().fill();
-										
-										row.addListener(new InputListener()
-										{
-											@Override
-											public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-											{	
-												Global.abilityPool.slotPassiveAbility((PassiveAbility)a.ability, index);
-												GameScreen.Instance.clearContextMenu();
-												
-												return true;
-											}
-										});
-
-										table.add(row).width(Value.percentWidth(1, table)).pad(2);
-										table.row();
-									}
-									
-									table.pack();
-									
-									GameScreen.Instance.contextMenu = new Tooltip(table, skin, stage);
-									GameScreen.Instance.contextMenu.show(event, x, y-GameScreen.Instance.contextMenu.getHeight()/2);
-								}
-							}
-							else
-							{
-								Table table = new Table();
-								
-								if (Global.CurrentLevel.player.essence >= a.cost)
-								{
-									HoverTextButton button = new HoverTextButton("Unlock for " + a.cost + " essence?\nYou have " + Global.CurrentLevel.player.essence + " essence.", contextMenuNormalFont, contextMenuHilightFont);
-									button.changePadding(5, 5);					
-									table.add(button).width(Value.percentWidth(1, table)).pad(2);
-									
-									table.addListener(new InputListener()
-									{
-										@Override
-										public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-										{	
-											Global.CurrentLevel.player.essence -= a.cost;
-											
-											a.unlocked = true;
-											GameScreen.Instance.clearContextMenu();
-											
-											return true;
-										}
-									});							
-								}
-								else
-								{
-									table.add(new Label("Not enough essence " + Global.CurrentLevel.player.essence + " / " + a.cost + ".\nGo kill more things", skin)).width(Value.percentWidth(1, table)).pad(2);
-									
-									table.addListener(new InputListener()
-									{
-										@Override
-										public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-										{	
-											GameScreen.Instance.clearContextMenu();
-											
-											return true;
-										}
-									});												
-								}
-								
-								table.pack();
-								
-								GameScreen.Instance.contextMenu = new Tooltip(table, skin, stage);
-								GameScreen.Instance.contextMenu.show(event, x, y);
-							}
-						}
+						HoverTextButton button = new HoverTextButton(text, contextMenuNormalFont, contextMenuHilightFont);
+						button.changePadding(5, 5);					
+						row.add(button).expand().fill();
 						
-						break;
-					}
-					ypos += TileSize;
-					
-					if (ycursor < ypos + TileSize*1.5f)
-					{
-						// over blank space
-						break;
-					}
-					ypos += TileSize * 0.5f;
-				}
-			}
-			
-			if (GameScreen.Instance.dragDropPayload != null)
-			{
-				GameScreen.Instance.touchUp((int)event.getStageX(), Global.Resolution[1] - (int)event.getStageY(), pointer, mousebutton);
-			}
-		}
-		
-		@Override
-		public boolean mouseMoved (InputEvent event, float x, float y)
-		{
-			if (tooltip != null) { tooltip.remove(); tooltip = null; }
-			
-			if (x < MaxLineWidth)
-			{
-				int yindex = (int)((getHeight() - y) / ButtonHeight);
-				
-				if (yindex >= 0 && yindex < Global.abilityPool.abilityLines.size)
-				{
-					Table t = new Table();
-					t.add(new Label(Global.abilityPool.abilityLines.get(yindex).name, skin));
-					tooltip = new Tooltip(t, skin, stage);
-					tooltip.show(event, x, y);
-				}				
-			}
-			else if (x < getPrefWidth())
-			{
-				int ypos = 0;
-				float ycursor = getHeight() - y;
-				
-				Array<Ability[]> abilityLine = Global.abilityPool.abilityLines.get(selectedAbilityLine).abilityTiers;
-				for (int i = 0; i < abilityLine.size; i++)
-				{
-					if (ycursor < ypos + TileSize/2)
-					{
-						// over tier
-						break;
-					}
-					ypos += TileSize * 0.5f;
-					
-					if (ycursor < ypos + TileSize)
-					{
-						// over tiles
-						
-						int xindex = (int)((x - MaxLineWidth - TileSize) / TileSize);
-						if (xindex >= 0 && xindex < 5)
+						row.addListener(new InputListener()
 						{
-							Ability a = abilityLine.get(i)[xindex];
-							
-							Table table = a.ability.createTable(skin);
-							
-							if (!a.unlocked)
-							{
-								table.row();
-								table.add(new Label("Cost: "+a.cost, skin));
+							@Override
+							public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+							{	
+								Global.abilityPool.slotPassiveAbility((PassiveAbility)a.ability, index);
+								GameScreen.Instance.clearContextMenu();
+								
+								return true;
 							}
-							
-							tooltip = new Tooltip(table, skin, stage);
-							tooltip.show(event, x, y);
-						}
-						
-						break;
+						});
+
+						table.add(row).width(Value.percentWidth(1, table)).pad(2);
+						table.row();
 					}
-					ypos += TileSize;
-					
-					if (ycursor < ypos + TileSize*1.5f)
-					{
-						// over blank space
-						break;
-					}
-					ypos += TileSize * 0.5f;
 				}
 			}
-			else
+			
+			table.pack();
+			
+			Tooltip tooltip = new Tooltip(table, skin, stage);			
+			tooltip.show(event, x-tooltip.getWidth()/2, y-tooltip.getHeight()/2);
+			
+			GameScreen.Instance.contextMenu = tooltip;			
+		}
+
+		@Override
+		public Table getToolTipForData(Object data)
+		{
+			Ability a = (Ability)data;
+			Table table = a.ability.createTable(skin);
+			
+			if (!a.unlocked)
 			{
-				return false;
+				table.row();
+				table.add(new Label("Cost: "+a.cost, skin));
 			}
 			
-			return true;
+			return table;
+		}
+
+		@Override
+		public Color getColourForData(Object data)
+		{
+			return null;
+		}
+
+		@Override
+		public void onDrawItemBackground(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+
+		@Override
+		public void onDrawItem(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+
+		@Override
+		public void onDrawItemForeground(Object data, Batch batch, int x, int y, int width, int height)
+		{
+			Ability a = (Ability)data;
+			
+			if (!a.unlocked)
+			{
+				batch.setColor(0.5f, 0.5f, 0.5f, 0.5f);
+				batch.draw(white, x, y, width, height);
+				
+				batch.setColor(Color.WHITE);
+				locked.render(batch, x, y, width, height);
+			}
 		}
 		
-		@Override
-		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-		{
-			GameScreen.Instance.clearContextMenu();
-			
-			if (x < MaxLineWidth)
-			{
-				int yindex = (int)((getHeight() - y) / ButtonHeight);
-				
-				if (yindex >= 0 && yindex < Global.abilityPool.abilityLines.size)
-				{
-					selectedAbilityLine = yindex;
-				}
-			}
-			else if (x < getPrefWidth())
-			{
-				int ypos = 0;
-				float ycursor = getHeight() - y;
-				
-				Array<Ability[]> abilityLine = Global.abilityPool.abilityLines.get(selectedAbilityLine).abilityTiers;
-				for (int i = 0; i < abilityLine.size; i++)
-				{
-					if (ycursor < ypos + TileSize/2)
-					{
-						// over tier
-						break;
-					}
-					ypos += TileSize * 0.5f;
-					
-					if (ycursor < ypos + TileSize)
-					{
-						// over tiles
-						
-						int xindex = (int)((x - MaxLineWidth - TileSize) / TileSize);
-						if (xindex < 5)
-						{
-							final Ability a = abilityLine.get(i)[xindex];
-							
-							if (a.unlocked)
-							{
-								GameScreen.Instance.dragDropPayload = new DragDropPayload(a.ability, a.ability.getIcon(), x-16, getHeight() - y - 16);
-							}
-						}
-						
-						break;
-					}
-					ypos += TileSize;
-					
-					if (ycursor < ypos + TileSize*1.5f)
-					{
-						// over blank space
-						break;
-					}
-					ypos += TileSize * 0.5f;
-				}
-			}
-			else
-			{
-				return false;
-			}
-			
-			return true;
-		}
-		
-		@Override
-		public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) 
-		{
-			//unlocking = null;
-			
-			if (tooltip != null)
-			{
-				tooltip.setVisible(false);
-				tooltip.remove();
-				tooltip = null;
-			}
-		}
 	}
 }

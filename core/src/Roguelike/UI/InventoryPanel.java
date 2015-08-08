@@ -8,6 +8,7 @@ import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.TaskWait;
+import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.ItemType;
 import Roguelike.Screens.GameScreen;
@@ -22,23 +23,16 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
-public class InventoryPanel extends Widget
-{
-	private Tooltip tooltip;
-	
+public class InventoryPanel extends Table
+{	
 	private int TileSize;
-	private boolean sizeInvalid;
-	
-	private final int NumTilesWidth = ItemType.values().length;
-	private int NumTilesHeight;
-	
-	private float prefWidth;
-	private float prefHeight;
 	
 	private final Skin skin;
 	private final Stage stage;
@@ -48,10 +42,12 @@ public class InventoryPanel extends Widget
 	
 	private final Sprite buttonUp;
 	private final Sprite buttonDown;
-	
-	private final HashMap<ItemType, Sprite> headers = new HashMap<ItemType, Sprite>();
 		
 	private ItemType selectedFilter = ItemType.ALL;
+	
+	private HeaderLine header;
+	private InventoryBody body;
+	private FloorLine floor;
 		
 	public InventoryPanel(Skin skin, Stage stage)
 	{		
@@ -65,295 +61,229 @@ public class InventoryPanel extends Widget
 		this.buttonUp = AssetManager.loadSprite("GUI/ButtonUp");
 		this.buttonDown = AssetManager.loadSprite("GUI/ButtonDown");
 		
-		headers.put(ItemType.WEAPON, AssetManager.loadSprite("GUI/Weapon"));
-		headers.put(ItemType.ARMOUR, AssetManager.loadSprite("GUI/Armour"));
-		headers.put(ItemType.JEWELRY, AssetManager.loadSprite("GUI/Jewelry"));
-		headers.put(ItemType.TREASURE, AssetManager.loadSprite("GUI/Treasure"));
-		headers.put(ItemType.MATERIAL, AssetManager.loadSprite("GUI/Ingot"));
-		headers.put(ItemType.MISC, AssetManager.loadSprite("GUI/Misc"));
-		headers.put(ItemType.ALL, AssetManager.loadSprite("GUI/All"));
+		header = new HeaderLine(skin, stage, buttonUp, tileBorder, TileSize);
+		body = new InventoryBody(skin, stage, tileBackground, tileBorder, 32);
+		floor = new FloorLine(skin, stage, tileBackground, null, 32);
+		
+		add(header).width(Value.percentWidth(1, this));
+		row();
+		add(body).expand().fill().width(Value.percentWidth(1, this));
+		row();
+		add(floor).width(Value.percentWidth(1, this));
 				
-		this.addListener(new InventoryPanelListener());
-		this.setWidth(getPrefWidth());
+		setTouchable(Touchable.childrenOnly);
 	}
 	
-	private void computeSize()
+	public class HeaderLine extends TilePanel
 	{
-		sizeInvalid = false;
+		private final HashMap<ItemType, Sprite> headers = new HashMap<ItemType, Sprite>();
 		
-		float height = getHeight();
-		
-		NumTilesHeight = (int)(height / TileSize) ;
-		
-		prefWidth = NumTilesWidth * TileSize;		
-		prefHeight = NumTilesHeight * TileSize;
-	}
-	
-	@Override
-	public void invalidate()
-	{
-		super.invalidate();
-		computeSize();
-	}
-	
-	@Override
-	public void draw (Batch batch, float parentAlpha)
-	{
-		batch.setColor(Color.WHITE);
-		
-		Iterator<Item> itr = Global.CurrentLevel.player.getInventory().iterator(selectedFilter);
-		
-		int xOffset = (int)getX();
-		
-		int top = (int)(getY()+getHeight());
-		
-		int y = 1;
-		int x = 0;
-		for (ItemType type : ItemType.values())
+		public HeaderLine(Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize)
 		{
-			if (type == selectedFilter)
+			super(skin, stage, tileBackground, tileBorder, ItemType.values().length, 1, tileSize, false);
+			
+			headers.put(ItemType.WEAPON, AssetManager.loadSprite("GUI/Weapon"));
+			headers.put(ItemType.ARMOUR, AssetManager.loadSprite("GUI/Armour"));
+			headers.put(ItemType.JEWELRY, AssetManager.loadSprite("GUI/Jewelry"));
+			headers.put(ItemType.TREASURE, AssetManager.loadSprite("GUI/Treasure"));
+			headers.put(ItemType.MATERIAL, AssetManager.loadSprite("GUI/Ingot"));
+			headers.put(ItemType.MISC, AssetManager.loadSprite("GUI/Misc"));
+			headers.put(ItemType.ALL, AssetManager.loadSprite("GUI/All"));
+			
+			tileData.clear();
+			for (ItemType type : ItemType.values())
 			{
-				buttonDown.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
+				tileData.add(type);
 			}
-			else
-			{
-				buttonUp.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
-			}
-			
-			int headerSize = 24;
-			headers.get(type).render(batch, x*TileSize + xOffset + 4, top - y*TileSize + 4, headerSize, headerSize);
-			x++;
-		}
-		
-		for (y = 2; y < NumTilesHeight; y++)		
-		{
-			for (x = 0; x < NumTilesWidth; x++)
-			{
-				batch.setColor(Color.WHITE);
-				
-				if (itr.hasNext())
-				{
-					Item item = itr.next();
-										
-					tileBackground.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
-					
-					item.getIcon().render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
-					
-					if (Global.CurrentLevel.player.getInventory().isEquipped(item))
-					{
-						batch.setColor(Color.GREEN);
-					}
-					else
-					{
-						batch.setColor(Color.DARK_GRAY);
-					}
-				}
-				else
-				{
-					tileBackground.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
-					batch.setColor(Color.DARK_GRAY);
-				}
-				
-				tileBorder.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
-			}
-		}
-				
-		itr = Global.CurrentLevel.player.tile.items.iterator();
-		y = NumTilesHeight;
-		for (x = 0; x < NumTilesWidth; x++)
-		{
-			batch.setColor(Color.LIGHT_GRAY);
-			
-			tileBackground.render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
-			
-			batch.setColor(Color.WHITE);
-			
-			if (itr.hasNext())
-			{
-				Item item = itr.next();				
-				item.getIcon().render(batch, x*TileSize + xOffset, top - y*TileSize, TileSize, TileSize);
-			}
-		}
-		
-		super.draw(batch, parentAlpha);
-	}
-	
-	@Override
-	public float getWidth()
-	{
-		return getPrefWidth();
-	}
-
-	@Override
-	public float getPrefWidth()
-	{
-		if (sizeInvalid) computeSize();
-		return prefWidth;
-	}
-
-	@Override
-	public float getPrefHeight()
-	{
-		if (sizeInvalid) computeSize();
-		return prefHeight;
-	}
-
-	private class InventoryPanelListener extends InputListener
-	{
-		@Override
-		public boolean mouseMoved (InputEvent event, float x, float y)
-		{	
-			GameEntity entity = Global.CurrentLevel.player;
-			
-			int tileX = (int)(x / TileSize);
-			int tileY = (int)((getHeight() - y) / TileSize);
-			
-			if (tooltip != null) { tooltip.remove(); tooltip = null; }
-			
-			if (tileX >= NumTilesWidth || tileX < 0 || tileY >= NumTilesHeight || tileY < 0)
-			{
-				return false;
-			}
-			
-			if (tileY == NumTilesHeight-1)
-			{
-				if (tileX < entity.tile.items.size)
-				{
-					Table t = entity.tile.items.get(tileX).createTable(skin, entity);
-					
-					tooltip = new Tooltip(t, skin, stage);
-					tooltip.show(event, x, y);
-				}
-			}
-			else if (tileY == 0)
-			{
-				if (tileX < NumTilesWidth)
-				{
-					ItemType type = ItemType.values()[tileX];
-					
-					Table t = new Table();
-					t.add(new Label(type.toString(), skin));
-					
-					tooltip = new Tooltip(t, skin, stage);
-					tooltip.show(event, x, y);
-				}				
-			}
-			else
-			{					
-				int index = (tileY-1)*NumTilesWidth + tileX;
-				
-				Item item = null;
-				Iterator<Item> itr = entity.getInventory().iterator(selectedFilter);
-				int count = 0;
-				while (itr.hasNext())
-				{
-					Item i = itr.next();
-					if (count == index)
-					{
-						item = i;
-						break;
-					}
-					count++;
-				}
-				
-				if (item != null)
-				{
-					Table t = item.createTable(skin, entity);
-					
-					tooltip = new Tooltip(t, skin, stage);
-					tooltip.show(event, x, y);
-				}
-			}
-			
-			return true;
-		}
-		
-		@Override
-		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-		{
-			GameScreen.Instance.clearContextMenu();
-			GameEntity entity = Global.CurrentLevel.player;
-			
-			int tileX = (int)(x / TileSize);
-			int tileY = (int)((getHeight() - y) / TileSize);
-						
-			if (tooltip != null) { tooltip.remove(); }
-			
-			if (tileX >= NumTilesWidth || tileX < 0 || tileY >= NumTilesHeight || tileY < 0)
-			{
-				return false;
-			}
-			
-			if (tileY == NumTilesHeight-1)
-			{
-				if (tileX < entity.tile.items.size)
-				{
-					Item i = entity.tile.items.get(tileX);
-					entity.getInventory().addItem(i);
-					entity.tile.items.removeValue(i, true);
-				}				
-			}
-			else if (tileY == 0)
-			{
-				if (tileX < NumTilesWidth)
-				{
-					selectedFilter = ItemType.values()[tileX];
-				}
-			}
-			else
-			{
-				int index = (tileY-1)*NumTilesWidth + tileX;
-				
-				Item item = null;
-				Iterator<Item> itr = entity.getInventory().iterator(selectedFilter);
-				int count = 0;
-				while (itr.hasNext())
-				{
-					Item i = itr.next();
-					if (count == index)
-					{
-						item = i;
-						break;
-					}
-					count++;
-				}
-				
-				if (item != null)
-				{
-					if (button == Buttons.LEFT)
-					{
-						entity.getInventory().toggleEquip(item);
-					}
-					else if (button == Buttons.RIGHT)
-					{
-						if (entity.getInventory().isEquipped(item))
-						{
-							entity.getInventory().unequip(item);
-						}
-						
-						entity.getInventory().removeItem(item);
-						entity.tile.items.add(item);
-					}
-					
-					for (int i = 0; i < 3; i++)
-					{
-						entity.tasks.add(new TaskWait());
-					}
-				}		
-			}
-			
-			return true;
 		}
 
 		@Override
-		public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) 
+		public void populateTileData()
 		{
-			if (tooltip != null)
+		}
+
+		@Override
+		public Sprite getSpriteForData(Object data)
+		{
+			return headers.get((ItemType)data);
+		}
+
+		@Override
+		public void handleDataClicked(Object data, InputEvent event, float x, float y)
+		{
+			selectedFilter = (ItemType)data;
+		}
+
+		@Override
+		public Table getToolTipForData(Object data)
+		{
+			Table table = new Table();
+			table.add(new Label(data.toString(), skin)).width(Value.percentWidth(1, table));
+			
+			return table;
+		}
+
+		@Override
+		public Color getColourForData(Object data)
+		{
+			if (data == selectedFilter)
 			{
-				tooltip.setVisible(false);
-				tooltip.remove();
-				tooltip = null;
+				return Color.DARK_GRAY;
+			}
+			
+			return null;
+		}
+
+		@Override
+		public void onDrawItemBackground(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+
+		@Override
+		public void onDrawItem(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+
+		@Override
+		public void onDrawItemForeground(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+		
+	}
+	
+	public class InventoryBody extends TilePanel
+	{
+
+		public InventoryBody(Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize)
+		{
+			super(skin, stage, tileBackground, tileBorder, ItemType.values().length, 1, tileSize, true);
+		}
+		
+		@Override
+		public void populateTileData()
+		{
+			tileData.clear();
+			
+			Iterator<Item> itr = Global.CurrentLevel.player.getInventory().iterator(selectedFilter);
+			while (itr.hasNext())
+			{
+				tileData.add(itr.next());
 			}
 		}
+
+		@Override
+		public Sprite getSpriteForData(Object data)
+		{
+			return ((Item)data).getIcon();
+		}
+
+		@Override
+		public void handleDataClicked(Object data, InputEvent event, float x, float y)
+		{
+			Item item = (Item)data;
+			
+			if (item.slot != null)
+			{
+				Global.CurrentLevel.player.getInventory().toggleEquip(item);
+			}
+		}
+
+		@Override
+		public Table getToolTipForData(Object data)
+		{
+			return ((Item)data).createTable(skin, Global.CurrentLevel.player);
+		}
+
+		@Override
+		public Color getColourForData(Object data)
+		{
+			Item item = (Item)data;
+			
+			if (item.slot != null)
+			{
+				if (Global.CurrentLevel.player.getInventory().isEquipped(item))
+				{
+					return Color.GREEN;
+				}
+			}
+			
+			return null;
+		}
+
+		@Override
+		public void onDrawItemBackground(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+
+		@Override
+		public void onDrawItem(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+
+		@Override
+		public void onDrawItemForeground(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+		
+	}
+
+	public class FloorLine extends TilePanel
+	{
+		public FloorLine(Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize)
+		{
+			super(skin, stage, tileBackground, tileBorder, ItemType.values().length, 1, tileSize, false);
+		}
+
+		@Override
+		public void populateTileData()
+		{
+			tileData.clear();
+			for (Item item : Global.CurrentLevel.player.tile.items)
+			{
+				tileData.add(item);
+			}
+		}
+
+		@Override
+		public Sprite getSpriteForData(Object data)
+		{
+			return ((Item)data).getIcon();
+		}
+
+		@Override
+		public void handleDataClicked(Object data, InputEvent event, float x, float y)
+		{
+			Item item = (Item)data;
+			Global.CurrentLevel.player.tile.items.removeValue(item, true);
+			Global.CurrentLevel.player.getInventory().addItem(item);
+		}
+
+		@Override
+		public Table getToolTipForData(Object data)
+		{
+			return ((Item)data).createTable(skin, Global.CurrentLevel.player);
+		}
+
+		@Override
+		public Color getColourForData(Object data)
+		{
+			return Color.LIGHT_GRAY;
+		}
+
+		@Override
+		public void onDrawItemBackground(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+
+		@Override
+		public void onDrawItem(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+
+		@Override
+		public void onDrawItemForeground(Object data, Batch batch, int x, int y, int width, int height)
+		{
+		}
+		
 	}
 }

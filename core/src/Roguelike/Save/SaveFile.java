@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashMap;
 
 import kryo.EnumMapSerializer;
 import kryo.EnumSetSerializer;
@@ -23,7 +24,8 @@ import com.esotericsoftware.kryo.io.Output;
 
 public class SaveFile
 {
-	public SaveLevel level;
+	public String currentLevel;
+	public HashMap<String, SaveLevel> allLevels;
 	public SaveAbilityPool abilityPool;
 	
 	public void save()
@@ -40,7 +42,8 @@ public class SaveFile
 			e.printStackTrace();
 		}
 		
-		kryo.writeObject(output, level);
+		output.writeString(currentLevel);
+		kryo.writeObject(output, allLevels);
 		kryo.writeObject(output, abilityPool);
 
 		output.close();
@@ -60,7 +63,8 @@ public class SaveFile
 			e.printStackTrace();
 		}
 		
-		level = kryo.readObject(input, SaveLevel.class);
+		currentLevel = input.readString();
+		allLevels = kryo.readObject(input, HashMap.class);
 		abilityPool = kryo.readObject(input, SaveAbilityPool.class);
 
 		input.close();

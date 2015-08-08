@@ -1,6 +1,10 @@
 <AbilityLine>
 	<Name>Lancer</Name>
 	<Description>Agile dealer of death, leaping around the battlefield striking from the skies.</Description>
+	<Icon>
+		<Name>Abilities/Lancer/JumpStrike</Name>
+		<Colour><RGB>30,144,255</RGB></Colour>
+	</Icon>
 	<Tiers>
 		<Tier>
 			<ActiveAbility>

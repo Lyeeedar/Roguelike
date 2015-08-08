@@ -1,6 +1,10 @@
 <AbilityLine>
 	<Name>Pyromaniac</Name>
 	<Description>Kill it with FIRE.</Description>
+	<Icon>
+		<Name>Abilities/Pyromaniac/UnreliableFlames</Name>
+		<Colour><RGB>255,165,0</RGB></Colour>
+	</Icon>
 	<Tiers>
 		<Tier>
 			<PassiveAbility>

@@ -73,6 +73,7 @@ public class GameEntity extends Entity
 		for (ActiveAbility a : slottedActiveAbilities)
 		{
 			a.cooldownAccumulator -= cost;
+			if (a.cooldownAccumulator < 0) { a.cooldownAccumulator = 0; }
 		}
 
 		for (GameEventHandler h : getAllHandlers())

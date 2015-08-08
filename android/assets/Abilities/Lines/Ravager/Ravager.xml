@@ -1,6 +1,10 @@
 <AbilityLine>
 	<Name>Ravager</Name>
 	<Description>Channel your fury and bloodlust. Become a whirlwind of death.</Description>
+	<Icon>
+		<Name>Abilities/Ravager/Enrage</Name>
+		<Colour><RGB>178,34,34</RGB></Colour>
+	</Icon>
 	<Tiers>
 		<Tier>
 			<ActiveAbility>

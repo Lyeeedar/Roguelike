@@ -151,11 +151,6 @@ public class GameScreen implements Screen, InputProcessor
 
 		stage = new Stage(new ScreenViewport());
 
-		Table mainUITable = new Table();
-		//mainUITable.debug();
-		mainUITable.setFillParent(true);
-		stage.addActor(mainUITable);
-
 		abilityPanel = new AbilityPanel(skin, stage);
 
 		abilityPoolPanel = new AbilityPoolPanel(skin, stage);
@@ -165,30 +160,40 @@ public class GameScreen implements Screen, InputProcessor
 		
 		Widget blankTab = new Widget();
 
-		//stage.addActor(messageStack);
-		stage.addActor(blankTab);
-		stage.addActor(inventoryPanel);
-		stage.addActor(abilityPoolPanel);
-
 		tabPane = new TabPanel();
 
 		TabPanel.Tab tab = tabPane.addTab(AssetManager.loadSprite("blank"), blankTab);
 		tabPane.addTab(AssetManager.loadSprite("GUI/Inventory"), inventoryPanel);
 		tabPane.addTab(AssetManager.loadSprite("GUI/Abilities"), abilityPoolPanel);
-		//tabPane.addTab(AssetManager.loadSprite("GUI/Message"), messageStack);
 		
 		tabPane.selectTab(tab);
-
-		if (Global.ANDROID)
-		{
-			mainUITable.add(tabPane).width(Value.percentWidth(0.5f, mainUITable)).expand().top().left().pad(10);
-		}
-		else
-		{
-			mainUITable.add(tabPane).width(Value.percentWidth(0.5f, mainUITable)).height(Value.percentHeight(0.3f, mainUITable)).expand().bottom().left().pad(10);
-		}
-
-		mainUITable.add(abilityPanel).expand().bottom().right().pad(20);
+		
+		stage.addActor(tabPane);
+		stage.addActor(abilityPanel);
+		
+		stage.addActor(inventoryPanel);
+		stage.addActor(abilityPoolPanel);
+		stage.addActor(abilityPanel);
+	
+		relayoutUI();
+	}
+	
+	public void relayoutUI()
+	{
+		abilityPanel.setX(stage.getWidth() - abilityPanel.getPrefWidth() - 20);
+		abilityPanel.setY(20);
+		abilityPanel.setWidth(abilityPanel.getPrefWidth());
+		abilityPanel.setHeight(abilityPanel.getPrefHeight());
+		
+		tabPane.setX(20);
+		tabPane.setY(20);
+		tabPane.setHeight(roundTo(stage.getHeight()/2, 32));
+		tabPane.setWidth(stage.getWidth());
+	}
+	
+	private float roundTo(float val, float multiple)
+	{
+		return (float) (multiple * Math.floor(val / multiple));
 	}
 
 	//endregion Create
@@ -574,6 +579,8 @@ public class GameScreen implements Screen, InputProcessor
 		stage.getViewport().setWorldHeight(Global.Resolution[1]);
 		stage.getViewport().setScreenWidth(Global.ScreenSize[0]);
 		stage.getViewport().setScreenHeight(Global.ScreenSize[1]);
+		
+		relayoutUI();
 	}
 
 	//----------------------------------------------------------------------
@@ -611,8 +618,9 @@ public class GameScreen implements Screen, InputProcessor
 		{
 			SaveFile save = new SaveFile();
 			
-			save.level = new SaveLevel();
-			save.level.store(Global.CurrentLevel);
+			Global.AllLevels.get(Global.CurrentLevel.UID).store(Global.CurrentLevel);
+			save.allLevels = Global.AllLevels;
+			save.currentLevel = Global.CurrentLevel.UID;
 			
 			save.abilityPool = new SaveAbilityPool();
 			save.abilityPool.store(Global.abilityPool);
@@ -624,8 +632,17 @@ public class GameScreen implements Screen, InputProcessor
 			SaveFile save = new SaveFile();
 			save.load();
 			
-			Global.ChangeLevel(save.level.create());
+			Global.AllLevels = save.allLevels;
+			Global.ChangeLevel(Global.AllLevels.get(save.currentLevel).create());
 			Global.abilityPool = save.abilityPool.create();
+		}
+		else if (keycode == Keys.I)
+		{
+			tabPane.toggleTab(inventoryPanel);
+		}
+		else if (keycode == Keys.K)
+		{
+			tabPane.toggleTab(abilityPoolPanel);
 		}
 		
 		return false;
@@ -649,75 +666,73 @@ public class GameScreen implements Screen, InputProcessor
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button)
 	{
-		if (!mouseOverUI)
+		if (tooltip != null)
 		{
-			clearContextMenu();
+			tooltip.setVisible(false);
+			tooltip.remove();
+			tooltip = null;
+		}
+		
+		clearContextMenu();
 
-			Vector3 mousePos = camera.unproject(new Vector3(screenX, screenY, 0));
-			
-			int mousePosX = (int) mousePos.x;
-			int mousePosY = (int) mousePos.y;
+		Vector3 mousePos = camera.unproject(new Vector3(screenX, screenY, 0));
+		
+		int mousePosX = (int) mousePos.x;
+		int mousePosY = (int) mousePos.y;
 
-			int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-			int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
 
-			int x = (mousePosX - offsetx) / Global.TileSize;
-			int y = (mousePosY - offsety) / Global.TileSize;
+		int x = (mousePosX - offsetx) / Global.TileSize;
+		int y = (mousePosY - offsety) / Global.TileSize;
 
-			if (preparedAbility != null)
+		if (preparedAbility != null)
+		{
+			if (button == Buttons.LEFT)
 			{
-				if (button == Buttons.LEFT)
+				if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height)
 				{
-					if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height)
+					GameTile tile = Global.CurrentLevel.getGameTile(x, y);
+					if (preparedAbility.isTargetValid(tile, abilityTiles))
 					{
-						GameTile tile = Global.CurrentLevel.getGameTile(x, y);
-						if (preparedAbility.isTargetValid(tile, abilityTiles))
-						{
-							Global.CurrentLevel.player.tasks.add(new TaskUseAbility(new int[]{x, y}, preparedAbility));
-						}
-					}
-				}
-				preparedAbility = null;
-			}
-			else
-			{
-				if (button == Buttons.RIGHT)
-				{
-					GameTile tile = null;
-					if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height)
-					{
-						tile = Global.CurrentLevel.getGameTile(x, y);
-					}
-
-					createContextMenu(mousePosX, mousePosY, tile);
-				}
-				else
-				{
-					if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height && Global.CurrentLevel.getSeenTile(x, y).seen)
-					{
-						Global.CurrentLevel.player.AI.setData("ClickPos", new int[]{x, y});
-					}
-					else
-					{
-						x = MathUtils.clamp(x, -1, 1);
-						y = MathUtils.clamp(y, -1, 1);
-						
-						x += Global.CurrentLevel.player.tile.x;
-						y += Global.CurrentLevel.player.tile.y;
-						
-						Global.CurrentLevel.player.AI.setData("ClickPos", new int[]{x, y});
+						Global.CurrentLevel.player.tasks.add(new TaskUseAbility(new int[]{x, y}, preparedAbility));
 					}
 				}
 			}
-
-			return true;
+			preparedAbility = null;
 		}
 		else
 		{
-			preparedAbility = null;
+			if (button == Buttons.RIGHT)
+			{
+				GameTile tile = null;
+				if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height)
+				{
+					tile = Global.CurrentLevel.getGameTile(x, y);
+				}
+
+				createContextMenu(mousePosX, mousePosY, tile);
+			}
+			else
+			{
+				if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height && Global.CurrentLevel.getSeenTile(x, y).seen)
+				{
+					Global.CurrentLevel.player.AI.setData("ClickPos", new int[]{x, y});
+				}
+				else
+				{
+					x = MathUtils.clamp(x, -1, 1);
+					y = MathUtils.clamp(y, -1, 1);
+					
+					x += Global.CurrentLevel.player.tile.x;
+					y += Global.CurrentLevel.player.tile.y;
+					
+					Global.CurrentLevel.player.AI.setData("ClickPos", new int[]{x, y});
+				}
+			}
 		}
 
-		return false;
+		return true;
 	}
 
 	//----------------------------------------------------------------------
@@ -726,13 +741,13 @@ public class GameScreen implements Screen, InputProcessor
 	{
 		if (dragDropPayload != null && dragDropPayload.shouldDraw())
 		{
-			if (isInBounds(screenX, screenY, abilityPanel))
+			//if (isInBounds(screenX, screenY, abilityPanel))
 			{
 				Vector2 tmp = new Vector2(screenX, Global.Resolution[1] - screenY);
 				tmp = abilityPanel.stageToLocalCoordinates(tmp);
-				abilityPanel.handleDrop(tmp.x, tmp.y);
+				//abilityPanel.handleDrop(tmp.x, tmp.y);
 			}
-			else
+			//else
 			{
 				if (dragDropPayload.obj instanceof ActiveAbility)
 				{
@@ -781,59 +796,45 @@ public class GameScreen implements Screen, InputProcessor
 			tooltip = null;
 		}
 
-		if (
-				(tabPane != null && isInBounds(screenX, screenY, tabPane)) ||
-				(abilityPanel != null && isInBounds(screenX, screenY, abilityPanel)) ||
-				(hpWidget != null && isInBounds(screenX, screenY, hpWidget))
-				)
+		mouseOverUI = false;
+
+		Vector3 mousePos = camera.unproject(new Vector3(screenX, screenY, 0));
+		
+		mousePosX = (int) mousePos.x;
+		mousePosY = (int) mousePos.y;
+
+		stage.setScrollFocus(null);
+
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+
+		int x = (mousePosX - offsetx) / Global.TileSize;
+		int y = (mousePosY - offsety) / Global.TileSize;
+
+		if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height)
 		{
-			mouseOverUI = true;
-			tabPane.focusCurrentTab(stage);
-		}
-		else
-		{
-			mouseOverUI = false;
+			GameTile tile = Global.CurrentLevel.getGameTile(x, y);
 
-			Vector3 mousePos = camera.unproject(new Vector3(screenX, screenY, 0));
-			
-			mousePosX = (int) mousePos.x;
-			mousePosY = (int) mousePos.y;
-
-			stage.setScrollFocus(null);
-
-			//screenY = Global.Resolution[1] - screenY;
-
-			int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-			int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
-
-			int x = (mousePosX - offsetx) / Global.TileSize;
-			int y = (mousePosY - offsety) / Global.TileSize;
-
-			if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height)
+			if (tile.entity != null)
 			{
-				GameTile tile = Global.CurrentLevel.getGameTile(x, y);
-
-				if (tile.entity != null)
-				{
-					Table table = EntityStatusRenderer.getMouseOverTable(tile.entity, x*Global.TileSize+offsetx, y*Global.TileSize+offsety, Global.TileSize, Global.TileSize, 1.0f/8.0f, mousePosX, mousePosY, skin);
-
-					if (table != null)
-					{
-						tooltip = new Tooltip(table, skin, stage);
-						tooltip.show(mousePosX, mousePosY);
-					}					
-				}
-			}
-
-			{
-				Table table = EntityStatusRenderer.getMouseOverTable(Global.CurrentLevel.player, 20, Global.Resolution[1] - 120, Global.Resolution[0]/4, 100, 1.0f/4.0f, mousePosX, mousePosY, skin);
+				Table table = EntityStatusRenderer.getMouseOverTable(tile.entity, x*Global.TileSize+offsetx, y*Global.TileSize+offsety, Global.TileSize, Global.TileSize, 1.0f/8.0f, mousePosX, mousePosY, skin);
 
 				if (table != null)
 				{
 					tooltip = new Tooltip(table, skin, stage);
 					tooltip.show(mousePosX, mousePosY);
-				}	
+				}					
 			}
+		}
+
+		{
+			Table table = EntityStatusRenderer.getMouseOverTable(Global.CurrentLevel.player, 20, Global.Resolution[1] - 120, Global.Resolution[0]/4, 100, 1.0f/4.0f, mousePosX, mousePosY, skin);
+
+			if (table != null)
+			{
+				tooltip = new Tooltip(table, skin, stage);
+				tooltip.show(mousePosX, mousePosY);
+			}	
 		}
 
 		return false;
@@ -961,14 +962,6 @@ public class GameScreen implements Screen, InputProcessor
 	}
 
 	//----------------------------------------------------------------------
-	public boolean isInBounds(float x, float y, Widget actor)
-	{
-		Vector2 tmp = new Vector2(x, Global.ScreenSize[1] - y);
-		tmp = actor.stageToLocalCoordinates(tmp);
-		return tmp.x >= 0 && tmp.x <= actor.getPrefWidth() && tmp.y >= 0 && tmp.y <= actor.getPrefHeight();
-	}
-
-	//----------------------------------------------------------------------
 	public void clearContextMenu()
 	{
 		if (contextMenu != null)
@@ -990,7 +983,7 @@ public class GameScreen implements Screen, InputProcessor
 		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
 		{
 			ActiveAbility aa = Global.abilityPool.slottedActiveAbilities[i];
-			if (aa != null && aa.cooldownAccumulator <= 0)
+			if (aa != null && aa.isAvailable())
 			{
 				available.add(aa);
 			}
@@ -1012,6 +1005,7 @@ public class GameScreen implements Screen, InputProcessor
 			{
 				final EnvironmentEntity entity = tile.environmentEntity;
 
+				boolean hadAction = false;
 				for (final ActivationAction aa : entity.actions)
 				{
 					if (!aa.visible) { continue; }
@@ -1037,15 +1031,18 @@ public class GameScreen implements Screen, InputProcessor
 
 					table.add(row).width(Value.percentWidth(1, table));
 					table.row();
+					
+					hadAction = true;
 				}
 
-				if (entity.actions.size > 0)
+				if (hadAction)
 				{
 					table.add(new Label("-------------", skin));
 					table.row();
 				}
 			}
 
+			boolean hadAbility = false;
 			for (final ActiveAbility aa : available)
 			{
 				Table row = new Table();
@@ -1078,10 +1075,15 @@ public class GameScreen implements Screen, InputProcessor
 
 				table.add(row).width(Value.percentWidth(1, table));
 				table.row();
+				
+				hadAbility = true;
 			}
 			
-			table.add(new Label("-------------", skin));
-			table.row();
+			if (hadAbility)
+			{
+				table.add(new Label("-------------", skin));
+				table.row();
+			}
 		}
 		
 		{
@@ -1158,7 +1160,7 @@ public class GameScreen implements Screen, InputProcessor
 
 	Tooltip tooltip;
 
-	boolean mouseOverUI;
+	public boolean mouseOverUI;
 
 	//----------------------------------------------------------------------
 	Array<GameEntity> toBeDrawn = new Array<GameEntity>();

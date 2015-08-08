@@ -11,6 +11,7 @@ import Roguelike.RoguelikeGame;
 import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
@@ -262,6 +263,30 @@ public class Level
 	public void update(float delta)
 	{
 		updateAccumulator += delta;
+		
+		// setup player abilities
+		{
+			player.slottedActiveAbilities.clear();
+			player.slottedPassiveAbilities.clear();
+			
+			for (ActiveAbility aa : Global.abilityPool.slottedActiveAbilities)
+			{
+				if (aa != null)
+				{
+					aa.caster = player;
+					player.slottedActiveAbilities.add(aa);
+				}
+				
+			}
+			
+			for (PassiveAbility pa : Global.abilityPool.slottedPassiveAbilities)
+			{
+				if (pa != null)
+				{
+					player.slottedPassiveAbilities.add(pa);
+				}
+			}
+		}
 		
 		if (!hasActiveEffects())
 		{	

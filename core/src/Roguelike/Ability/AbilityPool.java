@@ -2,11 +2,13 @@ package Roguelike.Ability;
 
 import java.io.IOException;
 
+import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Screens.GameScreen;
+import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
@@ -139,6 +141,7 @@ public class AbilityPool
 		public String fileName;
 		public String name;
 		public String description;
+		public Sprite icon;
 		
 		public static AbilityLine load(String file)
 		{
@@ -159,6 +162,8 @@ public class AbilityPool
 			
 			newLine.name = xmlElement.get("Name");
 			newLine.description = xmlElement.get("Description");
+			
+			newLine.icon = AssetManager.loadSprite(xmlElement.getChildByName("Icon"));
 			
 			Element tiersElement = xmlElement.getChildByName("Tiers");
 			for (Element tierElement : tiersElement.getChildrenByName("Tier"))

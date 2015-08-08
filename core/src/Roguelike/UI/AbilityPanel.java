@@ -2,6 +2,7 @@ package Roguelike.UI;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
+import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Entity.GameEntity;
@@ -19,287 +20,109 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
-public class AbilityPanel extends Widget
-{
-	private final int TileSize = 32;
-	
-	private Tooltip tooltip;
-		
+public class AbilityPanel extends TilePanel
+{			
 	private BitmapFont font;
 	private Texture white;
-		
-	private final Sprite tileBackground;
-	private final Sprite tileBorder;
-	
-	private final Skin skin;
-	private final Stage stage;
-	
+
 	private final GlyphLayout layout = new GlyphLayout();
 	
 	public AbilityPanel(Skin skin, Stage stage)
 	{
-		this.tileBackground = AssetManager.loadSprite("GUI/TileBackground");	
-		this.tileBorder = AssetManager.loadSprite("GUI/TileBorder");
+		super(skin, stage, AssetManager.loadSprite("GUI/TileBackground"), AssetManager.loadSprite("GUI/TileBorder"), Global.NUM_ABILITY_SLOTS, 2, 32, false);
+		
 		this.font = new BitmapFont();
-		this.white = AssetManager.loadTexture("Sprites/white.png");
-						
-		this.skin = skin;
-		this.stage = stage;
-				
-		addListener(new AbilityPanelListener());
-	}
-	
-	@Override
-	public void draw (Batch batch, float parentAlpha)
-	{
-		super.draw(batch, parentAlpha);
-		batch.setColor(Color.WHITE);
-		
-		int xoffset = (int)getX();		
-		int top = (int)(getY()+getHeight());
-		
-		boolean aaDragged = GameScreen.Instance.dragDropPayload != null && GameScreen.Instance.dragDropPayload.shouldDraw() && GameScreen.Instance.dragDropPayload.obj instanceof ActiveAbility;
-		boolean paDragged = GameScreen.Instance.dragDropPayload != null && GameScreen.Instance.dragDropPayload.shouldDraw() && GameScreen.Instance.dragDropPayload.obj instanceof PassiveAbility;
-		
-		GameEntity entity = Global.CurrentLevel.player;
-		
-		float x = 0;
-		for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
-		{
-			ActiveAbility aa = Global.abilityPool.slottedActiveAbilities[i];
-			PassiveAbility pa = Global.abilityPool.slottedPassiveAbilities[i];
-			
-			// Draw active
-			
-			// background
-			tileBackground.render(batch, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
-			
-			// icon
-			if (aa != null)
-			{
-				aa.Icon.render(batch, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
-				
-				if (!aa.isAvailable())
-				{
-					String text = "" + (int)Math.ceil(aa.cooldownAccumulator);
-					layout.setText(font, text);
-					
-					batch.setColor(0.4f, 0.4f, 0.4f, 0.4f);
-					batch.draw(white, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
-					batch.setColor(Color.WHITE);
-					
-					font.draw(batch, text, (int)(xoffset + x) + TileSize/2 - layout.width/2, (top - TileSize) + TileSize/2 + layout.height/2);
-				}
-			}
-			
-			// border
-			if (aa != null && aa == GameScreen.Instance.preparedAbility)
-			{
-				batch.setColor(Color.CYAN);
-			}
-			else if (aaDragged)
-			{				
-				batch.setColor(0.5f, 0.6f, 1.0f, 1.0f);
-			}
-			
-			tileBorder.render(batch, (int)(xoffset + x), top - TileSize, TileSize, TileSize);
-			
-			batch.setColor(Color.WHITE);
-			
-			// Draw Passive
-			
-			// background
-			tileBackground.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize, TileSize);			
-			
-			// icon
-			if (pa != null)
-			{
-				pa.Icon.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize, TileSize);
-			}
-			
-			// border
-			if (paDragged)
-			{
-				batch.setColor(0.5f, 0.6f, 1.0f, 1.0f);
-			}
-			
-			tileBorder.render(batch, (int)(xoffset + x), top - TileSize*2, TileSize, TileSize);	
-			
-			batch.setColor(Color.WHITE);
-			
-			x += TileSize;
-		}
-	}
-	
-	@Override
-	public float getPrefWidth()
-	{
-		return TileSize * Global.NUM_ABILITY_SLOTS;
+		this.white = AssetManager.loadTexture("Sprites/white.png");				
 	}
 
 	@Override
-	public float getPrefHeight()
+	public void populateTileData()
 	{
-		return TileSize * 2;
-	}
-	
-	public void handleDrop(float x, float y)
-	{
-		GameEntity entity = Global.CurrentLevel.player;
-		boolean aaDragged = GameScreen.Instance.dragDropPayload != null && GameScreen.Instance.dragDropPayload.obj instanceof ActiveAbility;
-		boolean paDragged = GameScreen.Instance.dragDropPayload != null && GameScreen.Instance.dragDropPayload.obj instanceof PassiveAbility;
+		tileData.clear();
 		
-		if (aaDragged || paDragged)
+		for (ActiveAbility aa : Global.abilityPool.slottedActiveAbilities)
 		{
-			int xIndex = (int) (x / TileSize);
-			int yIndex = (int) ((getHeight() - y) / TileSize);
-			
-			if (tooltip != null) { tooltip.remove(); tooltip = null; }
-			
-			if (xIndex < Global.NUM_ABILITY_SLOTS)
-			{
-				if (yIndex == 0)
-				{
-					if (aaDragged)
-					{
-						Global.abilityPool.slotActiveAbility((ActiveAbility)GameScreen.Instance.dragDropPayload.obj, xIndex);
-					}
-				}
-				else
-				{
-					if (paDragged)
-					{
-						Global.abilityPool.slotPassiveAbility((PassiveAbility)GameScreen.Instance.dragDropPayload.obj, xIndex);
-					}					
-				}
-			}
+			tileData.add(aa);
+		}
+		
+		for (PassiveAbility pa : Global.abilityPool.slottedPassiveAbilities)
+		{
+			tileData.add(pa);
 		}
 	}
-	
-	private class AbilityPanelListener extends InputListener
+
+	@Override
+	public Sprite getSpriteForData(Object data)
 	{
-		//----------------------------------------------------------------------
-		@Override
-		public void touchDragged (InputEvent event, float x, float y, int pointer)
-		{
-			if (GameScreen.Instance.dragDropPayload != null)
-			{
-				GameScreen.Instance.dragDropPayload.x = event.getStageX() - 16;
-				GameScreen.Instance.dragDropPayload.y = event.getStageY() - 16;				
-			}			
-		}
+		if (data == null) { return null; }
 		
-		@Override
-		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+		return ((IAbility)data).getIcon();
+	}
+
+	@Override
+	public void handleDataClicked(Object data, InputEvent event, float x, float y)
+	{
+		if (data instanceof ActiveAbility)
 		{
-			GameEntity entity = Global.CurrentLevel.player;
-			GameScreen.Instance.clearContextMenu();
+			ActiveAbility aa = (ActiveAbility)data;
 			
-			int xIndex = (int) (x / TileSize);
-			int yIndex = (int) ((getHeight() - y) / TileSize);
-			
-			if (tooltip != null) { tooltip.remove(); tooltip = null; }
-			
-			if (xIndex < Global.NUM_ABILITY_SLOTS)
+			if (aa.isAvailable())
 			{
-				if (yIndex == 0)
-				{
-					ActiveAbility aa = Global.abilityPool.slottedActiveAbilities[xIndex];
-					
-					if (aa != null && aa.isAvailable())
-					{
-						GameScreen.Instance.dragDropPayload = new DragDropPayload(aa, aa.getIcon(), x-16, getHeight() - y - 16);
-					}
-				}
-				else if (yIndex == 1)
-				{
-					PassiveAbility pa = Global.abilityPool.slottedPassiveAbilities[xIndex];
-					
-					if (pa != null)
-					{
-						GameScreen.Instance.dragDropPayload = new DragDropPayload(pa, pa.getIcon(), x-16, getHeight() - y - 16);
-					}
-				}
-			}	
-			
-			return true;
-		}
-		
-		@Override
-		public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-		{
-			GameEntity entity = Global.CurrentLevel.player;
-			if (GameScreen.Instance.dragDropPayload != null)
-			{
-				GameScreen.Instance.touchUp((int)event.getStageX(), Global.Resolution[1] - (int)event.getStageY(), pointer, button);
-			}
-			
-			int xIndex = (int) (x / TileSize);
-			int yIndex = (int) ((getHeight() - y) / TileSize);
-			
-			if (tooltip != null) { tooltip.remove(); tooltip = null; }
-			
-			if (xIndex < Global.NUM_ABILITY_SLOTS)
-			{
-				if (yIndex == 0)
-				{
-					ActiveAbility aa = Global.abilityPool.slottedActiveAbilities[xIndex];
-					
-					if (aa != null && aa.cooldownAccumulator <= 0)
-					{
-						GameScreen.Instance.prepareAbility(aa);
-					}
-				}
-			}	
-		}
-		
-		@Override
-		public boolean mouseMoved (InputEvent event, float x, float y)
-		{	
-			GameEntity entity = Global.CurrentLevel.player;
-			int xIndex = (int) (x / TileSize);
-			int yIndex = (int) ((getHeight() - y) / TileSize);
-			
-			if (tooltip != null) { tooltip.remove(); tooltip = null; }
-			
-			if (xIndex < Global.NUM_ABILITY_SLOTS)
-			{
-				if (yIndex == 0)
-				{
-					ActiveAbility aa = Global.abilityPool.slottedActiveAbilities[xIndex];
-					
-					if (aa != null)
-					{
-						tooltip = new Tooltip(aa.createTable(skin), skin, stage);
-						tooltip.show(event, x, y);
-					}
-				}
-				else
-				{
-					PassiveAbility aa = Global.abilityPool.slottedPassiveAbilities[xIndex];
-					
-					if (aa != null)
-					{
-						tooltip = new Tooltip(aa.createTable(skin), skin, stage);
-						tooltip.show(event, x, y);
-					}
-				}
-			}
-			
-			return true;
-		}
-		
-		@Override
-		public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) 
-		{
-			if (tooltip != null)
-			{
-				tooltip.setVisible(false);
-				tooltip.remove();
-				tooltip = null;
+				GameScreen.Instance.prepareAbility(aa);
 			}
 		}
 	}
+
+	@Override
+	public Table getToolTipForData(Object data)
+	{
+		if (data == null) { return null; }
+		
+		return ((IAbility)data).createTable(skin);
+	}
+
+	@Override
+	public Color getColourForData(Object data)
+	{
+		if (data == null) { return Color.DARK_GRAY; }
+		
+		if (data == GameScreen.Instance.preparedAbility) { return Color.CYAN; }
+		
+		return null;
+	}
+
+	@Override
+	public void onDrawItemBackground(Object data, Batch batch, int x, int y, int width, int height)
+	{
+	}
+
+	@Override
+	public void onDrawItem(Object data, Batch batch, int x, int y, int width, int height)
+	{
+		if (data instanceof ActiveAbility)
+		{
+			ActiveAbility aa = (ActiveAbility)data;
+			
+			if (!aa.isAvailable())
+			{
+				String text = "" + (int)Math.ceil(aa.cooldownAccumulator);
+				layout.setText(font, text);
+				
+				batch.setColor(0.4f, 0.4f, 0.4f, 0.4f);
+				batch.draw(white, x, y, width, height);
+				batch.setColor(Color.WHITE);
+				
+				font.draw(batch, text, x + width/2 - layout.width/2, y + height/2 + layout.height/2);
+			}
+		}	
+	}
+
+	@Override
+	public void onDrawItemForeground(Object data, Batch batch, int x, int y, int width, int height)
+	{
+	}
+
 }
