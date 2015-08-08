@@ -2,10 +2,13 @@ package Roguelike.Lights;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class Light
 {
+	public boolean copied;
+	
 	public Color colour;
 	public float baseIntensity;
 	public int flicker;
@@ -45,9 +48,10 @@ public class Light
 	
 	public Light copy()
 	{
-		Light l = new Light();
+		Light l = Pools.obtain(Light.class);
 		l.colour = new Color(colour);
 		l.baseIntensity = baseIntensity;
+		l.copied = true;
 		
 		return l;
 	}

@@ -19,7 +19,7 @@ public class TabPanel extends Widget
 {
 	private final Array<Tab> tabs = new Array<Tab>();
 	private Tab selectedTab = null;
-	private final int tabHeaderSize = 24;
+	private final int tabHeaderSize = 32;
 	
 	private final Sprite buttonUp;
 	private final Sprite buttonDown;

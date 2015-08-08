@@ -13,6 +13,7 @@ import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
+import Roguelike.Items.Recipe;
 import Roguelike.Levels.Level;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.GameScreen;
@@ -648,6 +649,11 @@ public class Global
 					CurrentLevel.player = GameEntity.load("player");
 
 					tile.addGameEntity(CurrentLevel.player);
+					
+					for (int i = 0; i < 1000; i++)
+					{
+						CurrentLevel.player.inventory.addItem(Recipe.generateMaterial(100));
+					}
 
 					exit = true;
 					break;

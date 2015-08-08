@@ -169,6 +169,8 @@ public class InventoryPanel extends Table
 			{
 				tileData.add(itr.next());
 			}
+			
+			dataHeight = tileData.size / viewWidth;
 		}
 
 		@Override
@@ -242,6 +244,8 @@ public class InventoryPanel extends Table
 			{
 				tileData.add(item);
 			}
+			
+			dataWidth = tileData.size;
 		}
 
 		@Override

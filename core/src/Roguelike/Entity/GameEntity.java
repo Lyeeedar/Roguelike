@@ -272,11 +272,9 @@ public class GameEntity extends Entity
 	}
 
 	//----------------------------------------------------------------------
-	public Array<Light> getLight()
+	public void getLight(Array<Light> output)
 	{
-		Array<Light> lights = new Array<Light>();
-
-		if (light != null) { lights.add(light); }
+		if (light != null) { output.add(light); }
 
 		for (EquipmentSlot slot : EquipmentSlot.values())
 		{
@@ -284,11 +282,9 @@ public class GameEntity extends Entity
 
 			if (i != null && i.light != null)
 			{
-				lights.add(i.light);
+				output.add(i.light);
 			}
 		}
-
-		return lights;
 	}
 
 	//endregion Public Methods

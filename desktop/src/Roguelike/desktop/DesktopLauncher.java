@@ -16,7 +16,7 @@ public class DesktopLauncher {
 		
 		Global.TargetResolution[0] = 800;
 		Global.TargetResolution[1] = 600;
-		
+				
 		new LwjglApplication(new RoguelikeGame(), config);
 	}
 }

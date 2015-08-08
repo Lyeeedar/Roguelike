@@ -15,6 +15,7 @@ import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
+import Roguelike.Levels.Level;
 import Roguelike.Save.SaveAbilityPool;
 import Roguelike.Save.SaveFile;
 import Roguelike.Save.SaveLevel;
@@ -54,6 +55,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -70,8 +73,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.PerformanceCounter;
 
-public class GameScreen implements Screen, InputProcessor
+public class GameScreen implements Screen, InputProcessor, GestureListener
 {
 	//####################################################################//
 	//region Create
@@ -129,14 +133,17 @@ public class GameScreen implements Screen, InputProcessor
 		white = AssetManager.loadTexture("Sprites/white.png");
 		border = AssetManager.loadSprite("GUI/frame");
 
-		LoadUI();
-
-		InputProcessor inputProcessorOne = this;
-		InputProcessor inputProcessorTwo = stage;
+		gestureDetector = new GestureDetector(this);
 		inputMultiplexer = new InputMultiplexer();
 
+		LoadUI();
+		
+		InputProcessor inputProcessorOne = this;
+		InputProcessor inputProcessorTwo = stage;
+	
+		inputMultiplexer.addProcessor(gestureDetector);
 		inputMultiplexer.addProcessor(inputProcessorTwo);
-		inputMultiplexer.addProcessor(inputProcessorOne);		
+		inputMultiplexer.addProcessor(inputProcessorOne);	
 	}
 
 	//----------------------------------------------------------------------
@@ -178,6 +185,7 @@ public class GameScreen implements Screen, InputProcessor
 		relayoutUI();
 	}
 	
+	//----------------------------------------------------------------------
 	public void relayoutUI()
 	{
 		abilityPanel.setX(stage.getWidth() - abilityPanel.getPrefWidth() - 20);
@@ -185,12 +193,23 @@ public class GameScreen implements Screen, InputProcessor
 		abilityPanel.setWidth(abilityPanel.getPrefWidth());
 		abilityPanel.setHeight(abilityPanel.getPrefHeight());
 		
-		tabPane.setX(20);
-		tabPane.setY(20);
-		tabPane.setHeight(roundTo(stage.getHeight()/2, 32));
-		tabPane.setWidth(stage.getWidth());
+		if (Global.ANDROID)
+		{
+			tabPane.setX(20);
+			tabPane.setY(20);
+			tabPane.setHeight(roundTo(stage.getHeight()-40, 32));
+			tabPane.setWidth(stage.getWidth());
+		}
+		else
+		{
+			tabPane.setX(20);
+			tabPane.setY(20);
+			tabPane.setHeight(roundTo(stage.getHeight()/2, 32));
+			tabPane.setWidth(stage.getWidth());
+		}
 	}
 	
+	//----------------------------------------------------------------------
 	private float roundTo(float val, float multiple)
 	{
 		return (float) (multiple * Math.floor(val / multiple));
@@ -218,8 +237,10 @@ public class GameScreen implements Screen, InputProcessor
 			fpsAccumulator = 0;
 		}		
 
+		updateCounter.start();
 		Global.CurrentLevel.update(delta);
-
+		updateCounter.stop();
+		
 		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
 		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
 
@@ -259,6 +280,7 @@ public class GameScreen implements Screen, InputProcessor
 		hpBars.clear();
 		overHead.clear();
 
+		tileRender.start();
 		for (int x = 0; x < Global.CurrentLevel.width; x++)
 		{
 			for (int y = 0; y < Global.CurrentLevel.height; y++)
@@ -347,7 +369,9 @@ public class GameScreen implements Screen, InputProcessor
 			}
 		}
 		batch.setShader(null);
+		tileRender.stop();
 		
+		itemRender.start();
 		for (int x = 0; x < Global.CurrentLevel.width; x++)
 		{
 			for (int y = 0; y < Global.CurrentLevel.height; y++)
@@ -365,8 +389,9 @@ public class GameScreen implements Screen, InputProcessor
 				}
 			}
 		}
+		itemRender.stop();
 
-		if (!mouseOverUI)
+		if (!mouseOverUI && !Global.ANDROID)
 		{					
 			if (
 					mousex < 0 || mousex >= Global.CurrentLevel.width ||
@@ -393,6 +418,7 @@ public class GameScreen implements Screen, InputProcessor
 			batch.setColor(Color.WHITE);
 		}
 
+		entityRender.start();
 		for (GameEntity entity : toBeDrawn)
 		{
 			if (entity == Global.CurrentLevel.player)
@@ -465,6 +491,8 @@ public class GameScreen implements Screen, InputProcessor
 				hpBars.add(ee);
 			}
 		}
+		
+		entityRender.stop();
 
 		for (Entity e : hpBars)
 		{
@@ -484,6 +512,7 @@ public class GameScreen implements Screen, InputProcessor
 			EntityStatusRenderer.draw(e, batch, cx, cy, Global.TileSize, Global.TileSize, 1.0f/8.0f);
 		}
 
+		effectRender.start();
 		for (ActiveAbility aa : Global.CurrentLevel.ActiveAbilities)
 		{
 			for (GameTile tile : aa.AffectedTiles)
@@ -527,12 +556,23 @@ public class GameScreen implements Screen, InputProcessor
 			}
 		}
 
-		EntityStatusRenderer.draw(Global.CurrentLevel.player, batch, 20, Global.Resolution[1] - 120, Global.Resolution[0]/4, 100, 1.0f/4.0f);
+		if (Global.ANDROID)
+		{
+			EntityStatusRenderer.draw(Global.CurrentLevel.player, batch, Global.Resolution[0]-(Global.Resolution[0]/4)-120, Global.Resolution[1] - 120, Global.Resolution[0]/4, 100, 1.0f/4.0f);
+		}
+		else
+		{
+			EntityStatusRenderer.draw(Global.CurrentLevel.player, batch, 20, Global.Resolution[1] - 120, Global.Resolution[0]/4, 100, 1.0f/4.0f);
+		}
+		
+		effectRender.stop();
 
 		batch.end();
 
+		uiRender.start();
 		stage.act(delta);
 		stage.draw();
+		uiRender.stop();
 
 		batch.begin();
 
@@ -544,7 +584,55 @@ public class GameScreen implements Screen, InputProcessor
 		font.draw(batch, "FPS: "+fps, Global.Resolution[0]-100, Global.Resolution[1] - 20);
 
 		batch.end();
+		
+		updateCounter.tick();
+		tileRender.tick();
+		itemRender.tick();
+		entityRender.tick();
+		effectRender.tick();
+		uiRender.tick();
+		
+		Level.updateDead.tick();
+		Level.updateLights.tick();
+		Level.updateSounds.tick();
+		Level.updateSprites.tick();
+		Level.updateVisible.tick();
+
+		Level.updatePart1.tick();
+		Level.updatePart2.tick();
+		Level.updatePart3.tick();
+		Level.updatePart4.tick();
+		
+		debugOut += delta;
+		if (debugOut > 1)
+		{
+			debugOut = 0;
+			
+			System.out.println("Timers:");
+			
+			System.out.println(updateCounter.toString());
+			System.out.println(tileRender.toString());
+			System.out.println(itemRender.toString());
+			System.out.println(entityRender.toString());
+			System.out.println(effectRender.toString());
+			System.out.println(uiRender.toString());
+			
+			System.out.print("\n");
+			
+			System.out.println(Level.updateDead.toString());
+			System.out.println(Level.updateLights.toString());
+			System.out.println(Level.updateSounds.toString());
+			System.out.println(Level.updateSprites.toString());
+			System.out.println(Level.updateVisible.toString());
+			System.out.println(Level.updatePart1.toString());
+			System.out.println(Level.updatePart2.toString());
+			System.out.println(Level.updatePart3.toString());
+			System.out.println(Level.updatePart4.toString());
+			
+			System.out.println("\n");
+		}
 	}
+	float debugOut = 0;
 
 	//----------------------------------------------------------------------
 	@Override
@@ -674,7 +762,27 @@ public class GameScreen implements Screen, InputProcessor
 		}
 		
 		clearContextMenu();
+		return true;
+	}
 
+	//----------------------------------------------------------------------
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button)
+	{
+		if (tooltip != null)
+		{
+			tooltip.setVisible(false);
+			tooltip.remove();
+			tooltip = null;
+		}
+		
+		clearContextMenu();
+		
+		if (longPressed || dragged)
+		{
+			return false;
+		}
+		
 		Vector3 mousePos = camera.unproject(new Vector3(screenX, screenY, 0));
 		
 		int mousePosX = (int) mousePos.x;
@@ -737,50 +845,17 @@ public class GameScreen implements Screen, InputProcessor
 
 	//----------------------------------------------------------------------
 	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button)
-	{
-		if (dragDropPayload != null && dragDropPayload.shouldDraw())
-		{
-			//if (isInBounds(screenX, screenY, abilityPanel))
-			{
-				Vector2 tmp = new Vector2(screenX, Global.Resolution[1] - screenY);
-				tmp = abilityPanel.stageToLocalCoordinates(tmp);
-				//abilityPanel.handleDrop(tmp.x, tmp.y);
-			}
-			//else
-			{
-				if (dragDropPayload.obj instanceof ActiveAbility)
-				{
-					int index = Global.abilityPool.getActiveAbilityIndex((ActiveAbility)dragDropPayload.obj);
-					if (index != -1)
-					{
-						Global.abilityPool.slotActiveAbility(null, index);
-					}
-				}
-				else if (dragDropPayload.obj instanceof PassiveAbility)
-				{
-					int index = Global.abilityPool.getPassiveAbilityIndex((PassiveAbility)dragDropPayload.obj);
-					if (index != -1)
-					{
-						Global.abilityPool.slotPassiveAbility(null, index);
-					}
-				}
-			}
-		}
-
-		dragDropPayload = null;
-
-		return false;
-	}
-
-	//----------------------------------------------------------------------
-	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer)
 	{
 		if (dragDropPayload != null)
 		{
 			dragDropPayload.x = screenX - 16;
 			dragDropPayload.y = Global.Resolution[1] - screenY - 16;
+		}
+		
+		if (Math.abs(screenX-startX) > 10 || Math.abs(screenY-startY) > 10)
+		{
+			dragged = true;
 		}
 
 		return false;
@@ -857,6 +932,81 @@ public class GameScreen implements Screen, InputProcessor
 	}
 
 	//endregion InputProcessor
+	//####################################################################//
+	//region GestureListener
+	
+	//----------------------------------------------------------------------
+	@Override
+	public boolean touchDown(float x, float y, int pointer, int button)
+	{
+		longPressed = false;
+		dragged = false;
+		
+		startX = x;
+		startY = y;
+		
+		return false;
+	}
+
+	//----------------------------------------------------------------------
+	@Override
+	public boolean tap(float x, float y, int count, int button)
+	{
+		return false;
+	}
+
+	//----------------------------------------------------------------------
+	@Override
+	public boolean longPress(float x, float y)
+	{
+		longPressed = true;
+		return false;
+	}
+
+	//----------------------------------------------------------------------
+	@Override
+	public boolean fling(float velocityX, float velocityY, int button)
+	{
+		return false;
+	}
+
+	//----------------------------------------------------------------------
+	@Override
+	public boolean pan(float x, float y, float deltaX, float deltaY)
+	{
+		return false;
+	}
+
+	//----------------------------------------------------------------------
+	@Override
+	public boolean panStop(float x, float y, int pointer, int button)
+	{
+		return false;
+	}
+
+	//----------------------------------------------------------------------
+	@Override
+	public boolean zoom(float initialDistance, float distance)
+	{
+		float amount = distance - initialDistance;
+		
+		Global.TileSize -= amount/5;
+		if (Global.TileSize < 8)
+		{
+			Global.TileSize = 8;
+		}
+		
+		return false;
+	}
+
+	//----------------------------------------------------------------------
+	@Override
+	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2)
+	{
+		return false;
+	}
+	
+	//endregion GestureListener
 	//####################################################################//
 	//region Public Methods
 
@@ -1118,7 +1268,24 @@ public class GameScreen implements Screen, InputProcessor
 	//endregion Private Methods
 	//####################################################################//
 	//region Data
+	
+	private PerformanceCounter updateCounter = new PerformanceCounter("Update");
+	private PerformanceCounter tileRender = new PerformanceCounter("TileRender");
+	private PerformanceCounter itemRender = new PerformanceCounter("ItemRender");
+	private PerformanceCounter entityRender = new PerformanceCounter("EntityRender");
+	private PerformanceCounter effectRender = new PerformanceCounter("EffectRender");
+	private PerformanceCounter uiRender = new PerformanceCounter("UIRender");
+	
+	//----------------------------------------------------------------------
+	private boolean longPressed;
+	private boolean dragged;
+	private float startX;
+	private float startY;
 
+	//----------------------------------------------------------------------
+	public GestureDetector gestureDetector;
+	
+	//----------------------------------------------------------------------
 	public OrthographicCamera camera;
 	
 	//----------------------------------------------------------------------
@@ -1156,7 +1323,7 @@ public class GameScreen implements Screen, InputProcessor
 	SpriteBatch batch;
 	Texture blank;
 	Texture white;
-	InputMultiplexer inputMultiplexer;
+	public InputMultiplexer inputMultiplexer;
 
 	Tooltip tooltip;
 
@@ -1216,4 +1383,6 @@ public class GameScreen implements Screen, InputProcessor
 		public static ShaderProgram Instance = new ShaderProgram(vertexShader,
 				fragmentShader);
 	}
+
+
 }

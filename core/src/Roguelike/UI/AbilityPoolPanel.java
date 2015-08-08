@@ -118,6 +118,8 @@ public class AbilityPoolPanel extends Table
 			{
 				tileData.add(line);
 			}
+			
+			dataHeight = tileData.size;
 		}
 
 		@Override
@@ -189,6 +191,8 @@ public class AbilityPoolPanel extends Table
 					tileData.add(a);
 				}
 			}
+			
+			dataHeight = tileData.size / 5;
 		}
 
 		@Override

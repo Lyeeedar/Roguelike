@@ -43,6 +43,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.PerformanceCounter;
+import com.badlogic.gdx.utils.Pools;
 
 public class Level
 {
@@ -65,6 +67,17 @@ public class Level
 	private GameTile[][] Grid;
 	public int width;
 	public int height;
+	
+	public static PerformanceCounter updateLights = new PerformanceCounter("UpdateLights");
+	public static PerformanceCounter updateSounds = new PerformanceCounter("UpdateSounds");
+	public static PerformanceCounter updateSprites = new PerformanceCounter("UpdateSprites");
+	public static PerformanceCounter updateDead = new PerformanceCounter("UpdateDead");
+	public static PerformanceCounter updateVisible = new PerformanceCounter("UpdateVisible");
+	
+	public static PerformanceCounter updatePart1 = new PerformanceCounter("UpdatePart1");
+	public static PerformanceCounter updatePart2 = new PerformanceCounter("UpdatePart2");
+	public static PerformanceCounter updatePart3 = new PerformanceCounter("UpdatePart3");
+	public static PerformanceCounter updatePart4 = new PerformanceCounter("UpdatePart4");
 			
 	public Level(GameTile[][] grid)
 	{
@@ -178,32 +191,19 @@ public class Level
 	
 	public void calculateLight(float delta, Array<Light> lights)
 	{
-		Color acol = new Color(Ambient);
-		acol.mul(acol.a);
-		acol.a = 1;
-		
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{	
-				Grid[x][y].light = new Color(acol);
-			}
-		}
-		
 		for (Light l : lights)
 		{
-			l.update(delta);
+			if (!l.copied) { l.update(delta); }
 			calculateSingleLight(l);
+			if (l.copied)
+			{
+				Pools.free(l);
+			}
 		}
 	}
 	
 	private void calculateSingleLight(Light l)
 	{
-		if (Math.max(Math.abs(player.tile.x - l.lx), Math.abs(player.tile.y - l.ly)) > player.getStatistic(Statistic.RANGE)+(int)Math.ceil(l.actualIntensity))
-		{
-			return; // too far away
-		}
-		
 		Array<int[]> output = new Array<int[]>();
 		ShadowCaster shadow = new ShadowCaster(Grid, (int)Math.ceil(l.actualIntensity));
 		shadow.ComputeFOV(l.lx, l.ly, output);
@@ -258,11 +258,15 @@ public class Level
 	
 	private Array<Light> lightList = new Array<Light>(false, 16);
 	
+	private Array<Light> tempLightList = new Array<Light>(false, 16);
+	
 	private float updateDeltaStep = 0.05f;
 	private float updateAccumulator;
 	public void update(float delta)
 	{
 		updateAccumulator += delta;
+		
+		updatePart1.start();
 		
 		// setup player abilities
 		{
@@ -287,6 +291,10 @@ public class Level
 				}
 			}
 		}
+		
+		updatePart1.stop();
+		
+		updatePart2.start();
 		
 		if (!hasActiveEffects())
 		{	
@@ -329,34 +337,71 @@ public class Level
 			}
 		}
 		
-		updateVisibleTiles();
-		lightList.clear();
+		updatePart2.stop();
 		
+		updatePart3.start();
+		
+		updateVisible.start();
+		updateVisibleTiles();
+		lightList.clear();	
+		updateVisible.stop();
+		
+		Color acol = new Color(Ambient);
+		acol.mul(acol.a);
+		acol.a = 1;
+		
+		int playerViewRange = player.getStatistic(Statistic.RANGE);
 		for (int x = 0; x < width; x++)
 		{
 			for (int y = 0; y < height; y++)
 			{
 				GameTile tile = Grid[x][y];
 				
-				updateSpritesForTile(tile, delta);
-				updateSpriteEffectsForTile(tile, delta);
-				getLightsForTile(tile, lightList);
+				getLightsForTile(tile, lightList, playerViewRange);
 				
+				if (tile.GetVisible()) 
+				{ 
+					tile.light = new Color(acol);
+					
+					updateSprites.start();
+					updateSpritesForTile(tile, delta);
+					updateSpriteEffectsForTile(tile, delta);
+					updateSprites.stop();
+				}
+				else
+				{
+					clearEffectForTile(tile);
+				}
+				
+				updateDead.start();
 				cleanUpDeadForTile(tile);
+				updateDead.stop();
 			}
 		}
 		
+		updatePart3.stop();
+		
+		updatePart4.start();
+		
+		updateSprites.start();
 		for (ActiveAbility aa : ActiveAbilities)
 		{
 			aa.getSprite().update(delta);
 		}
+		updateSprites.stop();
 		
+		updateLights.start();
 		calculateLight(delta, lightList);
+		updateLights.stop();
 		
+		updateSounds.start();
 		for (RepeatingSoundEffect sound : ambientSounds)
 		{
 			sound.update(delta);
 		}
+		updateSounds.stop();
+		
+		updatePart4.stop();
 	}
 	
 	private void cleanUpDeadForTile(GameTile tile)
@@ -467,6 +512,23 @@ public class Level
 		}
 	}
 	
+	private void clearEffectForTile(GameTile tile)
+	{
+		tile.spriteEffects.clear();
+		
+		if (tile.environmentEntity != null)
+		{
+			tile.environmentEntity.spriteEffects.clear();
+			tile.environmentEntity.sprite.spriteAnimation = null;
+		}
+		
+		if (tile.entity != null)
+		{
+			tile.entity.spriteEffects.clear();
+			tile.entity.sprite.spriteAnimation = null;
+		}
+	}
+	
 	private void updateSpriteEffectsForTile(GameTile tile, float delta)
 	{
 		Iterator<SpriteEffect> itr = tile.spriteEffects.iterator();
@@ -502,7 +564,7 @@ public class Level
 			}
 		}
 	}
-	
+		
 	private void updateSpritesForTile(GameTile tile, float delta)
 	{
 		for (Sprite sprite : tile.tileData.sprites)
@@ -526,56 +588,85 @@ public class Level
 		}
 	}
 	
-	private void getLightsForTile(GameTile tile, Array<Light> output)
-	{
-		int x = tile.x;
-		int y = tile.y;
+	private void getLightsForTile(GameTile tile, Array<Light> output, int viewRange)
+	{		
+		int lx = tile.x;
+		int ly = tile.y;
+		
+		int px = player.tile.x;
+		int py = player.tile.y;
 		
 		if (tile.tileData.light != null)
 		{
-			Light l = tile.tileData.light.copy();
-			l.lx = x;
-			l.ly = y;
-			output.add(l);
+			if (checkLightCloseEnough(lx, ly, (int)tile.tileData.light.baseIntensity, px, py, viewRange))
+			{
+				Light l = tile.tileData.light.copy();
+				l.lx = lx;
+				l.ly = ly;
+				output.add(l);
+			}		
 		}
 		
 		if (tile.environmentEntity != null && tile.environmentEntity.light != null)
 		{
-			tile.environmentEntity.light.lx = x;
-			tile.environmentEntity.light.ly = y;
-			output.add(tile.environmentEntity.light);
+			if (checkLightCloseEnough(lx, ly, (int)tile.environmentEntity.light.baseIntensity, px, py, viewRange))
+			{
+				tile.environmentEntity.light.lx = lx;
+				tile.environmentEntity.light.ly = ly;
+				output.add(tile.environmentEntity.light);
+			}
 		}
 		
 		for (SpriteEffect se : tile.spriteEffects)
 		{
 			if (se.light != null)
 			{
-				se.light.lx = x;
-				se.light.ly = y;
-				output.add(se.light);
+				if (checkLightCloseEnough(lx, ly, (int)se.light.baseIntensity, px, py, viewRange))
+				{
+					se.light.lx = lx;
+					se.light.ly = ly;
+					output.add(se.light);
+				}
 			}
 		}
 		
 		if (tile.entity != null)
 		{
-			Array<Light> lights = tile.entity.getLight();
-			for (Light l : lights)
+			tempLightList.clear();
+			tile.entity.getLight(tempLightList);
+			for (Light l : tempLightList)
 			{
-				l.lx = x;
-				l.ly = y;
-				output.add(l);
+				if (checkLightCloseEnough(lx, ly, (int)l.baseIntensity, px, py, viewRange))
+				{
+					l.lx = lx;
+					l.ly = ly;
+					output.add(l);
+				}
 			}
 			
 			for (SpriteEffect se : tile.entity.spriteEffects)
 			{
 				if (se.light != null)
 				{
-					se.light.lx = x;
-					se.light.ly = y;
-					output.add(se.light);
+					if (checkLightCloseEnough(lx, ly, (int)se.light.baseIntensity, px, py, viewRange))
+					{
+						se.light.lx = lx;
+						se.light.ly = ly;
+						output.add(se.light);
+					}
 				}
 			}
 		}
+	}
+	
+	public boolean checkLightCloseEnough(int lx, int ly, int intensity, int px, int py, int viewRange)
+	{
+		if (Math.max(Math.abs(px - lx), Math.abs(py - ly)) > viewRange+intensity)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 	
 	private boolean hasAbilitiesToUpdate()

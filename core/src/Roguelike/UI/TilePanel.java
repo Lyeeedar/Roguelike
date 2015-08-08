@@ -7,6 +7,10 @@ import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.input.GestureDetector.GestureListener;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -18,10 +22,18 @@ import com.badlogic.gdx.utils.Array;
 
 public abstract class TilePanel extends Widget
 {
+	private final TilePanel thisRef = this;
+	
 	protected int tileSize;
 	
 	protected int viewWidth;
 	protected int viewHeight;
+	
+	protected int dataWidth;
+	protected int dataHeight;
+	
+	protected int scrollX;
+	protected int scrollY;
 	
 	protected final Skin skin;
 	protected final Stage stage;
@@ -46,7 +58,11 @@ public abstract class TilePanel extends Widget
 		this.tileSize = tileSize;
 		this.expandVertically = expandVertically;
 		
-		this.addListener(new TilePanelListener());
+		TilePanelListener listener = new TilePanelListener();
+		
+		GameScreen.Instance.inputMultiplexer.addProcessor(new GestureDetector(listener));
+				
+		this.addListener(listener);
 		this.setWidth(getPrefWidth());
 	}
 	
@@ -84,10 +100,20 @@ public abstract class TilePanel extends Widget
 		return tileSize * viewHeight;
 	}
 	
+	private void validateScroll()
+	{
+		int scrollableX = Math.max(0, dataWidth - viewWidth);
+		int scrollableY = Math.max(0, dataHeight - viewHeight);
+		
+		scrollX = MathUtils.clamp(scrollX, 0, scrollableX);
+		scrollY = MathUtils.clamp(scrollY, 0, scrollableY);
+	}
+	
 	@Override
 	public void draw (Batch batch, float parentAlpha)
 	{
 		populateTileData();
+		validateScroll();
 		
 		int xOffset = (int)getX();	
 		int top = (int)(getY()+getHeight()) - tileSize;
@@ -108,10 +134,11 @@ public abstract class TilePanel extends Widget
 		x = 0;
 		y = 0;
 		
-		Iterator<Object> itr = tileData.iterator();
-		while (itr.hasNext())
+		int scrollOffset = scrollY * viewWidth + scrollX;
+		
+		for (int i = scrollOffset; i < tileData.size; i++)
 		{
-			Object item = itr.next();
+			Object item = tileData.get(i);
 			
 			Color baseColour = item != null && item == mouseOver ? Color.WHITE : Color.LIGHT_GRAY;
 			Color itemColour = getColourForData(item);
@@ -149,28 +176,39 @@ public abstract class TilePanel extends Widget
 			}
 		}
 	}
-
-	public class TilePanelListener extends InputListener
+	
+	public class TilePanelListener extends InputListener implements GestureListener
 	{
+		boolean longPressed = false;
+		
+		boolean dragged = false;
+		float dragX;
+		float dragY;
+		
+		float lastX;
+		float lastY;
+		
 		private Object pointToItem(float x, float y)
 		{
-			if (x < 0 || y < 0 || x > getWidth() || y > getHeight()) { return null; }
+			if (x < 0 || y < 0 || x > getPrefWidth() || y > getPrefHeight()) { return null; }
 			
 			y = getHeight() - y;
 			
 			int xIndex = (int) (x / tileSize);
 			int yIndex = (int) (y / tileSize);
 			
+			if (xIndex >= viewWidth || yIndex >= viewHeight) { return null; }
+			
 			int index = yIndex * viewWidth + xIndex;			
 			if (index >= tileData.size) { return null; }
 			return tileData.get(index);
 		}
 		
-		private void setMouseOverUI(float x, float y)
+		private boolean getMouseOverUI(float x, float y)
 		{
 			if (x < 0 || y < 0 || x > getWidth() || y > getHeight())
 			{
-				GameScreen.Instance.mouseOverUI = false;
+				return false;
 			}
 			else
 			{
@@ -181,13 +219,64 @@ public abstract class TilePanel extends Widget
 				
 				if (xIndex < viewWidth && yIndex < viewHeight)
 				{
-					GameScreen.Instance.mouseOverUI = true;
+					return true;
 				}
 				else
 				{
-					GameScreen.Instance.mouseOverUI = false;
+					return false;
 				}
 			}	
+		}
+		
+		@Override
+		public void touchDragged (InputEvent event, float x, float y, int pointer)
+		{
+			if (!dragged && (Math.abs(x-dragX) > 10 || Math.abs(y-dragY) > 10))
+			{
+				dragged = true;
+				
+				lastX = x;
+				lastY = y;
+			}
+			
+			if (dragged)
+			{
+				int xdiff = (int)((x-lastX)/tileSize);
+				int ydiff = (int)((y-lastY)/tileSize);
+				
+				if (xdiff != 0)
+				{
+					scrollX += xdiff;
+					lastX = x;
+				}
+				
+				if (ydiff != 0)
+				{
+					scrollY += ydiff;
+					lastY = y;
+				}
+			}
+		}
+		
+		@Override
+		public boolean scrolled (InputEvent event, float x, float y, int amount)
+		{
+			boolean mouseOverUI = getMouseOverUI(x, y);
+			
+			if (mouseOverUI)
+			{
+				if (dataWidth > viewWidth)
+				{
+					scrollX += amount;
+				}
+				else
+				{
+					scrollY += amount;
+				}
+			}
+			
+			GameScreen.Instance.mouseOverUI = mouseOverUI;
+			return mouseOverUI;
 		}
 		
 		@Override
@@ -215,9 +304,12 @@ public abstract class TilePanel extends Widget
 			
 			mouseOver = item;
 			
-			setMouseOverUI(x, y);
+			boolean mouseOverUI = getMouseOverUI(x, y);
+			GameScreen.Instance.mouseOverUI = mouseOverUI;
 			
-			return GameScreen.Instance.mouseOverUI;
+			if (mouseOverUI) { stage.setScrollFocus(thisRef); }
+			
+			return mouseOverUI;
 		}
 		
 		@Override
@@ -231,22 +323,49 @@ public abstract class TilePanel extends Widget
 			}
 			GameScreen.Instance.clearContextMenu();
 			
+			boolean mouseOverUI = getMouseOverUI(x, y);
+			GameScreen.Instance.mouseOverUI = mouseOverUI;
+			
+			dragged = false;
+			dragX = x;
+			dragY = y;
+			
+			return mouseOverUI;
+		}
+		
+		@Override
+		public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+		{
+			if (tooltip != null)
+			{
+				tooltip.setVisible(false);
+				tooltip.remove();
+				tooltip = null;
+			}
+			GameScreen.Instance.clearContextMenu();
+			
 			Object item = pointToItem(x, y);
 			
-			if (item != null)
+			if (!longPressed && !dragged && item != null)
 			{
 				handleDataClicked(item, event, x, y);
 			}
 			
-			setMouseOverUI(x, y);
+			boolean mouseOverUI = getMouseOverUI(x, y);
+			GameScreen.Instance.mouseOverUI = mouseOverUI;
 			
-			return GameScreen.Instance.mouseOverUI;
+			//return mouseOverUI;
+			
+			dragged = false;
 		}
 		
 		@Override
 		public void enter(InputEvent event, float x, float y, int pointer, Actor toActor) 
 		{
-			setMouseOverUI(x, y);
+			boolean mouseOverUI = getMouseOverUI(x, y);
+			GameScreen.Instance.mouseOverUI = mouseOverUI;
+			
+			if (mouseOverUI) { stage.setScrollFocus(thisRef); }
 		}
 		
 		@Override
@@ -262,6 +381,77 @@ public abstract class TilePanel extends Widget
 			}
 			
 			GameScreen.Instance.mouseOverUI = false;
+		}
+
+		@Override
+		public boolean touchDown(float x, float y, int pointer, int button)
+		{
+			longPressed = false;
+			return false;
+		}
+
+		@Override
+		public boolean tap(float x, float y, int count, int button)
+		{
+			return false;
+		}
+
+		@Override
+		public boolean longPress(float x, float y)
+		{
+			longPressed = true;
+			
+			if (tooltip != null)
+			{
+				tooltip.setVisible(false);
+				tooltip.remove();
+				tooltip = null;
+			}
+			
+			Object item = pointToItem(x, y);
+			
+			if (item != null)
+			{
+				Table table = getToolTipForData(item);
+				
+				if (table != null)
+				{
+					tooltip = new Tooltip(table, skin, stage);
+					tooltip.show(x, y);
+				}
+			}
+			
+			return false;
+		}
+
+		@Override
+		public boolean fling(float velocityX, float velocityY, int button)
+		{
+			return false;
+		}
+
+		@Override
+		public boolean pan(float x, float y, float deltaX, float deltaY)
+		{
+			return false;
+		}
+
+		@Override
+		public boolean panStop(float x, float y, int pointer, int button)
+		{
+			return false;
+		}
+
+		@Override
+		public boolean zoom(float initialDistance, float distance)
+		{
+			return false;
+		}
+
+		@Override
+		public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2)
+		{
+			return false;
 		}
 	}
 }

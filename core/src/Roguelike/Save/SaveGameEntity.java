@@ -11,6 +11,7 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 {
 	public String fileName;
 	public int hp;
+	public int essence;
 	public int[] pos = new int[2];
 	public boolean isPlayer = false;
 	public Array<StatusEffect> statuses = new Array<StatusEffect>();
@@ -24,6 +25,7 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 	{
 		fileName = obj.fileName;
 		hp = obj.HP;
+		essence = obj.essence;
 		pos = new int[]{obj.tile.x, obj.tile.y};
 		for (StatusEffect status : obj.statusEffects)
 		{			
@@ -44,6 +46,7 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 	{
 		GameEntity entity = GameEntity.load(fileName);
 		
+		entity.essence = essence;
 		entity.HP = hp;
 		for (StatusEffect saveStatus : statuses)
 		{
