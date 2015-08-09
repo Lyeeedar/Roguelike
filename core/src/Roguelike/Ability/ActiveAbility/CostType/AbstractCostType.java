@@ -39,5 +39,6 @@ public abstract class AbstractCostType
 	{
 		ClassMap.put("STATUS", CostTypeStatus.class);
 		ClassMap.put("HEALTH", CostTypeHP.class);
+		ClassMap.put("CONDITION", CostTypeCondition.class);
 	}
 }

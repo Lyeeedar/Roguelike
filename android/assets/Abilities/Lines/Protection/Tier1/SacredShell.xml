@@ -1,0 +1,16 @@
+<PassiveAbility>
+	<Name>Sacred Shell</Name>
+	<Description>Gain protection against all elements.</Description>
+	<Icon>
+		<Name>Abilities/Magus/Meditate</Name>
+		<Colour><RGB>200,100,100</RGB></Colour>
+	</Icon>
+	
+	<Events>
+		<Constant>
+		    <Def>10</Def>
+		    <Hardiness>10</Hardiness>
+		</Constant>
+	</Events>
+	
+</PassiveAbility>

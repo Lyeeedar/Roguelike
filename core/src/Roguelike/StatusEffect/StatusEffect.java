@@ -89,6 +89,7 @@ public class StatusEffect extends GameEventHandler
 		icon = xmlElement.getChildByName("Icon") != null ? AssetManager.loadSprite(xmlElement.getChildByName("Icon")) : icon;
 		duration = xmlElement.getFloat("Duration", duration);
 		persistUntilProcessed = xmlElement.getBoolean("PersistUntilProcessed", persistUntilProcessed);
+		if (persistUntilProcessed) { duration = 1; }
 		
 		Element eventsElement = xmlElement.getChildByName("Events");
 		if (eventsElement != null)

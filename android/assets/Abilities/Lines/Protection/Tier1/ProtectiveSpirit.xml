@@ -1,0 +1,44 @@
+<ActiveAbility>
+	<Name>Protective Spirit</Name>
+	<Description>Reduce all incoming damage by 20%.</Description>
+	
+	<Cooldown>30</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Abilities/Ravager/Enrage</Name>
+		<Colour><RGB>178,34,34</RGB></Colour>
+	</Icon>
+	
+	<HitSprite>
+	    <Name>AbilitySprites/Shout/Shout</Name>
+	    <UpdateRate>0.1</UpdateRate>
+	    <Colour><RGB>178,34,34</RGB></Colour>
+	    <Sound><Name>roar</Name></Sound>
+	</HitSprite>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+	    <Status>
+	        <Attacker>
+	            <Duration>15</Duration>
+	            <Events>
+	                <OnReceiveDamage>
+	                    <Damage>
+							<Damage>-Damage*0.2</Damage>
+						</Damage>
+	                </OnReceiveDamage>
+	            </Events>
+	        </Attacker>
+	    </Status>
+	</Effect>
+	
+</ActiveAbility>

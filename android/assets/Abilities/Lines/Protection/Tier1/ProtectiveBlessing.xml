@@ -1,0 +1,52 @@
+<ActiveAbility>
+	<Name>Protective Blessing</Name>
+	<Description>Each time you receive damage, reduce further incoming damage by a small amount.</Description>
+	
+	<Cooldown>30</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Abilities/Ravager/Enrage</Name>
+		<Colour><RGB>178,34,34</RGB></Colour>
+	</Icon>
+	
+	<HitSprite>
+	    <Name>AbilitySprites/Shout/Shout</Name>
+	    <UpdateRate>0.1</UpdateRate>
+	    <Colour><RGB>178,34,34</RGB></Colour>
+	    <Sound><Name>roar</Name></Sound>
+	</HitSprite>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+	    <Status>
+	        <Attacker>
+	            <Duration>5</Duration>
+	            <Events>
+	                <OnReceiveDamage>
+	                    <Status>
+	                        <Defender>
+	                            <Duration>5</Duration>
+	                            <Events>
+	                                <Constant>
+	                                    <Def>5</Def>
+	                                    <Hardiness>50</Hardiness>
+	                                </Constant>
+	                            </Events>
+	                        </Defender>
+	                    </Status>
+	                </OnReceiveDamage>
+	            </Events>
+	        </Attacker>
+	    </Status>
+	</Effect>
+	
+</ActiveAbility>

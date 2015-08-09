@@ -81,8 +81,21 @@ public class DamageEvent extends AbstractOnDamageEvent
 		{
 			Element sEl = xml.getChild(i);
 			
-			Tier1Element el = Tier1Element.valueOf(sEl.getName().toUpperCase());
-			equations.put(el, sEl.getText().toLowerCase());
+			if (sEl.getName().toLowerCase().equals("damage"))
+			{
+				for (Tier1Element el : Tier1Element.values())
+				{
+					String expanded = sEl.getText().toLowerCase();
+					expanded = expanded.replaceAll("damage(?!_)", "damage_"+el.toString().toLowerCase());
+					
+					equations.put(el, expanded);
+				}
+			}
+			else
+			{
+				Tier1Element el = Tier1Element.valueOf(sEl.getName().toUpperCase());
+				equations.put(el, sEl.getText().toLowerCase());
+			}
 		}
 	}
 }

@@ -1,0 +1,36 @@
+<AbilityLine>
+	<Name>Protection</Name>
+	<Description>Control the elements, shaping them into devastating attacks.</Description>
+	<Icon>
+		<Name>Abilities/Magus/Meditate</Name>
+		<Colour><RGB>160,32,240</RGB></Colour>
+	</Icon>
+	<Tiers>
+		<Tier>
+			<ActiveAbility>
+				<Name>Protection/Tier1/Aegis</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Protection/Tier1/ReversalOfFortune</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Protection/Tier1/ProtectiveSpirit</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<PassiveAbility>
+				<Name>Protection/Tier1/SacredShell</Name>
+				<Cost>100</Cost>
+			</PassiveAbility>
+			
+			<ActiveAbility>
+				<Name>Protection/Tier1/ProtectiveBlessing</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+		</Tier>
+	</Tiers>
+</AbilityLine>

@@ -1,0 +1,46 @@
+<ActiveAbility>
+
+	<Name>Reversal of Fortune</Name>
+	<Description>Next time you would take damage, heal by that amount instead.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Abilities/Ravager/Enrage</Name>
+		<Colour><RGB>178,34,34</RGB></Colour>
+	</Icon>
+	
+	<HitSprite>
+	    <Name>AbilitySprites/Shout/Shout</Name>
+	    <UpdateRate>0.1</UpdateRate>
+	    <Colour><RGB>178,34,34</RGB></Colour>
+	    <Sound><Name>roar</Name></Sound>
+	</HitSprite>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+	    <Status>
+	        <Attacker>
+	            <PersistUntilProcessed>true</PersistUntilProcessed>
+	            <Events>
+	                <OnReceiveDamage>
+	                    <Heal><Defender>Damage</Defender></Heal>
+	                    <Damage>
+							<Damage>-Damage</Damage>
+						</Damage>
+	                </OnReceiveDamage>
+	            </Events>
+	        </Attacker>
+	    </Status>
+	</Effect>
+	
+</ActiveAbility>

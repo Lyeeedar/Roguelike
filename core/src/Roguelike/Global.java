@@ -760,9 +760,9 @@ public class Global
 			float accumulatedReduction = 0;
 			{
 				float defense = damObj.defender.statistics.get(el.Defense);
-				float hardiness = 1.0f - damObj.defender.statistics.get(el.Hardiness) / 100.0f;
+				float hardiness = 1.0f - (float)damObj.defender.statistics.get(el.Hardiness) / 100.0f;
 
-				float maxReduction = attack * hardiness;
+				float maxReduction = attack - attack * hardiness;
 
 				float reduction = defense - pierce;
 				accumulatedReduction += Math.min(reduction, maxReduction);
@@ -772,9 +772,9 @@ public class Global
 			for (GameEventHandler handler : damObj.defender.getAllHandlers())
 			{
 				float defense = handler.getStatistic(defenderVariableMap, el.Defense);
-				float hardiness = 1.0f - handler.getStatistic(defenderVariableMap, el.Hardiness) / 100.0f;
+				float hardiness = 1.0f - (float)handler.getStatistic(defenderVariableMap, el.Hardiness) / 100.0f;
 
-				float maxReduction = attack * hardiness;
+				float maxReduction = attack - attack * hardiness;
 
 				float reduction = defense - pierce;
 				accumulatedReduction += Math.min(reduction, maxReduction);

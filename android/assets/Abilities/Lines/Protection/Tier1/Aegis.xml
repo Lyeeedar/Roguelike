@@ -1,0 +1,45 @@
+<ActiveAbility>
+
+	<Name>Aegis</Name>
+	<Description>Surround yourself in a protective shield that has a chance to block attacks.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Abilities/Ravager/Enrage</Name>
+		<Colour><RGB>178,34,34</RGB></Colour>
+	</Icon>
+	
+	<HitSprite>
+	    <Name>AbilitySprites/Shout/Shout</Name>
+	    <UpdateRate>0.1</UpdateRate>
+	    <Colour><RGB>178,34,34</RGB></Colour>
+	    <Sound><Name>roar</Name></Sound>
+	</HitSprite>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+	    <Status>
+	        <Attacker>
+	            <Duration>8</Duration>
+	            <Events>
+	                <OnReceiveDamage>
+	                    <Damage Condition="rnd(1) < 0.33">
+							<Damage>-Damage</Damage>
+						</Damage>
+	                </OnReceiveDamage>
+	            </Events>
+	        </Attacker>
+	    </Status>
+	</Effect>
+	
+</ActiveAbility>

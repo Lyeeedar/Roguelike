@@ -1,0 +1,18 @@
+<StatusEffect>
+	<Name>Bleeding</Name>
+	<Description>Bleeding out.</Description>
+	<Duration>5</Duration>
+	
+	<Icon>
+		<Name>Skills/SpikeTrap</Name>
+	</Icon>
+	
+	<Events>
+		<OnTurn>
+			<DOT>
+				<Aether_Atk>10</Aether_Atk>
+			</DOT>
+		</OnTurn>
+	</Events>
+	
+</StatusEffect>
