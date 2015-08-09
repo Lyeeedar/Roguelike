@@ -99,6 +99,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		blank = AssetManager.loadTexture("Sprites/blank.png");
 		white = AssetManager.loadTexture("Sprites/white.png");
+		bag = AssetManager.loadTexture("Sprites/bag.png");
 		border = AssetManager.loadSprite("GUI/frame");
 
 		gestureDetector = new GestureDetector(this);
@@ -350,9 +351,28 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{
 					batch.setColor(gtile.light);
 					
-					for (Item i : gtile.items)
+					int cx = x*Global.TileSize + offsetx;
+					int cy = y*Global.TileSize + offsety;
+					
+					if (gtile.items.size == 0)
 					{
-						i.getIcon().render(batch, x*Global.TileSize + offsetx, y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
+						
+					}
+					else if (gtile.items.size == 1)
+					{
+						gtile.items.get(0).getIcon().render(batch, cx, cy, Global.TileSize, Global.TileSize);
+					}
+					else
+					{
+						batch.draw(bag, cx, cy, Global.TileSize, Global.TileSize);
+						
+						for (Item item : gtile.items)
+						{
+							if (item.getIcon().spriteAnimation != null)
+							{
+								item.getIcon().render(batch, cx, cy, Global.TileSize, Global.TileSize);
+							}
+						}
 					}
 				}
 			}
@@ -702,6 +722,16 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			tabPane.toggleTab(abilityPoolPanel);
 		}
+		else if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9)
+		{
+			int abilityIndex = keycode - Keys.NUM_1;
+			if (Global.abilityPool.slottedActiveAbilities[abilityIndex] != null && Global.abilityPool.slottedActiveAbilities[abilityIndex].isAvailable())
+			{
+				prepareAbility(Global.abilityPool.slottedActiveAbilities[abilityIndex]);
+			}
+		}
+		
+		
 		
 		return false;
 	}
@@ -1297,6 +1327,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private Texture blank;
 	private Texture white;
 	public InputMultiplexer inputMultiplexer;
+	private Texture bag;
 
 	private Tooltip tooltip;
 

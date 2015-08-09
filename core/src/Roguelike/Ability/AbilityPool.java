@@ -22,6 +22,7 @@ public class AbilityPool
 	public PassiveAbility[] slottedPassiveAbilities = new PassiveAbility[Global.NUM_ABILITY_SLOTS];
 	public ActiveAbility[] slottedActiveAbilities = new ActiveAbility[Global.NUM_ABILITY_SLOTS];
 	
+	//----------------------------------------------------------------------
 	public void update(float cost)
 	{
 		for (ActiveAbility a : slottedActiveAbilities)
@@ -36,6 +37,31 @@ public class AbilityPool
 					GameScreen.Instance.addAbilityAvailabilityAction(a.Icon);
 				}
 			}
+		}
+	}
+	
+	//----------------------------------------------------------------------
+	public void clearActiveAbility(ActiveAbility aa)
+	{
+		if (aa.cooldownAccumulator > 0)
+		{
+			return;
+		}
+		
+		int index = getActiveAbilityIndex(aa);
+		if (index >= 0)
+		{
+			slottedActiveAbilities[index] = null;
+		}
+	}
+	
+	//----------------------------------------------------------------------
+	public void clearPassiveAbility(PassiveAbility aa)
+	{
+		int index = getPassiveAbilityIndex(aa);
+		if (index >= 0)
+		{
+			slottedPassiveAbilities[index] = null;
 		}
 	}
 	
@@ -108,11 +134,13 @@ public class AbilityPool
 		return -1;
 	}
 	
+	//----------------------------------------------------------------------
 	public AbilityPool()
 	{
 		
 	}
 	
+	//----------------------------------------------------------------------
 	public static AbilityPool createDefaultAbilityPool()
 	{
 		AbilityPool pool = new AbilityPool();
@@ -128,16 +156,19 @@ public class AbilityPool
 		return pool;
 	}
 		
+	//----------------------------------------------------------------------
 	public void loadAbilityLine(String name)
 	{
 		abilityLines.add(AbilityLine.load(name));
 	}
 	
+	//----------------------------------------------------------------------
 	public void addAbilityLine(AbilityLine line)
 	{
 		abilityLines.add(line);
 	}
 	
+	//----------------------------------------------------------------------
 	public static class AbilityLine
 	{
 		public String fileName;
@@ -201,6 +232,7 @@ public class AbilityPool
 		public final Array<Ability[]> abilityTiers = new Array<Ability[]>();		
 	}
 	
+	//----------------------------------------------------------------------
 	public static class Ability
 	{
 		public IAbility ability;

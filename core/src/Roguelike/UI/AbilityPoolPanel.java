@@ -29,11 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Array;
 
 public class AbilityPoolPanel extends Table
-{
-	private final int ButtonHeight = 32;
-	private final int TileSize = 32;
-	private float MaxLineWidth;
-	
+{	
 	private final Texture white;
 	
 	private final Sprite locked;
@@ -42,11 +38,10 @@ public class AbilityPoolPanel extends Table
 	private final Sprite tileBorder;
 	
 	private final Sprite buttonUp;
-	private final Sprite buttonDown;
 	
-	private final Skin skin;
-	private final Stage stage;
-		
+	private final BitmapFont font;
+	private final GlyphLayout layout = new GlyphLayout();
+
 	private int selectedAbilityLine = 0;
 	
 	//----------------------------------------------------------------------
@@ -58,9 +53,8 @@ public class AbilityPoolPanel extends Table
 			
 	public AbilityPoolPanel(Skin skin, Stage stage)
 	{
-		this.skin = skin;
-		this.stage = stage;
-
+		font = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 8);
+		
 		contextMenuNormalFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 12);
 		contextMenuHilightFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 14);
 		
@@ -71,7 +65,6 @@ public class AbilityPoolPanel extends Table
 		this.tileBorder = AssetManager.loadSprite("GUI/TileBorder");
 		
 		this.buttonUp = AssetManager.loadSprite("GUI/ButtonUp");
-		this.buttonDown = AssetManager.loadSprite("GUI/ButtonDown");
 		
 		abilityLine = new AbilityLineList(skin, stage, buttonUp, tileBorder, 32);
 		abilityList = new AbilityList(skin, stage, tileBackground, tileBorder, 32);
@@ -128,7 +121,7 @@ public class AbilityPoolPanel extends Table
 			AbilityLine line = (AbilityLine)data;
 			int index = Global.abilityPool.abilityLines.indexOf(line, true);
 			
-			return selectedAbilityLine == index ? Color.LIGHT_GRAY : null;
+			return selectedAbilityLine == index ? Color.GREEN : null;
 		}
 
 		@Override
@@ -239,7 +232,7 @@ public class AbilityPoolPanel extends Table
 						
 						Table row = new Table();
 						
-						String text = ii + ".";
+						String text = (ii+1) + ".";
 						if (equipped != null)
 						{
 							text += "  " + equipped.getName();
@@ -263,7 +256,7 @@ public class AbilityPoolPanel extends Table
 							}
 						});
 
-						table.add(row).width(Value.percentWidth(1, table)).pad(2);
+						table.add(row).width(Value.percentWidth(1, table)).pad(2).padLeft(5);
 						table.row();
 					}					
 				}
@@ -276,7 +269,7 @@ public class AbilityPoolPanel extends Table
 						
 						Table row = new Table();
 						
-						String text = ii + ".";
+						String text = (ii+1) + ".";
 						if (equipped != null)
 						{
 							text += "  " + equipped.getName();
@@ -300,7 +293,7 @@ public class AbilityPoolPanel extends Table
 							}
 						});
 
-						table.add(row).width(Value.percentWidth(1, table)).pad(2);
+						table.add(row).width(Value.percentWidth(1, table)).pad(2).padLeft(5);
 						table.row();
 					}
 				}
@@ -357,6 +350,26 @@ public class AbilityPoolPanel extends Table
 				
 				batch.setColor(Color.WHITE);
 				locked.render(batch, x, y, width, height);
+			}
+			else
+			{
+				int slotIndex = -1;
+				if (a.ability instanceof ActiveAbility)
+				{
+					slotIndex = Global.abilityPool.getActiveAbilityIndex((ActiveAbility)a.ability);
+				}
+				else
+				{
+					slotIndex = Global.abilityPool.getPassiveAbilityIndex((PassiveAbility)a.ability);
+				}
+				
+				if (slotIndex >= 0)
+				{
+					slotIndex++;
+					layout.setText(font, ""+slotIndex);
+					
+					font.draw(batch, ""+slotIndex, x+width/2-layout.width/2, y+height/2-layout.height/2);
+				}
 			}
 		}
 		

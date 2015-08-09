@@ -6,6 +6,7 @@ import java.util.Iterator;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
+import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.Pathfinding.ShadowCaster;
@@ -181,9 +182,17 @@ public class Level
 						s.history.add(new SeenHistoryItem(tile.entity.sprite, "A " + tile.entity.name));
 					}
 					
-					for (Item i : tile.items)
+					if (tile.items.size == 0)
 					{
-						s.history.add(new SeenHistoryItem(i.getIcon(), "A " + i.name));
+						
+					}
+					else if (tile.items.size == 1)
+					{
+						s.history.add(new SeenHistoryItem(tile.items.get(0).getIcon(), ""));
+					}
+					else
+					{
+						s.history.add(new SeenHistoryItem(AssetManager.loadSprite("bag"), ""));
 					}
 				}
 			}
@@ -527,6 +536,11 @@ public class Level
 		{
 			tile.entity.spriteEffects.clear();
 			tile.entity.sprite.spriteAnimation = null;
+		}
+		
+		for (Item i : tile.items)
+		{
+			i.getIcon().spriteAnimation = null;
 		}
 	}
 	

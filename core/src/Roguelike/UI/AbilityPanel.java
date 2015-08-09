@@ -10,6 +10,7 @@ import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -21,12 +22,16 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 public class AbilityPanel extends TilePanel
 {			
 	private BitmapFont font;
 	private Texture white;
+	
+	private BitmapFont contextMenuNormalFont;
+	private BitmapFont contextMenuHilightFont;
 
 	private final GlyphLayout layout = new GlyphLayout();
 	
@@ -34,7 +39,10 @@ public class AbilityPanel extends TilePanel
 	{
 		super(skin, stage, AssetManager.loadSprite("GUI/TileBackground"), AssetManager.loadSprite("GUI/TileBorder"), Global.NUM_ABILITY_SLOTS, 2, 32, false);
 		
-		this.font = new BitmapFont();
+		font = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 12);
+		contextMenuNormalFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 12);
+		contextMenuHilightFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 14);
+		
 		this.white = AssetManager.loadTexture("Sprites/white.png");				
 	}
 
@@ -63,15 +71,60 @@ public class AbilityPanel extends TilePanel
 	}
 
 	@Override
-	public void handleDataClicked(Object data, InputEvent event, float x, float y)
+	public void handleDataClicked(final Object data, InputEvent event, float x, float y)
 	{
-		if (data instanceof ActiveAbility)
+		if (event.getButton() == Buttons.RIGHT)
 		{
-			ActiveAbility aa = (ActiveAbility)data;
-			
-			if (aa.isAvailable())
+			if (data != null)
+			{				
+				Table table = new Table();
+				
+				HoverTextButton button = new HoverTextButton("Clear ability slot?", contextMenuNormalFont, contextMenuHilightFont);
+				button.changePadding(5, 5);					
+				table.add(button).width(Value.percentWidth(1, table)).pad(2);
+				
+				table.addListener(new InputListener()
+				{
+					public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+					{
+						return true;
+					}
+					
+					public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+					{	
+						if (data instanceof ActiveAbility)
+						{
+							ActiveAbility aa = (ActiveAbility)data;
+							Global.abilityPool.clearActiveAbility(aa);
+						}
+						else
+						{
+							PassiveAbility pa = (PassiveAbility)data;
+							Global.abilityPool.clearPassiveAbility(pa);
+						}
+						
+						GameScreen.Instance.clearContextMenu();
+					}
+				});
+				
+				table.pack();
+				
+				Tooltip tooltip = new Tooltip(table, skin, stage);			
+				tooltip.show(event, x-tooltip.getWidth()/2, y-tooltip.getHeight()/2);
+				
+				GameScreen.Instance.contextMenu = tooltip;	
+			}
+		}
+		else
+		{
+			if (data instanceof ActiveAbility)
 			{
-				GameScreen.Instance.prepareAbility(aa);
+				ActiveAbility aa = (ActiveAbility)data;
+				
+				if (aa.isAvailable())
+				{
+					GameScreen.Instance.prepareAbility(aa);
+				}
 			}
 		}
 	}

@@ -184,9 +184,24 @@ public class InventoryPanel extends Table
 		{
 			Item item = (Item)data;
 			
-			if (item.slot != null)
+			if (event.getButton() == Buttons.RIGHT)
 			{
-				Global.CurrentLevel.player.getInventory().toggleEquip(item);
+				if (item.slot != null && Global.CurrentLevel.player.getInventory().isEquipped(item))
+				{
+					Global.CurrentLevel.player.getInventory().toggleEquip(item);
+				}
+				else
+				{
+					Global.CurrentLevel.player.getInventory().removeItem(item);
+					Global.CurrentLevel.player.tile.items.add(item);
+				}
+			}
+			else
+			{
+				if (item.slot != null)
+				{
+					Global.CurrentLevel.player.getInventory().toggleEquip(item);
+				}
 			}
 		}
 
