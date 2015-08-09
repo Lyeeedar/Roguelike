@@ -12,11 +12,39 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class AssetManager
 {
+	private static HashMap<String, BitmapFont> loadedFonts = new HashMap<String, BitmapFont>();
+	public static BitmapFont loadFont(String name, int size)
+	{
+		String key = name+size;
+		
+		if (loadedFonts.containsKey(key))
+		{
+			return loadedFonts.get(key);
+		}
+		
+		FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal(name));
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = size;
+		parameter.borderWidth = 1;
+		parameter.kerning = true;
+		parameter.borderColor = Color.BLACK;
+		BitmapFont font = fgenerator.generateFont(parameter);
+		font.getData().markupEnabled = true;
+		fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
+		
+		loadedFonts.put(key, font);
+		
+		return font;
+	}
+	
 	private static HashMap<String, Sound> loadedSounds = new HashMap<String, Sound>();
 	public static Sound loadSound(String path)
 	{

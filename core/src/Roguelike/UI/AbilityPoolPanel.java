@@ -61,29 +61,8 @@ public class AbilityPoolPanel extends Table
 		this.skin = skin;
 		this.stage = stage;
 
-		{
-			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-			parameter.size = 12;
-			parameter.borderWidth = 1;
-			parameter.kerning = true;
-			parameter.borderColor = Color.BLACK;
-			contextMenuNormalFont = fgenerator.generateFont(parameter);
-			contextMenuNormalFont.getData().markupEnabled = true;
-			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
-		}
-		
-		{
-			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-			parameter.size = 14;
-			parameter.borderWidth = 1;
-			parameter.kerning = true;
-			parameter.borderColor = Color.BLACK;
-			contextMenuHilightFont = fgenerator.generateFont(parameter);
-			contextMenuHilightFont.getData().markupEnabled = true;
-			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
-		}
+		contextMenuNormalFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 12);
+		contextMenuHilightFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 14);
 		
 		this.white = AssetManager.loadTexture("Sprites/white.png");
 		this.locked = AssetManager.loadSprite("GUI/locked");
@@ -217,15 +196,17 @@ public class AbilityPoolPanel extends Table
 					
 					table.addListener(new InputListener()
 					{
-						@Override
 						public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+						{
+							return true;
+						}
+						
+						public void touchUp (InputEvent event, float x, float y, int pointer, int button)
 						{	
 							Global.CurrentLevel.player.essence -= a.cost;
 							
 							a.unlocked = true;
 							GameScreen.Instance.clearContextMenu();
-							
-							return true;
 						}
 					});							
 				}
@@ -235,12 +216,14 @@ public class AbilityPoolPanel extends Table
 					
 					table.addListener(new InputListener()
 					{
-						@Override
 						public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-						{	
-							GameScreen.Instance.clearContextMenu();
-							
+						{
 							return true;
+						}
+						
+						public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+						{	
+							GameScreen.Instance.clearContextMenu();						
 						}
 					});												
 				}
@@ -268,13 +251,15 @@ public class AbilityPoolPanel extends Table
 						
 						row.addListener(new InputListener()
 						{
-							@Override
 							public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+							{
+								return true;
+							}
+							
+							public void touchUp (InputEvent event, float x, float y, int pointer, int button)
 							{	
 								Global.abilityPool.slotActiveAbility((ActiveAbility)a.ability, index);
 								GameScreen.Instance.clearContextMenu();
-								
-								return true;
 							}
 						});
 
@@ -303,13 +288,15 @@ public class AbilityPoolPanel extends Table
 						
 						row.addListener(new InputListener()
 						{
-							@Override
 							public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+							{
+								return true;
+							}
+							
+							public void touchUp (InputEvent event, float x, float y, int pointer, int button)
 							{	
 								Global.abilityPool.slotPassiveAbility((PassiveAbility)a.ability, index);
 								GameScreen.Instance.clearContextMenu();
-								
-								return true;
 							}
 						});
 

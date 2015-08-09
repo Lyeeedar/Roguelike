@@ -54,10 +54,13 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 		}
 		entity.inventory = inventory;
 		
-		for (int i = 0; i < abilityCooldown.size; i++)
+		if (!isPlayer) 
 		{
-			entity.slottedActiveAbilities.get(i).cooldownAccumulator = abilityCooldown.get(i).val;
-		}
+			for (int i = 0; i < abilityCooldown.size; i++)
+			{
+				entity.slottedActiveAbilities.get(i).cooldownAccumulator = abilityCooldown.get(i).val;
+			}
+		}		
 		
 		entity.UID = UID;
 		

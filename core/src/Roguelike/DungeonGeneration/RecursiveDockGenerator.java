@@ -68,12 +68,31 @@ public class RecursiveDockGenerator
 				symbolGrid[x][y] = tiles[x][y].symbol;
 			}
 		}
+		
+//		for (int x = 0; x < width; x++)
+//		{
+//			for (int y = 0; y < height; y++)
+//			{
+//				System.out.print(symbolGrid[x][y].character);
+//			}
+//			System.out.print("\n");
+//		}
+//		System.out.println("\n");
 
 		// minimise
 		symbolGrid = RecursiveDockGenerator.minimiseGrid(symbolGrid, dfp.sharedSymbolMap.get('#'));
-
 		width = symbolGrid.length;
 		height = symbolGrid[0].length;
+		
+//		for (int x = 0; x < width; x++)
+//		{
+//			for (int y = 0; y < height; y++)
+//			{
+//				System.out.print(symbolGrid[x][y].character);
+//			}
+//			System.out.print("\n");
+//		}
+//		System.out.println("\n");
 
 		GameTile[][] actualTiles = new GameTile[width][height];
 		Level level = new Level(actualTiles);
@@ -430,79 +449,97 @@ public class RecursiveDockGenerator
 		int miny = -1;
 		int maxx = -1;
 		int maxy = -1;
+		
+		boolean complete = false;
 
 		// find min x
-		loop:
-			for (int x = 0; x < width; x++)
-			{
-				for (int y = 0; y < height; y++)
-				{
-					if (grid[x][y] != wall)
-					{
-						minx = x-1;
-						break loop;
-					}
-				}
-			}
-
-		// find min y
-		loop:
+		for (int x = 0; x < width; x++)
+		{
 			for (int y = 0; y < height; y++)
 			{
-				for (int x = minx; x < width; x++)
+				Symbol s = grid[x][y];
+				if (s.character != wall.character)
 				{
-					if (grid[x][y] != wall)
-					{
-						miny = y-1;
-						break loop;
-					}
+					minx = x-1;
+
+					complete = true;
+					break;
 				}
 			}
+			if (complete) { break; }
+		}
 
-			// find max x
-			loop:
-				for (int x = width-1; x >= minx; x--)
+		// find min y
+		complete = false;
+		for (int y = 0; y < height; y++)
+		{
+			for (int x = minx; x < width; x++)
+			{
+				Symbol s = grid[x][y];
+				if (s.character != wall.character)
 				{
-					for (int y = miny; y < height; y++)
-					{
-						if (grid[x][y] != wall)
-						{
-							maxx = x + 2;
-							break loop;
-						}
-					}
-				}
+					miny = y-1;
 
-			// find max y
-			loop:
-				for (int y = height-1; y >= miny; y--)
+					complete = true;
+					break;
+				}
+			}
+			if (complete) { break; }
+		}
+
+		// find max x
+		complete = false;
+		for (int x = width-1; x >= minx; x--)
+		{
+			for (int y = miny; y < height; y++)
+			{
+				Symbol s = grid[x][y];
+				if (s.character != wall.character)
 				{
-					for (int x = minx; x < maxx; x++)
-					{
-						if (grid[x][y] != wall)
-						{
-							maxy = y + 2;
-							break loop;
-						}
-					}
+					maxx = x + 2;
+
+					complete = true;
+					break;
 				}
+			}
+			if (complete) { break; }
+		}
 
-				// minimise room
-				int newwidth = maxx - minx;
-				int newheight = maxy - miny;
-
-				Symbol[][] newgrid = new Symbol[newwidth][newheight];
-
-				for (int x = 0; x < newwidth; x++)
+		// find max y
+		complete = false;
+		for (int y = height-1; y >= miny; y--)
+		{
+			for (int x = minx; x < maxx; x++)
+			{
+				Symbol s = grid[x][y];
+				if (s.character != wall.character)
 				{
-					for (int y = 0; y < newheight; y++)
-					{
-						newgrid[x][y] = grid[minx+x][miny+y];
-					}
-				}
+					maxy = y + 2;
 
-				return newgrid;
+					complete = true;
+					break;
+				}
+			}
+			if (complete) { break; }
+		}
+
+		// minimise room
+		int newwidth = maxx - minx;
+		int newheight = maxy - miny;
+
+		Symbol[][] newgrid = new Symbol[newwidth][newheight];
+
+		for (int x = 0; x < newwidth; x++)
+		{
+			for (int y = 0; y < newheight; y++)
+			{
+				newgrid[x][y] = grid[minx+x][miny+y];
+			}
+		}
+
+		return newgrid;
 	}
+	
 
 	//endregion Public Methods
 	//####################################################################//
@@ -1080,8 +1117,8 @@ public class RecursiveDockGenerator
 	private GenerationTile[][] tiles;
 	public Random ran;
 
-	private int width = 50;
-	private int height = 50;
+	private int width = 20;
+	private int height = 20;
 
 	private int minPadding = 1;
 	private int maxPadding = 3;

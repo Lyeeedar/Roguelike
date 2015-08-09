@@ -91,7 +91,7 @@ public class Level
 			for (int y = 0; y < height; y++)
 			{
 				SeenGrid[x][y] = new SeenTile();
-				SeenGrid[x][y].GameTile = Grid[x][y];
+				SeenGrid[x][y].gameTile = Grid[x][y];
 			}
 		}
 	}
@@ -134,14 +134,14 @@ public class Level
 				if (!SeenGrid[x][y].seen)
 				{
 					SeenTile s = SeenGrid[x][y];
-					s.GameTile = Grid[x][y];
+					s.gameTile = Grid[x][y];
 					s.seen = true;
 					
-					s.History.clear();
+					s.history.clear();
 					
 					for (Sprite sprite : Grid[x][y].tileData.sprites)
 					{
-						s.History.add(new SeenHistoryItem(sprite, Grid[x][y].tileData.description));
+						s.history.add(new SeenHistoryItem(sprite, Grid[x][y].tileData.description));
 					}
 				}
 			}
@@ -158,31 +158,31 @@ public class Level
 				if (tile.GetVisible())
 				{
 					SeenTile s = SeenGrid[x][y];
-					s.GameTile = tile;
+					s.gameTile = tile;
 					s.seen = true;
 					
-					s.History.clear();
+					s.history.clear();
 					
 					for (Sprite sprite : tile.tileData.sprites)
 					{
-						s.History.add(new SeenHistoryItem(sprite, tile.tileData.description));
+						s.history.add(new SeenHistoryItem(sprite, tile.tileData.description));
 					}
 					
 					if (tile.environmentEntity != null)
 					{
 						SeenHistoryItem shi = new SeenHistoryItem(tile.environmentEntity.sprite, "");
 						shi.location = tile.environmentEntity.location;
-						s.History.add(shi);
+						s.history.add(shi);
 					}
 										
-					if (tile.entity != null)
+					if (tile.entity != null && tile.entity != player)
 					{						
-						s.History.add(new SeenHistoryItem(tile.entity.sprite, "A " + tile.entity.name));
+						s.history.add(new SeenHistoryItem(tile.entity.sprite, "A " + tile.entity.name));
 					}
 					
 					for (Item i : tile.items)
 					{
-						s.History.add(new SeenHistoryItem(i.getIcon(), "A " + i.name));
+						s.history.add(new SeenHistoryItem(i.getIcon(), "A " + i.name));
 					}
 				}
 			}

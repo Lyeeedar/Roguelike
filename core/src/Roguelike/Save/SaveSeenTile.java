@@ -8,13 +8,15 @@ import com.badlogic.gdx.utils.Array;
 public class SaveSeenTile extends SaveableObject<SeenTile>
 {
 	public boolean seen = false;
-	public Array<SeenHistoryItem> History = new Array<SeenHistoryItem>();
+	public Array<SeenHistoryItem> history = new Array<SeenHistoryItem>();
 	
 	@Override
 	public void store(SeenTile obj)
 	{
 		seen = obj.seen;
-		History = obj.History;
+		
+		history.clear();
+		history.addAll(obj.history);
 	}
 	
 	@Override
@@ -22,7 +24,9 @@ public class SaveSeenTile extends SaveableObject<SeenTile>
 	{
 		SeenTile tile = new SeenTile();
 		tile.seen = seen;
-		tile.History = History;
+		
+		tile.history.clear();
+		tile.history.addAll(history);
 		
 		return tile;
 	}

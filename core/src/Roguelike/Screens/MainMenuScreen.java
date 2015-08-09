@@ -36,55 +36,11 @@ public class MainMenuScreen implements Screen
 	
 	private void create()
 	{
-		BitmapFont font;
-		{
-			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-			parameter.size = 60;
-			parameter.borderWidth = 1;
-			parameter.kerning = true;
-			parameter.borderColor = Color.BLACK;
-			font = fgenerator.generateFont(parameter); // font size 12 pixels
-			font.getData().markupEnabled = true;
-			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
-		}
-		
-		{
-			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-			parameter.size = 55;
-			parameter.borderWidth = 1;
-			parameter.kerning = true;
-			parameter.borderColor = Color.BLACK;
-			titleFont = fgenerator.generateFont(parameter); // font size 12 pixels
-			titleFont.getData().markupEnabled = true;
-			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
-		}
-		
-		{
-			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-			parameter.size = 30;
-			parameter.borderWidth = 1;
-			parameter.kerning = true;
-			parameter.borderColor = Color.BLACK;
-			normalFont = fgenerator.generateFont(parameter); // font size 12 pixels
-			normalFont.getData().markupEnabled = true;
-			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
-		}
-		
-		{
-			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-			parameter.size = 35;
-			parameter.borderWidth = 1;
-			parameter.kerning = true;
-			parameter.borderColor = Color.BLACK;
-			highlightFont = fgenerator.generateFont(parameter); // font size 12 pixels
-			highlightFont.getData().markupEnabled = true;
-			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
-		}
-		
+		BitmapFont font = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 60);
+		titleFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 55);
+		normalFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 30);
+		highlightFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 35);
+
 		skin = new Skin();
 		skin.addRegions(new TextureAtlas(Gdx.files.internal("GUI/uiskin.atlas")));
 		skin.add("default-font", font, BitmapFont.class);
@@ -116,10 +72,13 @@ public class MainMenuScreen implements Screen
 		{
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 			{
+				return true;
+			}
+			
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+			{
 				Global.newGame();
 				RoguelikeGame.Instance.switchScreen(ScreenEnum.GAME);
-				
-				return true;
 			}
 		});
 		
@@ -132,9 +91,12 @@ public class MainMenuScreen implements Screen
 		{
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 			{
-				Gdx.app.exit();
-				
 				return true;
+			}
+			
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+			{
+				Gdx.app.exit();
 			}
 		});
 		
@@ -163,7 +125,7 @@ public class MainMenuScreen implements Screen
 		
 		batch.begin();
 		
-		batch.draw(background, 0, 0, Global.Resolution[0], Global.Resolution[1]);
+		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		batch.end();
 		

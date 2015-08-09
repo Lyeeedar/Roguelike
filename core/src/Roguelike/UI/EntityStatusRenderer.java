@@ -18,21 +18,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
 public class EntityStatusRenderer
-{
-	private static BitmapFont font;
-	static
-	{
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = 8;
-		parameter.borderWidth = 1;
-		parameter.borderColor = Color.BLACK;
-		font = generator.generateFont(parameter); // font size 12 pixels
-		generator.dispose(); // don't forget to dispose to avoid memory leaks!
-	}
-	
+{	
 	public static void draw(Entity entity, Batch batch, int x, int y, int width, int height, float heightScale)
 	{		
+		BitmapFont font = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 8);
+		
 		float val = (float)entity.HP / (float)entity.getStatistic(Statistic.MAXHP);
 		float barheight = height * heightScale;
 		drawHpBar(val, batch, x, y, width, height, heightScale);

@@ -30,7 +30,7 @@ public class Symbol implements PathfindingTile
 	public String metaValue;
 	
 	//----------------------------------------------------------------------
-	private Element processedTileData;	
+	private long processedTileData;	
 	private EnumSet<Passability> tilePassable;	
 	//----------------------------------------------------------------------
 	
@@ -101,7 +101,7 @@ public class Symbol implements PathfindingTile
 	{
 		TileData data = TileData.parse(tileData);
 		
-		processedTileData = tileData;
+		processedTileData = tileData.hashCode();
 		tilePassable = data.passableBy;
 		
 		return data;
@@ -154,7 +154,7 @@ public class Symbol implements PathfindingTile
 
 	public boolean isPassable(Array<Passability> travelType)
 	{
-		if (processedTileData != tileData)
+		if (processedTileData != tileData.hashCode())
 		{
 			getTileData();
 		}

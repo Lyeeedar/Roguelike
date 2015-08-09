@@ -59,8 +59,10 @@ public class SaveLevel extends SaveableObject<Level>
 		seed = obj.seed;
 		UID = obj.UID;
 		
-		requiredRooms = obj.requiredRooms;
+		requiredRooms.clear();
+		requiredRooms.addAll(obj.requiredRooms);
 		
+		gameEntities.clear();
 		for (GameEntity entity : obj.getAllEntities())
 		{
 			SaveGameEntity saveObj = new SaveGameEntity();
@@ -73,6 +75,7 @@ public class SaveLevel extends SaveableObject<Level>
 			}
 		}
 		
+		items.clear();
 		for (int x = 0; x < obj.width; x++)
 		{
 			for (int y = 0; y < obj.height; y++)
@@ -85,6 +88,7 @@ public class SaveLevel extends SaveableObject<Level>
 			}
 		}
 		
+		environmentEntities.clear();
 		for (EnvironmentEntity entity : obj.getAllEnvironmentEntities())
 		{
 			if (entity.canTakeDamage)
@@ -114,7 +118,8 @@ public class SaveLevel extends SaveableObject<Level>
 		RecursiveDockGenerator generator = new RecursiveDockGenerator(fileName, depth, seed, !created, UID);
 		created = true;
 
-		generator.additionalRooms = requiredRooms;
+		generator.additionalRooms.clear();
+		generator.additionalRooms.addAll(requiredRooms);
 				
 		generator.generate();
 		Level level = generator.getLevel();

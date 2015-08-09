@@ -93,41 +93,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		batch = new SpriteBatch();
 
-		{
-			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-			parameter.size = 12;
-			parameter.borderWidth = 1;
-			parameter.kerning = true;
-			parameter.borderColor = Color.BLACK;
-			font = fgenerator.generateFont(parameter); // font size 12 pixels
-			font.getData().markupEnabled = true;
-			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
-		}
-		
-		{
-			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-			parameter.size = 12;
-			parameter.borderWidth = 1;
-			parameter.kerning = true;
-			parameter.borderColor = Color.BLACK;
-			contextMenuNormalFont = fgenerator.generateFont(parameter);
-			contextMenuNormalFont.getData().markupEnabled = true;
-			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
-		}
-		
-		{
-			FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator(Gdx.files.internal("Sprites/GUI/stan0755.ttf"));
-			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-			parameter.size = 14;
-			parameter.borderWidth = 1;
-			parameter.kerning = true;
-			parameter.borderColor = Color.BLACK;
-			contextMenuHilightFont = fgenerator.generateFont(parameter);
-			contextMenuHilightFont.getData().markupEnabled = true;
-			fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
-		}
+		font = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 12);
+		contextMenuNormalFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 12);
+		contextMenuHilightFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 14);
 
 		blank = AssetManager.loadTexture("Sprites/blank.png");
 		white = AssetManager.loadTexture("Sprites/white.png");
@@ -348,7 +316,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{					
 					batch.setColor(Global.CurrentLevel.Ambient);
 
-					for (SeenHistoryItem hist : stile.History)
+					for (SeenHistoryItem hist : stile.history)
 					{
 						int cx = x*Global.TileSize + offsetx;
 						int cy = y*Global.TileSize + offsety;
@@ -585,54 +553,56 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		batch.end();
 		
-		updateCounter.tick();
-		tileRender.tick();
-		itemRender.tick();
-		entityRender.tick();
-		effectRender.tick();
-		uiRender.tick();
-		
-		Level.updateDead.tick();
-		Level.updateLights.tick();
-		Level.updateSounds.tick();
-		Level.updateSprites.tick();
-		Level.updateVisible.tick();
-
-		Level.updatePart1.tick();
-		Level.updatePart2.tick();
-		Level.updatePart3.tick();
-		Level.updatePart4.tick();
-		
-		debugOut += delta;
-		if (debugOut > 1)
+		if (DEBUG)
 		{
-			debugOut = 0;
+			updateCounter.tick();
+			tileRender.tick();
+			itemRender.tick();
+			entityRender.tick();
+			effectRender.tick();
+			uiRender.tick();
 			
-			System.out.println("Timers:");
+			Level.updateDead.tick();
+			Level.updateLights.tick();
+			Level.updateSounds.tick();
+			Level.updateSprites.tick();
+			Level.updateVisible.tick();
+	
+			Level.updatePart1.tick();
+			Level.updatePart2.tick();
+			Level.updatePart3.tick();
+			Level.updatePart4.tick();
 			
-			System.out.println(updateCounter.toString());
-			System.out.println(tileRender.toString());
-			System.out.println(itemRender.toString());
-			System.out.println(entityRender.toString());
-			System.out.println(effectRender.toString());
-			System.out.println(uiRender.toString());
-			
-			System.out.print("\n");
-			
-			System.out.println(Level.updateDead.toString());
-			System.out.println(Level.updateLights.toString());
-			System.out.println(Level.updateSounds.toString());
-			System.out.println(Level.updateSprites.toString());
-			System.out.println(Level.updateVisible.toString());
-			System.out.println(Level.updatePart1.toString());
-			System.out.println(Level.updatePart2.toString());
-			System.out.println(Level.updatePart3.toString());
-			System.out.println(Level.updatePart4.toString());
-			
-			System.out.println("\n");
+			debugOut += delta;
+			if (debugOut > 1)
+			{
+				debugOut = 0;
+				
+				System.out.println("Timers:");
+				
+				System.out.println(updateCounter.toString());
+				System.out.println(tileRender.toString());
+				System.out.println(itemRender.toString());
+				System.out.println(entityRender.toString());
+				System.out.println(effectRender.toString());
+				System.out.println(uiRender.toString());
+				
+				System.out.print("\n");
+				
+				System.out.println(Level.updateDead.toString());
+				System.out.println(Level.updateLights.toString());
+				System.out.println(Level.updateSounds.toString());
+				System.out.println(Level.updateSprites.toString());
+				System.out.println(Level.updateVisible.toString());
+				System.out.println(Level.updatePart1.toString());
+				System.out.println(Level.updatePart2.toString());
+				System.out.println(Level.updatePart3.toString());
+				System.out.println(Level.updatePart4.toString());
+				
+				System.out.println("\n");
+			}
 		}
 	}
-	float debugOut = 0;
 
 	//----------------------------------------------------------------------
 	@Override
@@ -1269,6 +1239,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	//####################################################################//
 	//region Data
 	
+	private static final boolean DEBUG = false;
+	private float debugOut = 0;
+	
 	private PerformanceCounter updateCounter = new PerformanceCounter("Update");
 	private PerformanceCounter tileRender = new PerformanceCounter("TileRender");
 	private PerformanceCounter itemRender = new PerformanceCounter("ItemRender");
@@ -1311,33 +1284,33 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private float screenShakeAccumulator;	
 
 	//----------------------------------------------------------------------
-	InventoryPanel inventoryPanel;
-	AbilityPanel abilityPanel;
-	AbilityPoolPanel abilityPoolPanel;
-	HPWidget hpWidget;
-	MessageStack messageStack;
-	TabPanel tabPane;
+	private InventoryPanel inventoryPanel;
+	private AbilityPanel abilityPanel;
+	private AbilityPoolPanel abilityPoolPanel;
+	private HPWidget hpWidget;
+	private MessageStack messageStack;
+	private TabPanel tabPane;
 
-	Skin skin;
-	Stage stage;
-	SpriteBatch batch;
-	Texture blank;
-	Texture white;
+	private Skin skin;
+	private Stage stage;
+	private SpriteBatch batch;
+	private Texture blank;
+	private Texture white;
 	public InputMultiplexer inputMultiplexer;
 
-	Tooltip tooltip;
+	private Tooltip tooltip;
 
 	public boolean mouseOverUI;
 
 	//----------------------------------------------------------------------
-	Array<GameEntity> toBeDrawn = new Array<GameEntity>();
-	Array<EnvironmentEntity> overHead = new Array<EnvironmentEntity>();
-	Array<Entity> hpBars = new Array<Entity>();
+	private Array<GameEntity> toBeDrawn = new Array<GameEntity>();
+	private Array<EnvironmentEntity> overHead = new Array<EnvironmentEntity>();
+	private Array<Entity> hpBars = new Array<Entity>();
 
 	//----------------------------------------------------------------------
-	Sprite border;
-	int mousePosX;
-	int mousePosY;
+	private Sprite border;
+	private int mousePosX;
+	private int mousePosY;
 
 	//----------------------------------------------------------------------
 	public static GameScreen Instance;

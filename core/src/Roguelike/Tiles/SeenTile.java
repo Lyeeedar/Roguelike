@@ -13,14 +13,14 @@ import com.badlogic.gdx.utils.Array;
 public class SeenTile
 {
 	public boolean seen = false;
-	public Array<SeenHistoryItem> History = new Array<SeenHistoryItem>();
-	public GameTile GameTile;
+	public Array<SeenHistoryItem> history = new Array<SeenHistoryItem>();
+	public GameTile gameTile;
 			
 	public Table createTable(Skin skin)
 	{
 		Table table = new Table();
 		
-		if (GameTile.GetVisible())
+		if (gameTile.GetVisible())
 		{
 			table.add(new Label("You see:", skin));
 		}
@@ -31,7 +31,7 @@ public class SeenTile
 		
 		table.row();
 		
-		for (SeenHistoryItem shi : History)
+		for (SeenHistoryItem shi : history)
 		{
 			Label l = new Label(shi.description, skin);
 			l.setWrap(true);
