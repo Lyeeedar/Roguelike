@@ -7,21 +7,20 @@
 	<Range>5</Range>
 	
 	<Icon>
-		<Name>Abilities/Magus/MagicMissile</Name>
-		<Colour><RGB>200,100,100</RGB></Colour>
+		<Name>Abilities/BloodMagic/BloodBullet</Name>
+		<Colour><RGB>153,0,0</RGB></Colour>
 	</Icon>
 	
 	<HitSprite>
-		<Name>Fireburst/Fireburst</Name>
+		<Name>AbilitySprites/Splatter/Splatter</Name>
 		<UpdateRate>0.1</UpdateRate>
-		<Sound>
-		    <Name>fire_torch_pass_by_large_heavy_with_crackle_2</Name>
-		</Sound>
+		<Colour><RGB>153,0,0</RGB></Colour>
 	</HitSprite>
 	
 	<MovementSprite>
 		<Name>bolt</Name>
 		<UpdateRate>0.1</UpdateRate>
+		<Colour><RGB>153,0,0</RGB></Colour>
 	</MovementSprite>
 	
 	<Cost>

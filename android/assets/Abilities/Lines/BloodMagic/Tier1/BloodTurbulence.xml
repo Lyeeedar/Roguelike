@@ -8,16 +8,14 @@
 	<AOE>2</AOE>
 	
 	<Icon>
-		<Name>Abilities/Pyromaniac/Flamestrike</Name>
-		<Colour><RGB>200,100,100</RGB></Colour>
+		<Name>Abilities/BloodMagic/BloodTurbulence</Name>
+		<Colour><RGB>153,0,0</RGB></Colour>
 	</Icon>
 	
 	<HitSprite>
-		<Name>AbilitySprites/FireBurst/FireBurst</Name>
+		<Name>AbilitySprites/Splatter/Splatter</Name>
 		<UpdateRate>0.1</UpdateRate>
-		<Sound>
-		    <Name>fire_torch_pass_by_large_heavy_with_crackle_2</Name>
-		</Sound>
+		<Colour><RGB>153,0,0</RGB></Colour>
 	</HitSprite>
 	
 	<Targeting>

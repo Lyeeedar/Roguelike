@@ -7,9 +7,15 @@
 	<Range>3</Range>
 	
 	<Icon>
-		<Name>Abilities/Magus/MagicMissile</Name>
-		<Colour><RGB>200,100,100</RGB></Colour>
+		<Name>Abilities/BloodMagic/CardiacArrest</Name>
+		<Colour><RGB>153,0,0</RGB></Colour>
 	</Icon>
+	
+	<HitSprite>
+		<Name>AbilitySprites/Splatter/Splatter</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Colour><RGB>153,0,0</RGB></Colour>
+	</HitSprite>
 	
 	<Targeting>
 		<Entity Type="Enemy"></Entity>

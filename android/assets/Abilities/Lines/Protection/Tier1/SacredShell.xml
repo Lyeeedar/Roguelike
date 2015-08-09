@@ -2,8 +2,8 @@
 	<Name>Sacred Shell</Name>
 	<Description>Gain protection against all elements.</Description>
 	<Icon>
-		<Name>Abilities/Magus/Meditate</Name>
-		<Colour><RGB>200,100,100</RGB></Colour>
+		<Name>Abilities/Protection/SacredShell</Name>
+		<Colour><RGB>210,247,247</RGB></Colour>
 	</Icon>
 	
 	<Events>
