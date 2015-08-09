@@ -1,0 +1,36 @@
+<ActiveAbility>
+
+	<Name>Cardiac Arrest</Name>
+	<Description>Temporarily stop your targets heart, causing them to stop in their tracks and take damage.</Description>
+	
+	<Cooldown>15</Cooldown>
+	<Range>3</Range>
+	
+	<Icon>
+		<Name>Abilities/Magus/MagicMissile</Name>
+		<Colour><RGB>200,100,100</RGB></Colour>
+	</Icon>
+	
+	<Targeting>
+		<Entity Type="Enemy"></Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite />
+	</Movement>
+	
+	<Effect>
+		<Status>	    
+		    <Defender>	        
+		        <Duration>6</Duration>
+		        <Events>	            
+		            <OnMove><Cancel/></OnMove>
+		            <OnTurn>
+		                <DOT><Aether_Atk>20+Aether_Atk/20</Aether_Atk></DOT>
+		            </OnTurn>        
+		       	</Events> 
+		    </Defender>
+		</Status>
+	</Effect>
+	
+</ActiveAbility>

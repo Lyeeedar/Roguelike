@@ -40,6 +40,7 @@ public abstract class AbstractOnTaskEvent
 	{
 		ClassMap.put("CANCEL", CancelTaskEvent.class);
 		ClassMap.put("COST", CostTaskEvent.class);
+		ClassMap.put("DAMAGE", DamageTaskEvent.class);
 		ClassMap.put("STATUS", StatusTaskEvent.class);
 	}
 }

@@ -1,18 +1,18 @@
 <ActiveAbility>
 
-	<Name>Magic Missile</Name>
-	<Description>A bolt of pure elemental energy shoots at a nearby foe.</Description>
+	<Name>Blood Bullet</Name>
+	<Description>Sacrifice some health to fire a bullet of blood at your target.</Description>
 	
-	<Cooldown>7</Cooldown>
+	<Cooldown>5</Cooldown>
 	<Range>5</Range>
 	
 	<Icon>
 		<Name>Abilities/Magus/MagicMissile</Name>
-		<Colour><RGB>160,32,240</RGB></Colour>
+		<Colour><RGB>200,100,100</RGB></Colour>
 	</Icon>
 	
 	<HitSprite>
-		<Name>firebolt/firebolt</Name>
+		<Name>Fireburst/Fireburst</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Sound>
 		    <Name>fire_torch_pass_by_large_heavy_with_crackle_2</Name>
@@ -24,13 +24,12 @@
 		<UpdateRate>0.1</UpdateRate>
 	</MovementSprite>
 	
-	<Type>
-		<Harmful>
-		</Harmful>
-	</Type>
+	<Cost>
+	    <HEALTH>MaxHP/50</HEALTH>
+	</Cost>
 	
 	<Targeting>
-		<Entity></Entity>
+		<Entity Type="Enemy"></Entity>
 	</Targeting>
 	
 	<Movement>
@@ -39,11 +38,7 @@
 	
 	<Effect>
 		<Damage>
-			<Metal_Atk>20</Metal_Atk>
-			<Wood_ATK>20</Wood_ATK>
-			<Air_ATK>20</Air_ATK>
-			<Water_ATK>20</Water_ATK>
-			<Fire_ATK>20</Fire_ATK>
+			<Aether_Atk>MaxHP/10</Aether_Atk>
 		</Damage>
 	</Effect>
 	

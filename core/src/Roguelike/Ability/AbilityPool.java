@@ -122,6 +122,7 @@ public class AbilityPool
 		pool.loadAbilityLine("Life/Life");
 		pool.loadAbilityLine("Magus/Magus");
 		pool.loadAbilityLine("Lancer/Lancer");
+		pool.loadAbilityLine("BloodMagic/BloodMagic");
 		
 		return pool;
 	}

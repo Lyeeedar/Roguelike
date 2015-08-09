@@ -386,6 +386,16 @@ public class Global
 		ENTITY,
 
 		// Elemental stats
+		AETHER_ATK,
+		AETHER_PIERCE,
+		AETHER_DEF,
+		AETHER_HARDINESS,
+		
+		VOID_ATK,
+		VOID_PIERCE,
+		VOID_DEF,
+		VOID_HARDINESS,
+		
 		METAL_ATK,
 		METAL_PIERCE,
 		METAL_DEF,
@@ -411,7 +421,16 @@ public class Global
 		FIRE_DEF,
 		FIRE_HARDINESS		
 		;
-
+		
+		public static HashMap<String, Integer> emptyMap = new HashMap<String, Integer>();
+		static
+		{
+			for (Statistic s : Statistic.values())
+			{
+				emptyMap.put(s.toString().toLowerCase(), 0);
+			}
+		}
+		
 		public static HashMap<String, Integer> statsBlockToVariableBlock(EnumMap<Statistic, Integer> stats)
 		{
 			HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
@@ -492,6 +511,8 @@ public class Global
 	//----------------------------------------------------------------------
 	public enum Tier1Element
 	{
+		AETHER(Color.RED),
+		VOID(Color.DARK_GRAY),
 		METAL(Color.LIGHT_GRAY),
 		WOOD(Color.GREEN),
 		AIR(Color.CYAN),

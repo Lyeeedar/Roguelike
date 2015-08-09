@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public abstract class Entity
-{
+{	
 	//----------------------------------------------------------------------
 	public Array<Passability> getTravelType()
 	{
@@ -116,7 +116,7 @@ public abstract class Entity
 
 		for (Statistic s : Statistic.values())
 		{
-			variableMap.put(s.toString().toLowerCase(), statistics.get(s));
+			variableMap.put(s.toString().toLowerCase(), statistics.get(s) + inventory.getStatistic(Statistic.emptyMap, s));
 		}
 
 		variableMap.put("hp", HP);

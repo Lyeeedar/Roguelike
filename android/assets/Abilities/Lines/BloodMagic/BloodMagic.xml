@@ -1,0 +1,36 @@
+<AbilityLine>
+	<Name>Blood Magic</Name>
+	<Description>Harness the power of blood and soul, turning your lifeforce into a weapon.</Description>
+	<Icon>
+		<Name>Abilities/Magus/Meditate</Name>
+		<Colour><RGB>200,100,100</RGB></Colour>
+	</Icon>
+	<Tiers>
+		<Tier>
+			<ActiveAbility>
+				<Name>BloodMagic/Tier1/BloodBullet</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>BloodMagic/Tier1/CardiacArrest</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>BloodMagic/Tier1/OpenVein</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<PassiveAbility>
+				<Name>BloodMagic/Tier1/VitalCatalyst</Name>
+				<Cost>100</Cost>
+			</PassiveAbility>
+			
+			<ActiveAbility>
+				<Name>BloodMagic/Tier1/BloodTurbulence</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+		</Tier>
+	</Tiers>
+</AbilityLine>

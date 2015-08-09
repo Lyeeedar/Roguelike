@@ -7,6 +7,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
 import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.Items.Item;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
@@ -111,6 +112,11 @@ public class EffectTypeDamage extends AbstractEffectType
 		
 		for (GameEventHandler handler : aa.caster.getAllHandlers())
 		{
+			if (handler instanceof Item)
+			{
+				continue;
+			}
+			
 			for (Statistic s : Statistic.values())
 			{
 				int val = handler.getStatistic(variableMap, s);

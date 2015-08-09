@@ -64,6 +64,28 @@ public class TaskAttack extends AbstractTask
 
 		return hitSomething;
 	}
+	
+	public boolean canAttackTile(GameEntity obj, GameTile tile)
+	{
+		// Collect data
+		GameTile oldTile = obj.tile;
+
+		int newX = oldTile.x+dir.GetX();
+		int newY = oldTile.y+dir.GetY();
+
+		GameTile newTile = oldTile.level.getGameTile(newX, newY);
+
+		Item wep = obj.getInventory().getEquip(EquipmentSlot.MAINWEAPON);
+
+		Array<GameTile> hitTiles = getHitTiles(oldTile, newTile, obj, wep);
+
+		for (GameTile t : hitTiles)
+		{
+			if (t == tile) { return true; }
+		}
+		
+		return false;
+	}
 
 	private void doNormalAttack(Array<GameTile> hitTiles, GameEntity entity, Item weapon)
 	{
@@ -130,6 +152,16 @@ public class TaskAttack extends AbstractTask
 		for (GameTile tile : hitTiles)
 		{
 			if (tile.entity != null && !tile.entity.isAllies(entity))
+			{
+				int dist = Math.abs(tile.x - entity.tile.x) + Math.abs(tile.y - entity.tile.y);
+
+				if (dist < closest)
+				{
+					closest = dist;
+					bestTarget = tile;
+				}
+			}
+			else if (tile.environmentEntity != null && tile.environmentEntity.canTakeDamage)
 			{
 				int dist = Math.abs(tile.x - entity.tile.x) + Math.abs(tile.y - entity.tile.y);
 
@@ -238,33 +270,12 @@ public class TaskAttack extends AbstractTask
 		}
 		else if (type == WeaponType.BOW || type == WeaponType.WAND)
 		{
-			//			Direction anticlockwise = dir.GetAnticlockwise();
-			//			Direction clockwise = dir.GetClockwise();
-			//						
-			//			hitTiles.add(oldTile.level.getGameTile(
-			//					oldTile.x+anticlockwise.GetX(), 
-			//					oldTile.y+anticlockwise.GetY()
-			//					));
-			//			
-			//			hitTiles.add(oldTile.level.getGameTile(
-			//					oldTile.x+clockwise.GetX(), 
-			//					oldTile.y+clockwise.GetY()
-			//					));
-
 			for (int i = 2; i <= range; i++)
-			{
-				//				int acx = oldTile.x + anticlockwise.GetX()*i;
-				//				int acy = oldTile.y + anticlockwise.GetY()*i;
-				//				
+			{			
 				int nx = oldTile.x + dir.GetX()*i;
 				int ny = oldTile.y + dir.GetY()*i;
-				//				
-				//				int cx = oldTile.x + clockwise.GetX()*i;
-				//				int cy = oldTile.y + clockwise.GetY()*i;
 
-				//hitTiles.add(oldTile.level.getGameTile(acx, acy));
 				hitTiles.add(oldTile.level.getGameTile(nx, ny));
-				//hitTiles.add(oldTile.level.getGameTile(cx, cy));
 			}
 		}
 
@@ -328,11 +339,11 @@ public class TaskAttack extends AbstractTask
 				hitSomething = true;
 				break;
 			}
-		}
-
-		if (newTile.environmentEntity != null && !Passability.isPassable(newTile.environmentEntity.passableBy, obj.getTravelType()))
-		{
-			hitSomething = true;
+			
+			if (tile.environmentEntity != null && tile.environmentEntity.canTakeDamage && !Passability.isPassable(tile.environmentEntity.passableBy, obj.getTravelType()))
+			{
+				hitSomething = true;
+			}
 		}
 
 		// Do attack

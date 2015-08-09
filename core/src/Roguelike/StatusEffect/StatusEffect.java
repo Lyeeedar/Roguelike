@@ -21,6 +21,8 @@ public class StatusEffect extends GameEventHandler
 	public String name;
 	private String description;
 	
+	public boolean persistUntilProcessed = false;
+	
 	public Sprite icon;
 	public float duration;
 	
@@ -29,7 +31,16 @@ public class StatusEffect extends GameEventHandler
 	{
 		super.onTurn(entity, cost);
 		
-		duration -= cost;
+		if (!persistUntilProcessed) { duration -= cost; }
+	}
+	
+	@Override
+	public void processed()
+	{
+		if (persistUntilProcessed)
+		{
+			duration = -1;
+		}
 	}
 	
 	public Table createTable(Skin skin)
@@ -77,6 +88,7 @@ public class StatusEffect extends GameEventHandler
 		
 		icon = xmlElement.getChildByName("Icon") != null ? AssetManager.loadSprite(xmlElement.getChildByName("Icon")) : icon;
 		duration = xmlElement.getFloat("Duration", duration);
+		persistUntilProcessed = xmlElement.getBoolean("PersistUntilProcessed", persistUntilProcessed);
 		
 		Element eventsElement = xmlElement.getChildByName("Events");
 		if (eventsElement != null)

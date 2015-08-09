@@ -18,7 +18,7 @@ public class CostTypeHP extends AbstractCostType
 	@Override
 	public boolean isCostAvailable(ActiveAbility aa)
 	{
-		HashMap<String, Integer> variableMap = aa.variableMap;
+		HashMap<String, Integer> variableMap = aa.caster.getVariableMap();
 		
 		for (String name : reliesOn)
 		{
@@ -41,7 +41,7 @@ public class CostTypeHP extends AbstractCostType
 							
 		int raw = (int)exp.evaluate();
 				
-		return raw >= aa.caster.HP;
+		return raw < aa.caster.HP;
 	}
 
 	@Override

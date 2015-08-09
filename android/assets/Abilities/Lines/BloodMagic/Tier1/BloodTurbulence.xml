@@ -1,0 +1,38 @@
+<ActiveAbility>
+
+	<Name>Blood Turbulence</Name>
+	<Description>Excite the blood of the creatures in the target area, dealing damage.</Description>
+	
+	<Cooldown>15</Cooldown>
+	<Range>6</Range>
+	<AOE>2</AOE>
+	
+	<Icon>
+		<Name>Abilities/Pyromaniac/Flamestrike</Name>
+		<Colour><RGB>200,100,100</RGB></Colour>
+	</Icon>
+	
+	<HitSprite>
+		<Name>AbilitySprites/FireBurst/FireBurst</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Sound>
+		    <Name>fire_torch_pass_by_large_heavy_with_crackle_2</Name>
+		</Sound>
+	</HitSprite>
+	
+	<Targeting>
+		<Entity Type="Enemy"></Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Damage>
+			<Aether_Atk>100+Aether_Atk/6</Aether_Atk>
+		</Damage>
+	</Effect>
+	
+</ActiveAbility>

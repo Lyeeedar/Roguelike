@@ -19,6 +19,7 @@ import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.Entity.Tasks.TaskAttack;
 import Roguelike.Entity.Tasks.TaskMove;
+import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
@@ -716,18 +717,7 @@ public class Level
 			AbstractTask task = player.tasks.removeIndex(0);
 			for (GameEventHandler handler : player.getAllHandlers())
 			{
-				if (task instanceof TaskMove)
-				{
-					handler.onMove(player, (TaskMove)task);
-				}
-				else if (task instanceof TaskAttack)
-				{
-					handler.onAttack(player, (TaskAttack)task);
-				}
-				else if (task instanceof TaskWait)
-				{
-					handler.onWait(player, (TaskWait)task);
-				}
+				handler.onTask(player, task);
 			}
 			
 			if (!task.cancel) { task.processTask(player); }
@@ -791,10 +781,7 @@ public class Level
 					AbstractTask task = e.tasks.removeIndex(0);
 					for (GameEventHandler handler : e.getAllHandlers())
 					{
-						if (task instanceof TaskMove)
-						{
-							handler.onMove(e, (TaskMove)task);
-						}
+						handler.onTask(e, task);
 					}
 					
 					if (!task.cancel) { task.processTask(e); }
@@ -853,10 +840,7 @@ public class Level
 						AbstractTask task = e.tasks.removeIndex(0);
 						for (GameEventHandler handler : e.getAllHandlers())
 						{
-							if (task instanceof TaskMove)
-							{
-								handler.onMove(e, (TaskMove)task);
-							}
+							handler.onTask(e, task);
 						}
 						
 						if (!task.cancel) { task.processTask(e); }

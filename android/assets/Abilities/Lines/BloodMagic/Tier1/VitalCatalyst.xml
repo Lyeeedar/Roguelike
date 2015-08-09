@@ -1,0 +1,21 @@
+<PassiveAbility>
+	<Name>Vital Catalyst</Name>
+	<Description>Enhance the damage of your attacks. Sacrifice health whenever you attack or use an ability.</Description>
+	<Icon>
+		<Name>Abilities/Magus/Meditate</Name>
+		<Colour><RGB>200,100,100</RGB></Colour>
+	</Icon>
+	
+	<Events>
+		<OnAttack>
+			<Damage><Aether_Atk>MaxHP/50</Aether_Atk></Damage>
+		</OnAttack>
+		<OnUseAbility>
+			<Damage><Aether_Atk>MaxHP/50</Aether_Atk></Damage>
+		</OnUseAbility>
+		<Constant>
+		    <Atk>Atk*0.3</Atk>
+		</Constant>
+	</Events>
+	
+</PassiveAbility>

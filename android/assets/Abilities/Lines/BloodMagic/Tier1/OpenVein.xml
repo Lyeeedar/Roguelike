@@ -1,0 +1,30 @@
+<ActiveAbility>
+
+	<Name>Open Vein</Name>
+	<Description>Split your targets skin, letting its lifeforce drain out.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>3</Range>
+	
+	<Icon>
+		<Name>Abilities/Ravager/Enrage</Name>
+		<Colour><RGB>200,100,100</RGB></Colour>
+	</Icon>
+	
+	<Targeting>
+		<Entity Type="Enemy"></Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Status ReliesOn="Bleeding">
+			<Attacker>Bleeding</Attacker>
+			<Stacks>3+rnd(2)</Stacks>
+		</Status>
+	</Effect>
+	
+</ActiveAbility>

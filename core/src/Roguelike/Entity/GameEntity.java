@@ -240,9 +240,11 @@ public class GameEntity extends Entity
 	//----------------------------------------------------------------------
 	public int getStatistic(Statistic stat)
 	{
-		int val = statistics.get(stat);
+		int val = statistics.get(stat) + inventory.getStatistic(Statistic.emptyMap, stat);
 
 		HashMap<String, Integer> variableMap = getBaseVariableMap();
+
+		variableMap.put(stat.toString().toLowerCase(), val);
 		
 		for (PassiveAbility passive : slottedPassiveAbilities)
 		{
@@ -256,9 +258,7 @@ public class GameEntity extends Entity
 		{
 			val += se.getStatistic(variableMap, stat);
 		}
-
-		val += inventory.getStatistic(variableMap, stat);
-
+		
 		return val;
 	}
 

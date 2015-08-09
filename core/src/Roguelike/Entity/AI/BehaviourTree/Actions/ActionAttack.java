@@ -26,7 +26,7 @@ public class ActionAttack extends AbstractAction
 		
 		TaskAttack task = new TaskAttack(Direction.getDirection(target[0]-entity.tile.x, target[1]-entity.tile.y));
 		GameTile targetTile = entity.tile.level.getGameTile(target);
-		if (targetTile.environmentEntity != null && targetTile.environmentEntity.canTakeDamage)
+		if (targetTile.environmentEntity != null && targetTile.environmentEntity.canTakeDamage && task.canAttackTile(entity, targetTile))
 		{
 			entity.tasks.add(task);
 			

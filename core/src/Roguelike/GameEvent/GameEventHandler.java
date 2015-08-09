@@ -7,8 +7,10 @@ import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.Entity.Tasks.TaskAttack;
 import Roguelike.Entity.Tasks.TaskMove;
+import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.GameEvent.Damage.AbstractOnDamageEvent;
@@ -28,6 +30,7 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnTaskEvent> onMoveEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnTaskEvent> onAttackEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnTaskEvent> onWaitEvents = new Array<AbstractOnTaskEvent>();
+	public Array<AbstractOnTaskEvent> onUseAbilityEvents = new Array<AbstractOnTaskEvent>();
 	
 	public int getStatistic(HashMap<String, Integer> variableMap, Statistic s)
 	{
@@ -64,6 +67,11 @@ public abstract class GameEventHandler implements IGameObject
 		{
 			event.handle(entity, cost);
 		}
+		
+		if (onTurnEvents.size > 0)
+		{
+			processed();
+		}
 	}
 	
 	public void onDealDamage(DamageObject obj)
@@ -71,6 +79,11 @@ public abstract class GameEventHandler implements IGameObject
 		for (AbstractOnDamageEvent event : onDealDamageEvents)
 		{
 			event.handle(obj, this);
+		}
+		
+		if (onDealDamageEvents.size > 0)
+		{
+			processed();
 		}
 	}
 	
@@ -80,6 +93,31 @@ public abstract class GameEventHandler implements IGameObject
 		{
 			event.handle(obj, this);
 		}
+		
+		if (onReceiveDamageEvents.size > 0)
+		{
+			processed();
+		}
+	}
+	
+	public void onTask(Entity entity, AbstractTask task)
+	{
+		if (task instanceof TaskMove)
+		{
+			onMove(entity, (TaskMove)task);
+		}
+		else if (task instanceof TaskAttack)
+		{
+			onAttack(entity, (TaskAttack)task);
+		}
+		else if (task instanceof TaskWait)
+		{
+			onWait(entity, (TaskWait)task);
+		}
+		else if (task instanceof TaskUseAbility)
+		{
+			onUseAbility(entity, (TaskUseAbility)task);
+		}
 	}
 	
 	public void onMove(Entity entity, TaskMove task)
@@ -87,6 +125,11 @@ public abstract class GameEventHandler implements IGameObject
 		for (AbstractOnTaskEvent event : onMoveEvents)
 		{
 			event.handle(entity, task, this);
+		}
+		
+		if (onMoveEvents.size > 0)
+		{
+			processed();
 		}
 	}
 	
@@ -96,6 +139,11 @@ public abstract class GameEventHandler implements IGameObject
 		{
 			event.handle(entity, task, this);
 		}
+		
+		if (onAttackEvents.size > 0)
+		{
+			processed();
+		}
 	}
 	
 	public void onWait(Entity entity, TaskWait task)
@@ -104,9 +152,32 @@ public abstract class GameEventHandler implements IGameObject
 		{
 			event.handle(entity, task, this);
 		}
+		
+		if (onWaitEvents.size > 0)
+		{
+			processed();
+		}
 	}
 	
-	protected void parse(Element xml)
+	public void onUseAbility(Entity entity, TaskUseAbility task)
+	{
+		for (AbstractOnTaskEvent event : onUseAbilityEvents)
+		{
+			event.handle(entity, task, this);
+		}
+		
+		if (onUseAbilityEvents.size > 0)
+		{
+			processed();
+		}
+	}
+	
+	public void processed()
+	{
+		
+	}
+	
+ 	protected void parse(Element xml)
 	{
 		Element onTurnElements = xml.getChildByName("OnTurn");
 		if (onTurnElements != null)
@@ -171,6 +242,16 @@ public abstract class GameEventHandler implements IGameObject
 			{
 				Element onWaitElement = onWaitElements.getChild(i);
 				onWaitEvents.add(AbstractOnTaskEvent.load(onWaitElement));
+			}
+		}
+		
+		Element onUseAbilityElements = xml.getChildByName("OnUseAbility");
+		if (onUseAbilityElements != null)
+		{
+			for (int i = 0; i < onUseAbilityElements.getChildCount(); i++)
+			{
+				Element onUseAbilityElement = onUseAbilityElements.getChild(i);
+				onUseAbilityEvents.add(AbstractOnTaskEvent.load(onUseAbilityElement));
 			}
 		}
 	}
