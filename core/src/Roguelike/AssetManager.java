@@ -10,9 +10,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.PixmapPacker;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.Array;
@@ -72,6 +77,34 @@ public class AssetManager
 		return sound;
 	}
 	
+	private static final PixmapPacker packer = new PixmapPacker(1024, 1024, Format.RGBA8888, 2, false);
+	private static final TextureAtlas atlas = new TextureAtlas();
+	
+	private static HashMap<String, TextureRegion> loadedTextureRegions = new HashMap<String, TextureRegion>();
+	public static TextureRegion loadTextureRegion(String path)
+	{
+		if (loadedTextureRegions.containsKey(path))
+		{
+			return loadedTextureRegions.get(path);
+		}
+		
+		FileHandle file = Gdx.files.internal(path);
+		if (!file.exists())
+		{
+			loadedTextureRegions.put(path, null);
+			return null;
+		}
+		
+		Pixmap pixmap = new Pixmap(file);			
+		packer.pack(path, pixmap);		
+		packer.updateTextureAtlas(atlas, TextureFilter.Linear, TextureFilter.Linear, true);
+		
+		TextureRegion region = atlas.findRegion(path);
+		loadedTextureRegions.put(path, region);
+		
+		return region;
+	}
+	
 	private static HashMap<String, Texture> loadedTextures = new HashMap<String, Texture>();
 	public static Texture loadTexture(String path)
 	{
@@ -87,38 +120,31 @@ public class AssetManager
 			return null;
 		}
 		
-		Texture tex = new Texture(file, true);
+		Texture region = new Texture(path);
+		region.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		loadedTextures.put(path, region);
 		
-		tex.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
-		
-		loadedTextures.put(path, tex);
-		
-		return tex;
+		return region;
 	}
 	
 	public static Sprite loadSprite(String name)
 	{
-		return loadSprite(name, 0.5f, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE, AnimationMode.TEXTURE, null);
-	}
-	
-	public static Sprite loadSprite(String name, int size)
-	{
-		return loadSprite(name, 0.5f, new int[]{size, size}, new int[]{0, 0}, Color.WHITE, AnimationMode.TEXTURE, null);
+		return loadSprite(name, 0.5f, Color.WHITE, AnimationMode.TEXTURE, null);
 	}
 	
 	public static Sprite loadSprite(String name, float updateTime)
 	{
-		return loadSprite(name, updateTime, new int[]{0, 0}, new int[]{0, 0}, Color.WHITE, AnimationMode.TEXTURE, null);
+		return loadSprite(name, updateTime, Color.WHITE, AnimationMode.TEXTURE, null);
 	}
 	
-	public static Sprite loadSprite(String name, float updateTime, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode, SoundInstance sound)
+	public static Sprite loadSprite(String name, float updateTime, Color colour, AnimationMode mode, SoundInstance sound)
 	{
-		Array<Texture> textures = new Array<Texture>();
+		Array<TextureRegion> textures = new Array<TextureRegion>();
 		
 		int i = 0;
 		while (true)
 		{
-			Texture tex = loadTexture("Sprites/"+name+"_"+i+".png");
+			TextureRegion tex = loadTextureRegion("Sprites/"+name+"_"+i+".png");
 			
 			if (tex == null)
 			{
@@ -134,7 +160,7 @@ public class AssetManager
 		
 		if (textures.size == 0)
 		{
-			Texture tex = loadTexture("Sprites/"+name+".png");
+			TextureRegion tex = loadTextureRegion("Sprites/"+name+".png");
 			
 			if (tex != null)
 			{
@@ -145,16 +171,6 @@ public class AssetManager
 		if (textures.size == 0)
 		{
 			throw new RuntimeException("Cant find any textures for " + name + "!");
-		}
-		
-		if (tileSize[0] == 0)
-		{
-			tileSize[0] = textures.get(0).getWidth();
-		}
-		
-		if (tileSize[1] == 0)
-		{
-			tileSize[1] = textures.get(0).getHeight();
 		}
 		
 		if (updateTime <= 0)
@@ -169,7 +185,7 @@ public class AssetManager
 			}
 		}
 		
-		Sprite sprite = new Sprite(name, updateTime, textures, tileSize, tileIndex, colour, mode, sound);
+		Sprite sprite = new Sprite(name, updateTime, textures, colour, mode, sound);
 		
 		return sprite;
 	}
@@ -208,8 +224,6 @@ public class AssetManager
 		return loadSprite(
 				xml.get("Name"),
 				xml.getFloat("UpdateRate", 0),
-				new int[]{xml.getInt("Width", xml.getInt("Size", 0)), xml.getInt("Height", xml.getInt("Size", 0))},
-				new int[]{xml.getInt("IndexX", 0), xml.getInt("IndexY", 0)},
 				colour,
 				AnimationMode.valueOf(xml.get("AnimationMode", "Texture").toUpperCase()),
 				sound

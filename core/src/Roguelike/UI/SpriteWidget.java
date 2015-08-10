@@ -19,12 +19,11 @@ public class SpriteWidget extends Widget
 	private float width;
 	private float height;
 
-	public SpriteWidget (Sprite sprite) 
+	public SpriteWidget (Sprite sprite, int width, int height) 
 	{
 		this.drawable = sprite;
-		
-		width = sprite.tileSize[0];
-		height = sprite.tileSize[1];
+		this.width = width;
+		this.height = height;
 	}
 
 	public void layout () 

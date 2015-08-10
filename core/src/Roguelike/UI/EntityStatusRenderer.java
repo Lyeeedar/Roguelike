@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -50,7 +51,7 @@ public class EntityStatusRenderer
 	
 	public static void drawHpBar(float val, Batch batch, int x, int y, int width, int height, float heightScale)
 	{
-		Texture white = AssetManager.loadTexture("Sprites/white.png");
+		TextureRegion white = AssetManager.loadTextureRegion("Sprites/white.png");
 		
 		float barheight = height * heightScale;
 		

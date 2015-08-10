@@ -28,6 +28,10 @@ public class DungeonFileParser
 		OVERLAPPINGRECTS,
 		CELLULARAUTOMATA,
 		STARBURST,
+		POLYGON,
+		BURROW,
+		CHAMBERS,
+		FRACTAL,
 		NONE
 	}
 	

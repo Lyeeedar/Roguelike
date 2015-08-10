@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -30,7 +31,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class AbilityPoolPanel extends Table
 {	
-	private final Texture white;
+	private final TextureRegion white;
 	
 	private final Sprite locked;
 	
@@ -58,7 +59,7 @@ public class AbilityPoolPanel extends Table
 		contextMenuNormalFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 12);
 		contextMenuHilightFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 14);
 		
-		this.white = AssetManager.loadTexture("Sprites/white.png");
+		this.white = AssetManager.loadTextureRegion("Sprites/white.png");
 		this.locked = AssetManager.loadSprite("GUI/locked");
 				
 		this.tileBackground = AssetManager.loadSprite("GUI/TileBackground");	

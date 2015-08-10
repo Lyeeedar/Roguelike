@@ -192,8 +192,8 @@ public class EnvironmentEntity extends Entity
 	//----------------------------------------------------------------------
 	private static EnvironmentEntity CreateDoor()
 	{
-		final Sprite doorClosed = AssetManager.loadSprite("Objects/Door0", 1, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE, AnimationMode.NONE, null);
-		final Sprite doorOpen = AssetManager.loadSprite("Objects/Door1", 1, new int[]{16, 16}, new int[]{0, 0}, Color.WHITE, AnimationMode.NONE, null);
+		final Sprite doorClosed = AssetManager.loadSprite("Objects/Door0", 1, Color.WHITE, AnimationMode.NONE, null);
+		final Sprite doorOpen = AssetManager.loadSprite("Objects/Door1", 1, Color.WHITE, AnimationMode.NONE, null);
 		
 		ActivationAction action = new ActivationAction("Open")
 		{

@@ -1,12 +1,19 @@
 package Roguelike.Lights;
 
+import Roguelike.Global.Passability;
+import Roguelike.Pathfinding.ShadowCaster;
+import Roguelike.Tiles.GameTile;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class Light
 {
+	private static final Array<Passability> LightPassability = new Array<Passability>(new Passability[]{Passability.LIGHT});
+	
 	public boolean copied;
 	
 	public Color colour;
@@ -19,6 +26,60 @@ public class Light
 	public int ly;
 	
 	private float timeAccumulator;
+	
+	private int lastlx = -1;
+	private int lastly = -1;
+	private Array<int[]> opaqueTiles = new Array<int[]>();
+	private Array<int[]> shadowCastOutput = new Array<int[]>();
+	
+	public Array<int[]> getShadowCast(GameTile[][] grid)
+	{
+		boolean recalculate = false;
+		
+		if (copied)
+		{
+			recalculate = true;
+		}
+		else if (lx != lastlx || ly != lastly)
+		{
+			recalculate = true;
+		}
+		else
+		{
+			for (int[] pos : opaqueTiles)
+			{
+				GameTile tile = grid[pos[0]][pos[1]];				
+				if (tile.getPassable(LightPassability))
+				{
+					recalculate = true; // something has moved
+					break;
+				}
+			}
+		}
+		
+		if (recalculate)
+		{
+			shadowCastOutput.clear();
+			
+			ShadowCaster shadow = new ShadowCaster(grid, (int)Math.ceil(baseIntensity));
+			shadow.ComputeFOV(lx, ly, shadowCastOutput);
+			
+			// build list of opaque
+			opaqueTiles.clear();
+			for (int[] pos : shadowCastOutput)
+			{
+				GameTile tile = grid[pos[0]][pos[1]];				
+				if (!tile.getPassable(LightPassability))
+				{
+					opaqueTiles.add(pos);
+				}
+			}
+			lastlx = lx;
+			lastly = ly;
+		}
+		
+		return shadowCastOutput;
+	}
 	
 	public void update(float delta)
 	{

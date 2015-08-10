@@ -12,6 +12,7 @@ import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.Global.Direction;
+import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
@@ -50,6 +51,17 @@ public class GameEntity extends Entity
 	//region Public Methods
 	
 	//----------------------------------------------------------------------
+	public Array<Passability> getTravelType()
+	{
+		if (travelType == null)
+		{
+			travelType = Passability.statsToTravelType(getStatistics());
+		}
+		
+		return travelType;
+	}
+	
+	//----------------------------------------------------------------------
 	@Override
 	public void applyDamage(int dam, Entity damager)
 	{
@@ -68,6 +80,12 @@ public class GameEntity extends Entity
 	@Override
 	public void update(float cost)
 	{
+		if (inventory.isVariableMapDirty)
+		{
+			isVariableMapDirty = true;
+			inventory.isVariableMapDirty = false;
+		}
+		
 		actionDelayAccumulator += cost;
 
 		for (ActiveAbility a : slottedActiveAbilities)
@@ -93,6 +111,8 @@ public class GameEntity extends Entity
 		}
 
 		stacks = stackStatusEffects();
+		
+		travelType = Passability.statsToTravelType(getStatistics());
 	}
 
 	//----------------------------------------------------------------------
@@ -290,6 +310,8 @@ public class GameEntity extends Entity
 	//endregion Public Methods
 	//####################################################################//
 	//region Data
+	
+	private Array<Passability> travelType;
 	
 	public String fileName;
 

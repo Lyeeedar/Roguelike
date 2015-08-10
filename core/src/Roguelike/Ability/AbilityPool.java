@@ -19,6 +19,7 @@ public class AbilityPool
 {
 	public final Array<AbilityLine> abilityLines = new Array<AbilityLine>(false, 16);
 	
+	public boolean isVariableMapDirty = true;
 	public PassiveAbility[] slottedPassiveAbilities = new PassiveAbility[Global.NUM_ABILITY_SLOTS];
 	public ActiveAbility[] slottedActiveAbilities = new ActiveAbility[Global.NUM_ABILITY_SLOTS];
 	
@@ -53,6 +54,8 @@ public class AbilityPool
 		{
 			slottedActiveAbilities[index] = null;
 		}
+		
+		isVariableMapDirty = true;
 	}
 	
 	//----------------------------------------------------------------------
@@ -63,6 +66,8 @@ public class AbilityPool
 		{
 			slottedPassiveAbilities[index] = null;
 		}
+		
+		isVariableMapDirty = true;
 	}
 	
 	//----------------------------------------------------------------------
@@ -96,6 +101,8 @@ public class AbilityPool
 		{
 			slottedActiveAbilities[index] = aa;
 		}
+		
+		isVariableMapDirty = true;
 	}
 
 	//----------------------------------------------------------------------
@@ -110,6 +117,8 @@ public class AbilityPool
 		}
 
 		slottedPassiveAbilities[index] = pa;
+		
+		isVariableMapDirty = true;
 	}
 	
 	//----------------------------------------------------------------------

@@ -23,12 +23,6 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public abstract class Entity
 {	
 	//----------------------------------------------------------------------
-	public Array<Passability> getTravelType()
-	{
-		return Passability.statsToTravelType(getStatistics());
-	}
-	
-	//----------------------------------------------------------------------
 	public abstract void update(float delta);
 	
 	//----------------------------------------------------------------------
@@ -87,7 +81,33 @@ public abstract class Entity
 	//----------------------------------------------------------------------
 	public HashMap<String, Integer> getVariableMap()
 	{
-		HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
+		if (isVariableMapDirty)
+		{
+			isVariableMapDirty = false;
+			calculateBaseVariableMap();
+			calculateVariableMap();
+		}
+		
+		return variableMap;
+	}
+	
+	//----------------------------------------------------------------------
+	public HashMap<String, Integer> getBaseVariableMap()
+	{
+		if (isVariableMapDirty)
+		{
+			isVariableMapDirty = false;
+			calculateBaseVariableMap();
+			calculateVariableMap();
+		}
+		
+		return baseVariableMap;
+	}
+	
+	//----------------------------------------------------------------------
+	protected void calculateVariableMap()
+	{
+		variableMap.clear();
 
 		for (Statistic s : Statistic.values())
 		{
@@ -105,33 +125,29 @@ public abstract class Entity
 		{
 			variableMap.put(s.effect.name.toLowerCase(), s.count);
 		}
-
-		return variableMap;
 	}
 	
 	//----------------------------------------------------------------------
-	public HashMap<String, Integer> getBaseVariableMap()
+	protected void calculateBaseVariableMap()
 	{
-		HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
+		baseVariableMap.clear();
 
 		for (Statistic s : Statistic.values())
 		{
-			variableMap.put(s.toString().toLowerCase(), statistics.get(s) + inventory.getStatistic(Statistic.emptyMap, s));
+			baseVariableMap.put(s.toString().toLowerCase(), statistics.get(s) + inventory.getStatistic(Statistic.emptyMap, s));
 		}
 
-		variableMap.put("hp", HP);
+		baseVariableMap.put("hp", HP);
 		
 		if (inventory.getEquip(EquipmentSlot.MAINWEAPON) != null)
 		{
-			variableMap.put(inventory.getEquip(EquipmentSlot.MAINWEAPON).weaponType.toString().toLowerCase(), 1);
+			baseVariableMap.put(inventory.getEquip(EquipmentSlot.MAINWEAPON).weaponType.toString().toLowerCase(), 1);
 		}
 
 		for (StatusEffectStack s : stacks)
 		{
-			variableMap.put(s.effect.name.toLowerCase(), s.count);
+			baseVariableMap.put(s.effect.name.toLowerCase(), s.count);
 		}
-
-		return variableMap;
 	}
 
 	//----------------------------------------------------------------------
@@ -155,6 +171,11 @@ public abstract class Entity
 
 		damageAccumulator += dam;
 		hasDamage = true;
+		
+		if (dam != 0)
+		{
+			isVariableMapDirty = true;
+		}
 	}
 
 	//----------------------------------------------------------------------
@@ -166,6 +187,11 @@ public abstract class Entity
 		HP += appliedHeal;
 
 		healingAccumulator += appliedHeal;
+		
+		if (heal != 0)
+		{
+			isVariableMapDirty = true;
+		}
 	}
 
 	//----------------------------------------------------------------------
@@ -205,12 +231,16 @@ public abstract class Entity
 		if (!canTakeDamage) { return; }
 		
 		statusEffects.add(se);
+		
+		isVariableMapDirty = true;
 	}
 	
 	//----------------------------------------------------------------------
 	public void removeStatusEffect(StatusEffect se)
 	{
 		statusEffects.removeValue(se, true);
+		
+		isVariableMapDirty = true;
 	}
 	
 	//----------------------------------------------------------------------
@@ -221,11 +251,20 @@ public abstract class Entity
 			if (statusEffects.get(i).name.equals(se))
 			{
 				statusEffects.removeIndex(i);
+				isVariableMapDirty = true;
+				
 				break;
 			}
 		}
 	}
 
+	//----------------------------------------------------------------------
+	public boolean isVariableMapDirty = true;
+	
+	//----------------------------------------------------------------------
+	private HashMap<String, Integer> baseVariableMap = new HashMap<String, Integer>();
+	private HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
+	
 	//----------------------------------------------------------------------
 	public int damageAccumulator = 0;
 	public int healingAccumulator = 0;

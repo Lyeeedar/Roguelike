@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 public class Sprite
@@ -29,14 +30,10 @@ public class Sprite
 	public float animationAccumulator;
 	
 	public float rotation;
+		
+	public Array<TextureRegion> textures;
 	
-	public int[] tileSize;
-	public int[] tileIndex;
-	public int[] tileBounds;
-	
-	public Array<Texture> textures;
-	
-	public Array<Texture> extraLayers = new Array<Texture>();
+	public Array<TextureRegion> extraLayers = new Array<TextureRegion>();
 	
 	public SpriteAnimation spriteAnimation;
 	
@@ -44,23 +41,15 @@ public class Sprite
 	
 	public SoundInstance sound;
 	
- 	public Sprite(String fileName, float animationDelay, Array<Texture> textures, int[] tileSize, int[] tileIndex, Color colour, AnimationMode mode, SoundInstance sound)
+ 	public Sprite(String fileName, float animationDelay, Array<TextureRegion> textures, Color colour, AnimationMode mode, SoundInstance sound)
 	{		
  		this.fileName = fileName;
 		this.textures = textures;
 		this.animationDelay = animationDelay;
-		this.tileSize = tileSize;
-		this.tileIndex = tileIndex;
 		this.sound = sound;
 		
 		animationState = new AnimationState();
 		animationState.mode = mode;
-		
-		this.tileBounds = new int[]
-		{
-			tileSize[0] * tileIndex[0], tileSize[1] * tileIndex[1], // src x, y
-			tileSize[0], tileSize[1] // src width, height
-		};
 		
 		this.colour = colour;
 	}
@@ -141,7 +130,7 @@ public class Sprite
 		
 		drawTexture(batch, textures.get(animationState.texIndex), x, y, width, height, animationState);
 		
-		for (Texture tex : extraLayers)
+		for (TextureRegion tex : extraLayers)
 		{
 			drawTexture(batch, tex, x, y, width, height, animationState);
 		}
@@ -149,7 +138,7 @@ public class Sprite
 		batch.setColor(oldCol);
 	}
 	
-	private void drawTexture(Batch batch, Texture texture, int x, int y, int width, int height, AnimationState animationState)
+	private void drawTexture(Batch batch, TextureRegion texture, int x, int y, int width, int height, AnimationState animationState)
 	{	
 		if (renderDelay > 0) { return; }
 		
@@ -173,26 +162,17 @@ public class Sprite
 			return; // skip drawing
 		}
 		
-		batch.draw(
-				texture,
-				x, y,
-				width / 2.0f, height / 2.0f,
-				width, height, // width, height
-				1, 1, // scale
-				rotation, // rotation
-				tileBounds[0], tileBounds[1], tileBounds[2], tileBounds[3],
-				false, false // flip x, y
-		);
+		batch.draw(texture, x, y,width / 2.0f, height / 2.0f, width, height, 1, 1, rotation);
 	}
 
-	public Texture getCurrentTexture()
+	public TextureRegion getCurrentTexture()
 	{
 		return textures.get(animationState.texIndex);
 	}
 	
 	public Sprite copy()
 	{
-		return new Sprite(fileName, animationDelay, textures, tileSize, tileIndex, colour, animationState.mode, sound);
+		return new Sprite(fileName, animationDelay, textures, colour, animationState.mode, sound);
 	}
 	
 	public static class AnimationState

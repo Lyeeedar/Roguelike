@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class ImageUtils
 {
@@ -96,16 +97,17 @@ public class ImageUtils
 		return image;
 	}
 	
-	public static Pixmap TextureToPixmap(Texture texture)
+	public static Pixmap TextureToPixmap(TextureRegion texture)
 	{
-		try {
-			texture.getTextureData().prepare();
+		try 
+		{
+			texture.getTexture().getTextureData().prepare();
 		}
 		catch (Exception e)
 		{
 			
 		}
-		return texture.getTextureData().consumePixmap();
+		return texture.getTexture().getTextureData().consumePixmap();
 	}
 	
 	public static Texture PixmapToTexture(Pixmap pixmap)

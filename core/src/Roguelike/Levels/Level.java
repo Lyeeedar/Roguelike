@@ -70,6 +70,8 @@ public class Level
 	public int width;
 	public int height;
 	
+	private final PlayerVisibilityData visibilityData = new PlayerVisibilityData();
+	
 	public static PerformanceCounter updateLights = new PerformanceCounter("UpdateLights");
 	public static PerformanceCounter updateSounds = new PerformanceCounter("UpdateSounds");
 	public static PerformanceCounter updateSprites = new PerformanceCounter("UpdateSprites");
@@ -150,7 +152,7 @@ public class Level
 		}
 	}
 	
-	public void UpdateSeenGrid()
+	public void updateSeenGrid()
 	{
 		for (int x = 0; x < width; x++)
 		{
@@ -214,18 +216,16 @@ public class Level
 	
 	private void calculateSingleLight(Light l)
 	{
-		Array<int[]> output = new Array<int[]>();
-		ShadowCaster shadow = new ShadowCaster(Grid, (int)Math.ceil(l.actualIntensity));
-		shadow.ComputeFOV(l.lx, l.ly, output);
+		Array<int[]> output = l.getShadowCast(Grid);
 				
 		for (int[] tilePos : output)
 		{
 			GameTile tile = getGameTile(tilePos);
 			
-			float dst = 1 - Vector2.dst(l.lx, l.ly, tile.x, tile.y) / l.actualIntensity;
+			float dst = 1 - Vector2.dst2(l.lx, l.ly, tile.x, tile.y) / (l.actualIntensity * l.actualIntensity);
 			if (dst < 0) {dst = 0;}
 			
-			Color lcol = new Color(l.colour).mul(dst);
+			Color lcol = tempColor.set(l.colour).mul(dst);
 			lcol.mul(lcol.a);
 			lcol.a = 1;
 			
@@ -256,6 +256,8 @@ public class Level
 		return null;
 	}
 	
+	private static final Color tempColor = new Color();
+	
 	public Array<ActiveAbility> ActiveAbilities = new Array<ActiveAbility>(false, 16);
 	private Array<ActiveAbility> NewActiveAbilities = new Array<ActiveAbility>(false, 16);
 	public void addActiveAbility(ActiveAbility aa)
@@ -279,6 +281,7 @@ public class Level
 		updatePart1.start();
 		
 		// setup player abilities
+		if (Global.abilityPool.isVariableMapDirty)
 		{
 			player.slottedActiveAbilities.clear();
 			player.slottedPassiveAbilities.clear();
@@ -300,6 +303,9 @@ public class Level
 					player.slottedPassiveAbilities.add(pa);
 				}
 			}
+			
+			player.isVariableMapDirty = true;
+			Global.abilityPool.isVariableMapDirty = false;
 		}
 		
 		updatePart1.stop();
@@ -707,16 +713,14 @@ public class Level
 			}
 		}
 		
-		Array<int[]> output = new Array<int[]>();
-		ShadowCaster shadow = new ShadowCaster(Grid, player.getStatistic(Statistic.RANGE));
-		shadow.ComputeFOV(player.tile.x, player.tile.y, output);
+		Array<int[]> output = visibilityData.getShadowCast(Grid, player, player.tile.x, player.tile.y);
 		
 		for (int[] tilePos : output)
 		{
 			getGameTile(tilePos).SetVisible(true);
 		}
 		
-		UpdateSeenGrid();
+		updateSeenGrid();
 	}
 	
 	private void processPlayer()
@@ -1044,5 +1048,68 @@ public class Level
 		}
 		
 		return list;
+	}
+
+	private static class PlayerVisibilityData
+	{
+		private static final Array<Passability> LightPassability = new Array<Passability>(new Passability[]{Passability.LIGHT});
+		
+		private int range;
+		private int lastx;
+		private int lasty;
+		private Array<int[]> opaqueTiles = new Array<int[]>();
+		private Array<int[]> shadowCastOutput = new Array<int[]>();
+		
+		public Array<int[]> getShadowCast(GameTile[][] grid, GameEntity player, int x, int y)
+		{
+			boolean recalculate = false;
+			
+			int newrange = player.getStatistic(Statistic.RANGE);
+			
+			if (x != lastx || y != lasty)
+			{
+				recalculate = true;
+			}
+			else if (newrange != range)
+			{
+				recalculate = true;
+			}
+			else
+			{
+				for (int[] pos : opaqueTiles)
+				{
+					GameTile tile = grid[pos[0]][pos[1]];				
+					if (tile.getPassable(LightPassability))
+					{
+						recalculate = true; // something has moved
+						break;
+					}
+				}
+			}
+			
+			if (recalculate)
+			{
+				shadowCastOutput.clear();
+				
+				ShadowCaster shadow = new ShadowCaster(grid, newrange);
+				shadow.ComputeFOV(x, y, shadowCastOutput);
+				
+				// build list of opaque
+				opaqueTiles.clear();
+				for (int[] pos : shadowCastOutput)
+				{
+					GameTile tile = grid[pos[0]][pos[1]];				
+					if (!tile.getPassable(LightPassability))
+					{
+						opaqueTiles.add(pos);
+					}
+				}
+				lastx = x;
+				lasty = y;
+				range = newrange;
+			}
+			
+			return shadowCastOutput;
+		}
 	}
 }

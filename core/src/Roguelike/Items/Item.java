@@ -9,6 +9,7 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -174,49 +175,49 @@ public class Item extends GameEventHandler
 	}
 
 	//----------------------------------------------------------------------
-	public Texture getEquipTexture()
+	public TextureRegion getEquipTexture()
 	{
 		if (slot == EquipmentSlot.MAINWEAPON)
 		{
 			if (weaponType == WeaponType.SWORD)
 			{
-				return AssetManager.loadTexture("Sprites/player/hand1/sword2.png");
+				return AssetManager.loadTextureRegion("Sprites/player/hand1/sword2.png");
 			}
 			else if (weaponType == WeaponType.SPEAR)
 			{
-				return AssetManager.loadTexture("Sprites/player/hand1/spear1.png");
+				return AssetManager.loadTextureRegion("Sprites/player/hand1/spear1.png");
 			}
 			else if (weaponType == WeaponType.AXE)
 			{
-				return AssetManager.loadTexture("Sprites/player/hand1/axe.png");
+				return AssetManager.loadTextureRegion("Sprites/player/hand1/axe.png");
 			}
 			else if (weaponType == WeaponType.BOW)
 			{
-				return AssetManager.loadTexture("Sprites/player/hand1/bow.png");
+				return AssetManager.loadTextureRegion("Sprites/player/hand1/bow.png");
 			}
 			else if (weaponType == WeaponType.WAND)
 			{
-				return AssetManager.loadTexture("Sprites/player/hand1/sceptre.png");
+				return AssetManager.loadTextureRegion("Sprites/player/hand1/sceptre.png");
 			}
 		}
 		else if (slot == EquipmentSlot.OFFWEAPON)
 		{
-			return AssetManager.loadTexture("Sprites/player/hand2/shield_round1.png");
+			return AssetManager.loadTextureRegion("Sprites/player/hand2/shield_round1.png");
 		}
 		else if (slot == EquipmentSlot.HEAD)
 		{
-			return AssetManager.loadTexture("Sprites/player/head/chain.png");
+			return AssetManager.loadTextureRegion("Sprites/player/head/chain.png");
 		}
 		else if (slot == EquipmentSlot.BODY)
 		{
-			return AssetManager.loadTexture("Sprites/player/body/chainmail3.png");
+			return AssetManager.loadTextureRegion("Sprites/player/body/chainmail3.png");
 		}
 		else if (slot == EquipmentSlot.LEGS)
 		{
-			return AssetManager.loadTexture("Sprites/player/legs/leg_armor02.png");
+			return AssetManager.loadTextureRegion("Sprites/player/legs/leg_armor02.png");
 		}
 
-		return AssetManager.loadTexture("Sprites/blank.png");
+		return AssetManager.loadTextureRegion("Sprites/blank.png");
 	}
 
 	//----------------------------------------------------------------------

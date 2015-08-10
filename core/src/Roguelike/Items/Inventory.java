@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class Inventory
 {
+	public boolean isVariableMapDirty = true;
+	
 	public Array<Item> m_items = new Array<Item>();
 	
 	private HashMap<EquipmentSlot, Item> m_equipment = new HashMap<EquipmentSlot, Item>();
@@ -103,11 +105,15 @@ public class Inventory
 		if (item.slot == null) { return; }
 		
 		m_equipment.put(item.slot, item);	
+		
+		isVariableMapDirty = true;
 	}
 	
 	public void unequip(Item item)
 	{
 		m_equipment.remove(item.slot);	
+		
+		isVariableMapDirty = true;
 	}
 	
 	public void toggleEquip(Item item)

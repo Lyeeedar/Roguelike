@@ -8,20 +8,21 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 public class HPWidget extends Widget
 {
 	GameEntity entity;
 	private BitmapFont font;
-	private Texture white;
+	private TextureRegion white;
 	
 	public HPWidget(GameEntity entity)
 	{
 		this.entity = entity;
 		
 		this.font = new BitmapFont();
-		this.white = AssetManager.loadTexture("Sprites/white.png");
+		this.white = AssetManager.loadTextureRegion("Sprites/white.png");
 	}
 	
 	@Override

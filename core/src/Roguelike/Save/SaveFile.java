@@ -165,13 +165,11 @@ public class SaveFile
 			{
 				String fileName = input.readString();
 				float animDelay = input.readFloat();
-				int[] tileSize = input.readInts(2);
-				int[] tileIndex = input.readInts(2);
 				Color color = kryo.readObject(input, Color.class);
 				int modeVal = input.readInt();
 				AnimationMode mode = AnimationMode.values()[modeVal];
 				
-				Sprite sprite = AssetManager.loadSprite(fileName, animDelay, tileSize, tileIndex, color, mode, null);
+				Sprite sprite = AssetManager.loadSprite(fileName, animDelay,  color, mode, null);
 				return sprite;
 			}
 
@@ -179,8 +177,6 @@ public class SaveFile
 			{
 				output.writeString(sprite.fileName);
 				output.writeFloat(sprite.animationDelay);
-				output.writeInts(sprite.tileSize);
-				output.writeInts(sprite.tileIndex);
 				kryo.writeObject(output, sprite.colour);
 				output.writeInt(sprite.animationState.mode.ordinal());
 			}

@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -28,7 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 public class AbilityPanel extends TilePanel
 {			
 	private BitmapFont font;
-	private Texture white;
+	private TextureRegion white;
 	
 	private BitmapFont contextMenuNormalFont;
 	private BitmapFont contextMenuHilightFont;
@@ -43,7 +44,7 @@ public class AbilityPanel extends TilePanel
 		contextMenuNormalFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 12);
 		contextMenuHilightFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 14);
 		
-		this.white = AssetManager.loadTexture("Sprites/white.png");				
+		this.white = AssetManager.loadTextureRegion("Sprites/white.png");				
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
-import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.EnvironmentEntity.ActivationAction;
@@ -18,7 +17,6 @@ import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Levels.Level;
 import Roguelike.Save.SaveAbilityPool;
 import Roguelike.Save.SaveFile;
-import Roguelike.Save.SaveLevel;
 import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
@@ -52,13 +50,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -72,8 +68,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.PerformanceCounter;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameScreen implements Screen, InputProcessor, GestureListener
 {
@@ -97,9 +93,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		contextMenuNormalFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 12);
 		contextMenuHilightFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 14);
 
-		blank = AssetManager.loadTexture("Sprites/blank.png");
-		white = AssetManager.loadTexture("Sprites/white.png");
-		bag = AssetManager.loadTexture("Sprites/bag.png");
+		blank = AssetManager.loadTextureRegion("Sprites/blank.png");
+		white = AssetManager.loadTextureRegion("Sprites/white.png");
+		bag = AssetManager.loadTextureRegion("Sprites/bag.png");
 		border = AssetManager.loadSprite("GUI/frame");
 
 		gestureDetector = new GestureDetector(this);
@@ -990,7 +986,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		float amount = distance - initialDistance;
 		
-		Global.TileSize -= amount/5;
+		Global.TileSize -= amount/500;
 		if (Global.TileSize < 8)
 		{
 			Global.TileSize = 8;
@@ -1030,7 +1026,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public void addAbilityAvailabilityAction(Sprite sprite)
 	{
 		Table table = new Table();
-		table.add(new SpriteWidget(sprite)).size(Global.TileSize/2);
+		table.add(new SpriteWidget(sprite, 32, 32)).size(Global.TileSize/2);
 		table.addAction(new SequenceAction(
 				Actions.moveTo(Global.Resolution[0]/2+Global.TileSize/2, Global.Resolution[1]/2+Global.TileSize+Global.TileSize/2, 1),
 				Actions.removeActor()));		
@@ -1197,7 +1193,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				Table row = new Table();
 
-				row.add(new SpriteWidget(aa.Icon));
+				row.add(new SpriteWidget(aa.Icon, 32, 32));
 				
 				HoverTextButton button = new HoverTextButton(aa.getName(), contextMenuNormalFont, contextMenuHilightFont);
 				button.changePadding(5, 5);
@@ -1324,10 +1320,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private Skin skin;
 	private Stage stage;
 	private SpriteBatch batch;
-	private Texture blank;
-	private Texture white;
+	private TextureRegion blank;
+	private TextureRegion white;
 	public InputMultiplexer inputMultiplexer;
-	private Texture bag;
+	private TextureRegion bag;
 
 	private Tooltip tooltip;
 

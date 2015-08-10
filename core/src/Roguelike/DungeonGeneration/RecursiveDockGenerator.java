@@ -45,6 +45,12 @@ public class RecursiveDockGenerator
 		this.createDynamics = createDynamics;
 		this.levelUID = levelUID;
 		
+		if (Global.ANDROID)
+		{
+			width = 20;
+			height = 20;
+		}
+		
 		minPadding = (dfp.corridorStyle.minWidth/2)+1;
 		maxPadding += minPadding;
 		paddedMinRoom = minRoomSize + minPadding*2;
@@ -1246,6 +1252,14 @@ public class RecursiveDockGenerator
 				{
 					Starburst.process(roomContents, floor, wall, ran);
 				}
+				else if (type == RoomGeneratorType.POLYGON)
+				{
+					Polygon.process(roomContents, floor, wall, ran);
+				}
+				else if (type == RoomGeneratorType.CHAMBERS)
+				{
+					Chambers.process(roomContents, floor, wall, ran);
+				}
 				else
 				{
 					for (int x = 0; x < width; x++)
@@ -1267,12 +1281,17 @@ public class RecursiveDockGenerator
 						{
 							roomContents[x][y] = wall;
 						}
+						
+						if (roomContents[x][y] == null)
+						{
+							roomContents[x][y] = wall;
+						}
 
 						if (roomContents[x][y] == floor) { count++; }
 					}
 				}
 
-				if (count > (width*height)/3)
+				if (count > (width*height)/4)
 				{
 					break;
 				}
@@ -1342,9 +1361,15 @@ public class RecursiveDockGenerator
 					}
 				}
 
-				int[][] path = BresenhamLine.lineNoDiag(width/2, height/2, x, y);
+				int[][] path = BresenhamLine.lineNoDiag(x, y, width/2, height/2);
 				for (int[] pos : path)
 				{
+					boolean done = false;
+					if (roomContents[pos[0]][pos[1]] == floor)
+					{
+						done = true;
+					}
+					
 					for (int ix = 0; ix < dfp.corridorStyle.minWidth; ix++)
 					{
 						for (int iy = 0; iy < dfp.corridorStyle.minWidth; iy++)
@@ -1357,6 +1382,11 @@ public class RecursiveDockGenerator
 								roomContents[nx][ny] = floor;
 							}
 						}
+					}
+					
+					if (done)
+					{
+						break;
 					}
 				}
 				
