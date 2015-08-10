@@ -32,32 +32,37 @@ public class ImageUtils
 			{
 				Symbol s = grid[x][y];
 				
-				for (Sprite sprite : s.getTileData().sprites)
+				if (s.character == '#')
 				{
-					Pixmap src = TextureToPixmap(sprite.getCurrentTexture());
-					pixmap.drawPixmap(src, 
-							0, 0, src.getWidth(), src.getHeight(),
-							x*tileSize, y*tileSize, tileSize, tileSize);
-					src.dispose();
+					pixmap.setColor(Color.MAROON);
 				}
+				else if (s.character == '.')
+				{
+					pixmap.setColor(Color.GREEN);
+				}
+				else
+				{
+					pixmap.setColor(Color.BLUE);
+				}
+				pixmap.fillRectangle(x*tileSize, y*tileSize, tileSize, tileSize);
 				
-				if (s.hasEnvironmentEntity())
-				{
-					Pixmap src = TextureToPixmap(s.getEnvironmentEntity("").sprite.getCurrentTexture());
-					pixmap.drawPixmap(src, 
-							0, 0, src.getWidth(), src.getHeight(),
-							x*tileSize, y*tileSize, tileSize, tileSize);
-					src.dispose();
-				}
-				
-				if (s.hasGameEntity())
-				{
-					Pixmap src = TextureToPixmap(s.getGameEntity().sprite.getCurrentTexture());
-					pixmap.drawPixmap(src, 
-							0, 0, src.getWidth(), src.getHeight(),
-							x*tileSize, y*tileSize, tileSize, tileSize);
-					src.dispose();
-				}
+//				if (s.hasEnvironmentEntity())
+//				{
+//					Pixmap src = TextureToPixmap(s.getEnvironmentEntity("").sprite.getCurrentTexture());
+//					pixmap.drawPixmap(src, 
+//							0, 0, src.getWidth(), src.getHeight(),
+//							x*tileSize, y*tileSize, tileSize, tileSize);
+//					src.dispose();
+//				}
+//				
+//				if (s.hasGameEntity())
+//				{
+//					Pixmap src = TextureToPixmap(s.getGameEntity().sprite.getCurrentTexture());
+//					pixmap.drawPixmap(src, 
+//							0, 0, src.getWidth(), src.getHeight(),
+//							x*tileSize, y*tileSize, tileSize, tileSize);
+//					src.dispose();
+//				}
 			}
 		}
 		
@@ -97,21 +102,4 @@ public class ImageUtils
 		return image;
 	}
 	
-	public static Pixmap TextureToPixmap(TextureRegion texture)
-	{
-		try 
-		{
-			texture.getTexture().getTextureData().prepare();
-		}
-		catch (Exception e)
-		{
-			
-		}
-		return texture.getTexture().getTextureData().consumePixmap();
-	}
-	
-	public static Texture PixmapToTexture(Pixmap pixmap)
-	{
-		return new Texture(pixmap);
-	}
 }

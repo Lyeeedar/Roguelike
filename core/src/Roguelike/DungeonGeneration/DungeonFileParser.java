@@ -226,7 +226,10 @@ public class DungeonFileParser
 			else
 			{
 				Element generatorElement = xml.getChildByName("Generator");
-				room.generator = RoomGeneratorType.valueOf(generatorElement.getText().toUpperCase());				
+				room.generator = RoomGeneratorType.valueOf(generatorElement.getText().toUpperCase());
+				
+				room.width = xml.getInt("Width");
+				room.height = xml.getInt("Height");
 			}			
 			
 			Element symbolsElement = xml.getChildByName("Symbols");

@@ -1117,7 +1117,7 @@ public class RecursiveDockGenerator
 	public boolean createDynamics;
 	public String levelUID;
 	
-	private static final boolean DEBUG_OUTPUT = false;
+	private static final boolean DEBUG_OUTPUT = true;
 	private static final int DEBUG_SIZE = 16;
 
 	private GenerationTile[][] tiles;
@@ -1405,6 +1405,20 @@ public class RecursiveDockGenerator
 		}
 
 		//----------------------------------------------------------------------
+		private boolean isPosEnclosed(int x, int y)
+		{
+			boolean top = x+1 >= width || !roomContents[x+1][y].isPassable(GeneratorPassability);
+			boolean bottom = x-1 < 0 || !roomContents[x-1][y].isPassable(GeneratorPassability);
+			boolean left = y-1 < 0 || !roomContents[x][y-1].isPassable(GeneratorPassability);
+			boolean right = y+1 >= height || !roomContents[x][y+1].isPassable(GeneratorPassability);
+			
+			if (top && bottom) { return true; }
+			if (left && right) { return true; }
+			
+			return false;
+		}
+		
+		//----------------------------------------------------------------------
 		public void addFeatures(Random ran, DungeonFileParser dfp, FactionParser faction, int influence, boolean createDynamics)
 		{
 			Symbol[][] roomCopy = new Symbol[width][height];
@@ -1425,7 +1439,11 @@ public class RecursiveDockGenerator
 					if (roomContents[x][y].isPassable(GeneratorPassability))
 					{
 						int[] pos = {x, y};
-						validList.add(pos);
+						
+						if (!isPosEnclosed(x, y))
+						{
+							validList.add(pos);
+						}
 					}
 				}
 			}

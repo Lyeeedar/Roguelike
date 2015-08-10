@@ -93,13 +93,81 @@ public class Chambers
 				}
 			}
 		}
+		
+		private void placeDoor(Symbol[][]grid, Symbol floor, Symbol wall, Symbol door, Random ran)
+		{
+			int gridWidth = grid.length;
+			int gridHeight = grid[0].length;
+			Array<int[]> possibleDoorTiles = new Array<int[]>();
 			
+			if (splitVertically)
+			{
+				for (int ix = 1; ix < width-2; ix++)
+				{
+					int tx = x+ix;
+					int ty = child2.y;
+					
+					boolean valid = true;
+					if (valid)
+					{
+						int ttx = tx; int tty = ty-1;
+						if (tty >= 0 && grid[ttx][tty] != floor) { valid = false; }	
+					}
+					
+					if (valid)
+					{
+						int ttx = tx; int tty = ty+1;
+						if (tty < gridHeight && grid[ttx][tty] != floor) { valid = false; }	
+					}
+					
+					if (valid)
+					{
+						possibleDoorTiles.add(new int[]{tx, ty});
+					}
+				}
+			}
+			else
+			{
+				for (int iy = 1; iy < height-2; iy++)
+				{
+					int tx = child2.x;
+					int ty = y+iy;
+					
+					boolean valid = true;
+					if (valid)
+					{
+						int ttx = tx-1; int tty = ty;
+						if (ttx >= 0 && grid[ttx][tty] != floor) { valid = false; }	
+					}
+					
+					if (valid)
+					{
+						int ttx = tx+1; int tty = ty;
+						if (ttx < gridWidth && grid[ttx][tty] != floor) { valid = false; }	
+					}
+					
+					if (valid)
+					{
+						possibleDoorTiles.add(new int[]{tx, ty});
+					}
+				}
+			}
+			
+			int[] doorPos = possibleDoorTiles.size > 0 ? possibleDoorTiles.removeIndex(ran.nextInt(possibleDoorTiles.size)) : null;
+			
+			if (doorPos != null)
+			{
+				grid[doorPos[0]][doorPos[1]] = door;
+			}
+		}
+		
 		public void dig(Symbol[][]grid, Symbol floor, Symbol wall, Symbol door, Random ran)
 		{
 			if (child1 != null)
 			{
 				child1.dig(grid, floor, wall, door, ran);
 				child2.dig(grid, floor, wall, door, ran);
+				placeDoor(grid, floor, wall, door, ran);
 			}
 			else
 			{
@@ -112,70 +180,7 @@ public class Chambers
 				}
 			}
 			
-			int gridWidth = grid.length;
-			int gridHeight = grid[0].length;
-			Array<int[]> possibleDoorTiles = new Array<int[]>();
 			
-			if (splitVertically)
-			{
-				for (int ix = 1; ix < width-2; ix++)
-				{
-					possibleDoorTiles.add(new int[]{x+ix, y});
-				}
-			}
-			else
-			{
-				for (int iy = 1; iy < height-2; iy++)
-				{
-					possibleDoorTiles.add(new int[]{x, y+iy});
-				}
-			}
-			
-			int[] doorPos = null;
-			
-			while (possibleDoorTiles.size > 0)
-			{
-				int[] checkPos = possibleDoorTiles.removeIndex(ran.nextInt(possibleDoorTiles.size));
-				
-				boolean valid = true;
-				int tx = checkPos[0];
-				int ty = checkPos[1];
-				
-//				if (valid)
-//				{
-//					int ttx = tx-1; int tty = ty;
-//					if (ttx >= 0 && grid[ttx][tty] == wall) { valid = false; }	
-//				}
-//				
-//				if (valid)
-//				{
-//					int ttx = tx+1; int tty = ty;
-//					if (ttx < gridWidth && grid[ttx][tty] == wall) { valid = false; }	
-//				}
-//				
-//				if (valid)
-//				{
-//					int ttx = tx; int tty = ty-1;
-//					if (tty >= 0 && grid[ttx][tty] == wall) { valid = false; }	
-//				}
-//				
-//				if (valid)
-//				{
-//					int ttx = tx; int tty = ty+1;
-//					if (tty < gridHeight && grid[ttx][tty] == wall) { valid = false; }	
-//				}
-				
-				if (valid)
-				{
-					doorPos = checkPos;
-					break;
-				}
-			}
-			
-			if (doorPos != null)
-			{
-				grid[doorPos[0]][doorPos[1]] = door;
-			}
 		}
 	}
 	

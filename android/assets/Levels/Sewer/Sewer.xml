@@ -215,6 +215,12 @@
 
 		</Transition>
 		
+		<Chambers>
+		    <Width>20</Width>
+		    <Height>20</Height>
+		    <Generator>Chambers</Generator>
+		</Chambers>
+		
 	</Required>
 
 	
