@@ -4,6 +4,7 @@ import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 
 public class SaveSeenTile extends SaveableObject<SeenTile>
 {
@@ -15,8 +16,13 @@ public class SaveSeenTile extends SaveableObject<SeenTile>
 	{
 		seen = obj.seen;
 		
+		Pools.freeAll(history);		
 		history.clear();
-		history.addAll(obj.history);
+		
+		for (SeenHistoryItem item : obj.history)
+		{
+			history.add(item.copy());
+		}
 	}
 	
 	@Override
@@ -25,8 +31,13 @@ public class SaveSeenTile extends SaveableObject<SeenTile>
 		SeenTile tile = new SeenTile();
 		tile.seen = seen;
 		
+		Pools.freeAll(tile.history);
 		tile.history.clear();
-		tile.history.addAll(history);
+		
+		for (SeenHistoryItem item : history)
+		{
+			tile.history.add(item.copy());
+		}
 		
 		return tile;
 	}

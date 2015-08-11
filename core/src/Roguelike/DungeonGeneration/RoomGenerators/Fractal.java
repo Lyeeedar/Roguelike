@@ -4,7 +4,10 @@ import java.util.Random;
 
 import Roguelike.DungeonGeneration.DungeonFileParser;
 import Roguelike.DungeonGeneration.Symbol;
+import Roguelike.DungeonGeneration.DungeonFileParser.CorridorFeature;
+import Roguelike.DungeonGeneration.DungeonFileParser.CorridorFeature.PlacementMode;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 /**
@@ -14,6 +17,12 @@ import com.badlogic.gdx.utils.XmlReader.Element;
  */
 public class Fractal extends AbstractRoomGenerator
 {
+	private float frequency;
+	private float amplitude;
+	private int octaves;
+	private float scale;
+	private Array<FractalFeature> features = new Array<FractalFeature>();
+	
 	private boolean isPointValid(float[][] grid, int x, int y, float minval, float maxval)
 	{
 		int width = grid.length;
@@ -30,10 +39,13 @@ public class Fractal extends AbstractRoomGenerator
 	
 	public void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran, DungeonFileParser dfp)
 	{
+		Basic basic = new Basic();
+		basic.process(grid, floor, wall, ran, dfp);
+		
 		int width = grid.length;
 		int height = grid[0].length;
 		
-		NoiseGenerator noise = new NoiseGenerator(ran.nextInt(1000), 20, 0.8f, 8, 0.005f);
+		NoiseGenerator noise = new NoiseGenerator(ran.nextInt(1000), frequency, amplitude, octaves, scale);
 		float[][] simplexGrid = new float[width][height];
 		
 		for (int x = 0; x < width; x++)
@@ -52,11 +64,16 @@ public class Fractal extends AbstractRoomGenerator
 			{				
 				if (isPointValid(simplexGrid, x, y, 0, 0.6f))
 				{
-					grid[x][y] = wall;
-				}
-				else
-				{
-					grid[x][y] = floor;
+					float val = simplexGrid[x][y];
+					for (FractalFeature feature : features)
+					{
+						if (val >= feature.minVal && val <= feature.maxVal)
+						{
+							grid[x][y] = feature.getAsSymbol(grid[x][y]);
+							
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -85,8 +102,51 @@ public class Fractal extends AbstractRoomGenerator
 		}
 	}
 
+	//----------------------------------------------------------------------
+	public static class FractalFeature
+	{
+		public Element tileData;		
+		public Element environmentData;
+		public float minVal;
+		public float maxVal;
+		
+		public static FractalFeature load(Element xml)
+		{
+			FractalFeature feature = new FractalFeature();	
+
+			feature.tileData = xml.getChildByName("TileData");
+			feature.environmentData = xml.getChildByName("EnvironmentData");	
+			feature.minVal = xml.getFloat("Min", 0);
+			feature.maxVal = xml.getFloat("Max", 1);
+
+			return feature;
+		}
+
+		public Symbol getAsSymbol(Symbol current)
+		{
+			Symbol symbol = current.copy();
+			symbol.character = 'F';
+			symbol.tileData = tileData != null ? tileData : current.tileData;
+			symbol.environmentData = environmentData != null ? environmentData : current.environmentData;
+
+			return symbol;
+		}
+	}
+	
 	@Override
 	public void parse(Element xml)
 	{
+		frequency = xml.getFloat("Frequency", 10);
+		amplitude = xml.getFloat("Amplitude", 0.8f);
+		octaves = xml.getInt("Octaves", 8);
+		scale = xml.getFloat("Scale", 0.005f);
+		
+		Element featuresElement = xml.getChildByName("Features");
+		for (int i = 0; i < featuresElement.getChildCount(); i++)
+		{
+			Element featureElement = featuresElement.getChild(i);
+			FractalFeature feature = FractalFeature.load(featureElement);
+			features.add(feature);
+		}
 	}
 }

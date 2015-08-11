@@ -12,6 +12,7 @@ import Roguelike.Entity.EnvironmentEntity.ActivationAction;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
+import Roguelike.Fields.Field;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Levels.Level;
@@ -182,6 +183,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	//endregion Create
 	//####################################################################//
+	//region Screen
 
 	//----------------------------------------------------------------------
 	@Override
@@ -202,9 +204,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			fpsAccumulator = 0;
 		}		
 
-		updateCounter.start();
 		Global.CurrentLevel.update(delta);
-		updateCounter.stop();
 		
 		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
 		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
@@ -244,8 +244,59 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		toBeDrawn.clear();
 		hpBars.clear();
 		overHead.clear();
+		underFields.clear();
+		overFields.clear();
 
-		tileRender.start();
+		renderVisibleTiles(offsetx, offsety, tileSize3);
+		renderSeenTiles(offsetx, offsety, tileSize3);
+		renderItems(offsetx, offsety);
+		renderFields(underFields, offsetx, offsety);
+		renderCursor(offsetx, offsety, mousex, mousey, delta);
+		renderGameEntities(offsetx, offsety, tileSize3);
+		renderOverheadEntities(offsetx, offsety, tileSize3);
+		renderHpBars(offsetx, offsety);
+		renderActiveAbilities(offsetx, offsety);
+		renderSpriteEffects(offsetx, offsety, tileSize3);
+		renderFields(overFields, offsetx, offsety);
+
+		if (preparedAbility != null)
+		{
+			batch.setColor(0.3f, 0.6f, 0.8f, 0.5f);
+			for (int[] tile : abilityTiles)
+			{
+				batch.draw(white, tile[0]*Global.TileSize + offsetx, tile[1]*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
+			}
+		}
+
+		if (Global.ANDROID)
+		{
+			EntityStatusRenderer.draw(Global.CurrentLevel.player, batch, Global.Resolution[0]-(Global.Resolution[0]/4)-120, Global.Resolution[1] - 120, Global.Resolution[0]/4, 100, 1.0f/4.0f);
+		}
+		else
+		{
+			EntityStatusRenderer.draw(Global.CurrentLevel.player, batch, 20, Global.Resolution[1] - 120, Global.Resolution[0]/4, 100, 1.0f/4.0f);
+		}
+		
+		batch.end();
+
+		stage.act(delta);
+		stage.draw();
+
+		batch.begin();
+
+		if (dragDropPayload != null && dragDropPayload.shouldDraw())
+		{
+			dragDropPayload.sprite.render(batch, (int)dragDropPayload.x, (int)dragDropPayload.y, 32, 32);
+		}
+
+		font.draw(batch, "FPS: "+fps, Global.Resolution[0]-100, Global.Resolution[1] - 20);
+
+		batch.end();
+	}
+	
+	//----------------------------------------------------------------------
+	private void renderVisibleTiles(int offsetx, int offsety, int tileSize3)
+	{
 		for (int x = 0; x < Global.CurrentLevel.width; x++)
 		{
 			for (int y = 0; y < Global.CurrentLevel.height; y++)
@@ -259,6 +310,18 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					for (Sprite s : gtile.tileData.sprites)
 					{
 						s.render(batch, x*Global.TileSize + offsetx, y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
+					}
+					
+					if (gtile.field != null)
+					{
+						if (gtile.field.drawAbove)
+						{
+							overFields.add(gtile.field);
+						}
+						else
+						{
+							underFields.add(gtile.field);
+						}
 					}
 
 					if (gtile.environmentEntity != null) 
@@ -300,8 +363,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 			}
 		}
-		
+	}
+	
+	//----------------------------------------------------------------------
+	private void renderSeenTiles(int offsetx, int offsety, int tileSize3)
+	{
 		batch.setShader(GrayscaleShader.Instance);
+		batch.setColor(Global.CurrentLevel.Ambient);
 		for (int x = 0; x < Global.CurrentLevel.width; x++)
 		{
 			for (int y = 0; y < Global.CurrentLevel.height; y++)
@@ -311,8 +379,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				if (!gtile.GetVisible() && stile.seen)
 				{					
-					batch.setColor(Global.CurrentLevel.Ambient);
-
 					for (SeenHistoryItem hist : stile.history)
 					{
 						int cx = x*Global.TileSize + offsetx;
@@ -327,16 +393,17 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						{
 							hist.sprite.render(batch, cx, cy, Global.TileSize, Global.TileSize, hist.animationState);
 						}
-					}				
-
-					batch.setColor(Color.WHITE);				
+					}								
 				}
 			}
 		}
+		batch.setColor(Color.WHITE);
 		batch.setShader(null);
-		tileRender.stop();
-		
-		itemRender.start();
+	}
+	
+	//----------------------------------------------------------------------
+	private void renderItems(int offsetx, int offsety)
+	{
 		for (int x = 0; x < Global.CurrentLevel.width; x++)
 		{
 			for (int y = 0; y < Global.CurrentLevel.height; y++)
@@ -373,8 +440,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 			}
 		}
-		itemRender.stop();
-
+	}
+	
+	//----------------------------------------------------------------------
+	private void renderCursor(int offsetx, int offsety, int mousex, int mousey, float delta)
+	{
 		if (!mouseOverUI && !Global.ANDROID)
 		{					
 			if (
@@ -401,8 +471,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			border.render(batch, mousex*Global.TileSize + offsetx, mousey*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
 			batch.setColor(Color.WHITE);
 		}
-
-		entityRender.start();
+	}
+	
+	//----------------------------------------------------------------------
+	private void renderGameEntities(int offsetx, int offsety, int tileSize3)
+	{
 		for (GameEntity entity : toBeDrawn)
 		{
 			if (entity == Global.CurrentLevel.player)
@@ -454,7 +527,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 			hpBars.add(entity);
 		}
-		
+	}
+	
+	//----------------------------------------------------------------------
+	private void renderOverheadEntities(int offsetx, int offsety, int tileSize3)
+	{
 		for (EnvironmentEntity ee : overHead)
 		{
 			int cx = ee.tile.x*Global.TileSize + offsetx;
@@ -475,9 +552,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				hpBars.add(ee);
 			}
 		}
-		
-		entityRender.stop();
+	}
 
+	//----------------------------------------------------------------------
+	private void renderHpBars(int offsetx, int offsety)
+	{
 		for (Entity e : hpBars)
 		{
 			int x = e.tile.x;
@@ -495,8 +574,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 			EntityStatusRenderer.draw(e, batch, cx, cy, Global.TileSize, Global.TileSize, 1.0f/8.0f);
 		}
-
-		effectRender.start();
+	}
+	
+	//----------------------------------------------------------------------
+	private void renderActiveAbilities(int offsetx, int offsety)
+	{
 		for (ActiveAbility aa : Global.CurrentLevel.ActiveAbilities)
 		{
 			for (GameTile tile : aa.AffectedTiles)
@@ -507,7 +589,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 			}			
 		}
-		
+	}
+	
+	//----------------------------------------------------------------------
+	private void renderSpriteEffects(int offsetx, int offsety, int tileSize3)
+	{
 		for (int x = 0; x < Global.CurrentLevel.width; x++)
 		{
 			for (int y = 0; y < Global.CurrentLevel.height; y++)
@@ -530,96 +616,25 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 			}
 		}
-
-		if (preparedAbility != null)
-		{
-			batch.setColor(0.3f, 0.6f, 0.8f, 0.5f);
-			for (int[] tile : abilityTiles)
-			{
-				batch.draw(white, tile[0]*Global.TileSize + offsetx, tile[1]*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
-			}
-		}
-
-		if (Global.ANDROID)
-		{
-			EntityStatusRenderer.draw(Global.CurrentLevel.player, batch, Global.Resolution[0]-(Global.Resolution[0]/4)-120, Global.Resolution[1] - 120, Global.Resolution[0]/4, 100, 1.0f/4.0f);
-		}
-		else
-		{
-			EntityStatusRenderer.draw(Global.CurrentLevel.player, batch, 20, Global.Resolution[1] - 120, Global.Resolution[0]/4, 100, 1.0f/4.0f);
-		}
-		
-		effectRender.stop();
-
-		batch.end();
-
-		uiRender.start();
-		stage.act(delta);
-		stage.draw();
-		uiRender.stop();
-
-		batch.begin();
-
-		if (dragDropPayload != null && dragDropPayload.shouldDraw())
-		{
-			dragDropPayload.sprite.render(batch, (int)dragDropPayload.x, (int)dragDropPayload.y, 32, 32);
-		}
-
-		font.draw(batch, "FPS: "+fps, Global.Resolution[0]-100, Global.Resolution[1] - 20);
-
-		batch.end();
-		
-		if (DEBUG)
-		{
-			updateCounter.tick();
-			tileRender.tick();
-			itemRender.tick();
-			entityRender.tick();
-			effectRender.tick();
-			uiRender.tick();
-			
-			Level.updateDead.tick();
-			Level.updateLights.tick();
-			Level.updateSounds.tick();
-			Level.updateSprites.tick();
-			Level.updateVisible.tick();
+	}
 	
-			Level.updatePart1.tick();
-			Level.updatePart2.tick();
-			Level.updatePart3.tick();
-			Level.updatePart4.tick();
-			
-			debugOut += delta;
-			if (debugOut > 1)
-			{
-				debugOut = 0;
-				
-				System.out.println("Timers:");
-				
-				System.out.println(updateCounter.toString());
-				System.out.println(tileRender.toString());
-				System.out.println(itemRender.toString());
-				System.out.println(entityRender.toString());
-				System.out.println(effectRender.toString());
-				System.out.println(uiRender.toString());
-				
-				System.out.print("\n");
-				
-				System.out.println(Level.updateDead.toString());
-				System.out.println(Level.updateLights.toString());
-				System.out.println(Level.updateSounds.toString());
-				System.out.println(Level.updateSprites.toString());
-				System.out.println(Level.updateVisible.toString());
-				System.out.println(Level.updatePart1.toString());
-				System.out.println(Level.updatePart2.toString());
-				System.out.println(Level.updatePart3.toString());
-				System.out.println(Level.updatePart4.toString());
-				
-				System.out.println("\n");
-			}
+	//----------------------------------------------------------------------
+	private void renderFields(Array<Field> fields, int offsetx, int offsety)
+	{
+		for (Field field : fields)
+		{
+			int x = field.tile.x;
+			int y = field.tile.y;
+
+			int cx = x*Global.TileSize + offsetx;
+			int cy = y*Global.TileSize + offsety;
+
+			batch.setColor(field.tile.light);
+
+			field.sprite.render(batch, cx, cy, Global.TileSize, Global.TileSize);
 		}
 	}
-
+	
 	//----------------------------------------------------------------------
 	@Override
 	public void resize(int width, int height)
@@ -681,6 +696,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 	}
 
+	//endregion Screen
 	//####################################################################//
 	//region InputProcessor
 
@@ -1265,16 +1281,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	//####################################################################//
 	//region Data
 	
-	private static final boolean DEBUG = false;
-	private float debugOut = 0;
-	
-	private PerformanceCounter updateCounter = new PerformanceCounter("Update");
-	private PerformanceCounter tileRender = new PerformanceCounter("TileRender");
-	private PerformanceCounter itemRender = new PerformanceCounter("ItemRender");
-	private PerformanceCounter entityRender = new PerformanceCounter("EntityRender");
-	private PerformanceCounter effectRender = new PerformanceCounter("EffectRender");
-	private PerformanceCounter uiRender = new PerformanceCounter("UIRender");
-	
 	//----------------------------------------------------------------------
 	private boolean longPressed;
 	private boolean dragged;
@@ -1333,6 +1339,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private Array<GameEntity> toBeDrawn = new Array<GameEntity>();
 	private Array<EnvironmentEntity> overHead = new Array<EnvironmentEntity>();
 	private Array<Entity> hpBars = new Array<Entity>();
+	private Array<Field> underFields = new Array<Field>();
+	private Array<Field> overFields = new Array<Field>();
 
 	//----------------------------------------------------------------------
 	private Sprite border;

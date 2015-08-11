@@ -5,6 +5,7 @@ import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Fields.Field;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Tiles.GameTile;
@@ -27,6 +28,7 @@ public class SaveLevel extends SaveableObject<Level>
 	public Array<SaveGameEntity> gameEntities = new Array<SaveGameEntity>();
 	public Array<SaveLevelItem> items = new Array<SaveLevelItem>();
 	public Array<SaveEnvironmentEntity> environmentEntities = new Array<SaveEnvironmentEntity>();
+	public Array<SaveField> fields = new Array<SaveField>();
 	
 	public SaveSeenTile[][] seenTiles;
 
@@ -63,7 +65,9 @@ public class SaveLevel extends SaveableObject<Level>
 		requiredRooms.addAll(obj.requiredRooms);
 		
 		gameEntities.clear();
-		for (GameEntity entity : obj.getAllEntities())
+		Array<GameEntity> tempGameEntities = new Array<GameEntity>(false, 16);
+		obj.getAllEntities(tempGameEntities);	
+		for (GameEntity entity : tempGameEntities)
 		{
 			SaveGameEntity saveObj = new SaveGameEntity();
 			saveObj.store(entity);
@@ -88,8 +92,20 @@ public class SaveLevel extends SaveableObject<Level>
 			}
 		}
 		
+		fields.clear();
+		Array<Field> tempFields = new Array<Field>(false, 16);
+		obj.getAllFields(tempFields);
+		for (Field field : tempFields)
+		{
+			SaveField save = new SaveField();
+			save.store(field);
+			fields.add(save);
+		}
+		
 		environmentEntities.clear();
-		for (EnvironmentEntity entity : obj.getAllEnvironmentEntities())
+		Array<EnvironmentEntity> tempEnvironmentEntities = new Array<EnvironmentEntity>(false, 16);
+		obj.getAllEnvironmentEntities(tempEnvironmentEntities);	
+		for (EnvironmentEntity entity : tempEnvironmentEntities)
 		{
 			if (entity.canTakeDamage)
 			{
@@ -134,6 +150,13 @@ public class SaveLevel extends SaveableObject<Level>
 			{
 				level.player = ge;
 			}
+		}
+		
+		for (SaveField field : fields)
+		{
+			GameTile tile = level.getGameTile(field.pos);
+			Field f = field.create();
+			tile.field = f;
 		}
 		
 		for (SaveLevelItem item : items)

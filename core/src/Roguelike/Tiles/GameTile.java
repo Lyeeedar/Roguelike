@@ -4,6 +4,7 @@ import Roguelike.Global;
 import Roguelike.Global.Passability;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Fields.Field;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.PathfindingTile;
@@ -24,6 +25,7 @@ public class GameTile implements PathfindingTile
 	
 	public GameEntity entity;
 	public EnvironmentEntity environmentEntity;
+	public Field field;
 		
 	public Level level;
 	
@@ -101,6 +103,18 @@ public class GameTile implements PathfindingTile
 	@Override
 	public boolean getPassable(Array<Passability> travelType)
 	{
+		if (field != null)
+		{
+			if (Passability.isPassable(field.allowPassability, travelType))
+			{
+				return true;
+			}
+			else if (Passability.isPassable(field.restrictPassability, travelType))
+			{
+				return false;
+			}
+		}
+		
 		if (environmentEntity != null && !Passability.isPassable(environmentEntity.passableBy, travelType)) { return false; }
 		
 		boolean passable = Passability.isPassable(tileData.passableBy, travelType);
@@ -109,7 +123,6 @@ public class GameTile implements PathfindingTile
 		
 		return travelType.contains(Passability.ENTITY, true) || entity == null;
 	}
-
 	
 	@Override
 	public int getInfluence()

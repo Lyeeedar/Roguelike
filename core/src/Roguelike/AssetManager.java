@@ -77,7 +77,7 @@ public class AssetManager
 		return sound;
 	}
 	
-	private static final PixmapPacker packer = new PixmapPacker(1024, 1024, Format.RGBA8888, 2, false);
+	private static final PixmapPacker packer = new PixmapPacker(1024, 1024, Format.RGBA8888, 2, true);
 	private static final TextureAtlas atlas = new TextureAtlas();
 	
 	private static HashMap<String, TextureRegion> loadedTextureRegions = new HashMap<String, TextureRegion>();

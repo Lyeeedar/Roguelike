@@ -1,15 +1,12 @@
 package Roguelike.Levels;
 
-import java.util.HashSet;
 import java.util.Iterator;
 
-import Roguelike.GameEvent.GameEventHandler;
-import Roguelike.Global.Passability;
-import Roguelike.Global.Statistic;
 import Roguelike.AssetManager;
 import Roguelike.Global;
+import Roguelike.Global.Passability;
+import Roguelike.Global.Statistic;
 import Roguelike.RoguelikeGame;
-import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
@@ -18,71 +15,36 @@ import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
-import Roguelike.Entity.Tasks.TaskAttack;
-import Roguelike.Entity.Tasks.TaskMove;
-import Roguelike.Entity.Tasks.TaskUseAbility;
-import Roguelike.Entity.Tasks.TaskWait;
+import Roguelike.Fields.Field;
+import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.ItemType;
 import Roguelike.Items.Recipe;
 import Roguelike.Lights.Light;
+import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Sprite.BumpAnimation;
 import Roguelike.Sprite.MoveAnimation;
+import Roguelike.Sprite.MoveAnimation.MoveEquation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
-import Roguelike.Sprite.MoveAnimation.MoveEquation;
-import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
-import Roguelike.UI.MessageStack.Line;
-import Roguelike.UI.MessageStack.Message;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.PerformanceCounter;
 import com.badlogic.gdx.utils.Pools;
 
 public class Level
 {
-	private static final Array<Passability> ItemDropPassability = new Array<Passability>(new Passability[]{Passability.WALK, Passability.ENTITY});
+	//####################################################################//
+	//region Constructor
 	
-	public Array<RepeatingSoundEffect> ambientSounds = new Array<RepeatingSoundEffect>();
-	public String bgmName;
-	
-	public String fileName;
-	public int depth;
-	public long seed;
-	public Array<DFPRoom> requiredRooms;
-	public String UID;
-	
-	public GameEntity player;
-	
-	public Color Ambient = new Color(0.1f, 0.1f, 0.3f, 1.0f);
-	
-	public SeenTile[][] SeenGrid;
-	private GameTile[][] Grid;
-	public int width;
-	public int height;
-	
-	private final PlayerVisibilityData visibilityData = new PlayerVisibilityData();
-	
-	public static PerformanceCounter updateLights = new PerformanceCounter("UpdateLights");
-	public static PerformanceCounter updateSounds = new PerformanceCounter("UpdateSounds");
-	public static PerformanceCounter updateSprites = new PerformanceCounter("UpdateSprites");
-	public static PerformanceCounter updateDead = new PerformanceCounter("UpdateDead");
-	public static PerformanceCounter updateVisible = new PerformanceCounter("UpdateVisible");
-	
-	public static PerformanceCounter updatePart1 = new PerformanceCounter("UpdatePart1");
-	public static PerformanceCounter updatePart2 = new PerformanceCounter("UpdatePart2");
-	public static PerformanceCounter updatePart3 = new PerformanceCounter("UpdatePart3");
-	public static PerformanceCounter updatePart4 = new PerformanceCounter("UpdatePart4");
-			
 	public Level(GameTile[][] grid)
 	{
 		this.Grid = grid;
@@ -100,186 +62,19 @@ public class Level
 		}
 	}
 	
-	public GameTile[][] getGrid()
-	{
-		return Grid;
-	}
+	//endregion Constructor
+	//####################################################################//
+	//region Public Methods
 	
-	public GameTile getGameTile(int[] pos)
-	{
-		return getGameTile(pos[0], pos[1]);
-	}
-	
-	public GameTile getGameTile(int x, int y)
-	{
-		if (x < 0 || x >= width || y < 0 || y >= height) { return null; }
-		
-		return Grid[x][y];
-	}
-	
-	public SeenTile getSeenTile(int[] pos)
-	{
-		return getSeenTile(pos[0], pos[1]);
-	}
-	
-	public SeenTile getSeenTile(int x, int y)
-	{
-		if (x < 0 || x >= width || y < 0 || y >= height) { return null; }
-		
-		return SeenGrid[x][y];
-	}
-	
-	public void revealWholeLevel()
-	{
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{
-				if (!SeenGrid[x][y].seen)
-				{
-					SeenTile s = SeenGrid[x][y];
-					s.gameTile = Grid[x][y];
-					s.seen = true;
-					
-					s.history.clear();
-					
-					for (Sprite sprite : Grid[x][y].tileData.sprites)
-					{
-						s.history.add(new SeenHistoryItem(sprite, Grid[x][y].tileData.description));
-					}
-				}
-			}
-		}
-	}
-	
-	public void updateSeenGrid()
-	{
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{
-				GameTile tile = Grid[x][y];
-				if (tile.GetVisible())
-				{
-					SeenTile s = SeenGrid[x][y];
-					s.gameTile = tile;
-					s.seen = true;
-					
-					s.history.clear();
-					
-					for (Sprite sprite : tile.tileData.sprites)
-					{
-						s.history.add(new SeenHistoryItem(sprite, tile.tileData.description));
-					}
-					
-					if (tile.environmentEntity != null)
-					{
-						SeenHistoryItem shi = new SeenHistoryItem(tile.environmentEntity.sprite, "");
-						shi.location = tile.environmentEntity.location;
-						s.history.add(shi);
-					}
-										
-					if (tile.entity != null && tile.entity != player)
-					{						
-						s.history.add(new SeenHistoryItem(tile.entity.sprite, "A " + tile.entity.name));
-					}
-					
-					if (tile.items.size == 0)
-					{
-						
-					}
-					else if (tile.items.size == 1)
-					{
-						s.history.add(new SeenHistoryItem(tile.items.get(0).getIcon(), ""));
-					}
-					else
-					{
-						s.history.add(new SeenHistoryItem(AssetManager.loadSprite("bag"), ""));
-					}
-				}
-			}
-		}
-	}
-	
-	public void calculateLight(float delta, Array<Light> lights)
-	{
-		for (Light l : lights)
-		{
-			if (!l.copied) { l.update(delta); }
-			calculateSingleLight(l);
-			if (l.copied)
-			{
-				Pools.free(l);
-			}
-		}
-	}
-	
-	private void calculateSingleLight(Light l)
-	{
-		Array<int[]> output = l.getShadowCast(Grid);
-				
-		for (int[] tilePos : output)
-		{
-			GameTile tile = getGameTile(tilePos);
-			
-			float dst = 1 - Vector2.dst2(l.lx, l.ly, tile.x, tile.y) / (l.actualIntensity * l.actualIntensity);
-			if (dst < 0) {dst = 0;}
-			
-			Color lcol = tempColor.set(l.colour).mul(dst);
-			lcol.mul(lcol.a);
-			lcol.a = 1;
-			
-			tile.light.add(lcol);
-		}
-	}
-	
-	public Entity getEntityWithUID(String UID)
-	{
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{
-				GameTile tile = getGameTile(x, y);
-				
-				if (tile.environmentEntity != null)
-				{
-					if (tile.environmentEntity.UID.equals(UID)) { return tile.environmentEntity; }
-				}
-				
-				if (tile.entity != null)
-				{
-					if (tile.entity.UID.equals(UID)) { return tile.entity; }
-				}
-			}
-		}
-		
-		return null;
-	}
-	
-	private static final Color tempColor = new Color();
-	
-	public Array<ActiveAbility> ActiveAbilities = new Array<ActiveAbility>(false, 16);
-	private Array<ActiveAbility> NewActiveAbilities = new Array<ActiveAbility>(false, 16);
 	public void addActiveAbility(ActiveAbility aa)
 	{
 		NewActiveAbilities.add(aa);
 	}
 	
-	private Array<GameEntity> visibleList = new Array<GameEntity>(false, 16);
-	private Array<GameEntity> invisibleList = new Array<GameEntity>(false, 16);
-	
-	private Array<Light> lightList = new Array<Light>(false, 16);
-	
-	private Array<Light> tempLightList = new Array<Light>(false, 16);
-	
-	private float updateDeltaStep = 0.05f;
-	private float updateAccumulator;
 	public void update(float delta)
 	{
 		updateAccumulator += delta;
-		
-		updatePart1.start();
-		
+				
 		// setup player abilities
 		if (Global.abilityPool.isVariableMapDirty)
 		{
@@ -307,10 +102,6 @@ public class Level
 			player.isVariableMapDirty = true;
 			Global.abilityPool.isVariableMapDirty = false;
 		}
-		
-		updatePart1.stop();
-		
-		updatePart2.start();
 		
 		if (!hasActiveEffects())
 		{	
@@ -353,14 +144,8 @@ public class Level
 			}
 		}
 		
-		updatePart2.stop();
-		
-		updatePart3.start();
-		
-		updateVisible.start();
 		updateVisibleTiles();
 		lightList.clear();	
-		updateVisible.stop();
 		
 		Color acol = new Color(Ambient);
 		acol.mul(acol.a);
@@ -379,46 +164,253 @@ public class Level
 				{ 
 					tile.light = new Color(acol);
 					
-					updateSprites.start();
 					updateSpritesForTile(tile, delta);
 					updateSpriteEffectsForTile(tile, delta);
-					updateSprites.stop();
 				}
 				else
 				{
-					clearEffectForTile(tile);
+					clearEffectsForTile(tile);
 				}
 				
-				updateDead.start();
 				cleanUpDeadForTile(tile);
-				updateDead.stop();
 			}
 		}
-		
-		updatePart3.stop();
-		
-		updatePart4.start();
-		
-		updateSprites.start();
+
 		for (ActiveAbility aa : ActiveAbilities)
 		{
 			aa.getSprite().update(delta);
+			
+			if (aa.light != null)
+			{
+				for (GameTile t : aa.AffectedTiles)
+				{
+					int lx = t.x;
+					int ly = t.y;
+					if (checkLightCloseEnough(lx, ly, (int)aa.light.baseIntensity, player.tile.x, player.tile.y, playerViewRange))
+					{
+						Light light = aa.light.copy();
+						light.lx = lx;
+						light.ly = ly;
+						lightList.add(light);
+					}
+				}
+			}
 		}
-		updateSprites.stop();
-		
-		updateLights.start();
+
 		calculateLight(delta, lightList);
-		updateLights.stop();
 		
-		updateSounds.start();
 		for (RepeatingSoundEffect sound : ambientSounds)
 		{
 			sound.update(delta);
 		}
-		updateSounds.stop();
-		
-		updatePart4.stop();
 	}
+	
+	//endregion Public Methods
+	//####################################################################//
+	//region Visibility
+	
+	public void updateVisibleTiles()
+	{
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{	
+				Grid[x][y].SetVisible(false);
+			}
+		}
+		
+		Array<int[]> output = visibilityData.getShadowCast(Grid, player, player.tile.x, player.tile.y);
+		
+		for (int[] tilePos : output)
+		{
+			getGameTile(tilePos).SetVisible(true);
+		}
+		
+		updateSeenGrid();
+	}
+	
+	private void updateSeenGrid()
+	{
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				GameTile tile = Grid[x][y];
+				if (tile.GetVisible())
+				{
+					SeenTile s = SeenGrid[x][y];
+					s.gameTile = tile;
+					s.seen = true;
+					
+					Pools.freeAll(s.history);
+					s.history.clear();
+					
+					for (Sprite sprite : tile.tileData.sprites)
+					{
+						s.history.add(Pools.obtain(SeenHistoryItem.class).set(sprite, tile.tileData.description));
+					}
+					
+					if (tile.field != null)
+					{						
+						s.history.add(Pools.obtain(SeenHistoryItem.class).set(tile.field.sprite, ""));
+					}
+					
+					if (tile.environmentEntity != null)
+					{
+						SeenHistoryItem shi = Pools.obtain(SeenHistoryItem.class).set(tile.environmentEntity.sprite, "");
+						shi.location = tile.environmentEntity.location;
+						s.history.add(shi);
+					}
+										
+					if (tile.entity != null && tile.entity != player)
+					{						
+						s.history.add(Pools.obtain(SeenHistoryItem.class).set(tile.entity.sprite, ""));
+					}
+					
+					if (tile.items.size == 0)
+					{
+						
+					}
+					else if (tile.items.size == 1)
+					{
+						s.history.add(Pools.obtain(SeenHistoryItem.class).set(tile.items.get(0).getIcon(), ""));
+					}
+					else
+					{
+						s.history.add(Pools.obtain(SeenHistoryItem.class).set(AssetManager.loadSprite("bag"), ""));
+					}
+				}
+			}
+		}
+	}
+	
+	//endregion Visibility
+	//####################################################################//
+	//region Lights
+	
+	private void calculateLight(float delta, Array<Light> lights)
+	{
+		for (Light l : lights)
+		{
+			l.update(delta);
+			calculateSingleLight(l);
+			if (l.copied) { Pools.free(l); }
+		}
+	}
+	
+	private void calculateSingleLight(Light l)
+	{
+		Array<int[]> output = l.getShadowCast(Grid);
+				
+		for (int[] tilePos : output)
+		{
+			GameTile tile = getGameTile(tilePos);
+			
+			float dst = 1 - Vector2.dst2(l.lx, l.ly, tile.x, tile.y) / (l.actualIntensity * l.actualIntensity);
+			if (dst < 0) { dst = 0; }
+			
+			Color lcol = tempColor.set(l.colour).mul(dst);
+			lcol.mul(lcol.a);
+			lcol.a = 1;
+			
+			tile.light.add(lcol);
+		}
+	}
+	
+	private void getLightsForTile(GameTile tile, Array<Light> output, int viewRange)
+	{		
+		int lx = tile.x;
+		int ly = tile.y;
+		
+		int px = player.tile.x;
+		int py = player.tile.y;
+		
+		if (tile.tileData.light != null)
+		{
+			if (checkLightCloseEnough(lx, ly, (int)tile.tileData.light.baseIntensity, px, py, viewRange))
+			{
+				Light l = tile.tileData.light.copy();
+				l.lx = lx;
+				l.ly = ly;
+				output.add(l);
+			}		
+		}
+		
+		if (tile.field != null && tile.field.light != null)
+		{
+			if (checkLightCloseEnough(lx, ly, (int)tile.field.light.baseIntensity, px, py, viewRange))
+			{
+				tile.field.light.lx = lx;
+				tile.field.light.ly = ly;
+				output.add(tile.field.light);
+			}
+		}
+		
+		if (tile.environmentEntity != null && tile.environmentEntity.light != null)
+		{
+			if (checkLightCloseEnough(lx, ly, (int)tile.environmentEntity.light.baseIntensity, px, py, viewRange))
+			{
+				tile.environmentEntity.light.lx = lx;
+				tile.environmentEntity.light.ly = ly;
+				output.add(tile.environmentEntity.light);
+			}
+		}
+		
+		for (SpriteEffect se : tile.spriteEffects)
+		{
+			if (se.light != null)
+			{
+				if (checkLightCloseEnough(lx, ly, (int)se.light.baseIntensity, px, py, viewRange))
+				{
+					se.light.lx = lx;
+					se.light.ly = ly;
+					output.add(se.light);
+				}
+			}
+		}
+		
+		if (tile.entity != null)
+		{
+			tempLightList.clear();
+			tile.entity.getLight(tempLightList);
+			for (Light l : tempLightList)
+			{
+				if (checkLightCloseEnough(lx, ly, (int)l.baseIntensity, px, py, viewRange))
+				{
+					l.lx = lx;
+					l.ly = ly;
+					output.add(l);
+				}
+			}
+			
+			for (SpriteEffect se : tile.entity.spriteEffects)
+			{
+				if (se.light != null)
+				{
+					if (checkLightCloseEnough(lx, ly, (int)se.light.baseIntensity, px, py, viewRange))
+					{
+						se.light.lx = lx;
+						se.light.ly = ly;
+						output.add(se.light);
+					}
+				}
+			}
+		}
+	}
+	
+	private boolean checkLightCloseEnough(int lx, int ly, int intensity, int px, int py, int viewRange)
+	{
+		if (Math.max(Math.abs(px - lx), Math.abs(py - ly)) > viewRange+intensity)
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//endregion Lights
+	//####################################################################//
+	//region Cleanup
 	
 	private void cleanUpDeadForTile(GameTile tile)
 	{
@@ -528,7 +520,7 @@ public class Level
 		}
 	}
 	
-	private void clearEffectForTile(GameTile tile)
+	private void clearEffectsForTile(GameTile tile)
 	{
 		tile.spriteEffects.clear();
 		
@@ -549,6 +541,10 @@ public class Level
 			i.getIcon().spriteAnimation = null;
 		}
 	}
+	
+	//endregion Cleanup
+	//####################################################################//
+	//region Update
 	
 	private void updateSpriteEffectsForTile(GameTile tile, float delta)
 	{
@@ -593,6 +589,11 @@ public class Level
 			sprite.update(delta);
 		}
 		
+		if (tile.field != null)
+		{
+			tile.field.sprite.update(delta);
+		}
+		
 		if (tile.environmentEntity != null)
 		{
 			tile.environmentEntity.sprite.update(delta);
@@ -609,119 +610,9 @@ public class Level
 		}
 	}
 	
-	private void getLightsForTile(GameTile tile, Array<Light> output, int viewRange)
-	{		
-		int lx = tile.x;
-		int ly = tile.y;
-		
-		int px = player.tile.x;
-		int py = player.tile.y;
-		
-		if (tile.tileData.light != null)
-		{
-			if (checkLightCloseEnough(lx, ly, (int)tile.tileData.light.baseIntensity, px, py, viewRange))
-			{
-				Light l = tile.tileData.light.copy();
-				l.lx = lx;
-				l.ly = ly;
-				output.add(l);
-			}		
-		}
-		
-		if (tile.environmentEntity != null && tile.environmentEntity.light != null)
-		{
-			if (checkLightCloseEnough(lx, ly, (int)tile.environmentEntity.light.baseIntensity, px, py, viewRange))
-			{
-				tile.environmentEntity.light.lx = lx;
-				tile.environmentEntity.light.ly = ly;
-				output.add(tile.environmentEntity.light);
-			}
-		}
-		
-		for (SpriteEffect se : tile.spriteEffects)
-		{
-			if (se.light != null)
-			{
-				if (checkLightCloseEnough(lx, ly, (int)se.light.baseIntensity, px, py, viewRange))
-				{
-					se.light.lx = lx;
-					se.light.ly = ly;
-					output.add(se.light);
-				}
-			}
-		}
-		
-		if (tile.entity != null)
-		{
-			tempLightList.clear();
-			tile.entity.getLight(tempLightList);
-			for (Light l : tempLightList)
-			{
-				if (checkLightCloseEnough(lx, ly, (int)l.baseIntensity, px, py, viewRange))
-				{
-					l.lx = lx;
-					l.ly = ly;
-					output.add(l);
-				}
-			}
-			
-			for (SpriteEffect se : tile.entity.spriteEffects)
-			{
-				if (se.light != null)
-				{
-					if (checkLightCloseEnough(lx, ly, (int)se.light.baseIntensity, px, py, viewRange))
-					{
-						se.light.lx = lx;
-						se.light.ly = ly;
-						output.add(se.light);
-					}
-				}
-			}
-		}
-	}
-	
-	public boolean checkLightCloseEnough(int lx, int ly, int intensity, int px, int py, int viewRange)
-	{
-		if (Math.max(Math.abs(px - lx), Math.abs(py - ly)) > viewRange+intensity)
-		{
-			return false;
-		}
-		
-		return true;
-	}
-	
-	private boolean hasAbilitiesToUpdate()
-	{
-		for (ActiveAbility aa : ActiveAbilities)
-		{
-			if (aa.needsUpdate())
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
-		
-	public void updateVisibleTiles()
-	{
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{	
-				Grid[x][y].SetVisible(false);
-			}
-		}
-		
-		Array<int[]> output = visibilityData.getShadowCast(Grid, player, player.tile.x, player.tile.y);
-		
-		for (int[] tilePos : output)
-		{
-			getGameTile(tilePos).SetVisible(true);
-		}
-		
-		updateSeenGrid();
-	}
+	//endregion Update
+	//####################################################################//
+	//region Process
 	
 	private void processPlayer()
 	{
@@ -750,9 +641,23 @@ public class Level
 			
 			getAllEntitiesToBeProcessed(actionCost);
 			
-			for (EnvironmentEntity ee : getAllEnvironmentEntities())
+			tempEnvironmentEntityList.clear();
+			getAllEnvironmentEntities(tempEnvironmentEntityList);
+			for (EnvironmentEntity ee : tempEnvironmentEntityList)
 			{
 				ee.update(actionCost);
+			}
+			
+			tempFieldList.clear();
+			getAllFields(tempFieldList);
+			for (Field f : tempFieldList)
+			{
+				f.update(actionCost);
+				if (f.stacks < 1)
+				{
+					f.onDeath();
+					f.tile.field = null;
+				}
 			}
 			
 			// check if enemy visible			
@@ -886,7 +791,155 @@ public class Level
 		}
 	}
 	
-	public boolean enemyVisible()
+	private void getAllEntitiesToBeProcessed(float cost)
+	{		
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				boolean visible = Grid[x][y].GetVisible();
+				GameEntity e = Grid[x][y].entity;
+				if (e != null && e != player)
+				{
+					e.update(cost);
+					
+					if (e.actionDelayAccumulator > 0)
+					{
+						if (visible)
+						{
+							visibleList.add(e);
+						}
+						else
+						{
+							invisibleList.add(e);
+						}					
+					}
+				}
+			}
+		}
+		
+		for (ActiveAbility aa : ActiveAbilities)
+		{
+			aa.updateAccumulators(cost);
+		}
+	}
+	
+	//endregion Process
+	//####################################################################//
+	//region Getters
+	
+	public GameTile[][] getGrid()
+	{
+		return Grid;
+	}
+	
+	public GameTile getGameTile(int[] pos)
+	{
+		return getGameTile(pos[0], pos[1]);
+	}
+	
+	public GameTile getGameTile(int x, int y)
+	{
+		if (x < 0 || x >= width || y < 0 || y >= height) { return null; }
+		
+		return Grid[x][y];
+	}
+	
+	public SeenTile getSeenTile(int[] pos)
+	{
+		return getSeenTile(pos[0], pos[1]);
+	}
+	
+	public SeenTile getSeenTile(int x, int y)
+	{
+		if (x < 0 || x >= width || y < 0 || y >= height) { return null; }
+		
+		return SeenGrid[x][y];
+	}
+	
+	public Entity getEntityWithUID(String UID)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				GameTile tile = getGameTile(x, y);
+				
+				if (tile.environmentEntity != null)
+				{
+					if (tile.environmentEntity.UID.equals(UID)) { return tile.environmentEntity; }
+				}
+				
+				if (tile.entity != null)
+				{
+					if (tile.entity.UID.equals(UID)) { return tile.entity; }
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	public void getAllFields(Array<Field> list)
+	{		
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				if (Grid[x][y].field != null)
+				{
+					list.add(Grid[x][y].field);
+				}
+			}
+		}
+	}
+	
+	public void getAllEntities(Array<GameEntity> list)
+	{		
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				if (Grid[x][y].entity != null)
+				{
+					list.add(Grid[x][y].entity);
+				}
+			}
+		}
+	}
+	
+	public void getAllEnvironmentEntities(Array<EnvironmentEntity> list)
+	{		
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				if (Grid[x][y].environmentEntity != null)
+				{
+					list.add(Grid[x][y].environmentEntity);
+				}
+			}
+		}
+	}
+	
+	//endregion Getters	
+	//####################################################################//
+	//region Misc
+	
+	private boolean hasAbilitiesToUpdate()
+	{
+		for (ActiveAbility aa : ActiveAbilities)
+		{
+			if (aa.needsUpdate())
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean enemyVisible()
 	{
 		boolean enemy = false;
 		
@@ -909,7 +962,7 @@ public class Level
 		return enemy;
 	}
 	
-	public boolean hasActiveEffects()
+	private boolean hasActiveEffects()
 	{
 		boolean activeEffects = false;
 		
@@ -959,7 +1012,7 @@ public class Level
 		return activeEffects;
 	}
 	
-	public boolean hasActiveEffects(Entity e)
+	private boolean hasActiveEffects(Entity e)
 	{
 		if (e.tile.spriteEffects.size > 0)
 		{
@@ -981,75 +1034,54 @@ public class Level
 		return activeEffects;
 	}
 	
-	public void getAllEntitiesToBeProcessed(float cost)
-	{		
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{
-				boolean visible = Grid[x][y].GetVisible();
-				GameEntity e = Grid[x][y].entity;
-				if (e != null && e != player)
-				{
-					e.update(cost);
-					
-					if (e.actionDelayAccumulator > 0)
-					{
-						if (visible)
-						{
-							visibleList.add(e);
-						}
-						else
-						{
-							invisibleList.add(e);
-						}					
-					}
-				}
-			}
-		}
-		
-		for (ActiveAbility aa : ActiveAbilities)
-		{
-			aa.updateAccumulators(cost);
-		}
-	}
-		
-	public Array<GameEntity> getAllEntities()
-	{
-		Array<GameEntity> list = new Array<GameEntity>();
-		
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{
-				if (Grid[x][y].entity != null)
-				{
-					list.add(Grid[x][y].entity);
-				}
-			}
-		}
-		
-		return list;
-	}
+	//endregion Misc
+	//####################################################################//
+	//region Data
 	
-	public Array<EnvironmentEntity> getAllEnvironmentEntities()
-	{
-		Array<EnvironmentEntity> list = new Array<EnvironmentEntity>();
-		
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{
-				if (Grid[x][y].environmentEntity != null)
-				{
-					list.add(Grid[x][y].environmentEntity);
-				}
-			}
-		}
-		
-		return list;
-	}
-
+	private static final Array<Passability> ItemDropPassability = new Array<Passability>(new Passability[]{Passability.WALK, Passability.ENTITY});
+	
+	private static final Color tempColor = new Color();
+	
+	private Array<GameEntity> visibleList = new Array<GameEntity>(false, 16);
+	private Array<GameEntity> invisibleList = new Array<GameEntity>(false, 16);
+	
+	private Array<Light> lightList = new Array<Light>(false, 16);
+	
+	private Array<GameEntity> tempEntityList = new Array<GameEntity>(false, 16);
+	private Array<EnvironmentEntity> tempEnvironmentEntityList = new Array<EnvironmentEntity>(false, 16);
+	private Array<Field> tempFieldList = new Array<Field>(false, 16);
+ 	private Array<Light> tempLightList = new Array<Light>(false, 16);
+	
+	private float updateDeltaStep = 0.05f;
+	private float updateAccumulator;
+	
+	public Array<ActiveAbility> ActiveAbilities = new Array<ActiveAbility>(false, 16);
+	private Array<ActiveAbility> NewActiveAbilities = new Array<ActiveAbility>(false, 16);
+	
+	public Array<RepeatingSoundEffect> ambientSounds = new Array<RepeatingSoundEffect>();
+	public String bgmName;
+	
+	public String fileName;
+	public int depth;
+	public long seed;
+	public Array<DFPRoom> requiredRooms;
+	public String UID;
+	
+	public GameEntity player;
+	
+	public Color Ambient = new Color(0.1f, 0.1f, 0.3f, 1.0f);
+	
+	public SeenTile[][] SeenGrid;
+	private GameTile[][] Grid;
+	public int width;
+	public int height;
+	
+	private final PlayerVisibilityData visibilityData = new PlayerVisibilityData();
+	
+	//endregion Data
+	//####################################################################//
+	//region Classes
+	
 	private static class PlayerVisibilityData
 	{
 		private static final Array<Passability> LightPassability = new Array<Passability>(new Passability[]{Passability.LIGHT});
@@ -1112,4 +1144,7 @@ public class Level
 			return shadowCastOutput;
 		}
 	}
+	
+	//endregion Classes
+	//####################################################################//
 }

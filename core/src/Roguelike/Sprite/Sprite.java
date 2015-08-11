@@ -194,5 +194,13 @@ public class Sprite
 			
 			return as;
 		}
+		
+		public void set(AnimationState other)
+		{
+			mode = other.mode;
+			texIndex = other.texIndex;
+			isShrunk = other.isShrunk;
+			sinOffset = other.sinOffset;
+		}
 	}
 }

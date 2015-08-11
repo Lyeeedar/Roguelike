@@ -36,9 +36,10 @@
 			<Placement>Wall</Placement>
 			
 			<EnvironmentData>
+			    <Passable>true</Passable>
+				<Opaque>false</Opaque>
 				<Sprite>
 					<Name>mushroom/cluster</Name>
-					<Opaque>false</Opaque>
 				</Sprite>
 			</EnvironmentData>
 			

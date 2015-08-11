@@ -36,7 +36,7 @@ public class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntity>
 		UID = obj.UID;
 		
 		creationData = obj.creationData;
-		data = obj.data;
+		data = (HashMap<String, Object>)obj.data.clone();
 		
 		levelUID = obj.tile.level.UID;
 	}
@@ -45,7 +45,7 @@ public class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntity>
 	public EnvironmentEntity create()
 	{
 		EnvironmentEntity entity = EnvironmentEntity.load(creationData, levelUID);
-		entity.data = data;
+		entity.data = (HashMap<String, Object>)data.clone();
 		
 		entity.HP = hp;
 		for (StatusEffect saveStatus : statuses)

@@ -222,17 +222,30 @@
 		    <Height>20</Height>
 		    <Generator>
 		        <Fractal>
-		        	<Feature>
-		        	    <Min>0</Min>
-		        	    <Max>0.6</Max>
-		        	    <TileData>
-							<Passable>Levitate</Passable>
-							<Opaque>false</Opaque>
-							<Sprite>
-								<Name>dc-dngn/water/dngn_shallow_water</Name>
-							</Sprite>
-						</TileData>
-		        	</Feature>
+		            <Features>
+		                <Feature>
+			        	    <Min>0</Min>
+			        	    <Max>0.5</Max>
+			        	    <TileData>
+								<Passable>Levitate</Passable>
+								<Opaque>false</Opaque>
+								<Sprite>
+									<Name>dc-dngn/water/dngn_deep_water</Name>
+								</Sprite>
+							</TileData>
+			        	</Feature>
+		                <Feature>
+			        	    <Min>0.5</Min>
+			        	    <Max>0.6</Max>
+			        	    <TileData>
+								<Passable>true</Passable>
+								<Opaque>false</Opaque>
+								<Sprite>
+									<Name>dc-dngn/water/dngn_shallow_water</Name>
+								</Sprite>
+							</TileData>
+			        	</Feature>
+		            </Features>
 		        </Fractal>
 		    </Generator>
 		</Chambers>

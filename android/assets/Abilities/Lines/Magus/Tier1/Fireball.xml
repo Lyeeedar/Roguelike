@@ -26,6 +26,11 @@
 		<UpdateRate>0.1</UpdateRate>
 	</MovementSprite>
 	
+	<Light>
+		<Colour><RGB>255, 250, 10</RGB></Colour>
+		<Intensity>3</Intensity>
+	</Light>
+	
 	<Type>
 		<Harmful>
 		</Harmful>

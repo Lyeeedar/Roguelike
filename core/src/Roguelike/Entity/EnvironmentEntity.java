@@ -123,7 +123,9 @@ public class EnvironmentEntity extends Entity
 				
 				level.player = current.player;
 				
-				for (EnvironmentEntity ee : level.getAllEnvironmentEntities())
+				Array<EnvironmentEntity> entities = new Array<EnvironmentEntity>();
+				level.getAllEnvironmentEntities(entities);
+				for (EnvironmentEntity ee : entities)
 				{
 					if (ee.data.containsKey("Destination") && ((SaveLevel)ee.data.get("Destination")).UID.equals(current.UID))
 					{

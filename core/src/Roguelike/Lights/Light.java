@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public class Light
 {
 	private static final Array<Passability> LightPassability = new Array<Passability>(new Passability[]{Passability.LIGHT});
-	
+		
 	public boolean copied;
 	
 	public Color colour;
@@ -36,11 +36,7 @@ public class Light
 	{
 		boolean recalculate = false;
 		
-		if (copied)
-		{
-			recalculate = true;
-		}
-		else if (lx != lastlx || ly != lastly)
+		if (lx != lastlx || ly != lastly)
 		{
 			recalculate = true;
 		}
@@ -113,7 +109,15 @@ public class Light
 		l.colour = new Color(colour);
 		l.baseIntensity = baseIntensity;
 		l.copied = true;
+		l.flicker = flicker;
+		l.flickerPeriod = flickerPeriod;
+		l.timeAccumulator = timeAccumulator;
 		
+		l.lastlx = lastlx;
+		l.lastly = lastly;
+		l.opaqueTiles.addAll(opaqueTiles);
+		l.shadowCastOutput.addAll(shadowCastOutput);
+				
 		return l;
 	}
 	
@@ -122,12 +126,29 @@ public class Light
 		Light l = new Light();
 		
 		Element colourElement = xml.getChildByName("Colour");
-		l.colour = new Color(
-				colourElement.getFloat("Red", 0),
-				colourElement.getFloat("Green", 0),
-				colourElement.getFloat("Blue", 0),
-				colourElement.getFloat("Alpha", 1)
-				);
+		Color colour = Color.WHITE;
+		if (colourElement != null)
+		{
+			colour = new Color();
+			colour.a = 1;
+			
+			String rgb = colourElement.get("RGB", null);
+			if (rgb != null)
+			{
+				String[] cols = rgb.split(",");
+				colour.r = Float.parseFloat(cols[0]) / 255.0f;
+				colour.g = Float.parseFloat(cols[1]) / 255.0f;
+				colour.b = Float.parseFloat(cols[2]) / 255.0f;
+			}
+			
+			colour.r = colourElement.getFloat("Red", colour.r);
+			colour.g = colourElement.getFloat("Green", colour.g);
+			colour.b = colourElement.getFloat("Blue", colour.b);
+			colour.a = colourElement.getFloat("Alpha", colour.a);
+			
+			l.colour = colour;
+		}
+		
 		l.baseIntensity = xml.getFloat("Intensity");
 		l.flicker = xml.getInt("Flicker", 0);
 		l.flickerPeriod = xml.getFloat("FlickerPeriod", 1);

@@ -43,6 +43,7 @@ public abstract class AbstractRoomGenerator
 	//----------------------------------------------------------------------
 	static
 	{
+		ClassMap.put("BASIC", Basic.class);
 		ClassMap.put("CELLULARAUTOMATA", CellularAutomata.class);
 		ClassMap.put("CHAMBERS", Chambers.class);
 		ClassMap.put("FRACTAL", Fractal.class);

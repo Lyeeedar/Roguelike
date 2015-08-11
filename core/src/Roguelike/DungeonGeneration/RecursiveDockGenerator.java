@@ -183,7 +183,7 @@ public class RecursiveDockGenerator
 				if (createDynamics && symbol.hasGameEntity())
 				{
 					GameEntity e = symbol.getGameEntity();
-					newTile.addGameEntity(e);
+					//newTile.addGameEntity(e);
 					
 					for (int i = 0; i < 10; i++)
 					{
@@ -1656,7 +1656,6 @@ public class RecursiveDockGenerator
 					AStarPathfind pathfind = new AStarPathfind(roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false, GeneratorPassability);
 					int[][] path = pathfind.getPath();
 
-					if (path == null) continue;
 					for (int[] point : path)
 					{
 						Symbol s = roomContents[point[0]][point[1]];
