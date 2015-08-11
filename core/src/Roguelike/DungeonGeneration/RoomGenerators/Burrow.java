@@ -1,4 +1,4 @@
-package Roguelike.DungeonGeneration;
+package Roguelike.DungeonGeneration.RoomGenerators;
 
 public class Burrow
 {

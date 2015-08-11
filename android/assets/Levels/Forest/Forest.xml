@@ -7,8 +7,8 @@
 	</Ambient>
 	
 	<RoomGenerators>
-	    <CellularAutomata>3</CellularAutomata>
-	    <Starburst>1</Starburst>
+	    <CellularAutomata><Weight>3</Weight></CellularAutomata>
+	    <Starburst><Weight>1</Weight></Starburst>
 	</RoomGenerators>
 	
 	<CorridorStyle>

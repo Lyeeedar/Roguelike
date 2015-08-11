@@ -19,7 +19,9 @@
 	</Sound>
 	
 	<RoomGenerators>
-	    <OverlappingRects>1</OverlappingRects>
+	    <OverlappingRects>
+	        <Weight>1</Weight>
+	    </OverlappingRects>
 	</RoomGenerators>
 	
 	<CorridorStyle>
@@ -218,7 +220,21 @@
 		<Chambers>
 		    <Width>20</Width>
 		    <Height>20</Height>
-		    <Generator>Chambers</Generator>
+		    <Generator>
+		        <Fractal>
+		        	<Feature>
+		        	    <Min>0</Min>
+		        	    <Max>0.6</Max>
+		        	    <TileData>
+							<Passable>Levitate</Passable>
+							<Opaque>false</Opaque>
+							<Sprite>
+								<Name>dc-dngn/water/dngn_shallow_water</Name>
+							</Sprite>
+						</TileData>
+		        	</Feature>
+		        </Fractal>
+		    </Generator>
 		</Chambers>
 		
 	</Required>

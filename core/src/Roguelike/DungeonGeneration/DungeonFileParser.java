@@ -8,6 +8,8 @@ import java.util.Random;
 import Roguelike.DungeonGeneration.FactionParser.Feature;
 import Roguelike.DungeonGeneration.FactionParser.FeaturePlacementType;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
+import Roguelike.DungeonGeneration.RoomGenerators.AbstractRoomGenerator;
+import Roguelike.DungeonGeneration.RoomGenerators.OverlappingRects;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Sound.RepeatingSoundEffect;
@@ -21,20 +23,7 @@ import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class DungeonFileParser
-{
-	//----------------------------------------------------------------------
-	public enum RoomGeneratorType
-	{
-		OVERLAPPINGRECTS,
-		CELLULARAUTOMATA,
-		STARBURST,
-		POLYGON,
-		BURROW,
-		CHAMBERS,
-		FRACTAL,
-		NONE
-	}
-	
+{	
 	//----------------------------------------------------------------------
 	public static class CorridorStyle
 	{
@@ -127,7 +116,7 @@ public class DungeonFileParser
 	//----------------------------------------------------------------------
 	public static class RoomGenerator
 	{
-		public RoomGeneratorType type;
+		public AbstractRoomGenerator generator;
 		public int weight;
 	}
 	
@@ -158,7 +147,7 @@ public class DungeonFileParser
 		public HashMap<Character, Symbol> sharedSymbolMap;
 		public char[][] roomDef;
 		public String faction;		
-		public RoomGeneratorType generator;
+		public AbstractRoomGenerator generator;
 		
 		public static DFPRoom parse(Element xml, HashMap<Character, Symbol> sharedSymbolMap)
 		{
@@ -225,8 +214,8 @@ public class DungeonFileParser
 			}
 			else
 			{
-				Element generatorElement = xml.getChildByName("Generator");
-				room.generator = RoomGeneratorType.valueOf(generatorElement.getText().toUpperCase());
+				Element generatorElement = xml.getChildByName("Generator").getChild(0);
+				room.generator = AbstractRoomGenerator.load(generatorElement);
 				
 				room.width = xml.getInt("Width");
 				room.height = xml.getInt("Height");
@@ -392,7 +381,7 @@ public class DungeonFileParser
 	}
 	
 	//----------------------------------------------------------------------
-	public RoomGeneratorType getRoomGenerator(Random ran)
+	public AbstractRoomGenerator getRoomGenerator(Random ran)
 	{
 		int totalWeight = 0;
 		for (RoomGenerator rg : roomGenerators)
@@ -409,11 +398,11 @@ public class DungeonFileParser
 			
 			if (current >= target)
 			{
-				return rg.type;
+				return rg.generator;
 			}
 		}
 		
-		return RoomGeneratorType.OVERLAPPINGRECTS;
+		return null;
 	}
 	
 	//----------------------------------------------------------------------
@@ -439,8 +428,8 @@ public class DungeonFileParser
 				Element roomGen = roomGenElement.getChild(i);
 				
 				RoomGenerator gen = new RoomGenerator();
-				gen.type = RoomGeneratorType.valueOf(roomGen.getName().toUpperCase());
-				gen.weight = Integer.parseInt(roomGen.getText());
+				gen.generator = AbstractRoomGenerator.load(roomGen);
+				gen.weight = roomGen.getInt("Weight");
 				
 				roomGenerators.add(gen);
 			}
@@ -448,7 +437,7 @@ public class DungeonFileParser
 		else
 		{
 			RoomGenerator gen = new RoomGenerator();
-			gen.type = RoomGeneratorType.OVERLAPPINGRECTS;
+			gen.generator = new OverlappingRects();
 			gen.weight = 1;
 			
 			roomGenerators.add(gen);

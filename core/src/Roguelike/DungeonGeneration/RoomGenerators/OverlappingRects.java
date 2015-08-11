@@ -1,8 +1,13 @@
-package Roguelike.DungeonGeneration;
+package Roguelike.DungeonGeneration.RoomGenerators;
 
 import java.util.Random;
 
-public class OverlappingRects
+import Roguelike.DungeonGeneration.DungeonFileParser;
+import Roguelike.DungeonGeneration.Symbol;
+
+import com.badlogic.gdx.utils.XmlReader.Element;
+
+public class OverlappingRects extends AbstractRoomGenerator
 {
 	private static final float V_WIDTH_MIN = 0.3f;
 	private static final float V_WIDTH_MAX = 0.9f;
@@ -18,7 +23,7 @@ public class OverlappingRects
 	private static final float H_HEIGHT_MAX = 0.9f;
 	private static final float H_HEIGHT_DIFF = H_HEIGHT_MAX - H_HEIGHT_MIN;
 	
-	public static void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran)
+	public void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran, DungeonFileParser dfp)
 	{
 		int width = grid.length-2;
 		int height = grid[0].length-2;
@@ -73,5 +78,12 @@ public class OverlappingRects
 				grid[x+1][y+1] = floor;
 			}
 		}
+	}
+
+
+
+	@Override
+	public void parse(Element xml)
+	{
 	}
 }

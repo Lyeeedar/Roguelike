@@ -1,12 +1,20 @@
-package Roguelike.DungeonGeneration;
+package Roguelike.DungeonGeneration.RoomGenerators;
 
 import java.util.Random;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader.Element;
 
+import Roguelike.DungeonGeneration.DungeonFileParser;
+import Roguelike.DungeonGeneration.Symbol;
 import Roguelike.Global.Direction;
 
-public class Chambers
+/**
+ * Seperates the room via Binary Space partitioning, then places doors to connect the branches of the tree.
+ * @author Philip Collin
+ *
+ */
+public class Chambers extends AbstractRoomGenerator
 {
 	public static class BSPTree
 	{
@@ -184,10 +192,15 @@ public class Chambers
 		}
 	}
 	
-	public static void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran)
+	public void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran, DungeonFileParser dfp)
 	{
 		BSPTree tree = new BSPTree(0, 0, grid.length, grid[0].length);
 		tree.partition(ran);
 		tree.dig(grid, floor, wall, floor, ran);
+	}
+
+	@Override
+	public void parse(Element xml)
+	{
 	}
 }

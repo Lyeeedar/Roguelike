@@ -1,10 +1,14 @@
-package Roguelike.DungeonGeneration;
+package Roguelike.DungeonGeneration.RoomGenerators;
 
 import java.util.Random;
 
-import com.badlogic.gdx.math.Vector2;
+import Roguelike.DungeonGeneration.DungeonFileParser;
+import Roguelike.DungeonGeneration.Symbol;
 
-public class Starburst
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.XmlReader.Element;
+
+public class Starburst extends AbstractRoomGenerator
 {
 	
 	/*
@@ -101,7 +105,7 @@ public class Starburst
 	 * This function doesn't mark any grid in the perimeter of the given box.
 	 *
 	 */
-	public static void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran)
+	public void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran, DungeonFileParser dfp)
 	{
 		int y0, x0, y, x, ny, nx;
 		int i;
@@ -279,5 +283,14 @@ public class Starburst
 				}
 			}
 		}
+	}
+
+
+	
+
+
+	@Override
+	public void parse(Element xml)
+	{
 	}
 }

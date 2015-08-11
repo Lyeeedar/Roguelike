@@ -1,8 +1,13 @@
-package Roguelike.DungeonGeneration;
+package Roguelike.DungeonGeneration.RoomGenerators;
 
 import java.util.Random;
 
-public class Polygon
+import Roguelike.DungeonGeneration.DungeonFileParser;
+import Roguelike.DungeonGeneration.Symbol;
+
+import com.badlogic.gdx.utils.XmlReader.Element;
+
+public class Polygon extends AbstractRoomGenerator
 {
 	private static final int REGION = 25;
 
@@ -11,7 +16,7 @@ public class Polygon
 	 * 
 	 * These can be used to join disconnected regions.
 	 */ 
-	private static void floodfill(int[][] map, int size_y, int size_x, int y, int x, int mark, int[] miny, int[] minx)
+	private void floodfill(int[][] map, int size_y, int size_x, int y, int x, int mark, int[] miny, int[] minx)
 	{ 
 		int i; 
 		int j; 
@@ -36,7 +41,7 @@ public class Polygon
 
 	/* find all regions, mark each open cell (by floodfill) with an integer 
 		2 or greater indicating what region it's in. */ 
-	private static int floodall(int[][] map, int size_y, int size_x, int[] miny,int[] minx)
+	private int floodall(int[][] map, int size_y, int size_x, int[] miny,int[] minx)
 	{ 
 		int x; 
 		int y; 
@@ -89,7 +94,7 @@ public class Polygon
 	 * Instead of joining the regions, we remove all but the largest region, and renumber
 	 * this largest region 
 	 */
-	private static int removeallbutlargest(int[][] map, int size_y, int size_x)
+	private int removeallbutlargest(int[][] map, int size_y, int size_x)
 	{
 		int[] count = new int[REGION];
 		int y, x, c = 2;
@@ -148,7 +153,7 @@ public class Polygon
 	 * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 	 * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 	 */
-	private static boolean pnpoly(int nvert, float[] vertx, float[] verty, float testx, float testy)
+	private boolean pnpoly(int nvert, float[] vertx, float[] verty, float testx, float testy)
 	{
 		int i; 
 		int j;
@@ -168,7 +173,7 @@ public class Polygon
 
 	/* It is possible to generate poly rooms with very small sizes. We ensure that these rooms have
 	 * a minimum size */
-	private static final int MIN_POLY_ROOM_SIZE = 17;
+	private final int MIN_POLY_ROOM_SIZE = 17;
 
 	/*
 	 * Generates a room from a convex or concave polygon. We don't completely handle the complex (self-intersecting) case
@@ -176,7 +181,7 @@ public class Polygon
 	 * 
 	 * *y and *x represent pairs of vertex coordinates. These should probably be ordered but may not require this.
 	 */
-	private static boolean generate_poly_room(int n, int[] y, int[] x, Symbol[][] grid, Symbol floor, Symbol wall)
+	private boolean generate_poly_room(int n, int[] y, int[] x, Symbol[][] grid, Symbol floor, Symbol wall)
 	{
 		float[] verty = new float[n+1];
 		float[] vertx = new float[n+1];
@@ -265,7 +270,7 @@ public class Polygon
 	 * inner concave spaces as well.
 	 */
 
-	public static void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran)
+	public void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran, DungeonFileParser dfp)
 	{
 		int[] verty = new int[12];
 		int[] vertx = new int[12];
@@ -421,6 +426,13 @@ public class Polygon
 
 		/* Generate the polygon */
 		generate_poly_room(n, verty, vertx, grid, floor, wall);
+	}
+
+
+
+	@Override
+	public void parse(Element xml)
+	{
 	}
 
 

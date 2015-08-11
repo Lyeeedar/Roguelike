@@ -1,8 +1,13 @@
-package Roguelike.DungeonGeneration;
+package Roguelike.DungeonGeneration.RoomGenerators;
 
 import java.util.Random;
 
-public class CellularAutomata
+import Roguelike.DungeonGeneration.DungeonFileParser;
+import Roguelike.DungeonGeneration.Symbol;
+
+import com.badlogic.gdx.utils.XmlReader.Element;
+
+public class CellularAutomata extends AbstractRoomGenerator
 {
 	private static final int REGION = 25;
 	private static final int GRID_WALL = 0;
@@ -13,7 +18,7 @@ public class CellularAutomata
 	 * 
 	 * These can be used to join disconnected regions.
 	 */ 
-	private static void floodfill(int[][] map, int size_y, int size_x, int y, int x, int mark, int[] miny, int[] minx)
+	private void floodfill(int[][] map, int size_y, int size_x, int y, int x, int mark, int[] miny, int[] minx)
 	{ 
 		int i; 
 		int j; 
@@ -38,7 +43,7 @@ public class CellularAutomata
 
 	/* find all regions, mark each open cell (by floodfill) with an integer 
 		2 or greater indicating what region it's in. */ 
-	private static int floodall(int[][] map, int size_y, int size_x, int[] miny,int[] minx)
+	private int floodall(int[][] map, int size_y, int size_x, int[] miny,int[] minx)
 	{ 
 		int x; 
 		int y; 
@@ -87,8 +92,6 @@ public class CellularAutomata
 
 	} 
 
-
-
 	/* joinall is an iterative step toward joining all map regions. 
 		The output map is guaranteed to have the same number of 
 		open spaces, or fewer, than the input. With enough 
@@ -96,7 +99,7 @@ public class CellularAutomata
 		will be produced. Further iterations will just copy that 
 		map. 
 	*/ 
-	private static int joinall(int[][] mapin, int[][] mapout, int size_y, int size_x)
+	private int joinall(int[][] mapin, int[][] mapout, int size_y, int size_x)
 	{ 
 		int[] minx = new int[REGION]; 
 		int[] miny = new int[REGION]; 
@@ -156,7 +159,6 @@ public class CellularAutomata
 
 	}
 
-
 	/*
 	 * This builds a cave-like region using cellular automata identical to that outlined in the
 	 * algorithm at http://roguebasin.roguelikedevelopment.org/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
@@ -178,7 +180,7 @@ public class CellularAutomata
 	 * We can define a combination of wall, floor and edge to allow e.g. a series of islands rising out of lava
 	 * or some other mix of terrain.
 	 */
-	public static void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran)
+	public void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran, DungeonFileParser dfp)
 	{
 		int wall_prob = ran.nextInt(5) + 40;
 		int r1 = 5;
@@ -269,5 +271,12 @@ public class CellularAutomata
 	 			grid[xi][yi] = wall;
 	 		}
 	 	}
+	}
+
+	
+
+	@Override
+	public void parse(Element xml)
+	{
 	}
 }

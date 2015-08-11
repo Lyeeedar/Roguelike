@@ -14,10 +14,10 @@ import Roguelike.Global.Passability;
 import Roguelike.DungeonGeneration.DungeonFileParser.CorridorFeature.PlacementMode;
 import Roguelike.DungeonGeneration.DungeonFileParser.CorridorStyle.PathStyle;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
-import Roguelike.DungeonGeneration.DungeonFileParser.RoomGeneratorType;
 import Roguelike.DungeonGeneration.FactionParser.Encounter;
 import Roguelike.DungeonGeneration.FactionParser.Feature;
 import Roguelike.DungeonGeneration.FactionParser.FeaturePlacementType;
+import Roguelike.DungeonGeneration.RoomGenerators.AbstractRoomGenerator;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Items.Recipe;
@@ -1234,31 +1234,15 @@ public class RecursiveDockGenerator
 		}
 
 		//----------------------------------------------------------------------
-		public void generateRoomContents(Random ran, DungeonFileParser dfp, Symbol floor, Symbol wall, RoomGeneratorType type)
+		public void generateRoomContents(Random ran, DungeonFileParser dfp, Symbol floor, Symbol wall, AbstractRoomGenerator generator)
 		{
 			roomContents = new Symbol[width][height];
 
 			for (int i = 0; i < 20; i++)
 			{
-				if (type == RoomGeneratorType.OVERLAPPINGRECTS)
+				if (generator != null)
 				{
-					OverlappingRects.process(roomContents, floor, wall, ran);
-				}
-				else if (type == RoomGeneratorType.CELLULARAUTOMATA)
-				{
-					CellularAutomata.process(roomContents, floor, wall, ran);
-				}
-				else if (type == RoomGeneratorType.STARBURST)
-				{
-					Starburst.process(roomContents, floor, wall, ran);
-				}
-				else if (type == RoomGeneratorType.POLYGON)
-				{
-					Polygon.process(roomContents, floor, wall, ran);
-				}
-				else if (type == RoomGeneratorType.CHAMBERS)
-				{
-					Chambers.process(roomContents, floor, wall, ran);
+					generator.process(roomContents, floor, wall, ran, dfp);
 				}
 				else
 				{
@@ -1399,9 +1383,9 @@ public class RecursiveDockGenerator
 			Symbol floor = dfp.sharedSymbolMap.get('.');
 			Symbol wall = dfp.sharedSymbolMap.get('#');
 			
-			RoomGeneratorType type = dfp.getRoomGenerator(ran);
+			AbstractRoomGenerator generator = dfp.getRoomGenerator(ran);
 			
-			generateRoomContents(ran, dfp, floor, wall, type);
+			generateRoomContents(ran, dfp, floor, wall, generator);
 		}
 
 		//----------------------------------------------------------------------
@@ -1672,6 +1656,7 @@ public class RecursiveDockGenerator
 					AStarPathfind pathfind = new AStarPathfind(roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false, GeneratorPassability);
 					int[][] path = pathfind.getPath();
 
+					if (path == null) continue;
 					for (int[] point : path)
 					{
 						Symbol s = roomContents[point[0]][point[1]];
