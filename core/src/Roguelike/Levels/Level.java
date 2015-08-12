@@ -655,7 +655,6 @@ public class Level
 				f.update(actionCost);
 				if (f.stacks < 1)
 				{
-					f.onDeath();
 					f.tile.field = null;
 					f.tile = null;
 				}

@@ -1,0 +1,20 @@
+<Field>
+    <FieldName>Fire</FieldName>
+    <Sprite>
+        <Name>effect/cloud_fire2</Name>
+    </Sprite>
+    <Duration>
+        <Fade>
+            <Rate>5</Rate>
+            <ResetOnEntity>true</ResetOnEntity>
+        </Fade>
+    </Duration>
+    <Spread>
+        <Adjacent />
+    </Spread>
+    <OnTurn>
+        <Damage>
+            <Fire_Atk>20</Fire_Atk>
+        </Damage>
+    </OnTurn>
+</Field>

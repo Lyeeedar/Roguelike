@@ -16,7 +16,7 @@ public class AdjacentSpreadStyle extends AbstractSpreadStyle
 	@Override
 	public void update(float delta, Field field)
 	{
-		float updateAccumulator = (Float)field.getData("UpdateAccumulator", 0.0f);
+		float updateAccumulator = (Float)field.getData("SpreadAccumulator", 0.0f);
 		
 		updateAccumulator += delta;
 		
@@ -27,6 +27,8 @@ public class AdjacentSpreadStyle extends AbstractSpreadStyle
 			Array<GameTile> validTiles = new Array<GameTile>();
 			for (Direction dir : Direction.values())
 			{
+				if (dir == Direction.CENTER) { continue; }
+				
 				GameTile tile = field.tile.level.getGameTile(field.tile.x+dir.GetX(), field.tile.y+dir.GetY());
 				
 				boolean check = false;
@@ -52,7 +54,7 @@ public class AdjacentSpreadStyle extends AbstractSpreadStyle
 			}
 		}
 		
-		field.setData("UpdateAccumulator", updateAccumulator);
+		field.setData("SpreadAccumulator", updateAccumulator);
 	}
 
 	@Override

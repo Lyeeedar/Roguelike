@@ -726,10 +726,16 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			Global.ChangeLevel(Global.AllLevels.get(save.currentLevel).create());
 			Global.abilityPool = save.abilityPool.create();
 		}
-		if (keycode == Keys.W)
+		else if (keycode == Keys.W)
 		{
 			Field field = Field.load("Water");
 			field.stacks = 10;
+			Global.CurrentLevel.player.tile.addField(field);
+		}
+		else if (keycode == Keys.F)
+		{
+			Field field = Field.load("Fire");
+			field.stacks = 1;
 			Global.CurrentLevel.player.tile.addField(field);
 		}
 		else if (keycode == Keys.I)

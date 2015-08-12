@@ -9,6 +9,8 @@ import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Sprite.MoveAnimation.MoveEquation;
 import Roguelike.Tiles.GameTile;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class MovementTypeSmite extends AbstractMovementType
@@ -41,6 +43,15 @@ public class MovementTypeSmite extends AbstractMovementType
 			
 			effect.Sprite.spriteAnimation = new MoveAnimation(0.05f * distMoved, diff, MoveEquation.LINEAR);
 			
+			// calc rotation
+			Vector2 vec = new Vector2(diff[0]*-1, diff[1]*-1);
+			vec.nor();
+			float x = vec.x;
+			float y = vec.y;
+			double dot = 0*x + 1*y; // dot product
+			double det = 0*y - 1*x; // determinant
+			float angle = (float) Math.atan2(det, dot) * MathUtils.radiansToDegrees;
+			effect.Sprite.rotation = angle;
 			
 			tile.spriteEffects.add(effect);
 		}

@@ -1,4 +1,4 @@
-package Roguelike.Fields.DurationStyle;
+package Roguelike.Fields.OnTurnEffect;
 
 import java.util.HashMap;
 
@@ -8,20 +8,20 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
-public abstract class AbstractDurationStyle
+public abstract class AbstractOnTurnEffect
 {
 	public abstract void update(float delta, Field field);	
 	public abstract void parse(Element xml);
 	
 	//----------------------------------------------------------------------
-	public static AbstractDurationStyle load(Element xml)
+	public static AbstractOnTurnEffect load(Element xml)
 	{		
-		Class<AbstractDurationStyle> c = ClassMap.get(xml.getName().toUpperCase());
-		AbstractDurationStyle type = null;
+		Class<AbstractOnTurnEffect> c = ClassMap.get(xml.getName().toUpperCase());
+		AbstractOnTurnEffect type = null;
 		
 		try
 		{
-			type = (AbstractDurationStyle)ClassReflection.newInstance(c);
+			type = (AbstractOnTurnEffect)ClassReflection.newInstance(c);
 		} 
 		catch (ReflectionException e)
 		{
@@ -39,8 +39,6 @@ public abstract class AbstractDurationStyle
 	//----------------------------------------------------------------------
 	static
 	{
-		ClassMap.put("FADE", FadeDurationStyle.class);
-		ClassMap.put("SINGLE", SingleDurationStyle.class);
-		ClassMap.put("PERMANENT", PermanentDurationStyle.class);
+		ClassMap.put("DAMAGE", DamageOnTurnEffect.class);
 	}
 }

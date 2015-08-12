@@ -6,12 +6,15 @@ import java.util.HashMap;
 
 import Roguelike.AssetManager;
 import Roguelike.Global.Passability;
+import Roguelike.Fields.DurationStyle.AbstractDurationStyle;
+import Roguelike.Fields.OnTurnEffect.AbstractOnTurnEffect;
 import Roguelike.Fields.SpreadStyle.AbstractSpreadStyle;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -73,10 +76,10 @@ public class Field
 	public boolean drawAbove = false;
 	public int stacks = 1;
 	
+	public AbstractDurationStyle durationStyle;
 	public AbstractSpreadStyle spreadStyle;
-	//public Array<AbstractOnTurnEffect> onTurnEffects;
+	public Array<AbstractOnTurnEffect> onTurnEffects = new Array<AbstractOnTurnEffect>();
 	//public HashMap<String, AbstractInteractionType> fieldInteractions;
-	//public AbstractDurationType durationType;
 	
 	public HashMap<String, Object> data = new HashMap<String, Object>();
 	
@@ -85,14 +88,20 @@ public class Field
 	
 	public void update(float cost)
 	{
-		spreadStyle.update(cost, this);
-//		for (AbstractOnTurnEffect effect : onTurnEffects)
-//		{
-//			effect.update(cost, this);
-//		}
+		for (AbstractOnTurnEffect effect : onTurnEffects)
+		{
+			effect.update(cost, this);
+		}
+		
+		durationStyle.update(cost, this);
+		
+		if (stacks > 0)
+		{
+			spreadStyle.update(cost, this);
+		}
 	}
 	
-	public void onDeath()
+	public void onNaturalDeath()
 	{
 		//onDeathEffect.process(this);
 	}
@@ -148,10 +157,10 @@ public class Field
 		field.stacks = stacks;
 		field.light = light != null ? light.copy() : null;
 		
+		field.durationStyle = durationStyle;
 		field.spreadStyle = spreadStyle;
-		//field.onTurnEffects = onTurnEffects;
+		field.onTurnEffects = onTurnEffects;
 		//field.fieldInteractions = fieldInteractions;
-		//filed.durationType = durationType;
 		
 		field.allowPassability = allowPassability;
 		field.restrictPassability = restrictPassability;
@@ -192,10 +201,27 @@ public class Field
 		
 		drawAbove = xml.getBoolean("DrawAbove", drawAbove);
 		
-		Element spreadElement = xml.getChildByName("SpreadStyle");
+		Element durationElement = xml.getChildByName("Duration");
+		if (durationElement != null)
+		{
+			durationStyle = AbstractDurationStyle.load(durationElement.getChild(0));
+		}
+		
+		Element spreadElement = xml.getChildByName("Spread");
 		if (spreadElement != null)
 		{
 			spreadStyle = AbstractSpreadStyle.load(spreadElement.getChild(0));
+		}
+		
+		Element onTurnElement = xml.getChildByName("OnTurn");
+		if (onTurnElement != null)
+		{
+			for (int i = 0; i < onTurnElement.getChildCount(); i++)
+			{
+				Element effectElement = onTurnElement.getChild(i);
+				AbstractOnTurnEffect effect = AbstractOnTurnEffect.load(effectElement);
+				onTurnEffects.add(effect);
+			}
 		}
 		
 		String allowString = xml.get("AllowPassability", null);

@@ -16,7 +16,7 @@ public class WanderSpreadStyle extends AbstractSpreadStyle
 	@Override
 	public void update(float delta, Field field)
 	{
-		float updateAccumulator = (Float)field.getData("UpdateAccumulator", 0.0f);
+		float updateAccumulator = (Float)field.getData("SpreadAccumulator", 0.0f);
 		Direction lastMove = (Direction)field.getData("LastMove", Direction.CENTER);
 		
 		updateAccumulator += delta;
@@ -28,6 +28,8 @@ public class WanderSpreadStyle extends AbstractSpreadStyle
 			Array<Direction> validDirs = new Array<Direction>();
 			for (Direction dir : Direction.values())
 			{
+				if (dir == Direction.CENTER) { continue; }
+				
 				// prevent going backwards
 				if (dir.GetX() != lastMove.GetX()*-1 || dir.GetY() != lastMove.GetY()*-1)
 				{
@@ -51,14 +53,14 @@ public class WanderSpreadStyle extends AbstractSpreadStyle
 			{
 				Direction dir = validDirs.random();
 				GameTile tile = field.tile.level.getGameTile(field.tile.x+dir.GetX(), field.tile.y+dir.GetY());	
-				field.trySpawnInTile(tile.x, tile.y);
+				field.trySpawnInTile(tile.x, tile.y);				
 				field.stacks--;
 				
 				lastMove = dir;
 			}
 		}
 		
-		field.setData("UpdateAccumulator", updateAccumulator);
+		field.setData("SpreadAccumulator", updateAccumulator);
 		field.setData("LastMove", lastMove);
 	}
 

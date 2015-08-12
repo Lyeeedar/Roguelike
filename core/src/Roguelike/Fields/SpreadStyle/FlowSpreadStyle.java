@@ -16,7 +16,7 @@ public class FlowSpreadStyle extends AbstractSpreadStyle
 	@Override
 	public void update(float delta, Field field)
 	{
-		float updateAccumulator = (Float)field.getData("UpdateAccumulator", 0.0f);
+		float updateAccumulator = (Float)field.getData("SpreadAccumulator", 0.0f);
 		
 		updateAccumulator += delta;
 		
@@ -51,7 +51,7 @@ public class FlowSpreadStyle extends AbstractSpreadStyle
 			}
 		}
 		
-		field.setData("UpdateAccumulator", updateAccumulator);
+		field.setData("SpreadAccumulator", updateAccumulator);
 	}
 
 	@Override

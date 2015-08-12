@@ -3,7 +3,13 @@
     <Sprite>
         <Name>dc-dngn/water/dngn_shoals_shallow_water</Name>
     </Sprite>
-    <SpreadStyle>
+    <Duration>
+        <Fade>
+            <Rate>10</Rate>
+            <ResetOnStacks>true</ResetOnStacks>
+        </Fade>
+    </Duration>
+    <Spread>
         <Flow/>
-    </SpreadStyle>
+    </Spread>
 </Field>
