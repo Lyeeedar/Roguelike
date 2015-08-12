@@ -1,0 +1,22 @@
+<Field>
+    <FieldName>IceFog</FieldName>
+    <Tags>Cold,Gas</Tags>
+    <Layer>Air</Layer>
+    <Sprite>
+        <Name>effect/cloud_cold1</Name>
+    </Sprite>
+    <Duration>
+        <Fade>
+            <Rate>5</Rate>
+        </Fade>
+    </Duration>
+     <OnTurn>
+        <Damage>
+            <Water_Atk>10</Water_Atk>
+            <Air_Atk>10</Air_Atk>
+        </Damage>
+    </OnTurn>
+    <Spread>
+        <Flow />
+    </Spread>
+</Field>

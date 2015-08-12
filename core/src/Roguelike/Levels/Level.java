@@ -16,6 +16,7 @@ import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.Fields.Field;
+import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
@@ -250,10 +251,14 @@ public class Level
 						s.history.add(Pools.obtain(SeenHistoryItem.class).set(sprite, tile.tileData.description));
 					}
 					
-					if (tile.field != null)
-					{						
-						s.history.add(Pools.obtain(SeenHistoryItem.class).set(tile.field.sprite, ""));
-					}
+					for (FieldLayer layer : FieldLayer.values())
+					{
+						Field field = tile.fields.get(layer);
+						if (field != null)
+						{						
+							s.history.add(Pools.obtain(SeenHistoryItem.class).set(field.sprite, ""));
+						}
+					}					
 					
 					if (tile.environmentEntity != null)
 					{
@@ -336,15 +341,19 @@ public class Level
 			}		
 		}
 		
-		if (tile.field != null && tile.field.light != null)
+		for (FieldLayer layer : FieldLayer.values())
 		{
-			if (checkLightCloseEnough(lx, ly, (int)tile.field.light.baseIntensity, px, py, viewRange))
+			Field field = tile.fields.get(layer);
+			if (field != null && field.light != null)
 			{
-				tile.field.light.lx = lx;
-				tile.field.light.ly = ly;
-				output.add(tile.field.light);
+				if (checkLightCloseEnough(lx, ly, (int)field.light.baseIntensity, px, py, viewRange))
+				{
+					field.light.lx = lx;
+					field.light.ly = ly;
+					output.add(field.light);
+				}
 			}
-		}
+		}		
 		
 		if (tile.environmentEntity != null && tile.environmentEntity.light != null)
 		{
@@ -589,9 +598,13 @@ public class Level
 			sprite.update(delta);
 		}
 		
-		if (tile.field != null)
+		for (FieldLayer layer : FieldLayer.values())
 		{
-			tile.field.sprite.update(delta);
+			Field field = tile.fields.get(layer);
+			if (field != null)
+			{
+				field.sprite.update(delta);
+			}
 		}
 		
 		if (tile.environmentEntity != null)
@@ -652,10 +665,12 @@ public class Level
 			getAllFields(tempFieldList);
 			for (Field f : tempFieldList)
 			{
+				if (f.tile == null) { continue; }
+				
 				f.update(actionCost);
 				if (f.stacks < 1)
 				{
-					f.tile.field = null;
+					f.tile.fields.put(f.layer, null);
 					f.tile = null;
 				}
 			}
@@ -886,9 +901,13 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{
-				if (Grid[x][y].field != null)
+				for (FieldLayer layer : FieldLayer.values())
 				{
-					list.add(Grid[x][y].field);
+					Field field = Grid[x][y].fields.get(layer);
+					if (field != null)
+					{
+						list.add(field);
+					}
 				}
 			}
 		}

@@ -33,19 +33,19 @@ public class DamageOnTurnEffect extends AbstractOnTurnEffect
 			
 			if (field.tile.entity != null)
 			{
-				doDamage(field.tile.entity);
+				doDamage(field.tile.entity, field);
 			}
 			
 			if (field.tile.environmentEntity != null && field.tile.environmentEntity.canTakeDamage)
 			{
-				doDamage(field.tile.environmentEntity);
+				doDamage(field.tile.environmentEntity, field);
 			}
 		}
 		
 		field.setData("OnTurnAccumulator", updateAccumulator);
 	}
 	
-	private void doDamage(Entity entity)
+	private void doDamage(Entity entity, Field field)
 	{
 		HashMap<String, Integer> variableMap = entity.getVariableMap();
 		for (String name : reliesOn)
@@ -55,6 +55,7 @@ public class DamageOnTurnEffect extends AbstractOnTurnEffect
 				variableMap.put(name.toLowerCase(), 0);
 			}
 		}
+		variableMap.put("stacks", field.stacks);
 		
 		if (condition != null)
 		{

@@ -29,10 +29,11 @@ public class FlowSpreadStyle extends AbstractSpreadStyle
 			{
 				GameTile tile = field.tile.level.getGameTile(field.tile.x+dir.GetX(), field.tile.y+dir.GetY());
 				
-				if (tile.field != null && tile.field.fieldName.equals(field.fieldName))
+				Field tileField = tile.fields.get(field.layer);
+				if (tileField != null && tileField.fieldName.equals(field.fieldName))
 				{
 					// same field, only flow down the gradient
-					if (tile.field.stacks < field.stacks)
+					if (tileField.stacks < field.stacks)
 					{
 						validTiles.add(tile);
 					}

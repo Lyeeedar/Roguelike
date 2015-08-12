@@ -1,8 +1,19 @@
 <Field>
     <FieldName>Fire</FieldName>
+    <Tags>Hot</Tags>
     <Sprite>
-        <Name>effect/cloud_fire2</Name>
+        <Name>FieldSprites/Fire/Fire</Name>
+        <UpdateRate>0.2</UpdateRate>
     </Sprite>
+    <Light>
+		<Colour>
+			<Red>1</Red>
+			<Green>0.9</Green>
+		</Colour>
+		
+		<Intensity>4</Intensity>
+		<Flicker>3</Flicker>
+	</Light>  
     <Duration>
         <Fade>
             <Rate>5</Rate>
@@ -17,4 +28,9 @@
             <Fire_Atk>20</Fire_Atk>
         </Damage>
     </OnTurn>
+    <OnDeath>
+        <Spawn>
+            <Field>Smoke</Field>
+        </Spawn>
+    </OnDeath>
 </Field>

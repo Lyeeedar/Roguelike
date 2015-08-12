@@ -1,0 +1,24 @@
+<Field>
+    <FieldName>Ice</FieldName>
+    <Tags>Cold,Solid</Tags>
+    <Sprite>
+        <Name>dc-dngn/wall/marble_wall5</Name>
+    </Sprite>
+    <Duration>
+        <Permanent />
+    </Duration>
+    <Spread>
+        <None />
+    </Spread>
+    <Interactions>
+        <Water>
+            <KillOther />
+        </Water>
+        <Hot>
+            <Spawn>
+                <Field>Water</Field>
+                <Stacks>SrcStacks</Stacks>
+            </Spawn>         
+        </Hot>
+    </Interactions>
+</Field>

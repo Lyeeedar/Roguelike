@@ -103,6 +103,13 @@ public class Light
 		}
 	}
 	
+	public Light copyNoFlag()
+	{
+		Light l = copy();
+		l.copied = false;
+		return l;
+	}
+	
 	public Light copy()
 	{
 		Light l = Pools.obtain(Light.class);

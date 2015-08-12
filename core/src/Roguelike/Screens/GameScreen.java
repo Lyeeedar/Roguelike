@@ -13,6 +13,7 @@ import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Fields.Field;
+import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Levels.Level;
@@ -312,15 +313,19 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						s.render(batch, x*Global.TileSize + offsetx, y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
 					}
 					
-					if (gtile.field != null)
+					for (FieldLayer layer : FieldLayer.values())
 					{
-						if (gtile.field.drawAbove)
+						Field field = gtile.fields.get(layer);
+						if (field != null)
 						{
-							overFields.add(gtile.field);
-						}
-						else
-						{
-							underFields.add(gtile.field);
+							if (field.layer == FieldLayer.GROUND)
+							{
+								field.sprite.render(batch, x*Global.TileSize + offsetx, y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
+							}
+							else
+							{
+								overFields.add(field);
+							}
 						}
 					}
 
@@ -737,6 +742,20 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			Field field = Field.load("Fire");
 			field.stacks = 1;
 			Global.CurrentLevel.player.tile.addField(field);
+		}
+		else if (keycode == Keys.G)
+		{
+			Field field = Field.load("IceFog");
+			field.stacks = 4;
+			Global.CurrentLevel.player.tile.addField(field);
+		}
+		else if (keycode == Keys.H)
+		{
+			Field field = Field.load("Static");
+			field.stacks = 1;
+			GameTile playerTile = Global.CurrentLevel.player.tile;
+			GameTile spawnTile = Global.CurrentLevel.getGameTile(playerTile.x+1, playerTile.y+1);
+			spawnTile.addField(field);
 		}
 		else if (keycode == Keys.I)
 		{

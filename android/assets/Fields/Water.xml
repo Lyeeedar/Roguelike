@@ -1,5 +1,6 @@
 <Field>
     <FieldName>Water</FieldName>
+    <Tags>Wet,Liquid</Tags>
     <Sprite>
         <Name>dc-dngn/water/dngn_shoals_shallow_water</Name>
     </Sprite>
@@ -12,4 +13,18 @@
     <Spread>
         <Flow/>
     </Spread>
+    <Interactions>
+        <Hot>
+            <Spawn>
+                <Field>Steam</Field>
+                <Stacks>max3(SrcStacks, DstStacks, 1)</Stacks>
+            </Spawn>         
+        </Hot>
+        <Cold>
+            <Spawn>
+                <Field>Ice</Field>
+                <Stacks>SrcStacks</Stacks>
+            </Spawn>
+        </Cold>
+    </Interactions>
 </Field>

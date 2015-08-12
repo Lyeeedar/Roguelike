@@ -1,10 +1,13 @@
 package Roguelike.Tiles;
 
+import java.util.EnumMap;
+
 import Roguelike.Global;
 import Roguelike.Global.Passability;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Fields.Field;
+import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.PathfindingTile;
@@ -25,7 +28,7 @@ public class GameTile implements PathfindingTile
 	
 	public GameEntity entity;
 	public EnvironmentEntity environmentEntity;
-	public Field field;
+	public EnumMap<FieldLayer, Field> fields = new EnumMap<FieldLayer, Field>(FieldLayer.class);
 		
 	public Level level;
 	
@@ -46,6 +49,11 @@ public class GameTile implements PathfindingTile
 		this.tileData = tileData;
 		
 		light = new Color(Color.WHITE);
+		
+		for (FieldLayer layer : FieldLayer.values())
+		{
+			fields.put(layer, null);
+		}
 	}
 	
 	public void addEnvironmentEntity(EnvironmentEntity entity)
@@ -59,14 +67,20 @@ public class GameTile implements PathfindingTile
 		entity.tile = this;
 	}
 	
+	public void clearField(FieldLayer layer)
+	{
+		Field field = fields.get(layer);
+		if (field != null)
+		{
+			field.tile = null;
+			fields.put(layer, null);
+		}
+	}
+	
 	public void addField(Field field)
 	{
-		if (field.tile != null)
-		{
-			field.tile.field = null;
-		}
-		
-		this.field = field;
+		clearField(field.layer);		
+		fields.put(field.layer, field);
 		field.tile = this;
 	}
 	
@@ -114,17 +128,21 @@ public class GameTile implements PathfindingTile
 	@Override
 	public boolean getPassable(Array<Passability> travelType)
 	{
-		if (field != null)
+		for (FieldLayer layer : FieldLayer.values())
 		{
-			if (Passability.isPassable(field.allowPassability, travelType))
+			Field field = fields.get(layer);
+			if (field != null)
 			{
-				return true;
+				if (Passability.isPassable(field.allowPassability, travelType))
+				{
+					return true;
+				}
+				else if (Passability.isPassable(field.restrictPassability, travelType))
+				{
+					return false;
+				}
 			}
-			else if (Passability.isPassable(field.restrictPassability, travelType))
-			{
-				return false;
-			}
-		}
+		}		
 		
 		if (environmentEntity != null && !Passability.isPassable(environmentEntity.passableBy, travelType)) { return false; }
 		

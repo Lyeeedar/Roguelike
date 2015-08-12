@@ -1,12 +1,15 @@
 package Roguelike.Fields;
 
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 
 import Roguelike.AssetManager;
 import Roguelike.Global.Passability;
 import Roguelike.Fields.DurationStyle.AbstractDurationStyle;
+import Roguelike.Fields.FieldInteractionTypes.AbstractFieldInteractionType;
+import Roguelike.Fields.OnDeathEffect.AbstractOnDeathEffect;
 import Roguelike.Fields.OnTurnEffect.AbstractOnTurnEffect;
 import Roguelike.Fields.SpreadStyle.AbstractSpreadStyle;
 import Roguelike.Lights.Light;
@@ -66,20 +69,29 @@ public class Field
   * thuorns/razorcrystals
   * explosive gas
   */
+	public enum FieldLayer
+	{
+		GROUND,
+		AIR
+	}
+	
 	public String fileName;
 	public String fieldName;
+	
+	public String[] tags = new String[0];
 	
 	public GameTile tile;
 	public Light light;
 	
 	public Sprite sprite;
-	public boolean drawAbove = false;
+	public FieldLayer layer = FieldLayer.GROUND;
 	public int stacks = 1;
 	
 	public AbstractDurationStyle durationStyle;
 	public AbstractSpreadStyle spreadStyle;
 	public Array<AbstractOnTurnEffect> onTurnEffects = new Array<AbstractOnTurnEffect>();
-	//public HashMap<String, AbstractInteractionType> fieldInteractions;
+	public HashMap<String, AbstractFieldInteractionType> fieldInteractions = new HashMap<String, AbstractFieldInteractionType>();
+	public AbstractOnDeathEffect onDeath;
 	
 	public HashMap<String, Object> data = new HashMap<String, Object>();
 	
@@ -87,7 +99,7 @@ public class Field
 	public EnumSet<Passability> restrictPassability = EnumSet.noneOf(Passability.class);
 	
 	public void update(float cost)
-	{
+	{		
 		for (AbstractOnTurnEffect effect : onTurnEffects)
 		{
 			effect.update(cost, this);
@@ -103,33 +115,103 @@ public class Field
 	
 	public void onNaturalDeath()
 	{
-		//onDeathEffect.process(this);
+		if (onDeath != null)
+		{
+			onDeath.process(this);
+		}
 	}
 	
 	public void trySpawnInTile(int x, int y)
 	{
 		GameTile newTile = tile.level.getGameTile(x, y);
-				
-		if (newTile.field != null)
+		Field newField = copy();
+		newField.stacks = 1;
+		
+		EnumMap<FieldLayer, Field> fieldStore = new EnumMap<FieldLayer, Field>(FieldLayer.class);
+		
+		for (FieldLayer layer : FieldLayer.values())
 		{
-			// if same field, increase stacks
-			if (newTile.field.fieldName.equals(fieldName))
+			Field tileField = newTile.fields.get(layer);
+			
+			if (tileField != null)
 			{
-				newTile.field.stacks++;
-			}
-			// if different field, interact
-			else
-			{
-				// do interaction somehow				
+				// if same field, increase stacks
+				if (tileField.fieldName.equals(fieldName))
+				{
+					tileField.stacks++;
+					fieldStore.put(tileField.layer, tileField);
+				}
+				// if different field, interact
+				else
+				{
+					//First check for interaction on self
+					Field srcField = newField;
+					Field dstField = tileField;
+					AbstractFieldInteractionType interaction = getInteraction(srcField.fieldInteractions, dstField);
+					if (interaction == null) 
+					{
+						srcField = tileField;
+						dstField = newField;
+						interaction = getInteraction(srcField.fieldInteractions, dstField);
+					}
+					
+					if (interaction != null)
+					{
+						if (!fieldStore.containsKey(layer))
+						{
+							fieldStore.put(layer, null);
+						}
+						
+						Field field = interaction.process(srcField, dstField);
+						fieldStore.put(field.layer, field);
+					}					
+					else
+					{
+						fieldStore.put(tileField.layer, tileField);
+					}
+				}
 			}
 		}
-		else
+		
+		if (!fieldStore.containsKey(newField.layer))
 		{
-			Field newField = copy();
-			newField.stacks = 1;
-			
-			newTile.addField(newField);
-		}	
+			Field tileField = newTile.fields.get(newField.layer);
+			if (tileField != null && tileField.stacks > 1)
+			{
+				fieldStore.put(newField.layer, tileField);
+			}
+			else
+			{
+				fieldStore.put(newField.layer, newField);
+			}
+		}
+		
+		for (FieldLayer layer : FieldLayer.values())
+		{
+			if (fieldStore.containsKey(layer))
+			{
+				Field field = fieldStore.get(layer);
+				
+				if (field == null)
+				{
+					newTile.clearField(layer);
+				}
+				else
+				{
+					newTile.addField(field);
+				}
+			}
+		}
+	}
+	
+	private AbstractFieldInteractionType getInteraction(HashMap<String, AbstractFieldInteractionType> interactions, Field field)
+	{
+		if (interactions.containsKey(field.fieldName)) { return interactions.get(field.fieldName); }
+		for (String tag : field.tags)
+		{
+			if (interactions.containsKey(tag)) { return interactions.get(tag); }
+		}
+		return null;
 	}
 	
 	public Object getData(String key, Object fallback)
@@ -152,15 +234,17 @@ public class Field
 		Field field = new Field();
 		field.fileName = fileName;
 		field.fieldName = fieldName;
+		field.tags = tags;
 		field.sprite = sprite.copy();
-		field.drawAbove = drawAbove;
+		field.layer = layer;
 		field.stacks = stacks;
-		field.light = light != null ? light.copy() : null;
+		field.light = light != null ? light.copyNoFlag() : null;
 		
 		field.durationStyle = durationStyle;
 		field.spreadStyle = spreadStyle;
 		field.onTurnEffects = onTurnEffects;
-		//field.fieldInteractions = fieldInteractions;
+		field.fieldInteractions = fieldInteractions;
+		field.onDeath = onDeath;
 		
 		field.allowPassability = allowPassability;
 		field.restrictPassability = restrictPassability;
@@ -189,6 +273,18 @@ public class Field
 			internalLoad(extendsElement);
 		}
 		
+		String tagsElement = xml.get("Tags", null);
+		if (tagsElement != null)
+		{
+			Array<String> tagArr = new Array<String>();
+			if (tags != null) { tagArr.addAll(tags); }
+			
+			String[] split = tagsElement.toLowerCase().split(",");
+			tagArr.addAll(split);
+			
+			tags = tagArr.toArray(String.class);
+		}
+		
 		fieldName = xml.get("FieldName", fieldName);
 		
 		sprite = xml.getChildByName("Sprite") != null ? AssetManager.loadSprite(xml.getChildByName("Sprite")) : sprite;
@@ -199,7 +295,7 @@ public class Field
 			light = Roguelike.Lights.Light.load(lightElement);
 		}
 		
-		drawAbove = xml.getBoolean("DrawAbove", drawAbove);
+		layer = xml.get("Layer", null) != null ? FieldLayer.valueOf(xml.get("Layer").toUpperCase()) : layer;
 		
 		Element durationElement = xml.getChildByName("Duration");
 		if (durationElement != null)
@@ -224,14 +320,34 @@ public class Field
 			}
 		}
 		
-		String allowString = xml.get("AllowPassability", null);
+		Element onDeathElement = xml.getChildByName("OnDeath");
+		if (onDeathElement != null)
+		{
+			onDeath = AbstractOnDeathEffect.load(onDeathElement.getChild(0));
+		}
+		
+		Element interactionsElement = xml.getChildByName("Interactions");
+		if (interactionsElement != null)
+		{
+			for (int i = 0; i < interactionsElement.getChildCount(); i++)
+			{
+				Element interactionEl = interactionsElement.getChild(i);
+				
+				String key = interactionEl.getName();
+				Element content = interactionEl.getChild(0);
+				
+				fieldInteractions.put(key.toLowerCase(), AbstractFieldInteractionType.load(content));
+			}
+		}
+		
+		String allowString = xml.get("Allow", null);
 		if (allowString != null)
 		{
 			EnumSet<Passability> pass = Passability.parse(allowString);
 			allowPassability.addAll(pass);
 		}
 		
-		String restrictString = xml.get("RestrictPassability", null);
+		String restrictString = xml.get("Restrict", null);
 		if (restrictString != null)
 		{
 			EnumSet<Passability> pass = Passability.parse(restrictString);

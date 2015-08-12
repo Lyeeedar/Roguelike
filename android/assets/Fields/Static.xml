@@ -1,0 +1,29 @@
+<Field>
+    <FieldName>Static</FieldName>
+    <Tags>Electricity</Tags>
+    <Sprite>
+        <Name>spells/air/chain_lightning</Name>
+    </Sprite>
+    <Duration>
+        <Single />
+    </Duration>
+    <Spread>
+        <Wander />
+    </Spread>
+    <OnTurn>
+        <Damage>
+            <Fire_Atk>20</Fire_Atk>
+            <Air_Atk>20</Air_Atk>
+        </Damage>
+    </OnTurn>
+    <Interaction>
+        <Wet>
+            <Propogate>
+                <Sprite>
+                    <Name>AbilitySprites/LightningBurst/LightningBurst</Name>
+                    <UpdateRate>0.2</UpdateRate>
+                </Sprite>
+            </Propogate>
+        </Wet>
+    </Interaction>
+</Field>
