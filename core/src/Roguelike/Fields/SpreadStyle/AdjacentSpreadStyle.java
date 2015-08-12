@@ -16,11 +16,11 @@ public class AdjacentSpreadStyle extends AbstractSpreadStyle
 	@Override
 	public void update(float delta, Field field)
 	{
-		float updateAccumulator = (Float)field.getData("UpdateAccumulator", 0);
+		float updateAccumulator = (Float)field.getData("UpdateAccumulator", 0.0f);
 		
 		updateAccumulator += delta;
 		
-		while (updateAccumulator >= updateRate && field.stacks > 1)
+		while (updateAccumulator >= updateRate && field.stacks > 0)
 		{
 			updateAccumulator -= updateRate;
 			
@@ -29,16 +29,19 @@ public class AdjacentSpreadStyle extends AbstractSpreadStyle
 			{
 				GameTile tile = field.tile.level.getGameTile(field.tile.x+dir.GetX(), field.tile.y+dir.GetY());
 				
-				if (tile.getPassable(travelType))
+				boolean check = false;
+				if (tile.entity != null)
 				{
-					if (tile.entity != null)
-					{
-						validTiles.add(tile);
-					}
-					else if (tile.environmentEntity != null && tile.environmentEntity.canTakeDamage)
-					{
-						validTiles.add(tile);
-					}
+					check = true;
+				}
+				else if (tile.environmentEntity != null && tile.environmentEntity.canTakeDamage)
+				{
+					check = true;
+				}
+				
+				if (check && Passability.isPassable(tile.tileData.passableBy, travelType))
+				{
+					validTiles.add(tile);
 				}
 			}
 			
@@ -56,6 +59,6 @@ public class AdjacentSpreadStyle extends AbstractSpreadStyle
 	public void parse(Element xml)
 	{
 		updateRate = xml.getFloat("Update", 2);
-		travelType = Passability.parseArray(xml.get("TravelType", "Ground"));
+		travelType = Passability.parseArray(xml.get("TravelType", "Walk"));
 	}
 }

@@ -16,12 +16,12 @@ public class WanderSpreadStyle extends AbstractSpreadStyle
 	@Override
 	public void update(float delta, Field field)
 	{
-		float updateAccumulator = (Float)field.getData("UpdateAccumulator", 0);
+		float updateAccumulator = (Float)field.getData("UpdateAccumulator", 0.0f);
 		Direction lastMove = (Direction)field.getData("LastMove", Direction.CENTER);
 		
 		updateAccumulator += delta;
 		
-		while (updateAccumulator >= updateRate && field.stacks > 1)
+		while (updateAccumulator >= updateRate && field.stacks > 0)
 		{
 			updateAccumulator -= updateRate;
 			
@@ -29,13 +29,20 @@ public class WanderSpreadStyle extends AbstractSpreadStyle
 			for (Direction dir : Direction.values())
 			{
 				// prevent going backwards
-				if (dir.GetX() != lastMove.GetX()*-1 && dir.GetY() != lastMove.GetY()*-1)
+				if (dir.GetX() != lastMove.GetX()*-1 || dir.GetY() != lastMove.GetY()*-1)
 				{
 					GameTile tile = field.tile.level.getGameTile(field.tile.x+dir.GetX(), field.tile.y+dir.GetY());
 					
-					if (tile.getPassable(travelType))
+					if (Passability.isPassable(tile.tileData.passableBy, travelType))
 					{
-						validDirs.add(dir);
+						if (tile.environmentEntity != null && !tile.environmentEntity.canTakeDamage && !Passability.isPassable(tile.environmentEntity.passableBy, travelType))
+						{
+							// treat as impassible tile
+						}
+						else
+						{
+							validDirs.add(dir);
+						}
 					}
 				}
 			}
@@ -59,6 +66,6 @@ public class WanderSpreadStyle extends AbstractSpreadStyle
 	public void parse(Element xml)
 	{
 		updateRate = xml.getFloat("Update", 0.5f);
-		travelType = Passability.parseArray(xml.get("TravelType", "Ground"));
+		travelType = Passability.parseArray(xml.get("TravelType", "Walk"));
 	}
 }

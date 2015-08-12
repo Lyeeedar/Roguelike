@@ -156,7 +156,7 @@ public class SaveLevel extends SaveableObject<Level>
 		{
 			GameTile tile = level.getGameTile(field.pos);
 			Field f = field.create();
-			tile.field = f;
+			tile.addField(f);
 		}
 		
 		for (SaveLevelItem item : items)

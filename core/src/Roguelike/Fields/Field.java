@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public class Field
 {
  /**
-  * Spread style: non, flow, adjacent, wander, line
+  * match based on tags, not name (hot, wet, explosive, poisonous, gas)
   * interation: propogate, spawn, die, none
   * on urn, damage, heal, status, spawn
   * duration, permanent, time, single
@@ -111,11 +111,7 @@ public class Field
 			// if different field, interact
 			else
 			{
-				boolean thisSurvived = false;
-				//if (fieldInteractions.containsKey(newTile.field.fieldName))
-				//{
-				//	thisSurvived = fieldInteractions.interact(this, newTile.field);
-				//}
+				// do interaction somehow				
 			}
 		}
 		else
@@ -123,7 +119,7 @@ public class Field
 			Field newField = copy();
 			newField.stacks = 1;
 			
-			newTile.field = newField;
+			newTile.addField(newField);
 		}	
 	}
 	
@@ -145,8 +141,9 @@ public class Field
 	public Field copy()
 	{
 		Field field = new Field();
+		field.fileName = fileName;
 		field.fieldName = fieldName;
-		field.sprite = sprite;
+		field.sprite = sprite.copy();
 		field.drawAbove = drawAbove;
 		field.stacks = stacks;
 		field.light = light != null ? light.copy() : null;
@@ -163,14 +160,14 @@ public class Field
 	}
 	
 	//----------------------------------------------------------------------
-	protected void internalLoad(String fieldName)
+	protected void internalLoad(String fileName)
 	{
 		XmlReader xmlReader = new XmlReader();
 		Element xml = null;
 
 		try
 		{
-			xml = xmlReader.parse(Gdx.files.internal("Fields/"+fieldName+".xml"));
+			xml = xmlReader.parse(Gdx.files.internal("Fields/"+fileName+".xml"));
 		} 
 		catch (IOException e)
 		{
@@ -198,7 +195,7 @@ public class Field
 		Element spreadElement = xml.getChildByName("SpreadStyle");
 		if (spreadElement != null)
 		{
-			spreadStyle = AbstractSpreadStyle.load(spreadElement);
+			spreadStyle = AbstractSpreadStyle.load(spreadElement.getChild(0));
 		}
 		
 		String allowString = xml.get("AllowPassability", null);

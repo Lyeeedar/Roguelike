@@ -59,6 +59,17 @@ public class GameTile implements PathfindingTile
 		entity.tile = this;
 	}
 	
+	public void addField(Field field)
+	{
+		if (field.tile != null)
+		{
+			field.tile.field = null;
+		}
+		
+		this.field = field;
+		field.tile = this;
+	}
+	
 	public int[] addGameEntity(GameEntity obj)
 	{
 		GameTile oldTile = obj.tile;
@@ -121,7 +132,7 @@ public class GameTile implements PathfindingTile
 		
 		if (!passable) { return false; }
 		
-		return travelType.contains(Passability.ENTITY, true) || entity == null;
+		return entity == null || travelType.contains(Passability.ENTITY, true);
 	}
 	
 	@Override

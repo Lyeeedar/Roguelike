@@ -1,0 +1,9 @@
+<Field>
+    <FieldName>Water</FieldName>
+    <Sprite>
+        <Name>dc-dngn/water/dngn_shoals_shallow_water</Name>
+    </Sprite>
+    <SpreadStyle>
+        <Flow/>
+    </SpreadStyle>
+</Field>

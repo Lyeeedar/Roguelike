@@ -657,6 +657,7 @@ public class Level
 				{
 					f.onDeath();
 					f.tile.field = null;
+					f.tile = null;
 				}
 			}
 			

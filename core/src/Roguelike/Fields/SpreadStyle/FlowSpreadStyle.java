@@ -16,7 +16,7 @@ public class FlowSpreadStyle extends AbstractSpreadStyle
 	@Override
 	public void update(float delta, Field field)
 	{
-		float updateAccumulator = (Float)field.getData("UpdateAccumulator", 0);
+		float updateAccumulator = (Float)field.getData("UpdateAccumulator", 0.0f);
 		
 		updateAccumulator += delta;
 		
@@ -58,6 +58,6 @@ public class FlowSpreadStyle extends AbstractSpreadStyle
 	public void parse(Element xml)
 	{
 		updateRate = xml.getFloat("Update", 0.5f);
-		travelType = Passability.parseArray(xml.get("TravelType", "Ground"));
+		travelType = Passability.parseArray(xml.get("TravelType", "Walk,Entity"));
 	}
 }
