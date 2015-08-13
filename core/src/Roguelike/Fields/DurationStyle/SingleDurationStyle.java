@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class SingleDurationStyle extends AbstractDurationStyle
 {
-
 	@Override
 	public void update(float delta, Field field)
 	{
@@ -24,6 +23,7 @@ public class SingleDurationStyle extends AbstractDurationStyle
 		if (collide)
 		{
 			field.stacks = 0;
+			field.onNaturalDeath();
 		}
 	}
 

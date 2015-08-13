@@ -1,17 +1,6 @@
-<Field>
+<Field Extends="Gas,Opaque">
     <FieldName>Smoke</FieldName>
-    <Tags>Gas,Opaque</Tags>
-    <Layer>Air</Layer>
     <Sprite>
         <Name>effect/cloud_black_smoke</Name>
     </Sprite>
-    <Duration>
-        <Fade>
-            <Rate>5</Rate>
-        </Fade>
-    </Duration>
-    <Spread>
-        <Flow />
-    </Spread>
-    <Restrict>Light</Restrict>
 </Field>

@@ -735,27 +735,29 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			Field field = Field.load("Water");
 			field.stacks = 10;
-			Global.CurrentLevel.player.tile.addField(field);
+			GameTile playerTile = Global.CurrentLevel.player.tile;			
+			field.trySpawnInTile(playerTile, 10);
 		}
 		else if (keycode == Keys.F)
 		{
 			Field field = Field.load("Fire");
 			field.stacks = 1;
-			Global.CurrentLevel.player.tile.addField(field);
+			GameTile playerTile = Global.CurrentLevel.player.tile;			
+			field.trySpawnInTile(playerTile, 1);
 		}
 		else if (keycode == Keys.G)
 		{
 			Field field = Field.load("IceFog");
 			field.stacks = 4;
-			Global.CurrentLevel.player.tile.addField(field);
+			GameTile playerTile = Global.CurrentLevel.player.tile;			
+			field.trySpawnInTile(playerTile, 4);
 		}
 		else if (keycode == Keys.H)
 		{
 			Field field = Field.load("Static");
-			field.stacks = 1;
-			GameTile playerTile = Global.CurrentLevel.player.tile;
-			GameTile spawnTile = Global.CurrentLevel.getGameTile(playerTile.x+1, playerTile.y+1);
-			spawnTile.addField(field);
+			GameTile playerTile = Global.CurrentLevel.player.tile;		
+			GameTile newTile = playerTile.level.getGameTile(playerTile.x+1, playerTile.y+1);
+			field.trySpawnInTile(newTile, 10);
 		}
 		else if (keycode == Keys.I)
 		{

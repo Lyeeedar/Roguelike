@@ -1,19 +1,10 @@
-<Field>
+<Field Extends="Solid">
     <FieldName>Ice</FieldName>
-    <Tags>Cold,Solid</Tags>
+    <Tags>Cold</Tags>
     <Sprite>
         <Name>dc-dngn/wall/marble_wall5</Name>
     </Sprite>
-    <Duration>
-        <Permanent />
-    </Duration>
-    <Spread>
-        <None />
-    </Spread>
     <Interactions>
-        <Water>
-            <KillOther />
-        </Water>
         <Hot>
             <Spawn>
                 <Field>Water</Field>

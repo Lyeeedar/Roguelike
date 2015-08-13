@@ -1,4 +1,4 @@
-package Roguelike.Fields.OnTurnEffect;
+package Roguelike.Fields.OnDeathEffect;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -9,28 +9,29 @@ import Roguelike.Global;
 import Roguelike.Entity.Entity;
 import Roguelike.Fields.Field;
 import Roguelike.Global.Statistic;
+import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
-public class DamageOnTurnEffect extends AbstractOnTurnEffect
+public class DamageOnDeathEffect extends AbstractOnDeathEffect
 {
 	private String condition;	
 	private EnumMap<Statistic, String> equations = new EnumMap<Statistic, String>(Statistic.class);
 	private String[] reliesOn;
-	
+
 	@Override
-	public void process(Field field)
+	public void process(Field field, GameTile tile)
 	{
-		if (field.tile.entity != null)
+		if (tile.entity != null)
 		{
-			doDamage(field.tile.entity, field);
+			doDamage(tile.entity, field);
 		}
 		
-		if (field.tile.environmentEntity != null && field.tile.environmentEntity.canTakeDamage)
+		if (tile.environmentEntity != null && tile.environmentEntity.canTakeDamage)
 		{
-			doDamage(field.tile.environmentEntity, field);
+			doDamage(tile.environmentEntity, field);
 		}
 	}
 	

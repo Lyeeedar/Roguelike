@@ -1,0 +1,10 @@
+<Field>
+    <Tags>Gas</Tags>
+    <Layer>Air</Layer>
+    <Duration>
+        <Fade />
+    </Duration>
+    <Spread>
+        <Flow />
+    </Spread>
+</Field>

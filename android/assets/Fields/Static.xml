@@ -10,20 +10,19 @@
     <Spread>
         <Wander />
     </Spread>
-    <OnTurn>
+    <OnDeath>
         <Damage>
             <Fire_Atk>20</Fire_Atk>
             <Air_Atk>20</Air_Atk>
         </Damage>
-    </OnTurn>
-    <Interaction>
+         <Sprite>
+         	<Name>AbilitySprites/LightningBurst/LightningBurst</Name>
+         	<UpdateRate>0.2</UpdateRate>
+         </Sprite>
+    </OnDeath>
+    <Interactions>
         <Wet>
-            <Propogate>
-                <Sprite>
-                    <Name>AbilitySprites/LightningBurst/LightningBurst</Name>
-                    <UpdateRate>0.2</UpdateRate>
-                </Sprite>
-            </Propogate>
+            <Propogate />
         </Wet>
-    </Interaction>
+    </Interactions>
 </Field>

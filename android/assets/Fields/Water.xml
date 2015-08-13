@@ -1,6 +1,6 @@
-<Field>
+<Field Extends="Liquid">
     <FieldName>Water</FieldName>
-    <Tags>Wet,Liquid</Tags>
+    <Tags>Wet</Tags>
     <Sprite>
         <Name>dc-dngn/water/dngn_shoals_shallow_water</Name>
     </Sprite>
@@ -10,9 +10,6 @@
             <ResetOnStacks>true</ResetOnStacks>
         </Fade>
     </Duration>
-    <Spread>
-        <Flow/>
-    </Spread>
     <Interactions>
         <Hot>
             <Spawn>

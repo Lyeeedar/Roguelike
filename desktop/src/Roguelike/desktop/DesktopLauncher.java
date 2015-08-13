@@ -6,8 +6,10 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 
-public class DesktopLauncher {
-	public static void main (String[] arg) {
+public class DesktopLauncher
+{
+	public static void main (String[] arg)
+	{
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.foregroundFPS = 0;
 		config.width = 800;

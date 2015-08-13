@@ -52,16 +52,21 @@ public class WanderSpreadStyle extends AbstractSpreadStyle
 			if (validDirs.size > 0)
 			{
 				Direction dir = validDirs.random();
-				GameTile tile = field.tile.level.getGameTile(field.tile.x+dir.GetX(), field.tile.y+dir.GetY());	
-				field.trySpawnInTile(tile.x, tile.y);				
-				field.stacks--;
+				GameTile newTile = field.tile.level.getGameTile(field.tile.x+dir.GetX(), field.tile.y+dir.GetY());	
+				field.trySpawnInTile(newTile, field.stacks-1);				
+				field.tile.clearField(field.layer);
 				
-				lastMove = dir;
+				Field newField = newTile.fields.get(field.layer);
+				if (newField != null && newField.fieldName.equals(field.fieldName))
+				{
+					newField.data.put("LastMove", dir);
+				}
+				
+				return;
 			}
 		}
 		
 		field.setData("SpreadAccumulator", updateAccumulator);
-		field.setData("LastMove", lastMove);
 	}
 
 	@Override

@@ -38,6 +38,7 @@ public abstract class AbstractEffectType
 	static
 	{
 		ClassMap.put("DAMAGE", EffectTypeDamage.class);
+		ClassMap.put("FIELD", EffectTypeField.class);
 		ClassMap.put("HEAL", EffectTypeHeal.class);
 		ClassMap.put("STATUS", EffectTypeStatus.class);
 		ClassMap.put("TELEPORT", EffectTypeTeleport.class);

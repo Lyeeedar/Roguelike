@@ -1,0 +1,15 @@
+<Field>
+    <Tags>Liquid</Tags>
+    <Layer>Ground</Layer>
+    <Duration>
+        <Fade/>
+    </Duration>
+    <Spread>
+        <Flow/>
+    </Spread>
+    <Interactions>
+        <Solid>
+            <KillThis />
+        </Solid>
+    </Interactions>
+</Field>

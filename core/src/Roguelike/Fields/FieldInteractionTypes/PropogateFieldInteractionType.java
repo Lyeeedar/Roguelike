@@ -5,6 +5,7 @@ import java.util.HashSet;
 import Roguelike.AssetManager;
 import Roguelike.Global.Direction;
 import Roguelike.Fields.Field;
+import Roguelike.Fields.OnDeathEffect.AbstractOnDeathEffect;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
@@ -12,9 +13,7 @@ import Roguelike.Tiles.GameTile;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class PropogateFieldInteractionType extends AbstractFieldInteractionType
-{
-	private Sprite sprite;
-	
+{	
 	@Override
 	public Field process(Field src, Field dst)
 	{
@@ -24,7 +23,10 @@ public class PropogateFieldInteractionType extends AbstractFieldInteractionType
 		
 		for (GameTile tile : tiles)
 		{
-			tile.spriteEffects.add(new SpriteEffect(sprite.copy(), Direction.CENTER, null));
+			for (AbstractOnDeathEffect effect : src.onDeathEffects)
+			{
+				effect.process(src, tile);
+			}
 		}
 		
 		return dst;
@@ -52,7 +54,6 @@ public class PropogateFieldInteractionType extends AbstractFieldInteractionType
 	@Override
 	public void parse(Element xml)
 	{
-		sprite = AssetManager.loadSprite(xml.getChildByName("Sprite"));
 	}
 
 }

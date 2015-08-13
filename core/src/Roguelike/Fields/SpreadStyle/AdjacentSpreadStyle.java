@@ -49,8 +49,8 @@ public class AdjacentSpreadStyle extends AbstractSpreadStyle
 			
 			if (validTiles.size > 0)
 			{
-				GameTile tile = validTiles.random();				
-				field.trySpawnInTile(tile.x, tile.y);
+				GameTile newTile = validTiles.random();				
+				field.trySpawnInTile(newTile, 1);
 			}
 		}
 		

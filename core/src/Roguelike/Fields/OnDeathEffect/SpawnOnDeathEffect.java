@@ -5,6 +5,7 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Fields.Field;
+import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -16,7 +17,7 @@ public class SpawnOnDeathEffect extends AbstractOnDeathEffect
 	String stacksEqn;
 
 	@Override
-	public void process(Field field)
+	public void process(Field field, GameTile tile)
 	{
 		HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
 
@@ -43,7 +44,7 @@ public class SpawnOnDeathEffect extends AbstractOnDeathEffect
 		Field newField = Field.load(fieldName);
 		newField.stacks = stacks;
 		
-		field.tile.addField(newField);
+		tile.addField(newField);
 	}
 
 	@Override

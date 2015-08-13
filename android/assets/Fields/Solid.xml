@@ -1,0 +1,10 @@
+<Field>
+    <Tags>Solid</Tags>
+    <Layer>Ground</Layer>
+    <Duration>
+        <Permanent />
+    </Duration>
+    <Spread>
+        <None />
+    </Spread>
+</Field>

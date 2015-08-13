@@ -12,6 +12,7 @@ import Roguelike.Fields.FieldInteractionTypes.AbstractFieldInteractionType;
 import Roguelike.Fields.OnDeathEffect.AbstractOnDeathEffect;
 import Roguelike.Fields.OnTurnEffect.AbstractOnTurnEffect;
 import Roguelike.Fields.SpreadStyle.AbstractSpreadStyle;
+import Roguelike.GameEvent.IGameObject;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Tiles.GameTile;
@@ -21,7 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-public class Field
+public class Field implements IGameObject
 {
  /**
   * match based on tags, not name (hot, wet, explosive, poisonous, gas)
@@ -91,7 +92,7 @@ public class Field
 	public AbstractSpreadStyle spreadStyle;
 	public Array<AbstractOnTurnEffect> onTurnEffects = new Array<AbstractOnTurnEffect>();
 	public HashMap<String, AbstractFieldInteractionType> fieldInteractions = new HashMap<String, AbstractFieldInteractionType>();
-	public AbstractOnDeathEffect onDeath;
+	public Array<AbstractOnDeathEffect> onDeathEffects = new Array<AbstractOnDeathEffect>();
 	
 	public HashMap<String, Object> data = new HashMap<String, Object>();
 	
@@ -100,10 +101,20 @@ public class Field
 	
 	public void update(float cost)
 	{		
-		for (AbstractOnTurnEffect effect : onTurnEffects)
+		float onTurnAccumulator = (Float)getData("OnTurnAccumulator", 0.0f);
+		onTurnAccumulator += cost;
+		
+		while (onTurnAccumulator > 1)
 		{
-			effect.update(cost, this);
+			onTurnAccumulator -= 1;
+			
+			for (AbstractOnTurnEffect effect : onTurnEffects)
+			{
+				effect.process(this);
+			}
 		}
+		
+		setData("OnTurnAccumulator", onTurnAccumulator);
 		
 		durationStyle.update(cost, this);
 		
@@ -115,17 +126,16 @@ public class Field
 	
 	public void onNaturalDeath()
 	{
-		if (onDeath != null)
+		for (AbstractOnDeathEffect effect : onDeathEffects)
 		{
-			onDeath.process(this);
+			effect.process(this, tile);
 		}
 	}
 	
-	public void trySpawnInTile(int x, int y)
+	public void trySpawnInTile(GameTile newTile, int stacks)
 	{
-		GameTile newTile = tile.level.getGameTile(x, y);
 		Field newField = copy();
-		newField.stacks = 1;
+		newField.stacks = stacks;
 		
 		EnumMap<FieldLayer, Field> fieldStore = new EnumMap<FieldLayer, Field>(FieldLayer.class);
 		
@@ -244,7 +254,7 @@ public class Field
 		field.spreadStyle = spreadStyle;
 		field.onTurnEffects = onTurnEffects;
 		field.fieldInteractions = fieldInteractions;
-		field.onDeath = onDeath;
+		field.onDeathEffects = onDeathEffects;
 		
 		field.allowPassability = allowPassability;
 		field.restrictPassability = restrictPassability;
@@ -270,7 +280,11 @@ public class Field
 		String extendsElement = xml.getAttribute("Extends", null);
 		if (extendsElement != null)
 		{
-			internalLoad(extendsElement);
+			String[] split = extendsElement.split(",");
+			for (String file : split)
+			{
+				internalLoad(file);
+			}
 		}
 		
 		String tagsElement = xml.get("Tags", null);
@@ -323,7 +337,12 @@ public class Field
 		Element onDeathElement = xml.getChildByName("OnDeath");
 		if (onDeathElement != null)
 		{
-			onDeath = AbstractOnDeathEffect.load(onDeathElement.getChild(0));
+			for (int i = 0; i < onDeathElement.getChildCount(); i++)
+			{
+				Element deathElement = onDeathElement.getChild(i);
+				AbstractOnDeathEffect death = AbstractOnDeathEffect.load(deathElement);
+				onDeathEffects.add(death);
+			}
 		}
 		
 		Element interactionsElement = xml.getChildByName("Interactions");
@@ -364,5 +383,26 @@ public class Field
 		f.internalLoad(name);
 
 		return f;
+	}
+
+	
+	@Override
+	public String getName()
+	{
+		return fieldName;
+	}
+
+	
+	@Override
+	public String getDescription()
+	{
+		return "";
+	}
+
+	
+	@Override
+	public Sprite getIcon()
+	{
+		return sprite;
 	}
 }

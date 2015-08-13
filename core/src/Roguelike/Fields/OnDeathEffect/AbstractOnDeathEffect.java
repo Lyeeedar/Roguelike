@@ -3,6 +3,7 @@ package Roguelike.Fields.OnDeathEffect;
 import java.util.HashMap;
 
 import Roguelike.Fields.Field;
+import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
@@ -10,7 +11,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 public abstract class AbstractOnDeathEffect
 {
-	public abstract void process(Field field);	
+	public abstract void process(Field field, GameTile tile);	
 	public abstract void parse(Element xml);
 	
 	//----------------------------------------------------------------------
@@ -40,5 +41,8 @@ public abstract class AbstractOnDeathEffect
 	static
 	{
 		ClassMap.put("SPAWN", SpawnOnDeathEffect.class);
+		ClassMap.put("DAMAGE", DamageOnDeathEffect.class);
+		ClassMap.put("STATUS", StatusOnDeathEffect.class);
+		ClassMap.put("SPRITE", SpriteOnDeathEffect.class);
 	}
 }

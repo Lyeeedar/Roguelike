@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 public abstract class AbstractOnTurnEffect
 {
-	public abstract void update(float delta, Field field);	
+	public abstract void process(Field field);	
 	public abstract void parse(Element xml);
 	
 	//----------------------------------------------------------------------
@@ -40,5 +40,6 @@ public abstract class AbstractOnTurnEffect
 	static
 	{
 		ClassMap.put("DAMAGE", DamageOnTurnEffect.class);
+		ClassMap.put("STATUS", StatusOnTurnEffect.class);
 	}
 }
