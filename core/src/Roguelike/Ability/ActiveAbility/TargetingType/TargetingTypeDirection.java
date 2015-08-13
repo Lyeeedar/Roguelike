@@ -15,9 +15,7 @@ public class TargetingTypeDirection extends AbstractTargetingType
 
 	@Override
 	public boolean isTargetValid(ActiveAbility ab, GameTile tile)
-	{
-		if (!tile.GetVisible()) { return false; }
-		
+	{		
 		int x = tile.x - ab.source.x;
 		int y = tile.y - ab.source.y;
 		

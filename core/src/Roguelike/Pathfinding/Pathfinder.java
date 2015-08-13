@@ -3,6 +3,7 @@ package Roguelike.Pathfinding;
 import java.util.HashSet;
 
 import Roguelike.Global.Passability;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
 
@@ -27,10 +28,10 @@ public class Pathfinder
 		this.factions = factions;
 	}
 	
-	public int[][] getPath(Array<Passability> travelType)
+	public Array<Point> getPath(Array<Passability> travelType)
 	{
 		AStarPathfind astar = new AStarPathfind(Grid, startx, starty, endx, endy, canMoveDiagonal, false, travelType);
-		int[][] path = astar.getPath();
+		Array<Point> path = astar.getPath();
 		
 		if (path == null)
 		{
@@ -176,11 +177,11 @@ public class Pathfinder
 		private static void path(TestTile[][] grid, int startx, int starty, int endx, int endy)
 		{
 			AStarPathfind astar = new AStarPathfind(grid, startx, starty, endx, endy, false, true, new Array<Passability>());
-			int[][] path = astar.getPath();
+			Array<Point> path = astar.getPath();
 			
-			for (int[] step : path)
+			for (Point step : path)
 			{
-				grid[step[0]][step[1]].isPath = true;
+				grid[step.x][step.y].isPath = true;
 			}
 			
 			for (int x = 0; x < 10; x++)

@@ -323,8 +323,8 @@ public class EnvironmentEntity extends Entity
 						
 						for (Direction d : Direction.values())
 						{
-							int nx = x + d.GetX();
-							int ny = y + d.GetY();
+							int nx = x + d.getX();
+							int ny = y + d.getY();
 							
 							GameTile ntile = tile.level.getGameTile(nx, ny);
 							

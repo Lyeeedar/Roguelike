@@ -37,7 +37,7 @@ public class PropogateFieldInteractionType extends AbstractFieldInteractionType
 	{
 		for (Direction dir : Direction.values())
 		{
-			GameTile newTile = src.level.getGameTile(src.x+dir.GetX(), src.y+dir.GetY());
+			GameTile newTile = src.level.getGameTile(src.x+dir.getX(), src.y+dir.getY());
 			
 			if (newTile.fields.get(field.layer) != null && newTile.fields.get(field.layer).fieldName.equals(field.fieldName))
 			{

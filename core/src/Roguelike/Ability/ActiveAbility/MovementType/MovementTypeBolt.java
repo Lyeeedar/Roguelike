@@ -7,8 +7,10 @@ import Roguelike.Global.Passability;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Pathfinding.BresenhamLine;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class MovementTypeBolt extends AbstractMovementType
@@ -24,23 +26,25 @@ public class MovementTypeBolt extends AbstractMovementType
 		speed = xml.getInt("Speed", 1);
 	}
 	
-	int[][] path;
+	Array<Point> path;
 	int i;
 
 	@Override
 	public void init(ActiveAbility ab, int endx, int endy)
 	{
-		int[][] fullpath = BresenhamLine.line(ab.source.x, ab.source.y, endx, endy, ab.source.level.getGrid(), false, ab.range+1, BoltPassability);
+		Array<Point> fullpath = BresenhamLine.line(ab.source.x, ab.source.y, endx, endy, ab.source.level.getGrid(), false, ab.range+1, BoltPassability);
 		
-		Array<int[]> actualpath = new Array<int[]>(fullpath.length);
-		for (int i = 1; i < ab.range+1 && i < fullpath.length; i++)
+		Array<Point> actualpath = new Array<Point>(fullpath.size);
+		for (int i = 1; i < ab.range+1 && i < fullpath.size; i++)
 		{
-			actualpath.add(fullpath[i]);
+			actualpath.add(fullpath.get(i).copy());
 		}
-		path = actualpath.toArray(int[].class);
+		path = actualpath;
+		
+		Pools.freeAll(fullpath);
 		
 		ab.AffectedTiles.clear();
-		ab.AffectedTiles.add(ab.source.level.getGameTile(path[0]));
+		ab.AffectedTiles.add(ab.source.level.getGameTile(path.get(0)));
 	}
 	
 	@Override
@@ -48,21 +52,21 @@ public class MovementTypeBolt extends AbstractMovementType
 	{	
 		if (ab.AffectedTiles.peek().entity != null)
 		{
-			i = path.length;
+			i = path.size;
 			return true;
 		}
 		
 		float step = 1.0f / speed;
 		if (accumulator >= 0)
 		{
-			if (i < path.length-1)
+			if (i < path.size-1)
 			{
-				GameTile nextTile = ab.AffectedTiles.peek().level.getGameTile(path[i+1]);				
+				GameTile nextTile = ab.AffectedTiles.peek().level.getGameTile(path.get(i+1));				
 				direction = Direction.getDirection(ab.AffectedTiles.peek(), nextTile);								
 								
 				if (!Passability.isPassable(nextTile.tileData.passableBy, BoltPassability))
 				{
-					i = path.length;
+					i = path.size;
 					return true;
 				}
 				
@@ -71,14 +75,14 @@ public class MovementTypeBolt extends AbstractMovementType
 				
 				if (nextTile.entity != null)
 				{
-					i = path.length;
+					i = path.size;
 					return true;
 				}
 				else
 				{
 					i++;
 					
-					if (i == path.length-1)
+					if (i == path.size-1)
 					{
 						return true;
 					}

@@ -225,7 +225,7 @@
 		            <Features>
 		                <Feature>
 			        	    <Min>0</Min>
-			        	    <Max>0.5</Max>
+			        	    <Max>0.1</Max>
 			        	    <TileData>
 								<Passable>Levitate</Passable>
 								<Opaque>false</Opaque>
@@ -235,8 +235,8 @@
 							</TileData>
 			        	</Feature>
 		                <Feature>
-			        	    <Min>0.5</Min>
-			        	    <Max>0.6</Max>
+			        	    <Min>0.1</Min>
+			        	    <Max>0.3</Max>
 			        	    <TileData>
 								<Passable>true</Passable>
 								<Opaque>false</Opaque>

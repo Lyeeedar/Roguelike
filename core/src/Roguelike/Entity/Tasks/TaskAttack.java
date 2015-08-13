@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 
 import Roguelike.Global;
 import Roguelike.Entity.GameEntity;
@@ -22,9 +23,12 @@ import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Sprite.MoveAnimation.MoveEquation;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
 public class TaskAttack extends AbstractTask
 {
+	private static final Array<Passability> WeaponPassability = new Array<Passability>(new Passability[]{Passability.LIGHT});
+	
 	public Direction dir;
 
 	public TaskAttack(Direction dir)
@@ -37,8 +41,8 @@ public class TaskAttack extends AbstractTask
 		// Collect data
 		GameTile oldTile = obj.tile;
 
-		int newX = oldTile.x+dir.GetX();
-		int newY = oldTile.y+dir.GetY();
+		int newX = oldTile.x+dir.getX();
+		int newY = oldTile.y+dir.getY();
 
 		GameTile newTile = oldTile.level.getGameTile(newX, newY);
 
@@ -70,8 +74,8 @@ public class TaskAttack extends AbstractTask
 		// Collect data
 		GameTile oldTile = obj.tile;
 
-		int newX = oldTile.x+dir.GetX();
-		int newY = oldTile.y+dir.GetY();
+		int newX = oldTile.x+dir.getX();
+		int newY = oldTile.y+dir.getY();
 
 		GameTile newTile = oldTile.level.getGameTile(newX, newY);
 
@@ -118,7 +122,7 @@ public class TaskAttack extends AbstractTask
 			if (tile.entity != null)
 			{
 				SpriteEffect e = new SpriteEffect(hitEffect.copy(), Direction.CENTER, null);
-				e.Sprite.rotation = dir.GetAngle();
+				e.Sprite.rotation = dir.getAngle();
 
 				tile.entity.spriteEffects.add(e);
 			}
@@ -126,13 +130,13 @@ public class TaskAttack extends AbstractTask
 			if (tile.environmentEntity != null)
 			{
 				SpriteEffect e = new SpriteEffect(hitEffect.copy(), Direction.CENTER, null);
-				e.Sprite.rotation = dir.GetAngle();
+				e.Sprite.rotation = dir.getAngle();
 
 				tile.environmentEntity.spriteEffects.add(e);
 			}
 
 			SpriteEffect e = new SpriteEffect(hitEffect.copy(), Direction.CENTER, null);
-			e.Sprite.rotation = dir.GetAngle();
+			e.Sprite.rotation = dir.getAngle();
 
 			tile.spriteEffects.add(e);
 			
@@ -243,72 +247,33 @@ public class TaskAttack extends AbstractTask
 		Array<GameTile> hitTiles = new Array<GameTile>();
 		hitTiles.add(newTile);
 
-		if (type == WeaponType.SPEAR)
+		if (type == WeaponType.AXE)
 		{
-			for (int i = 1; i < range; i++)
-			{
-				hitTiles.add(oldTile.level.getGameTile(
-						oldTile.x+dir.GetX()*(i+1), 
-						oldTile.y+dir.GetY()*(i+1)
-						));
-			}
-		}
-		else if (type == WeaponType.AXE)
-		{
-			Direction anticlockwise = dir.GetAnticlockwise();
-			Direction clockwise = dir.GetClockwise();
+			Direction anticlockwise = dir.getAnticlockwise();
+			Direction clockwise = dir.getClockwise();
 
 			hitTiles.add(oldTile.level.getGameTile(
-					oldTile.x+anticlockwise.GetX(), 
-					oldTile.y+anticlockwise.GetY()
+					oldTile.x+anticlockwise.getX(), 
+					oldTile.y+anticlockwise.getY()
 					));
 
 			hitTiles.add(oldTile.level.getGameTile(
-					oldTile.x+clockwise.GetX(), 
-					oldTile.y+clockwise.GetY()
+					oldTile.x+clockwise.getX(), 
+					oldTile.y+clockwise.getY()
 					));
 		}
-		else if (type == WeaponType.BOW || type == WeaponType.WAND)
+		else if (type == WeaponType.SPEAR || type == WeaponType.BOW || type == WeaponType.WAND)
 		{
 			for (int i = 2; i <= range; i++)
 			{			
-				int nx = oldTile.x + dir.GetX()*i;
-				int ny = oldTile.y + dir.GetY()*i;
+				int nx = oldTile.x + dir.getX()*i;
+				int ny = oldTile.y + dir.getY()*i;
 
-				hitTiles.add(oldTile.level.getGameTile(nx, ny));
-			}
-		}
-
-		// Remove invisible tiles
-		Array<int[]> visibleTiles = new Array<int[]>();
-		ShadowCaster shadowCaster = new ShadowCaster(entity.tile.level.getGrid(), range);
-		shadowCaster.ComputeFOV(entity.tile.x, entity.tile.y, visibleTiles);
-
-		Iterator<GameTile> itr = hitTiles.iterator();
-		while (itr.hasNext())
-		{
-			GameTile tile = itr.next();
-
-			if (tile != null)
-			{
-				boolean visible = false;
-				for (int[] pos : visibleTiles)
-				{
-					if (pos[0] == tile.x && pos[1] == tile.y)
-					{
-						visible = true;
-						break;
-					}
-				}
-
-				if (!visible)
-				{
-					itr.remove();
-				}
-			}
-			else
-			{
-				itr.remove();
+				GameTile tile = oldTile.level.getGameTile(nx, ny);
+				
+				hitTiles.add(tile);
+				
+				if (!tile.getPassable(WeaponPassability)) { break; }
 			}
 		}
 
@@ -321,8 +286,8 @@ public class TaskAttack extends AbstractTask
 		// Collect data
 		GameTile oldTile = obj.tile;
 
-		int newX = oldTile.x+dir.GetX();
-		int newY = oldTile.y+dir.GetY();
+		int newX = oldTile.x+dir.getX();
+		int newY = oldTile.y+dir.getY();
 
 		GameTile newTile = oldTile.level.getGameTile(newX, newY);
 

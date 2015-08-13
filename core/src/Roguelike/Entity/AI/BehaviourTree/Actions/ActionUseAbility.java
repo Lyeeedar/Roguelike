@@ -4,7 +4,10 @@ import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskUseAbility;
+import Roguelike.Tiles.Point;
 
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionUseAbility extends AbstractAction
@@ -26,15 +29,17 @@ public class ActionUseAbility extends AbstractAction
 		ability.caster = entity;
 		ability.source = entity.tile;
 		
-		int[][] validTargets = ability.getValidTargets();
+		Array<Point> validTargets = ability.getValidTargets();
 		
-		if (validTargets.length == 0)
+		if (validTargets.size == 0)
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
 		
-		entity.tasks.add(new TaskUseAbility(validTargets[0], ability));
+		entity.tasks.add(new TaskUseAbility(validTargets.get(0).copy(), ability));
+		
+		Pools.freeAll(validTargets);
 		
 		State = BehaviourTreeState.SUCCEEDED;
 		return State;

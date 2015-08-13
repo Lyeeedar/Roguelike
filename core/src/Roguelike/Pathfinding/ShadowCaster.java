@@ -14,9 +14,11 @@ import java.util.ArrayDeque;
 import java.util.HashSet;
 
 import Roguelike.Global.Passability;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 
 public class ShadowCaster
 {
@@ -49,7 +51,7 @@ public class ShadowCaster
 	// that can tell whether a given cell is opaque. Calls the setFoV action on
 	// every cell that is both within the radius and visible from the center.
 
-	public void ComputeFOV(int x, int y, Array<int[]> output)
+	public void ComputeFOV(int x, int y, Array<Point> output)
 	{
 		this.startX = MathUtils.clamp(x, 0, grid.length - 1);
 		this.startY = MathUtils.clamp(y, 0, grid[0].length - 1);
@@ -60,7 +62,7 @@ public class ShadowCaster
 		}
 	}
 
-	private void ComputeFieldOfViewInOctantZero(int octant, Array<int[]> output)
+	private void ComputeFieldOfViewInOctantZero(int octant, Array<Point> output)
 	{
 		ArrayDeque<Column> queue = new ArrayDeque<Column>();
 		
@@ -82,7 +84,7 @@ public class ShadowCaster
 	// portion that are within the radius as in the field of view, and
 	// (2) it computes which portions of the following column are in the
 	// field of view, and puts them on a work queue for later processing.
-	private void ComputeFoVForColumnPortion(int x, int[] topVector, int[] bottomVector, ArrayDeque<Column> queue, int octant, Array<int[]> output)
+	private void ComputeFoVForColumnPortion(int x, int[] topVector, int[] bottomVector, ArrayDeque<Column> queue, int octant, Array<Point> output)
 	{
 		// Search for transitions from opaque to transparent or
 		// transparent to opaque and use those to determine what
@@ -123,29 +125,40 @@ public class ShadowCaster
 		Boolean wasLastCellOpaque = null;
 		for (int y = topY; y >= bottomY; y--)
 		{
-			int[] temp = TranslateOctant(new int[] { x, y }, octant);
-			boolean inRadius = IsInRadius(temp[0], temp[1]);
+			Point temp = Pools.obtain(Point.class);
+			Point translated = TranslateOctant(temp.set(x, y), octant);
+			Pools.free(temp);
+			
+			boolean inRadius = IsInRadius(translated.x, translated.y);
 			if (inRadius)
 			{
 				// The current cell is in the field of view.
 
 				if (
-					temp[0] < 0 ||
-					temp[1] < 0 ||
-					temp[0] >= grid.length ||
-					temp[1] >= grid[0].length
+					translated.x < 0 ||
+					translated.y < 0 ||
+					translated.x >= grid.length ||
+					translated.y >= grid[0].length
 					)
 				{
+					Pools.free(translated);
 					continue;
 				}
 				
-				String s = temp[0]+","+temp[1];
+				String s = translated.x+","+translated.y;
 				if (!tileLookup.contains(s))
 				{
-					output.add(temp);
-					
+					output.add(translated);					
 					tileLookup.add(s);
 				}
+				else
+				{
+					Pools.free(translated);
+				}
+			}
+			else
+			{
+				Pools.free(translated);
 			}
 
 			// A cell that was too far away to be seen is effectively
@@ -209,61 +222,72 @@ public class ShadowCaster
 	//
 	//
 
-	private int[] TranslateOctant(int[] thepos, int octant)
+	private Point TranslateOctant(Point thepos, int octant)
 	{
-		int[] pos = { thepos[0], thepos[1] };
+		Point pos = thepos.copy();
 
 		if (octant == 1)
 		{
-			int temp = pos[0];
-			pos[0] = pos[1];
-			pos[1] = temp;
+			int temp = pos.x;
+			pos.x = pos.y;
+			pos.y = temp;
 		} 
 		else if (octant == 2)
 		{
-			int temp = pos[0];
-			pos[0] = pos[1] * -1;
-			pos[1] = temp;
+			int temp = pos.x;
+			pos.x = pos.y * -1;
+			pos.y = temp;
 		} 
 		else if (octant == 3)
 		{
-			pos[0] = pos[0] * -1;
+			pos.x = pos.x * -1;
 		} 
 		else if (octant == 4)
 		{
-			int temp = pos[0] * -1;
-			pos[0] = pos[1] * -1;
-			pos[1] = temp;
+			int temp = pos.x * -1;
+			pos.x = pos.y * -1;
+			pos.y = temp;
 		} 
 		else if (octant == 5)
 		{
-			pos[1] = pos[1] * -1;
-			pos[0] = pos[0] * -1;
+			pos.y = pos.y * -1;
+			pos.x = pos.x * -1;
 		} 
 		else if (octant == 6)
 		{
-			int temp = pos[1];
-			pos[1] = pos[0] * -1;
-			pos[0] = temp;
+			int temp = pos.y;
+			pos.y = pos.x * -1;
+			pos.x = temp;
 		} 
 		else if (octant == 7)
 		{
-			pos[1] = pos[1] * -1;
+			pos.y = pos.y * -1;
 		}
 
-		pos[0] = (pos[0]) + startX;
-		pos[1] = (pos[1]) + startY;
+		pos.x = (pos.x) + startX;
+		pos.y = (pos.y) + startY;
 
 		return pos;
 	}
 
 	private boolean isOpaque(int x, int y, int octant)
 	{
-		int[] pos = TranslateOctant(new int[] { x, y }, octant);
+		Point temp = Pools.obtain(Point.class);
+		Point pos = TranslateOctant(temp.set(x, y), octant);
+		Pools.free(temp);
 		
-		if (pos[0] == startX && pos[1] == startY) { return false; } // hack to prevent start tile from blocking sight
+		// hack to prevent start tile from blocking sight
+		if (pos.x == startX && pos.y == startY)
+		{
+			Pools.free(pos);
+			return false;
+		} 
 		
-		return !grid[pos[0]][pos[1]].getPassable(travelType);
+		boolean opaque = !grid[pos.x][pos.y].getPassable(travelType);
+		
+		Pools.free(pos);
+		
+		return opaque;
 	}
 }
 

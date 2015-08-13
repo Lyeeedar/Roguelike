@@ -1,8 +1,10 @@
 package Roguelike.Lights;
 
 import Roguelike.Global.Passability;
+import Roguelike.Pathfinding.ShadowCastCache;
 import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
@@ -11,9 +13,7 @@ import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class Light
-{
-	private static final Array<Passability> LightPassability = new Array<Passability>(new Passability[]{Passability.LIGHT});
-		
+{		
 	public boolean copied;
 	
 	public Color colour;
@@ -27,57 +27,9 @@ public class Light
 	
 	private float timeAccumulator;
 	
-	private int lastlx = -1;
-	private int lastly = -1;
-	private Array<int[]> opaqueTiles = new Array<int[]>();
-	private Array<int[]> shadowCastOutput = new Array<int[]>();
+	public ShadowCastCache shadowCastCache = new ShadowCastCache();
 	
-	public Array<int[]> getShadowCast(GameTile[][] grid)
-	{
-		boolean recalculate = false;
-		
-		if (lx != lastlx || ly != lastly)
-		{
-			recalculate = true;
-		}
-		else
-		{
-			for (int[] pos : opaqueTiles)
-			{
-				GameTile tile = grid[pos[0]][pos[1]];				
-				if (tile.getPassable(LightPassability))
-				{
-					recalculate = true; // something has moved
-					break;
-				}
-			}
-		}
-		
-		if (recalculate)
-		{
-			shadowCastOutput.clear();
-			
-			ShadowCaster shadow = new ShadowCaster(grid, (int)Math.ceil(baseIntensity));
-			shadow.ComputeFOV(lx, ly, shadowCastOutput);
-			
-			// build list of opaque
-			opaqueTiles.clear();
-			for (int[] pos : shadowCastOutput)
-			{
-				GameTile tile = grid[pos[0]][pos[1]];				
-				if (!tile.getPassable(LightPassability))
-				{
-					opaqueTiles.add(pos);
-				}
-			}
-			lastlx = lx;
-			lastly = ly;
-		}
-		
-		return shadowCastOutput;
-	}
-	
-	public void update(float delta)
+ 	public void update(float delta)
 	{
 		if (flicker > 0)
 		{
@@ -119,11 +71,7 @@ public class Light
 		l.flicker = flicker;
 		l.flickerPeriod = flickerPeriod;
 		l.timeAccumulator = timeAccumulator;
-		
-		l.lastlx = lastlx;
-		l.lastly = lastly;
-		l.opaqueTiles.addAll(opaqueTiles);
-		l.shadowCastOutput.addAll(shadowCastOutput);
+		l.shadowCastCache = shadowCastCache.copy();
 				
 		return l;
 	}

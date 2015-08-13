@@ -3,9 +3,11 @@ package Roguelike.Entity.AI.BehaviourTree.Actions;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskWait;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionProcessInput extends AbstractAction
@@ -14,7 +16,7 @@ public class ActionProcessInput extends AbstractAction
 	@Override
 	public BehaviourTreeState evaluate(GameEntity entity)
 	{
-		int[] targetPos = (int[])getData("ClickPos", null);
+		Point targetPos = (Point)getData("ClickPos", null);
 		
 		if (targetPos != null)
 		{
@@ -51,13 +53,16 @@ public class ActionProcessInput extends AbstractAction
 			
 			if (x != 0 || y != 0 || space)
 			{
-				targetPos = new int[]{ entity.tile.x + x, entity.tile.y + y };
+				targetPos = Pools.obtain(Point.class).set(entity.tile.x + x, entity.tile.y + y);
 			}
 		}
 		
 		if (targetPos != null)
 		{
-			if (targetPos[0] == entity.tile.x && targetPos[1] == entity.tile.y)
+			Point oldPos = (Point)getData("Pos", null);
+			if (oldPos != null) { Pools.free(oldPos); }
+			
+			if (targetPos.x == entity.tile.x && targetPos.y == entity.tile.y)
 			{
 				entity.tasks.add(new TaskWait());
 				

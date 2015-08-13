@@ -4,6 +4,7 @@ import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Items.Inventory;
 import Roguelike.StatusEffect.StatusEffect;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
 
@@ -12,7 +13,7 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 	public String fileName;
 	public int hp;
 	public int essence;
-	public int[] pos = new int[2];
+	public Point pos = new Point();
 	public boolean isPlayer = false;
 	public Array<StatusEffect> statuses = new Array<StatusEffect>();
 	public Array<CooldownWrapper> abilityCooldown = new Array<CooldownWrapper>();
@@ -26,7 +27,7 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 		fileName = obj.fileName;
 		hp = obj.HP;
 		essence = obj.essence;
-		pos = new int[]{obj.tile.x, obj.tile.y};
+		pos.set(obj.tile.x, obj.tile.y);
 		for (StatusEffect status : obj.statusEffects)
 		{			
 			statuses.add(status);

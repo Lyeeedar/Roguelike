@@ -6,7 +6,10 @@ import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionMoveTo extends AbstractAction
@@ -18,7 +21,7 @@ public class ActionMoveTo extends AbstractAction
 	@Override
 	public BehaviourTreeState evaluate(GameEntity entity)
 	{
-		int[] target = (int[])getData(key, null);
+		Point target = (Point)getData(key, null);
 		
 		// if no target, fail
 		if (target == null)
@@ -28,37 +31,40 @@ public class ActionMoveTo extends AbstractAction
 		}
 		
 		// if we arrived at our target, succeed
-		if (entity.tile.x == target[0] && entity.tile.y == target[1])
+		if (entity.tile.x == target.x && entity.tile.y == target.y)
 		{			
 			State = BehaviourTreeState.SUCCEEDED;
 			return State;
 		}
 						
-		Pathfinder pathFinder = new Pathfinder(entity.tile.level.getGrid(), entity.tile.x, entity.tile.y, target[0], target[1], true);
-		int[][] path = pathFinder.getPath(entity.getTravelType());
+		Pathfinder pathFinder = new Pathfinder(entity.tile.level.getGrid(), entity.tile.x, entity.tile.y, target.x, target.y, true);
+		Array<Point> path = pathFinder.getPath(entity.getTravelType());
 		
 		// if couldnt find a valid path, fail
-		if (path.length < 2)
+		if (path.size < 2)
 		{
+			Pools.freeAll(path);
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
 		
-		GameTile nextTile = entity.tile.level.getGameTile(path[1]);
+		GameTile nextTile = entity.tile.level.getGameTile(path.get(1));
 		// if next step is impassable then fail
 		if (!nextTile.getPassable(entity.getTravelType()))
 		{
+			Pools.freeAll(path);
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
 		
-		int[] offset = new int[]{ path[1][0] - path[0][0], path[1][1] - path[0][1] };
+		int[] offset = new int[]{ path.get(1).x - path.get(0).x, path.get(1).y - path.get(0).y };
 		
 		// if moving towards path to the object
 		if (towards)
 		{
-			if (path.length-1 <= dst)
+			if (path.size-1 <= dst)
 			{
+				Pools.freeAll(path);
 				State = BehaviourTreeState.SUCCEEDED;
 				return State;
 			}
@@ -68,8 +74,9 @@ public class ActionMoveTo extends AbstractAction
 		// if moving away then just run directly away
 		else
 		{
-			if (path.length-1 >= dst)
+			if (path.size-1 >= dst)
 			{
+				Pools.freeAll(path);
 				State = BehaviourTreeState.SUCCEEDED;
 				return State;
 			}
@@ -77,6 +84,7 @@ public class ActionMoveTo extends AbstractAction
 			entity.tasks.add(new TaskMove(Direction.getDirection(offset[0]*-1, offset[1]*-1)));
 		}
 		
+		Pools.freeAll(path);
 		State = BehaviourTreeState.RUNNING;
 		return State;
 	}

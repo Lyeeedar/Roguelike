@@ -53,11 +53,6 @@ public class GameEntity extends Entity
 	//----------------------------------------------------------------------
 	public Array<Passability> getTravelType()
 	{
-		if (travelType == null)
-		{
-			travelType = Passability.statsToTravelType(getStatistics());
-		}
-		
 		return travelType;
 	}
 	
@@ -111,8 +106,6 @@ public class GameEntity extends Entity
 		}
 
 		stacks = stackStatusEffects();
-		
-		travelType = Passability.statsToTravelType(getStatistics());
 	}
 
 	//----------------------------------------------------------------------
@@ -268,6 +261,12 @@ public class GameEntity extends Entity
 	}
 
 	//----------------------------------------------------------------------
+	public int getVariable(Statistic stat)
+	{
+		return variableMap.get(stat.toString().toLowerCase());
+	}
+	
+	//----------------------------------------------------------------------
 	public int getStatistic(Statistic stat)
 	{
 		int val = statistics.get(stat) + inventory.getStatistic(Statistic.emptyMap, stat);
@@ -321,7 +320,7 @@ public class GameEntity extends Entity
 	//####################################################################//
 	//region Data
 	
-	private Array<Passability> travelType;
+	
 	
 	public String fileName;
 

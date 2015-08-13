@@ -4,6 +4,7 @@ import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Global.Passability;
 import Roguelike.Pathfinding.BresenhamLine;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -20,14 +21,14 @@ public class MovementTypeRay extends AbstractMovementType
 	@Override
 	public void init(ActiveAbility ab, int endx, int endy)
 	{
-		int[][] path = BresenhamLine.line(ab.source.x, ab.source.y, endx, endy, ab.source.level.getGrid(), false, ab.range, RayPassability);
+		Array<Point> path = BresenhamLine.line(ab.source.x, ab.source.y, endx, endy, ab.source.level.getGrid(), false, ab.range, RayPassability);
 		
 		ab.AffectedTiles.clear();
 		
-		for (int i = 1; i < path.length; i++)
+		for (int i = 1; i < path.size; i++)
 		{
-			int[] p = path[i];
-			GameTile tile = ab.source.level.getGameTile(p[0], p[1]);
+			Point p = path.get(i);
+			GameTile tile = ab.source.level.getGameTile(p);
 			ab.AffectedTiles.add(tile);
 			
 			if (!tile.getPassable(RayPassability)) { break; }

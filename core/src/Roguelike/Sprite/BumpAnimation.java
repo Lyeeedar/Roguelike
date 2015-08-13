@@ -24,8 +24,8 @@ public class BumpAnimation extends SpriteAnimation
 	{
 		float alpha = MathUtils.clamp(Math.abs( ( time - duration / 2 ) / ( duration / 2) ), 0, 1);
 		
-		offset[0] = (int)((tileSize/3) * alpha * direction.GetX());
-		offset[1] = (int)((tileSize/3) * alpha * direction.GetY());
+		offset[0] = (int)((tileSize/3) * alpha * direction.getX());
+		offset[1] = (int)((tileSize/3) * alpha * direction.getY());
 	}
 
 	@Override

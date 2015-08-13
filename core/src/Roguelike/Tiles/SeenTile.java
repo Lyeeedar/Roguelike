@@ -21,7 +21,7 @@ public class SeenTile
 	{
 		Table table = new Table();
 		
-		if (gameTile.GetVisible())
+		if (gameTile.visible)
 		{
 			table.add(new Label("You see:", skin));
 		}

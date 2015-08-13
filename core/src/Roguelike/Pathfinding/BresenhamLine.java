@@ -1,22 +1,24 @@
 package Roguelike.Pathfinding;
 
 import Roguelike.Global.Passability;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 
 public class BresenhamLine
 {
-	public static int[][] lineNoDiag(int x0, int y0, int x1, int y1) {
+	public static Array<Point> lineNoDiag(int x0, int y0, int x1, int y1) {
 	    int xDist =  Math.abs(x1 - x0);
 	    int yDist = -Math.abs(y1 - y0);
 	    int xStep = (x0 < x1 ? +1 : -1);
 	    int yStep = (y0 < y1 ? +1 : -1);
 	    int error = xDist + yDist;
 
-	    Array<int[]> path = new Array<int[]>();
+	    Array<Point> path = new Array<Point>();
 	    
-	    path.add(new int[]{x0, y0});
+	    path.add(Pools.obtain(Point.class).set(x0, y0));
 
 	    while (x0 != x1 || y0 != y1) {
 	        if (2*error - yDist > xDist - 2*error) {
@@ -29,13 +31,13 @@ public class BresenhamLine
 	            y0 += yStep;
 	        }
 
-	        path.add(new int[]{x0, y0});
+	        path.add(Pools.obtain(Point.class).set(x0, y0));
 	    }
 	    
-	    return path.toArray(int[].class);
+	    return path;
 	}
 	
-	public static int[][] line (int x, int y, int x2, int y2, PathfindingTile[][] Grid, boolean checkPassable, int range, Array<Passability> travelType) 
+	public static Array<Point> line (int x, int y, int x2, int y2, PathfindingTile[][] Grid, boolean checkPassable, int range, Array<Passability> travelType) 
 	{
 		x = MathUtils.clamp(x, 0, Grid.length-1);
 		x2 = MathUtils.clamp(x2, 0, Grid.length-1);
@@ -69,11 +71,11 @@ public class BresenhamLine
 	    
 	    int dist = range;
 	    
-	    Array<int[]> path = new Array<int[]>();
+	    Array<Point> path = new Array<Point>();
 	    
 	    for (int i = 0; i <= dist; i++) 
 	    {
-	        path.add(new int[]{x, y});
+	        path.add(Pools.obtain(Point.class).set(x, y));
 	        
 	        numerator += shortest ;
 	        if ( !(numerator < longest) ) 
@@ -100,6 +102,6 @@ public class BresenhamLine
 	        }
 	    }
 	    
-	    return path.toArray(int[].class);
+	    return path;
 	}
 }

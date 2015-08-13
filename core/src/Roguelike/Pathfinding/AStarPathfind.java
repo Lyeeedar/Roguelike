@@ -13,8 +13,10 @@ package Roguelike.Pathfinding;
 import java.util.PriorityQueue;
 
 import Roguelike.Global.Passability;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 
 public class AStarPathfind
 {
@@ -187,7 +189,7 @@ public class AStarPathfind
 		return false;
 	}
 
-	public int[][] getPath()
+	public Array<Point> getPath()
 	{
 		nodes = new Node[width][height];
 		
@@ -204,22 +206,22 @@ public class AStarPathfind
 		}
 		else
 		{
-			Array<int[]> path = new Array<int[]>();
+			Array<Point> path = new Array<Point>();
 
-			path.add(new int[]{endx, endy});
+			path.add(Pools.obtain(Point.class).set(endx, endy));
 			
 			Node node = nodes[endx][endy];
 			
 			while (node != null)
 			{
-				path.add(new int[]{node.x, node.y});
+				path.add(Pools.obtain(Point.class).set(node.x, node.y));
 				
 				node = node.parent;
 			}
 			
 			path.reverse();
 			
-			return path.toArray(int[].class);
+			return path;
 		}
 	}
 		

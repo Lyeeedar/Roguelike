@@ -10,11 +10,12 @@ import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Items.Inventory;
 import Roguelike.Save.SaveGameEntity.CooldownWrapper;
 import Roguelike.StatusEffect.StatusEffect;
+import Roguelike.Tiles.Point;
 
 public class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntity>
 {
 	public int hp;
-	public int[] pos = new int[2];
+	public Point pos = new Point();
 	public Array<StatusEffect> statuses = new Array<StatusEffect>();
 	public Inventory inventory;
 	public String UID;
@@ -26,7 +27,7 @@ public class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntity>
 	public void store(EnvironmentEntity obj)
 	{
 		hp = obj.HP;
-		pos = new int[]{obj.tile.x, obj.tile.y};
+		pos.set(obj.tile.x, obj.tile.y);
 		for (StatusEffect status : obj.statusEffects)
 		{			
 			statuses.add(status);

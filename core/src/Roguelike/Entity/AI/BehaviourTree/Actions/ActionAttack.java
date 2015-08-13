@@ -5,6 +5,7 @@ import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskAttack;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -15,7 +16,7 @@ public class ActionAttack extends AbstractAction
 	@Override
 	public BehaviourTreeState evaluate(GameEntity entity)
 	{
-		int[] target = (int[])getData(key, null);
+		Point target = (Point)getData(key, null);
 		
 		// if no target, fail
 		if (target == null)
@@ -24,7 +25,7 @@ public class ActionAttack extends AbstractAction
 			return State;
 		}
 		
-		TaskAttack task = new TaskAttack(Direction.getDirection(target[0]-entity.tile.x, target[1]-entity.tile.y));
+		TaskAttack task = new TaskAttack(Direction.getDirection(target.x-entity.tile.x, target.y-entity.tile.y));
 		GameTile targetTile = entity.tile.level.getGameTile(target);
 		if (targetTile.environmentEntity != null && targetTile.environmentEntity.canTakeDamage && task.canAttackTile(entity, targetTile))
 		{

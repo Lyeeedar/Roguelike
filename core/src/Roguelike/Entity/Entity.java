@@ -66,7 +66,7 @@ public abstract class Entity
 	}
 
 	//----------------------------------------------------------------------
-	public EnumMap<Statistic, Integer> getStatistics()
+	private EnumMap<Statistic, Integer> getStatistics()
 	{
 		EnumMap<Statistic, Integer> newMap = new EnumMap<Statistic, Integer>(Statistic.class);
 
@@ -86,6 +86,7 @@ public abstract class Entity
 			isVariableMapDirty = false;
 			calculateBaseVariableMap();
 			calculateVariableMap();
+			travelType = Passability.variableMapToTravelType(variableMap);
 		}
 		
 		return variableMap;
@@ -99,6 +100,7 @@ public abstract class Entity
 			isVariableMapDirty = false;
 			calculateBaseVariableMap();
 			calculateVariableMap();
+			travelType = Passability.variableMapToTravelType(variableMap);
 		}
 		
 		return baseVariableMap;
@@ -267,8 +269,9 @@ public abstract class Entity
 	public boolean isVariableMapDirty = true;
 	
 	//----------------------------------------------------------------------
-	private HashMap<String, Integer> baseVariableMap = new HashMap<String, Integer>();
-	private HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
+	protected HashMap<String, Integer> baseVariableMap = new HashMap<String, Integer>();
+	protected HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
+	protected Array<Passability> travelType = new Array<Passability>();
 	
 	//----------------------------------------------------------------------
 	public int damageAccumulator = 0;

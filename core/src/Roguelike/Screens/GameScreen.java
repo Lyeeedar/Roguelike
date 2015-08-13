@@ -23,6 +23,7 @@ import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 import Roguelike.UI.AbilityPanel;
@@ -71,6 +72,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.PerformanceCounter;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameScreen implements Screen, InputProcessor, GestureListener
@@ -263,9 +265,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		if (preparedAbility != null)
 		{
 			batch.setColor(0.3f, 0.6f, 0.8f, 0.5f);
-			for (int[] tile : abilityTiles)
+			for (Point tile : abilityTiles)
 			{
-				batch.draw(white, tile[0]*Global.TileSize + offsetx, tile[1]*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
+				batch.draw(white, tile.x*Global.TileSize + offsetx, tile.y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
 			}
 		}
 
@@ -304,7 +306,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				GameTile gtile = Global.CurrentLevel.getGameTile(x, y);
 
-				if (gtile.GetVisible())
+				if (gtile.visible)
 				{
 					batch.setColor(gtile.light);	
 
@@ -347,7 +349,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							else
 							{
 								Direction dir = gtile.environmentEntity.location;
-								gtile.environmentEntity.sprite.render(batch, cx + tileSize3*(dir.GetX()*-1+1), cy + tileSize3*(dir.GetY()*-1+1), tileSize3, tileSize3);
+								gtile.environmentEntity.sprite.render(batch, cx + tileSize3*(dir.getX()*-1+1), cy + tileSize3*(dir.getY()*-1+1), tileSize3, tileSize3);
 							}
 
 							if (gtile.environmentEntity.HP < gtile.environmentEntity.statistics.get(Statistic.MAXHP) || gtile.environmentEntity.stacks.size > 0)
@@ -382,7 +384,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				GameTile gtile = Global.CurrentLevel.getGameTile(x, y);
 				SeenTile stile = Global.CurrentLevel.getSeenTile(x, y);
 
-				if (!gtile.GetVisible() && stile.seen)
+				if (!gtile.visible && stile.seen)
 				{					
 					for (SeenHistoryItem hist : stile.history)
 					{
@@ -392,7 +394,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						if (hist.location != Direction.CENTER)
 						{
 							Direction dir = hist.location;
-							hist.sprite.render(batch, cx + tileSize3*(dir.GetX()*-1+1), cy + tileSize3*(dir.GetY()*-1+1), tileSize3, tileSize3);
+							hist.sprite.render(batch, cx + tileSize3*(dir.getX()*-1+1), cy + tileSize3*(dir.getY()*-1+1), tileSize3, tileSize3);
 						}
 						else
 						{
@@ -415,7 +417,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				GameTile gtile = Global.CurrentLevel.getGameTile(x, y);
 
-				if (gtile.GetVisible())
+				if (gtile.visible)
 				{
 					batch.setColor(gtile.light);
 					
@@ -517,7 +519,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 				else
 				{								
-					e.Sprite.render(batch, cx + tileSize3*(e.Corner.GetX()*-1+1), cy + tileSize3*(e.Corner.GetY()*-1+1), tileSize3, tileSize3);
+					e.Sprite.render(batch, cx + tileSize3*(e.Corner.getX()*-1+1), cy + tileSize3*(e.Corner.getY()*-1+1), tileSize3, tileSize3);
 				}				
 			}
 
@@ -549,7 +551,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			else
 			{
 				Direction dir = ee.location;
-				ee.sprite.render(batch, cx + tileSize3*(dir.GetX()*-1+1), cy + tileSize3*(dir.GetY()*-1+1), tileSize3, tileSize3);
+				ee.sprite.render(batch, cx + tileSize3*(dir.getX()*-1+1), cy + tileSize3*(dir.getY()*-1+1), tileSize3, tileSize3);
 			}
 
 			if (ee.HP < ee.statistics.get(Statistic.MAXHP) || ee.stacks.size > 0)
@@ -588,7 +590,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			for (GameTile tile : aa.AffectedTiles)
 			{
-				if (tile.GetVisible())
+				if (tile.visible)
 				{
 					aa.getSprite().render(batch, tile.x*Global.TileSize + offsetx, tile.y*Global.TileSize + offsety, Global.TileSize, Global.TileSize);
 				}
@@ -605,7 +607,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				GameTile gtile = Global.CurrentLevel.getGameTile(x, y);
 
-				if (gtile.GetVisible())
+				if (gtile.visible)
 				{
 					for (SpriteEffect e : gtile.spriteEffects)
 					{
@@ -615,7 +617,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 						else
 						{								
-							e.Sprite.render(batch, x*Global.TileSize + offsetx + tileSize3*(e.Corner.GetX()*-1+1), y*Global.TileSize + offsety + tileSize3*(e.Corner.GetY()*-1+1), tileSize3, tileSize3);
+							e.Sprite.render(batch, x*Global.TileSize + offsetx + tileSize3*(e.Corner.getX()*-1+1), y*Global.TileSize + offsety + tileSize3*(e.Corner.getY()*-1+1), tileSize3, tileSize3);
 						}					
 					}
 				}
@@ -848,7 +850,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					GameTile tile = Global.CurrentLevel.getGameTile(x, y);
 					if (preparedAbility.isTargetValid(tile, abilityTiles))
 					{
-						Global.CurrentLevel.player.tasks.add(new TaskUseAbility(new int[]{x, y}, preparedAbility));
+						Global.CurrentLevel.player.tasks.add(new TaskUseAbility(Pools.obtain(Point.class).set(x, y), preparedAbility));
 					}
 				}
 			}
@@ -870,7 +872,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height && Global.CurrentLevel.getSeenTile(x, y).seen)
 				{
-					Global.CurrentLevel.player.AI.setData("ClickPos", new int[]{x, y});
+					Global.CurrentLevel.player.AI.setData("ClickPos", Pools.obtain(Point.class).set(x, y));
 				}
 				else
 				{
@@ -880,7 +882,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					x += Global.CurrentLevel.player.tile.x;
 					y += Global.CurrentLevel.player.tile.y;
 					
-					Global.CurrentLevel.player.AI.setData("ClickPos", new int[]{x, y});
+					Global.CurrentLevel.player.AI.setData("ClickPos", Pools.obtain(Point.class).set(x, y));
 				}
 			}
 		}
@@ -1062,6 +1064,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		preparedAbility.caster = Global.CurrentLevel.player;
 		preparedAbility.source = Global.CurrentLevel.player.tile;
 
+		if (abilityTiles != null) { Pools.freeAll(abilityTiles); }
 		abilityTiles = preparedAbility.getValidTargets();
 	}
 
@@ -1385,7 +1388,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	//----------------------------------------------------------------------
 	public ActiveAbility preparedAbility;
-	private int[][] abilityTiles;
+	private Array<Point> abilityTiles;
 
 	//endregion Data
 	//####################################################################//

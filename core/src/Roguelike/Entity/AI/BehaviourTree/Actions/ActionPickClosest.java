@@ -3,6 +3,7 @@ package Roguelike.Entity.AI.BehaviourTree.Actions;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -41,10 +42,10 @@ public class ActionPickClosest extends AbstractAction
 				
 				for (Object o : array)
 				{
-					if (o instanceof int[])
+					if (o instanceof Point)
 					{
-						int[] pos = (int[])o;
-						float tmp = Vector2.dst2(entity.tile.x, entity.tile.y, pos[0], pos[1]);
+						Point pos = (Point)o;
+						float tmp = Vector2.dst2(entity.tile.x, entity.tile.y, pos.x, pos.y);
 						
 						if (tmp < best)
 						{

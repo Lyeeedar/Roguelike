@@ -38,7 +38,7 @@ public class GameTile implements PathfindingTile
 	
 	public String metaValue;
 		
-	boolean visible;
+	public boolean visible;
 	
 	public GameTile(int x, int y, Level level, TileData tileData)
 	{
@@ -49,11 +49,6 @@ public class GameTile implements PathfindingTile
 		this.tileData = tileData;
 		
 		light = new Color(Color.WHITE);
-		
-		for (FieldLayer layer : FieldLayer.values())
-		{
-			fields.put(layer, null);
-		}
 	}
 	
 	public void addEnvironmentEntity(EnvironmentEntity entity)
@@ -69,17 +64,18 @@ public class GameTile implements PathfindingTile
 	
 	public void clearField(FieldLayer layer)
 	{
-		Field field = fields.get(layer);
-		if (field != null)
+		if (fields.containsKey(layer))
 		{
+			Field field = fields.get(layer);
 			field.tile = null;
-			fields.put(layer, null);
+			
+			fields.remove(layer);
 		}
 	}
 	
 	public void addField(Field field)
 	{
-		clearField(field.layer);		
+		clearField(field.layer);
 		fields.put(field.layer, field);
 		field.tile = this;
 	}
@@ -115,34 +111,27 @@ public class GameTile implements PathfindingTile
 		return Vector2.dst(prevTile.x, prevTile.y, x, y);
 	}
 	
-	public boolean GetVisible()
-	{
-		return visible;
-	}
-	
-	public void SetVisible(boolean visible)
-	{
-		this.visible = visible;
-	}
-
 	@Override
 	public boolean getPassable(Array<Passability> travelType)
 	{
-		for (FieldLayer layer : FieldLayer.values())
+		if (fields.size() > 0)
 		{
-			Field field = fields.get(layer);
-			if (field != null)
+			for (FieldLayer layer : FieldLayer.values())
 			{
-				if (Passability.isPassable(field.allowPassability, travelType))
+				Field field = fields.get(layer);
+				if (field != null)
 				{
-					return true;
-				}
-				else if (Passability.isPassable(field.restrictPassability, travelType))
-				{
-					return false;
+					if (Passability.isPassable(field.allowPassability, travelType))
+					{
+						return true;
+					}
+					else if (Passability.isPassable(field.restrictPassability, travelType))
+					{
+						return false;
+					}
 				}
 			}
-		}		
+		}
 		
 		if (environmentEntity != null && !Passability.isPassable(environmentEntity.passableBy, travelType)) { return false; }
 		

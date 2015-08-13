@@ -23,6 +23,7 @@ import Roguelike.Items.Item;
 import Roguelike.Items.Item.ItemType;
 import Roguelike.Items.Recipe;
 import Roguelike.Lights.Light;
+import Roguelike.Pathfinding.ShadowCastCache;
 import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.RepeatingSoundEffect;
@@ -32,6 +33,7 @@ import Roguelike.Sprite.MoveAnimation.MoveEquation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 
@@ -161,7 +163,7 @@ public class Level
 				
 				getLightsForTile(tile, lightList, playerViewRange);
 				
-				if (tile.GetVisible()) 
+				if (tile.visible) 
 				{ 
 					tile.light = new Color(acol);
 					
@@ -216,15 +218,15 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{	
-				Grid[x][y].SetVisible(false);
+				Grid[x][y].visible = false;
 			}
 		}
+				
+		Array<Point> output = visibilityData.getShadowCast(Grid, player.tile.x, player.tile.y, player.getVariable(Statistic.RANGE));
 		
-		Array<int[]> output = visibilityData.getShadowCast(Grid, player, player.tile.x, player.tile.y);
-		
-		for (int[] tilePos : output)
+		for (Point tilePos : output)
 		{
-			getGameTile(tilePos).SetVisible(true);
+			getGameTile(tilePos).visible = true;
 		}
 		
 		updateSeenGrid();
@@ -237,7 +239,7 @@ public class Level
 			for (int y = 0; y < height; y++)
 			{
 				GameTile tile = Grid[x][y];
-				if (tile.GetVisible())
+				if (tile.visible)
 				{
 					SeenTile s = SeenGrid[x][y];
 					s.gameTile = tile;
@@ -251,14 +253,17 @@ public class Level
 						s.history.add(Pools.obtain(SeenHistoryItem.class).set(sprite, tile.tileData.description));
 					}
 					
-					for (FieldLayer layer : FieldLayer.values())
+					if (tile.fields.size() > 0)
 					{
-						Field field = tile.fields.get(layer);
-						if (field != null)
-						{						
-							s.history.add(Pools.obtain(SeenHistoryItem.class).set(field.sprite, ""));
+						for (FieldLayer layer : FieldLayer.values())
+						{
+							Field field = tile.fields.get(layer);
+							if (field != null)
+							{						
+								s.history.add(Pools.obtain(SeenHistoryItem.class).set(field.sprite, ""));
+							}
 						}
-					}					
+					}
 					
 					if (tile.environmentEntity != null)
 					{
@@ -305,9 +310,9 @@ public class Level
 	
 	private void calculateSingleLight(Light l)
 	{
-		Array<int[]> output = l.getShadowCast(Grid);
+		Array<Point> output = l.shadowCastCache.getShadowCast(Grid, l.lx, l.ly, (int)l.baseIntensity);
 				
-		for (int[] tilePos : output)
+		for (Point tilePos : output)
 		{
 			GameTile tile = getGameTile(tilePos);
 			
@@ -341,19 +346,22 @@ public class Level
 			}		
 		}
 		
-		for (FieldLayer layer : FieldLayer.values())
+		if (tile.fields.size() > 0)
 		{
-			Field field = tile.fields.get(layer);
-			if (field != null && field.light != null)
+			for (FieldLayer layer : FieldLayer.values())
 			{
-				if (checkLightCloseEnough(lx, ly, (int)field.light.baseIntensity, px, py, viewRange))
+				Field field = tile.fields.get(layer);
+				if (field != null && field.light != null)
 				{
-					field.light.lx = lx;
-					field.light.ly = ly;
-					output.add(field.light);
+					if (checkLightCloseEnough(lx, ly, (int)field.light.baseIntensity, px, py, viewRange))
+					{
+						field.light.lx = lx;
+						field.light.ly = ly;
+						output.add(field.light);
+					}
 				}
 			}
-		}		
+		}
 		
 		if (tile.environmentEntity != null && tile.environmentEntity.light != null)
 		{
@@ -427,7 +435,7 @@ public class Level
 			GameEntity e = tile.entity;
 			if (e != null)
 			{
-				if (tile.GetVisible())
+				if (tile.visible)
 				{
 					if (e.hasDamage)
 					{
@@ -468,7 +476,7 @@ public class Level
 			Entity e = tile.environmentEntity;
 			if (e != null)
 			{
-				if (e.damageAccumulator > 0 && tile.GetVisible())
+				if (e.damageAccumulator > 0 && tile.visible)
 				{
 					GameScreen.Instance.addActorDamageAction(e);
 				}
@@ -485,21 +493,22 @@ public class Level
 	
 	private void dropItems(Inventory inventory, GameTile source)
 	{
-		Array<int[]> possibleTiles = new Array<int[]>();
+		Array<Point> possibleTiles = new Array<Point>();
 		ShadowCaster sc = new ShadowCaster(Grid, 5, ItemDropPassability);
 		sc.ComputeFOV(source.x, source.y, possibleTiles);
 		
 		// remove nonpassable tiles
-		Iterator<int[]> itr = possibleTiles.iterator();
+		Iterator<Point> itr = possibleTiles.iterator();
 		while (itr.hasNext())
 		{
-			int[] pos = itr.next();
+			Point pos = itr.next();
 			
 			GameTile tile = getGameTile(pos);
 			
 			if (!tile.getPassable(ItemDropPassability))
 			{
 				itr.remove();
+				Pools.free(pos);
 			}
 		}
 		
@@ -513,7 +522,7 @@ public class Level
 					i = Recipe.generateItemForMaterial(i);
 				}
 
-				int[] target = possibleTiles.get(MathUtils.random(possibleTiles.size-1));
+				Point target = possibleTiles.random();
 				GameTile tile = getGameTile(target);
 				
 				tile.items.add(i);
@@ -527,6 +536,8 @@ public class Level
 				delay += 0.02f;
 			}
 		}
+		
+		Pools.freeAll(possibleTiles);
 	}
 	
 	private void clearEffectsForTile(GameTile tile)
@@ -598,14 +609,17 @@ public class Level
 			sprite.update(delta);
 		}
 		
-		for (FieldLayer layer : FieldLayer.values())
+		if (tile.fields.size() > 0)
 		{
-			Field field = tile.fields.get(layer);
-			if (field != null)
+			for (FieldLayer layer : FieldLayer.values())
 			{
-				field.sprite.update(delta);
+				Field field = tile.fields.get(layer);
+				if (field != null)
+				{
+					field.sprite.update(delta);
+				}
 			}
-		}
+		}		
 		
 		if (tile.environmentEntity != null)
 		{
@@ -737,7 +751,7 @@ public class Level
 			{
 				itr.remove();
 			}
-			else if (!e.tile.GetVisible())
+			else if (!e.tile.visible)
 			{
 				// If entity is now invisible, submit to the invisible list to be processed
 				itr.remove();
@@ -796,7 +810,7 @@ public class Level
 				{
 					itr.remove();
 				}
-				else if (e.tile.GetVisible())
+				else if (e.tile.visible)
 				{
 					// If entity is now visible, submit to the visible list to be processed
 					itr.remove();
@@ -812,7 +826,7 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{
-				boolean visible = Grid[x][y].GetVisible();
+				boolean visible = Grid[x][y].visible;
 				GameEntity e = Grid[x][y].entity;
 				if (e != null && e != player)
 				{
@@ -848,9 +862,9 @@ public class Level
 		return Grid;
 	}
 	
-	public GameTile getGameTile(int[] pos)
+	public GameTile getGameTile(Point pos)
 	{
-		return getGameTile(pos[0], pos[1]);
+		return getGameTile(pos.x, pos.y);
 	}
 	
 	public GameTile getGameTile(int x, int y)
@@ -860,9 +874,9 @@ public class Level
 		return Grid[x][y];
 	}
 	
-	public SeenTile getSeenTile(int[] pos)
+	public SeenTile getSeenTile(Point pos)
 	{
-		return getSeenTile(pos[0], pos[1]);
+		return getSeenTile(pos.x, pos.y);
 	}
 	
 	public SeenTile getSeenTile(int x, int y)
@@ -901,12 +915,15 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{
-				for (FieldLayer layer : FieldLayer.values())
+				if (Grid[x][y].fields.size() > 0)
 				{
-					Field field = Grid[x][y].fields.get(layer);
-					if (field != null)
+					for (FieldLayer layer : FieldLayer.values())
 					{
-						list.add(field);
+						Field field = Grid[x][y].fields.get(layer);
+						if (field != null)
+						{
+							list.add(field);
+						}
 					}
 				}
 			}
@@ -966,7 +983,7 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{				
-				if (Grid[x][y].GetVisible() && Grid[x][y].entity != null)
+				if (Grid[x][y].visible && Grid[x][y].entity != null)
 				{					
 					if (!Grid[x][y].entity.isAllies(player))
 					{
@@ -989,7 +1006,7 @@ public class Level
 		{
 			for (int y = 0; y < height; y++)
 			{			
-				if (!Grid[x][y].GetVisible()) { continue; }
+				if (!Grid[x][y].visible) { continue; }
 				
 				if (Grid[x][y].spriteEffects.size > 0)
 				{
@@ -1095,75 +1112,8 @@ public class Level
 	public int width;
 	public int height;
 	
-	private final PlayerVisibilityData visibilityData = new PlayerVisibilityData();
+	private final ShadowCastCache visibilityData = new ShadowCastCache();
 	
 	//endregion Data
-	//####################################################################//
-	//region Classes
-	
-	private static class PlayerVisibilityData
-	{
-		private static final Array<Passability> LightPassability = new Array<Passability>(new Passability[]{Passability.LIGHT});
-		
-		private int range;
-		private int lastx;
-		private int lasty;
-		private Array<int[]> opaqueTiles = new Array<int[]>();
-		private Array<int[]> shadowCastOutput = new Array<int[]>();
-		
-		public Array<int[]> getShadowCast(GameTile[][] grid, GameEntity player, int x, int y)
-		{
-			boolean recalculate = false;
-			
-			int newrange = player.getStatistic(Statistic.RANGE);
-			
-			if (x != lastx || y != lasty)
-			{
-				recalculate = true;
-			}
-			else if (newrange != range)
-			{
-				recalculate = true;
-			}
-			else
-			{
-				for (int[] pos : opaqueTiles)
-				{
-					GameTile tile = grid[pos[0]][pos[1]];				
-					if (tile.getPassable(LightPassability))
-					{
-						recalculate = true; // something has moved
-						break;
-					}
-				}
-			}
-			
-			if (recalculate)
-			{
-				shadowCastOutput.clear();
-				
-				ShadowCaster shadow = new ShadowCaster(grid, newrange);
-				shadow.ComputeFOV(x, y, shadowCastOutput);
-				
-				// build list of opaque
-				opaqueTiles.clear();
-				for (int[] pos : shadowCastOutput)
-				{
-					GameTile tile = grid[pos[0]][pos[1]];				
-					if (!tile.getPassable(LightPassability))
-					{
-						opaqueTiles.add(pos);
-					}
-				}
-				lastx = x;
-				lasty = y;
-				range = newrange;
-			}
-			
-			return shadowCastOutput;
-		}
-	}
-	
-	//endregion Classes
 	//####################################################################//
 }

@@ -20,6 +20,7 @@ import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.Mixer;
 import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 import Roguelike.UI.MessageStack.Line;
 import Roguelike.UI.MessageStack.Message;
 
@@ -27,6 +28,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.sun.xml.internal.ws.util.StringUtils;
 
@@ -89,9 +91,12 @@ public class Global
 
 		private Direction clockwise;
 		private Direction anticlockwise;
+		
+		private boolean isCardinal = false;
 
 		static
 		{
+			// Setup neighbours
 			Direction.CENTER.clockwise = Direction.CENTER;
 			Direction.CENTER.anticlockwise = Direction.CENTER;
 
@@ -118,6 +123,12 @@ public class Global
 
 			Direction.NORTHWEST.anticlockwise = Direction.WEST;
 			Direction.NORTHWEST.clockwise = Direction.NORTH;
+			
+			// Setup is cardinal
+			Direction.NORTH.isCardinal = true;
+			Direction.SOUTH.isCardinal = true;
+			Direction.EAST.isCardinal = true;
+			Direction.WEST.isCardinal = true;
 		}
 
 		Direction(int x, int y) 
@@ -130,28 +141,33 @@ public class Global
 			double det = 0*y - 1*x; // determinant
 			angle = (float) Math.atan2(det, dot) * MathUtils.radiansToDegrees;
 		}
+		
+		public boolean isCardinal()
+		{
+			return isCardinal;
+		}
 
-		public int GetX()
+		public int getX()
 		{
 			return x;
 		}
 
-		public int GetY()
+		public int getY()
 		{
 			return y;
 		}
 
-		public float GetAngle()
+		public float getAngle()
 		{
 			return angle;
 		}
 
-		public Direction GetClockwise()
+		public Direction getClockwise()
 		{
 			return clockwise;
 		}
 
-		public Direction GetAnticlockwise()
+		public Direction getAnticlockwise()
 		{
 			return anticlockwise;
 		}
@@ -165,7 +181,7 @@ public class Global
 
 			for (Direction dir : Direction.values())
 			{
-				if (dir.GetX() == x && dir.GetY() == y)
+				if (dir.getX() == x && dir.getY() == y)
 				{
 					d = dir;
 					break;
@@ -185,65 +201,68 @@ public class Global
 			return getDirection(t2.x - t1.x, t2.y - t1.y);
 		}
 	
-		public static Array<int[]> buildCone(Direction dir, int[] start, int range)
+		public static Array<Point> buildCone(Direction dir, Point start, int range)
 		{
-			Array<int[]> hitTiles = new Array<int[]>();
+			Array<Point> hitTiles = new Array<Point>();
 			
-			Direction anticlockwise = dir.GetAnticlockwise();
-			Direction clockwise = dir.GetClockwise();
+			Direction anticlockwise = dir.getAnticlockwise();
+			Direction clockwise = dir.getClockwise();
 			
-			int[] acwOffset = { dir.GetX() - anticlockwise.GetX(), dir.GetY() - anticlockwise.GetY() };
-			int[] cwOffset = { dir.GetX() - clockwise.GetX(), dir.GetY() - clockwise.GetY() };
+			Point acwOffset = Pools.obtain(Point.class).set( dir.getX() - anticlockwise.getX(), dir.getY() - anticlockwise.getY() );
+			Point cwOffset = Pools.obtain(Point.class).set( dir.getX() - clockwise.getX(), dir.getY() - clockwise.getY() );
 			
-			hitTiles.add(new int[]{
-					start[0] + anticlockwise.GetX(), 
-					start[1] + anticlockwise.GetY()}
+			hitTiles.add(Pools.obtain(Point.class).set(
+					start.x + anticlockwise.getX(), 
+					start.y + anticlockwise.getY())
 			);
 			
-			hitTiles.add(new int[]{
-					start[0] + dir.GetX(), 
-					start[1] + dir.GetY()}
+			hitTiles.add(Pools.obtain(Point.class).set(
+					start.x + dir.getX(), 
+					start.y + dir.getY())
 			);
 			
-			hitTiles.add(new int[]{
-					start[0] + clockwise.GetX(), 
-					start[1] + clockwise.GetY()}
+			hitTiles.add(Pools.obtain(Point.class).set(
+					start.x + clockwise.getX(), 
+					start.y + clockwise.getY())
 			);
 			
 			for (int i = 2; i <= range; i++)
 			{
-				int acx = start[0] + anticlockwise.GetX()*i;
-				int acy = start[1] + anticlockwise.GetY()*i;
+				int acx = start.x + anticlockwise.getX()*i;
+				int acy = start.y + anticlockwise.getY()*i;
 				
-				int nx = start[0] + dir.GetX()*i;
-				int ny = start[1] + dir.GetY()*i;
+				int nx = start.x + dir.getX()*i;
+				int ny = start.y + dir.getY()*i;
 				
-				int cx = start[0] + clockwise.GetX()*i;
-				int cy = start[1]+ clockwise.GetY()*i;
+				int cx = start.x + clockwise.getX()*i;
+				int cy = start.y+ clockwise.getY()*i;
 				
 				// add base tiles
-				hitTiles.add(new int[]{acx, acy});
-				hitTiles.add(new int[]{nx, ny});
-				hitTiles.add(new int[]{cx, cy});
+				hitTiles.add(Pools.obtain(Point.class).set(acx, acy));
+				hitTiles.add(Pools.obtain(Point.class).set(nx, ny));
+				hitTiles.add(Pools.obtain(Point.class).set(cx, cy));
 				
 				// add anticlockwise - mid
 				for (int ii = 1; ii <= range; ii++)
 				{
-					int px = acx + acwOffset[0] * ii;
-					int py = acy + acwOffset[1] * ii;
+					int px = acx + acwOffset.x * ii;
+					int py = acy + acwOffset.y * ii;
 					
-					hitTiles.add(new int[]{px, py});
+					hitTiles.add(Pools.obtain(Point.class).set(px, py));
 				}
 				
 				// add mid - clockwise
 				for (int ii = 1; ii <= range; ii++)
 				{
-					int px = cx + cwOffset[0] * ii;
-					int py = cy + cwOffset[1] * ii;
+					int px = cx + cwOffset.x * ii;
+					int py = cy + cwOffset.y * ii;
 					
-					hitTiles.add(new int[]{px, py});
+					hitTiles.add(Pools.obtain(Point.class).set(px, py));
 				}
 			}
+			
+			Pools.free(acwOffset);
+			Pools.free(cwOffset);
 			
 			return hitTiles;
 		}
@@ -264,15 +283,16 @@ public class Global
 			this.stat = stat;
 		}
 		
-		public static Array<Passability> statsToTravelType(EnumMap<Statistic, Integer> stats)
+		public static Array<Passability> variableMapToTravelType(HashMap<String, Integer> stats)
 		{
 			Array<Passability> travelType = new Array<Passability>();
 			
 			for (Passability p : Passability.values())
 			{
-				if (stats.containsKey(p.stat))
+				String checkString = p.stat.toString().toLowerCase();
+				if (stats.containsKey(checkString))
 				{
-					int val = stats.get(p.stat);
+					int val = stats.get(checkString);
 					
 					if (val > 0)
 					{
@@ -654,7 +674,7 @@ public class Global
 		abilityPool = AbilityPool.createDefaultAbilityPool();
 		AllLevels.clear();
 		
-		SaveLevel firstLevel = new SaveLevel("Forest", 0, null, MathUtils.random(Long.MAX_VALUE-1));
+		SaveLevel firstLevel = new SaveLevel("Sewer", 0, null, MathUtils.random(Long.MAX_VALUE-1));
 		firstLevel = getLevel(firstLevel);
 		
 		ChangeLevel(firstLevel.create());

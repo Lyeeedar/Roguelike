@@ -7,13 +7,14 @@ import Roguelike.Lights.Light;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
+import Roguelike.Tiles.Point;
 
 public class TaskUseAbility extends AbstractTask
 {
-	public int[] target;
+	public Point target;
 	public ActiveAbility ability;
 	
-	public TaskUseAbility(int[] target, ActiveAbility ability)
+	public TaskUseAbility(Point target, ActiveAbility ability)
 	{
 		this.target = target;
 		this.ability = ability;

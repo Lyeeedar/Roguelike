@@ -39,21 +39,35 @@ public class Fractal extends AbstractRoomGenerator
 	
 	public void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran, DungeonFileParser dfp)
 	{
-		Basic basic = new Basic();
-		basic.process(grid, floor, wall, ran, dfp);
-		
 		int width = grid.length;
 		int height = grid[0].length;
 		
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				grid[x][y] = wall;
+			}
+		}
+		
+		Chambers chambers = new Chambers();
+		chambers.process(grid, floor, wall, ran, dfp);
+		
 		NoiseGenerator noise = new NoiseGenerator(ran.nextInt(1000), frequency, amplitude, octaves, scale);
 		float[][] simplexGrid = new float[width][height];
+		
+		float minVal = Float.MAX_VALUE;
+		float maxVal = 0;
 		
 		for (int x = 0; x < width; x++)
 		{
 			for (int y = 0; y < height; y++)
 			{
 				float noiseVal = noise.generate(x, y);
-				noiseVal = (noiseVal + 1) / 2; // scale between 0 - 1;
+				
+				if (noiseVal < minVal) { minVal = noiseVal; }
+				if (noiseVal > maxVal) { maxVal = noiseVal; }
+				
 				simplexGrid[x][y] = noiseVal;
 			}
 		}
@@ -61,18 +75,27 @@ public class Fractal extends AbstractRoomGenerator
 		for (int x = 0; x < width; x++)
 		{
 			for (int y = 0; y < height; y++)
+			{
+				float val = simplexGrid[x][y];
+				
+				float zeroed = val - minVal;
+				float alpha = zeroed / (maxVal - minVal);
+				
+				simplexGrid[x][y] = alpha;
+			}
+		}
+		
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
 			{				
-				if (isPointValid(simplexGrid, x, y, 0, 0.6f))
+				float val = simplexGrid[x][y];
+				for (FractalFeature feature : features)
 				{
-					float val = simplexGrid[x][y];
-					for (FractalFeature feature : features)
+					if (val >= feature.minVal && val <= feature.maxVal)
 					{
-						if (val >= feature.minVal && val <= feature.maxVal)
-						{
-							grid[x][y] = feature.getAsSymbol(grid[x][y]);
-							
-							break;
-						}
+						grid[x][y] = feature.getAsSymbol(grid[x][y]);						
+						break;
 					}
 				}
 			}

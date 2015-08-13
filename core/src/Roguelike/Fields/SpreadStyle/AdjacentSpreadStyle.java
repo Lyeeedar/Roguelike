@@ -29,7 +29,7 @@ public class AdjacentSpreadStyle extends AbstractSpreadStyle
 			{
 				if (dir == Direction.CENTER) { continue; }
 				
-				GameTile tile = field.tile.level.getGameTile(field.tile.x+dir.GetX(), field.tile.y+dir.GetY());
+				GameTile tile = field.tile.level.getGameTile(field.tile.x+dir.getX(), field.tile.y+dir.getY());
 				
 				boolean check = false;
 				if (tile.entity != null)

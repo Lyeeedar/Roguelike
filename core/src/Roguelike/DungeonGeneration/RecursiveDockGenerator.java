@@ -26,9 +26,11 @@ import Roguelike.Pathfinding.AStarPathfind;
 import Roguelike.Pathfinding.BresenhamLine;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 import Roguelike.Util.ImageUtils;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 
 public class RecursiveDockGenerator
 {
@@ -144,7 +146,7 @@ public class RecursiveDockGenerator
 								HashSet<Direction> validDirections = new HashSet<Direction>();
 								for (Direction dir : Direction.values())
 								{
-									boolean passable = symbolGrid[x+dir.GetX()][y+dir.GetY()] == dfp.sharedSymbolMap.get('#');
+									boolean passable = symbolGrid[x+dir.getX()][y+dir.getY()] == dfp.sharedSymbolMap.get('#');
 									if (!passable) { validDirections.add(dir); }
 								}
 								
@@ -153,9 +155,9 @@ public class RecursiveDockGenerator
 									// look for direction with full surround
 									for (Direction dir : Direction.values())
 									{
-										boolean acwvalid = validDirections.contains(dir.GetAnticlockwise());
+										boolean acwvalid = validDirections.contains(dir.getAnticlockwise());
 										boolean valid = validDirections.contains(dir);
-										boolean cwvalid = validDirections.contains(dir.GetClockwise());
+										boolean cwvalid = validDirections.contains(dir.getClockwise());
 										
 										if (acwvalid && valid && cwvalid)
 										{
@@ -173,7 +175,7 @@ public class RecursiveDockGenerator
 							}
 							
 							entity.location = location;
-							entity.sprite.rotation = location.GetAngle();
+							entity.sprite.rotation = location.getAngle();
 						}
 						
 						newTile.addEnvironmentEntity(entity);
@@ -183,7 +185,7 @@ public class RecursiveDockGenerator
 				if (createDynamics && symbol.hasGameEntity())
 				{
 					GameEntity e = symbol.getGameEntity();
-					//newTile.addGameEntity(e);
+					newTile.addGameEntity(e);
 					
 					for (int i = 0; i < 10; i++)
 					{
@@ -843,14 +845,16 @@ public class RecursiveDockGenerator
 			int y2 = (int)p[1].coord(1);
 						
 			AStarPathfind pathFind = new AStarPathfind(tiles, x1, y1, x2, y2, false, true, dfp.corridorStyle.minWidth, GeneratorPassability);
-			int[][] path = pathFind.getPath();
+			Array<Point> path = pathFind.getPath();
 
 			carveCorridor(path);
+			
+			Pools.freeAll(path);
 		}
 	}
 
 	//----------------------------------------------------------------------
-	protected void carveCorridor(int[][] path)
+	protected void carveCorridor(Array<Point> path)
 	{	
 		int centralCount = 0;
 		int sideCount = 0;
@@ -858,18 +862,18 @@ public class RecursiveDockGenerator
 		
 		int width = dfp.corridorStyle.minWidth;
 		
-		for (int i = 0; i < path.length; i++)
+		for (int i = 0; i < path.size; i++)
 		{
-			int[] pos = path[i];
+			Point pos = path.get(i);
 			
-			GenerationTile t = tiles[pos[0]][pos[1]];	
+			GenerationTile t = tiles[pos.x][pos.y];	
 			t.isCorridor = true;
 			
 			for (int x = 0; x < width; x++)
 			{
 				for (int y = 0; y < width; y++)
 				{
-					t = tiles[pos[0]+x][pos[1]+y];	
+					t = tiles[pos.x+x][pos.y+y];	
 
 					if (t.symbol == dfp.sharedSymbolMap.get('#'))
 					{
@@ -894,7 +898,7 @@ public class RecursiveDockGenerator
 			
 			if (dfp.corridorStyle.centralConstant != null)
 			{
-				t = tiles[pos[0]+width/2][pos[1]+width/2];
+				t = tiles[pos.x+width/2][pos.y+width/2];
 				t.symbol = dfp.corridorStyle.centralConstant.getAsSymbol(t.symbol);
 				t.placerHashCode = path.hashCode();
 			}
@@ -905,7 +909,7 @@ public class RecursiveDockGenerator
 				
 				if (centralCount == dfp.corridorStyle.centralRecurring.interval)
 				{
-					t = tiles[pos[0]+width/2][pos[1]+width/2];
+					t = tiles[pos.x+width/2][pos.y+width/2];
 					t.symbol = dfp.corridorStyle.centralRecurring.getAsSymbol(t.symbol);
 					t.placerHashCode = path.hashCode();
 					
@@ -928,19 +932,19 @@ public class RecursiveDockGenerator
 							(dfp.corridorStyle.sideRecurring.placementMode == PlacementMode.ALTERNATE && !placementAlternator);
 					
 					Symbol wall = dfp.sharedSymbolMap.get('#');
-					if (path[i-1][0] != pos[0])
+					if (path.get(i-1).x != pos.x)
 					{
-						if (placeTop && tiles[pos[0]+width/2][pos[1]-1].symbol == wall)
+						if (placeTop && tiles[pos.x+width/2][pos.y-1].symbol == wall)
 						{
-							t = tiles[pos[0]+width/2][pos[1]];
+							t = tiles[pos.x+width/2][pos.y];
 							t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
 							t.symbol.attachLocation = Direction.NORTH;
 							t.placerHashCode = path.hashCode();
 						}
 						
-						if (placeBottom && tiles[pos[0]+width/2][pos[1]+width].symbol == wall)
+						if (placeBottom && tiles[pos.x+width/2][pos.y+width].symbol == wall)
 						{
-							t = tiles[pos[0]+width/2][pos[1]+width-1];
+							t = tiles[pos.x+width/2][pos.y+width-1];
 							t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
 							t.symbol.attachLocation = Direction.SOUTH;
 							t.placerHashCode = path.hashCode();
@@ -948,17 +952,17 @@ public class RecursiveDockGenerator
 					}
 					else
 					{
-						if (placeTop && tiles[pos[0]-1][pos[1]+width/2].symbol == wall)
+						if (placeTop && tiles[pos.x-1][pos.y+width/2].symbol == wall)
 						{
-							t = tiles[pos[0]][pos[1]+width/2];
+							t = tiles[pos.x][pos.y+width/2];
 							t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
 							t.symbol.attachLocation = Direction.EAST;
 							t.placerHashCode = path.hashCode();
 						}
 						
-						if (placeBottom && tiles[pos[0]+width][pos[1]+width/2].symbol == wall)
+						if (placeBottom && tiles[pos.x+width][pos.y+width/2].symbol == wall)
 						{
-							t = tiles[pos[0]+width-1][pos[1]+width/2];
+							t = tiles[pos.x+width-1][pos.y+width/2];
 							t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol(t.symbol);
 							t.symbol.attachLocation = Direction.WEST;
 							t.placerHashCode = path.hashCode();
@@ -972,7 +976,7 @@ public class RecursiveDockGenerator
 			
 			if (dfp.corridorStyle.maxWidth != dfp.corridorStyle.minWidth)
 			{
-				int targetWidth = i > path.length-3 ? dfp.corridorStyle.minWidth : dfp.corridorStyle.minWidth + ran.nextInt(dfp.corridorStyle.maxWidth - dfp.corridorStyle.minWidth);
+				int targetWidth = i > path.size-3 ? dfp.corridorStyle.minWidth : dfp.corridorStyle.minWidth + ran.nextInt(dfp.corridorStyle.maxWidth - dfp.corridorStyle.minWidth);
 				
 				int total = width + targetWidth;
 				
@@ -1349,11 +1353,11 @@ public class RecursiveDockGenerator
 					}
 				}
 
-				int[][] path = BresenhamLine.lineNoDiag(x, y, width/2, height/2);
-				for (int[] pos : path)
+				Array<Point> path = BresenhamLine.lineNoDiag(x, y, width/2, height/2);
+				for (Point pos : path)
 				{
 					boolean done = false;
-					if (roomContents[pos[0]][pos[1]] == floor)
+					if (roomContents[pos.x][pos.y] == floor)
 					{
 						done = true;
 					}
@@ -1362,8 +1366,8 @@ public class RecursiveDockGenerator
 					{
 						for (int iy = 0; iy < dfp.corridorStyle.minWidth; iy++)
 						{
-							int nx = pos[0]+ix;
-							int ny = pos[1]+iy;
+							int nx = pos.x+ix;
+							int ny = pos.y+iy;
 							
 							if (nx < width && ny < height)
 							{
@@ -1378,6 +1382,7 @@ public class RecursiveDockGenerator
 					}
 				}
 				
+				Pools.freeAll(path);
 			}
 		}
 		
@@ -1507,8 +1512,8 @@ public class RecursiveDockGenerator
 							boolean isWall = false;
 							for (Direction d : Direction.values())
 							{
-								int nx = x + d.GetX();
-								int ny = y + d.GetY();
+								int nx = x + d.getX();
+								int ny = y + d.getY();
 
 								if (nx >= 0 && nx < width && ny >= 0 && ny < height)
 								{
@@ -1568,8 +1573,8 @@ public class RecursiveDockGenerator
 							boolean isWall = false;
 							for (Direction d : Direction.values())
 							{
-								int nx = x + d.GetX();
-								int ny = y + d.GetY();
+								int nx = x + d.getX();
+								int ny = y + d.getY();
 
 								if (nx >= 0 && nx < width && ny >= 0 && ny < height)
 								{
@@ -1658,23 +1663,25 @@ public class RecursiveDockGenerator
 					if (door == otherDoor) { continue; }
 
 					AStarPathfind pathfind = new AStarPathfind(roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false, GeneratorPassability);
-					int[][] path = pathfind.getPath();
+					Array<Point> path = pathfind.getPath();
 
-					for (int[] point : path)
+					for (Point point : path)
 					{
-						Symbol s = roomContents[point[0]][point[1]];
+						Symbol s = roomContents[point.x][point.y];
 						
 						if (!s.isPassable(GeneratorPassability))
 						{
-							roomContents[point[0]][point[1]].tileData = roomCopy[point[0]][point[1]].tileData;
+							roomContents[point.x][point.y].tileData = roomCopy[point.x][point.y].tileData;
 						}
 						
 						if (s.hasEnvironmentEntity() && !s.getEnvironmentEntityPassable(GeneratorPassability))
 						{
-							roomContents[point[0]][point[1]].environmentData = roomCopy[point[0]][point[1]].environmentData;
-							roomContents[point[0]][point[1]].environmentEntityData = null;
+							roomContents[point.x][point.y].environmentData = roomCopy[point.x][point.y].environmentData;
+							roomContents[point.x][point.y].environmentEntityData = null;
 						}
 					}
+					
+					Pools.freeAll(path);
 				}
 			}
 			

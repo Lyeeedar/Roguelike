@@ -3,7 +3,9 @@ package Roguelike.Entity.AI.BehaviourTree.Actions;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionConvertTo extends AbstractAction
@@ -30,16 +32,23 @@ public class ActionConvertTo extends AbstractAction
 		{
 			if (Type == ConvertType.POSITION)
 			{
+				Object storedVal = getData(OutputKey, null);
+				if (storedVal != null && storedVal instanceof Point) 
+				{ 
+					Pools.free((Point)storedVal); 
+					setData(OutputKey, null); 
+				}
+				
 				if (o instanceof GameTile)
 				{
 					GameTile gt = (GameTile)o;					
-					setData(OutputKey, new int[]{gt.x, gt.y});					
+					setData(OutputKey, Pools.obtain(Point.class).set(gt.x, gt.y));					
 					State = BehaviourTreeState.SUCCEEDED;
 				}
 				else if (o instanceof GameEntity)
 				{
 					GameEntity e = (GameEntity)o;					
-					setData(OutputKey, new int[]{e.tile.x, e.tile.y});					
+					setData(OutputKey, Pools.obtain(Point.class).set(e.tile.x, e.tile.y));					
 					State = BehaviourTreeState.SUCCEEDED;
 				}
 				else

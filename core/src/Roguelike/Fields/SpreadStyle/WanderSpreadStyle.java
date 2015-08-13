@@ -31,9 +31,9 @@ public class WanderSpreadStyle extends AbstractSpreadStyle
 				if (dir == Direction.CENTER) { continue; }
 				
 				// prevent going backwards
-				if (dir.GetX() != lastMove.GetX()*-1 || dir.GetY() != lastMove.GetY()*-1)
+				if (dir.getX() != lastMove.getX()*-1 || dir.getY() != lastMove.getY()*-1)
 				{
-					GameTile tile = field.tile.level.getGameTile(field.tile.x+dir.GetX(), field.tile.y+dir.GetY());
+					GameTile tile = field.tile.level.getGameTile(field.tile.x+dir.getX(), field.tile.y+dir.getY());
 					
 					if (Passability.isPassable(tile.tileData.passableBy, travelType))
 					{
@@ -52,7 +52,7 @@ public class WanderSpreadStyle extends AbstractSpreadStyle
 			if (validDirs.size > 0)
 			{
 				Direction dir = validDirs.random();
-				GameTile newTile = field.tile.level.getGameTile(field.tile.x+dir.GetX(), field.tile.y+dir.GetY());	
+				GameTile newTile = field.tile.level.getGameTile(field.tile.x+dir.getX(), field.tile.y+dir.getY());	
 				field.trySpawnInTile(newTile, field.stacks-1);				
 				field.tile.clearField(field.layer);
 				

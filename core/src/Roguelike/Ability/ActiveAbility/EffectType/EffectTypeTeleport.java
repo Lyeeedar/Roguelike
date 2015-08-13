@@ -9,9 +9,11 @@ import Roguelike.Pathfinding.BresenhamLine;
 import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.MoveAnimation.MoveEquation;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class EffectTypeTeleport extends AbstractEffectType
@@ -105,14 +107,16 @@ public class EffectTypeTeleport extends AbstractEffectType
 		}
 		else if (destinationType == DestinationType.LINE)
 		{
-			destination = src.level.getGameTile(src.x + dir.GetX() * distance, src.y + dir.GetY() * distance);
+			destination = src.level.getGameTile(src.x + dir.getX() * distance, src.y + dir.getY() * distance);
 		}
 		else
 		{
-			Array<int[]> possibleTiles = Direction.buildCone(dir, new int[]{src.x,  src.y}, distance);
-			int[] pos = possibleTiles.get(MathUtils.random(possibleTiles.size-1));
+			Array<Point> possibleTiles = Direction.buildCone(dir, Pools.obtain(Point.class).set(src.x,  src.y), distance);
+			Point pos = possibleTiles.get(MathUtils.random(possibleTiles.size-1));
 			
 			destination = src.level.getGameTile(pos);
+			
+			Pools.freeAll(possibleTiles);
 		}
 			
 		if (style != Style.CHARGE)
@@ -135,25 +139,28 @@ public class EffectTypeTeleport extends AbstractEffectType
 			}
 		}
 		
-		int[][] possibleTiles = BresenhamLine.lineNoDiag(src.x, src.y, destination.x, destination.y);
+		Array<Point> possibleTiles = BresenhamLine.lineNoDiag(src.x, src.y, destination.x, destination.y);
 		
-		for (int i = possibleTiles.length-1; i >= 0; i--)
+		for (int i = possibleTiles.size-1; i >= 0; i--)
 		{
-			GameTile tile = src.level.getGameTile(possibleTiles[i]);
+			GameTile tile = src.level.getGameTile(possibleTiles.get(i));
 			
 			if (tile.getPassable(entity.getTravelType()) && tile.entity == null)
 			{
+				Pools.freeAll(possibleTiles);
 				return tile;
 			}
 		}
+		
+		Pools.freeAll(possibleTiles);
 		
 		return src;
 	}
 	
 	private GameTile getTile(GameTile current, Direction dir)
 	{
-		int nx = current.x + dir.GetX();
-		int ny = current.y + dir.GetY();
+		int nx = current.x + dir.getX();
+		int ny = current.y + dir.getY();
 		
 		return current.level.getGameTile(nx, ny);
 	}

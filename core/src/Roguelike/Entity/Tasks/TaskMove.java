@@ -37,8 +37,8 @@ public class TaskMove extends AbstractTask
 		// Collect data
 		GameTile oldTile = obj.tile;
 		
-		int newX = oldTile.x+dir.GetX();
-		int newY = oldTile.y+dir.GetY();
+		int newX = oldTile.x+dir.getX();
+		int newY = oldTile.y+dir.getY();
 		
 		GameTile newTile = oldTile.level.getGameTile(newX, newY);
 		

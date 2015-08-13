@@ -11,8 +11,10 @@ import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Items.Item.WeaponType;
 import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionMoveToAttack extends AbstractAction
@@ -25,7 +27,7 @@ public class ActionMoveToAttack extends AbstractAction
 	@Override
 	public BehaviourTreeState evaluate(GameEntity entity)
 	{
-		int[] target = (int[])getData(key, null);
+		Point target = (Point)getData(key, null);
 		
 		// if no target, fail
 		if (target == null)
@@ -59,7 +61,7 @@ public class ActionMoveToAttack extends AbstractAction
 			}
 		}
 		
-		Array<int[]> possibleTiles = new Array<int[]>();
+		Array<Point> possibleTiles = new Array<Point>();
 		
 		for (Direction dir : Direction.values())
 		{
@@ -67,7 +69,7 @@ public class ActionMoveToAttack extends AbstractAction
 			
 			for (int i = 0; i < range; i++)
 			{
-				int[] newPos = {target[0] + dir.GetX()*(i+1), target[1] + dir.GetY()*(i+1)};
+				Point newPos = Pools.obtain(Point.class).set(target.x + dir.getX()*(i+1), target.y + dir.getY()*(i+1));
 				GameTile tile = entity.tile.level.getGameTile(newPos);
 				
 				if (!tile.getPassable(WeaponPassability))
@@ -82,28 +84,36 @@ public class ActionMoveToAttack extends AbstractAction
 		}
 		
 		int bestDist = Integer.MAX_VALUE;
-		int[][] bestPath = null;
+		Array<Point> bestPath = null;
 		
-		for (int[] pos : possibleTiles)
+		for (Point pos : possibleTiles)
 		{
-			if (pos[0] == entity.tile.x && pos[1] == entity.tile.y)
+			if (pos.x == entity.tile.x && pos.y == entity.tile.y)
 			{
+				Pools.freeAll(possibleTiles);
 				State = BehaviourTreeState.SUCCEEDED;
 				return State;
 			}
 			
-			Pathfinder pathFinder = new Pathfinder(entity.tile.level.getGrid(), entity.tile.x, entity.tile.y, pos[0], pos[1], true);
-			int[][] path = pathFinder.getPath(entity.getTravelType());
+			Pathfinder pathFinder = new Pathfinder(entity.tile.level.getGrid(), entity.tile.x, entity.tile.y, pos.x, pos.y, true);
+			Array<Point> path = pathFinder.getPath(entity.getTravelType());
 			
-			if (path.length > 1 && path.length < bestDist)
+			if (path.size > 1 && path.size < bestDist)
 			{
-				if (entity.tile.level.getGameTile(path[1]).getPassable(entity.getTravelType()))
+				if (entity.tile.level.getGameTile(path.get(1)).getPassable(entity.getTravelType()))
 				{
-					bestDist = path.length;
+					bestDist = path.size;
+					
+					if (bestPath != null)
+					{
+						Pools.freeAll(bestPath);
+					}
 					bestPath = path;
 				}
 			}
 		}
+		
+		Pools.freeAll(possibleTiles);
 		
 		if (bestPath == null)
 		{
@@ -111,7 +121,9 @@ public class ActionMoveToAttack extends AbstractAction
 			return State;
 		}
 		
-		int[] offset = new int[]{ bestPath[1][0] - bestPath[0][0], bestPath[1][1] - bestPath[0][1] };
+		int[] offset = new int[]{ bestPath.get(1).x - bestPath.get(0).x, bestPath.get(1).y - bestPath.get(0).y };
+		
+		Pools.freeAll(bestPath);
 		
 		entity.tasks.add(new TaskMove(Direction.getDirection(offset)));
 		

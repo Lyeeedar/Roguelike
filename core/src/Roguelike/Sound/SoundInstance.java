@@ -6,10 +6,12 @@ import Roguelike.AssetManager;
 import Roguelike.Global.Passability;
 import Roguelike.Pathfinding.AStarPathfind;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class SoundInstance
@@ -68,13 +70,13 @@ public class SoundInstance
 						if (t.entity != null)
 						{
 							AStarPathfind astar = new AStarPathfind(tile.level.getGrid(), tile.x, tile.y, x, y, true, false, SoundPassability);
-							int[][] path = astar.getPath();
+							Array<Point> path = astar.getPath();
 														
-							if (path != null && path.length < maxAudibleDist)
+							if (path != null && path.size < maxAudibleDist)
 							{
 								if (t.entity == tile.level.player)
 								{
-									playerDist = path.length;
+									playerDist = path.size;
 								}
 								else if (tile.entity.isAllies(shoutFaction))
 								{
@@ -85,6 +87,8 @@ public class SoundInstance
 									t.entity.AI.setData("EnemyPos", shoutSource);
 								}
 							}
+							
+							Pools.freeAll(path);
 						}
 					}
 				}
@@ -93,9 +97,11 @@ public class SoundInstance
 		else
 		{
 			AStarPathfind astar = new AStarPathfind(tile.level.getGrid(), tile.x, tile.y, tile.level.player.tile.x, tile.level.player.tile.y, true, false, SoundPassability);
-			int[][] path = astar.getPath();
+			Array<Point> path = astar.getPath();
 			
-			if (path != null) { playerDist = path.length; }
+			if (path != null) { playerDist = path.size; }
+			
+			Pools.freeAll(path);
 		}
 		
 		// calculate sound play volume

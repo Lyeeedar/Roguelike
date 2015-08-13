@@ -25,12 +25,14 @@ import Roguelike.GameEvent.IGameObject;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
+import Roguelike.Pathfinding.ShadowCastCache;
 import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
@@ -39,6 +41,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -66,6 +69,8 @@ public class ActiveAbility implements IAbility, IGameObject
 	public HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
 	
 	public Array<Passability> abilityPassability = new Array<Passability>(new Passability[]{Passability.LEVITATE});
+	
+	private ShadowCastCache cache = new ShadowCastCache();
 	
 	//----------------------------------------------------------------------
 	// rendering
@@ -101,6 +106,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		aa.range = range;
 		aa.cone = cone;
 		aa.screenshake = screenshake;
+		aa.cache = cache.copy();
 		
 		aa.targetingType = targetingType.copy();
 		aa.movementType = movementType.copy();
@@ -189,11 +195,11 @@ public class ActiveAbility implements IAbility, IGameObject
 	}
 
 	//----------------------------------------------------------------------
-	public boolean isTargetValid(GameTile tile, int[][] valid)
+	public boolean isTargetValid(GameTile tile, Array<Point> valid)
 	{
-		for (int[] validTile : valid)
+		for (Point validTile : valid)
 		{
-			if (validTile[0] == tile.x && validTile[1] == tile.y)
+			if (validTile.x == tile.x && validTile.y == tile.y)
 			{
 				return true;
 			}
@@ -203,25 +209,23 @@ public class ActiveAbility implements IAbility, IGameObject
 	}
 	
 	//----------------------------------------------------------------------
-	public int[][] getValidTargets()
+	public Array<Point> getValidTargets()
 	{		
-		Array<int[]> validTargets = new Array<int[]>();
+		Array<Point> validTargets = new Array<Point>();
 		
-		Array<int[]> output = new Array<int[]>();
-		ShadowCaster shadow = new ShadowCaster(source.level.getGrid(), range);
-		shadow.ComputeFOV(source.x, source.y, output);
+		Array<Point> output = cache.getShadowCast(source.level.getGrid(), source.x, source.y, range);
 		
-		for (int[] tilePos : output)
+		for (Point tilePos : output)
 		{
 			GameTile tile = source.level.getGameTile(tilePos);
 			
 			if (targetingType.isTargetValid(this, tile))
 			{
-				validTargets.add(tilePos);
+				validTargets.add(tilePos.copy());
 			}
 		}
-		
-		return validTargets.toArray(int[].class);
+				
+		return validTargets;
 	}
 	
 	//----------------------------------------------------------------------
@@ -257,7 +261,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		}
 		
 		boolean finished = movementType.update(this);
-		if (movementSprite != null) { movementSprite.rotation = movementType.direction.GetAngle(); }
+		if (movementSprite != null) { movementSprite.rotation = movementType.direction.getAngle(); }
 		
 		if (finished)
 		{
@@ -269,34 +273,38 @@ public class ActiveAbility implements IAbility, IGameObject
 			}
 			else if (aoe > 0)
 			{
-				Array<int[]> output = new Array<int[]>();
+				Array<Point> output = new Array<Point>();
 				
 				ShadowCaster shadow = new ShadowCaster(epicenter.level.getGrid(), aoe, abilityPassability);
 				shadow.ComputeFOV(epicenter.x, epicenter.y, output);
 				
-				for (int[] tilePos : output)
+				for (Point tilePos : output)
 				{
-					GameTile tile = epicenter.level.getGameTile(tilePos);
-					
+					GameTile tile = epicenter.level.getGameTile(tilePos);					
 					AffectedTiles.add(tile);
 				}
+				
+				Pools.freeAll(output);
 			}
 			else if (cone > 0)
 			{
 				Direction dir = Direction.getDirection(source, epicenter);
-				Array<int[]> cone = Direction.buildCone(dir, new int[]{epicenter.x, epicenter.y}, this.cone);
 				
-				Array<int[]> output = new Array<int[]>();
+				Point epicenterPoint = Pools.obtain(Point.class).set(epicenter.x, epicenter.y);				
+				Array<Point> cone = Direction.buildCone(dir, epicenterPoint, this.cone);
+				Pools.free(epicenterPoint);
+				
+				Array<Point> output = new Array<Point>();
 				
 				ShadowCaster shadow = new ShadowCaster(epicenter.level.getGrid(), this.cone, abilityPassability);
 				shadow.ComputeFOV(epicenter.x, epicenter.y, output);
 				
-				for (int[] tilePos : cone)
+				for (Point tilePos : cone)
 				{
 					GameTile tile = epicenter.level.getGameTile(tilePos);
 					
 					boolean canAdd = false;
-					for (int[] visPos : output)
+					for (Point visPos : output)
 					{
 						GameTile visTile = epicenter.level.getGameTile(visPos);
 						
@@ -312,6 +320,8 @@ public class ActiveAbility implements IAbility, IGameObject
 						AffectedTiles.add(tile);
 					}
 				}
+				
+				Pools.freeAll(output);
 			}
 			
 			// minimise list

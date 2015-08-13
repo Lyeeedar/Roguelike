@@ -9,6 +9,7 @@ import Roguelike.Fields.Field;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Kryo;
@@ -192,7 +193,7 @@ public class SaveLevel extends SaveableObject<Level>
 	
 	public static class SaveLevelItem
 	{
-		public int[] pos;
+		public Point pos = new Point();
 		public Item item;
 		
 		public SaveLevelItem()
@@ -202,7 +203,7 @@ public class SaveLevel extends SaveableObject<Level>
 		
 		public SaveLevelItem(GameTile tile, Item item)
 		{
-			pos = new int[]{tile.x, tile.y};
+			pos.set(tile.x, tile.y);
 			this.item = item;
 		}
 	}
