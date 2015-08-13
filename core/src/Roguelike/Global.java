@@ -654,7 +654,7 @@ public class Global
 		abilityPool = AbilityPool.createDefaultAbilityPool();
 		AllLevels.clear();
 		
-		SaveLevel firstLevel = new SaveLevel("Sewer", 0, null, MathUtils.random(Long.MAX_VALUE-1));
+		SaveLevel firstLevel = new SaveLevel("Forest", 0, null, MathUtils.random(Long.MAX_VALUE-1));
 		firstLevel = getLevel(firstLevel);
 		
 		ChangeLevel(firstLevel.create());

@@ -159,7 +159,7 @@ public abstract class Entity
 	//----------------------------------------------------------------------
 	public void applyDamage(int dam, Entity damager)
 	{
-		if (!canTakeDamage) { return; }
+		if (!canTakeDamage || HP == 0) { return; }
 		
 		HP = Math.max(HP-dam, 0);
 
@@ -167,6 +167,11 @@ public abstract class Entity
 		{
 			damager.essence += essence;
 			essence = 0;
+			
+			for (GameEventHandler handler : getAllHandlers())
+			{
+				handler.onDeath(this, damager);
+			}
 		}
 
 		damageAccumulator += dam;

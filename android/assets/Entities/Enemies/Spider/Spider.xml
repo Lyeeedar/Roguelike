@@ -48,6 +48,7 @@
 					<Name>spider/cocoon</Name>
 				</Sprite>
 				<Passable>false</Passable>
+				<Opaque>false</Opaque>
 				
 				<Statistics>
 					<MaxHP>200</MaxHP>

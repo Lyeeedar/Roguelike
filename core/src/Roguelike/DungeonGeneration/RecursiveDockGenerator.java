@@ -474,6 +474,7 @@ public class RecursiveDockGenerator
 			}
 			if (complete) { break; }
 		}
+		if (minx == -1) { return grid; }
 
 		// find min y
 		complete = false;
@@ -492,6 +493,7 @@ public class RecursiveDockGenerator
 			}
 			if (complete) { break; }
 		}
+		if (miny == -1) { return grid; }
 
 		// find max x
 		complete = false;
@@ -510,6 +512,7 @@ public class RecursiveDockGenerator
 			}
 			if (complete) { break; }
 		}
+		if (maxx == -1) { return grid; }
 
 		// find max y
 		complete = false;
@@ -528,6 +531,7 @@ public class RecursiveDockGenerator
 			}
 			if (complete) { break; }
 		}
+		if (maxy == -1) { return grid; }
 
 		// minimise room
 		int newwidth = maxx - minx;

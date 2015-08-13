@@ -20,4 +20,17 @@
 		<Levitate>1</Levitate>
 	</Statistics>
 	
+	<PassiveAbilities>
+	    <Death>
+	        <Events>
+	            <OnDeath>
+	                <Field>
+	                    <Field>PoisonGas</Field>
+	                    <Stacks>3</Stacks>
+	                </Field>
+	            </OnDeath>
+	        </Events>
+	    </Death>
+	</PassiveAbilities>
+	
 </Entity>

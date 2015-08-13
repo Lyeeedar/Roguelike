@@ -2,7 +2,7 @@
 	<Name>Sticky Flames</Name>
 	<Description>Your fire attacks ignite your foes.</Description>
 	<Icon>
-		<Name>Abilities/Pyromaniac/StickyFlames</Name>
+		<Name>Abilities/Pyromaniac/UnreliableFlames</Name>
 		<Colour><RGB>255,165,0</RGB></Colour>
 	</Icon>
 	
@@ -12,6 +12,9 @@
 				<Defender>Burning</Defender>
 				<Stacks>CEIL(DAMAGE_FIRE/100)</Stacks>
 			</Status>
+			<Field Condition="damage_fire > 0 && rnd(1) < 0.1">
+			    <Defender>Fire</Defender>
+			</Field>
 		</OnDealDamage>
 	</Events>
 	

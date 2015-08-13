@@ -13,8 +13,8 @@ import exp4j.Helpers.EquationHelper;
 
 public class SpawnOnDeathEffect extends AbstractOnDeathEffect
 {
-	String fieldName;
-	String stacksEqn;
+	private String fieldName;
+	private String stacksEqn;
 
 	@Override
 	public void process(Field field, GameTile tile)

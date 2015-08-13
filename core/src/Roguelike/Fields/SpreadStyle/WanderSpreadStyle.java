@@ -60,6 +60,11 @@ public class WanderSpreadStyle extends AbstractSpreadStyle
 				if (newField != null && newField.fieldName.equals(field.fieldName))
 				{
 					newField.data.put("LastMove", dir);
+					
+					if (field.stacks-1 == 0)
+					{
+						field.onNaturalDeath();
+					}
 				}
 				
 				return;

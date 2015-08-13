@@ -60,17 +60,23 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 			e.printStackTrace();
 		}
 		
-		String extendsElement = xmlElement.getAttribute("Extends", null);
+		internalLoad(xmlElement);
+	}
+	
+	//----------------------------------------------------------------------
+	private void internalLoad(Element xml)
+	{
+		String extendsElement = xml.getAttribute("Extends", null);
 		if (extendsElement != null)
 		{
 			internalLoad(extendsElement);
 		}
 		
-		Name = xmlElement.get("Name", Name);
-		Icon = xmlElement.getChildByName("Icon") != null ? AssetManager.loadSprite(xmlElement.getChildByName("Icon")) : Icon;
-		Description = xmlElement.get("Description", Description);
+		Name = xml.get("Name", Name);
+		Icon = xml.getChildByName("Icon") != null ? AssetManager.loadSprite(xml.getChildByName("Icon")) : Icon;
+		Description = xml.get("Description", Description);
 		
-		Element eventsElement = xmlElement.getChildByName("Events");
+		Element eventsElement = xml.getChildByName("Events");
 		if (eventsElement != null)
 		{
 			super.parse(eventsElement);
@@ -87,6 +93,15 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 		return ab;
 	}
 
+	//----------------------------------------------------------------------
+	public static PassiveAbility load(Element xml)
+	{
+		PassiveAbility ab = new PassiveAbility();
+
+		ab.internalLoad(xml);
+
+		return ab;
+	}
 	
 	@Override
 	public String getName()

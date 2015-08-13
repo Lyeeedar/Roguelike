@@ -7,10 +7,10 @@
 	</Icon>
 	<Tiers>
 		<Tier>
-			<PassiveAbility>
-				<Name>Pyromaniac/Tier1/StickyFlames</Name>
+			<ActiveAbility>
+				<Name>Pyromaniac/Tier1/FlameSurge</Name>
 				<Cost>100</Cost>
-			</PassiveAbility>
+			</ActiveAbility>
 			
 			<ActiveAbility>
 				<Name>Pyromaniac/Tier1/Flamestrike</Name>
@@ -28,7 +28,7 @@
 			</ActiveAbility>
 			
 			<PassiveAbility>
-				<Name>Pyromaniac/Tier1/UnreliableFlames</Name>
+				<Name>Pyromaniac/Tier1/StickyFlames</Name>
 				<Cost>100</Cost>
 			</PassiveAbility>
 		</Tier>

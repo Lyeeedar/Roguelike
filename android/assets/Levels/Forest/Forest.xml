@@ -1,10 +1,17 @@
 <Level>
 	<Ambient>
-		<Red>1</Red>
-		<Green>1</Green>
-		<Blue>1</Blue>
+		<Red>0.7</Red>
+		<Green>0.8</Green>
+		<Blue>0.4</Blue>
 		<Alpha>1</Alpha>
 	</Ambient>
+	
+	<Sound>
+	    <BGM>Heroic Age</BGM>
+	    <Ambient>
+
+	    </Ambient>
+	</Sound>
 	
 	<RoomGenerators>
 	    <CellularAutomata><Weight>3</Weight></CellularAutomata>
@@ -18,8 +25,7 @@
 	
 	<Factions>
 		<Major>
-		    <Spriggan>3</Spriggan>
-		    <Centaur>3</Centaur>
+		    <Toad>3</Toad>
 		</Major>
 		<Minor>
 			<Toad>4</Toad>

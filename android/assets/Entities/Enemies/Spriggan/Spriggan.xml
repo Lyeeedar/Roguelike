@@ -35,6 +35,8 @@
 			<Placement>Any</Placement>
 			
 			<EnvironmentData>
+			    <Passable>true</Passable>
+			    <Opaque>false</Opaque>
 				<Sprite>
 					<Name>spriggan/flowers</Name>
 				</Sprite>

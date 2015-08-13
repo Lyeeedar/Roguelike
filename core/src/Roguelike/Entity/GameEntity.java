@@ -250,8 +250,18 @@ public class GameEntity extends Entity
 			for (int i = 0; i < passiveAbilityElement.getChildCount() && i < Global.NUM_ABILITY_SLOTS; i++)
 			{
 				Element abEl = passiveAbilityElement.getChild(i);
+				
+				PassiveAbility ab = null;
+				
+				if (abEl.getChildCount() > 0)
+				{
+					ab = PassiveAbility.load(abEl);
+				}
+				else
+				{
+					ab = PassiveAbility.load(abEl.getText());
+				}
 
-				PassiveAbility ab = PassiveAbility.load(abEl.getText());
 				slottedPassiveAbilities.add(ab);
 			}
 		}

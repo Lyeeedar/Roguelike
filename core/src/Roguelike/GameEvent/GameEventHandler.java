@@ -15,6 +15,7 @@ import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.GameEvent.Damage.AbstractOnDamageEvent;
 import Roguelike.GameEvent.Damage.DamageObject;
+import Roguelike.GameEvent.OnDeath.AbstractOnDeathEvent;
 import Roguelike.GameEvent.OnTask.AbstractOnTaskEvent;
 import Roguelike.GameEvent.OnTurn.AbstractOnTurnEvent;
 
@@ -31,6 +32,7 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnTaskEvent> onAttackEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnTaskEvent> onWaitEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnTaskEvent> onUseAbilityEvents = new Array<AbstractOnTaskEvent>();
+	public Array<AbstractOnDeathEvent> onDeathEvents = new Array<AbstractOnDeathEvent>();
 	
 	public int getStatistic(HashMap<String, Integer> variableMap, Statistic s)
 	{
@@ -60,15 +62,34 @@ public abstract class GameEventHandler implements IGameObject
 	{
 		return constantEvent.equations;
 	}
-		
-	public void onTurn(Entity entity, float cost)
-	{		
-		for (AbstractOnTurnEvent event : onTurnEvents)
+	
+	public void onDeath(Entity entity, Entity killer)
+	{
+		boolean successfulProcess = false;
+		for (AbstractOnDeathEvent event : onDeathEvents)
 		{
-			event.handle(entity, cost);
+			boolean success = event.handle(entity, killer);
+			
+			if (success) { successfulProcess = true; }
 		}
 		
-		if (onTurnEvents.size > 0)
+		if (successfulProcess)
+		{
+			processed();
+		}
+	}
+	
+	public void onTurn(Entity entity, float cost)
+	{
+		boolean successfulProcess = false;
+		for (AbstractOnTurnEvent event : onTurnEvents)
+		{
+			boolean success = event.handle(entity, cost);
+			
+			if (success) { successfulProcess = true; }
+		}
+		
+		if (successfulProcess)
 		{
 			processed();
 		}
@@ -76,12 +97,15 @@ public abstract class GameEventHandler implements IGameObject
 	
 	public void onDealDamage(DamageObject obj)
 	{
+		boolean successfulProcess = false;
 		for (AbstractOnDamageEvent event : onDealDamageEvents)
 		{
-			event.handle(obj, this);
+			boolean success = event.handle(obj, this);
+			
+			if (success) { successfulProcess = true; }
 		}
 		
-		if (onDealDamageEvents.size > 0)
+		if (successfulProcess)
 		{
 			processed();
 		}
@@ -89,12 +113,15 @@ public abstract class GameEventHandler implements IGameObject
 	
 	public void onReceiveDamage(DamageObject obj)
 	{
+		boolean successfulProcess = false;
 		for (AbstractOnDamageEvent event : onReceiveDamageEvents)
 		{
-			event.handle(obj, this);
+			boolean success = event.handle(obj, this);
+			
+			if (success) { successfulProcess = true; }
 		}
 		
-		if (onReceiveDamageEvents.size > 0)
+		if (successfulProcess)
 		{
 			processed();
 		}
@@ -122,12 +149,15 @@ public abstract class GameEventHandler implements IGameObject
 	
 	public void onMove(Entity entity, TaskMove task)
 	{
+		boolean successfulProcess = false;
 		for (AbstractOnTaskEvent event : onMoveEvents)
 		{
-			event.handle(entity, task, this);
+			boolean success = event.handle(entity, task, this);
+			
+			if (success) { successfulProcess = true; }
 		}
 		
-		if (onMoveEvents.size > 0)
+		if (successfulProcess)
 		{
 			processed();
 		}
@@ -135,12 +165,15 @@ public abstract class GameEventHandler implements IGameObject
 	
 	public void onAttack(Entity entity, TaskAttack task)
 	{
+		boolean successfulProcess = false;
 		for (AbstractOnTaskEvent event : onAttackEvents)
 		{
-			event.handle(entity, task, this);
+			boolean success = event.handle(entity, task, this);
+
+			if (success) { successfulProcess = true; }
 		}
 		
-		if (onAttackEvents.size > 0)
+		if (successfulProcess)
 		{
 			processed();
 		}
@@ -148,12 +181,15 @@ public abstract class GameEventHandler implements IGameObject
 	
 	public void onWait(Entity entity, TaskWait task)
 	{
+		boolean successfulProcess = false;
 		for (AbstractOnTaskEvent event : onWaitEvents)
 		{
-			event.handle(entity, task, this);
+			boolean success = event.handle(entity, task, this);
+			
+			if (success) { successfulProcess = true; }
 		}
 		
-		if (onWaitEvents.size > 0)
+		if (successfulProcess)
 		{
 			processed();
 		}
@@ -161,12 +197,15 @@ public abstract class GameEventHandler implements IGameObject
 	
 	public void onUseAbility(Entity entity, TaskUseAbility task)
 	{
+		boolean successfulProcess = false;
 		for (AbstractOnTaskEvent event : onUseAbilityEvents)
 		{
-			event.handle(entity, task, this);
+			boolean success = event.handle(entity, task, this);
+			
+			if (success) { successfulProcess = true; }
 		}
 		
-		if (onUseAbilityEvents.size > 0)
+		if (successfulProcess)
 		{
 			processed();
 		}
@@ -186,6 +225,16 @@ public abstract class GameEventHandler implements IGameObject
 			{
 				Element onTurnElement = onTurnElements.getChild(i);
 				onTurnEvents.add(AbstractOnTurnEvent.load(onTurnElement));
+			}
+		}
+		
+		Element onDeathElements = xml.getChildByName("OnDeath");
+		if (onDeathElements != null)
+		{
+			for (int i = 0; i < onDeathElements.getChildCount(); i++)
+			{
+				Element onDeathElement = onDeathElements.getChild(i);
+				onDeathEvents.add(AbstractOnDeathEvent.load(onDeathElement));
 			}
 		}
 		

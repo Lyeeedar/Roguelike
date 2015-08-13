@@ -18,9 +18,10 @@ public class PropogateFieldInteractionType extends AbstractFieldInteractionType
 	public Field process(Field src, Field dst)
 	{
 		GameTile srcTile = src.tile != null ? src.tile : dst.tile;
+		src.tile = srcTile;
+		
 		HashSet<GameTile> tiles = new HashSet<GameTile>();
 		getAllLinkedTiles(tiles, srcTile, dst);
-		
 		for (GameTile tile : tiles)
 		{
 			for (AbstractOnDeathEffect effect : src.onDeathEffects)
