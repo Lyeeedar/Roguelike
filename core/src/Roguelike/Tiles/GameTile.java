@@ -51,7 +51,7 @@ public class GameTile implements PathfindingTile
 		light = new Color(Color.WHITE);
 	}
 	
-	public void addEnvironmentEntity(EnvironmentEntity entity)
+	public final void addEnvironmentEntity(EnvironmentEntity entity)
 	{
 		if (entity.tile != null)
 		{
@@ -62,7 +62,7 @@ public class GameTile implements PathfindingTile
 		entity.tile = this;
 	}
 	
-	public void clearField(FieldLayer layer)
+	public final void clearField(FieldLayer layer)
 	{
 		if (fields.containsKey(layer))
 		{
@@ -73,14 +73,14 @@ public class GameTile implements PathfindingTile
 		}
 	}
 	
-	public void addField(Field field)
+	public final void addField(Field field)
 	{
 		clearField(field.layer);
 		fields.put(field.layer, field);
 		field.tile = this;
 	}
 	
-	public int[] addGameEntity(GameEntity obj)
+	public final int[] addGameEntity(GameEntity obj)
 	{
 		GameTile oldTile = obj.tile;
 		
@@ -96,7 +96,7 @@ public class GameTile implements PathfindingTile
 		return new int[]{0, 0};
 	}
 	
-	public int[] getPosDiff(GameTile prevTile)
+	public final int[] getPosDiff(GameTile prevTile)
 	{
 		int[] oldPos = new int[]{prevTile.x * Global.TileSize, prevTile.y * Global.TileSize};		
 		int[] newPos = {x * Global.TileSize, y * Global.TileSize};
@@ -106,13 +106,13 @@ public class GameTile implements PathfindingTile
 		return diff;
 	}
 	
-	public float getDist(GameTile prevTile)
+	public final float getDist(GameTile prevTile)
 	{				
 		return Vector2.dst(prevTile.x, prevTile.y, x, y);
 	}
 	
 	@Override
-	public boolean getPassable(Array<Passability> travelType)
+	public final boolean getPassable(Array<Passability> travelType)
 	{
 		if (fields.size() > 0)
 		{

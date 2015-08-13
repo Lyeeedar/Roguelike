@@ -857,36 +857,36 @@ public class Level
 	//####################################################################//
 	//region Getters
 	
-	public GameTile[][] getGrid()
+	public final GameTile[][] getGrid()
 	{
 		return Grid;
 	}
 	
-	public GameTile getGameTile(Point pos)
+	public final GameTile getGameTile(Point pos)
 	{
 		return getGameTile(pos.x, pos.y);
 	}
 	
-	public GameTile getGameTile(int x, int y)
+	public final GameTile getGameTile(int x, int y)
 	{
 		if (x < 0 || x >= width || y < 0 || y >= height) { return null; }
 		
 		return Grid[x][y];
 	}
 	
-	public SeenTile getSeenTile(Point pos)
+	public final SeenTile getSeenTile(Point pos)
 	{
 		return getSeenTile(pos.x, pos.y);
 	}
 	
-	public SeenTile getSeenTile(int x, int y)
+	public final SeenTile getSeenTile(int x, int y)
 	{
 		if (x < 0 || x >= width || y < 0 || y >= height) { return null; }
 		
 		return SeenGrid[x][y];
 	}
 	
-	public Entity getEntityWithUID(String UID)
+	public final Entity getEntityWithUID(String UID)
 	{
 		for (int x = 0; x < width; x++)
 		{
@@ -909,7 +909,7 @@ public class Level
 		return null;
 	}
 	
-	public void getAllFields(Array<Field> list)
+	public final void getAllFields(Array<Field> list)
 	{		
 		for (int x = 0; x < width; x++)
 		{
@@ -930,7 +930,7 @@ public class Level
 		}
 	}
 	
-	public void getAllEntities(Array<GameEntity> list)
+	public final void getAllEntities(Array<GameEntity> list)
 	{		
 		for (int x = 0; x < width; x++)
 		{
@@ -944,7 +944,7 @@ public class Level
 		}
 	}
 	
-	public void getAllEnvironmentEntities(Array<EnvironmentEntity> list)
+	public final void getAllEnvironmentEntities(Array<EnvironmentEntity> list)
 	{		
 		for (int x = 0; x < width; x++)
 		{
