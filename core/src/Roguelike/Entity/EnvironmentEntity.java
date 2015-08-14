@@ -122,7 +122,7 @@ public class EnvironmentEntity extends Entity
 				Level current = entity.tile.level;
 				SaveLevel save = Global.getLevel((SaveLevel)entity.data.get("Destination"));
 
-				LoadingScreen.Instance.set(save, current.player, "Stair: "+current.UID, null);
+				LoadingScreen.Instance.set(save, current.player, "Stair: "+save.UID, null);
 				
 				RoguelikeGame.Instance.switchScreen(ScreenEnum.LOADING);
 			}

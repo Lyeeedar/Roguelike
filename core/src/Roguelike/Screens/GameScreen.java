@@ -104,6 +104,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		border = AssetManager.loadSprite("GUI/frame");
 
 		gestureDetector = new GestureDetector(this);
+		gestureDetector.setLongPressSeconds(0.5f);
+		
 		inputMultiplexer = new InputMultiplexer();
 
 		LoadUI();
@@ -838,6 +840,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button)
 	{
+		if (longPressed || dragged)
+		{
+			return false;
+		}
+		
 		if (tooltip != null)
 		{
 			tooltip.setVisible(false);
@@ -846,11 +853,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 		
 		clearContextMenu();
-		
-		if (longPressed || dragged)
-		{
-			return false;
-		}
 		
 		Vector3 mousePos = camera.unproject(new Vector3(screenX, screenY, 0));
 		
@@ -882,13 +884,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			if (button == Buttons.RIGHT)
 			{
-				GameTile tile = null;
-				if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height)
-				{
-					tile = Global.CurrentLevel.getGameTile(x, y);
-				}
-
-				createContextMenu(mousePosX, mousePosY, tile);
+				rightClick(screenX, screenY);
 			}
 			else
 			{
@@ -1000,6 +996,29 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		return false;
 	}
 
+	//----------------------------------------------------------------------
+	public void rightClick(float screenX, float screenY)
+	{
+		Vector3 mousePos = camera.unproject(new Vector3(screenX, screenY, 0));
+		
+		int mousePosX = (int) mousePos.x;
+		int mousePosY = (int) mousePos.y;
+
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+
+		int x = (mousePosX - offsetx) / Global.TileSize;
+		int y = (mousePosY - offsety) / Global.TileSize;
+		
+		GameTile tile = null;
+		if (x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height)
+		{
+			tile = Global.CurrentLevel.getGameTile(x, y);
+		}
+
+		createContextMenu(mousePosX, mousePosY, tile);
+	}
+	
 	//endregion InputProcessor
 	//####################################################################//
 	//region GestureListener
@@ -1028,8 +1047,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean longPress(float x, float y)
 	{
+		rightClick(x, y);
+		
 		longPressed = true;
-		return false;
+		return true;
 	}
 
 	//----------------------------------------------------------------------
@@ -1241,9 +1262,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						@Override
 						public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 						{	
+							clearContextMenu();
 							aa.activate(entity);
 							Global.CurrentLevel.player.tasks.add(new TaskWait());
-							clearContextMenu();
 
 							return true;
 						}

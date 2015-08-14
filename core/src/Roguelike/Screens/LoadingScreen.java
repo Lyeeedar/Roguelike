@@ -101,6 +101,7 @@ public class LoadingScreen implements Screen
 		{
 			if (event == null)
 			{
+				level.created = true;
 				Global.ChangeLevel(generator.getLevel(), player, travelType);
 				RoguelikeGame.Instance.switchScreen(ScreenEnum.GAME);
 			}
@@ -177,8 +178,7 @@ public class LoadingScreen implements Screen
 		this.travelType = travelType;
 		this.event = event;
 		
-		generator = new RecursiveDockGenerator(level.fileName, level.depth, level.seed, !level.created, level.UID);
-		level.created = true;
+		generator = new RecursiveDockGenerator(level);
 		
 		this.percent = generator.percent;
 		this.generationString = generator.generationText;

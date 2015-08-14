@@ -424,7 +424,7 @@ public abstract class TilePanel extends Widget
 				}
 			}
 			
-			return false;
+			return true;
 		}
 
 		@Override

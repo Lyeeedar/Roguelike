@@ -25,6 +25,7 @@ import Roguelike.Levels.Level;
 import Roguelike.Pathfinding.AStarPathfind;
 import Roguelike.Pathfinding.BresenhamLine;
 import Roguelike.Pathfinding.PathfindingTile;
+import Roguelike.Save.SaveLevel;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.ImageUtils;
@@ -38,14 +39,10 @@ public class RecursiveDockGenerator
 	//region Constructor
 
 	//----------------------------------------------------------------------
-	public RecursiveDockGenerator(String level, int depth, long seed, boolean createDynamics, String levelUID)
+	public RecursiveDockGenerator(SaveLevel level)
 	{
-		dfp = DungeonFileParser.load(level+"/"+level);
-		this.depth = depth;
-		this.fileName = level;
-		this.seed = seed;
-		this.createDynamics = createDynamics;
-		this.levelUID = levelUID;
+		this.saveLevel = level;
+		dfp = DungeonFileParser.load(level.fileName+"/"+level.fileName);
 
 		if (Global.ANDROID)
 		{
@@ -57,7 +54,7 @@ public class RecursiveDockGenerator
 		maxPadding += minPadding;
 		paddedMinRoom = minRoomSize + minPadding*2;
 
-		ran = new Random(seed);
+		ran = new Random(level.seed);
 	}
 
 	//endregion Constructor
@@ -303,11 +300,11 @@ public class RecursiveDockGenerator
 	//----------------------------------------------------------------------
 	protected void selectRooms()
 	{
-		for (DFPRoom r : dfp.getRequiredRooms(depth))
+		for (DFPRoom r : dfp.getRequiredRooms(saveLevel.depth))
 		{
 			if (r.isTransition)
 			{
-				if (createDynamics)
+				if (!saveLevel.created)
 				{
 					additionalRooms.add(r);
 				}
@@ -326,7 +323,7 @@ public class RecursiveDockGenerator
 
 			if (r.isTransition)
 			{
-				if (createDynamics)
+				if (!saveLevel.created)
 				{
 					additionalRooms.add(r);
 				}
@@ -1002,7 +999,7 @@ public class RecursiveDockGenerator
 
 				if (fp != null)
 				{
-					room.addFeatures(ran, dfp, fp, influence, createDynamics);
+					room.addFeatures(ran, dfp, fp, influence);
 				}	
 			}
 		}
@@ -1026,13 +1023,13 @@ public class RecursiveDockGenerator
 
 				influence = 100 - influence;
 
-				pair.room.addFeatures(ran, dfp, majorFaction, influence, createDynamics);
+				pair.room.addFeatures(ran, dfp, majorFaction, influence);
 			}
 			else
 			{
 				int influence = ran.nextInt(80) + 10;
 
-				pair.room.addFeatures(ran, dfp, FactionParser.load(dfp.getMinorFaction(ran)), influence, createDynamics);
+				pair.room.addFeatures(ran, dfp, FactionParser.load(dfp.getMinorFaction(ran)), influence);
 			}
 		}
 	}
@@ -1087,9 +1084,9 @@ public class RecursiveDockGenerator
 		level.bgmName = dfp.BGM;
 		level.ambientSounds.addAll(dfp.ambientSounds);
 
-		level.depth = depth;
-		level.fileName = fileName;
-		level.seed = seed;
+		level.depth = saveLevel.depth;
+		level.fileName = saveLevel.fileName;
+		level.seed = saveLevel.seed;
 		level.requiredRooms = additionalRooms;
 
 		for (int x = 0; x < width; x++)
@@ -1108,9 +1105,9 @@ public class RecursiveDockGenerator
 
 				if (symbol.hasEnvironmentEntity())
 				{
-					EnvironmentEntity entity = symbol.getEnvironmentEntity(levelUID);
+					EnvironmentEntity entity = symbol.getEnvironmentEntity(saveLevel.UID);
 
-					if (createDynamics || !entity.canTakeDamage)
+					if (!saveLevel.created || !entity.canTakeDamage)
 					{		
 						if (entity.attachToWall)
 						{
@@ -1162,7 +1159,7 @@ public class RecursiveDockGenerator
 					}
 				}
 
-				if (createDynamics && symbol.hasGameEntity())
+				if (!saveLevel.created && symbol.hasGameEntity())
 				{
 					GameEntity e = symbol.getGameEntity();
 					newTile.addGameEntity(e);
@@ -1181,9 +1178,11 @@ public class RecursiveDockGenerator
 			}
 			//System.out.print("\n");
 		}
+		
+		saveLevel.addSavedLevelContents(level);
 
-		level.depth = depth;
-		level.UID = levelUID;
+		level.depth = saveLevel.depth;
+		level.UID = saveLevel.UID;
 	}
 
 	//endregion Private Methods
@@ -1198,11 +1197,7 @@ public class RecursiveDockGenerator
 	
 	private int generationIndex = 0;
 
-	public int depth;
-	public long seed;
-	public String fileName;
-	public boolean createDynamics;
-	public String levelUID;
+	public SaveLevel saveLevel;
 
 	private static final boolean DEBUG_OUTPUT = false;
 	private static final int DEBUG_SIZE = 16;
@@ -1494,7 +1489,7 @@ public class RecursiveDockGenerator
 		}
 
 		//----------------------------------------------------------------------
-		public void addFeatures(Random ran, DungeonFileParser dfp, FactionParser faction, int influence, boolean createDynamics)
+		public void addFeatures(Random ran, DungeonFileParser dfp, FactionParser faction, int influence)
 		{
 			Symbol[][] roomCopy = new Symbol[width][height];
 			for (int x  = 0; x < width; x++)
