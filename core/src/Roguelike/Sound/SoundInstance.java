@@ -53,7 +53,7 @@ public class SoundInstance
 	{
 		// calculate data propogation
 		float playerDist = Integer.MAX_VALUE;
-		int[] shoutSource = {tile.x, tile.y};
+		Point shoutSource = Pools.obtain(Point.class).set(tile.x, tile.y);
 		
 		int maxAudibleDist = (range/4)*3;
 		
@@ -88,7 +88,10 @@ public class SoundInstance
 								}
 							}
 							
-							Pools.freeAll(path);
+							if (path != null)
+							{
+								Pools.freeAll(path);
+							}
 						}
 					}
 				}
@@ -99,9 +102,11 @@ public class SoundInstance
 			AStarPathfind astar = new AStarPathfind(tile.level.getGrid(), tile.x, tile.y, tile.level.player.tile.x, tile.level.player.tile.y, true, false, SoundPassability);
 			Array<Point> path = astar.getPath();
 			
-			if (path != null) { playerDist = path.size; }
-			
-			Pools.freeAll(path);
+			if (path != null) 
+			{ 
+				playerDist = path.size;
+				Pools.freeAll(path);
+			}
 		}
 		
 		// calculate sound play volume

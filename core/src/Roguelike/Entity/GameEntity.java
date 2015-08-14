@@ -30,12 +30,14 @@ import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 import Roguelike.UI.MessageStack.Line;
 import Roguelike.UI.MessageStack.Message;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -62,7 +64,7 @@ public class GameEntity extends Entity
 	{
 		super.applyDamage(dam, damager);
 		
-		AI.setData("EnemyPos", new int[]{damager.tile.x, damager.tile.y});
+		AI.setData("EnemyPos", Pools.obtain(Point.class).set(damager.tile.x, damager.tile.y));
 	}
 
 	//----------------------------------------------------------------------

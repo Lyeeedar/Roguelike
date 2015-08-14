@@ -17,8 +17,10 @@ import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
 import Roguelike.DungeonGeneration.Symbol;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Levels.Level;
+import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.GameScreen;
+import Roguelike.Screens.LoadingScreen;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationMode;
 import Roguelike.StatusEffect.StatusEffect;
@@ -119,24 +121,10 @@ public class EnvironmentEntity extends Entity
 			{
 				Level current = entity.tile.level;
 				SaveLevel save = Global.getLevel((SaveLevel)entity.data.get("Destination"));
-				Level level = save.create();
+
+				LoadingScreen.Instance.set(save, current.player, "Stair: "+current.UID, null);
 				
-				level.player = current.player;
-				
-				Array<EnvironmentEntity> entities = new Array<EnvironmentEntity>();
-				level.getAllEnvironmentEntities(entities);
-				for (EnvironmentEntity ee : entities)
-				{
-					if (ee.data.containsKey("Destination") && ((SaveLevel)ee.data.get("Destination")).UID.equals(current.UID))
-					{
-						ee.tile.addGameEntity(level.player);
-						
-						break;
-					}
-				}
-				
-				Global.ChangeLevel(level);
-				level.updateVisibleTiles();
+				RoguelikeGame.Instance.switchScreen(ScreenEnum.LOADING);
 			}
 		};
 		
@@ -158,6 +146,7 @@ public class EnvironmentEntity extends Entity
 					{
 						HashMap<String, Object> eedata = new HashMap<String, Object>();
 						eedata.put("Destination", new SaveLevel(levelUID));
+						eedata.put("Stair: "+destinationLevel.UID, new Object());
 						symbol.environmentEntityData = eedata;
 						
 						break;
@@ -185,6 +174,7 @@ public class EnvironmentEntity extends Entity
 			entity.canTakeDamage = false;
 			entity.actions.add(action);
 			entity.data.put("Destination", destinationLevel);
+			entity.data.put("Stair: "+levelUID, new Object());
 			entity.UID = "EnvironmentEntity DownStair: ID " + entity.hashCode();
 			
 			return entity;

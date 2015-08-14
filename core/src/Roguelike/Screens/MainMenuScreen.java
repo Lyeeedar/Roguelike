@@ -11,6 +11,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -32,7 +33,6 @@ public class MainMenuScreen implements Screen
 {	
 	public MainMenuScreen()
 	{
-		create();
 	}
 	
 	private void create()
@@ -79,7 +79,6 @@ public class MainMenuScreen implements Screen
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button)
 			{
 				Global.newGame();
-				RoguelikeGame.Instance.switchScreen(ScreenEnum.GAME);
 			}
 		});
 		
@@ -113,7 +112,25 @@ public class MainMenuScreen implements Screen
 	@Override
 	public void show()
 	{
-		Gdx.input.setInputProcessor(stage);	
+		if (!created)
+		{
+			create();
+			created = true;
+		}
+		
+		Gdx.input.setInputProcessor(stage);
+		
+		camera = new OrthographicCamera(Global.Resolution[0], Global.Resolution[1]);
+		camera.translate(Global.Resolution[0] / 2, Global.Resolution[1] / 2);
+		camera.setToOrtho(false, Global.Resolution[0], Global.Resolution[1]);
+		camera.update();
+		
+		batch.setProjectionMatrix(camera.combined);
+		stage.getViewport().setCamera(camera);
+		stage.getViewport().setWorldWidth(Global.Resolution[0]);
+		stage.getViewport().setWorldHeight(Global.Resolution[1]);
+		stage.getViewport().setScreenWidth(Global.ScreenSize[0]);
+		stage.getViewport().setScreenHeight(Global.ScreenSize[1]);
 	}
 
 	@Override
@@ -126,7 +143,7 @@ public class MainMenuScreen implements Screen
 		
 		batch.begin();
 		
-		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.draw(background, 0, 0, Global.Resolution[0], Global.Resolution[1]);
 		
 		batch.end();
 		
@@ -136,8 +153,35 @@ public class MainMenuScreen implements Screen
 	@Override
 	public void resize(int width, int height)
 	{
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
-		stage.getViewport().update(width, height, true);
+		Global.ScreenSize[0] = width;
+		Global.ScreenSize[1] = height;
+
+        float w = (float)Global.TargetResolution[0];
+        float h = (float)Global.TargetResolution[1];
+        
+        if (width < height)
+        {
+        	h = w * ((float)height/(float)width);
+        }
+        else
+        {
+        	w = h * ((float)width/(float)height);
+        }
+        
+        Global.Resolution[0] = (int)w;
+        Global.Resolution[1] = (int)h;	
+		
+		camera = new OrthographicCamera(Global.Resolution[0], Global.Resolution[1]);
+		camera.translate(Global.Resolution[0] / 2, Global.Resolution[1] / 2);
+		camera.setToOrtho(false, Global.Resolution[0], Global.Resolution[1]);
+		camera.update();
+		
+		batch.setProjectionMatrix(camera.combined);
+		stage.getViewport().setCamera(camera);
+		stage.getViewport().setWorldWidth(Global.Resolution[0]);
+		stage.getViewport().setWorldHeight(Global.Resolution[1]);
+		stage.getViewport().setScreenWidth(Global.ScreenSize[0]);
+		stage.getViewport().setScreenHeight(Global.ScreenSize[1]);
 	}
 
 	@Override
@@ -159,6 +203,11 @@ public class MainMenuScreen implements Screen
 	public void dispose()
 	{
 	}
+	
+	//----------------------------------------------------------------------
+	public OrthographicCamera camera;
+	
+	boolean created;
 	
 	Stage stage;
 	Skin skin;

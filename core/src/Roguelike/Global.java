@@ -15,8 +15,11 @@ import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.Items.Recipe;
 import Roguelike.Levels.Level;
+import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.GameScreen;
+import Roguelike.Screens.LoadingScreen;
+import Roguelike.Screens.LoadingScreen.PostGenerateEvent;
 import Roguelike.Sound.Mixer;
 import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Tiles.GameTile;
@@ -671,43 +674,30 @@ public class Global
 	//----------------------------------------------------------------------
 	public static void newGame()
 	{
-		abilityPool = AbilityPool.createDefaultAbilityPool();
 		AllLevels.clear();
 		
 		SaveLevel firstLevel = new SaveLevel("Sewer", 0, null, MathUtils.random(Long.MAX_VALUE-1));
-		firstLevel = getLevel(firstLevel);
+		AllLevels.put(firstLevel.UID, firstLevel);
 		
-		ChangeLevel(firstLevel.create());
-
-		boolean exit = false;
-		for (int x = 0; x < CurrentLevel.width; x++)
+		GameEntity player = GameEntity.load("player");
+		
+		LoadingScreen.Instance.set(firstLevel, player, "PlayerSpawn",
+		new PostGenerateEvent()
 		{
-			for (int y = 0; y < CurrentLevel.height; y++)
+			@Override
+			public void execute(Level level)
 			{
-				GameTile tile = CurrentLevel.getGameTile(x, y);
-				if (tile.metaValue != null && tile.metaValue.equals("PlayerSpawn"))
-				{
-					CurrentLevel.player = GameEntity.load("player");
-
-					tile.addGameEntity(CurrentLevel.player);
-					
-					for (int i = 0; i < 1000; i++)
-					{
-						CurrentLevel.player.inventory.addItem(Recipe.generateMaterial(100));
-					}
-
-					exit = true;
-					break;
-				}
+				abilityPool = AbilityPool.createDefaultAbilityPool();
 			}
-			if (exit) { break;} 
-		}
-
-		CurrentLevel.updateVisibleTiles();
+		});
+		
+		
+		
+		RoguelikeGame.Instance.switchScreen(ScreenEnum.LOADING);
 	}
 	
 	//----------------------------------------------------------------------
-	public static void ChangeLevel(Level level)
+	public static void ChangeLevel(Level level, GameEntity player, String travelKey)
 	{
 		if (CurrentLevel != null)
 		{
@@ -715,6 +705,9 @@ public class Global
 			{
 				sound.stop();
 			}
+			
+			CurrentLevel.player.tile.entity = null;
+			CurrentLevel.player = null;
 			
 			// Save
 			SaveLevel save = new SaveLevel();
@@ -732,6 +725,35 @@ public class Global
 		{
 			BGM = new Mixer(level.bgmName, 0.1f);
 		}
+		
+		if (player != null)
+		{
+			level.player = player;
+			
+			//outer:
+			for (int x = 0; x < level.width; x++)
+			{
+				for (int y = 0; y < level.height; y++)
+				{
+					GameTile tile = level.getGameTile(x, y);
+					if (tile.metaValue != null)
+					{
+						if (tile.metaValue.equals(travelKey))
+						{tile.addGameEntity(player);
+						break;// outer;
+						}
+					}
+					
+					if (tile.environmentEntity != null && tile.environmentEntity.data.containsKey(travelKey))
+					{
+						tile.addGameEntity(player);
+						break;// outer;
+					}
+				}
+			}
+		}
+		
+		CurrentLevel.updateVisibleTiles();
 	}
 	
 	//----------------------------------------------------------------------

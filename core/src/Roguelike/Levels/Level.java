@@ -15,6 +15,7 @@ import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
+import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Fields.Field;
 import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.GameEvent.GameEventHandler;
@@ -104,6 +105,11 @@ public class Level
 			
 			player.isVariableMapDirty = true;
 			Global.abilityPool.isVariableMapDirty = false;
+			
+			for (int i = 0; i < 3; i++)
+			{
+				player.tasks.add(new TaskWait());
+			}
 		}
 		
 		if (!hasActiveEffects())
@@ -304,7 +310,10 @@ public class Level
 		{
 			l.update(delta);
 			calculateSingleLight(l);
-			if (l.copied) { Pools.free(l); }
+			if (l.copied) 
+			{ 
+				Pools.free(l); 
+			}
 		}
 	}
 	

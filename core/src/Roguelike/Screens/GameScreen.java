@@ -2,9 +2,11 @@ package Roguelike.Screens;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
+import Roguelike.RoguelikeGame;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
+import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
@@ -19,6 +21,7 @@ import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Levels.Level;
 import Roguelike.Save.SaveAbilityPool;
 import Roguelike.Save.SaveFile;
+import Roguelike.Save.SaveLevel;
 import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
@@ -84,8 +87,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public GameScreen()
 	{
 		Instance = this;
-		
-		create();
 	}
 	
 	//----------------------------------------------------------------------
@@ -192,7 +193,25 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public void show()
 	{
+		if (!created)
+		{
+			create();
+			created = true;
+		}
+		
 		Gdx.input.setInputProcessor(inputMultiplexer);	
+		
+		camera = new OrthographicCamera(Global.Resolution[0], Global.Resolution[1]);
+		camera.translate(Global.Resolution[0] / 2, Global.Resolution[1] / 2);
+		camera.setToOrtho(false, Global.Resolution[0], Global.Resolution[1]);
+		camera.update();
+		
+		batch.setProjectionMatrix(camera.combined);
+		stage.getViewport().setCamera(camera);
+		stage.getViewport().setWorldWidth(Global.Resolution[0]);
+		stage.getViewport().setWorldHeight(Global.Resolution[1]);
+		stage.getViewport().setScreenWidth(Global.ScreenSize[0]);
+		stage.getViewport().setScreenHeight(Global.ScreenSize[1]);
 	}
 
 	//----------------------------------------------------------------------
@@ -730,8 +749,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			save.load();
 			
 			Global.AllLevels = save.allLevels;
-			Global.ChangeLevel(Global.AllLevels.get(save.currentLevel).create());
 			Global.abilityPool = save.abilityPool.create();
+			
+			SaveLevel level = Global.AllLevels.get(save.currentLevel);
+			LoadingScreen.Instance.set(level, null, null, null);
+			RoguelikeGame.Instance.switchScreen(ScreenEnum.LOADING);
 		}
 		else if (keycode == Keys.W)
 		{
@@ -1316,6 +1338,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	//endregion Private Methods
 	//####################################################################//
 	//region Data
+	
+	//----------------------------------------------------------------------
+	private boolean created;
 	
 	//----------------------------------------------------------------------
 	private boolean longPressed;

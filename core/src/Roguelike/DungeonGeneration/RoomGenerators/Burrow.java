@@ -5,7 +5,9 @@ import java.util.Random;
 import Roguelike.Global.Direction;
 import Roguelike.DungeonGeneration.DungeonFileParser;
 import Roguelike.DungeonGeneration.Symbol;
+import Roguelike.Tiles.Point;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -56,43 +58,78 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public class Burrow extends AbstractRoomGenerator
 {
 	private float floorCoverage;
-	private int minNeighbours;
-	private int maxNeighbours;
 	private float connectionChance;
 	
-	private Array<int[]> tempArray = new Array<int[]>();
+	private Array<Point> tempArray = new Array<Point>();
 	
-//	private boolean canPlace(Symbol[][] grid, Symbol floor, int x, int y)
-//	{
-//		
-//	}
-//	
-//	private int[] placeNewSeed(Symbol[][] grid, Symbol floor, Symbol wall, Random ran)
-//	{
-//		Pools.freeAll(tempArray);
-//		tempArray.clear();
-//		
-//		int width = grid.length;
-//		int height = grid[0].length;
-//		
-//		for (int x = 0; x < width; x++)
-//		{
-//			for (int y = 0; y < height; y++)
-//			{
-//				if (grid[x][y] == wall)
-//				{
-//					int[] pos = Pools.obtain(int[].class);
-//					pos[0] = x;
-//					pos[1] = y;
-//				}
-//			}
-//		}
-//	}
+	private boolean canPlace(Symbol[][] grid, Symbol floor, Symbol wall, Random ran, Point p)
+	{
+		return true;
+	}
+	
+	private Point getCellFromStore(Array<Point> cellStore, Random ran)
+	{
+		int range = cellStore.size;
+		if (cellStore.size > 125)
+		{
+			range = (int)(25 * Math.pow(cellStore.size, 1.0f/3.0f));
+		}
+		
+		int index = ran.nextInt(range);
+		Point p = cellStore.removeIndex(cellStore.size-index);
+		
+		return p;
+	}
+	
+	private void addNeighboursToCellStore(Symbol[][] grid, Symbol wall, Point point, Array<Point> cellStore)
+	{
+		for (Direction dir : Direction.values())
+		{
+			int nx = point.x+dir.getX();
+			int ny = point.y+dir.getY();
+			
+			if (grid[nx][ny] == wall)
+			{
+				cellStore.add(Pools.obtain(Point.class).set(nx, ny));
+			}			
+		}
+	}
+	
+	private Point placeNewSeed(Symbol[][] grid, Symbol floor, Symbol wall, Random ran)
+	{
+		Pools.freeAll(tempArray);
+		tempArray.clear();
+		
+		int width = grid.length;
+		int height = grid[0].length;
+		
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				if (grid[x][y] == wall)
+				{
+					Point pos = Pools.obtain(Point.class);
+					pos.x = x;
+					pos.y = y;
+					
+					tempArray.add(pos);
+				}
+			}
+		}
+		
+		Point chosen = tempArray.random().copy();
+		grid[chosen.x][chosen.y] = floor;
+		
+		Pools.freeAll(tempArray);
+		
+		return chosen;
+	}
 	
 	@Override
 	public void process(Symbol[][] grid, Symbol floor, Symbol wall, Random ran, DungeonFileParser dfp)
 	{
-		Array<int[]> cellStore = new Array<int[]>();
+		Array<Point> cellStore = new Array<Point>(false, 16);
 		int placedCount = 0;
 		
 		int width = grid.length;
@@ -103,25 +140,30 @@ public class Burrow extends AbstractRoomGenerator
 		// Place seed tiles
 		for (int i = 0; i < 8; i++)
 		{
-			int x = ran.nextInt(width);
-			int y = ran.nextInt(height);
-			
-			grid[x][y] = floor;
-			placedCount++;
-			
-			for (Direction dir : Direction.values())
-			{
-				int nx = x+dir.getX();
-				int ny = y+dir.getY();
-				
-				cellStore.add(new int[]{nx, ny});
-			}
+			Point seed = placeNewSeed(grid, floor, wall, ran);		
+			placedCount++;			
+			addNeighboursToCellStore(grid, wall, seed, cellStore);
 		}
 		
 		// place tiles
 		while (placedCount < targetTileCount)
 		{
-			
+			if (cellStore.size == 0)
+			{
+				Point seed = placeNewSeed(grid, floor, wall, ran);		
+				placedCount++;				
+				addNeighboursToCellStore(grid, wall, seed, cellStore);
+			}
+			else
+			{
+				Point p = getCellFromStore(cellStore, ran);
+				if (canPlace(grid, floor, wall, ran, p))
+				{
+					grid[p.x][p.y] = floor;
+					placedCount++;				
+					addNeighboursToCellStore(grid, wall, p, cellStore);
+				}
+			}
 		}
 	}
 
@@ -129,8 +171,6 @@ public class Burrow extends AbstractRoomGenerator
 	public void parse(Element xml)
 	{
 		floorCoverage = xml.getFloat("FloorCoverage", 0.6f);
-		minNeighbours = xml.getInt("MinNeighbours", 1);
-		maxNeighbours = xml.getInt("MaxNeighbours", 6);
 		connectionChance = xml.getFloat("ConnectionChance", 0.2f);
 	}
 

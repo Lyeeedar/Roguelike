@@ -27,8 +27,16 @@ public class ShadowCastCache
 		cache.lastrange = lastrange;
 		cache.lastx = lastx;
 		cache.lasty = lasty;
-		cache.opaqueTiles.addAll(opaqueTiles);
-		cache.shadowCastOutput.addAll(shadowCastOutput);
+		
+		for (Point p : opaqueTiles)
+		{
+			cache.opaqueTiles.add(p.copy());
+		}
+		
+		for (Point p : shadowCastOutput)
+		{
+			cache.shadowCastOutput.add(p.copy());
+		}
 		
 		return cache;
 	}

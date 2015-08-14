@@ -132,15 +132,11 @@ public class SaveLevel extends SaveableObject<Level>
 	@Override
 	public Level create()
 	{
-		RecursiveDockGenerator generator = new RecursiveDockGenerator(fileName, depth, seed, !created, UID);
-		created = true;
-
-		generator.additionalRooms.clear();
-		generator.additionalRooms.addAll(requiredRooms);
-				
-		generator.generate();
-		Level level = generator.getLevel();
-		
+		return null;
+	}
+	
+	public void addSavedLevelContents(Level level)
+	{
 		for (SaveGameEntity entity : gameEntities)
 		{
 			GameTile tile = level.getGameTile(entity.pos);
@@ -182,8 +178,6 @@ public class SaveLevel extends SaveableObject<Level>
 				}
 			}
 		}
-		
-		return level;
 	}
 	
 	public void createUID()

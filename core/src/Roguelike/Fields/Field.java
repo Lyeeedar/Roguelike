@@ -100,7 +100,9 @@ public class Field implements IGameObject
 	public EnumSet<Passability> restrictPassability = EnumSet.noneOf(Passability.class);
 	
 	public void update(float cost)
-	{		
+	{
+		if (tile == null) { return; } // we are dead
+		
 		float onTurnAccumulator = (Float)getData("OnTurnAccumulator", 0.0f);
 		onTurnAccumulator += cost;
 		

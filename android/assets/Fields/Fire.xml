@@ -27,6 +27,9 @@
         <Damage>
             <Fire_Atk>20</Fire_Atk>
         </Damage>
+        <Status>
+            <Status>Burning</Status>
+        </Status>
     </OnTurn>
     <OnDeath>
         <Spawn>

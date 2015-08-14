@@ -67,7 +67,7 @@ public class GameTile implements PathfindingTile
 		if (fields.containsKey(layer))
 		{
 			Field field = fields.get(layer);
-			field.tile = null;
+			if (field != null) { field.tile = null; }
 			
 			fields.remove(layer);
 		}

@@ -7,7 +7,7 @@
     </Sprite>
     <OnTurn>
         <Damage>
-            <Wood_Atk>10</Wood_Atk>
+            <Wood_Atk>Stacks*15</Wood_Atk>
         </Damage>
     </OnTurn>
 </Field>

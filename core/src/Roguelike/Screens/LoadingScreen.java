@@ -4,35 +4,31 @@ import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
-import Roguelike.UI.HoverTextButton;
-import Roguelike.UI.HoverTextButton.HorizontalAlignment;
+import Roguelike.DungeonGeneration.RecursiveDockGenerator;
+import Roguelike.Entity.GameEntity;
+import Roguelike.Levels.Level;
+import Roguelike.Save.SaveLevel;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class GameOverScreen implements Screen
-{
-	public GameOverScreen()
+public class LoadingScreen implements Screen
+{	
+	public static LoadingScreen Instance;
+	boolean created = false;
+	
+	public LoadingScreen()
 	{
+		Instance = this;
 	}
 	
 	private void create()
@@ -41,7 +37,7 @@ public class GameOverScreen implements Screen
 		titleFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 55);
 		normalFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 30);
 		highlightFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 35);
-		
+
 		skin = new Skin();
 		skin.addRegions(new TextureAtlas(Gdx.files.internal("GUI/uiskin.atlas")));
 		skin.add("default-font", font, BitmapFont.class);
@@ -51,48 +47,7 @@ public class GameOverScreen implements Screen
 		batch = new SpriteBatch();
 		
 		background = AssetManager.loadTexture("Sprites/GUI/Title.png");
-		
-		createUI();
-	}
-	
-	private void createUI()
-	{
-		Table table = new Table();
-		//table.debug();
-		
-		Label title = new Label("Game Over", skin);
-		
-		LabelStyle style = new LabelStyle();
-		style.font = titleFont;
-		title.setStyle(style);
-		table.add(title).expandY().top().padTop(100);
-		table.row();
-		
-		detailLabel = new Label("", skin);
-		table.add(detailLabel);
-		table.row();
-		
-		Table buttonTable = new Table();
-		
-		HoverTextButton mmbutton = new HoverTextButton("Main Menu", normalFont, highlightFont);
-		mmbutton.halign = HorizontalAlignment.RIGHT;
-		mmbutton.addListener(new InputListener()
-		{
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-			{
-				RoguelikeGame.Instance.switchScreen(ScreenEnum.MAINMENU);
-				
-				return true;
-			}
-		});
-		
-		buttonTable.add(mmbutton).expandX().fillX();
-		buttonTable.row();
-		
-		table.add(buttonTable).width(Value.percentWidth(0.3f, table)).expandX().expandY().top();
-		
-		table.setFillParent(true);
-		stage.addActor(table);
+		white = AssetManager.loadTexture("Sprites/white.png");
 	}
 
 	@Override
@@ -103,11 +58,6 @@ public class GameOverScreen implements Screen
 			create();
 			created = true;
 		}
-		
-		String infoText = "You died :(\n";
-		infoText += "You got to depth " + Global.CurrentLevel.depth + ".\n";
-		infoText += "You survived for " + Global.AUT + " Arbitrary Units of Time.\n";
-		detailLabel.setText(infoText);
 		
 		Gdx.input.setInputProcessor(stage);
 		
@@ -127,6 +77,11 @@ public class GameOverScreen implements Screen
 	@Override
 	public void render(float delta)
 	{
+		if (complete && event != null)
+		{
+			generationString = "Executing Events";
+		}
+		
 		stage.act();
 		
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -134,11 +89,31 @@ public class GameOverScreen implements Screen
 		
 		batch.begin();
 		
-		//batch.draw(background, 0, 0, Global.Resolution[0], Global.Resolution[1]);
+		batch.draw(background, 0, 0, Global.Resolution[0], Global.Resolution[1]);
+		batch.draw(white, 0, Global.Resolution[1]/2-2, Global.Resolution[0]*((float)percent/100.0f), Global.Resolution[1]/2+2);
+		normalFont.draw(batch, generationString, Global.Resolution[0]/2, Global.Resolution[1]/2);
 		
 		batch.end();
 		
 		stage.draw();
+		
+		if (complete)
+		{
+			if (event == null)
+			{
+				Global.ChangeLevel(generator.getLevel(), player, travelType);
+				RoguelikeGame.Instance.switchScreen(ScreenEnum.GAME);
+			}
+			else
+			{
+				event.execute(generator.getLevel());
+				event = null;
+			}
+		}
+		
+		complete = generator.generate();
+		percent = generator.percent;
+		generationString = generator.generationText;
 	}
 
 	@Override
@@ -195,10 +170,26 @@ public class GameOverScreen implements Screen
 	{
 	}
 	
+	public void set(SaveLevel level, GameEntity player, String travelType, PostGenerateEvent event)
+	{
+		this.level = level;
+		this.player = player;
+		this.travelType = travelType;
+		this.event = event;
+		
+		generator = new RecursiveDockGenerator(level.fileName, level.depth, level.seed, !level.created, level.UID);
+		level.created = true;
+		
+		this.percent = generator.percent;
+		this.generationString = generator.generationText;
+		this.complete = false;
+
+		generator.additionalRooms.clear();
+		generator.additionalRooms.addAll(level.requiredRooms);
+	}
+	
 	//----------------------------------------------------------------------
 	public OrthographicCamera camera;
-	
-	boolean created;
 	
 	Stage stage;
 	Skin skin;
@@ -210,6 +201,19 @@ public class GameOverScreen implements Screen
 	BitmapFont highlightFont;
 	
 	Texture background;
+	Texture white;
 	
-	Label detailLabel;
+	boolean complete;
+	String generationString;
+	int percent = 0;
+	SaveLevel level;
+	GameEntity player;
+	String travelType;
+	RecursiveDockGenerator generator;
+	PostGenerateEvent event;
+	
+	public static abstract class PostGenerateEvent
+	{
+		public abstract void execute(Level level);
+	}
 }
