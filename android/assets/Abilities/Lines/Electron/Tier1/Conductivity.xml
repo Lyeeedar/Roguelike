@@ -1,0 +1,48 @@
+<ActiveAbility>
+
+	<Name>Conductivity</Name>
+	<Description>Charge your targets with electricity, lowering their defenses and making them release bolts of lightning on death.</Description>
+	
+	<Cooldown>10</Cooldown>
+	<AOE>2</AOE>
+	<Range>5</Range>
+	
+	<Icon>
+		<Name>Abilities/Electron/Conductivity</Name>
+		<Colour><RGB>248,255,43</RGB></Colour>
+	</Icon>
+	
+	<HitSprite>
+		<Name>AbilitySprites/LightningBurst/LightningBurst</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Colour><RGB>50,50,200</RGB></Colour>
+	</HitSprite>
+	
+	<Targeting>
+		<Tile />
+	</Targeting>
+	
+	<Movement>
+		<Smite />
+	</Movement>
+	
+	<Effect>
+		<Status>
+		    <Defender>
+		        <Events>
+		            <Constant>
+		                <Air_Def>-20</Air_Def>
+		                <Air_Hardiness>-20</Air_Hardiness>
+		            </Constant>
+		            
+		            <OnDeath>
+		                <Field>
+		                    <Field>Static</Field>
+		                </Field>
+		            </OnDeath>
+		        </Events>
+		    </Defender>
+		</Status>
+	</Effect>
+	
+</ActiveAbility>

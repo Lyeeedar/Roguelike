@@ -27,7 +27,8 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnTurnEvent> onTurnEvents = new Array<AbstractOnTurnEvent>();
 	public ConstantEvent constantEvent;
 	public Array<AbstractOnDamageEvent> onDealDamageEvents = new Array<AbstractOnDamageEvent>();
-	public Array<AbstractOnDamageEvent> onReceiveDamageEvents = new Array<AbstractOnDamageEvent>();	
+	public Array<AbstractOnDamageEvent> onReceiveDamageEvents = new Array<AbstractOnDamageEvent>();
+	public Array<AbstractOnTaskEvent> onTaskEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnTaskEvent> onMoveEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnTaskEvent> onAttackEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnTaskEvent> onWaitEvents = new Array<AbstractOnTaskEvent>();
@@ -145,6 +146,19 @@ public abstract class GameEventHandler implements IGameObject
 		{
 			onUseAbility(entity, (TaskUseAbility)task);
 		}
+		
+		boolean successfulProcess = false;
+		for (AbstractOnTaskEvent event : onTaskEvents)
+		{
+			boolean success = event.handle(entity, task, this);
+			
+			if (success) { successfulProcess = true; }
+		}
+		
+		if (successfulProcess)
+		{
+			processed();
+		}
 	}
 	
 	public void onMove(Entity entity, TaskMove task)
@@ -261,6 +275,16 @@ public abstract class GameEventHandler implements IGameObject
 			{
 				Element onReceiveDamageElement = onReceiveDamageElements.getChild(i);
 				onReceiveDamageEvents.add(AbstractOnDamageEvent.load(onReceiveDamageElement));
+			}
+		}
+		
+		Element onTaskElements = xml.getChildByName("OnTask");
+		if (onTaskElements != null)
+		{
+			for (int i = 0; i < onTaskElements.getChildCount(); i++)
+			{
+				Element onTaskElement = onTaskElements.getChild(i);
+				onTaskEvents.add(AbstractOnTaskEvent.load(onTaskElement));
 			}
 		}
 		

@@ -1,0 +1,16 @@
+<StatusEffect>
+	<Name>Chilled</Name>
+	<Description>Deep cold slows your movements.</Description>
+	<Duration>5</Duration>
+	
+	<Icon>
+		<Name>Skills/SpikeTrap</Name>
+	</Icon>
+	
+	<Events>
+		<OnTask>
+		    <Cost>cost*1.1</Cost>
+		</OnTask>
+	</Events>
+	
+</StatusEffect>

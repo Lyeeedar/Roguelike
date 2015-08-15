@@ -52,6 +52,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	
 	private int cone = 0;
 	private int aoe = 0;
+	private boolean excludeSelf = false;
 	public int range = 1;
 	private float screenshake = 0;
 			
@@ -341,6 +342,11 @@ public class ActiveAbility implements IAbility, IGameObject
 				}
 			}
 			
+			if (excludeSelf)
+			{
+				AffectedTiles.removeValue(epicenter, true);
+			}
+			
 			for (GameTile tile : AffectedTiles)
 			{
 				for (AbstractEffectType effect : effectTypes)
@@ -365,7 +371,7 @@ public class ActiveAbility implements IAbility, IGameObject
 				// check distance for screenshake
 				float dist = Vector2.dst(epicenter.x, epicenter.y,  epicenter.level.player.tile.x,  epicenter.level.player.tile.y);
 				float shakeRadius = screenshake;
-				if (dist > aoe)
+				if (aoe != 0 && dist > aoe)
 				{
 					shakeRadius *= (dist-aoe) / (aoe*2);
 				}
@@ -411,7 +417,15 @@ public class ActiveAbility implements IAbility, IGameObject
 		
 		this.name = xmlElement.get("Name", this.name);
 		description = xmlElement.get("Description", description);
-		aoe = xmlElement.getInt("AOE", aoe);
+		
+		Element aoeElement = xmlElement.getChildByName("AOE");
+		if (aoeElement != null)
+		{
+			aoe = Integer.parseInt(aoeElement.getText());
+			excludeSelf = aoeElement.getBoolean("ExcludeSelf", false);
+		}
+		
+		
 		cone = xmlElement.getInt("Cone", cone);
 		range = xmlElement.getInt("Range", range);
 		cooldown = xmlElement.getFloat("Cooldown", cooldown);

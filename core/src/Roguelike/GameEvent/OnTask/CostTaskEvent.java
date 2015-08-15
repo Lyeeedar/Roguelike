@@ -53,8 +53,7 @@ public class CostTaskEvent extends AbstractOnTaskEvent
 		
 		ExpressionBuilder expB = EquationHelper.createEquationBuilder(costEqn);
 		EquationHelper.setVariableNames(expB, variableMap, "");
-		expB.variable("value");
-		expB.variable("val");
+		expB.variable("cost");
 				
 		Expression exp = EquationHelper.tryBuild(expB);
 		if (exp == null)
@@ -63,8 +62,7 @@ public class CostTaskEvent extends AbstractOnTaskEvent
 		}
 		
 		EquationHelper.setVariableValues(exp, variableMap, "");
-		exp.setVariable("value", task.cost);
-		exp.setVariable("val", task.cost);
+		exp.setVariable("cost", task.cost);
 		
 		float cost = (float)exp.evaluate();
 		

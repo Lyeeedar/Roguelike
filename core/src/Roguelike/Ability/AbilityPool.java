@@ -161,6 +161,8 @@ public class AbilityPool
 		pool.loadAbilityLine("Lancer/Lancer");
 		pool.loadAbilityLine("BloodMagic/BloodMagic");
 		pool.loadAbilityLine("Protection/Protection");
+		pool.loadAbilityLine("WinterMagus/WinterMagus");
+		pool.loadAbilityLine("Electron/Electron");
 		
 		return pool;
 	}

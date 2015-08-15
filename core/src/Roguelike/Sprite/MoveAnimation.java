@@ -62,4 +62,10 @@ public class MoveAnimation extends SpriteAnimation
 	{
 		return offset;
 	}
+
+	@Override
+	public float[] getRenderScale()
+	{
+		return null;
+	}
 }

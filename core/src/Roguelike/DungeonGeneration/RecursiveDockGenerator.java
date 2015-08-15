@@ -131,7 +131,7 @@ public class RecursiveDockGenerator
 						symbolGrid[x][y] = tiles[x][y].symbol;
 					}
 				}
-				ImageUtils.writeSymbolGridToFile(symbolGrid, "beforeFeatures.png", DEBUG_SIZE);
+				if (!Global.ANDROID) { ImageUtils.writeSymbolGridToFile(symbolGrid, "beforeFeatures.png", DEBUG_SIZE); }
 			}
 		}
 		else if (generationIndex == 5)
@@ -158,7 +158,7 @@ public class RecursiveDockGenerator
 						symbolGrid[x][y] = tiles[x][y].symbol;
 					}
 				}
-				ImageUtils.writeSymbolGridToFile(symbolGrid, "afterFeatures.png", DEBUG_SIZE);
+				if (!Global.ANDROID) { ImageUtils.writeSymbolGridToFile(symbolGrid, "afterFeatures.png", DEBUG_SIZE); }
 			}
 		}
 		else if (generationIndex == 7)
@@ -335,6 +335,8 @@ public class RecursiveDockGenerator
 				requiredRooms.add(room);
 			}
 		}
+		
+		additionalRooms.addAll(saveLevel.requiredRooms);
 
 		for (DFPRoom r : additionalRooms)
 		{
@@ -1199,7 +1201,7 @@ public class RecursiveDockGenerator
 
 	public SaveLevel saveLevel;
 
-	private static final boolean DEBUG_OUTPUT = false;
+	private static final boolean DEBUG_OUTPUT = true;
 	private static final int DEBUG_SIZE = 16;
 
 	private GenerationTile[][] tiles;

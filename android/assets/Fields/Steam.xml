@@ -1,4 +1,4 @@
-<Field Extends="Gas,Opaque">
+<Field Extends="Gas">
     <FieldName>Steam</FieldName>
     <Sprite>
         <Name>effect/cloud_grey_smoke</Name>

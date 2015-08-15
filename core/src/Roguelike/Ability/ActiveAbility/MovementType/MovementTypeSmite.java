@@ -7,6 +7,8 @@ import Roguelike.Sprite.MoveAnimation;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Sprite.MoveAnimation.MoveEquation;
+import Roguelike.Sprite.StretchAnimation;
+import Roguelike.Sprite.StretchAnimation.StretchEquation;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.math.MathUtils;
@@ -15,10 +17,16 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class MovementTypeSmite extends AbstractMovementType
 {
-
+	private String animationType;
+	private String animationEquation;
+	private float animationTime;
+	
 	@Override
 	public void parse(Element xml)
 	{
+		animationType = xml.get("AnimationType", "Move").toUpperCase();
+		animationEquation = xml.get("AnimationEquation", "Linear").toUpperCase();
+		animationTime = xml.getFloat("AnimationTime", 1);
 	}
 
 	@Override
@@ -41,7 +49,14 @@ public class MovementTypeSmite extends AbstractMovementType
 			int[] diff = tile.getPosDiff(ab.source);
 			int distMoved = ( Math.abs(diff[0]) + Math.abs(diff[1]) ) / Global.TileSize;
 			
-			effect.Sprite.spriteAnimation = new MoveAnimation(0.05f * distMoved, diff, MoveEquation.LINEAR);
+			if (animationType.equals("MOVE"))
+			{
+				effect.Sprite.spriteAnimation = new MoveAnimation(0.05f * distMoved * animationTime, diff, MoveEquation.valueOf(animationEquation));
+			}
+			else if (animationType.equals("STRETCH"))
+			{
+				effect.Sprite.spriteAnimation = new StretchAnimation(0.01f * distMoved * animationTime, diff, 0.5f, StretchEquation.valueOf(animationEquation));
+			}
 			
 			// calc rotation
 			Vector2 vec = new Vector2(diff[0]*-1, diff[1]*-1);
@@ -64,6 +79,9 @@ public class MovementTypeSmite extends AbstractMovementType
 	public AbstractMovementType copy()
 	{
 		MovementTypeSmite t = new MovementTypeSmite();
+		t.animationType = animationType;
+		t.animationEquation = animationEquation;
+		t.animationTime = animationTime;
 		return t;
 	}
 

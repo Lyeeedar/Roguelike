@@ -1,0 +1,36 @@
+<AbilityLine>
+	<Name>Electron</Name>
+	<Description>Wield shocking power.</Description>
+	<Icon>
+		<Name>Abilities/Electron/Megawatt</Name>
+		<Colour><RGB>248,255,43</RGB></Colour>
+	</Icon>
+	<Tiers>
+		<Tier>
+			<ActiveAbility>
+				<Name>Electron/Tier1/ThunderStrike</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Electron/Tier1/StaticCharge</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Electron/Tier1/Conductivity</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Electron/Tier1/Megawatt</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			
+			<ActiveAbility>
+				<Name>Electron/Tier1/LightningBolt</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+		</Tier>
+	</Tiers>
+</AbilityLine>

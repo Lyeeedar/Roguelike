@@ -24,6 +24,8 @@ public class DamageOnDeathEffect extends AbstractOnDeathEffect
 	@Override
 	public void process(Field field, GameTile tile)
 	{
+		if (tile == null) { return; }
+		
 		if (tile.entity != null)
 		{
 			doDamage(tile.entity, field);

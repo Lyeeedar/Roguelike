@@ -138,7 +138,7 @@ public class Field implements IGameObject
 	{
 		Field newField = copy();
 		newField.stacks = stacks;
-		
+				
 		EnumMap<FieldLayer, Field> fieldStore = new EnumMap<FieldLayer, Field>(FieldLayer.class);
 		
 		for (FieldLayer layer : FieldLayer.values())

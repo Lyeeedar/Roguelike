@@ -419,7 +419,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 						else
 						{
-							hist.sprite.render(batch, cx, cy, Global.TileSize, Global.TileSize, hist.animationState);
+							hist.sprite.render(batch, cx, cy, Global.TileSize, Global.TileSize, 1, 1, hist.animationState);
 						}
 					}								
 				}
@@ -1029,6 +1029,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		longPressed = false;
 		dragged = false;
+		lastZoom = 0;
 		
 		startX = x;
 		startY = y;
@@ -1078,9 +1079,14 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean zoom(float initialDistance, float distance)
 	{
-		float amount = distance - initialDistance;
+		System.out.println("Initial: " + initialDistance + "   Current: "+distance);
 		
-		Global.TileSize -= amount/500;
+		distance = initialDistance - distance;
+		
+		float amount = distance - lastZoom;
+		lastZoom = distance;
+		
+		Global.TileSize -= amount / 10.0f;
 		if (Global.TileSize < 8)
 		{
 			Global.TileSize = 8;
@@ -1259,14 +1265,19 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 					row.addListener(new InputListener()
 					{
+						
 						@Override
 						public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+						{
+							return true;
+						}
+						
+						@Override
+						public void touchUp (InputEvent event, float x, float y, int pointer, int button)
 						{	
 							clearContextMenu();
 							aa.activate(entity);
 							Global.CurrentLevel.player.tasks.add(new TaskWait());
-
-							return true;
 						}
 					});
 
@@ -1297,20 +1308,16 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				row.addListener(new InputListener()
 				{
 					@Override
-					public boolean mouseMoved (InputEvent event, float x, float y)
+					public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
 					{
-						mouseOverUI = true;
-
 						return true;
 					}
 
 					@Override
-					public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+					public void touchUp (InputEvent event, float x, float y, int pointer, int button)
 					{	
-						prepareAbility(aa);
 						clearContextMenu();
-
-						return true;
+						prepareAbility(aa);
 					}
 				});
 
@@ -1338,11 +1345,15 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-				{	
-					Global.CurrentLevel.player.AI.setData("Rest", true);
-					clearContextMenu();
-
+				{
 					return true;
+				}
+
+				@Override
+				public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+				{	
+					clearContextMenu();
+					Global.CurrentLevel.player.AI.setData("Rest", true);
 				}
 			});
 
@@ -1359,6 +1370,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	//endregion Private Methods
 	//####################################################################//
 	//region Data
+	
+	//----------------------------------------------------------------------
+	private float lastZoom;
 	
 	//----------------------------------------------------------------------
 	private boolean created;

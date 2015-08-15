@@ -183,9 +183,6 @@ public class LoadingScreen implements Screen
 		this.percent = generator.percent;
 		this.generationString = generator.generationText;
 		this.complete = false;
-
-		generator.additionalRooms.clear();
-		generator.additionalRooms.addAll(level.requiredRooms);
 	}
 	
 	//----------------------------------------------------------------------

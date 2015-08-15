@@ -33,4 +33,11 @@ public class BumpAnimation extends SpriteAnimation
 	{
 		return offset;
 	}
+
+	
+	@Override
+	public float[] getRenderScale()
+	{
+		return null;
+	}
 }

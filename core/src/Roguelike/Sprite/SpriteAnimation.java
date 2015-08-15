@@ -21,6 +21,7 @@ public abstract class SpriteAnimation
 	}
 	
 	public abstract int[] getRenderOffset();
+	public abstract float[] getRenderScale();
 	
 	protected abstract void updateInternal(float delta);
 }

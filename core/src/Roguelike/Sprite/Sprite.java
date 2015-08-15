@@ -112,33 +112,46 @@ public class Sprite
 	
 	public void render(Batch batch, int x, int y, int width, int height)
 	{
+		float scaleX = 1;
+		float scaleY = 1;
+		
 		if (spriteAnimation != null)
 		{
 			int[] offset = spriteAnimation.getRenderOffset();
-			x += offset[0];
-			y += offset[1];
+			if (offset != null)
+			{
+				x += offset[0];
+				y += offset[1];
+			}
+			
+			float[] scale = spriteAnimation.getRenderScale();
+			if (scale != null)
+			{
+				scaleX = scale[0];
+				scaleY = scale[1];
+			}
 		}
 		
-		render(batch, x, y, width, height, animationState);
+		render(batch, x, y, width, height, scaleX, scaleY, animationState);
 	}
 	
-	public void render(Batch batch, int x, int y, int width, int height, AnimationState animationState)
+	public void render(Batch batch, int x, int y, int width, int height, float scaleX, float scaleY, AnimationState animationState)
 	{
 		Color oldCol = batch.getColor();
 		Color col = new Color(oldCol).mul(colour);
 		batch.setColor(col);
 		
-		drawTexture(batch, textures.get(animationState.texIndex), x, y, width, height, animationState);
+		drawTexture(batch, textures.get(animationState.texIndex), x, y, width, height, scaleX, scaleY, animationState);
 		
 		for (TextureRegion tex : extraLayers)
 		{
-			drawTexture(batch, tex, x, y, width, height, animationState);
+			drawTexture(batch, tex, x, y, width, height, scaleX, scaleY, animationState);
 		}
 		
 		batch.setColor(oldCol);
 	}
 	
-	private void drawTexture(Batch batch, TextureRegion texture, int x, int y, int width, int height, AnimationState animationState)
+	private void drawTexture(Batch batch, TextureRegion texture, int x, int y, int width, int height, float scaleX, float scaleY, AnimationState animationState)
 	{	
 		if (renderDelay > 0) { return; }
 		
@@ -162,7 +175,7 @@ public class Sprite
 			return; // skip drawing
 		}
 		
-		batch.draw(texture, x, y,width / 2.0f, height / 2.0f, width, height, 1, 1, rotation);
+		batch.draw(texture, x, y, width / 2.0f, height / 2.0f, width, height, scaleX, scaleY, rotation);
 	}
 
 	public TextureRegion getCurrentTexture()
