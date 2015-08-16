@@ -16,8 +16,8 @@
 	
 	<ItemTemplate>	
 		<Slot>MainWeapon</Slot>
-		<Type>Weapon</Type>
-		<WeaponType>Axe</WeaponType>	
+		<Category>Weapon</Category>
+		<Type>Axe</Type>	
 	</ItemTemplate>
 	
 </Recipe>

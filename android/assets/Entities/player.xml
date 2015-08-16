@@ -34,8 +34,8 @@
 		        <Description>A small metal knife. Cheap and mass produced by those looking to increase their smithing skills.</Description>
 		        
 		        <Slot>MainWeapon</Slot>
-				<Type>Weapon</Type>
-				<WeaponType>Sword</WeaponType>
+				<Category>Weapon</Category>
+				<Type>Sword</Type>
 			
 				<Events>
 					<Constant>
@@ -49,7 +49,8 @@
 		        <Name>Torch</Name>
 		        <Description>A burning torch. You can deliver a fiery prod with this.</Description>
 		        <Slot>OffWeapon</Slot>
-		        <Type>Weapon</Type>
+		        <Category>Weapon</Category>
+		        <Type>Torch</Type>
 		        
 		        <Events>
 					<Constant>
@@ -64,7 +65,7 @@
 		        <Name>Padded Shirt</Name>
 		        <Description>A thick padded shirt. Can keep you warm in the cold nights and protect you from small amounts of stabbing.</Description>
 		        <Slot>Body</Slot>
-		        <Type>Armour</Type>
+		        <Category>Armour</Category>
 		        
 		        <Events>
 					<Constant>
@@ -80,7 +81,7 @@
 		        <Name>Padded Trousers</Name>
 		        <Description>Is that a large amount of protective insulation in your pocket, or are you just happy to see me?</Description>
 		        <Slot>Legs</Slot>
-		        <Type>Armour</Type>
+		        <Category>Armour</Category>
 		        
 		        <Events>
 					<Constant>

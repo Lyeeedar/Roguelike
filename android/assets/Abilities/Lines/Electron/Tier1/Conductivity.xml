@@ -29,6 +29,7 @@
 	<Effect>
 		<Status>
 		    <Defender>
+		        <Duration>10</Duration>
 		        <Events>
 		            <Constant>
 		                <Air_Def>-20</Air_Def>
@@ -38,6 +39,7 @@
 		            <OnDeath>
 		                <Field>
 		                    <Field>Static</Field>
+		                    <Stacks>6</Stacks>
 		                </Field>
 		            </OnDeath>
 		        </Events>

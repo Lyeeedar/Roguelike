@@ -10,7 +10,7 @@ import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
-import Roguelike.Items.Item.ItemType;
+import Roguelike.Items.Item.ItemCategory;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 
@@ -43,7 +43,7 @@ public class InventoryPanel extends Table
 	private final Sprite buttonUp;
 	private final Sprite buttonDown;
 		
-	private ItemType selectedFilter = ItemType.ALL;
+	private ItemCategory selectedFilter = ItemCategory.ALL;
 	
 	private HeaderLine header;
 	private InventoryBody body;
@@ -76,22 +76,22 @@ public class InventoryPanel extends Table
 	
 	public class HeaderLine extends TilePanel
 	{
-		private final HashMap<ItemType, Sprite> headers = new HashMap<ItemType, Sprite>();
+		private final HashMap<ItemCategory, Sprite> headers = new HashMap<ItemCategory, Sprite>();
 		
 		public HeaderLine(Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize)
 		{
-			super(skin, stage, tileBackground, tileBorder, ItemType.values().length, 1, tileSize, false);
+			super(skin, stage, tileBackground, tileBorder, ItemCategory.values().length, 1, tileSize, false);
 			
-			headers.put(ItemType.WEAPON, AssetManager.loadSprite("GUI/Weapon"));
-			headers.put(ItemType.ARMOUR, AssetManager.loadSprite("GUI/Armour"));
-			headers.put(ItemType.JEWELRY, AssetManager.loadSprite("GUI/Jewelry"));
-			headers.put(ItemType.TREASURE, AssetManager.loadSprite("GUI/Treasure"));
-			headers.put(ItemType.MATERIAL, AssetManager.loadSprite("GUI/Ingot"));
-			headers.put(ItemType.MISC, AssetManager.loadSprite("GUI/Misc"));
-			headers.put(ItemType.ALL, AssetManager.loadSprite("GUI/All"));
+			headers.put(ItemCategory.WEAPON, AssetManager.loadSprite("GUI/Weapon"));
+			headers.put(ItemCategory.ARMOUR, AssetManager.loadSprite("GUI/Armour"));
+			headers.put(ItemCategory.JEWELRY, AssetManager.loadSprite("GUI/Jewelry"));
+			headers.put(ItemCategory.TREASURE, AssetManager.loadSprite("GUI/Treasure"));
+			headers.put(ItemCategory.MATERIAL, AssetManager.loadSprite("GUI/Ingot"));
+			headers.put(ItemCategory.MISC, AssetManager.loadSprite("GUI/Misc"));
+			headers.put(ItemCategory.ALL, AssetManager.loadSprite("GUI/All"));
 			
 			tileData.clear();
-			for (ItemType type : ItemType.values())
+			for (ItemCategory type : ItemCategory.values())
 			{
 				tileData.add(type);
 			}
@@ -105,13 +105,13 @@ public class InventoryPanel extends Table
 		@Override
 		public Sprite getSpriteForData(Object data)
 		{
-			return headers.get((ItemType)data);
+			return headers.get((ItemCategory)data);
 		}
 
 		@Override
 		public void handleDataClicked(Object data, InputEvent event, float x, float y)
 		{
-			selectedFilter = (ItemType)data;
+			selectedFilter = (ItemCategory)data;
 		}
 
 		@Override
@@ -156,7 +156,7 @@ public class InventoryPanel extends Table
 
 		public InventoryBody(Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize)
 		{
-			super(skin, stage, tileBackground, tileBorder, ItemType.values().length, 1, tileSize, true);
+			super(skin, stage, tileBackground, tileBorder, ItemCategory.values().length, 1, tileSize, true);
 		}
 		
 		@Override
@@ -248,7 +248,7 @@ public class InventoryPanel extends Table
 	{
 		public FloorLine(Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize)
 		{
-			super(skin, stage, tileBackground, tileBorder, ItemType.values().length, 1, tileSize, false);
+			super(skin, stage, tileBackground, tileBorder, ItemCategory.values().length, 1, tileSize, false);
 		}
 
 		@Override

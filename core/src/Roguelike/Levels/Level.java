@@ -21,7 +21,7 @@ import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
-import Roguelike.Items.Item.ItemType;
+import Roguelike.Items.Item.ItemCategory;
 import Roguelike.Items.Recipe;
 import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.ShadowCastCache;
@@ -526,7 +526,7 @@ public class Level
 		{
 			if (i.canDrop && i.shouldDrop())
 			{
-				if (i.itemType == ItemType.MATERIAL)
+				if (i.category == ItemCategory.MATERIAL)
 				{
 					i = Recipe.generateItemForMaterial(i);
 				}

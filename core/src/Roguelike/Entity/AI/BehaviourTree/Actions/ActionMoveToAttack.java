@@ -1,14 +1,13 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
-import Roguelike.Entity.GameEntity;
-import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
-import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
+import Roguelike.Entity.GameEntity;
+import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
+import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
-import Roguelike.Items.Item.WeaponType;
 import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
@@ -41,16 +40,16 @@ public class ActionMoveToAttack extends AbstractAction
 		
 		if (wep != null)
 		{
-			WeaponType type = wep.weaponType;
+			String type = wep.type;
 
 			range = wep.getStatistic(entity.getBaseVariableMap(), Statistic.RANGE);
 			if (range == 0) 
 			{ 
-				if (type == WeaponType.SPEAR)
+				if (type.equals("spear"))
 				{
 					range = 2;
 				}
-				else if (type == WeaponType.BOW || type == WeaponType.WAND)
+				else if (type.equals("bow") || type.equals("wand"))
 				{
 					range = 4;
 				}

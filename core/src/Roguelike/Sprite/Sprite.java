@@ -32,9 +32,7 @@ public class Sprite
 	public float rotation;
 		
 	public Array<TextureRegion> textures;
-	
-	public Array<TextureRegion> extraLayers = new Array<TextureRegion>();
-	
+		
 	public SpriteAnimation spriteAnimation;
 	
 	public AnimationState animationState;
@@ -142,11 +140,6 @@ public class Sprite
 		batch.setColor(col);
 		
 		drawTexture(batch, textures.get(animationState.texIndex), x, y, width, height, scaleX, scaleY, animationState);
-		
-		for (TextureRegion tex : extraLayers)
-		{
-			drawTexture(batch, tex, x, y, width, height, scaleX, scaleY, animationState);
-		}
 		
 		batch.setColor(oldCol);
 	}

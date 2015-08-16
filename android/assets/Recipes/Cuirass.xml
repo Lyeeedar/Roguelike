@@ -16,7 +16,7 @@
 	
 	<ItemTemplate>	
 		<Slot>Body</Slot>
-		<Type>Armour</Type>
+		<Category>Armour</Category>
 	</ItemTemplate>
 	
 </Recipe>

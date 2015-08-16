@@ -6,7 +6,8 @@
 		<Name>GUI/Lantern</Name>
 	</Icon>
 	<Slot>Lantern</Slot>
-	<Type>Misc</Type>
+	<Category>Misc</Category>
+	<Type>Lantern</Type>
 	
 	<Light>
 		<Colour>

@@ -34,6 +34,7 @@
 		<Status>
 		    <Defender>
 		        <Name>Frozen</Name>
+		        <Duration>5</Duration>
 		        <Events>
 		            <OnTask><Cancel /></OnTask>
 		        </Events>

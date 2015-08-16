@@ -1165,11 +1165,6 @@ public class RecursiveDockGenerator
 				{
 					GameEntity e = symbol.getGameEntity();
 					newTile.addGameEntity(e);
-
-					for (int i = 0; i < 10; i++)
-					{
-						e.inventory.addItem(Recipe.generateMaterial(100));
-					}
 				}
 
 				newTile.metaValue = symbol.metaValue;

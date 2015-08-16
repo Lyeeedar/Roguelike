@@ -8,6 +8,7 @@ import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Items.Inventory;
+import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
@@ -118,9 +119,13 @@ public abstract class Entity
 
 		variableMap.put("hp", HP);
 		
-		if (inventory.getEquip(EquipmentSlot.MAINWEAPON) != null)
+		for (EquipmentSlot slot : EquipmentSlot.values())
 		{
-			variableMap.put(inventory.getEquip(EquipmentSlot.MAINWEAPON).weaponType.toString().toLowerCase(), 1);
+			Item equipped = inventory.getEquip(slot);
+			if (equipped != null && equipped.type != null)
+			{
+				variableMap.put(equipped.type, 1);
+			}
 		}
 
 		for (StatusEffectStack s : stacks)
@@ -141,9 +146,13 @@ public abstract class Entity
 
 		baseVariableMap.put("hp", HP);
 		
-		if (inventory.getEquip(EquipmentSlot.MAINWEAPON) != null)
+		for (EquipmentSlot slot : EquipmentSlot.values())
 		{
-			baseVariableMap.put(inventory.getEquip(EquipmentSlot.MAINWEAPON).weaponType.toString().toLowerCase(), 1);
+			Item equipped = inventory.getEquip(slot);
+			if (equipped != null && equipped.type != null)
+			{
+				variableMap.put(equipped.type, 1);
+			}
 		}
 
 		for (StatusEffectStack s : stacks)

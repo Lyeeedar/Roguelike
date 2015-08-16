@@ -506,22 +506,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		for (GameEntity entity : toBeDrawn)
 		{
-			if (entity == Global.CurrentLevel.player)
-			{
-				Sprite sprite = Global.CurrentLevel.player.sprite;
-				sprite.extraLayers.clear();
-
-				for (EquipmentSlot slot : EquipmentSlot.values())
-				{
-					Item equip = Global.CurrentLevel.player.getInventory().getEquip(slot);
-
-					if (equip != null)
-					{
-						sprite.extraLayers.add(equip.getEquipTexture());
-					}
-				}
-			}
-
 			int x = entity.tile.x;
 			int y = entity.tile.y;
 

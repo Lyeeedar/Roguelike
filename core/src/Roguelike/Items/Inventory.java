@@ -8,7 +8,7 @@ import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.RoguelikeGame;
 import Roguelike.Items.Item.EquipmentSlot;
-import Roguelike.Items.Item.ItemType;
+import Roguelike.Items.Item.ItemCategory;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -138,18 +138,18 @@ public class Inventory
 		return m_equipment.get(item.slot) == item;
 	}
 	
-	public Iterator<Item> iterator(ItemType type)
+	public Iterator<Item> iterator(ItemCategory type)
 	{
 		return new ItemIterator(type, m_items.iterator());
 	}
 	
 	private class ItemIterator implements Iterator<Item>
 	{
-		private ItemType type;
+		private ItemCategory type;
 		private Iterator<Item> itr;
 		private Item queued;
 		
-		public ItemIterator(ItemType type, Iterator<Item> itr)
+		public ItemIterator(ItemCategory type, Iterator<Item> itr)
 		{
 			this.type = type;
 			this.itr = itr;
@@ -162,7 +162,7 @@ public class Inventory
 			{
 				Item i = itr.next();
 				
-				if (type == ItemType.ALL || i.itemType == type)
+				if (type == ItemCategory.ALL || i.category == type)
 				{
 					queued = i;
 					break;

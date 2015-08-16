@@ -1,25 +1,8 @@
 package Roguelike.Entity.Tasks;
 
-import java.util.Iterator;
-
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-
-import Roguelike.Global;
 import Roguelike.Global.Direction;
-import Roguelike.Global.Statistic;
-import Roguelike.Items.Item;
-import Roguelike.Items.Item.EquipmentSlot;
-import Roguelike.Items.Item.WeaponType;
-import Roguelike.RoguelikeGame;
 import Roguelike.Entity.GameEntity;
-import Roguelike.Pathfinding.ShadowCaster;
-import Roguelike.Sprite.BumpAnimation;
 import Roguelike.Sprite.MoveAnimation;
-import Roguelike.Sprite.Sprite;
-import Roguelike.Sprite.SpriteAnimation;
-import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Sprite.MoveAnimation.MoveEquation;
 import Roguelike.Tiles.GameTile;
 

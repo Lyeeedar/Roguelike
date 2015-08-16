@@ -7,11 +7,11 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global.Tier1Element;
 import Roguelike.GameEvent.Constant.ConstantEvent;
-import Roguelike.Items.Item.ItemType;
-import Roguelike.Items.Item.MaterialType;
+import Roguelike.Items.Item.ItemCategory;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g3d.model.data.ModelMaterial.MaterialType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
@@ -211,7 +211,7 @@ public class Recipe
 			
 			for (Tier1Element el : Tier1Element.values())
 			{
-				if (targetItem.itemType == ItemType.WEAPON)
+				if (targetItem.category == ItemCategory.WEAPON)
 				{
 					targetItem.getStatisticsObject().put(el.Attack, values.get(el).toString());
 				}
@@ -233,7 +233,7 @@ public class Recipe
 			
 			for (Tier1Element el : Tier1Element.values())
 			{
-				if (targetItem.itemType == ItemType.WEAPON)
+				if (targetItem.category == ItemCategory.WEAPON)
 				{
 					targetItem.getStatisticsObject().put(el.Pierce, values.get(el).toString());
 				}
@@ -246,40 +246,9 @@ public class Recipe
 	}
 
 	//---------- DEBUG STUFF
-	public static Item generateMaterial(int power)
-	{
-		Tier1Element element = Tier1Element.values()[MathUtils.random(Tier1Element.values().length-1)];
-		
-		Item item = new Item();
-		item.itemType = ItemType.MATERIAL;
-		item.materialType = MaterialType.values()[MathUtils.random(MaterialType.values().length-1)];
-		
-		String[] names = {
-				"Wyvern",
-				"Cutting",
-				"Obsidian",
-				"Chitin",
-				"Nature",
-				"Ironfur",
-				"Kelt",
-				"Avonwrath",
-				"Leviathan",
-				"Polt",
-				"Static"
-		};
-		item.name = names[MathUtils.random(names.length-1)] + " " + element.toString().toLowerCase();
-		 
-		item.icon = item.materialType.icon.copy();
-		item.icon.colour = element.Colour;
-		
-		item.elementalStats.put(element, power);
-		
-		return item;
-	}
-	
 	public static Item generateItemForMaterial(Item mat)
 	{
-		Recipe recipe = Recipe.getRandomRecipe(mat.materialType.suitableForWeapon, mat.materialType.suitableForArmour);
+		Recipe recipe = Recipe.getRandomRecipe(true, true);
 		
 		int numMats = recipe.slots.length;
 		Item[] materials = new Item[numMats];

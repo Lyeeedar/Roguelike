@@ -10,12 +10,12 @@ public class SingleDurationStyle extends AbstractDurationStyle
 	public void update(float delta, Field field)
 	{
 		boolean collide = false;
-		if (field.tile.entity != null)
+		if (field.tile.entity != null && field.tile.entity.HP > 0)
 		{
 			collide = true;
 		}
 		
-		if (field.tile.environmentEntity != null && field.tile.environmentEntity.canTakeDamage)
+		if (field.tile.environmentEntity != null && field.tile.environmentEntity.canTakeDamage && field.tile.environmentEntity.HP > 0)
 		{
 			collide = true;
 		}

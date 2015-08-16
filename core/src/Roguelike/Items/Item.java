@@ -42,30 +42,6 @@ public class Item extends GameEventHandler
 	 */
 
 	//----------------------------------------------------------------------
-	public enum WeaponType
-	{
-		NONE("strike/strike", "knife_stab"),
-		SWORD("slash/slash", "knife_stab"),
-		SPEAR("thrust/thrust", "knife_stab"),
-		AXE("slash/slash", "knife_stab"),
-		BOW("arrow", "arrow_approaching_and_hitting_target"),
-		WAND("bolt", "arrow_approaching_and_hitting_target");
-
-		public final Sprite hitSprite;
-
-		private WeaponType(String hit)
-		{
-			hitSprite = hit != null ? AssetManager.loadSprite(hit, 0.1f) : null;
-		}
-		
-		private WeaponType(String hit, String sound)
-		{
-			hitSprite = hit != null ? AssetManager.loadSprite(hit, 0.1f) : null;
-			hitSprite.sound = new SoundInstance(AssetManager.loadSound(sound));
-		}
-	}
-
-	//----------------------------------------------------------------------
 	public enum EquipmentSlot
 	{
 		// Armour
@@ -87,7 +63,7 @@ public class Item extends GameEventHandler
 	}
 
 	//----------------------------------------------------------------------
-	public enum ItemType
+	public enum ItemCategory
 	{
 		ARMOUR,
 		WEAPON,
@@ -97,41 +73,6 @@ public class Item extends GameEventHandler
 		MISC,
 
 		ALL
-	}
-
-	//----------------------------------------------------------------------
-	public enum MaterialType
-	{
-		FABRIC("GUI/Fabric", false, true),
-		HIDE("GUI/Hide", false, true),
-		LEATHER("GUI/Leather", false, true),
-		ORE("GUI/Ore", true, true),
-		INGOT("GUI/Ingot", true, true),
-		LOG("GUI/Log", true, true),
-		PLANK("GUI/Plank", true, true),
-		BONE("GUI/Bone", true, true),
-		CLAW("GUI/Claw", true, false),
-		FANG("GUI/Fang", true, false),
-		SPINE("GUI/Spine", true, false),
-		SCALE("GUI/Scale", true, true),
-		FEATHER("GUI/Feather", false, true),
-		SHELL("GUI/Shell", true, true),
-		VIAL("GUI/Vial", true, false),
-		SAC("GUI/Sac", true, false),
-		POWDER("GUI/Powder", true, true),
-		CRYSTAL("GUI/Crystal", true, true),
-		GEM("GUI/Gem", true, true);
-
-		public final Sprite icon;
-		public final boolean suitableForWeapon;
-		public final boolean suitableForArmour;
-
-		private MaterialType(String path, boolean suitableForWeapon, boolean suitableForArmour)
-		{
-			icon = AssetManager.loadSprite(path);
-			this.suitableForWeapon = suitableForWeapon;
-			this.suitableForArmour = suitableForArmour;
-		}
 	}
 
 	//----------------------------------------------------------------------
@@ -145,11 +86,10 @@ public class Item extends GameEventHandler
 	public Sprite icon;
 	public Sprite hitEffect;
 
-	public WeaponType weaponType = WeaponType.NONE;
 	public EquipmentSlot slot;
-	public ItemType itemType;
-	public MaterialType materialType;
-
+	public ItemCategory category;
+	public String type;
+	
 	public int count;
 	public Light light;
 	public boolean canDrop = true;
@@ -172,52 +112,6 @@ public class Item extends GameEventHandler
 		double conditionVal = exp.evaluate();
 
 		return conditionVal == 1;
-	}
-
-	//----------------------------------------------------------------------
-	public TextureRegion getEquipTexture()
-	{
-		if (slot == EquipmentSlot.MAINWEAPON)
-		{
-			if (weaponType == WeaponType.SWORD)
-			{
-				return AssetManager.loadTextureRegion("Sprites/player/hand1/sword2.png");
-			}
-			else if (weaponType == WeaponType.SPEAR)
-			{
-				return AssetManager.loadTextureRegion("Sprites/player/hand1/spear1.png");
-			}
-			else if (weaponType == WeaponType.AXE)
-			{
-				return AssetManager.loadTextureRegion("Sprites/player/hand1/axe.png");
-			}
-			else if (weaponType == WeaponType.BOW)
-			{
-				return AssetManager.loadTextureRegion("Sprites/player/hand1/bow.png");
-			}
-			else if (weaponType == WeaponType.WAND)
-			{
-				return AssetManager.loadTextureRegion("Sprites/player/hand1/sceptre.png");
-			}
-		}
-		else if (slot == EquipmentSlot.OFFWEAPON)
-		{
-			return AssetManager.loadTextureRegion("Sprites/player/hand2/shield_round1.png");
-		}
-		else if (slot == EquipmentSlot.HEAD)
-		{
-			return AssetManager.loadTextureRegion("Sprites/player/head/chain.png");
-		}
-		else if (slot == EquipmentSlot.BODY)
-		{
-			return AssetManager.loadTextureRegion("Sprites/player/body/chainmail3.png");
-		}
-		else if (slot == EquipmentSlot.LEGS)
-		{
-			return AssetManager.loadTextureRegion("Sprites/player/legs/leg_armor02.png");
-		}
-
-		return AssetManager.loadTextureRegion("Sprites/blank.png");
 	}
 
 	//----------------------------------------------------------------------
@@ -302,7 +196,7 @@ public class Item extends GameEventHandler
 		table.add(new Label(name, skin)).expandX().left();
 
 		{
-			Label label = new Label(weaponType.toString().toLowerCase(), skin);
+			Label label = new Label(type, skin);
 			label.setFontScale(0.7f);
 			table.add(label).expandX().right();
 		}
@@ -455,18 +349,17 @@ public class Item extends GameEventHandler
 		}
 
 		slot = xmlElement.get("Slot", null) != null ? EquipmentSlot.valueOf(xmlElement.get("Slot").toUpperCase()) : slot;
-		itemType = xmlElement.get("Type", null) != null ? ItemType.valueOf(xmlElement.get("Type").toUpperCase()) : itemType;		
-		weaponType = xmlElement.get("WeaponType", null) != null ? WeaponType.valueOf(xmlElement.get("WeaponType").toUpperCase()) : weaponType;
-		materialType = xmlElement.get("MaterialType", null) != null ? MaterialType.valueOf(xmlElement.get("MaterialType").toUpperCase()) : materialType;
+		category = xmlElement.get("Category", null) != null ? ItemCategory.valueOf(xmlElement.get("Category").toUpperCase()) : category;		
+		type = xmlElement.get("Type", null) != null ? xmlElement.get("Type").toLowerCase() : type;
 	}
 
 	//----------------------------------------------------------------------
 	@Override
 	public String getName()
 	{
-		if (itemType == ItemType.MATERIAL)
+		if (category == ItemCategory.MATERIAL)
 		{
-			return name + " " + materialType.toString().toLowerCase();
+			return name + " " + type;
 		}
 
 		return name;
@@ -490,25 +383,36 @@ public class Item extends GameEventHandler
 
 		if (slot == EquipmentSlot.MAINWEAPON)
 		{
-			if (weaponType == WeaponType.SWORD)
+			if (type.equals("sword"))
 			{
 				return AssetManager.loadSprite("GUI/Sword");
 			}
-			else if (weaponType == WeaponType.SPEAR)
+			else if (type.equals("spear"))
 			{
 				return AssetManager.loadSprite("GUI/Spear");
 			}
-			else if (weaponType == WeaponType.AXE)
+			else if (type.equals("axe"))
 			{
 				return AssetManager.loadSprite("GUI/Axe");
 			}
-			else if (weaponType == WeaponType.BOW)
+			else if (type.equals("bow"))
 			{
 				return AssetManager.loadSprite("GUI/Bow");
 			}
-			else if (weaponType == WeaponType.WAND)
+			else if (type.equals("wand"))
 			{
 				return AssetManager.loadSprite("GUI/Wand");
+			}
+		}
+		else if (slot == EquipmentSlot.OFFWEAPON)
+		{
+			if (type.equals("shield"))
+			{
+				return AssetManager.loadSprite("GUI/Shield");
+			}
+			else if (type.equals("torch"))
+			{
+				return AssetManager.loadSprite("GUI/Torch");
 			}
 		}
 		else if (slot == EquipmentSlot.HEAD)
@@ -523,11 +427,150 @@ public class Item extends GameEventHandler
 		{
 			return AssetManager.loadSprite("GUI/Legs");
 		}
-		else if (itemType == ItemType.MATERIAL)
+		else if (category == ItemCategory.MATERIAL)
 		{
-			return materialType.icon;
+			if (type.equals("fabric"))
+			{
+				return AssetManager.loadSprite("GUI/Fabric");
+			}
+			else if (type.equals("hide"))
+			{
+				return AssetManager.loadSprite("GUI/Hide");
+			}
+			else if (type.equals("leather"))
+			{
+				return AssetManager.loadSprite("GUI/Leather");
+			}
+			else if (type.equals("ore"))
+			{
+				return AssetManager.loadSprite("GUI/Ore");
+			}
+			else if (type.equals("ingot"))
+			{
+				return AssetManager.loadSprite("GUI/Ingot");
+			}
+			else if (type.equals("log"))
+			{
+				return AssetManager.loadSprite("GUI/Log");
+			}
+			else if (type.equals("plank"))
+			{
+				return AssetManager.loadSprite("GUI/Plank");
+			}
+			else if (type.equals("bone"))
+			{
+				return AssetManager.loadSprite("GUI/Bone");
+			}
+			else if (type.equals("claw"))
+			{
+				return AssetManager.loadSprite("GUI/Claw");
+			}
+			else if (type.equals("fang"))
+			{
+				return AssetManager.loadSprite("GUI/Fang");
+			}
+			else if (type.equals("spine"))
+			{
+				return AssetManager.loadSprite("GUI/Spine");
+			}
+			else if (type.equals("scale"))
+			{
+				return AssetManager.loadSprite("GUI/Scale");
+			}
+			else if (type.equals("feather"))
+			{
+				return AssetManager.loadSprite("GUI/Feather");
+			}
+			else if (type.equals("shell"))
+			{
+				return AssetManager.loadSprite("GUI/Shell");
+			}
+			else if (type.equals("vial"))
+			{
+				return AssetManager.loadSprite("GUI/Vial");
+			}
+			else if (type.equals("sac"))
+			{
+				return AssetManager.loadSprite("GUI/Sac");
+			}
+			else if (type.equals("powder"))
+			{
+				return AssetManager.loadSprite("GUI/Powder");
+			}
+			else if (type.equals("crystal"))
+			{
+				return AssetManager.loadSprite("GUI/Crystal");
+			}
+			else if (type.equals("gem"))
+			{
+				return AssetManager.loadSprite("GUI/Gem");
+			}
 		}
 
 		return AssetManager.loadSprite("white");
+	}
+
+	//----------------------------------------------------------------------
+	public Sprite getWeaponHitEffect()
+	{
+		if (hitEffect != null)
+		{
+			return hitEffect;
+		}
+		
+		if (type.equals("sword"))
+		{
+			return AssetManager.loadSprite("slash/slash");
+		}
+		else if (type.equals("spear"))
+		{
+			return AssetManager.loadSprite("thrust/thrust");
+		}
+		else if (type.equals("axe"))
+		{
+			return AssetManager.loadSprite("slash/slash");
+		}
+		else if (type.equals("bow"))
+		{
+			return AssetManager.loadSprite("arrow");
+		}
+		else if (type.equals("wand"))
+		{
+			return AssetManager.loadSprite("bolt");
+		}
+		
+		return AssetManager.loadSprite("strike/strike");
+	}
+	
+	//----------------------------------------------------------------------
+	public SoundInstance getWeaponSound()
+	{
+		if (hitEffect != null && hitEffect.sound != null)
+		{
+			return hitEffect.sound;
+		}
+		
+		if (type.equals("sword"))
+		{
+			return new SoundInstance(AssetManager.loadSound("knife_stab"));
+		}
+		else if (type.equals("spear"))
+		{
+			return new SoundInstance(AssetManager.loadSound("knife_stab"));
+		}
+		else if (type.equals("axe"))
+		{
+			return new SoundInstance(AssetManager.loadSound("knife_stab"));
+		}
+		else if (type.equals("bow"))
+		{
+			return new SoundInstance(AssetManager.loadSound("arrow_approaching_and_hitting_target"));
+		}
+		else if (type.equals("wand"))
+		{
+			return new SoundInstance(AssetManager.loadSound("arrow_approaching_and_hitting_target"));
+		}
+		
+		return new SoundInstance(AssetManager.loadSound("knife_stab"));
 	}
 }

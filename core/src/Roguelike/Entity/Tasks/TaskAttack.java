@@ -1,29 +1,23 @@
 package Roguelike.Entity.Tasks;
 
-import java.util.Iterator;
+import Roguelike.Global;
+import Roguelike.Global.Direction;
+import Roguelike.Global.Passability;
+import Roguelike.Global.Statistic;
+import Roguelike.Entity.GameEntity;
+import Roguelike.Items.Item;
+import Roguelike.Items.Item.EquipmentSlot;
+import Roguelike.Sound.SoundInstance;
+import Roguelike.Sprite.BumpAnimation;
+import Roguelike.Sprite.MoveAnimation;
+import Roguelike.Sprite.MoveAnimation.MoveEquation;
+import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.SpriteEffect;
+import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
-
-import Roguelike.Global;
-import Roguelike.Entity.GameEntity;
-import Roguelike.Global.Direction;
-import Roguelike.Global.Passability;
-import Roguelike.Global.Statistic;
-import Roguelike.Items.Item;
-import Roguelike.Items.Item.EquipmentSlot;
-import Roguelike.Items.Item.WeaponType;
-import Roguelike.Pathfinding.ShadowCaster;
-import Roguelike.Sound.SoundInstance;
-import Roguelike.Sprite.BumpAnimation;
-import Roguelike.Sprite.MoveAnimation;
-import Roguelike.Sprite.Sprite;
-import Roguelike.Sprite.SpriteEffect;
-import Roguelike.Sprite.MoveAnimation.MoveEquation;
-import Roguelike.Tiles.GameTile;
-import Roguelike.Tiles.Point;
 
 public class TaskAttack extends AbstractTask
 {
@@ -109,11 +103,11 @@ public class TaskAttack extends AbstractTask
 		Sprite hitEffect = null;
 		if (weapon == null)
 		{
-			hitEffect = WeaponType.NONE.hitSprite;
+			hitEffect = entity.defaultHitEffect;
 		}
 		else
 		{
-			hitEffect = weapon.hitEffect != null ? weapon.hitEffect : weapon.weaponType.hitSprite;
+			hitEffect = weapon.getWeaponHitEffect();
 		}
 
 		// add hit effects
@@ -193,7 +187,7 @@ public class TaskAttack extends AbstractTask
 				entity.attack(bestTarget.environmentEntity, dir);
 			}
 
-			Sprite hitEffect = weapon.hitEffect != null ? weapon.hitEffect : weapon.weaponType.hitSprite;
+			Sprite hitEffect = weapon.getWeaponHitEffect();
 
 			Sprite sprite = hitEffect.copy();
 
@@ -219,21 +213,21 @@ public class TaskAttack extends AbstractTask
 
 	private Array<GameTile> getHitTiles(GameTile oldTile, GameTile newTile, GameEntity entity, Item weapon)
 	{		
-		WeaponType type = WeaponType.NONE;
+		String type = "none";
 		int range = 1;
 
 		if (weapon != null)
 		{
-			type = weapon.weaponType;
+			type = weapon.type;
 
 			range = weapon.getStatistic(entity.getBaseVariableMap(), Statistic.RANGE);
 			if (range == 0) 
 			{ 
-				if (type == WeaponType.SPEAR)
+				if (type.equals("spear"))
 				{
 					range = 2;
 				}
-				else if (type == WeaponType.BOW || type == WeaponType.WAND)
+				else if (type.equals("bow") || type.equals("wand"))
 				{
 					range = 4;
 				}
@@ -247,7 +241,7 @@ public class TaskAttack extends AbstractTask
 		Array<GameTile> hitTiles = new Array<GameTile>();
 		hitTiles.add(newTile);
 
-		if (type == WeaponType.AXE)
+		if (type.equals("axe"))
 		{
 			Direction anticlockwise = dir.getAnticlockwise();
 			Direction clockwise = dir.getClockwise();
@@ -262,7 +256,7 @@ public class TaskAttack extends AbstractTask
 					oldTile.y+clockwise.getY()
 					));
 		}
-		else if (type == WeaponType.SPEAR || type == WeaponType.BOW || type == WeaponType.WAND)
+		else if (type.equals("spear") || type.equals("bow") || type.equals("wand"))
 		{
 			for (int i = 2; i <= range; i++)
 			{			
@@ -314,7 +308,7 @@ public class TaskAttack extends AbstractTask
 		// Do attack
 		if (hitSomething)
 		{			
-			if (wep != null && (wep.weaponType == WeaponType.BOW || wep.weaponType == WeaponType.WAND))
+			if (wep != null && (wep.type.equals("bow") || wep.type.equals("wand")))
 			{
 				doRangedAttack(hitTiles, newTile, obj, wep);
 			}
