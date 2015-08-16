@@ -18,7 +18,8 @@
 			    <Name>Enchanted Scimitar</Name>
 			    <Description>A blade wreathed in cutting air magic.</Description>
 				<Slot>MainWeapon</Slot>
-				<WeaponType>Sword</WeaponType>
+				<Category>Weapon</Category>
+				<Type>Sword</Type>
 				<Events>
 					<Constant>
 						<Metal_Atk>70</Metal_Atk>

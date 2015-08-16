@@ -16,9 +16,9 @@
 	    
 	    <Wood DropChance="rnd(10)<1">
 	        
-	        <Type>Material</Type>
+	        <Category>Material</Category>
 		    <Name>Heartwood</Name>
-		    <MaterialType>Log</MaterialType>
+		    <Type>Log</Type>
 		    <Elements>
 		        <Metal>20</Metal>
 		        <Water>rnd(20)</Water>

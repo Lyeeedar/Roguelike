@@ -59,7 +59,8 @@
 			    <Name>Spriggan Wand</Name>
 			    <Description>A small rod with a glowing tip.</Description>
 				<Slot>MainWeapon</Slot>
-				<WeaponType>Wand</WeaponType>
+				<Category>Weapon</Category>
+				<Type>Wand</Type>
 				<Events>
 					<Constant>
 					    <Wood_Atk>35</Wood_Atk>

@@ -1,0 +1,15 @@
+<PassiveAbility>
+	<Name>Axe Focus</Name>
+	<Description>You do more damage with axes.</Description>
+	<Icon>
+		<Name>Abilities/Ravager/PowerOfM</Name>
+		<Colour><RGB>178,34,34</RGB></Colour>
+	</Icon>
+	
+	<Events>
+		<Constant ReliesOn="axe">
+		    <Atk>axe*Atk*0.2</Atk>
+		</Constant>
+	</Events>
+	
+</PassiveAbility>

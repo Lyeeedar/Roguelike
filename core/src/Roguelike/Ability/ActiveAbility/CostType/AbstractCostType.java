@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 public abstract class AbstractCostType
 {
 	public abstract boolean isCostAvailable(ActiveAbility aa);
+	public abstract String getCostString(ActiveAbility aa);
 	public abstract void spendCost(ActiveAbility aa);
 	public abstract void parse(Element xml);
 	public abstract AbstractCostType copy();
@@ -40,5 +41,6 @@ public abstract class AbstractCostType
 		ClassMap.put("STATUS", CostTypeStatus.class);
 		ClassMap.put("HEALTH", CostTypeHP.class);
 		ClassMap.put("CONDITION", CostTypeCondition.class);
+		ClassMap.put("EQUIPPED", CostTypeEquipped.class);
 	}
 }

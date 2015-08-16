@@ -1,0 +1,17 @@
+<PassiveAbility>
+	<Name>Critical Strikes</Name>
+	<Description>You have a chance to hit a weakpoint for extra damage.</Description>
+	<Icon>
+		<Name>Abilities/Swordmaster/CriticalStrikes</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<Events>
+		<OnDealDamage>
+		    <Damage Condition="attacker_sword && rnd(1) < 0.91" ReliesOn="sword">
+		        <Damage>Damage*2</Damage>
+		    </Damage>
+		</OnDealDamage>
+	</Events>
+	
+</PassiveAbility>

@@ -1,0 +1,15 @@
+<PassiveAbility>
+	<Name>Spear Focus</Name>
+	<Description>You do more damage with spears.</Description>
+	<Icon>
+		<Name>Abilities/Lancer/SpearFocus</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<Events>
+		<Constant ReliesOn="spear">
+		    <Atk>spear*Atk*0.2</Atk>
+		</Constant>
+	</Events>
+	
+</PassiveAbility>

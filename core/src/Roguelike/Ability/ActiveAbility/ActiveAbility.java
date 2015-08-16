@@ -8,6 +8,7 @@ import java.util.Iterator;
 import Roguelike.AssetManager;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
+import Roguelike.Global.Statistic;
 import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.AbilityType.AbstractAbilityType;
 import Roguelike.Ability.ActiveAbility.CostType.AbstractCostType;
@@ -53,7 +54,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	private int cone = 0;
 	private int aoe = 0;
 	private boolean excludeSelf = false;
-	public int range = 1;
+	private int range = 1;
 	private float screenshake = 0;
 			
 	public float cooldownAccumulator;
@@ -82,6 +83,15 @@ public class ActiveAbility implements IAbility, IGameObject
 	private Sprite useSprite;
 	
 	private boolean spentCost = false;
+	
+	//----------------------------------------------------------------------
+	public int getRange()
+	{
+		if (range > 0) { return range; }
+		Item item = caster.getInventory().getEquip(EquipmentSlot.MAINWEAPON);
+		if (item != null) { return item.getRange(caster); }
+		return 1;
+	}
 	
 	//----------------------------------------------------------------------
 	public boolean isAvailable()
@@ -184,6 +194,13 @@ public class ActiveAbility implements IAbility, IGameObject
 		descLabel.setWrap(true);
 		table.add(descLabel).expand().left().width(com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth(1, table));
 		table.row();
+		
+		for (AbstractCostType cost : costTypes)
+		{
+			String string = cost.getCostString(this);
+			table.add(new Label(string, skin)).expandX().left();
+			table.row();
+		}
 
 		return table;
 	}
@@ -207,7 +224,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	{		
 		Array<Point> validTargets = new Array<Point>();
 		
-		Array<Point> output = cache.getShadowCast(source.level.getGrid(), source.x, source.y, range);
+		Array<Point> output = cache.getShadowCast(source.level.getGrid(), source.x, source.y, getRange());
 		
 		for (Point tilePos : output)
 		{

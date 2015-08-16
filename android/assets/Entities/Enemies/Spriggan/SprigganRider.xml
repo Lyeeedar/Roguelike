@@ -18,7 +18,8 @@
 			    <Name>Spriggan Lance</Name>
 			    <Description>A short wooden lance. Its smooth surface makes it seem grown, not cut.</Description>
 				<Slot>MainWeapon</Slot>
-				<WeaponType>Spear</WeaponType>
+				<Category>Weapon</Category>
+				<Type>Spear</Type>
 				<Events>
 					<Constant>
 						<Wood_Atk>100</Wood_Atk>
@@ -28,9 +29,9 @@
 		</Equipment>
 		
 		<Item DropChance="rnd(6)<=1">
-		    <Type>Material</Type>
+		    <Category>Material</Category>
 		    <Name>Bat Wing</Name>
-		    <MaterialType>Leather</MaterialType>
+		    <Type>Leather</Type>
 		    <Elements>
 		        <Metal>rnd(20)</Metal>
 		        <Wood>50+rnd(30)</Wood>

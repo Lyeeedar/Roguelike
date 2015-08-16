@@ -1,0 +1,40 @@
+<ActiveAbility>
+
+	<Name>Take Aim</Name>
+	<Description>Take careful aim, tagetting your opponents weakpoints.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Abilities/Marksman/TakeAim</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<Cost>
+	    <Equipped>bow</Equipped>
+	</Cost>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Status>
+			<Attacker>
+				<Duration>10</Duration>
+				<Events>
+					<Constant>
+						<Pierce>50</Pierce>
+					</Constant>
+				</Events>
+			</Attacker>
+		</Status>
+	</Effect>
+	
+</ActiveAbility>

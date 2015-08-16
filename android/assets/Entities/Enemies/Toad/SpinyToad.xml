@@ -33,9 +33,9 @@
 	    
 	    <Hide DropChance="rnd(10)<1">
 	        
-	        <Type>Material</Type>
+	        <Category>Material</Category>
 		    <Name>Toad Skin</Name>
-		    <MaterialType>Leather</MaterialType>
+		    <Type>Leather</<Type>>
 		    <Elements>
 		        <Metal>20</Metal>
 		        <Wood>20+rnd(30)</Wood>
@@ -46,9 +46,9 @@
 	    
 	    <Spine DropChance="rnd(10)<1">
 	        
-	        <Type>Material</Type>
+	        <Category>Material</Category>
 		    <Name>Toad Spine</Name>
-		    <MaterialType>Spine</MaterialType>
+		    <<Type>>Spine</<Type>>
 		    <Elements>
 		        <Wood>20+rnd(10)</Wood>
 		        <Water>70+rnd(50)</Water>

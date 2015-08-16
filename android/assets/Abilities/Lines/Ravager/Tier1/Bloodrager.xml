@@ -1,5 +1,5 @@
 <PassiveAbility>
-	<Name>Power of S</Name>
+	<Name>Bloodrager</Name>
 	<Description>Dealing damage fills you with sadistic joy, sending you into a blood fury.</Description>
 	<Icon>
 		<Name>Abilities/Ravager/PowerOfS</Name>
@@ -8,7 +8,7 @@
 	
 	<Events>
 		<OnDealDamage>
-			<Status Condition="rnd(1) < 0.3">
+			<Status Condition="axe && rnd(1) < 0.3" ReliesOn="axe">
 				<Attacker>Bloodlust</Attacker>
 			</Status>
 		</OnDealDamage>

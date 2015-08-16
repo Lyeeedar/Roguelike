@@ -1,6 +1,6 @@
 <ActiveAbility>
 
-	<Name>Furious Strike</Name>
+	<Name>Crushing Blow</Name>
 	<Description>Channel all your bloodlust into a single attack.</Description>
 	
 	<Cooldown>10</Cooldown>
@@ -18,8 +18,10 @@
 	
 	<Cost>
 	    <Status ReliesOn="Bloodlust">
-	        <Bloodlust>Bloodlust</Bloodlust>
+	        <Status>Bloodlust</Status>
+	        <Stacks>Bloodlust</Stacks>
 	    </Status>
+	    <Equipped>axe</Equipped>
 	</Cost>
 	
 	<Targeting>
@@ -35,11 +37,7 @@
 	
 	<Effect>
 		<Damage ReliesOn="Bloodlust">
-			<Metal_Atk>METAL_ATK*(1+0.25*BLOODLUST)</Metal_Atk>
-			<Wood_Atk>WOOD_ATK*(1+0.25*BLOODLUST)</Wood_Atk>
-			<Air_Atk>AIR_ATK*(1+0.25*BLOODLUST)</Air_Atk>
-			<Water_Atk>WATER_ATK*(1+0.25*BLOODLUST)</Water_Atk>
-			<Fire_Atk>FIRE_ATK*(1+0.25*BLOODLUST)</Fire_Atk>
+			<Atk>ATK*(1+0.25*BLOODLUST)</Atk>
 		</Damage>
 	</Effect>
 	

@@ -24,7 +24,7 @@ public class EntityStatusRenderer
 	{		
 		BitmapFont font = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 8);
 		
-		float val = (float)entity.HP / (float)entity.getStatistic(Statistic.MAXHP);
+		float val = (float)entity.HP / (float)entity.getVariable(Statistic.MAXHP);
 		float barheight = height * heightScale;
 		drawHpBar(val, batch, x, y, width, height, heightScale);
 		

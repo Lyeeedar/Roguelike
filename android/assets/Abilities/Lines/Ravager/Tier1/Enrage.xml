@@ -18,6 +18,10 @@
 	    <Sound><Name>roar</Name></Sound>
 	</HitSprite>
 	
+	<Cost>
+	    <Equipped>axe</Equipped>
+	</Cost>
+	
 	<Targeting>
 		<Self></Self>
 	</Targeting>

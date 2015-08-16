@@ -1,0 +1,32 @@
+<AbilityLine>
+	<Name>Swordmaster</Name>
+	<Description>Wield a blade with deadly proficiency.</Description>
+	<Icon>
+		<Name>Abilities/Swordmaster/SwordFocus</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	<Tiers>
+		<Tier>
+			<ActiveAbility>
+				<Name>Swordmaster/Tier1/Charge</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<PassiveAbility>
+				<Name>Swordmaster/Tier1/CriticalStrikes</Name>
+				<Cost>100</Cost>
+			</PassiveAbility>
+			<ActiveAbility>
+				<Name>Swordmaster/Tier1/Flurry</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<ActiveAbility>
+				<Name>Swordmaster/Tier1/WeakpointStrike</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<PassiveAbility>
+				<Name>Swordmaster/Tier1/SwordFocus</Name>
+				<Cost>100</Cost>
+			</PassiveAbility>
+		</Tier>
+	</Tiers>
+</AbilityLine>

@@ -18,7 +18,8 @@
 			    <Name>Centaur Bow</Name>
 			    <Description>A short bow.</Description>
 				<Slot>MainWeapon</Slot>
-				<WeaponType>Bow</WeaponType>
+				<Category>Weapon</Category>
+				<Type>Bow</Type>
 				<Events>
 					<Constant>
 					    <Wood_Atk>30</Wood_Atk>

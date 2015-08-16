@@ -1,0 +1,50 @@
+<ActiveAbility>
+
+	<Name>Flurry</Name>
+	<Description>Attack with a furious flurry of strikes, making your attacks faster but lowering your guard.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Abilities/Swordmaster/Flurry</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<HitSprite>
+	    <Name>AbilitySprites/Shout/Shout</Name>
+	    <UpdateRate>0.1</UpdateRate>
+	    <Colour><RGB>178,34,34</RGB></Colour>
+	    <Sound><Name>roar</Name></Sound>
+	</HitSprite>
+	
+	<Cost>
+	    <Equipped>sword</Equipped>
+	</Cost>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Status>
+			<Attacker>
+			    <Duration>10</Duration>
+			    <Events>
+			        <Constant>
+			            <Def>-Def*0.3</Def>
+			        </Constant>
+			        <OnAttack>
+			            <Cost>cost*0.5</Cost>
+			        </OnAttack>
+			    </Events>
+			</Attacker>
+		</Status>
+	</Effect>
+	
+</ActiveAbility>

@@ -14,21 +14,18 @@ import exp4j.Helpers.EquationHelper;
 
 public class CostTypeStatus extends AbstractCostType
 {
-	private Array<StatusEquation> equations = new Array<StatusEquation>();
+	private String status;
+	private String stacksEqn;
 	private String[] reliesOn;
 	
 	@Override
 	public void parse(Element xml)
 	{	
 		reliesOn = xml.getAttribute("ReliesOn", "").split(",");		
-		for (int i = 0; i < xml.getChildCount(); i++)
-		{
-			Element el = xml.getChild(i);
-			equations.add(new StatusEquation(el.getName(), el.getText().toLowerCase()));
-		}
+		status = xml.get("Status").toLowerCase();
+		stacksEqn = xml.get("Stacks", "1").toLowerCase();
 	}
 	
-
 	@Override
 	public boolean isCostAvailable(ActiveAbility aa)
 	{
@@ -44,35 +41,32 @@ public class CostTypeStatus extends AbstractCostType
 		
 		Array<StatusEffectStack> stacks = aa.caster.stackStatusEffects();
 		
-		for (StatusEquation sEqn : equations)
+		ExpressionBuilder expB = EquationHelper.createEquationBuilder(stacksEqn);
+		EquationHelper.setVariableNames(expB, variableMap, "");
+							
+		Expression exp = EquationHelper.tryBuild(expB);
+		if (exp == null)
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder(sEqn.eqn);
-			EquationHelper.setVariableNames(expB, variableMap, "");
-								
-			Expression exp = EquationHelper.tryBuild(expB);
-			if (exp == null)
+			return false;
+		}
+		
+		EquationHelper.setVariableValues(exp, variableMap, "");
+		
+		int count = (int)exp.evaluate();
+		
+		StatusEffectStack stack = null;
+		for (StatusEffectStack s : stacks)
+		{
+			if (s.effect.name.equals(status))
 			{
-				return false;
+				stack = s;
+				break;
 			}
-			
-			EquationHelper.setVariableValues(exp, variableMap, "");
-			
-			int count = (int)exp.evaluate();
-			
-			StatusEffectStack stack = null;
-			for (StatusEffectStack s : stacks)
-			{
-				if (s.effect.name.equals(sEqn.status))
-				{
-					stack = s;
-					break;
-				}
-			}
-			
-			if (stack == null || stack.count < count)
-			{
-				return false;
-			}
+		}
+		
+		if (stack == null || stack.count < count)
+		{
+			return false;
 		}
 		
 		return true;
@@ -91,47 +85,87 @@ public class CostTypeStatus extends AbstractCostType
 			}
 		}
 				
-		for (StatusEquation sEqn : equations)
+		ExpressionBuilder expB = EquationHelper.createEquationBuilder(stacksEqn);
+		EquationHelper.setVariableNames(expB, variableMap, "");
+							
+		Expression exp = EquationHelper.tryBuild(expB);
+		if (exp == null)
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder(sEqn.eqn);
-			EquationHelper.setVariableNames(expB, variableMap, "");
-								
-			Expression exp = EquationHelper.tryBuild(expB);
-			if (exp == null)
-			{
-				return;
-			}
-			
-			EquationHelper.setVariableValues(exp, variableMap, "");
-			
-			int count = (int)exp.evaluate();
-			
-			for (int i = 0; i < count; i++)
-			{
-				aa.caster.removeStatusEffect(sEqn.status);
-			}
+			return;
+		}
+		
+		EquationHelper.setVariableValues(exp, variableMap, "");
+		
+		int count = (int)exp.evaluate();
+		
+		for (int i = 0; i < count; i++)
+		{
+			aa.caster.removeStatusEffect(status);
 		}
 	}
-	
+		
 	@Override
 	public AbstractCostType copy()
 	{
 		CostTypeStatus consume = new CostTypeStatus();
-		consume.equations = equations;
+		consume.status = status;
+		consume.stacksEqn = stacksEqn;
 		consume.reliesOn = reliesOn;
 		
 		return consume;
 	}
-	
-	private static class StatusEquation
-	{
-		public String status;
-		public String eqn;
+
+	@Override
+	public String getCostString(ActiveAbility aa)
+	{		
+		HashMap<String, Integer> variableMap = aa.variableMap;
 		
-		public StatusEquation(String status, String eqn)
+		for (String name : reliesOn)
 		{
-			this.status = status;
-			this.eqn = eqn;
+			if (!variableMap.containsKey(name.toLowerCase()))
+			{
+				variableMap.put(name.toLowerCase(), 0);
+			}
 		}
+		
+		Array<StatusEffectStack> stacks = aa.caster.stackStatusEffects();
+		
+		ExpressionBuilder expB = EquationHelper.createEquationBuilder(stacksEqn);
+		EquationHelper.setVariableNames(expB, variableMap, "");
+							
+		Expression exp = EquationHelper.tryBuild(expB);
+		if (exp == null)
+		{
+			return "[RED]ERROR: Parsing equation '"+stacksEqn+"'";
+		}
+		
+		EquationHelper.setVariableValues(exp, variableMap, "");
+		
+		int count = (int)exp.evaluate();
+		
+		StatusEffectStack stack = null;
+		for (StatusEffectStack s : stacks)
+		{
+			if (s.effect.name.equals(status))
+			{
+				stack = s;
+				break;
+			}
+		}
+		
+		String line = "";
+		
+		if (stack == null || stack.count < count)
+		{
+			line += "[RED]";
+		}
+		else
+		{
+			line += "[GREEN]";
+		}
+		
+		line += "Costs "+count+" "+status;
+				
+		return line;
 	}
 }

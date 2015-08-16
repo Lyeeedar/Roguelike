@@ -1,0 +1,35 @@
+<ActiveAbility>
+
+	<Name>Charge</Name>
+	<Description>Charge at your foe.</Description>
+	
+	<Cooldown>15</Cooldown>
+	<Range>4</Range>
+	
+	<Icon>
+		<Name>Abilities/Swordmaster/Charge</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<Cost>
+	    <Equipped>sword</Equipped>
+	</Cost>
+	
+	<Targeting>
+		<Entity Type="Enemy"></<Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite></Smite>
+	</Movement>
+	
+	<Effect>
+		<Teleport>
+		    <Style>Charge</Style>
+		</Teleport>
+		<Damage>
+		    <Atk>Atk*1.3</Atk>
+		</Damage>
+	</Effect>
+	
+</ActiveAbility>

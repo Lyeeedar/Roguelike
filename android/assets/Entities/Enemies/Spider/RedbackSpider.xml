@@ -17,7 +17,8 @@
 	    <Equipment>
 	        
 	        <Fangs Drop="false">
-	            <Slot>MainWeapon</Slot>            
+	            <Slot>MainWeapon</Slot>   
+	            <Type>Sword</Type>        
 	            <Events>	                
 	                <OnDealDamage>	                    
 	                    <Status>	                        

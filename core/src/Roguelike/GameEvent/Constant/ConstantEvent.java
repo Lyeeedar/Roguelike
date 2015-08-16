@@ -21,11 +21,11 @@ import exp4j.Operators.BooleanOperators;
 public class ConstantEvent
 {
 	public EnumMap<Statistic, String> equations = new EnumMap<Statistic, String>(Statistic.class);
-	private String[] reliesOn = new String[0];
+	private String[] reliesOn;
 	
 	public void parse(Element xml)
 	{
-		reliesOn = xml.getAttribute("ReliesOn", "").split(",");
+		reliesOn = xml.getAttribute("ReliesOn", "").toLowerCase().split(",");
 		
 		for (int i = 0; i < xml.getChildCount(); i++)
 		{
@@ -88,11 +88,14 @@ public class ConstantEvent
 			return 0;
 		}
 		
-		for (String name : reliesOn)
+		if (reliesOn != null)
 		{
-			if (!variableMap.containsKey(name.toLowerCase()))
+			for (String name : reliesOn)
 			{
-				variableMap.put(name.toLowerCase(), 0);
+				if (!variableMap.containsKey(name))
+				{
+					variableMap.put(name, 0);
+				}
 			}
 		}
 		

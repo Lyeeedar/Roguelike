@@ -49,6 +49,16 @@ public class EffectTypeDamage extends AbstractEffectType
 					equations.put(el.Attack, expanded);
 				}
 			}
+			else if (sEl.getName().toUpperCase().equals("PIERCE"))
+			{
+				for (Tier1Element el : Tier1Element.values())
+				{
+					String expanded = sEl.getText().toLowerCase();
+					expanded = expanded.replaceAll("(?<!_)pierce", el.Pierce.toString().toLowerCase());
+					
+					equations.put(el.Pierce, expanded);
+				}
+			}
 			else
 			{
 				Statistic stat = Statistic.valueOf(sEl.getName().toUpperCase());

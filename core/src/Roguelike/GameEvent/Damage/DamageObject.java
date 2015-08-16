@@ -66,14 +66,14 @@ public class DamageObject
 		
 		for (String name : reliesOn)
 		{
-			String atkName = "attacker_" + name.toLowerCase();
-			if (!attackerVariableMap.containsKey(atkName))
+			String atkName = "attacker_" + name;
+			if (!attackerVariableMap.containsKey(name))
 			{
 				expB.variable(atkName);
 			}
 			
-			String defName = "defender_" + name.toLowerCase();
-			if (!defenderVariableMap.containsKey(defName))
+			String defName = "defender_" + name;
+			if (!defenderVariableMap.containsKey(name))
 			{
 				expB.variable(defName);
 			}
@@ -88,14 +88,14 @@ public class DamageObject
 		
 		for (String name : reliesOn)
 		{
-			String atkName = "attacker_" + name.toLowerCase();
-			if (!attackerVariableMap.containsKey(atkName))
+			String atkName = "attacker_" + name;
+			if (!attackerVariableMap.containsKey(name))
 			{
 				exp.setVariable(atkName, 0);
 			}
 			
-			String defName = "defender_" + name.toLowerCase();
-			if (!defenderVariableMap.containsKey(defName))
+			String defName = "defender_" + name;
+			if (!defenderVariableMap.containsKey(name))
 			{
 				exp.setVariable(defName, 0);
 			}

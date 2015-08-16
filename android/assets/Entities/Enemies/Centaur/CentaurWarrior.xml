@@ -18,7 +18,8 @@
 			    <Name>Centaur Scimitar</Name>
 			    <Description>A sharp scimitar.</Description>
 				<Slot>MainWeapon</Slot>
-				<WeaponType>Sword</WeaponType>
+				<Category>Weapon</Category>
+				<Type>Sword</Type>
 				<Events>
 					<Constant>
 						<Metal_Atk>110</Metal_Atk>

@@ -22,6 +22,7 @@ import com.sun.xml.internal.ws.util.StringUtils;
 
 import exp4j.Helpers.EquationHelper;
 import Roguelike.AssetManager;
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Constant.ConstantEvent;
@@ -96,6 +97,29 @@ public class Item extends GameEventHandler
 	public String dropChanceEqn;
 	public EnumMap<Tier1Element, Integer> elementalStats = Tier1Element.getElementBlock();
 
+	//----------------------------------------------------------------------
+	public int getRange(Entity entity)
+	{
+		int range = getStatistic(entity.getBaseVariableMap(), Statistic.RANGE);
+		if (range == 0) 
+		{ 
+			if (type.equals("spear"))
+			{
+				range = 2;
+			}
+			else if (type.equals("bow") || type.equals("wand"))
+			{
+				range = 4;
+			}
+			else
+			{
+				range = 1;
+			}
+		}
+		
+		return range;
+	}
+	
 	//----------------------------------------------------------------------
 	public boolean shouldDrop()
 	{
@@ -520,26 +544,26 @@ public class Item extends GameEventHandler
 		
 		if (type.equals("sword"))
 		{
-			return AssetManager.loadSprite("slash/slash");
+			return AssetManager.loadSprite("slash/slash", 0.1f);
 		}
 		else if (type.equals("spear"))
 		{
-			return AssetManager.loadSprite("thrust/thrust");
+			return AssetManager.loadSprite("thrust/thrust", 0.1f);
 		}
 		else if (type.equals("axe"))
 		{
-			return AssetManager.loadSprite("slash/slash");
+			return AssetManager.loadSprite("slash/slash", 0.1f);
 		}
 		else if (type.equals("bow"))
 		{
-			return AssetManager.loadSprite("arrow");
+			return AssetManager.loadSprite("arrow", 0.1f);
 		}
 		else if (type.equals("wand"))
 		{
-			return AssetManager.loadSprite("bolt");
+			return AssetManager.loadSprite("bolt", 0.1f);
 		}
 		
-		return AssetManager.loadSprite("strike/strike");
+		return AssetManager.loadSprite("strike/strike", 0.1f);
 	}
 	
 	//----------------------------------------------------------------------

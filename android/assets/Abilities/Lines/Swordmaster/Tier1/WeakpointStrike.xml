@@ -1,0 +1,35 @@
+<ActiveAbility>
+
+	<Name>Weakpoint Strike</Name>
+	<Description>Strike your opponent through a gap in their armour.</Description>
+	
+	<Cooldown>10</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Abilities/Swordmaster/WeakpointStrike</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<Cost>
+	    <Equipped>sword</Equipped>
+	</Cost>
+
+	<Targeting>
+		<Entity Type="Enemy">
+		</Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Damage>
+		    <Atk>Atk</Atk>
+			<Pierce>50</Pierce>
+		</Damage>
+	</Effect>
+	
+</ActiveAbility>

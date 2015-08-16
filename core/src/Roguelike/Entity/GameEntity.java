@@ -263,12 +263,6 @@ public class GameEntity extends Entity
 	}
 
 	//----------------------------------------------------------------------
-	public int getVariable(Statistic stat)
-	{
-		return variableMap.get(stat.toString().toLowerCase());
-	}
-	
-	//----------------------------------------------------------------------
 	public int getStatistic(Statistic stat)
 	{
 		int val = statistics.get(stat) + inventory.getStatistic(Statistic.emptyMap, stat);

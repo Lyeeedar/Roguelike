@@ -74,7 +74,7 @@ public class DamageEvent extends AbstractOnDamageEvent
 	@Override
 	public void parse(Element xml)
 	{
-		reliesOn = xml.getAttribute("ReliesOn", "").split(",");
+		reliesOn = xml.getAttribute("ReliesOn", "").toLowerCase().split(",");
 		condition = xml.getAttribute("Condition", null); if (condition != null) { condition = condition.toLowerCase(); }
 		
 		for (int i = 0; i < xml.getChildCount(); i++)

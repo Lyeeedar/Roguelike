@@ -34,9 +34,9 @@
 	    
 	    <Hide DropChance="rnd(10)<1">
 	        
-	        <Type>Material</Type>
+	        <Category>Material</Category>
 		    <Name>Toad Skin</Name>
-		    <MaterialType>Leather</MaterialType>
+		    <Type>Leather</Type>
 		    <Elements>
 		        <Metal>20</Metal>
 		        <Wood>20+rnd(30)</Wood>

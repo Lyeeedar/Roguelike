@@ -5,20 +5,19 @@
 	
 	<Cooldown>4</Cooldown>
 	<Range>1</Range>
+	<Cone>1</Cone>
 	
 	<Icon>
 		<Name>Abilities/Ravager/PowerStrike</Name>
 		<Colour><RGB>178,34,34</RGB></Colour>
 	</Icon>
 	
-	<Type>
-		<Harmful>
-		</Harmful>
-	</Type>
-	
+	<Cost>
+	    <Equipped>axe</Equipped>
+	</Cost>
+
 	<Targeting>
-		<Entity>
-			<NotSelf></NotSelf>
+		<Entity Type="Enemy">
 		</Entity>
 	</Targeting>
 	

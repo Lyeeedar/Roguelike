@@ -802,10 +802,9 @@ public class Global
 				float defense = damObj.defender.statistics.get(el.Defense);
 				float hardiness = 1.0f - (float)damObj.defender.statistics.get(el.Hardiness) / 100.0f;
 
-				float maxReduction = attack - attack * hardiness;
+				float maxReduction = attack * hardiness;
 
-				float reduction = defense - pierce;
-				accumulatedReduction += Math.min(reduction, maxReduction);
+				accumulatedReduction += Math.max(0, Math.min(defense, maxReduction) - pierce);
 			}
 			
 			HashMap<String, Integer> defenderVariableMap = damObj.defender.getBaseVariableMap();
@@ -814,10 +813,9 @@ public class Global
 				float defense = handler.getStatistic(defenderVariableMap, el.Defense);
 				float hardiness = 1.0f - (float)handler.getStatistic(defenderVariableMap, el.Hardiness) / 100.0f;
 
-				float maxReduction = attack - attack * hardiness;
+				float maxReduction = attack * hardiness;
 
-				float reduction = defense - pierce;
-				accumulatedReduction += Math.min(reduction, maxReduction);
+				accumulatedReduction += Math.max(0, Math.min(defense, maxReduction) - pierce);
 			}
 			
 			attack -= accumulatedReduction;

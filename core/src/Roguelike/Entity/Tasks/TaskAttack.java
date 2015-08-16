@@ -219,23 +219,7 @@ public class TaskAttack extends AbstractTask
 		if (weapon != null)
 		{
 			type = weapon.type;
-
-			range = weapon.getStatistic(entity.getBaseVariableMap(), Statistic.RANGE);
-			if (range == 0) 
-			{ 
-				if (type.equals("spear"))
-				{
-					range = 2;
-				}
-				else if (type.equals("bow") || type.equals("wand"))
-				{
-					range = 4;
-				}
-				else
-				{
-					range = 1;
-				}
-			}
+			range = weapon.getRange(entity);
 		}
 
 		Array<GameTile> hitTiles = new Array<GameTile>();

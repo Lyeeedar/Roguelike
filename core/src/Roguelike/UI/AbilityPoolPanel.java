@@ -312,6 +312,13 @@ public class AbilityPoolPanel extends Table
 		public Table getToolTipForData(Object data)
 		{
 			Ability a = (Ability)data;
+			
+			if (a.ability instanceof ActiveAbility)
+			{
+				((ActiveAbility)a.ability).caster = Global.CurrentLevel.player;
+				((ActiveAbility)a.ability).variableMap = Global.CurrentLevel.player.getVariableMap();
+			}
+			
 			Table table = a.ability.createTable(skin);
 			
 			if (!a.unlocked)

@@ -9,7 +9,7 @@
 	
 	<Events>
 		<OnTask>
-		    <Cost>cost*1.1</Cost>
+		    <Cost>cost*1.2</Cost>
 		</OnTask>
 	</Events>
 	

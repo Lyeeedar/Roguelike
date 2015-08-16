@@ -154,7 +154,7 @@ public class AbilityPool
 	{
 		AbilityPool pool = new AbilityPool();
 		
-		pool.loadAbilityLine("Ravager/Ravager");
+		//pool.loadAbilityLine("Ravager/Ravager");
 		pool.loadAbilityLine("Pyromaniac/Pyromaniac");
 		pool.loadAbilityLine("Life/Life");
 		pool.loadAbilityLine("Magus/Magus");
@@ -163,6 +163,8 @@ public class AbilityPool
 		pool.loadAbilityLine("Protection/Protection");
 		pool.loadAbilityLine("WinterMagus/WinterMagus");
 		pool.loadAbilityLine("Electron/Electron");
+		pool.loadAbilityLine("Marksman/Marksman");
+		pool.loadAbilityLine("Swordmaster/Swordmaster");
 		
 		return pool;
 	}

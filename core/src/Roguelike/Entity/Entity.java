@@ -67,6 +67,12 @@ public abstract class Entity
 	}
 
 	//----------------------------------------------------------------------
+	public int getVariable(Statistic stat)
+	{
+		return variableMap.get(stat.toString().toLowerCase());
+	}
+	
+	//----------------------------------------------------------------------
 	private EnumMap<Statistic, Integer> getStatistics()
 	{
 		EnumMap<Statistic, Integer> newMap = new EnumMap<Statistic, Integer>(Statistic.class);
@@ -111,12 +117,7 @@ public abstract class Entity
 	protected void calculateVariableMap()
 	{
 		variableMap.clear();
-
-		for (Statistic s : Statistic.values())
-		{
-			variableMap.put(s.toString().toLowerCase(), getStatistic(s));
-		}
-
+		
 		variableMap.put("hp", HP);
 		
 		for (EquipmentSlot slot : EquipmentSlot.values())
@@ -132,7 +133,12 @@ public abstract class Entity
 		{
 			variableMap.put(s.effect.name.toLowerCase(), s.count);
 		}
-	}
+		
+		for (Statistic s : Statistic.values())
+		{
+			variableMap.put(s.toString().toLowerCase(), getStatistic(s));
+		}
+	}	
 	
 	//----------------------------------------------------------------------
 	protected void calculateBaseVariableMap()
@@ -151,7 +157,7 @@ public abstract class Entity
 			Item equipped = inventory.getEquip(slot);
 			if (equipped != null && equipped.type != null)
 			{
-				variableMap.put(equipped.type, 1);
+				baseVariableMap.put(equipped.type, 1);
 			}
 		}
 

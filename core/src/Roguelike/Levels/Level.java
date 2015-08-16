@@ -160,7 +160,7 @@ public class Level
 		acol.mul(acol.a);
 		acol.a = 1;
 		
-		int playerViewRange = player.getStatistic(Statistic.RANGE);
+		int playerViewRange = player.getVariable(Statistic.RANGE);
 		for (int x = 0; x < width; x++)
 		{
 			for (int y = 0; y < height; y++)
