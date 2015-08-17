@@ -1,0 +1,45 @@
+<ActiveAbility>
+
+	<Name>Magic Missile</Name>
+	<Description>A bolt of pure elemental energy shoots at a nearby foe.</Description>
+	
+	<Cooldown>7</Cooldown>
+	<Range>5</Range>
+	
+	<Icon>
+		<Name>Abilities/Wandwoad/MagicMissile</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<HitSprite>
+		<Name>firebolt/firebolt</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Sound>
+		    <Name>fire_torch_pass_by_large_heavy_with_crackle_2</Name>
+		</Sound>
+	</HitSprite>
+	
+	<Cost>
+	    <Equipped>wand</Equipped>
+	</Cost>
+	
+	<MovementSprite>
+		<Name>bolt</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</MovementSprite>
+	
+	<Targeting>
+		<Entity></Entity>
+	</Targeting>
+	
+	<Movement>
+		<Smite />
+	</Movement>
+	
+	<Effect>
+		<Damage>
+			<Atk>20</Atk>
+		</Damage>
+	</Effect>
+	
+</ActiveAbility>

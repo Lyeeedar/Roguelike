@@ -1,0 +1,16 @@
+<PassiveAbility>
+	<Name>Shield Focus</Name>
+	<Description>Shields protect you more.</Description>
+	<Icon>
+		<Name>Abilities/Bulwark/ShieldFocus</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<Events>
+		<Constant ReliesOn="shield">
+		    <Def>shield*Def*0.2</Def>
+		    <Hardiness>shield*75</Hardiness>
+		</Constant>
+	</Events>
+	
+</PassiveAbility>

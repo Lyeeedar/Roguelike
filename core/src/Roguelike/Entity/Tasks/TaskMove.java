@@ -2,8 +2,8 @@ package Roguelike.Entity.Tasks;
 
 import Roguelike.Global.Direction;
 import Roguelike.Entity.GameEntity;
-import Roguelike.Sprite.MoveAnimation;
-import Roguelike.Sprite.MoveAnimation.MoveEquation;
+import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
+import Roguelike.Sprite.SpriteAnimation.MoveAnimation.MoveEquation;
 import Roguelike.Tiles.GameTile;
 
 public class TaskMove extends AbstractTask

@@ -20,6 +20,11 @@
 	<MovementSprite>
 		<Name>AbilitySprites/LightningBoltMove/LightningBolt</Name>
 		<UpdateRate>0.1</UpdateRate>
+		<Animation>
+		    <Stretch>
+		        <Equation>ReverseExtend</Equation>
+		    </Stretch>
+		</Animation>
 	</MovementSprite>
 	
 	<Targeting>
@@ -27,10 +32,7 @@
 	</Targeting>
 	
 	<Movement>
-		<Smite>
-		    <AnimationType>Stretch</AnimationType>
-		    <AnimationEquation>ReverseExtend</AnimationEquation>
-		</Smite>
+		<Smite />
 	</Movement>
 	
 	<Effect>

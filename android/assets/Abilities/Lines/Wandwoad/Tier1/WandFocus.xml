@@ -1,0 +1,15 @@
+<PassiveAbility>
+	<Name>Wand Focus</Name>
+	<Description>You do more damage with wands.</Description>
+	<Icon>
+		<Name>Abilities/Wandwoad/WandFocus</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<Events>
+		<Constant ReliesOn="wand">
+		    <Atk>wand*Atk*0.2</Atk>
+		</Constant>
+	</Events>
+	
+</PassiveAbility>

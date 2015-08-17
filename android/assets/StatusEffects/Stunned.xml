@@ -1,0 +1,21 @@
+<StatusEffect>
+	<Name>Stunned</Name>
+	<Description>You are stunned, dropping your guard and stopping your movements.</Description>
+	<Duration>2</Duration>
+	
+	<Icon>
+		<Name>Skills/SpikeTrap</Name>
+	</Icon>
+	
+	<Events>
+		<OnTask>
+		    <Cancel />
+		</OnTask>
+		<OnReceiveDamage>
+		    <Damage>
+		        <Damage>Damage*1.5</Damage>
+		    </Damage>
+		</OnReceiveDamage>
+	</Events>
+	
+</StatusEffect>

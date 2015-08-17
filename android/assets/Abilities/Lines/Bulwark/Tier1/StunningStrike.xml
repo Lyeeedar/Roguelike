@@ -1,0 +1,36 @@
+<ActiveAbility>
+
+	<Name>Stunning Strike</Name>
+	<Description>Strike a foe with your shield, briefly stunning them.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Abilities/Bulwark/StunningStrike</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<Cost>
+	    <Equipped>shield</Equipped>
+	</Cost>
+	
+	<Targeting>
+		<Entity Type="Enemy" />
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+		<Status>
+			<Defender>Stunned</Defender>
+		</Status>
+		<Damage>
+		    <Atk>Atk</Atk>
+		</Damage>
+	</Effect>
+	
+</ActiveAbility>

@@ -1,0 +1,32 @@
+<AbilityLine>
+	<Name>Bulwark</Name>
+	<Description>The art of the shield.</Description>
+	<Icon>
+		<Name>Abilities/Bulwark/DefensiveStance</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	<Tiers>
+		<Tier>
+			<ActiveAbility>
+				<Name>Bulwark/Tier1/Block</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<ActiveAbility>
+				<Name>Bulwark/Tier1/ClearingBlow</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<PassiveAbility>
+				<Name>Bulwark/Tier1/DefensiveStance</Name>
+				<Cost>100</Cost>
+			</PassiveAbility>
+			<ActiveAbility>
+				<Name>Bulwark/Tier1/StunningStrike</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<PassiveAbility>
+				<Name>Bulwark/Tier1/ShieldFocus</Name>
+				<Cost>100</Cost>
+			</PassiveAbility>
+		</Tier>
+	</Tiers>
+</AbilityLine>

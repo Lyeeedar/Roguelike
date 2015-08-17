@@ -1,0 +1,48 @@
+<ActiveAbility>
+
+	<Name>Block</Name>
+	<Description>Block the next few attacks</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+	
+	<Icon>
+		<Name>Abilities/Bulwark/Block</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<Cost>
+	    <Equipped>shield</Equipped>
+	</Cost>
+	
+	<HitSprite>
+		<Name>AbilitySprites/Aegis/Aegis</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Colour><RGB>210,247,247</RGB></Colour>
+	</HitSprite>
+	
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+	
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+	
+	<Effect>
+	    <Status>
+	        <Attacker>
+	            <Duration>2</Duration>
+	            <Events>
+	                <OnReceiveDamage>
+	                    <Damage>
+							<Damage>-Damage</Damage>
+						</Damage>
+	                </OnReceiveDamage>
+	            </Events>
+	        </Attacker>
+	    </Status>
+	</Effect>
+	
+</ActiveAbility>

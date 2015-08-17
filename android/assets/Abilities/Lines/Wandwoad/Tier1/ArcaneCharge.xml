@@ -1,0 +1,26 @@
+<PassiveAbility>
+	<Name>Arcane Charge</Name>
+	<Description>Replace waiting with meditating, granting you a temporary bonus to damage.</Description>
+	<Icon>
+		<Name>Abilities/Wandwoad/ArcaneCharge</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<Events>
+		<OnWait>
+			<Status Condition="wand && focus < 5" ReliesOn="Focus,wand">
+				<Status>
+				    <Name>Focus</Name>
+				    <Description>Your mind is focused, giving you a damage buff.</Description>
+				    <Duration>10</Duration>
+				    <Events>
+				        <Constant>
+				            <Atk>Atk*0.06</Atk>
+				        </Constant>
+				    </Events>
+				</Status>
+			</Status>
+		</OnWait>
+	</Events>
+	
+</PassiveAbility>

@@ -1,0 +1,32 @@
+<AbilityLine>
+	<Name>Wandwoad</Name>
+	<Description>Fully control the energies of a combat wand.</Description>
+	<Icon>
+		<Name>Abilities/Wandwoad/WandFocus</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	<Tiers>
+		<Tier>
+			<PassiveAbility>
+				<Name>Wandwoad/Tier1/ArcaneCharge</Name>
+				<Cost>100</Cost>
+			</PassiveAbility>
+			<ActiveAbility>
+				<Name>Wandwoad/Tier1/FastCast</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<ActiveAbility>
+				<Name>Wandwoad/Tier1/MagicMissile</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<ActiveAbility>
+				<Name>Wandwoad/Tier1/TelekineticBlast</Name>
+				<Cost>100</Cost>
+			</ActiveAbility>
+			<PassiveAbility>
+				<Name>Wandwoad/Tier1/WandFocus</Name>
+				<Cost>100</Cost>
+			</PassiveAbility>
+		</Tier>
+	</Tiers>
+</AbilityLine>

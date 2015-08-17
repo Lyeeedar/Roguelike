@@ -90,7 +90,7 @@ public class LoadingScreen implements Screen
 		batch.begin();
 		
 		batch.draw(background, 0, 0, Global.Resolution[0], Global.Resolution[1]);
-		batch.draw(white, 0, Global.Resolution[1]/2-2, Global.Resolution[0]*((float)percent/100.0f), Global.Resolution[1]/2+2);
+		batch.draw(white, 0, Global.Resolution[1]/2-20, Global.Resolution[0]*((float)percent/100.0f), 40);
 		normalFont.draw(batch, generationString, Global.Resolution[0]/2, Global.Resolution[1]/2);
 		
 		batch.end();

@@ -1,0 +1,40 @@
+<ActiveAbility>
+
+	<Name>Clearing Blow</Name>
+	<Description>Swing your shield in an arc, sending the enemies before you flying away.</Description>
+	
+	<Cooldown>20</Cooldown>
+	<Range>4</Range>
+	<Cone>1</Cone>
+	
+	<Icon>
+		<Name>Abilities/Bulwark/ClearingBlow</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+	
+	<Cost>
+	    <Equipped>shield</Equipped>
+	</Cost>
+	
+	<Targeting>
+		<Direction/>
+	</Targeting>
+	
+	<Movement>
+		<Smite></Smite>
+	</Movement>
+	
+	<Effect>
+		<Teleport>
+		    <Move>Target</Move>
+		    <Direction>Away</Direction>
+		    <Type>Cone</Type>
+		    <Style>Leap</Style>
+		    <Distance>3</Distance>
+		</Teleport>
+		<Damage>
+		    <Atk>Atk</Atk>
+		</Damage>
+	</Effect>
+	
+</ActiveAbility>
