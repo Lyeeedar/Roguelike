@@ -15,7 +15,7 @@
 	</Slots>
 	
 	<ItemTemplate>	
-		<Slot>MainWeapon</Slot>
+		<Slot>MainWeapon,OffWeapon</Slot>
 		<Category>Weapon</Category>
 		<Type>Bow</Type>	
 	</ItemTemplate>

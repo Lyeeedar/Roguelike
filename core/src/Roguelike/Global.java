@@ -649,7 +649,7 @@ public class Global
 	{
 		AllLevels.clear();
 
-		SaveLevel firstLevel = new SaveLevel( "Sewer", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
+		SaveLevel firstLevel = new SaveLevel( "Forest", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
 		AllLevels.put( firstLevel.UID, firstLevel );
 
 		GameEntity player = GameEntity.load( "player" );
@@ -701,24 +701,24 @@ public class Global
 			level.player = player;
 
 			outer:
-			for ( int x = 0; x < level.width; x++ )
-			{
-				for ( int y = 0; y < level.height; y++ )
+				for ( int x = 0; x < level.width; x++ )
 				{
-					GameTile tile = level.getGameTile( x, y );
-					if ( tile.metaValue != null && tile.metaValue.equals( travelKey ) )
+					for ( int y = 0; y < level.height; y++ )
 					{
-						tile.addGameEntity( player );
-						break outer;
-					}
+						GameTile tile = level.getGameTile( x, y );
+						if ( tile.metaValue != null && tile.metaValue.equals( travelKey ) )
+						{
+							tile.addGameEntity( player );
+							break outer;
+						}
 
-						if ( tile.environmentEntity != null && tile.environmentEntity.data.containsKey( travelKey ) )
-					{
-						tile.addGameEntity( player );
-						break outer;
+					if ( tile.environmentEntity != null && tile.environmentEntity.data.containsKey( travelKey ) )
+						{
+							tile.addGameEntity( player );
+							break outer;
+						}
 					}
 				}
-			}
 		}
 
 		CurrentLevel.updateVisibleTiles();

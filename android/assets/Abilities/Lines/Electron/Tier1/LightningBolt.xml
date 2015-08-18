@@ -22,6 +22,11 @@
 	<MovementSprite>
 		<Name>AbilitySprites/LightningBoltMove/LightningBolt</Name>
 		<UpdateRate>0.1</UpdateRate>
+		<Animation>
+		    <Stretch>
+		        <Equation>ReverseExtend</Equation>
+		    </Stretch>
+		</Animation>
 	</MovementSprite>
 	
 	<Targeting>

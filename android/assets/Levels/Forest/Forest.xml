@@ -21,7 +21,21 @@
 	<CorridorStyle>
 	    <PathStyle>Wandering</PathStyle>
 	    <Width>2</Width>
+	    
+	     <CentralConstant>
+			<TileData>
+				<Passable>true</Passable>
+				<Opaque>false</Opaque>
+				<Sprite>
+					<Name>dc-dngn/floor/dirt0</Name>
+				</Sprite>
+			</TileData>
+	    </CentralConstant>
 	</CorridorStyle>
+	
+	<Preprocessor>
+	    <Random></Random>
+	</Preprocessor>
 	
 	<Factions>
 		<Major>

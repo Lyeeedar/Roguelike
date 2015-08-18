@@ -36,9 +36,11 @@
 			<Attacker>
 			    <Duration>10</Duration>
 			    <Events>
-			        <Constant>
-			            <Def>-Def*0.3</Def>
-			        </Constant>
+			        <OnReceiveDamage>
+			            <Damage>
+			                <Damage>Damage*1.2</Damage>
+			            </Damage>
+			        </OnReceiveDamage>
 			        <OnAttack>
 			            <Cost>cost*0.5</Cost>
 			        </OnAttack>

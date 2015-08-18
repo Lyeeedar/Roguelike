@@ -17,6 +17,8 @@ public class StretchAnimation extends AbstractSpriteAnimation
 	private float finalScale;
 	private StretchEquation eqn;
 	private float trueDuration;
+	private float animSpeed = 0.2f;
+	private float padding = 0.5f;
 
 	private float time;
 	private int[] offset = { 0, 0 };
@@ -79,8 +81,8 @@ public class StretchAnimation extends AbstractSpriteAnimation
 	@Override
 	public void set( float duration, int[] diff )
 	{
-		duration = duration * 0.2f;
-		this.duration = duration + 0.5f;
+		duration = duration * animSpeed;
+		this.duration = duration + padding;
 		this.trueDuration = duration;
 		this.diff = diff;
 		this.time = 0;
@@ -106,5 +108,7 @@ public class StretchAnimation extends AbstractSpriteAnimation
 	public void parse( Element xml )
 	{
 		eqn = StretchEquation.valueOf( xml.get( "Equation", "Extend" ).toUpperCase() );
+		animSpeed = xml.getFloat( "AnimationSpeed", 0.2f );
+		padding = xml.getFloat( "Padding", 0.5f );
 	}
 }

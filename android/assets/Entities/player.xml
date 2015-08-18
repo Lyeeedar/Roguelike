@@ -35,7 +35,7 @@
 		        
 		        <Slot>MainWeapon</Slot>
 				<Category>Weapon</Category>
-				<Type>Bow</Type>
+				<Type>Sword</Type>
 			
 				<Events>
 					<Constant>
