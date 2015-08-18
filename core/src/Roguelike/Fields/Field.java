@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import Roguelike.AssetManager;
 import Roguelike.Global.Passability;
+import Roguelike.Entity.Entity;
 import Roguelike.Fields.DurationStyle.AbstractDurationStyle;
 import Roguelike.Fields.FieldInteractionTypes.AbstractFieldInteractionType;
 import Roguelike.Fields.OnDeathEffect.AbstractOnDeathEffect;
@@ -24,223 +25,206 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class Field implements IGameObject
 {
- /**
-  * match based on tags, not name (hot, wet, explosive, poisonous, gas)
-  * interation: propogate, spawn, die, none
-  * on urn, damage, heal, status, spawn
-  * duration, permanent, time, single
-  * modify passability: allow, restrict
-  * 
-  * water
-  * spead fast flow
-  * fires turns it to steam
-  * single stacks disappear after time
-  * add swim passability
-  * 
-  * steam
-  * blocks vision
-  * dissipates after short time
-  * 
-  * smoke
-  * same as steam
-  * 
-  * fire
-  * spreads to neighbouring entities
-  * does damage
-  * disppears after nbot doing damage for some turns
-  * when dies naturally turn into smoke
-  * 
-  * electricity
-  * disappears after a few turns
-  * discharges into entity, high dam
-  * annihaltes with water, discharging into every connected water tile
-  * 
-  * ice
-  * eveny movement gets doubled
-  * fire melts it, turning it into water
-  * 
-  * lava
-  * flow slow
-  * spawns fire around it
-  * does high dam
-  * 
-  * others
-  * poison
-  * bog/cobweb
-  * thuorns/razorcrystals
-  * explosive gas
-  */
+	/**
+	 * match based on tags, not name (hot, wet, explosive, poisonous, gas)
+	 * interation: propogate, spawn, die, none on urn, damage, heal, status,
+	 * spawn duration, permanent, time, single modify passability: allow,
+	 * restrict
+	 *
+	 * water spead fast flow fires turns it to steam single stacks disappear
+	 * after time add swim passability
+	 *
+	 * steam blocks vision dissipates after short time
+	 *
+	 * smoke same as steam
+	 *
+	 * fire spreads to neighbouring entities does damage disppears after nbot
+	 * doing damage for some turns when dies naturally turn into smoke
+	 *
+	 * electricity disappears after a few turns discharges into entity, high dam
+	 * annihaltes with water, discharging into every connected water tile
+	 *
+	 * ice eveny movement gets doubled fire melts it, turning it into water
+	 *
+	 * lava flow slow spawns fire around it does high dam
+	 *
+	 * others poison bog/cobweb thuorns/razorcrystals explosive gas
+	 */
 	public enum FieldLayer
 	{
-		GROUND,
-		AIR
+		GROUND, AIR
 	}
-	
+
 	public String fileName;
 	public String fieldName;
-	
+
 	public String[] tags = new String[0];
-	
+
 	public GameTile tile;
 	public Light light;
-	
+
 	public Sprite sprite;
 	public FieldLayer layer = FieldLayer.GROUND;
 	public int stacks = 1;
-	
+
 	public AbstractDurationStyle durationStyle;
 	public AbstractSpreadStyle spreadStyle;
 	public Array<AbstractOnTurnEffect> onTurnEffects = new Array<AbstractOnTurnEffect>();
 	public HashMap<String, AbstractFieldInteractionType> fieldInteractions = new HashMap<String, AbstractFieldInteractionType>();
 	public Array<AbstractOnDeathEffect> onDeathEffects = new Array<AbstractOnDeathEffect>();
-	
+
 	public HashMap<String, Object> data = new HashMap<String, Object>();
-	
-	public EnumSet<Passability> allowPassability = EnumSet.noneOf(Passability.class);
-	public EnumSet<Passability> restrictPassability = EnumSet.noneOf(Passability.class);
-	
-	public void update(float cost)
+
+	public EnumSet<Passability> allowPassability = EnumSet.noneOf( Passability.class );
+	public EnumSet<Passability> restrictPassability = EnumSet.noneOf( Passability.class );
+
+	public void update( float cost )
 	{
-		if (tile == null) { return; } // we are dead
-		
-		float onTurnAccumulator = (Float)getData("OnTurnAccumulator", 0.0f);
+		if ( tile == null ) { return; } // we are dead
+
+		float onTurnAccumulator = (Float) getData( "OnTurnAccumulator", 0.0f );
 		onTurnAccumulator += cost;
-		
-		while (onTurnAccumulator > 1)
+
+		while ( onTurnAccumulator > 1 )
 		{
 			onTurnAccumulator -= 1;
-			
-			for (AbstractOnTurnEffect effect : onTurnEffects)
+
+			if ( tile.environmentEntity != null )
 			{
-				effect.process(this);
+				processOnTurnEffectsForEntity( tile.environmentEntity, 1 );
 			}
 		}
-		
-		setData("OnTurnAccumulator", onTurnAccumulator);
-		
-		durationStyle.update(cost, this);
-		
-		if (stacks > 0)
+
+		setData( "OnTurnAccumulator", onTurnAccumulator );
+
+		durationStyle.update( cost, this );
+
+		if ( stacks > 0 )
 		{
-			spreadStyle.update(cost, this);
+			spreadStyle.update( cost, this );
 		}
 	}
-	
+
+	public void processOnTurnEffectsForEntity( Entity entity, float cost )
+	{
+		for ( AbstractOnTurnEffect effect : onTurnEffects )
+		{
+			effect.process( this, entity, cost );
+		}
+	}
+
 	public void onNaturalDeath()
 	{
-		for (AbstractOnDeathEffect effect : onDeathEffects)
+		for ( AbstractOnDeathEffect effect : onDeathEffects )
 		{
-			effect.process(this, tile);
+			effect.process( this, tile );
 		}
 	}
-	
-	public void trySpawnInTile(GameTile newTile, int stacks)
+
+	public void trySpawnInTile( GameTile newTile, int stacks )
 	{
 		Field newField = copy();
 		newField.stacks = stacks;
-				
-		EnumMap<FieldLayer, Field> fieldStore = new EnumMap<FieldLayer, Field>(FieldLayer.class);
-		
-		for (FieldLayer layer : FieldLayer.values())
+
+		EnumMap<FieldLayer, Field> fieldStore = new EnumMap<FieldLayer, Field>( FieldLayer.class );
+
+		for ( FieldLayer layer : FieldLayer.values() )
 		{
-			Field tileField = newTile.fields.get(layer);
-			
-			if (tileField != null)
+			Field tileField = newTile.fields.get( layer );
+
+			if ( tileField != null )
 			{
 				// if same field, increase stacks
-				if (tileField.fieldName.equals(fieldName))
+				if ( tileField.fieldName.equals( fieldName ) )
 				{
 					tileField.stacks++;
-					fieldStore.put(tileField.layer, tileField);
+					fieldStore.put( tileField.layer, tileField );
 				}
 				// if different field, interact
 				else
 				{
-					//First check for interaction on self
+					// First check for interaction on self
 					Field srcField = newField;
 					Field dstField = tileField;
-					AbstractFieldInteractionType interaction = getInteraction(srcField.fieldInteractions, dstField);
-					if (interaction == null) 
+					AbstractFieldInteractionType interaction = getInteraction( srcField.fieldInteractions, dstField );
+					if ( interaction == null )
 					{
 						srcField = tileField;
 						dstField = newField;
-						interaction = getInteraction(srcField.fieldInteractions, dstField);
+						interaction = getInteraction( srcField.fieldInteractions, dstField );
 					}
-					
-					if (interaction != null)
+
+					if ( interaction != null )
 					{
-						if (!fieldStore.containsKey(layer))
+						if ( !fieldStore.containsKey( layer ) )
 						{
-							fieldStore.put(layer, null);
+							fieldStore.put( layer, null );
 						}
-						
-						Field field = interaction.process(srcField, dstField);
-						fieldStore.put(field.layer, field);
-					}					
+
+						Field field = interaction.process( srcField, dstField );
+						fieldStore.put( field.layer, field );
+					}
 					else
 					{
-						fieldStore.put(tileField.layer, tileField);
+						fieldStore.put( tileField.layer, tileField );
 					}
 				}
 			}
 		}
-		
-		if (!fieldStore.containsKey(newField.layer))
+
+		if ( !fieldStore.containsKey( newField.layer ) )
 		{
-			Field tileField = newTile.fields.get(newField.layer);
-			if (tileField != null && tileField.stacks > 1)
+			Field tileField = newTile.fields.get( newField.layer );
+			if ( tileField != null && tileField.stacks > 1 )
 			{
-				fieldStore.put(newField.layer, tileField);
+				fieldStore.put( newField.layer, tileField );
 			}
 			else
 			{
-				fieldStore.put(newField.layer, newField);
+				fieldStore.put( newField.layer, newField );
 			}
 		}
-		
-		for (FieldLayer layer : FieldLayer.values())
+
+		for ( FieldLayer layer : FieldLayer.values() )
 		{
-			if (fieldStore.containsKey(layer))
+			if ( fieldStore.containsKey( layer ) )
 			{
-				Field field = fieldStore.get(layer);
-				
-				if (field == null)
+				Field field = fieldStore.get( layer );
+
+				if ( field == null )
 				{
-					newTile.clearField(layer);
+					newTile.clearField( layer );
 				}
 				else
 				{
-					newTile.addField(field);
+					newTile.addField( field );
 				}
 			}
 		}
 	}
-	
-	private AbstractFieldInteractionType getInteraction(HashMap<String, AbstractFieldInteractionType> interactions, Field field)
+
+	private AbstractFieldInteractionType getInteraction( HashMap<String, AbstractFieldInteractionType> interactions, Field field )
 	{
-		if (interactions.containsKey(field.fieldName)) { return interactions.get(field.fieldName); }
-		for (String tag : field.tags)
+		if ( interactions.containsKey( field.fieldName ) ) { return interactions.get( field.fieldName ); }
+		for ( String tag : field.tags )
 		{
-			if (interactions.containsKey(tag)) { return interactions.get(tag); }
+			if ( interactions.containsKey( tag ) ) { return interactions.get( tag ); }
 		}
 		return null;
 	}
-	
-	public Object getData(String key, Object fallback)
+
+	public Object getData( String key, Object fallback )
 	{
-		if (data.containsKey(key))
-		{
-			return data.get(key);
-		}
-		
+		if ( data.containsKey( key ) ) { return data.get( key ); }
+
 		return fallback;
 	}
-	
-	public void setData(String key, Object val)
+
+	public void setData( String key, Object val )
 	{
-		data.put(key, val);
+		data.put( key, val );
 	}
-	
+
 	public Field copy()
 	{
 		Field field = new Field();
@@ -251,157 +235,157 @@ public class Field implements IGameObject
 		field.layer = layer;
 		field.stacks = stacks;
 		field.light = light != null ? light.copyNoFlag() : null;
-		
+
 		field.durationStyle = durationStyle;
 		field.spreadStyle = spreadStyle;
 		field.onTurnEffects = onTurnEffects;
 		field.fieldInteractions = fieldInteractions;
 		field.onDeathEffects = onDeathEffects;
-		
+
 		field.allowPassability = allowPassability;
 		field.restrictPassability = restrictPassability;
-		
+
 		return field;
 	}
-	
-	//----------------------------------------------------------------------
-	protected void internalLoad(String fileName)
+
+	// ----------------------------------------------------------------------
+	protected void internalLoad( String fileName )
 	{
 		XmlReader xmlReader = new XmlReader();
 		Element xml = null;
 
 		try
 		{
-			xml = xmlReader.parse(Gdx.files.internal("Fields/"+fileName+".xml"));
-		} 
-		catch (IOException e)
+			xml = xmlReader.parse( Gdx.files.internal( "Fields/" + fileName + ".xml" ) );
+		}
+		catch ( IOException e )
 		{
 			e.printStackTrace();
 		}
 
-		String extendsElement = xml.getAttribute("Extends", null);
-		if (extendsElement != null)
+		String extendsElement = xml.getAttribute( "Extends", null );
+		if ( extendsElement != null )
 		{
-			String[] split = extendsElement.split(",");
-			for (String file : split)
+			String[] split = extendsElement.split( "," );
+			for ( String file : split )
 			{
-				internalLoad(file);
+				internalLoad( file );
 			}
 		}
-		
-		String tagsElement = xml.get("Tags", null);
-		if (tagsElement != null)
+
+		String tagsElement = xml.get( "Tags", null );
+		if ( tagsElement != null )
 		{
 			Array<String> tagArr = new Array<String>();
-			if (tags != null) { tagArr.addAll(tags); }
-			
-			String[] split = tagsElement.toLowerCase().split(",");
-			tagArr.addAll(split);
-			
-			tags = tagArr.toArray(String.class);
-		}
-		
-		fieldName = xml.get("FieldName", fieldName);
-		
-		sprite = xml.getChildByName("Sprite") != null ? AssetManager.loadSprite(xml.getChildByName("Sprite")) : sprite;
+			if ( tags != null )
+			{
+				tagArr.addAll( tags );
+			}
 
-		Element lightElement = xml.getChildByName("Light");
-		if (lightElement != null)
-		{
-			light = Roguelike.Lights.Light.load(lightElement);
+			String[] split = tagsElement.toLowerCase().split( "," );
+			tagArr.addAll( split );
+
+			tags = tagArr.toArray( String.class );
 		}
-		
-		layer = xml.get("Layer", null) != null ? FieldLayer.valueOf(xml.get("Layer").toUpperCase()) : layer;
-		
-		Element durationElement = xml.getChildByName("Duration");
-		if (durationElement != null)
+
+		fieldName = xml.get( "FieldName", fieldName );
+
+		sprite = xml.getChildByName( "Sprite" ) != null ? AssetManager.loadSprite( xml.getChildByName( "Sprite" ) ) : sprite;
+
+		Element lightElement = xml.getChildByName( "Light" );
+		if ( lightElement != null )
 		{
-			durationStyle = AbstractDurationStyle.load(durationElement.getChild(0));
+			light = Roguelike.Lights.Light.load( lightElement );
 		}
-		
-		Element spreadElement = xml.getChildByName("Spread");
-		if (spreadElement != null)
+
+		layer = xml.get( "Layer", null ) != null ? FieldLayer.valueOf( xml.get( "Layer" ).toUpperCase() ) : layer;
+
+		Element durationElement = xml.getChildByName( "Duration" );
+		if ( durationElement != null )
 		{
-			spreadStyle = AbstractSpreadStyle.load(spreadElement.getChild(0));
+			durationStyle = AbstractDurationStyle.load( durationElement.getChild( 0 ) );
 		}
-		
-		Element onTurnElement = xml.getChildByName("OnTurn");
-		if (onTurnElement != null)
+
+		Element spreadElement = xml.getChildByName( "Spread" );
+		if ( spreadElement != null )
 		{
-			for (int i = 0; i < onTurnElement.getChildCount(); i++)
+			spreadStyle = AbstractSpreadStyle.load( spreadElement.getChild( 0 ) );
+		}
+
+		Element onTurnElement = xml.getChildByName( "OnTurn" );
+		if ( onTurnElement != null )
+		{
+			for ( int i = 0; i < onTurnElement.getChildCount(); i++ )
 			{
-				Element effectElement = onTurnElement.getChild(i);
-				AbstractOnTurnEffect effect = AbstractOnTurnEffect.load(effectElement);
-				onTurnEffects.add(effect);
+				Element effectElement = onTurnElement.getChild( i );
+				AbstractOnTurnEffect effect = AbstractOnTurnEffect.load( effectElement );
+				onTurnEffects.add( effect );
 			}
 		}
-		
-		Element onDeathElement = xml.getChildByName("OnDeath");
-		if (onDeathElement != null)
+
+		Element onDeathElement = xml.getChildByName( "OnDeath" );
+		if ( onDeathElement != null )
 		{
-			for (int i = 0; i < onDeathElement.getChildCount(); i++)
+			for ( int i = 0; i < onDeathElement.getChildCount(); i++ )
 			{
-				Element deathElement = onDeathElement.getChild(i);
-				AbstractOnDeathEffect death = AbstractOnDeathEffect.load(deathElement);
-				onDeathEffects.add(death);
+				Element deathElement = onDeathElement.getChild( i );
+				AbstractOnDeathEffect death = AbstractOnDeathEffect.load( deathElement );
+				onDeathEffects.add( death );
 			}
 		}
-		
-		Element interactionsElement = xml.getChildByName("Interactions");
-		if (interactionsElement != null)
+
+		Element interactionsElement = xml.getChildByName( "Interactions" );
+		if ( interactionsElement != null )
 		{
-			for (int i = 0; i < interactionsElement.getChildCount(); i++)
+			for ( int i = 0; i < interactionsElement.getChildCount(); i++ )
 			{
-				Element interactionEl = interactionsElement.getChild(i);
-				
+				Element interactionEl = interactionsElement.getChild( i );
+
 				String key = interactionEl.getName();
-				Element content = interactionEl.getChild(0);
-				
-				fieldInteractions.put(key.toLowerCase(), AbstractFieldInteractionType.load(content));
+				Element content = interactionEl.getChild( 0 );
+
+				fieldInteractions.put( key.toLowerCase(), AbstractFieldInteractionType.load( content ) );
 			}
 		}
-		
-		String allowString = xml.get("Allow", null);
-		if (allowString != null)
+
+		String allowString = xml.get( "Allow", null );
+		if ( allowString != null )
 		{
-			EnumSet<Passability> pass = Passability.parse(allowString);
-			allowPassability.addAll(pass);
+			EnumSet<Passability> pass = Passability.parse( allowString );
+			allowPassability.addAll( pass );
 		}
-		
-		String restrictString = xml.get("Restrict", null);
-		if (restrictString != null)
+
+		String restrictString = xml.get( "Restrict", null );
+		if ( restrictString != null )
 		{
-			EnumSet<Passability> pass = Passability.parse(restrictString);
-			restrictPassability.addAll(pass);
+			EnumSet<Passability> pass = Passability.parse( restrictString );
+			restrictPassability.addAll( pass );
 		}
 	}
 
-	//----------------------------------------------------------------------
-	public static Field load(String name)
+	// ----------------------------------------------------------------------
+	public static Field load( String name )
 	{
 		Field f = new Field();
 		f.fileName = name;
 
-		f.internalLoad(name);
+		f.internalLoad( name );
 
 		return f;
 	}
 
-	
 	@Override
 	public String getName()
 	{
 		return fieldName;
 	}
 
-	
 	@Override
 	public String getDescription()
 	{
 		return "";
 	}
 
-	
 	@Override
 	public Sprite getIcon()
 	{

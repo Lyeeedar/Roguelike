@@ -18,6 +18,7 @@ import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeRay;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeSmite;
 import Roguelike.Ability.ActiveAbility.TargetingType.AbstractTargetingType;
 import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeTile;
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.IGameObject;
 import Roguelike.Items.Item;
@@ -179,7 +180,7 @@ public class ActiveAbility implements IAbility, IGameObject
 
 	// ----------------------------------------------------------------------
 	@Override
-	public Table createTable( Skin skin )
+	public Table createTable( Skin skin, Entity entity )
 	{
 		Table table = new Table();
 
@@ -193,8 +194,24 @@ public class ActiveAbility implements IAbility, IGameObject
 
 		for ( AbstractCostType cost : costTypes )
 		{
-			String string = cost.getCostString( this );
-			table.add( new Label( string, skin ) ).expandX().left();
+			String string = cost.toString( this );
+			Label label = new Label( string, skin );
+			label.setWrap( true );
+
+			table.add( label ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
+			table.row();
+		}
+
+		table.add( new Label( "", skin ) );
+		table.row();
+
+		for ( AbstractEffectType effect : effectTypes )
+		{
+			String string = effect.toString( this );
+			Label label = new Label( string, skin );
+			label.setWrap( true );
+
+			table.add( label ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) ).padBottom( 5 );
 			table.row();
 		}
 

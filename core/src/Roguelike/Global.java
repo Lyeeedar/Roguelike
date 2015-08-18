@@ -25,6 +25,7 @@ import Roguelike.UI.MessageStack.Line;
 import Roguelike.UI.MessageStack.Message;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
@@ -374,10 +375,6 @@ public class Global
 		// Basic stats
 		MAXHP,
 		RANGE,
-		SPEED,
-		WEIGHT,
-		CARRYLIMIT,
-		COOLDOWN,
 
 		// Passability
 		WALK,
@@ -549,6 +546,8 @@ public class Global
 			Pierce = Statistic.valueOf( toString() + "_PIERCE" );
 			Defense = Statistic.valueOf( toString() + "_DEF" );
 			Hardiness = Statistic.valueOf( toString() + "_HARDINESS" );
+
+			Colors.put( this.toString(), this.Colour );
 		}
 
 		public static EnumMap<Tier1Element, Integer> getElementBlock()
@@ -829,5 +828,11 @@ public class Global
 		{
 			GameScreen.Instance.addConsoleMessage( line );
 		}
+	}
+
+	// ----------------------------------------------------------------------
+	public static String capitalizeString( String s )
+	{
+		return s.substring( 0, 1 ).toUpperCase() + s.substring( 1 ).toLowerCase();
 	}
 }

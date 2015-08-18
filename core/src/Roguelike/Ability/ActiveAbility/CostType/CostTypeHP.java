@@ -81,7 +81,7 @@ public class CostTypeHP extends AbstractCostType
 
 	
 	@Override
-	public String getCostString(ActiveAbility aa)
+	public String toString(ActiveAbility aa)
 	{
 		int raw = calculateHPCost(aa);
 		boolean valid = raw < aa.caster.HP;

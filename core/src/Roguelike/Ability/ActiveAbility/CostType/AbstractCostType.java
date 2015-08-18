@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 public abstract class AbstractCostType
 {
 	public abstract boolean isCostAvailable(ActiveAbility aa);
-	public abstract String getCostString(ActiveAbility aa);
+	public abstract String toString(ActiveAbility aa);
 	public abstract void spendCost(ActiveAbility aa);
 	public abstract void parse(Element xml);
 	public abstract AbstractCostType copy();

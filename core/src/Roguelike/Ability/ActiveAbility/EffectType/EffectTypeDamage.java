@@ -6,138 +6,142 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
-import Roguelike.GameEvent.GameEventHandler;
-import Roguelike.Items.Item;
-import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
-import Roguelike.Lights.Light;
-import Roguelike.Sprite.Sprite;
-import Roguelike.Sprite.SpriteEffect;
-import Roguelike.StatusEffect.StatusEffect;
+import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.Items.Item;
 import Roguelike.Tiles.GameTile;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-import exp4j.Functions.RandomFunction;
 import exp4j.Helpers.EquationHelper;
-import exp4j.Operators.BooleanOperators;
 
 public class EffectTypeDamage extends AbstractEffectType
 {
-	private EnumMap<Statistic, String> equations = new EnumMap<Statistic, String>(Statistic.class);
+	private EnumMap<Statistic, String> equations = new EnumMap<Statistic, String>( Statistic.class );
 	private String[] reliesOn;
-	
+
 	@Override
-	public void parse(Element xml)
-	{			
-		reliesOn = xml.getAttribute("ReliesOn", "").split(",");
-		
-		for (int i = 0; i < xml.getChildCount(); i++)
+	public void parse( Element xml )
+	{
+		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
+
+		for ( int i = 0; i < xml.getChildCount(); i++ )
 		{
-			Element sEl = xml.getChild(i);
-			
-			if (sEl.getName().toUpperCase().equals("ATK"))
+			Element sEl = xml.getChild( i );
+
+			if ( sEl.getName().toUpperCase().equals( "ATK" ) )
 			{
-				for (Tier1Element el : Tier1Element.values())
+				for ( Tier1Element el : Tier1Element.values() )
 				{
 					String expanded = sEl.getText().toLowerCase();
-					expanded = expanded.replaceAll("(?<!_)atk", el.Attack.toString().toLowerCase());
-					
-					equations.put(el.Attack, expanded);
+					expanded = expanded.replaceAll( "(?<!_)atk", el.Attack.toString().toLowerCase() );
+
+					equations.put( el.Attack, expanded );
 				}
 			}
-			else if (sEl.getName().toUpperCase().equals("PIERCE"))
+			else if ( sEl.getName().toUpperCase().equals( "PIERCE" ) )
 			{
-				for (Tier1Element el : Tier1Element.values())
+				for ( Tier1Element el : Tier1Element.values() )
 				{
 					String expanded = sEl.getText().toLowerCase();
-					expanded = expanded.replaceAll("(?<!_)pierce", el.Pierce.toString().toLowerCase());
-					
-					equations.put(el.Pierce, expanded);
+					expanded = expanded.replaceAll( "(?<!_)pierce", el.Pierce.toString().toLowerCase() );
+
+					equations.put( el.Pierce, expanded );
 				}
 			}
 			else
 			{
-				Statistic stat = Statistic.valueOf(sEl.getName().toUpperCase());
-				equations.put(stat, sEl.getText().toLowerCase());
+				Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
+				equations.put( stat, sEl.getText().toLowerCase() );
 			}
 		}
 	}
 
 	@Override
-	public void update(ActiveAbility aa, float time, GameTile tile)
-	{		
-		if (tile.entity != null)
+	public void update( ActiveAbility aa, float time, GameTile tile )
+	{
+		if ( tile.entity != null || tile.environmentEntity != null )
 		{
-			applyToEntity(tile.entity, aa);
-		}
-		
-		if (tile.environmentEntity != null)
-		{
-			applyToEntity(tile.environmentEntity, aa);
+			HashMap<String, Integer> variableMap = calculateVariableMap( aa );
+
+			if ( tile.entity != null )
+			{
+				applyToEntity( tile.entity, aa, variableMap );
+			}
+
+			if ( tile.environmentEntity != null )
+			{
+				applyToEntity( tile.environmentEntity, aa, variableMap );
+			}
 		}
 	}
 
-	private void applyToEntity(Entity target, ActiveAbility aa)
+	private void applyToEntity( Entity target, ActiveAbility aa, HashMap<String, Integer> variableMap )
+	{
+		Global.calculateDamage( aa.caster, target, variableMap, true );
+	}
+
+	private HashMap<String, Integer> calculateVariableMap( ActiveAbility aa )
 	{
 		HashMap<String, Integer> variableMap = aa.caster.getBaseVariableMap();
-		
-		for (String name : reliesOn)
+
+		for ( String name : reliesOn )
 		{
-			if (!variableMap.containsKey(name.toLowerCase()))
+			if ( !variableMap.containsKey( name.toLowerCase() ) )
 			{
-				variableMap.put(name.toLowerCase(), 0);
+				variableMap.put( name.toLowerCase(), 0 );
 			}
 		}
-		
+
 		EnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
-		
-		for (Statistic stat : Statistic.values())
+
+		for ( Statistic stat : Statistic.values() )
 		{
-			if (equations.containsKey(stat))
+			if ( equations.containsKey( stat ) )
 			{
-				String eqn = equations.get(stat);
-				
-				ExpressionBuilder expB = EquationHelper.createEquationBuilder(eqn);
-				EquationHelper.setVariableNames(expB, variableMap, "");
-									
-				Expression exp = EquationHelper.tryBuild(expB);
-				if (exp == null)
+				String eqn = equations.get( stat );
+
+				ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
+				EquationHelper.setVariableNames( expB, variableMap, "" );
+
+				Expression exp = EquationHelper.tryBuild( expB );
+				if ( exp == null )
 				{
 					continue;
 				}
-				
-				EquationHelper.setVariableValues(exp, variableMap, "");
-									
-				int raw = (int)exp.evaluate();
-				
-				stats.put(stat, raw);
+
+				EquationHelper.setVariableValues( exp, variableMap, "" );
+
+				int raw = (int) exp.evaluate();
+
+				stats.put( stat, raw );
 			}
 		}
-		
-		variableMap = Statistic.statsBlockToVariableBlock(stats);
-		
-		for (GameEventHandler handler : aa.caster.getAllHandlers())
+
+		variableMap = Statistic.statsBlockToVariableBlock( stats );
+
+		for ( GameEventHandler handler : aa.caster.getAllHandlers() )
 		{
-			if (handler instanceof Item)
+			if ( handler instanceof Item )
 			{
 				continue;
 			}
-			
-			for (Statistic s : Statistic.values())
+
+			for ( Statistic s : Statistic.values() )
 			{
-				int val = handler.getStatistic(variableMap, s);
-				
-				variableMap.put(s.toString().toLowerCase(), variableMap.get(s.toString().toLowerCase())+val);
-			}			
+				int val = handler.getStatistic( variableMap, s );
+
+				variableMap.put( s.toString().toLowerCase(), variableMap.get( s.toString().toLowerCase() ) + val );
+			}
 		}
-		
-		Global.calculateDamage(aa.caster, target, variableMap, true);			
+
+		return variableMap;
 	}
-	
+
 	@Override
 	public AbstractEffectType copy()
 	{
@@ -145,5 +149,39 @@ public class EffectTypeDamage extends AbstractEffectType
 		e.equations = equations;
 		e.reliesOn = reliesOn;
 		return e;
+	}
+
+	@Override
+	public String toString( ActiveAbility aa )
+	{
+		HashMap<String, Integer> variableMap = calculateVariableMap( aa );
+
+		Array<String> lines = new Array<String>();
+
+		for ( Tier1Element el : Tier1Element.values() )
+		{
+			if ( equations.containsKey( el.Attack ) )
+			{
+				int atkVal = variableMap.get( el.Attack.toString().toLowerCase() );
+
+				if ( atkVal > 0 )
+				{
+					String line = "Deals ";
+					line += "[" + el.toString() + "] ";
+					line += atkVal;
+
+					if ( equations.containsKey( el.Pierce ) )
+					{
+						line += " (" + variableMap.get( el.Pierce.toString().toLowerCase() ) + ")";
+					}
+
+					line += " " + Global.capitalizeString( el.toString() ) + "[] Damage";
+
+					lines.add( line );
+				}
+			}
+		}
+
+		return String.join( "\n", lines );
 	}
 }

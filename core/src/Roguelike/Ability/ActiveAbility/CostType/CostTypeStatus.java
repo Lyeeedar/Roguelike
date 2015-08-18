@@ -116,7 +116,7 @@ public class CostTypeStatus extends AbstractCostType
 	}
 
 	@Override
-	public String getCostString(ActiveAbility aa)
+	public String toString(ActiveAbility aa)
 	{		
 		HashMap<String, Integer> variableMap = aa.variableMap;
 		

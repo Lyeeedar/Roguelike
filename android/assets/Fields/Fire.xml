@@ -21,7 +21,9 @@
         </Fade>
     </Duration>
     <Spread>
-        <Adjacent />
+        <Adjacent>
+            <SpreadTags>Flammable</SpreadTags>
+        </Adjacent>
     </Spread>
     <OnTurn>
         <Damage>

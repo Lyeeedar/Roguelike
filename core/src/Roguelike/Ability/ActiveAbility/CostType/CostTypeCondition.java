@@ -70,7 +70,7 @@ public class CostTypeCondition extends AbstractCostType
 
 	
 	@Override
-	public String getCostString(ActiveAbility aa)
+	public String toString(ActiveAbility aa)
 	{
 		String colour = isCostAvailable(aa) ? "[GREEN]" : "[RED]";	
 		return colour+"Requires "+equation+".";

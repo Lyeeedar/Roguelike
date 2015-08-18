@@ -5,74 +5,92 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Entity.Entity;
-import Roguelike.Entity.GameEntity;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-import exp4j.Functions.RandomFunction;
 import exp4j.Helpers.EquationHelper;
-import exp4j.Operators.BooleanOperators;
 
 public class HealOverTimeEvent extends AbstractOnTurnEvent
 {
 	String condition;
-	
+
 	String equation;
 	float remainder;
-	
+
 	@Override
-	public boolean handle(Entity entity, float time)
+	public boolean handle( Entity entity, float time )
 	{
 		HashMap<String, Integer> variableMap = entity.getVariableMap();
-		
-		if (condition != null)
+
+		if ( condition != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder(condition);
-			EquationHelper.setVariableNames(expB, variableMap, "");
-					
-			Expression exp = EquationHelper.tryBuild(expB);
-			if (exp == null)
-			{
-				return false;
-			}
-			
-			EquationHelper.setVariableValues(exp, variableMap, "");
-			
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
+
+			Expression exp = EquationHelper.tryBuild( expB );
+			if ( exp == null ) { return false; }
+
+			EquationHelper.setVariableValues( exp, variableMap, "" );
+
 			double conditionVal = exp.evaluate();
-			
-			if (conditionVal == 0)
-			{
-				return false;
-			}
+
+			if ( conditionVal == 0 ) { return false; }
 		}
-		
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder(equation);
-		EquationHelper.setVariableNames(expB, variableMap, "");
-				
-		Expression exp = EquationHelper.tryBuild(expB);
-		if (exp == null)
-		{
-			return false;
-		}
-		
-		EquationHelper.setVariableValues(exp, variableMap, "");
-		
-		float raw = (float)exp.evaluate() * time + remainder;
-		
-		int rounded = (int)Math.floor(raw);
-		
+
+		ExpressionBuilder expB = EquationHelper.createEquationBuilder( equation );
+		EquationHelper.setVariableNames( expB, variableMap, "" );
+
+		Expression exp = EquationHelper.tryBuild( expB );
+		if ( exp == null ) { return false; }
+
+		EquationHelper.setVariableValues( exp, variableMap, "" );
+
+		float raw = (float) exp.evaluate() * time + remainder;
+
+		int rounded = (int) Math.floor( raw );
+
 		remainder = raw - rounded;
-		
-		entity.applyHealing(rounded);
-		
+
+		entity.applyHealing( rounded );
+
 		return true;
 	}
 
 	@Override
-	public void parse(Element xml)
+	public void parse( Element xml )
 	{
-		condition = xml.getAttribute("Condition", null); if (condition != null) { condition = condition.toLowerCase(); }
-		equation = xml.get("Heal"); if (equation != null) { equation = equation.toLowerCase(); }
+		condition = xml.getAttribute( "Condition", null );
+		if ( condition != null )
+		{
+			condition = condition.toLowerCase();
+		}
+		equation = xml.get( "Heal" );
+		if ( equation != null )
+		{
+			equation = equation.toLowerCase();
+		}
+	}
+
+	@Override
+	public Array<String> toString( HashMap<String, Integer> variableMap )
+	{
+		Array<String> lines = new Array<String>();
+
+		ExpressionBuilder expB = EquationHelper.createEquationBuilder( equation );
+		EquationHelper.setVariableNames( expB, variableMap, "" );
+
+		Expression exp = EquationHelper.tryBuild( expB );
+		if ( exp == null ) { return lines; }
+
+		EquationHelper.setVariableValues( exp, variableMap, "" );
+
+		float raw = (float) exp.evaluate();
+		int rounded = (int) Math.floor( raw );
+
+		lines.add( "Heals " + rounded + " health" );
+
+		return lines;
 	}
 
 }

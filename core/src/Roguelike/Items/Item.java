@@ -29,7 +29,7 @@ public class Item extends GameEventHandler
 {
 	/*
 	 * IDEAS:
-	 *
+	 * 
 	 * Unlock extra power after condition (absorb x essence, kill x enemy)
 	 */
 
@@ -164,33 +164,12 @@ public class Item extends GameEventHandler
 		table.add( descLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 		table.row();
 
-		for ( Statistic stat : Statistic.values() )
-		{
-			int oldval = other == null ? 0 : other.getStatistic( entity.getBaseVariableMap(), stat );
-			int newval = getStatistic( entity.getBaseVariableMap(), stat );
+		table.add( new Label( "", skin ) );
+		table.row();
 
-			if ( oldval != 0 || newval != 0 )
-			{
-				String statText = Statistic.formatString( stat.toString() ) + ": " + newval;
-
-				if ( newval != oldval )
-				{
-					int diff = newval - oldval;
-
-					if ( diff > 0 )
-					{
-						statText += "   [GREEN]+" + diff;
-					}
-					else
-					{
-						statText += "   [RED]" + diff;
-					}
-				}
-
-				table.add( new Label( statText, skin ) ).expandX().left();
-				table.row();
-			}
-		}
+		Label statLabel = new Label( this.toString( entity.getBaseVariableMap() ), skin );
+		statLabel.setWrap( true );
+		table.add( statLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 
 		return table;
 	}
@@ -241,36 +220,15 @@ public class Item extends GameEventHandler
 			}
 		}
 
-		table.add( new Label( damText, skin ) ).expandX().left().padBottom( 20 );
+		table.add( new Label( damText, skin ) ).expandX().left();
 		table.row();
 
-		for ( Statistic stat : Statistic.values() )
-		{
-			int oldval = other == null ? 0 : other.getStatistic( entity.getBaseVariableMap(), stat );
-			int newval = getStatistic( entity.getBaseVariableMap(), stat );
+		table.add( new Label( "", skin ) );
+		table.row();
 
-			if ( oldval != 0 || newval != 0 )
-			{
-				String statText = Statistic.formatString( stat.toString() ) + ": " + newval;
-
-				if ( newval != oldval )
-				{
-					int diff = newval - oldval;
-
-					if ( diff > 0 )
-					{
-						statText += "   [GREEN]+" + diff;
-					}
-					else
-					{
-						statText += "   [RED]" + diff;
-					}
-				}
-
-				table.add( new Label( statText, skin ) ).expandX().left();
-				table.row();
-			}
-		}
+		Label statLabel = new Label( this.toString( entity.getBaseVariableMap() ), skin );
+		statLabel.setWrap( true );
+		table.add( statLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 
 		return table;
 	}
@@ -355,7 +313,7 @@ public class Item extends GameEventHandler
 			light = Light.load( lightElement );
 		}
 
-		String slotsElement = xmlElement.get( "Slot" );
+		String slotsElement = xmlElement.get( "Slot", null );
 		if ( slotsElement != null )
 		{
 			String[] split = slotsElement.split( "," );

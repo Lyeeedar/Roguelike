@@ -19,8 +19,6 @@
 	<Statistics>
 		<MaxHP>1000</MaxHP>
 		<Range>10</<Range>
-		<Speed>5</<Speed>
-		<Weight>1</Weight>
 		
 		<Wood_Atk>20</Wood_Atk>
 		

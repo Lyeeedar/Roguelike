@@ -11,36 +11,40 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 public abstract class AbstractEffectType
 {
-	public abstract void update(ActiveAbility aa, float time, GameTile tile);
-	public abstract void parse(Element xml);
+	public abstract void update( ActiveAbility aa, float time, GameTile tile );
+
+	public abstract void parse( Element xml );
+
 	public abstract AbstractEffectType copy();
-	
-	public static AbstractEffectType load(Element xml)
-	{		
-		Class<AbstractEffectType> c = ClassMap.get(xml.getName().toUpperCase());
+
+	public abstract String toString( ActiveAbility aa );
+
+	public static AbstractEffectType load( Element xml )
+	{
+		Class<AbstractEffectType> c = ClassMap.get( xml.getName().toUpperCase() );
 		AbstractEffectType type = null;
-		
+
 		try
 		{
-			type = (AbstractEffectType)ClassReflection.newInstance(c);
-		} 
-		catch (ReflectionException e)
+			type = ClassReflection.newInstance( c );
+		}
+		catch ( ReflectionException e )
 		{
 			e.printStackTrace();
 		}
-		
-		type.parse(xml);
-		
+
+		type.parse( xml );
+
 		return type;
 	}
-	
+
 	public static final HashMap<String, Class> ClassMap = new HashMap<String, Class>();
 	static
 	{
-		ClassMap.put("DAMAGE", EffectTypeDamage.class);
-		ClassMap.put("FIELD", EffectTypeField.class);
-		ClassMap.put("HEAL", EffectTypeHeal.class);
-		ClassMap.put("STATUS", EffectTypeStatus.class);
-		ClassMap.put("TELEPORT", EffectTypeTeleport.class);
+		ClassMap.put( "DAMAGE", EffectTypeDamage.class );
+		ClassMap.put( "FIELD", EffectTypeField.class );
+		ClassMap.put( "HEAL", EffectTypeHeal.class );
+		ClassMap.put( "STATUS", EffectTypeStatus.class );
+		ClassMap.put( "TELEPORT", EffectTypeTeleport.class );
 	}
 }
