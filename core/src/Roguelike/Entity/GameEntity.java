@@ -23,6 +23,7 @@ import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader;
@@ -198,7 +199,7 @@ public class GameEntity extends Entity
 		AI = xmlElement.getChildByName( "AI" ) != null ? BehaviourTree.load( Gdx.files.internal( "AI/" + xmlElement.get( "AI" ) + ".xml" ) ) : AI;
 		canSwap = xmlElement.getBoolean( "CanSwap", false );
 		canMove = xmlElement.getBoolean( "CanMove", true );
-		essence = xmlElement.getInt( "Essence", 20 );
+		essence = xmlElement.getInt( "Essence", MathUtils.random( 100 ) );
 
 		Element factionElement = xmlElement.getChildByName( "Factions" );
 		if ( factionElement != null )

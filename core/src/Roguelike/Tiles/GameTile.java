@@ -36,6 +36,7 @@ public class GameTile implements PathfindingTile
 	public Array<SpriteEffect> spriteEffects = new Array<SpriteEffect>();
 
 	public Array<Item> items = new Array<Item>( false, 16 );
+	public int essence;
 
 	public String metaValue;
 

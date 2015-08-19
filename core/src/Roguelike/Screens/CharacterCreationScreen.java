@@ -2,8 +2,8 @@ package Roguelike.Screens;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
-import Roguelike.RoguelikeGame;
-import Roguelike.RoguelikeGame.ScreenEnum;
+import Roguelike.Sprite.Sprite;
+import Roguelike.UI.ClassList;
 import Roguelike.UI.HoverTextButton;
 import Roguelike.UI.HoverTextButton.HorizontalAlignment;
 
@@ -11,7 +11,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -21,19 +20,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class MainMenuScreen implements Screen
+public class CharacterCreationScreen implements Screen
 {
-	public MainMenuScreen()
-	{
-	}
-
 	private void create()
 	{
-		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 60 );
-		titleFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 55 );
+		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 14 );
+
 		normalFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 30 );
 		highlightFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 35 );
 
@@ -45,22 +40,28 @@ public class MainMenuScreen implements Screen
 		stage = new Stage( new ScreenViewport() );
 		batch = new SpriteBatch();
 
-		background = AssetManager.loadTexture( "Sprites/GUI/Title.png" );
+		this.tileBackground = AssetManager.loadSprite( "GUI/TileBackground" );
+		this.tileBorder = AssetManager.loadSprite( "GUI/TileBorder" );
 
 		createUI();
 	}
 
 	private void createUI()
 	{
+		classList = new ClassList( skin, stage, tileBackground, tileBorder );
+		textArea = new TextArea( "Jeff", skin );
+
 		Table table = new Table();
 		// table.debug();
 
-		Label title = new Label( "Chronicles of Aether", skin );
-		title.getStyle().font = titleFont;
-		table.add( title ).expandY().top().padTop( 100 );
-		table.row();
+		table.add( classList ).left().expandY().fillY().pad( 20 );
 
-		Table buttonTable = new Table();
+		Table rightTable = new Table();
+		table.add( rightTable ).expand().fill();
+
+		rightTable.add( new Label( "Name:", skin ) );
+		rightTable.add( textArea );
+		rightTable.row();
 
 		HoverTextButton ngbutton = new HoverTextButton( "New Game", normalFont, highlightFont );
 		ngbutton.halign = HorizontalAlignment.RIGHT;
@@ -75,34 +76,14 @@ public class MainMenuScreen implements Screen
 			@Override
 			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 			{
-				RoguelikeGame.Instance.switchScreen( ScreenEnum.CHARACTERCREATION );
+				Global.PlayerName = textArea.getText();
+				Global.PlayerTitle = classList.chosen.name;
+				Global.newGame( classList.chosen.entity, classList.chosen.lines );
 			}
 		} );
 
-		buttonTable.add( ngbutton ).expandX().fillX();
-		buttonTable.row();
-
-		HoverTextButton qbutton = new HoverTextButton( "Quit", normalFont, highlightFont );
-		qbutton.halign = HorizontalAlignment.RIGHT;
-		qbutton.addListener( new InputListener()
-		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
-			{
-				Gdx.app.exit();
-			}
-		} );
-
-		buttonTable.add( qbutton ).expandX().fillX();
-		buttonTable.row();
-
-		table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expandX().right().padRight( 50 ).expandY().top();
+		rightTable.add( ngbutton ).expandX().fillX();
+		rightTable.row();
 
 		table.setFillParent( true );
 		stage.addActor( table );
@@ -142,7 +123,8 @@ public class MainMenuScreen implements Screen
 
 		batch.begin();
 
-		batch.draw( background, 0, 0, Global.Resolution[0], Global.Resolution[1] );
+		// batch.draw(background, 0, 0, Global.Resolution[0],
+		// Global.Resolution[1]);
 
 		batch.end();
 
@@ -181,6 +163,8 @@ public class MainMenuScreen implements Screen
 		stage.getViewport().setWorldHeight( Global.Resolution[1] );
 		stage.getViewport().setScreenWidth( Global.ScreenSize[0] );
 		stage.getViewport().setScreenHeight( Global.ScreenSize[1] );
+
+		classList.setWidth( classList.getPrefWidth() );
 	}
 
 	@Override
@@ -208,14 +192,18 @@ public class MainMenuScreen implements Screen
 
 	boolean created;
 
+	ClassList classList;
+
 	Stage stage;
 	Skin skin;
 
 	SpriteBatch batch;
 
-	BitmapFont titleFont;
+	TextArea textArea;
 	BitmapFont normalFont;
 	BitmapFont highlightFont;
 
-	Texture background;
+	private Sprite tileBackground;
+	private Sprite tileBorder;
+
 }

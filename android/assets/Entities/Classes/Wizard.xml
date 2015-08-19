@@ -1,0 +1,79 @@
+<Entity>
+	<Name>Player</Name>
+	
+	<Factions>
+		<Faction>Player</Faction>
+	</Factions>
+	
+	<AI>player</AI>
+	<Essence>400</Essence>
+	
+	<CanSwap>true</CanSwap>
+	
+	<Sprite>
+		<Name>Classes/Wizard</Name>
+		<UpdateRate>0.5</UpdateRate>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<Statistics>
+		<MaxHP>900</MaxHP>
+		<Range>10</<Range>	
+		<Wood_Atk>20</Wood_Atk>		
+	</Statistics>
+	
+	<Inventory>
+		<Equipment>
+		    
+		    <Wand>
+		        <Name>Wand</Name>
+		        <Description>You're a wizard Harry</Description>
+		        
+		        <Slot>MainWeapon</Slot>
+				<Category>Weapon</Category>
+				<Type>Wand</Type>
+			
+				<Events>
+					<Constant>
+						<Air_Atk>50</Air_Atk>
+					</Constant>
+				</Events>
+		    </Wand>
+		    
+		    <Top>
+		        
+		        <Name>Padded Shirt</Name>
+		        <Description>A thick padded shirt. Can keep you warm in the cold nights and protect you from small amounts of stabbing.</Description>
+		        <Slot>Body</Slot>
+		        <Category>Armour</Category>
+		        
+		        <Events>
+					<Constant>
+						<Def>5</Def>
+						<Hardiness>25</Hardiness>
+					</Constant>
+				</Events>
+		        
+		    </Top>
+		    
+		     <Leg>
+		        
+		        <Name>Padded Trousers</Name>
+		        <Description>Is that a large amount of protective insulation in your pocket, or are you just happy to see me?</Description>
+		        <Slot>Legs</Slot>
+		        <Category>Armour</Category>
+		        
+		        <Events>
+					<Constant>
+						<Def>5</Def>
+						<Hardiness>25</Hardiness>
+					</Constant>
+				</Events>
+		        
+		    </Leg>
+		    
+			<Item>Misc/BasicLantern</Item>
+		</Equipment>
+	</Inventory>
+	
+</Entity>

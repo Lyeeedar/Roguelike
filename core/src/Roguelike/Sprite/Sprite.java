@@ -35,6 +35,8 @@ public class Sprite
 
 	public SoundInstance sound;
 
+	public float[] baseScale = { 1, 1 };
+
 	public Sprite( String fileName, float animationDelay, Array<TextureRegion> textures, Color colour, AnimationMode mode, SoundInstance sound )
 	{
 		this.fileName = fileName;
@@ -103,8 +105,8 @@ public class Sprite
 
 	public void render( Batch batch, int x, int y, int width, int height )
 	{
-		float scaleX = 1;
-		float scaleY = 1;
+		float scaleX = baseScale[0];
+		float scaleY = baseScale[1];
 
 		if ( spriteAnimation != null )
 		{
@@ -152,7 +154,7 @@ public class Sprite
 
 		// Check if not onscreen
 		if ( x + width < 0 || y + height < 0 || x > Global.Resolution[0] || y > Global.Resolution[1] ) { return; // skip
-																													// drawing
+		// drawing
 		}
 
 		batch.draw( texture, x, y, width / 2.0f, height / 2.0f, width, height, scaleX, scaleY, rotation );

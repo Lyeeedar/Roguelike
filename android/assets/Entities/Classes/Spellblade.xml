@@ -1,0 +1,79 @@
+<Entity>
+	<Name>Player</Name>
+	
+	<Factions>
+		<Faction>Player</Faction>
+	</Factions>
+	
+	<AI>player</AI>
+	<Essence>400</Essence>
+	
+	<CanSwap>true</CanSwap>
+	
+	<Sprite>
+		<Name>Classes/Spellblade</Name>
+		<UpdateRate>0.5</UpdateRate>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<Statistics>
+		<MaxHP>1000</MaxHP>
+		<Range>10</<Range>	
+		<Wood_Atk>20</Wood_Atk>		
+	</Statistics>
+	
+	<Inventory>
+		<Equipment>
+		    
+		    <Dagger>
+		        <Name>Iron Dagger</Name>
+		        <Description>A small metal knife. Cheap and mass produced by those looking to increase their smithing skills.</Description>
+		        
+		        <Slot>MainWeapon</Slot>
+				<Category>Weapon</Category>
+				<Type>Sword</Type>
+			
+				<Events>
+					<Constant>
+						<Metal_Atk>50</Metal_Atk>
+					</Constant>
+				</Events>
+		    </Dagger>
+		    
+		    <Top>
+		        
+		        <Name>Padded Shirt</Name>
+		        <Description>A thick padded shirt. Can keep you warm in the cold nights and protect you from small amounts of stabbing.</Description>
+		        <Slot>Body</Slot>
+		        <Category>Armour</Category>
+		        
+		        <Events>
+					<Constant>
+						<Def>5</Def>
+						<Hardiness>25</Hardiness>
+					</Constant>
+				</Events>
+		        
+		    </Top>
+		    
+		     <Leg>
+		        
+		        <Name>Padded Trousers</Name>
+		        <Description>Is that a large amount of protective insulation in your pocket, or are you just happy to see me?</Description>
+		        <Slot>Legs</Slot>
+		        <Category>Armour</Category>
+		        
+		        <Events>
+					<Constant>
+						<Def>5</Def>
+						<Hardiness>25</Hardiness>
+					</Constant>
+				</Events>
+		        
+		    </Leg>
+		    
+			<Item>Misc/BasicLantern</Item>
+		</Equipment>
+	</Inventory>
+	
+</Entity>

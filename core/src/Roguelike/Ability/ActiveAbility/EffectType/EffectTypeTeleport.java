@@ -10,7 +10,6 @@ import Roguelike.Sprite.SpriteAnimation.MoveAnimation.MoveEquation;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -104,7 +103,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 		else
 		{
 			Array<Point> possibleTiles = Direction.buildCone( dir, Pools.obtain( Point.class ).set( src.x, src.y ), distance );
-			Point pos = possibleTiles.get( MathUtils.random( possibleTiles.size - 1 ) );
+			Point pos = possibleTiles.random();
 
 			destination = src.level.getGameTile( pos );
 

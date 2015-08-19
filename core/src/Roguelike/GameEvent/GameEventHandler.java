@@ -354,7 +354,7 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 
-	public String toString( HashMap<String, Integer> variableMap )
+	public Array<String> toString( HashMap<String, Integer> variableMap )
 	{
 		Array<String> lines = new Array<String>();
 
@@ -489,6 +489,6 @@ public abstract class GameEventHandler implements IGameObject
 			}
 		}
 
-		return String.join( "\n", lines );
+		return lines;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
+import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.RoguelikeGame;
@@ -39,6 +40,7 @@ import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
@@ -471,7 +473,7 @@ public class Level
 				{
 					e.tile.entity = null;
 
-					dropItems( e.getInventory(), e.tile );
+					dropItems( e.getInventory(), e.tile, e.essence );
 				}
 				else if ( e == player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
@@ -493,13 +495,13 @@ public class Level
 				{
 					e.tile.environmentEntity = null;
 
-					dropItems( e.getInventory(), e.tile );
+					dropItems( e.getInventory(), e.tile, e.essence );
 				}
 			}
 		}
 	}
 
-	private void dropItems( Inventory inventory, GameTile source )
+	private void dropItems( Inventory inventory, GameTile source, int essence )
 	{
 		Array<Point> possibleTiles = new Array<Point>();
 		ShadowCaster sc = new ShadowCaster( Grid, 5, ItemDropPassability );
@@ -521,6 +523,38 @@ public class Level
 		}
 
 		float delay = 0;
+
+		if ( essence > 0 )
+		{
+			int blockSize = MathUtils.clamp( essence / 10, 10, 100 );
+
+			while ( essence > 0 )
+			{
+				int block = Math.min( blockSize, essence );
+				essence -= block;
+
+				Point target = possibleTiles.random();
+				GameTile tile = getGameTile( target );
+
+				tile.essence += block;
+
+				int[] diff = tile.getPosDiff( source );
+
+				Sprite sprite = AssetManager.loadSprite( "orb" );
+				MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
+				anim.leapHeight = 6;
+				sprite.spriteAnimation = anim;
+				sprite.renderDelay = delay;
+				delay += 0.02f;
+
+				float scale = 0.5f + 0.5f * ( MathUtils.clamp( block, 10.0f, 1000.0f ) / 1000.0f );
+				sprite.baseScale[0] = scale;
+				sprite.baseScale[1] = scale;
+
+				tile.spriteEffects.add( new SpriteEffect( sprite, Direction.CENTER, null ) );
+			}
+		}
+
 		for ( Item i : inventory.m_items )
 		{
 			if ( i.canDrop && i.shouldDrop() )
@@ -710,6 +744,14 @@ public class Level
 					f.tile.fields.put( f.layer, null );
 					f.tile = null;
 				}
+			}
+
+			if ( player.tile.essence > 0 )
+			{
+				GameScreen.Instance.addActorEssenceAction( player, player.tile.essence );
+
+				player.essence += player.tile.essence;
+				player.tile.essence = 0;
 			}
 
 			player.tile.processFieldEffectsForEntity( player, actionCost );

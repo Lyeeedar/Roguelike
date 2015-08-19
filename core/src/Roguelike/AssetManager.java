@@ -92,7 +92,7 @@ public class AssetManager
 
 		Pixmap pixmap = new Pixmap( file );
 		packer.pack( path, pixmap );
-		packer.updateTextureAtlas( atlas, TextureFilter.Linear, TextureFilter.Linear, true );
+		packer.updateTextureAtlas( atlas, TextureFilter.Nearest, TextureFilter.Nearest, true );
 
 		TextureRegion region = atlas.findRegion( path );
 		loadedTextureRegions.put( path, region );

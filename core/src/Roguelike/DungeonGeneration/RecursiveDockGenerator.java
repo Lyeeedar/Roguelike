@@ -362,13 +362,13 @@ public class RecursiveDockGenerator
 		}
 
 		requiredRooms.sort( new Comparator<Room>()
-		{
+				{
 			@Override
 			public int compare( Room arg0, Room arg1 )
 			{
 				return arg0.comparisonString().compareTo( arg1.comparisonString() );
 			}
-		} );
+				} );
 	}
 
 	// ----------------------------------------------------------------------
@@ -708,14 +708,14 @@ public class RecursiveDockGenerator
 			tris.add( tri );
 		}
 		tris.sort( new Comparator<Triangle>()
-				{
+		{
 
 			@Override
 			public int compare( Triangle arg0, Triangle arg1 )
 			{
 				return arg0.compareTo( arg1 );
 			}
-				} );
+		} );
 
 		for ( Triangle tri : tris )
 		{
@@ -1814,6 +1814,10 @@ public class RecursiveDockGenerator
 
 					AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false, GeneratorPassability );
 					Array<Point> path = pathfind.getPath();
+					if ( path == null )
+					{
+						continue;
+					}
 
 					for ( Point point : path )
 					{

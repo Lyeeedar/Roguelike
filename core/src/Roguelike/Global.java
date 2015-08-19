@@ -61,6 +61,12 @@ public class Global
 	public static Level CurrentLevel;
 
 	// ----------------------------------------------------------------------
+	public static String PlayerName = "Jeff";
+
+	// ----------------------------------------------------------------------
+	public static String PlayerTitle = "Adventurer";
+
+	// ----------------------------------------------------------------------
 	public static HashMap<String, SaveLevel> AllLevels = new HashMap<String, SaveLevel>();
 
 	// ----------------------------------------------------------------------
@@ -644,21 +650,19 @@ public class Global
 	}
 
 	// ----------------------------------------------------------------------
-	public static void newGame()
+	public static void newGame( GameEntity player, final String lines )
 	{
 		AllLevels.clear();
 
 		SaveLevel firstLevel = new SaveLevel( "Forest", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
 		AllLevels.put( firstLevel.UID, firstLevel );
 
-		GameEntity player = GameEntity.load( "player" );
-
 		LoadingScreen.Instance.set( firstLevel, player, "PlayerSpawn", new PostGenerateEvent()
 		{
 			@Override
 			public void execute( Level level )
 			{
-				abilityPool = AbilityPool.createDefaultAbilityPool();
+				abilityPool = AbilityPool.createAbilityPool( lines );
 			}
 		} );
 

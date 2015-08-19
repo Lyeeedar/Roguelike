@@ -12,11 +12,11 @@
 				<Cost>100</Cost>
 			</ActiveAbility>
 			<PassiveAbility>
-				<Name>Ravager/Tier1/PowerOfM</Name>
+				<Name>Ravager/Tier1/AxeFocus</Name>
 				<Cost>100</Cost>
 			</PassiveAbility>
 			<PassiveAbility>
-				<Name>Ravager/Tier1/PowerOfS</Name>
+				<Name>Ravager/Tier1/Bloodrager</Name>
 				<Cost>100</Cost>
 			</PassiveAbility>
 			<ActiveAbility>
@@ -24,7 +24,7 @@
 				<Cost>100</Cost>
 			</ActiveAbility>
 			<ActiveAbility>
-				<Name>Ravager/Tier1/FuriousStrike</Name>
+				<Name>Ravager/Tier1/CrushingBlow</Name>
 				<Cost>100</Cost>
 			</ActiveAbility>
 		</Tier>
