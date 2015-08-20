@@ -230,6 +230,23 @@ public class AbilityPool
 			return newLine;
 		}
 
+		public static Sprite getSprite( String file )
+		{
+			XmlReader xml = new XmlReader();
+			Element xmlElement = null;
+
+			try
+			{
+				xmlElement = xml.parse( Gdx.files.internal( "Abilities/Lines/" + file + ".xml" ) );
+			}
+			catch ( IOException e )
+			{
+				e.printStackTrace();
+			}
+
+			return AssetManager.loadSprite( xmlElement.getChildByName( "Icon" ) );
+		}
+
 		public final Array<Ability[]> abilityTiers = new Array<Ability[]>();
 	}
 

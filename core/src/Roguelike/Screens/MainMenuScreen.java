@@ -32,10 +32,10 @@ public class MainMenuScreen implements Screen
 
 	private void create()
 	{
-		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 60 );
-		titleFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 55 );
-		normalFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 30 );
-		highlightFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 35 );
+		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 50 );
+		titleFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 45 );
+		normalFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 25 );
+		highlightFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 30 );
 
 		skin = new Skin();
 		skin.addRegions( new TextureAtlas( Gdx.files.internal( "GUI/uiskin.atlas" ) ) );
@@ -155,8 +155,8 @@ public class MainMenuScreen implements Screen
 		Global.ScreenSize[0] = width;
 		Global.ScreenSize[1] = height;
 
-		float w = Global.TargetResolution[0];
-		float h = Global.TargetResolution[1];
+		float w = 360;
+		float h = 480;
 
 		if ( width < height )
 		{

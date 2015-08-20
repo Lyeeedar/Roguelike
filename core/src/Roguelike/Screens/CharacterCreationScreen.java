@@ -2,10 +2,14 @@ package Roguelike.Screens;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
+import Roguelike.Ability.AbilityPool.AbilityLine;
+import Roguelike.Items.Item;
 import Roguelike.Sprite.Sprite;
 import Roguelike.UI.ClassList;
+import Roguelike.UI.ClassList.ClassDesc;
 import Roguelike.UI.HoverTextButton;
 import Roguelike.UI.HoverTextButton.HorizontalAlignment;
+import Roguelike.UI.SpriteWidget;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -59,8 +63,12 @@ public class CharacterCreationScreen implements Screen
 		Table rightTable = new Table();
 		table.add( rightTable ).expand().fill();
 
-		rightTable.add( new Label( "Name:", skin ) );
-		rightTable.add( textArea );
+		Table nameTable = new Table();
+
+		nameTable.add( new Label( "Name:", skin ) );
+		nameTable.add( textArea );
+
+		rightTable.add( nameTable ).padTop( 50 ).padBottom( 20 ).expandX().left();
 		rightTable.row();
 
 		HoverTextButton ngbutton = new HoverTextButton( "New Game", normalFont, highlightFont );
@@ -82,7 +90,11 @@ public class CharacterCreationScreen implements Screen
 			}
 		} );
 
-		rightTable.add( ngbutton ).expandX().fillX();
+		selectedClass = new Table();
+		rightTable.add( selectedClass ).expand().fill();
+		rightTable.row();
+
+		rightTable.add( ngbutton ).expandX().fillX().padTop( 20 ).padBottom( 50 ).center();
 		rightTable.row();
 
 		table.setFillParent( true );
@@ -113,9 +125,57 @@ public class CharacterCreationScreen implements Screen
 		stage.getViewport().setScreenHeight( Global.ScreenSize[1] );
 	}
 
+	// ----------------------------------------------------------------------
+	private float roundTo( float val, float multiple )
+	{
+		return (float) ( multiple * Math.floor( val / multiple ) );
+	}
+
+	private void fillClassDesc()
+	{
+		selectedClass.clearChildren();
+
+		if ( lastSelected == null ) { return; }
+		selectedClass.add( new Label( lastSelected.name, skin ) ).expandX().left().top();
+		selectedClass.row();
+
+		Label descLabel = new Label( lastSelected.description, skin );
+		descLabel.setWrap( true );
+		selectedClass.add( descLabel ).expandX().left().top();
+		selectedClass.row();
+
+		Table lineTable = new Table();
+		lineTable.add( new Label( "Ability Lines: ", skin ) );
+
+		String[] lines = lastSelected.lines.split( "," );
+		for ( String line : lines )
+		{
+			SpriteWidget sprite = new SpriteWidget( AbilityLine.getSprite( line + "/" + line ), 32, 32 );
+			lineTable.add( sprite ).pad( 10 );
+		}
+
+		selectedClass.add( lineTable ).expandX().left().top();
+		selectedClass.row();
+
+		selectedClass.add( new Label( "Starting Inventory:", skin ) ).expandX().left().top();
+		selectedClass.row();
+
+		for ( Item item : lastSelected.entity.getInventory().m_items )
+		{
+			selectedClass.add( new Label( item.name, skin ) ).expandX().left().padLeft( 30 ).top();
+			selectedClass.row();
+		}
+	}
+
 	@Override
 	public void render( float delta )
 	{
+		if ( classList.chosen != lastSelected )
+		{
+			lastSelected = classList.chosen;
+			fillClassDesc();
+		}
+
 		stage.act();
 
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
@@ -137,8 +197,8 @@ public class CharacterCreationScreen implements Screen
 		Global.ScreenSize[0] = width;
 		Global.ScreenSize[1] = height;
 
-		float w = Global.TargetResolution[0];
-		float h = Global.TargetResolution[1];
+		float w = 360;
+		float h = 480;
 
 		if ( width < height )
 		{
@@ -165,6 +225,8 @@ public class CharacterCreationScreen implements Screen
 		stage.getViewport().setScreenHeight( Global.ScreenSize[1] );
 
 		classList.setWidth( classList.getPrefWidth() );
+		classList.setHeight( roundTo( h - 40, 64 ) );
+		fillClassDesc();
 	}
 
 	@Override
@@ -193,6 +255,9 @@ public class CharacterCreationScreen implements Screen
 	boolean created;
 
 	ClassList classList;
+
+	Table selectedClass;
+	ClassDesc lastSelected;
 
 	Stage stage;
 	Skin skin;

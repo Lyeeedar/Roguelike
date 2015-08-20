@@ -211,7 +211,7 @@ public abstract class TilePanel extends Widget
 
 		private Object pointToItem( float x, float y )
 		{
-			if ( x < 0 || y < 0 || x > getPrefWidth() || y > getPrefHeight() ) { return null; }
+			if ( x < 0 || y < 0 || x > getPrefWidth() || y > getHeight() ) { return null; }
 
 			y = getHeight() - y;
 

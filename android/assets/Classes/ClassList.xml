@@ -3,28 +3,28 @@
     <Class>
         <Name>Soldier</Name>
         <Description>A physical fighter proficient in all manner of weaponry</Description>
-        <Lines>Swordmaster, Lancer, Bulwark, Marksman, Protection</Lines>
+        <Lines>Swordmaster,Lancer,Bulwark,Marksman,Protection</Lines>
         <EntityPath>Classes/Soldier</EntityPath>
     </Class>
     
     <Class>
         <Name>Spellblade</Name>
         <Description>Combine blades and elemental powers to crush your foes</Description>
-        <Lines>Swordmaster, Life, Electron, Pyromaniac, WinterMagus</Lines>
+        <Lines>Swordmaster,Life,Electron,Pyromaniac,WinterMagus</Lines>
         <EntityPath>Classes/Spellblade</EntityPath>
     </Class>
     
     <Class>
         <Name>Wizard</Name>
         <Description>Manipulate elemental energies to blast things to death</Description>
-        <Lines>Wandwoad, BloodMagic, Electron, Pyromaniac, WinterMagus</Lines>
+        <Lines>Wandwoad,BloodMagic,Electron,Pyromaniac,WinterMagus</Lines>
         <EntityPath>Classes/Wizard</EntityPath>
     </Class>
     
     <Class>
         <Name>Hero Farmer</Name>
         <Description>Everyone knows that farmers make the best heroes</Description>
-        <Lines>Ravager, Lancer, BloodMagic, Life, Protection</Lines>
+        <Lines>Ravager,Lancer,BloodMagic,Life,Protection</Lines>
         <EntityPath>Classes/Farmer</EntityPath>
     </Class>
     

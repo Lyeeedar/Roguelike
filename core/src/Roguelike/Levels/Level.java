@@ -186,6 +186,24 @@ public class Level
 			}
 		}
 
+		// do shadows
+		for ( int x = 0; x < width; x++ )
+		{
+			for ( int y = 0; y < height; y++ )
+			{
+				GameTile tile = Grid[x][y];
+				if ( tile.tileData.shadow != null )
+				{
+					if ( Math.abs( x - player.tile.x ) > playerViewRange || Math.abs( y - player.tile.y ) > playerViewRange )
+					{
+						continue;
+					}
+
+					tile.tileData.shadow.apply( Grid, x, y );
+				}
+			}
+		}
+
 		for ( ActiveAbility aa : ActiveAbilities )
 		{
 			aa.getSprite().update( delta );
@@ -251,6 +269,7 @@ public class Level
 					SeenTile s = SeenGrid[x][y];
 					s.gameTile = tile;
 					s.seen = true;
+					s.light.set( tile.light );
 
 					Pools.freeAll( s.history );
 					s.history.clear();
@@ -295,6 +314,16 @@ public class Level
 					else
 					{
 						s.history.add( Pools.obtain( SeenHistoryItem.class ).set( AssetManager.loadSprite( "bag" ), "" ) );
+					}
+
+					if ( tile.essence > 0 )
+					{
+						Sprite sprite = AssetManager.loadSprite( "orb" );
+						float scale = 0.5f + 0.5f * ( MathUtils.clamp( tile.essence, 10.0f, 1000.0f ) / 1000.0f );
+						sprite.baseScale[0] = scale;
+						sprite.baseScale[1] = scale;
+
+						s.history.add( Pools.obtain( SeenHistoryItem.class ).set( sprite, "" ) );
 					}
 				}
 			}
@@ -504,7 +533,7 @@ public class Level
 	private void dropItems( Inventory inventory, GameTile source, int essence )
 	{
 		Array<Point> possibleTiles = new Array<Point>();
-		ShadowCaster sc = new ShadowCaster( Grid, 5, ItemDropPassability );
+		ShadowCaster sc = new ShadowCaster( Grid, 3, ItemDropPassability );
 		sc.ComputeFOV( source.x, source.y, possibleTiles );
 
 		// remove nonpassable tiles

@@ -398,7 +398,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private void renderSeenTiles( int offsetx, int offsety, int tileSize3 )
 	{
 		batch.setShader( GrayscaleShader.Instance );
-		batch.setColor( Global.CurrentLevel.Ambient );
 		for ( int x = 0; x < Global.CurrentLevel.width; x++ )
 		{
 			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
@@ -408,6 +407,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				if ( !gtile.visible && stile.seen )
 				{
+					batch.setColor( stile.light );
 					for ( SeenHistoryItem hist : stile.history )
 					{
 						int cx = x * Global.TileSize + offsetx;
@@ -420,7 +420,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 						else
 						{
-							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, 1, 1, hist.animationState );
+							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
 						}
 					}
 				}

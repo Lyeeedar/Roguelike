@@ -9,7 +9,7 @@
 	
 	<Icon>
 		<Name>Abilities/Ravager/PowerStrike</Name>
-		<Colour><RGB>178,34,34</RGB></Colour>
+		<Colour><RGB>220,220,220</RGB></Colour>
 	</Icon>
 	
 	<Cost>

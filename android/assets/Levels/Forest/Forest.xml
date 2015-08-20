@@ -1,8 +1,8 @@
 <Level>
 	<Ambient>
-		<Red>0.7</Red>
-		<Green>0.8</Green>
-		<Blue>0.4</Blue>
+		<Red>0.85</Red>
+		<Green>1</Green>
+		<Blue>0.6</Blue>
 		<Alpha>1</Alpha>
 	</Ambient>
 	
@@ -78,6 +78,10 @@
 						<Blue>0</Blue>
 					</Colour>
 				</Sprite>
+				<AmbientShadow>
+				    <Factor>0.2</Factor>
+				    <Range>2</Range>
+				</AmbientShadow>
 			</TileData>
 		</Symbol>
 		

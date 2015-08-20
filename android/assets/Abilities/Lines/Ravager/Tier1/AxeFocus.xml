@@ -2,8 +2,8 @@
 	<Name>Axe Focus</Name>
 	<Description>You do more damage with axes.</Description>
 	<Icon>
-		<Name>Abilities/Ravager/PowerOfM</Name>
-		<Colour><RGB>178,34,34</RGB></Colour>
+		<Name>Abilities/Ravager/AxeFocus</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
 	</Icon>
 	
 	<Events>

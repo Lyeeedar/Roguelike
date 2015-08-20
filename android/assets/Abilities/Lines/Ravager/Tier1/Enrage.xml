@@ -8,7 +8,7 @@
 	
 	<Icon>
 		<Name>Abilities/Ravager/Enrage</Name>
-		<Colour><RGB>178,34,34</RGB></Colour>
+		<Colour><RGB>220,220,220</RGB></Colour>
 	</Icon>
 	
 	<HitSprite>
