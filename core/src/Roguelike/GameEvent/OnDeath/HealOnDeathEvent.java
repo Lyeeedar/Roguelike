@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import Roguelike.Entity.Entity;
 
 import com.badlogic.gdx.utils.Array;
@@ -44,15 +45,23 @@ public class HealOnDeathEvent extends AbstractOnDeathEvent
 			if ( conditionVal == 0 ) { return false; }
 		}
 
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder( amountEqn );
-		EquationHelper.setVariableNames( expB, variableMap, "" );
+		int healVal = 0;
+		if ( Global.isNumber( amountEqn ) )
+		{
+			healVal = Integer.parseInt( amountEqn );
+		}
+		else
+		{
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder( amountEqn );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
 
-		Expression exp = EquationHelper.tryBuild( expB );
-		if ( exp == null ) { return false; }
+			Expression exp = EquationHelper.tryBuild( expB );
+			if ( exp == null ) { return false; }
 
-		EquationHelper.setVariableValues( exp, variableMap, "" );
+			EquationHelper.setVariableValues( exp, variableMap, "" );
 
-		int healVal = (int) exp.evaluate();
+			healVal = (int) exp.evaluate();
+		}
 
 		entity.applyHealing( healVal );
 

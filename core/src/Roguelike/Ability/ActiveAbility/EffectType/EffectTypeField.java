@@ -2,6 +2,7 @@ package Roguelike.Ability.ActiveAbility.EffectType;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Fields.Field;
 import Roguelike.Tiles.GameTile;
@@ -57,15 +58,22 @@ public class EffectTypeField extends AbstractEffectType
 
 		if ( stacksEqn != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
-			EquationHelper.setVariableNames( expB, aa.variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp != null )
+			if ( Global.isNumber( stacksEqn ) )
 			{
-				EquationHelper.setVariableValues( exp, aa.variableMap, "" );
+				stacks = Integer.parseInt( stacksEqn );
+			}
+			else
+			{
+				ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
+				EquationHelper.setVariableNames( expB, aa.variableMap, "" );
 
-				stacks = (int) Math.ceil( exp.evaluate() );
+				Expression exp = EquationHelper.tryBuild( expB );
+				if ( exp != null )
+				{
+					EquationHelper.setVariableValues( exp, aa.variableMap, "" );
+
+					stacks = (int) Math.ceil( exp.evaluate() );
+				}
 			}
 		}
 

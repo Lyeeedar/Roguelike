@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import Roguelike.GameEvent.IGameObject;
 import Roguelike.StatusEffect.StatusEffect;
 
@@ -43,15 +44,22 @@ public class StatusEvent extends AbstractOnDamageEvent
 
 		if ( stacksEqn != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
-			obj.writeVariableNames( expB, reliesOn );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp != null )
+			if ( Global.isNumber( stacksEqn ) )
 			{
-				obj.writeVariableValues( exp, reliesOn );
+				stacks = Integer.parseInt( stacksEqn );
+			}
+			else
+			{
+				ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
+				obj.writeVariableNames( expB, reliesOn );
 
-				stacks = (int) Math.ceil( exp.evaluate() );
+				Expression exp = EquationHelper.tryBuild( expB );
+				if ( exp != null )
+				{
+					obj.writeVariableValues( exp, reliesOn );
+
+					stacks = (int) Math.ceil( exp.evaluate() );
+				}
 			}
 		}
 

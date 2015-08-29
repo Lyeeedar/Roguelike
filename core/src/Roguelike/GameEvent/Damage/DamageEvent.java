@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import Roguelike.Global.Tier1Element;
 import Roguelike.GameEvent.IGameObject;
 
@@ -43,20 +44,28 @@ public class DamageEvent extends AbstractOnDamageEvent
 		{
 			if ( equations.containsKey( el ) )
 			{
+				int raw = 0;
 				String eqn = equations.get( el );
 
-				ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-				obj.writeVariableNames( expB, reliesOn );
-
-				Expression exp = EquationHelper.tryBuild( expB );
-				if ( exp == null )
+				if ( Global.isNumber( eqn ) )
 				{
-					continue;
+					raw = Integer.parseInt( eqn );
 				}
+				else
+				{
+					ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
+					obj.writeVariableNames( expB, reliesOn );
 
-				obj.writeVariableValues( exp, reliesOn );
+					Expression exp = EquationHelper.tryBuild( expB );
+					if ( exp == null )
+					{
+						continue;
+					}
 
-				int raw = (int) exp.evaluate();
+					obj.writeVariableValues( exp, reliesOn );
+
+					raw = (int) exp.evaluate();
+				}
 
 				els.put( el, raw );
 			}

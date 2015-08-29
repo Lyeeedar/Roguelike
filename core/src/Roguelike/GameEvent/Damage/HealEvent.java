@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import Roguelike.GameEvent.IGameObject;
 
 import com.badlogic.gdx.utils.Array;
@@ -38,33 +39,49 @@ public class HealEvent extends AbstractOnDamageEvent
 
 		if ( attacker != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( attacker );
-			obj.writeVariableNames( expB, reliesOn );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp != null )
+			if ( Global.isNumber( attacker ) )
 			{
-				obj.writeVariableValues( exp, reliesOn );
-
-				int raw = (int) exp.evaluate();
-
+				int raw = Integer.parseInt( attacker );
 				obj.attacker.applyHealing( raw );
+			}
+			else
+			{
+				ExpressionBuilder expB = EquationHelper.createEquationBuilder( attacker );
+				obj.writeVariableNames( expB, reliesOn );
+
+				Expression exp = EquationHelper.tryBuild( expB );
+				if ( exp != null )
+				{
+					obj.writeVariableValues( exp, reliesOn );
+
+					int raw = (int) exp.evaluate();
+
+					obj.attacker.applyHealing( raw );
+				}
 			}
 		}
 
 		if ( defender != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( defender );
-			obj.writeVariableNames( expB, reliesOn );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp != null )
+			if ( Global.isNumber( defender ) )
 			{
-				obj.writeVariableValues( exp, reliesOn );
-
-				int raw = (int) exp.evaluate();
-
+				int raw = Integer.parseInt( defender );
 				obj.defender.applyHealing( raw );
+			}
+			else
+			{
+				ExpressionBuilder expB = EquationHelper.createEquationBuilder( defender );
+				obj.writeVariableNames( expB, reliesOn );
+
+				Expression exp = EquationHelper.tryBuild( expB );
+				if ( exp != null )
+				{
+					obj.writeVariableValues( exp, reliesOn );
+
+					int raw = (int) exp.evaluate();
+
+					obj.defender.applyHealing( raw );
+				}
 			}
 		}
 

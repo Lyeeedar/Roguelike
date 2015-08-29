@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Tiles.GameTile;
@@ -46,27 +47,35 @@ public class EffectTypeHeal extends AbstractEffectType
 
 	private int getHealing( ActiveAbility aa )
 	{
-		HashMap<String, Integer> variableMap = aa.variableMap;
-
-		for ( String name : reliesOn )
+		if ( Global.isNumber( equation ) )
 		{
-			if ( !variableMap.containsKey( name.toLowerCase() ) )
-			{
-				variableMap.put( name.toLowerCase(), 0 );
-			}
+			return Integer.parseInt( equation );
 		}
+		else
+		{
+			HashMap<String, Integer> variableMap = aa.variableMap;
 
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder( equation );
-		EquationHelper.setVariableNames( expB, variableMap, "" );
+			for ( String name : reliesOn )
+			{
+				if ( !variableMap.containsKey( name.toLowerCase() ) )
+				{
+					variableMap.put( name.toLowerCase(), 0 );
+				}
+			}
 
-		Expression exp = EquationHelper.tryBuild( expB );
-		if ( exp == null ) { return 0; }
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder( equation );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
 
-		EquationHelper.setVariableValues( exp, variableMap, "" );
+			Expression exp = EquationHelper.tryBuild( expB );
+			if ( exp == null ) { return 0; }
 
-		int raw = (int) exp.evaluate();
+			EquationHelper.setVariableValues( exp, variableMap, "" );
 
-		return raw;
+			int raw = (int) exp.evaluate();
+
+			return raw;
+
+		}
 	}
 
 	@Override

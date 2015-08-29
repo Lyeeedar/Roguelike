@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import Roguelike.Entity.Entity;
 
 import com.badlogic.gdx.utils.Array;
@@ -38,15 +39,25 @@ public class HealOverTimeEvent extends AbstractOnTurnEvent
 			if ( conditionVal == 0 ) { return false; }
 		}
 
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder( equation );
-		EquationHelper.setVariableNames( expB, variableMap, "" );
+		float raw = 0;
+		if ( Global.isNumber( equation ) )
+		{
+			raw = Float.parseFloat( equation );
+		}
+		else
+		{
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder( equation );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
 
-		Expression exp = EquationHelper.tryBuild( expB );
-		if ( exp == null ) { return false; }
+			Expression exp = EquationHelper.tryBuild( expB );
+			if ( exp == null ) { return false; }
 
-		EquationHelper.setVariableValues( exp, variableMap, "" );
+			EquationHelper.setVariableValues( exp, variableMap, "" );
 
-		float raw = (float) exp.evaluate() * time + remainder;
+			raw = (float) exp.evaluate();
+		}
+
+		raw = raw * time + remainder;
 
 		int rounded = (int) Math.floor( raw );
 

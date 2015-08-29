@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.GameEvent.IGameObject;
@@ -52,15 +53,22 @@ public class StatusTaskEvent extends AbstractOnTaskEvent
 
 		if ( stacksEqn != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp != null )
+			if ( Global.isNumber( stacksEqn ) )
 			{
-				EquationHelper.setVariableValues( exp, variableMap, "" );
+				stacks = Integer.parseInt( stacksEqn );
+			}
+			else
+			{
+				ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
+				EquationHelper.setVariableNames( expB, variableMap, "" );
 
-				stacks = (int) Math.ceil( exp.evaluate() );
+				Expression exp = EquationHelper.tryBuild( expB );
+				if ( exp != null )
+				{
+					EquationHelper.setVariableValues( exp, variableMap, "" );
+
+					stacks = (int) Math.ceil( exp.evaluate() );
+				}
 			}
 		}
 
