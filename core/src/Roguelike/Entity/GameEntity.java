@@ -21,6 +21,7 @@ import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.Point;
+import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
@@ -43,7 +44,7 @@ public class GameEntity extends Entity
 	// region Public Methods
 
 	// ----------------------------------------------------------------------
-	public Array<Passability> getTravelType()
+	public EnumBitflag<Passability> getTravelType()
 	{
 		return travelType;
 	}
@@ -310,6 +311,8 @@ public class GameEntity extends Entity
 	// endregion Public Methods
 	// ####################################################################//
 	// region Data
+
+	public boolean seen = false;
 
 	public String fileName;
 

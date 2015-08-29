@@ -1,6 +1,8 @@
 package Roguelike.Tiles;
 
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 import Roguelike.Global;
 import Roguelike.Global.Passability;
@@ -11,12 +13,15 @@ import Roguelike.Fields.Field;
 import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
+import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Sprite.SpriteEffect;
+import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 
 public class GameTile implements PathfindingTile
 {
@@ -25,7 +30,11 @@ public class GameTile implements PathfindingTile
 
 	public TileData tileData;
 
-	public Color light;
+	private static final Color tempColour = new Color();
+
+	public HashMap<Light, LightData> lightMap = new HashMap<Light, LightData>();
+	public Color ambientColour = new Color();
+	public Color light = new Color();
 
 	public GameEntity entity;
 	public EnvironmentEntity environmentEntity;
@@ -133,7 +142,7 @@ public class GameTile implements PathfindingTile
 	}
 
 	@Override
-	public final boolean getPassable( Array<Passability> travelType )
+	public final boolean getPassable( EnumBitflag<Passability> travelType )
 	{
 		if ( fields.size() > 0 )
 		{
@@ -142,27 +151,74 @@ public class GameTile implements PathfindingTile
 				Field field = fields.get( layer );
 				if ( field != null )
 				{
-					if ( Passability.isPassable( field.allowPassability, travelType ) )
+					if ( field.allowPassability.intersect( travelType ) )
 					{
 						return true;
 					}
-					else if ( Passability.isPassable( field.restrictPassability, travelType ) ) { return false; }
+					else if ( field.restrictPassability.intersect( travelType ) ) { return false; }
 				}
 			}
 		}
 
-		if ( environmentEntity != null && !Passability.isPassable( environmentEntity.passableBy, travelType ) ) { return false; }
+		if ( environmentEntity != null && !environmentEntity.passableBy.intersect( travelType ) ) { return false; }
 
-		boolean passable = Passability.isPassable( tileData.passableBy, travelType );
+		boolean passable = tileData.passableBy.intersect( travelType );
 
 		if ( !passable ) { return false; }
 
-		return entity == null || travelType.contains( Passability.ENTITY, true );
+		return entity == null || travelType.contains( Passability.ENTITY );
 	}
 
 	@Override
 	public int getInfluence()
 	{
 		return 0;
+	}
+
+	public void setLight( Light light, float intensity, Color colour )
+	{
+		lightMap.put( light, Pools.obtain( LightData.class ).set( intensity, colour ) );
+	}
+
+	public void clearLight( Light light )
+	{
+		LightData data = lightMap.get( light );
+		Pools.free( data );
+		lightMap.remove( light );
+	}
+
+	public void composeLight()
+	{
+		light.set( ambientColour );
+
+		for ( Map.Entry<Light, LightData> pair : lightMap.entrySet() )
+		{
+			tempColour.set( pair.getValue().colour );
+
+			tempColour.mul( tempColour.a );
+			tempColour.a = 1;
+
+			tempColour.mul( pair.getValue().intensity );
+			light.add( tempColour );
+		}
+	}
+
+	public static class LightData
+	{
+		public float intensity;
+		public Color colour;
+
+		public LightData()
+		{
+
+		}
+
+		public LightData set( float intensity, Color colour )
+		{
+			this.intensity = intensity;
+			this.colour = colour;
+
+			return this;
+		}
 	}
 }

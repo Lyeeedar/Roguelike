@@ -5,13 +5,14 @@ import Roguelike.Global.Passability;
 import Roguelike.Fields.Field;
 import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class AdjacentSpreadStyle extends AbstractSpreadStyle
 {
-	private Array<Passability> travelType;
+	private EnumBitflag<Passability> travelType;
 	private String[] spreadTags;
 	private float updateRate;
 
@@ -69,7 +70,7 @@ public class AdjacentSpreadStyle extends AbstractSpreadStyle
 					}
 				}
 
-				if ( check && Passability.isPassable( tile.tileData.passableBy, travelType ) )
+				if ( check && tile.tileData.passableBy.intersect( travelType ) )
 				{
 					validTiles.add( tile );
 				}

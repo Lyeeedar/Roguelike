@@ -1,12 +1,10 @@
 package Roguelike.Tiles;
 
-import java.util.EnumSet;
-
 import Roguelike.AssetManager;
 import Roguelike.Global.Passability;
 import Roguelike.Lights.AmbientShadow;
-import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -14,10 +12,9 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public class TileData
 {
 	public Sprite[] sprites;
-	public Light light;
 	public AmbientShadow shadow;
 
-	public EnumSet<Passability> passableBy;
+	public EnumBitflag<Passability> passableBy;
 
 	public String description;
 
@@ -40,11 +37,6 @@ public class TileData
 		}
 		data.sprites = sprites.toArray( Sprite.class );
 
-		if ( xml.getChildByName( "Light" ) != null )
-		{
-			data.light = Light.load( xml.getChildByName( "Light" ) );
-		}
-
 		if ( xml.getChildByName( "AmbientShadow" ) != null )
 		{
 			data.shadow = AmbientShadow.load( xml.getChildByName( "AmbientShadow" ) );
@@ -58,11 +50,11 @@ public class TileData
 
 			if ( opaque )
 			{
-				data.passableBy.remove( Passability.LIGHT );
+				data.passableBy.clearBit( Passability.LIGHT );
 			}
 			else
 			{
-				data.passableBy.add( Passability.LIGHT );
+				data.passableBy.setBit( Passability.LIGHT );
 			}
 		}
 

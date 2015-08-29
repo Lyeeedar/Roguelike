@@ -3,7 +3,6 @@ package Roguelike.Screens;
 import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
-import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
@@ -221,6 +220,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		fpsAccumulator += delta;
 		if ( fpsAccumulator > 0.5f )
 		{
+			storedFrametime = frametime;
 			fps = (int) ( 1.0f / frametime );
 			fpsAccumulator = 0;
 		}
@@ -314,6 +314,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 
 		font.draw( batch, "FPS: " + fps, Global.Resolution[0] - 100, Global.Resolution[1] - 20 );
+		font.draw( batch, "Frametime: " + storedFrametime, Global.Resolution[0] - 200, Global.Resolution[1] - 40 );
 
 		batch.end();
 	}
@@ -487,7 +488,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			else
 			{
 				GameTile mouseTile = Global.CurrentLevel.getGameTile( mousex, mousey );
-				if ( Passability.isPassable( mouseTile.tileData.passableBy, Global.CurrentLevel.player.getTravelType() ) )
+				if ( mouseTile.tileData.passableBy.intersect( Global.CurrentLevel.player.getTravelType() ) )
 				{
 					batch.setColor( Color.GREEN );
 				}
@@ -1090,8 +1091,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean zoom( float initialDistance, float distance )
 	{
-		System.out.println( "Initial: " + initialDistance + "   Current: " + distance );
-
 		distance = initialDistance - distance;
 
 		float amount = distance - lastZoom;
@@ -1426,6 +1425,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	// ----------------------------------------------------------------------
 	private int fps;
+	private float storedFrametime;
 	private float fpsAccumulator;
 	private float frametime;
 	private BitmapFont font;

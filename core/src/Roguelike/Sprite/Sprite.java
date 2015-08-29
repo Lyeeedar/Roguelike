@@ -18,6 +18,8 @@ public class Sprite
 
 	public String fileName;
 
+	private static final Color tempColour = new Color();
+
 	public Color colour = new Color( Color.WHITE );
 
 	public float renderDelay = -1;
@@ -131,7 +133,7 @@ public class Sprite
 	public void render( Batch batch, int x, int y, int width, int height, float scaleX, float scaleY, AnimationState animationState )
 	{
 		Color oldCol = batch.getColor();
-		Color col = new Color( oldCol ).mul( colour );
+		Color col = tempColour.set( oldCol ).mul( colour );
 		batch.setColor( col );
 
 		drawTexture( batch, textures.get( animationState.texIndex ), x, y, width, height, scaleX, scaleY, animationState );

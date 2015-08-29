@@ -32,6 +32,7 @@ import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
+import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
@@ -68,7 +69,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	public GameEntity caster;
 	public HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
 
-	public Array<Passability> abilityPassability = new Array<Passability>( new Passability[] { Passability.LEVITATE } );
+	public EnumBitflag<Passability> abilityPassability = new EnumBitflag<Passability>( Passability.LEVITATE );
 
 	private ShadowCastCache cache = new ShadowCastCache();
 

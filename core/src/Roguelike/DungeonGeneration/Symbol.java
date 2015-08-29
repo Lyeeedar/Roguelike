@@ -1,8 +1,6 @@
 package Roguelike.DungeonGeneration;
 
-import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
@@ -10,13 +8,13 @@ import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Tiles.TileData;
+import Roguelike.Util.EnumBitflag;
 
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 //----------------------------------------------------------------------
 public class Symbol implements PathfindingTile
-{		
+{
 	public char character;
 
 	public Element tileData;
@@ -28,12 +26,13 @@ public class Symbol implements PathfindingTile
 	public String entityData;
 
 	public String metaValue;
-	
-	//----------------------------------------------------------------------
-	private long processedTileData;	
-	private EnumSet<Passability> tilePassable;	
-	//----------------------------------------------------------------------
-	
+
+	// ----------------------------------------------------------------------
+	private long processedTileData;
+	private EnumBitflag<Passability> tilePassable;
+
+	// ----------------------------------------------------------------------
+
 	public Symbol copy()
 	{
 		Symbol s = new Symbol();
@@ -43,83 +42,80 @@ public class Symbol implements PathfindingTile
 		s.environmentEntityData = environmentEntityData;
 		s.entityData = entityData;
 		s.metaValue = metaValue;
-		
+
 		return s;
 	}
-	
+
 	public boolean hasEnvironmentEntity()
 	{
 		return environmentData != null;
 	}
-	
-	public EnvironmentEntity getEnvironmentEntity(String levelUID)
+
+	public EnvironmentEntity getEnvironmentEntity( String levelUID )
 	{
-		if (environmentData != null)
+		if ( environmentData != null )
 		{
-			EnvironmentEntity ee = EnvironmentEntity.load(environmentData, levelUID);
-			
-			if (ee.creationData.get("Type", "").equals("Transition"))
+			EnvironmentEntity ee = EnvironmentEntity.load( environmentData, levelUID );
+
+			if ( ee.creationData.get( "Type", "" ).equals( "Transition" ) )
 			{
-				if (environmentEntityData != null)
+				if ( environmentEntityData != null )
 				{
-					ee.data = environmentEntityData;					
+					ee.data = environmentEntityData;
 				}
 				else
 				{
 					environmentEntityData = ee.data;
 				}
-				
+
 			}
-						
+
 			return ee;
 		}
-		
+
 		return null;
 	}
 
-	public boolean getEnvironmentEntityPassable(Array<Passability> travelType)
+	public boolean getEnvironmentEntityPassable( EnumBitflag<Passability> travelType )
 	{
-		if (environmentData != null)
-		{
-			return Passability.isPassable(Passability.parse(environmentData.get("Passable", "true")), travelType);
-		}
-		
+		if ( environmentData != null ) { return Passability.parse( environmentData.get( "Passable", "true" ) ).intersect( travelType ); }
+
 		return true;
 	}
-	
+
 	public boolean hasGameEntity()
 	{
 		return entityData != null;
 	}
-	
+
 	public GameEntity getGameEntity()
 	{
-		return entityData != null ? GameEntity.load(entityData) : null;
+		return entityData != null ? GameEntity.load( entityData ) : null;
 	}
-	
+
 	public TileData getTileData()
 	{
-		TileData data = TileData.parse(tileData);
-		
+		TileData data = TileData.parse( tileData );
+
 		processedTileData = tileData.hashCode();
 		tilePassable = data.passableBy;
-		
+
 		return data;
 	}
 
-	public static Symbol parse(Element xml, HashMap<Character, Symbol> sharedSymbolMap, HashMap<Character, Symbol> localSymbolMap)
+	public static Symbol parse( Element xml, HashMap<Character, Symbol> sharedSymbolMap, HashMap<Character, Symbol> localSymbolMap )
 	{
 		Symbol symbol = new Symbol();
 
 		// load the base symbol
-		if (xml.getAttribute("Extends", null) != null)
+		if ( xml.getAttribute( "Extends", null ) != null )
 		{
-			char extendsSymbol = xml.getAttribute("Extends").charAt(0);
+			char extendsSymbol = xml.getAttribute( "Extends" ).charAt( 0 );
 
-			Symbol rs = localSymbolMap != null ? localSymbolMap.get(extendsSymbol) : null;
-			if (rs == null)
+			Symbol rs = localSymbolMap != null ? localSymbolMap.get( extendsSymbol ) : null;
+			if ( rs == null )
 			{
-				rs = sharedSymbolMap.get(extendsSymbol);
+				rs = sharedSymbolMap.get( extendsSymbol );
 			}
 
 			symbol.character = rs.character;
@@ -130,65 +126,63 @@ public class Symbol implements PathfindingTile
 		}
 
 		// fill in the new values
-		symbol.character = xml.get("Char", ""+symbol.character).charAt(0);
+		symbol.character = xml.get( "Char", "" + symbol.character ).charAt( 0 );
 
-		if (xml.getChildByName("TileData") != null)
+		if ( xml.getChildByName( "TileData" ) != null )
 		{
-			symbol.tileData = xml.getChildByName("TileData");
+			symbol.tileData = xml.getChildByName( "TileData" );
 		}
 
-		if (xml.getChildByName("EnvironmentData") != null)
+		if ( xml.getChildByName( "EnvironmentData" ) != null )
 		{
-			symbol.environmentData = xml.getChildByName("EnvironmentData");
+			symbol.environmentData = xml.getChildByName( "EnvironmentData" );
 		}
 
-		if (xml.getChildByName("EntityData") != null)
+		if ( xml.getChildByName( "EntityData" ) != null )
 		{
-			symbol.entityData = xml.get("EntityData");
+			symbol.entityData = xml.get( "EntityData" );
 		}
 
-		symbol.metaValue = xml.get("MetaValue", symbol.metaValue);
+		symbol.metaValue = xml.get( "MetaValue", symbol.metaValue );
 
 		return symbol;
 	}
 
-	public boolean isPassable(Array<Passability> travelType)
+	public boolean isPassable( EnumBitflag<Passability> travelType )
 	{
-		if (processedTileData != tileData.hashCode())
+		if ( processedTileData != tileData.hashCode() )
 		{
 			getTileData();
 		}
-		
-		return Passability.isPassable(tilePassable, travelType);
+
+		return tilePassable.intersect( travelType );
 	}
 
 	@Override
 	public String toString()
 	{
-		return ""+character;
+		return "" + character;
 	}
 
 	@Override
-	public boolean getPassable(Array<Passability> travelType)
+	public boolean getPassable( EnumBitflag<Passability> travelType )
 	{
-		return isPassable(travelType);
+		return isPassable( travelType );
 	}
 
-	private static final Array<Passability> InfluencePassable = new Array<Passability>(new Passability[]{Passability.WALK});
+	private static final EnumBitflag<Passability> InfluencePassable = new EnumBitflag<Passability>( Passability.WALK );
+
 	@Override
 	public int getInfluence()
 	{
-		if (character == 'F')
+		if ( character == 'F' )
 		{
-			if (hasEnvironmentEntity())
+			if ( hasEnvironmentEntity() )
 			{
-				if (!getEnvironmentEntityPassable(InfluencePassable))
-				{
-					return 100;
-				}
+				if ( !getEnvironmentEntityPassable( InfluencePassable ) ) { return 100; }
 			}
 		}
-		
+
 		return 0;
 	}
 }

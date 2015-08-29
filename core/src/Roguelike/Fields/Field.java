@@ -2,7 +2,6 @@ package Roguelike.Fields;
 
 import java.io.IOException;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.HashMap;
 
 import Roguelike.AssetManager;
@@ -17,6 +16,7 @@ import Roguelike.GameEvent.IGameObject;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
@@ -75,8 +75,8 @@ public class Field implements IGameObject
 
 	public HashMap<String, Object> data = new HashMap<String, Object>();
 
-	public EnumSet<Passability> allowPassability = EnumSet.noneOf( Passability.class );
-	public EnumSet<Passability> restrictPassability = EnumSet.noneOf( Passability.class );
+	public EnumBitflag<Passability> allowPassability = new EnumBitflag<Passability>();
+	public EnumBitflag<Passability> restrictPassability = new EnumBitflag<Passability>();
 
 	public void update( float cost )
 	{
@@ -351,15 +351,15 @@ public class Field implements IGameObject
 		String allowString = xml.get( "Allow", null );
 		if ( allowString != null )
 		{
-			EnumSet<Passability> pass = Passability.parse( allowString );
-			allowPassability.addAll( pass );
+			EnumBitflag<Passability> pass = Passability.parse( allowString );
+			allowPassability.setAll( pass );
 		}
 
 		String restrictString = xml.get( "Restrict", null );
 		if ( restrictString != null )
 		{
-			EnumSet<Passability> pass = Passability.parse( restrictString );
-			restrictPassability.addAll( pass );
+			EnumBitflag<Passability> pass = Passability.parse( restrictString );
+			restrictPassability.setAll( pass );
 		}
 	}
 

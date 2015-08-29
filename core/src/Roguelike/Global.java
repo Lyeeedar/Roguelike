@@ -1,7 +1,6 @@
 package Roguelike;
 
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
@@ -23,6 +22,7 @@ import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.UI.MessageStack.Line;
 import Roguelike.UI.MessageStack.Message;
+import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
@@ -271,9 +271,9 @@ public class Global
 			this.stat = stat;
 		}
 
-		public static Array<Passability> variableMapToTravelType( HashMap<String, Integer> stats )
+		public static EnumBitflag<Passability> variableMapToTravelType( HashMap<String, Integer> stats )
 		{
-			Array<Passability> travelType = new Array<Passability>();
+			EnumBitflag<Passability> travelType = new EnumBitflag<Passability>();
 
 			for ( Passability p : Passability.values() )
 			{
@@ -284,7 +284,7 @@ public class Global
 
 					if ( val > 0 )
 					{
-						travelType.add( p );
+						travelType.setBit( p );
 					}
 				}
 			}
@@ -292,9 +292,9 @@ public class Global
 			return travelType;
 		}
 
-		public static EnumSet<Passability> parse( String passable )
+		public static EnumBitflag<Passability> parse( String passable )
 		{
-			EnumSet<Passability> passableBy = EnumSet.noneOf( Passability.class );
+			EnumBitflag<Passability> passableBy = new EnumBitflag<Passability>();
 
 			if ( passable != null )
 			{
@@ -303,7 +303,7 @@ public class Global
 					// all
 					for ( Passability p : Passability.values() )
 					{
-						passableBy.add( p );
+						passableBy.setBit( p );
 					}
 				}
 				else if ( passable.equalsIgnoreCase( "false" ) )
@@ -315,7 +315,7 @@ public class Global
 					String[] split = passable.split( "," );
 					for ( String p : split )
 					{
-						passableBy.add( Passability.valueOf( p.toUpperCase() ) );
+						passableBy.setBit( Passability.valueOf( p.toUpperCase() ) );
 					}
 				}
 			}
@@ -323,9 +323,9 @@ public class Global
 			return passableBy;
 		}
 
-		public static Array<Passability> parseArray( String passable )
+		public static EnumBitflag<Passability> parseArray( String passable )
 		{
-			Array<Passability> passableBy = new Array<Passability>();
+			EnumBitflag<Passability> passableBy = new EnumBitflag<Passability>();
 
 			if ( passable != null )
 			{
@@ -334,7 +334,7 @@ public class Global
 					// all
 					for ( Passability p : Passability.values() )
 					{
-						passableBy.add( p );
+						passableBy.setBit( p );
 					}
 				}
 				else if ( passable.equalsIgnoreCase( "false" ) )
@@ -346,7 +346,7 @@ public class Global
 					String[] split = passable.split( "," );
 					for ( String p : split )
 					{
-						passableBy.add( Passability.valueOf( p.toUpperCase() ) );
+						passableBy.setBit( Passability.valueOf( p.toUpperCase() ) );
 					}
 				}
 			}
@@ -354,25 +354,6 @@ public class Global
 			return passableBy;
 		}
 
-		public static boolean isPassable( EnumSet<Passability> passableBy, Array<Passability> travelType )
-		{
-			// if (passableBy == null || travelType == null)
-			// {
-			// return false;
-			// }
-
-			boolean passable = false;
-			for ( Passability p : travelType )
-			{
-				if ( passableBy.contains( p ) )
-				{
-					passable = true;
-					break;
-				}
-			}
-
-			return passable;
-		}
 	}
 
 	// ----------------------------------------------------------------------

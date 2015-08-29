@@ -38,6 +38,7 @@ import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
+import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
@@ -157,10 +158,6 @@ public class Level
 		updateVisibleTiles();
 		lightList.clear();
 
-		Color acol = new Color( Ambient );
-		acol.mul( acol.a );
-		acol.a = 1;
-
 		int playerViewRange = player.getVariable( Statistic.RANGE );
 		for ( int x = 0; x < width; x++ )
 		{
@@ -168,12 +165,11 @@ public class Level
 			{
 				GameTile tile = Grid[x][y];
 
+				tile.light.set( tile.ambientColour );
 				getLightsForTile( tile, lightList, playerViewRange );
 
 				if ( tile.visible )
 				{
-					tile.light = new Color( acol );
-
 					updateSpritesForTile( tile, delta );
 					updateSpriteEffectsForTile( tile, delta );
 				}
@@ -183,24 +179,6 @@ public class Level
 				}
 
 				cleanUpDeadForTile( tile );
-			}
-		}
-
-		// do shadows
-		for ( int x = 0; x < width; x++ )
-		{
-			for ( int y = 0; y < height; y++ )
-			{
-				GameTile tile = Grid[x][y];
-				if ( tile.tileData.shadow != null )
-				{
-					if ( Math.abs( x - player.tile.x ) > playerViewRange || Math.abs( y - player.tile.y ) > playerViewRange )
-					{
-						continue;
-					}
-
-					tile.tileData.shadow.apply( Grid, x, y );
-				}
 			}
 		}
 
@@ -334,6 +312,35 @@ public class Level
 	// ####################################################################//
 	// region Lights
 
+	public void calculateAmbient()
+	{
+		Color acol = new Color( Ambient );
+		acol.mul( acol.a );
+		acol.a = 1;
+
+		for ( int x = 0; x < width; x++ )
+		{
+			for ( int y = 0; y < height; y++ )
+			{
+				GameTile tile = Grid[x][y];
+				tile.ambientColour.set( acol );
+			}
+		}
+
+		// do shadows
+		for ( int x = 0; x < width; x++ )
+		{
+			for ( int y = 0; y < height; y++ )
+			{
+				GameTile tile = Grid[x][y];
+				if ( tile.tileData.shadow != null )
+				{
+					tile.tileData.shadow.apply( Grid, x, y );
+				}
+			}
+		}
+	}
+
 	private void calculateLight( float delta, Array<Light> lights )
 	{
 		for ( Light l : lights )
@@ -361,11 +368,13 @@ public class Level
 				dst = 0;
 			}
 
-			Color lcol = tempColor.set( l.colour ).mul( dst );
-			lcol.mul( lcol.a );
-			lcol.a = 1;
+			tempColour.set( l.colour );
+			tempColour.mul( tempColour.a );
+			tempColour.a = 1;
 
-			tile.light.add( lcol );
+			tempColour.mul( dst );
+
+			tile.light.add( tempColour );
 		}
 	}
 
@@ -376,17 +385,6 @@ public class Level
 
 		int px = player.tile.x;
 		int py = player.tile.y;
-
-		if ( tile.tileData.light != null )
-		{
-			if ( checkLightCloseEnough( lx, ly, (int) tile.tileData.light.baseIntensity, px, py, viewRange ) )
-			{
-				Light l = tile.tileData.light.copy();
-				l.lx = lx;
-				l.ly = ly;
-				output.add( l );
-			}
-		}
 
 		if ( tile.fields.size() > 0 )
 		{
@@ -938,6 +936,20 @@ public class Level
 				GameEntity e = Grid[x][y].entity;
 				if ( e != null && e != player )
 				{
+					if ( e.tile.visible )
+					{
+						e.seen = true;
+					}
+					if ( !e.seen )
+					{
+						continue;
+					}
+
+					if ( Math.min( Math.abs( x - player.tile.x ), Math.abs( y - player.tile.y ) ) > 25 )
+					{
+						continue;
+					}
+
 					e.update( cost );
 
 					if ( e.actionDelayAccumulator > 0 )
@@ -1185,16 +1197,13 @@ public class Level
 	// ####################################################################//
 	// region Data
 
-	private static final Array<Passability> ItemDropPassability = new Array<Passability>( new Passability[] { Passability.WALK, Passability.ENTITY } );
-
-	private static final Color tempColor = new Color();
+	private static final EnumBitflag<Passability> ItemDropPassability = new EnumBitflag<Passability>( Passability.WALK, Passability.ENTITY );
 
 	private Array<GameEntity> visibleList = new Array<GameEntity>( false, 16 );
 	private Array<GameEntity> invisibleList = new Array<GameEntity>( false, 16 );
 
 	private Array<Light> lightList = new Array<Light>( false, 16 );
 
-	private Array<GameEntity> tempEntityList = new Array<GameEntity>( false, 16 );
 	private Array<EnvironmentEntity> tempEnvironmentEntityList = new Array<EnvironmentEntity>( false, 16 );
 	private Array<Field> tempFieldList = new Array<Field>( false, 16 );
 	private Array<Light> tempLightList = new Array<Light>( false, 16 );
@@ -1224,6 +1233,8 @@ public class Level
 	public int height;
 
 	private final ShadowCastCache visibilityData = new ShadowCastCache();
+
+	private final Color tempColour = new Color();
 
 	// endregion Data
 	// ####################################################################//

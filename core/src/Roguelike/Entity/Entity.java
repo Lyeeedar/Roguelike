@@ -15,6 +15,7 @@ import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
@@ -282,7 +283,7 @@ public abstract class Entity
 	// ----------------------------------------------------------------------
 	protected HashMap<String, Integer> baseVariableMap = new HashMap<String, Integer>();
 	protected HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
-	protected Array<Passability> travelType = new Array<Passability>();
+	protected EnumBitflag<Passability> travelType = new EnumBitflag<Passability>();
 
 	// ----------------------------------------------------------------------
 	public int damageAccumulator = 0;

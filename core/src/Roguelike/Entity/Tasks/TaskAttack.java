@@ -13,6 +13,7 @@ import Roguelike.Sprite.SpriteAnimation.BumpAnimation;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation.MoveEquation;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -20,7 +21,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class TaskAttack extends AbstractTask
 {
-	private static final Array<Passability> WeaponPassability = new Array<Passability>( new Passability[] { Passability.LIGHT } );
+	private static final EnumBitflag<Passability> WeaponPassability = new EnumBitflag<Passability>( Passability.LIGHT );
 
 	public Direction dir;
 
@@ -96,7 +97,7 @@ public class TaskAttack extends AbstractTask
 			{
 				entity.attack( tile.entity, dir );
 			}
-			else if ( tile.environmentEntity != null && !Passability.isPassable( tile.environmentEntity.passableBy, entity.getTravelType() ) )
+			else if ( tile.environmentEntity != null && !tile.environmentEntity.passableBy.intersect( entity.getTravelType() ) )
 			{
 				entity.attack( tile.environmentEntity, dir );
 			}
@@ -187,7 +188,7 @@ public class TaskAttack extends AbstractTask
 			{
 				entity.attack( bestTarget.entity, dir );
 			}
-			else if ( bestTarget.environmentEntity != null && !Passability.isPassable( bestTarget.environmentEntity.passableBy, entity.getTravelType() ) )
+			else if ( bestTarget.environmentEntity != null && !bestTarget.environmentEntity.passableBy.intersect( entity.getTravelType() ) )
 			{
 				entity.attack( bestTarget.environmentEntity, dir );
 			}
@@ -288,9 +289,7 @@ public class TaskAttack extends AbstractTask
 				break;
 			}
 
-			if ( tile.environmentEntity != null
-					&& tile.environmentEntity.canTakeDamage
-					&& !Passability.isPassable( tile.environmentEntity.passableBy, obj.getTravelType() ) )
+			if ( tile.environmentEntity != null && tile.environmentEntity.canTakeDamage && !tile.environmentEntity.passableBy.intersect( obj.getTravelType() ) )
 			{
 				hitSomething = true;
 			}

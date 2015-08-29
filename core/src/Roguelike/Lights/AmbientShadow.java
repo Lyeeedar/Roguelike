@@ -23,11 +23,6 @@ public class AmbientShadow
 
 				GameTile tile = grid[x][y];
 
-				if ( !tile.visible )
-				{
-					continue;
-				}
-
 				float dst = 1 - Vector2.dst2( px, py, tile.x, tile.y ) / ( range * range );
 				if ( dst < 0 )
 				{
@@ -36,7 +31,7 @@ public class AmbientShadow
 
 				float scaleVal = 1.0f - factor * dst;
 
-				tile.light.mul( scaleVal );
+				tile.ambientColour.mul( scaleVal );
 			}
 		}
 	}

@@ -27,6 +27,7 @@ import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
+import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.ImageUtils;
 
 import com.badlogic.gdx.utils.Array;
@@ -1229,6 +1230,8 @@ public class RecursiveDockGenerator
 
 		level.depth = saveLevel.depth;
 		level.UID = saveLevel.UID;
+
+		level.calculateAmbient();
 	}
 
 	// endregion Private Methods
@@ -1236,7 +1239,7 @@ public class RecursiveDockGenerator
 	// region Data
 
 	// ----------------------------------------------------------------------
-	public static final Array<Passability> GeneratorPassability = new Array<Passability>( new Passability[] { Passability.WALK } );
+	public static final EnumBitflag<Passability> GeneratorPassability = new EnumBitflag<Passability>( Passability.WALK );
 
 	public int percent;
 	public String generationText = "Selecting Rooms";
@@ -2039,7 +2042,7 @@ public class RecursiveDockGenerator
 
 		// ----------------------------------------------------------------------
 		@Override
-		public boolean getPassable( Array<Passability> travelType )
+		public boolean getPassable( EnumBitflag<Passability> travelType )
 		{
 			return passable;
 		}
