@@ -20,7 +20,7 @@
 	
 	<CorridorStyle>
 	    <PathStyle>Wandering</PathStyle>
-	    <Width>2</Width>
+	    <Width>1</Width>
 	    
 	     <CentralConstant>
 			<TileData>

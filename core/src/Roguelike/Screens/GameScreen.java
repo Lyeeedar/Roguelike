@@ -326,7 +326,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
 			{
-				GameTile gtile = Global.CurrentLevel.getGameTile( x, y );
+				GameTile gtile = Global.CurrentLevel.Grid[x][y];
 
 				if ( gtile.visible )
 				{
@@ -337,18 +337,21 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						s.render( batch, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
 					}
 
-					for ( FieldLayer layer : FieldLayer.values() )
+					if ( gtile.hasFields )
 					{
-						Field field = gtile.fields.get( layer );
-						if ( field != null )
+						for ( FieldLayer layer : FieldLayer.values() )
 						{
-							if ( field.layer == FieldLayer.GROUND )
+							Field field = gtile.fields.get( layer );
+							if ( field != null )
 							{
-								field.sprite.render( batch, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
-							}
-							else
-							{
-								overFields.add( field );
+								if ( field.layer == FieldLayer.GROUND )
+								{
+									field.sprite.render( batch, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
+								}
+								else
+								{
+									overFields.add( field );
+								}
 							}
 						}
 					}
@@ -398,19 +401,121 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private void renderSeenTiles( int offsetx, int offsety, int tileSize3 )
 	{
+		Color col = batch.getColor();
+
 		batch.setShader( GrayscaleShader.Instance );
 		for ( int x = 0; x < Global.CurrentLevel.width; x++ )
 		{
 			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
 			{
-				GameTile gtile = Global.CurrentLevel.getGameTile( x, y );
-				SeenTile stile = Global.CurrentLevel.getSeenTile( x, y );
+				GameTile gtile = Global.CurrentLevel.Grid[x][y];
+				SeenTile stile = Global.CurrentLevel.SeenGrid[x][y];
 
 				if ( !gtile.visible && stile.seen )
 				{
-					batch.setColor( stile.light );
-					for ( SeenHistoryItem hist : stile.history )
+					if ( !stile.light.equals( col ) )
 					{
+						batch.setColor( stile.light );
+						col = stile.light;
+					}
+
+					for ( int i = 0; i < stile.tileHistory.size; i++ )
+					{
+						SeenHistoryItem hist = stile.tileHistory.items[i];
+
+						int cx = x * Global.TileSize + offsetx;
+						int cy = y * Global.TileSize + offsety;
+
+						if ( hist.location != Direction.CENTER )
+						{
+							Direction dir = hist.location;
+							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+						}
+						else
+						{
+							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
+						}
+					}
+
+					if ( stile.fieldHistory.size > 0 )
+					{
+						for ( int i = 0; i < stile.fieldHistory.size; i++ )
+						{
+							SeenHistoryItem hist = stile.fieldHistory.items[i];
+
+							int cx = x * Global.TileSize + offsetx;
+							int cy = y * Global.TileSize + offsety;
+
+							if ( hist.location != Direction.CENTER )
+							{
+								Direction dir = hist.location;
+								hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+							}
+							else
+							{
+								hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
+							}
+						}
+					}
+
+					if ( stile.environmentHistory != null )
+					{
+						SeenHistoryItem hist = stile.environmentHistory;
+
+						int cx = x * Global.TileSize + offsetx;
+						int cy = y * Global.TileSize + offsety;
+
+						if ( hist.location != Direction.CENTER )
+						{
+							Direction dir = hist.location;
+							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+						}
+						else
+						{
+							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
+						}
+					}
+
+					if ( stile.entityHistory != null )
+					{
+						SeenHistoryItem hist = stile.entityHistory;
+
+						int cx = x * Global.TileSize + offsetx;
+						int cy = y * Global.TileSize + offsety;
+
+						if ( hist.location != Direction.CENTER )
+						{
+							Direction dir = hist.location;
+							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+						}
+						else
+						{
+							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
+						}
+					}
+
+					if ( stile.itemHistory != null )
+					{
+						SeenHistoryItem hist = stile.itemHistory;
+
+						int cx = x * Global.TileSize + offsetx;
+						int cy = y * Global.TileSize + offsety;
+
+						if ( hist.location != Direction.CENTER )
+						{
+							Direction dir = hist.location;
+							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+						}
+						else
+						{
+							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
+						}
+					}
+
+					if ( stile.essenceHistory != null )
+					{
+						SeenHistoryItem hist = stile.essenceHistory;
+
 						int cx = x * Global.TileSize + offsetx;
 						int cy = y * Global.TileSize + offsety;
 
@@ -438,7 +543,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
 			{
-				GameTile gtile = Global.CurrentLevel.getGameTile( x, y );
+				GameTile gtile = Global.CurrentLevel.Grid[x][y];
 
 				if ( gtile.visible && gtile.items.size > 0 )
 				{
@@ -519,18 +624,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 			entity.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
 
-			for ( SpriteEffect e : entity.spriteEffects )
-			{
-				if ( e.Corner == Direction.CENTER )
-				{
-					e.Sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
-				}
-				else
-				{
-					e.Sprite.render( batch, cx + tileSize3 * ( e.Corner.getX() * -1 + 1 ), cy + tileSize3 * ( e.Corner.getY() * -1 + 1 ), tileSize3, tileSize3 );
-				}
-			}
-
 			batch.setColor( Color.WHITE );
 
 			if ( entity.sprite.spriteAnimation != null )
@@ -547,24 +640,27 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private void renderOverheadEntities( int offsetx, int offsety, int tileSize3 )
 	{
-		for ( EnvironmentEntity ee : overHead )
+		if ( overHead.size > 0 )
 		{
-			int cx = ee.tile.x * Global.TileSize + offsetx;
-			int cy = ee.tile.y * Global.TileSize + offsety;
+			for ( EnvironmentEntity ee : overHead )
+			{
+				int cx = ee.tile.x * Global.TileSize + offsetx;
+				int cy = ee.tile.y * Global.TileSize + offsety;
 
-			if ( ee.location == Direction.CENTER )
-			{
-				ee.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
-			}
-			else
-			{
-				Direction dir = ee.location;
-				ee.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
-			}
+				if ( ee.location == Direction.CENTER )
+				{
+					ee.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
+				}
+				else
+				{
+					Direction dir = ee.location;
+					ee.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+				}
 
-			if ( ee.HP < ee.statistics.get( Statistic.MAXHP ) || ee.stacks.size > 0 )
-			{
-				hpBars.add( ee );
+				if ( ee.HP < ee.statistics.get( Statistic.MAXHP ) || ee.stacks.size > 0 )
+				{
+					hpBars.add( ee );
+				}
 			}
 		}
 	}
@@ -594,13 +690,16 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private void renderActiveAbilities( int offsetx, int offsety )
 	{
-		for ( ActiveAbility aa : Global.CurrentLevel.ActiveAbilities )
+		if ( Global.CurrentLevel.ActiveAbilities.size > 0 )
 		{
-			for ( GameTile tile : aa.AffectedTiles )
+			for ( ActiveAbility aa : Global.CurrentLevel.ActiveAbilities )
 			{
-				if ( tile.visible )
+				for ( GameTile tile : aa.AffectedTiles )
 				{
-					aa.getSprite().render( batch, tile.x * Global.TileSize + offsetx, tile.y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
+					if ( tile.visible )
+					{
+						aa.getSprite().render( batch, tile.x * Global.TileSize + offsetx, tile.y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
+					}
 				}
 			}
 		}
@@ -613,9 +712,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
 			{
-				GameTile gtile = Global.CurrentLevel.getGameTile( x, y );
+				GameTile gtile = Global.CurrentLevel.Grid[x][y];
 
-				if ( gtile.visible )
+				if ( gtile.visible && gtile.spriteEffects.size > 0 )
 				{
 					for ( SpriteEffect e : gtile.spriteEffects )
 					{
@@ -640,17 +739,20 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private void renderFields( Array<Field> fields, int offsetx, int offsety )
 	{
-		for ( Field field : fields )
+		if ( fields.size > 0 )
 		{
-			int x = field.tile.x;
-			int y = field.tile.y;
+			for ( Field field : fields )
+			{
+				int x = field.tile.x;
+				int y = field.tile.y;
 
-			int cx = x * Global.TileSize + offsetx;
-			int cy = y * Global.TileSize + offsety;
+				int cx = x * Global.TileSize + offsetx;
+				int cy = y * Global.TileSize + offsety;
 
-			batch.setColor( field.tile.light );
+				batch.setColor( field.tile.light );
 
-			field.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
+				field.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
+			}
 		}
 	}
 
@@ -661,7 +763,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
 			{
-				GameTile gtile = Global.CurrentLevel.getGameTile( x, y );
+				GameTile gtile = Global.CurrentLevel.Grid[x][y];
 
 				if ( gtile.visible && gtile.essence > 0 && gtile.spriteEffects.size == 0 )
 				{

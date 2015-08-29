@@ -132,13 +132,25 @@ public class Sprite
 
 	public void render( Batch batch, int x, int y, int width, int height, float scaleX, float scaleY, AnimationState animationState )
 	{
-		Color oldCol = batch.getColor();
-		Color col = tempColour.set( oldCol ).mul( colour );
-		batch.setColor( col );
+		Color oldCol = null;
+		if ( colour.a == 0 )
+		{
+			return;
+		}
+		else if ( colour.r != 1 || colour.g != 1 || colour.b != 1 )
+		{
+			oldCol = batch.getColor();
 
-		drawTexture( batch, textures.get( animationState.texIndex ), x, y, width, height, scaleX, scaleY, animationState );
+			Color col = tempColour.set( oldCol ).mul( colour );
+			batch.setColor( col );
+		}
 
-		batch.setColor( oldCol );
+		drawTexture( batch, textures.items[animationState.texIndex], x, y, width, height, scaleX, scaleY, animationState );
+
+		if ( oldCol != null )
+		{
+			batch.setColor( oldCol );
+		}
 	}
 
 	private void drawTexture( Batch batch, TextureRegion texture, int x, int y, int width, int height, float scaleX, float scaleY, AnimationState animationState )

@@ -1,48 +1,168 @@
 package Roguelike.Tiles;
 
-import Roguelike.Global;
+import Roguelike.AssetManager;
 import Roguelike.Global.Direction;
+import Roguelike.Entity.GameEntity;
+import Roguelike.Fields.Field;
+import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationState;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 
 public class SeenTile
 {
 	public boolean seen = false;
-	public Array<SeenHistoryItem> history = new Array<SeenHistoryItem>();
+
+	public Array<SeenHistoryItem> tileHistory = new Array<SeenHistoryItem>( false, 1, SeenHistoryItem.class );
+	public Array<SeenHistoryItem> fieldHistory = new Array<SeenHistoryItem>( false, 1, SeenHistoryItem.class );
+	public SeenHistoryItem environmentHistory;
+	public SeenHistoryItem entityHistory;
+	public SeenHistoryItem itemHistory;
+	public SeenHistoryItem essenceHistory;
+
 	public GameTile gameTile;
 	public Color light = new Color( 1 );
 
-	public Table createTable( Skin skin )
+	public void set( GameTile tile, GameEntity player )
 	{
-		Table table = new Table();
+		light.set( tile.light );
+		gameTile = tile;
 
-		if ( gameTile.visible )
+		// Update tile history list size
+		if ( tileHistory.size != tile.tileData.sprites.length )
 		{
-			table.add( new Label( "You see:", skin ) );
+			Pools.freeAll( tileHistory );
+			tileHistory.clear();
+
+			for ( int i = 0; i < tile.tileData.sprites.length; i++ )
+			{
+				tileHistory.add( Pools.obtain( SeenHistoryItem.class ) );
+			}
+		}
+
+		// Store tile history
+		for ( int i = 0; i < tile.tileData.sprites.length; i++ )
+		{
+			tileHistory.get( i ).set( tile.tileData.sprites[i] );
+		}
+
+		if ( tile.hasFields )
+		{
+			// Update field history list size
+			if ( fieldHistory.size != tile.fields.size() )
+			{
+				Pools.freeAll( fieldHistory );
+				fieldHistory.clear();
+
+				for ( int i = 0; i < tile.fields.size(); i++ )
+				{
+					fieldHistory.add( Pools.obtain( SeenHistoryItem.class ) );
+				}
+			}
+
+			// Store field history
+			int i = 0;
+			for ( FieldLayer layer : FieldLayer.values() )
+			{
+				Field field = tile.fields.get( layer );
+				if ( field != null )
+				{
+					fieldHistory.get( i++ ).set( field.sprite );
+				}
+			}
+		}
+		else if ( fieldHistory.size > 0 )
+		{
+			// Clear field history if it should be empty
+			Pools.freeAll( fieldHistory );
+			fieldHistory.clear();
+		}
+
+		// Store environment history
+		if ( tile.environmentEntity != null )
+		{
+			if ( environmentHistory == null )
+			{
+				environmentHistory = Pools.obtain( SeenHistoryItem.class );
+			}
+
+			environmentHistory.set( tile.environmentEntity.sprite );
+			environmentHistory.location = tile.environmentEntity.location;
+		}
+		else if ( environmentHistory != null )
+		{
+			Pools.free( environmentHistory );
+			environmentHistory = null;
+		}
+
+		// Store entity history
+		if ( tile.entity != null && tile.entity != player )
+		{
+			if ( entityHistory == null )
+			{
+				entityHistory = Pools.obtain( SeenHistoryItem.class );
+			}
+
+			entityHistory.set( tile.entity.sprite );
+		}
+		else if ( entityHistory != null )
+		{
+			Pools.free( entityHistory );
+			entityHistory = null;
+		}
+
+		// Store item history
+		if ( tile.items.size == 0 )
+		{
+			if ( itemHistory != null )
+			{
+				Pools.free( itemHistory );
+				itemHistory = null;
+			}
+		}
+		else if ( tile.items.size == 1 )
+		{
+			if ( itemHistory == null )
+			{
+				itemHistory = Pools.obtain( SeenHistoryItem.class );
+			}
+
+			itemHistory.set( tile.items.get( 0 ).getIcon() );
 		}
 		else
 		{
-			table.add( new Label( "You remember seeing:", skin ) );
+			if ( itemHistory == null )
+			{
+				itemHistory = Pools.obtain( SeenHistoryItem.class );
+			}
+
+			itemHistory.set( AssetManager.loadSprite( "bag" ) );
 		}
 
-		table.row();
-
-		for ( SeenHistoryItem shi : history )
+		// Store essence history
+		if ( tile.essence > 0 )
 		{
-			Label l = new Label( shi.description, skin );
-			l.setWrap( true );
-			table.add( l ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
-			table.row();
-		}
+			Sprite sprite = AssetManager.loadSprite( "orb" );
+			float scale = 0.5f + 0.5f * ( MathUtils.clamp( tile.essence, 10.0f, 1000.0f ) / 1000.0f );
+			sprite.baseScale[0] = scale;
+			sprite.baseScale[1] = scale;
 
-		return table;
+			if ( essenceHistory == null )
+			{
+				essenceHistory = Pools.obtain( SeenHistoryItem.class );
+			}
+
+			essenceHistory.set( sprite );
+		}
+		else if ( essenceHistory != null )
+		{
+			Pools.free( essenceHistory );
+			essenceHistory = null;
+		}
 	}
 
 	public static class SeenHistoryItem
@@ -51,27 +171,21 @@ public class SeenTile
 		public AnimationState animationState = new AnimationState();
 		public Direction location = Direction.CENTER;
 
-		String description;
-		float turn;
-
 		public SeenHistoryItem()
 		{
 
 		}
 
-		public SeenHistoryItem( Sprite sprite, String desc )
+		public SeenHistoryItem( Sprite sprite )
 		{
-			set( sprite, desc );
+			set( sprite );
 		}
 
-		public SeenHistoryItem set( Sprite sprite, String desc )
+		public SeenHistoryItem set( Sprite sprite )
 		{
 			this.sprite = sprite;
 			this.animationState.set( sprite.animationState );
-			this.description = desc;
 			this.location = Direction.CENTER;
-
-			turn = Global.AUT;
 
 			return this;
 		}
@@ -83,8 +197,6 @@ public class SeenTile
 			item.sprite = sprite;
 			item.animationState = animationState;
 			item.location = location;
-			item.description = description;
-			item.turn = turn;
 
 			return item;
 		}

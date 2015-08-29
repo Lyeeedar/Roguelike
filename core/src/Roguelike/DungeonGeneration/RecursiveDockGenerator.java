@@ -46,8 +46,8 @@ public class RecursiveDockGenerator
 
 		if ( Global.ANDROID )
 		{
-			width = 20;
-			height = 20;
+			width = 50;
+			height = 50;
 		}
 
 		minPadding = ( dfp.corridorStyle.minWidth / 2 ) + 1;
@@ -363,13 +363,13 @@ public class RecursiveDockGenerator
 		}
 
 		requiredRooms.sort( new Comparator<Room>()
-				{
+		{
 			@Override
 			public int compare( Room arg0, Room arg1 )
 			{
 				return arg0.comparisonString().compareTo( arg1.comparisonString() );
 			}
-				} );
+		} );
 	}
 
 	// ----------------------------------------------------------------------
@@ -709,14 +709,14 @@ public class RecursiveDockGenerator
 			tris.add( tri );
 		}
 		tris.sort( new Comparator<Triangle>()
-		{
+				{
 
 			@Override
 			public int compare( Triangle arg0, Triangle arg1 )
 			{
 				return arg0.compareTo( arg1 );
 			}
-		} );
+				} );
 
 		for ( Triangle tri : tris )
 		{

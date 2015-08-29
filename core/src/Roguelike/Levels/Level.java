@@ -37,7 +37,6 @@ import Roguelike.Sprite.SpriteAnimation.MoveAnimation.MoveEquation;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Tiles.SeenTile;
-import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.graphics.Color;
@@ -182,22 +181,26 @@ public class Level
 			}
 		}
 
-		for ( ActiveAbility aa : ActiveAbilities )
+		if ( ActiveAbilities.size > 0 )
 		{
-			aa.getSprite().update( delta );
-
-			if ( aa.light != null )
+			for ( ActiveAbility aa : ActiveAbilities )
 			{
-				for ( GameTile t : aa.AffectedTiles )
+				aa.getSprite().update( delta );
+
+				if ( aa.light != null )
 				{
-					int lx = t.x;
-					int ly = t.y;
-					if ( checkLightCloseEnough( lx, ly, (int) aa.light.baseIntensity, player.tile.x, player.tile.y, playerViewRange ) )
+					for ( GameTile t : aa.AffectedTiles )
 					{
-						Light light = aa.light.copy();
-						light.lx = lx;
-						light.ly = ly;
-						lightList.add( light );
+						int lx = t.x;
+						int ly = t.y;
+						if ( checkLightCloseEnough( lx, ly, (int) aa.light.baseIntensity, player.tile.x, player.tile.y, playerViewRange ) )
+						{
+							Light light = aa.light.copy();
+							light.lx = lx;
+							light.ly = ly;
+							light.copied = true;
+							lightList.add( light );
+						}
 					}
 				}
 			}
@@ -245,64 +248,9 @@ public class Level
 				if ( tile.visible )
 				{
 					SeenTile s = SeenGrid[x][y];
-					s.gameTile = tile;
 					s.seen = true;
-					s.light.set( tile.light );
 
-					Pools.freeAll( s.history );
-					s.history.clear();
-
-					for ( Sprite sprite : tile.tileData.sprites )
-					{
-						s.history.add( Pools.obtain( SeenHistoryItem.class ).set( sprite, tile.tileData.description ) );
-					}
-
-					if ( tile.fields.size() > 0 )
-					{
-						for ( FieldLayer layer : FieldLayer.values() )
-						{
-							Field field = tile.fields.get( layer );
-							if ( field != null )
-							{
-								s.history.add( Pools.obtain( SeenHistoryItem.class ).set( field.sprite, "" ) );
-							}
-						}
-					}
-
-					if ( tile.environmentEntity != null )
-					{
-						SeenHistoryItem shi = Pools.obtain( SeenHistoryItem.class ).set( tile.environmentEntity.sprite, "" );
-						shi.location = tile.environmentEntity.location;
-						s.history.add( shi );
-					}
-
-					if ( tile.entity != null && tile.entity != player )
-					{
-						s.history.add( Pools.obtain( SeenHistoryItem.class ).set( tile.entity.sprite, "" ) );
-					}
-
-					if ( tile.items.size == 0 )
-					{
-
-					}
-					else if ( tile.items.size == 1 )
-					{
-						s.history.add( Pools.obtain( SeenHistoryItem.class ).set( tile.items.get( 0 ).getIcon(), "" ) );
-					}
-					else
-					{
-						s.history.add( Pools.obtain( SeenHistoryItem.class ).set( AssetManager.loadSprite( "bag" ), "" ) );
-					}
-
-					if ( tile.essence > 0 )
-					{
-						Sprite sprite = AssetManager.loadSprite( "orb" );
-						float scale = 0.5f + 0.5f * ( MathUtils.clamp( tile.essence, 10.0f, 1000.0f ) / 1000.0f );
-						sprite.baseScale[0] = scale;
-						sprite.baseScale[1] = scale;
-
-						s.history.add( Pools.obtain( SeenHistoryItem.class ).set( sprite, "" ) );
-					}
+					s.set( tile, player );
 				}
 			}
 		}
@@ -386,7 +334,7 @@ public class Level
 		int px = player.tile.x;
 		int py = player.tile.y;
 
-		if ( tile.fields.size() > 0 )
+		if ( tile.hasFields )
 		{
 			for ( FieldLayer layer : FieldLayer.values() )
 			{
@@ -413,15 +361,18 @@ public class Level
 			}
 		}
 
-		for ( SpriteEffect se : tile.spriteEffects )
+		if ( tile.spriteEffects.size > 0 )
 		{
-			if ( se.light != null )
+			for ( SpriteEffect se : tile.spriteEffects )
 			{
-				if ( checkLightCloseEnough( lx, ly, (int) se.light.baseIntensity, px, py, viewRange ) )
+				if ( se.light != null )
 				{
-					se.light.lx = lx;
-					se.light.ly = ly;
-					output.add( se.light );
+					if ( checkLightCloseEnough( lx, ly, (int) se.light.baseIntensity, px, py, viewRange ) )
+					{
+						se.light.lx = lx;
+						se.light.ly = ly;
+						output.add( se.light );
+					}
 				}
 			}
 		}
@@ -440,15 +391,18 @@ public class Level
 				}
 			}
 
-			for ( SpriteEffect se : tile.entity.spriteEffects )
+			if ( tile.entity.spriteEffects.size > 0 )
 			{
-				if ( se.light != null )
+				for ( SpriteEffect se : tile.entity.spriteEffects )
 				{
-					if ( checkLightCloseEnough( lx, ly, (int) se.light.baseIntensity, px, py, viewRange ) )
+					if ( se.light != null )
 					{
-						se.light.lx = lx;
-						se.light.ly = ly;
-						output.add( se.light );
+						if ( checkLightCloseEnough( lx, ly, (int) se.light.baseIntensity, px, py, viewRange ) )
+						{
+							se.light.lx = lx;
+							se.light.ly = ly;
+							output.add( se.light );
+						}
 					}
 				}
 			}
@@ -611,23 +565,27 @@ public class Level
 
 	private void clearEffectsForTile( GameTile tile )
 	{
-		tile.spriteEffects.clear();
+		if ( tile.spriteEffects.size > 0 )
+		{
+			tile.spriteEffects.clear();
+		}
 
 		if ( tile.environmentEntity != null )
 		{
-			tile.environmentEntity.spriteEffects.clear();
 			tile.environmentEntity.sprite.spriteAnimation = null;
 		}
 
 		if ( tile.entity != null )
 		{
-			tile.entity.spriteEffects.clear();
 			tile.entity.sprite.spriteAnimation = null;
 		}
 
-		for ( Item i : tile.items )
+		if ( tile.items.size > 0 )
 		{
-			i.getIcon().spriteAnimation = null;
+			for ( Item i : tile.items )
+			{
+				i.getIcon().spriteAnimation = null;
+			}
 		}
 	}
 
@@ -637,36 +595,9 @@ public class Level
 
 	private void updateSpriteEffectsForTile( GameTile tile, float delta )
 	{
-		Iterator<SpriteEffect> itr = tile.spriteEffects.iterator();
-		while ( itr.hasNext() )
+		if ( tile.spriteEffects.size > 0 )
 		{
-			SpriteEffect e = itr.next();
-			boolean finished = e.Sprite.update( delta );
-
-			if ( finished )
-			{
-				itr.remove();
-			}
-		}
-
-		if ( tile.entity != null )
-		{
-			itr = tile.entity.spriteEffects.iterator();
-			while ( itr.hasNext() )
-			{
-				SpriteEffect e = itr.next();
-				boolean finished = e.Sprite.update( delta );
-
-				if ( finished )
-				{
-					itr.remove();
-				}
-			}
-		}
-
-		if ( tile.environmentEntity != null )
-		{
-			itr = tile.environmentEntity.spriteEffects.iterator();
+			Iterator<SpriteEffect> itr = tile.spriteEffects.iterator();
 			while ( itr.hasNext() )
 			{
 				SpriteEffect e = itr.next();
@@ -687,7 +618,7 @@ public class Level
 			sprite.update( delta );
 		}
 
-		if ( tile.fields.size() > 0 )
+		if ( tile.hasFields )
 		{
 			for ( FieldLayer layer : FieldLayer.values() )
 			{
@@ -709,9 +640,12 @@ public class Level
 			tile.entity.sprite.update( delta );
 		}
 
-		for ( Item i : tile.items )
+		if ( tile.items.size > 0 )
 		{
-			i.getIcon().update( delta );
+			for ( Item i : tile.items )
+			{
+				i.getIcon().update( delta );
+			}
 		}
 	}
 
@@ -1035,7 +969,7 @@ public class Level
 		{
 			for ( int y = 0; y < height; y++ )
 			{
-				if ( Grid[x][y].fields.size() > 0 )
+				if ( Grid[x][y].hasFields )
 				{
 					for ( FieldLayer layer : FieldLayer.values() )
 					{
@@ -1084,9 +1018,12 @@ public class Level
 
 	private boolean hasAbilitiesToUpdate()
 	{
-		for ( ActiveAbility aa : ActiveAbilities )
+		if ( ActiveAbilities.size > 0 )
 		{
-			if ( aa.needsUpdate() ) { return true; }
+			for ( ActiveAbility aa : ActiveAbilities )
+			{
+				if ( aa.needsUpdate() ) { return true; }
+			}
 		}
 
 		return false;
@@ -1185,11 +1122,6 @@ public class Level
 			activeEffects = true;
 		}
 
-		if ( e.spriteEffects.size > 0 )
-		{
-			activeEffects = true;
-		}
-
 		return activeEffects;
 	}
 
@@ -1228,7 +1160,7 @@ public class Level
 	public Color Ambient = new Color( 0.1f, 0.1f, 0.3f, 1.0f );
 
 	public SeenTile[][] SeenGrid;
-	private GameTile[][] Grid;
+	public GameTile[][] Grid;
 	public int width;
 	public int height;
 

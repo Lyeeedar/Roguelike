@@ -31,7 +31,7 @@ public class ConstantEvent
 			{
 				for ( Tier1Element el : Tier1Element.values() )
 				{
-					String expanded = sEl.getText().toLowerCase();
+					String expanded = sEl.getText().trim().toLowerCase();
 					expanded = expanded.replaceAll( "(?<!_)atk", el.Attack.toString().toLowerCase() );
 
 					equations.put( el.Attack, expanded );
@@ -41,7 +41,7 @@ public class ConstantEvent
 			{
 				for ( Tier1Element el : Tier1Element.values() )
 				{
-					String expanded = sEl.getText().toLowerCase();
+					String expanded = sEl.getText().trim().toLowerCase();
 					expanded = expanded.replaceAll( "(?<!_)def", el.Defense.toString().toLowerCase() );
 
 					equations.put( el.Defense, expanded );
@@ -51,7 +51,7 @@ public class ConstantEvent
 			{
 				for ( Tier1Element el : Tier1Element.values() )
 				{
-					String expanded = sEl.getText().toLowerCase();
+					String expanded = sEl.getText().trim().toLowerCase();
 					expanded = expanded.replaceAll( "(?<!_)pierce", el.Pierce.toString().toLowerCase() );
 
 					equations.put( el.Pierce, expanded );
@@ -61,7 +61,7 @@ public class ConstantEvent
 			{
 				for ( Tier1Element el : Tier1Element.values() )
 				{
-					String expanded = sEl.getText().toLowerCase();
+					String expanded = sEl.getText().trim().toLowerCase();
 					expanded = expanded.replaceAll( "(?<!_)hardiness", el.Hardiness.toString().toLowerCase() );
 
 					equations.put( el.Hardiness, expanded );
@@ -70,7 +70,7 @@ public class ConstantEvent
 			else
 			{
 				Statistic el = Statistic.valueOf( sEl.getName().toUpperCase() );
-				equations.put( el, sEl.getText().toLowerCase() );
+				equations.put( el, sEl.getText().trim().toLowerCase() );
 			}
 		}
 	}
@@ -81,28 +81,35 @@ public class ConstantEvent
 
 		if ( eqn == null ) { return 0; }
 
-		if ( reliesOn != null )
+		if ( Global.isNumber( eqn ) )
 		{
-			for ( String name : reliesOn )
+			return Integer.parseInt( eqn );
+		}
+		else
+		{
+			if ( reliesOn != null )
 			{
-				if ( !variableMap.containsKey( name ) )
+				for ( String name : reliesOn )
 				{
-					variableMap.put( name, 0 );
+					if ( !variableMap.containsKey( name ) )
+					{
+						variableMap.put( name, 0 );
+					}
 				}
 			}
+
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
+
+			Expression exp = EquationHelper.tryBuild( expB );
+			if ( exp == null ) { return 0; }
+
+			EquationHelper.setVariableValues( exp, variableMap, "" );
+
+			int val = (int) exp.evaluate();
+
+			return val;
 		}
-
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-		EquationHelper.setVariableNames( expB, variableMap, "" );
-
-		Expression exp = EquationHelper.tryBuild( expB );
-		if ( exp == null ) { return 0; }
-
-		EquationHelper.setVariableValues( exp, variableMap, "" );
-
-		int val = (int) exp.evaluate();
-
-		return val;
 	}
 
 	public void putStatistic( Statistic stat, String eqn )

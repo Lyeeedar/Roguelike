@@ -17,74 +17,74 @@ public class ActionMoveTo extends AbstractAction
 	public int dst;
 	public boolean towards;
 	public String key;
-	
+
 	@Override
-	public BehaviourTreeState evaluate(GameEntity entity)
+	public BehaviourTreeState evaluate( GameEntity entity )
 	{
-		Point target = (Point)getData(key, null);
-		
+		Point target = (Point) getData( key, null );
+
 		// if no target, fail
-		if (target == null)
+		if ( target == null )
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
-		
+
 		// if we arrived at our target, succeed
-		if (entity.tile.x == target.x && entity.tile.y == target.y)
-		{			
+		if ( entity.tile.x == target.x && entity.tile.y == target.y )
+		{
 			State = BehaviourTreeState.SUCCEEDED;
 			return State;
 		}
-						
-		Pathfinder pathFinder = new Pathfinder(entity.tile.level.getGrid(), entity.tile.x, entity.tile.y, target.x, target.y, true);
-		Array<Point> path = pathFinder.getPath(entity.getTravelType());
-		
+
+		Pathfinder pathFinder = new Pathfinder( entity.tile.level.getGrid(), entity.tile.x, entity.tile.y, target.x, target.y, true );
+		Array<Point> path = pathFinder.getPath( entity.getTravelType() );
+
 		// if couldnt find a valid path, fail
-		if (path.size < 2)
+		if ( path.size < 2 )
 		{
-			Pools.freeAll(path);
+			Pools.freeAll( path );
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
-		
-		GameTile nextTile = entity.tile.level.getGameTile(path.get(1));
+
+		GameTile nextTile = entity.tile.level.getGameTile( path.get( 1 ) );
 		// if next step is impassable then fail
-		if (!nextTile.getPassable(entity.getTravelType()))
+		if ( !nextTile.getPassable( entity.getTravelType() ) )
 		{
-			Pools.freeAll(path);
+			Pools.freeAll( path );
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
-		
-		int[] offset = new int[]{ path.get(1).x - path.get(0).x, path.get(1).y - path.get(0).y };
-		
+
+		int[] offset = new int[] { path.get( 1 ).x - path.get( 0 ).x, path.get( 1 ).y - path.get( 0 ).y };
+
 		// if moving towards path to the object
-		if (towards)
+		if ( towards )
 		{
-			if (path.size-1 <= dst)
+			if ( path.size - 1 <= dst )
 			{
-				Pools.freeAll(path);
+				Pools.freeAll( path );
 				State = BehaviourTreeState.SUCCEEDED;
 				return State;
 			}
-			
-			entity.tasks.add(new TaskMove(Direction.getDirection(offset)));
+
+			entity.tasks.add( new TaskMove( Direction.getDirection( offset ) ) );
 		}
 		// if moving away then just run directly away
 		else
 		{
-			if (path.size-1 >= dst)
+			if ( path.size - 1 >= dst )
 			{
-				Pools.freeAll(path);
+				Pools.freeAll( path );
 				State = BehaviourTreeState.SUCCEEDED;
 				return State;
 			}
-			
-			entity.tasks.add(new TaskMove(Direction.getDirection(offset[0]*-1, offset[1]*-1)));
+
+			entity.tasks.add( new TaskMove( Direction.getDirection( offset[0] * -1, offset[1] * -1 ) ) );
 		}
-		
-		Pools.freeAll(path);
+
+		Pools.freeAll( path );
 		State = BehaviourTreeState.RUNNING;
 		return State;
 	}
@@ -92,14 +92,14 @@ public class ActionMoveTo extends AbstractAction
 	@Override
 	public void cancel()
 	{
-		
+
 	}
 
 	@Override
-	public void parse(Element xmlElement)
+	public void parse( Element xmlElement )
 	{
-		dst = Integer.parseInt(xmlElement.getAttribute("Distance", "0"));
-		towards = Boolean.parseBoolean(xmlElement.getAttribute("Towards", "true"));
-		key = xmlElement.getAttribute("Key");
+		dst = Integer.parseInt( xmlElement.getAttribute( "Distance", "0" ) );
+		towards = Boolean.parseBoolean( xmlElement.getAttribute( "Towards", "true" ) );
+		key = xmlElement.getAttribute( "Key" );
 	}
 }

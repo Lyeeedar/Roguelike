@@ -29,7 +29,7 @@ public class Item extends GameEventHandler
 {
 	/*
 	 * IDEAS:
-	 *
+	 * 
 	 * Unlock extra power after condition (absorb x essence, kill x enemy)
 	 */
 
@@ -83,23 +83,28 @@ public class Item extends GameEventHandler
 	public String dropChanceEqn;
 	public EnumMap<Tier1Element, Integer> elementalStats = Tier1Element.getElementBlock();
 
+	private int range = -1000;
+
 	// ----------------------------------------------------------------------
 	public int getRange( Entity entity )
 	{
-		int range = getStatistic( entity.getBaseVariableMap(), Statistic.RANGE );
-		if ( range == 0 )
+		if ( range == -1000 )
 		{
-			if ( type.equals( "spear" ) )
+			range = getStatistic( entity.getBaseVariableMap(), Statistic.RANGE );
+			if ( range == 0 )
 			{
-				range = 2;
-			}
-			else if ( type.equals( "bow" ) || type.equals( "wand" ) )
-			{
-				range = 4;
-			}
-			else
-			{
-				range = 1;
+				if ( type.equals( "spear" ) )
+				{
+					range = 2;
+				}
+				else if ( type.equals( "bow" ) || type.equals( "wand" ) )
+				{
+					range = 4;
+				}
+				else
+				{
+					range = 1;
+				}
 			}
 		}
 
@@ -324,6 +329,13 @@ public class Item extends GameEventHandler
 		}
 		category = xmlElement.get( "Category", null ) != null ? ItemCategory.valueOf( xmlElement.get( "Category" ).toUpperCase() ) : category;
 		type = xmlElement.get( "Type", null ) != null ? xmlElement.get( "Type" ).toLowerCase() : type;
+
+		// Preload sprites
+		if ( type != null )
+		{
+			getWeaponHitEffect();
+			getIcon();
+		}
 	}
 
 	// ----------------------------------------------------------------------

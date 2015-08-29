@@ -133,7 +133,7 @@ public class AssetManager
 
 	public static Sprite loadSprite( String name, float updateTime, Color colour, AnimationMode mode, SoundInstance sound )
 	{
-		Array<TextureRegion> textures = new Array<TextureRegion>();
+		Array<TextureRegion> textures = new Array<TextureRegion>( false, 1, TextureRegion.class );
 
 		int i = 0;
 		while ( true )

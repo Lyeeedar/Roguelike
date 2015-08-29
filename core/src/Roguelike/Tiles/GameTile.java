@@ -39,6 +39,7 @@ public class GameTile implements PathfindingTile
 	public GameEntity entity;
 	public EnvironmentEntity environmentEntity;
 	public EnumMap<FieldLayer, Field> fields = new EnumMap<FieldLayer, Field>( FieldLayer.class );
+	public boolean hasFields;
 
 	public Level level;
 
@@ -100,6 +101,8 @@ public class GameTile implements PathfindingTile
 			}
 
 			fields.remove( layer );
+
+			hasFields = fields.size() > 0;
 		}
 	}
 
@@ -108,6 +111,8 @@ public class GameTile implements PathfindingTile
 		clearField( field.layer );
 		fields.put( field.layer, field );
 		field.tile = this;
+
+		hasFields = fields.size() > 0;
 	}
 
 	public final int[] addGameEntity( GameEntity obj )
