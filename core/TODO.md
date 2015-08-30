@@ -1,8 +1,7 @@
 TODO
 
-- [ ] debug check for non-scaling abilities. Add default scaling to all abilities
-- [ ] For dam show default then + then scale added dam
-- [ ] add cast animations
+- [x] debug check for non-scaling abilities. Add default scaling to all abilities
+- [x] add cast animations
 - [ ] charcater stats panel
 - [ ] invastigate incorrect stair linking
 - [ ] on dam events should work of base dam, not multiplied together

@@ -48,7 +48,7 @@ public class SoundInstance
 		SoundInstance sound = new SoundInstance();
 		sound.sound = AssetManager.loadSound( xml.get( "Name" ) );
 
-		sound.text = xml.get( "Text" );
+		sound.text = xml.get( "Text", "" );
 
 		return sound;
 	}

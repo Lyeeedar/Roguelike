@@ -30,6 +30,7 @@ import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
+import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
@@ -280,6 +281,11 @@ public class ActiveAbility implements IAbility, IGameObject
 				cost.spendCost( this );
 			}
 			spentCost = true;
+
+			if ( useSprite != null )
+			{
+				caster.tile.spriteEffects.add( new SpriteEffect( useSprite.copy(), Direction.CENTER, light != null ? light.copyNoFlag() : null ) );
+			}
 		}
 
 		boolean finished = movementType.update( this );
@@ -300,6 +306,11 @@ public class ActiveAbility implements IAbility, IGameObject
 						int[] diff = tile.getPosDiff( source );
 
 						Sprite sprite = movementSprite.copy();
+						if ( sprite.spriteAnimation == null && movementType instanceof MovementTypeSmite )
+						{
+							sprite.spriteAnimation = new MoveAnimation();
+						}
+
 						if ( sprite.spriteAnimation != null )
 						{
 							int distMoved = ( Math.abs( diff[0] ) + Math.abs( diff[1] ) ) / Global.TileSize;

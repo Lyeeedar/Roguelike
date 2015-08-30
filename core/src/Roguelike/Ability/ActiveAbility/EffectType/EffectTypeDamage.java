@@ -21,6 +21,7 @@ import exp4j.Helpers.EquationHelper;
 
 public class EffectTypeDamage extends AbstractEffectType
 {
+	private FastEnumMap<Statistic, Integer> scaleLevel = new FastEnumMap<Statistic, Integer>( Statistic.class );
 	private FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
 	private String[] reliesOn;
 
@@ -32,15 +33,18 @@ public class EffectTypeDamage extends AbstractEffectType
 		for ( int i = 0; i < xml.getChildCount(); i++ )
 		{
 			Element sEl = xml.getChild( i );
+			int scale = sEl.getIntAttribute( "Scale", 1 );
 
 			if ( sEl.getName().toUpperCase().equals( "ATK" ) )
 			{
+
 				for ( Tier1Element el : Tier1Element.values() )
 				{
 					String expanded = sEl.getText().toLowerCase();
 					expanded = expanded.replaceAll( "(?<!_)atk", el.Attack.toString().toLowerCase() );
 
 					equations.put( el.Attack, expanded );
+					scaleLevel.put( el.Attack, scale );
 				}
 			}
 			else if ( sEl.getName().toUpperCase().equals( "PIERCE" ) )
@@ -51,12 +55,14 @@ public class EffectTypeDamage extends AbstractEffectType
 					expanded = expanded.replaceAll( "(?<!_)pierce", el.Pierce.toString().toLowerCase() );
 
 					equations.put( el.Pierce, expanded );
+					scaleLevel.put( el.Pierce, scale );
 				}
 			}
 			else
 			{
 				Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
 				equations.put( stat, sEl.getText().toLowerCase() );
+				scaleLevel.put( stat, scale );
 			}
 		}
 	}
@@ -126,6 +132,8 @@ public class EffectTypeDamage extends AbstractEffectType
 					raw = (int) exp.evaluate();
 				}
 
+				raw += Global.calculateScaleBonusDam( raw, scaleLevel.get( stat ), stats.get( stat ) );
+
 				stats.put( stat, raw );
 			}
 		}
@@ -156,6 +164,7 @@ public class EffectTypeDamage extends AbstractEffectType
 		EffectTypeDamage e = new EffectTypeDamage();
 		e.equations = equations;
 		e.reliesOn = reliesOn;
+		e.scaleLevel = scaleLevel;
 		return e;
 	}
 

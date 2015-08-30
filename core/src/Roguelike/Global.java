@@ -693,24 +693,24 @@ public class Global
 			level.player = player;
 
 			outer:
-				for ( int x = 0; x < level.width; x++ )
+			for ( int x = 0; x < level.width; x++ )
+			{
+				for ( int y = 0; y < level.height; y++ )
 				{
-					for ( int y = 0; y < level.height; y++ )
+					GameTile tile = level.getGameTile( x, y );
+					if ( tile.metaValue != null && tile.metaValue.equals( travelKey ) )
 					{
-						GameTile tile = level.getGameTile( x, y );
-						if ( tile.metaValue != null && tile.metaValue.equals( travelKey ) )
-						{
-							tile.addGameEntity( player );
-							break outer;
-						}
+						tile.addGameEntity( player );
+						break outer;
+					}
 
-					if ( tile.environmentEntity != null && tile.environmentEntity.data.containsKey( travelKey ) )
-						{
-							tile.addGameEntity( player );
-							break outer;
-						}
+						if ( tile.environmentEntity != null && tile.environmentEntity.data.containsKey( travelKey ) )
+					{
+						tile.addGameEntity( player );
+						break outer;
 					}
 				}
+			}
 		}
 
 		CurrentLevel.updateVisibleTiles();
@@ -844,6 +844,19 @@ public class Global
 			if ( !Character.isDigit( string.charAt( i ) ) ) { return false; }
 		}
 		return true;
+	}
+
+	// ----------------------------------------------------------------------
+	public static int calculateScaleBonusDam( int baseDam, int scaleLevel, int stat )
+	{
+		if ( stat < 100 ) { return 0; }
+
+		float scaleRange = baseDam * scaleLevel;
+		float alpha = MathUtils.log2( stat / 100 );
+
+		float val = scaleRange * alpha;
+
+		return (int) Math.floor( val );
 	}
 
 	// ----------------------------------------------------------------------

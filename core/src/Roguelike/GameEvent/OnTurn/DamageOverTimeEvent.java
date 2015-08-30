@@ -18,6 +18,7 @@ import exp4j.Helpers.EquationHelper;
 public class DamageOverTimeEvent extends AbstractOnTurnEvent
 {
 	private String condition;
+	private FastEnumMap<Statistic, Integer> scaleLevel = new FastEnumMap<Statistic, Integer>( Statistic.class );
 	private FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
 	private String[] reliesOn;
 
@@ -91,6 +92,8 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 					raw = (int) exp.evaluate();
 				}
 
+				raw += Global.calculateScaleBonusDam( raw, scaleLevel.get( stat ), stats.get( stat ) );
+
 				stats.put( stat, raw );
 			}
 		}
@@ -119,9 +122,37 @@ public class DamageOverTimeEvent extends AbstractOnTurnEvent
 		for ( int i = 0; i < xml.getChildCount(); i++ )
 		{
 			Element sEl = xml.getChild( i );
+			int scale = sEl.getIntAttribute( "Scale", 1 );
 
-			Statistic el = Statistic.valueOf( sEl.getName().toUpperCase() );
-			equations.put( el, sEl.getText().toLowerCase() );
+			if ( sEl.getName().toUpperCase().equals( "ATK" ) )
+			{
+
+				for ( Tier1Element el : Tier1Element.values() )
+				{
+					String expanded = sEl.getText().toLowerCase();
+					expanded = expanded.replaceAll( "(?<!_)atk", el.Attack.toString().toLowerCase() );
+
+					equations.put( el.Attack, expanded );
+					scaleLevel.put( el.Attack, scale );
+				}
+			}
+			else if ( sEl.getName().toUpperCase().equals( "PIERCE" ) )
+			{
+				for ( Tier1Element el : Tier1Element.values() )
+				{
+					String expanded = sEl.getText().toLowerCase();
+					expanded = expanded.replaceAll( "(?<!_)pierce", el.Pierce.toString().toLowerCase() );
+
+					equations.put( el.Pierce, expanded );
+					scaleLevel.put( el.Pierce, scale );
+				}
+			}
+			else
+			{
+				Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
+				equations.put( stat, sEl.getText().toLowerCase() );
+				scaleLevel.put( stat, scale );
+			}
 		}
 	}
 
