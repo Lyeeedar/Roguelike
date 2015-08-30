@@ -13,8 +13,12 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 public abstract class AbstractRoomGenerator
 {
 	// ----------------------------------------------------------------------
+	public boolean ensuresConnectivity = false;
+
+	// ----------------------------------------------------------------------
 	public abstract void process( Symbol[][] grid, Symbol floor, Symbol wall, Random ran, DungeonFileParser dfp );
 
+	// ----------------------------------------------------------------------
 	public abstract void parse( Element xml );
 
 	// ----------------------------------------------------------------------

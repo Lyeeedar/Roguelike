@@ -372,120 +372,133 @@ public class Item extends GameEventHandler
 		{
 			if ( type.equals( "sword" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Sword" );
+				icon = AssetManager.loadSprite( "GUI/Sword" );
 			}
 			else if ( type.equals( "spear" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Spear" );
+				icon = AssetManager.loadSprite( "GUI/Spear" );
 			}
 			else if ( type.equals( "axe" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Axe" );
+				icon = AssetManager.loadSprite( "GUI/Axe" );
 			}
 			else if ( type.equals( "bow" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Bow" );
+				icon = AssetManager.loadSprite( "GUI/Bow" );
 			}
-			else if ( type.equals( "wand" ) ) { return AssetManager.loadSprite( "GUI/Wand" ); }
+			else if ( type.equals( "wand" ) )
+			{
+				icon = AssetManager.loadSprite( "GUI/Wand" );
+			}
 		}
 		else if ( slot == EquipmentSlot.OFFWEAPON )
 		{
 			if ( type.equals( "shield" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Shield" );
+				icon = AssetManager.loadSprite( "GUI/Shield" );
 			}
-			else if ( type.equals( "torch" ) ) { return AssetManager.loadSprite( "GUI/Torch" ); }
+			else if ( type.equals( "torch" ) )
+			{
+				icon = AssetManager.loadSprite( "GUI/Torch" );
+			}
 		}
 		else if ( slot == EquipmentSlot.HEAD )
 		{
-			return AssetManager.loadSprite( "GUI/Head" );
+			icon = AssetManager.loadSprite( "GUI/Head" );
 		}
 		else if ( slot == EquipmentSlot.BODY )
 		{
-			return AssetManager.loadSprite( "GUI/Body" );
+			icon = AssetManager.loadSprite( "GUI/Body" );
 		}
 		else if ( slot == EquipmentSlot.LEGS )
 		{
-			return AssetManager.loadSprite( "GUI/Legs" );
+			icon = AssetManager.loadSprite( "GUI/Legs" );
 		}
 		else if ( category == ItemCategory.MATERIAL )
 		{
 			if ( type.equals( "fabric" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Fabric" );
+				icon = AssetManager.loadSprite( "GUI/Fabric" );
 			}
 			else if ( type.equals( "hide" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Hide" );
+				icon = AssetManager.loadSprite( "GUI/Hide" );
 			}
 			else if ( type.equals( "leather" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Leather" );
+				icon = AssetManager.loadSprite( "GUI/Leather" );
 			}
 			else if ( type.equals( "ore" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Ore" );
+				icon = AssetManager.loadSprite( "GUI/Ore" );
 			}
 			else if ( type.equals( "ingot" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Ingot" );
+				icon = AssetManager.loadSprite( "GUI/Ingot" );
 			}
 			else if ( type.equals( "log" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Log" );
+				icon = AssetManager.loadSprite( "GUI/Log" );
 			}
 			else if ( type.equals( "plank" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Plank" );
+				icon = AssetManager.loadSprite( "GUI/Plank" );
 			}
 			else if ( type.equals( "bone" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Bone" );
+				icon = AssetManager.loadSprite( "GUI/Bone" );
 			}
 			else if ( type.equals( "claw" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Claw" );
+				icon = AssetManager.loadSprite( "GUI/Claw" );
 			}
 			else if ( type.equals( "fang" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Fang" );
+				icon = AssetManager.loadSprite( "GUI/Fang" );
 			}
 			else if ( type.equals( "spine" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Spine" );
+				icon = AssetManager.loadSprite( "GUI/Spine" );
 			}
 			else if ( type.equals( "scale" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Scale" );
+				icon = AssetManager.loadSprite( "GUI/Scale" );
 			}
 			else if ( type.equals( "feather" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Feather" );
+				icon = AssetManager.loadSprite( "GUI/Feather" );
 			}
 			else if ( type.equals( "shell" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Shell" );
+				icon = AssetManager.loadSprite( "GUI/Shell" );
 			}
 			else if ( type.equals( "vial" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Vial" );
+				icon = AssetManager.loadSprite( "GUI/Vial" );
 			}
 			else if ( type.equals( "sac" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Sac" );
+				icon = AssetManager.loadSprite( "GUI/Sac" );
 			}
 			else if ( type.equals( "powder" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Powder" );
+				icon = AssetManager.loadSprite( "GUI/Powder" );
 			}
 			else if ( type.equals( "crystal" ) )
 			{
-				return AssetManager.loadSprite( "GUI/Crystal" );
+				icon = AssetManager.loadSprite( "GUI/Crystal" );
 			}
-			else if ( type.equals( "gem" ) ) { return AssetManager.loadSprite( "GUI/Gem" ); }
+			else if ( type.equals( "gem" ) )
+			{
+				icon = AssetManager.loadSprite( "GUI/Gem" );
+			}
 		}
 
-		return AssetManager.loadSprite( "white" );
+		if ( icon == null )
+		{
+			icon = AssetManager.loadSprite( "white" );
+		}
+		return icon;
 	}
 
 	// ----------------------------------------------------------------------

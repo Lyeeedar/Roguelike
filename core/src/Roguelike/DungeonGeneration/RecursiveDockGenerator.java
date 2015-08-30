@@ -1,7 +1,9 @@
 package Roguelike.DungeonGeneration;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Random;
 
@@ -149,6 +151,14 @@ public class RecursiveDockGenerator
 			markRooms();
 			generationIndex++;
 
+			generationText = "Filling empty spaces";
+		}
+		else if ( generationIndex == 7 )
+		{
+			identifyAndFillEmptySpaces();
+
+			generationIndex++;
+
 			generationText = "Creating Level";
 
 			if ( DEBUG_OUTPUT )
@@ -167,7 +177,7 @@ public class RecursiveDockGenerator
 				}
 			}
 		}
-		else if ( generationIndex == 7 )
+		else if ( generationIndex == 8 )
 		{
 			createLevel();
 			generationIndex++;
@@ -380,7 +390,7 @@ public class RecursiveDockGenerator
 		{
 			for ( int y = 0; y < height; y++ )
 			{
-				tiles[x][y] = new GenerationTile();
+				tiles[x][y] = new GenerationTile( x, y );
 
 				if ( dfp.corridorStyle.pathStyle == PathStyle.STRAIGHT )
 				{
@@ -996,6 +1006,171 @@ public class RecursiveDockGenerator
 	}
 
 	// ----------------------------------------------------------------------
+	protected void identifyAndFillEmptySpaces()
+	{
+		Symbol wall = dfp.sharedSymbolMap.get( '#' );
+
+		for ( int x = 0; x < width; x++ )
+		{
+			for ( int y = 0; y < height; y++ )
+			{
+				if ( isEmpty( tiles[x][y] ) )
+				{
+					HashSet<GenerationTile> output = new HashSet<GenerationTile>();
+					floodFillEmptySpace( x, y, output );
+
+					if ( output.size() > 4 )
+					{
+						// convert into a room
+						Room room = new Room();
+
+						// find min/max
+						int minx = Integer.MAX_VALUE;
+						int miny = Integer.MAX_VALUE;
+						int maxx = 0;
+						int maxy = 0;
+
+						for ( GenerationTile tile : output )
+						{
+							if ( tile.x < minx )
+							{
+								minx = tile.x;
+							}
+							if ( tile.y < miny )
+							{
+								miny = tile.y;
+							}
+							if ( tile.x > maxx )
+							{
+								maxx = tile.x;
+							}
+							if ( tile.y > maxy )
+							{
+								maxy = tile.y;
+							}
+						}
+
+						room.width = ( maxx - minx ) + 1;
+						room.height = ( maxy - miny ) + 1;
+
+						// Copy contents into room
+						room.roomContents = new Symbol[room.width][room.height];
+						for ( int rx = 0; rx < room.width; rx++ )
+						{
+							for ( int ry = 0; ry < room.height; ry++ )
+							{
+								if ( output.contains( tiles[minx + rx][miny + ry] ) )
+								{
+									room.roomContents[rx][ry] = tiles[minx + rx][miny + ry].symbol;
+								}
+								else
+								{
+									room.roomContents[rx][ry] = wall;
+								}
+							}
+						}
+
+						// Identify doors
+						room.findDoors( ran, dfp );
+
+						// Find closest faction
+						FactionParser closestFaction = null;
+						int dist = Integer.MAX_VALUE;
+
+						for ( Map.Entry<FactionParser, Point> faction : factions.entrySet() )
+						{
+							int tempdist = Math.abs( room.x - faction.getValue().x ) + Math.abs( room.y - faction.getValue().y );
+							if ( tempdist < dist )
+							{
+								dist = tempdist;
+								closestFaction = faction.getKey();
+							}
+						}
+
+						int influence = dist;
+						if ( influence > 0 )
+						{
+							float fract = (float) influence / (float) ( width + height );
+							influence = (int) ( fract * 100 );
+						}
+
+						influence = 100 - influence;
+
+						room.addFeatures( ran, dfp, closestFaction, influence );
+
+						// Copy placed features back into map
+						for ( int rx = 0; rx < room.width; rx++ )
+						{
+							for ( int ry = 0; ry < room.height; ry++ )
+							{
+								if ( output.contains( tiles[minx + rx][miny + ry] ) )
+								{
+									if ( tiles[minx + rx][miny + ry].symbol != room.roomContents[rx][ry] )
+									{
+										room.roomContents[rx][ry].character = 'E';
+									}
+
+									tiles[minx + rx][miny + ry].symbol = room.roomContents[rx][ry];
+								}
+							}
+						}
+					}
+
+					// Mark the area as empty space to indicate we already
+					// filled this
+					for ( GenerationTile tile : output )
+					{
+						tile.isEmptySpace = true;
+					}
+				}
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	protected void floodFillEmptySpace( int x, int y, HashSet<GenerationTile> output )
+	{
+		if ( output.contains( tiles[x][y] ) ) { return; }
+
+		output.add( tiles[x][y] );
+
+		for ( Direction dir : Direction.values() )
+		{
+			if ( dir.isCardinal() )
+			{
+				int nx = x + dir.getX();
+				int ny = y + dir.getY();
+
+				if ( isEmpty( tiles[nx][ny] ) )
+				{
+					// check neighbours
+
+					if ( isEmpty( nx, ny, dir.getClockwise() ) || isEmpty( nx, ny, dir.getAnticlockwise() ) )
+					{
+						floodFillEmptySpace( nx, ny, output );
+					}
+				}
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	// ----------------------------------------------------------------------
+	protected boolean isEmpty( int x, int y, Direction dir )
+	{
+		GenerationTile tile = tiles[x + dir.getX()][y + dir.getY()];
+		return !tile.isCorridor && !tile.isRoom && !tile.isEmptySpace && tile.symbol.character != '#';
+	}
+
+	// ----------------------------------------------------------------------
+	// ----------------------------------------------------------------------
+	protected boolean isEmpty( GenerationTile tile )
+	{
+		return !tile.isCorridor && !tile.isRoom && !tile.isEmptySpace && tile.symbol.character != '#';
+	}
+
+	// ----------------------------------------------------------------------
+	// ----------------------------------------------------------------------
 	protected void placeFactions()
 	{
 		// place factions
@@ -1018,6 +1193,8 @@ public class RecursiveDockGenerator
 		String majorFactionName = dfp.getMajorFaction( ran );
 
 		FactionParser majorFaction = FactionParser.load( majorFactionName );
+
+		factions.put( majorFaction, new Point( largest.x + largest.width / 2, largest.y + largest.height / 2 ) );
 
 		class Pair implements Comparable<Pair>
 		{
@@ -1054,6 +1231,13 @@ public class RecursiveDockGenerator
 				if ( fp != null )
 				{
 					room.addFeatures( ran, dfp, fp, influence );
+
+					factions.put( fp, new Point( room.x + room.width / 2, room.y + room.height / 2 ) );
+				}
+				else
+				{
+					int dist = Math.abs( room.x - largest.x ) + Math.abs( room.y - largest.y );
+					sortedRooms.add( new Pair( dist, room ) );
 				}
 			}
 		}
@@ -1083,11 +1267,16 @@ public class RecursiveDockGenerator
 			{
 				int influence = ran.nextInt( 80 ) + 10;
 
-				pair.room.addFeatures( ran, dfp, FactionParser.load( dfp.getMinorFaction( ran ) ), influence );
+				FactionParser fp = FactionParser.load( dfp.getMinorFaction( ran ) );
+
+				pair.room.addFeatures( ran, dfp, fp, influence );
+
+				factions.put( fp, new Point( pair.room.x + pair.room.width / 2, pair.room.y + pair.room.height / 2 ) );
 			}
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	// ----------------------------------------------------------------------
 	protected void createLevel()
 	{
@@ -1270,6 +1459,8 @@ public class RecursiveDockGenerator
 	public Array<Room> toBePlaced = new Array<Room>();
 
 	private Array<Room> placedRooms = new Array<Room>();
+
+	private HashMap<FactionParser, Point> factions = new HashMap<FactionParser, Point>();
 
 	public DungeonFileParser dfp;
 
@@ -1507,7 +1698,7 @@ public class RecursiveDockGenerator
 						}
 					}
 
-					if ( done )
+					if ( generator.ensuresConnectivity && done )
 					{
 						break;
 					}
@@ -1560,7 +1751,7 @@ public class RecursiveDockGenerator
 			{
 				for ( int y = 1; y < height - 1; y++ )
 				{
-					if ( roomContents[x][y].isPassable( GeneratorPassability ) )
+					if ( roomContents[x][y] != null && roomContents[x][y].isPassable( GeneratorPassability ) )
 					{
 						int[] pos = { x, y };
 
@@ -1655,7 +1846,7 @@ public class RecursiveDockGenerator
 
 								if ( nx >= 0 && nx < width && ny >= 0 && ny < height )
 								{
-									if ( !roomContents[nx][ny].isPassable( GeneratorPassability ) )
+									if ( roomContents[nx][ny] != null && !roomContents[nx][ny].isPassable( GeneratorPassability ) )
 									{
 										isWall = true;
 										break;
@@ -1721,7 +1912,7 @@ public class RecursiveDockGenerator
 
 								if ( nx >= 0 && nx < width && ny >= 0 && ny < height )
 								{
-									if ( !roomContents[nx][ny].isPassable( GeneratorPassability ) )
+									if ( roomContents[nx][ny] != null && !roomContents[nx][ny].isPassable( GeneratorPassability ) )
 									{
 										isWall = true;
 										break;
@@ -1817,10 +2008,6 @@ public class RecursiveDockGenerator
 
 					AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false, GeneratorPassability );
 					Array<Point> path = pathfind.getPath();
-					if ( path == null )
-					{
-						continue;
-					}
 
 					for ( Point point : path )
 					{
@@ -2039,6 +2226,16 @@ public class RecursiveDockGenerator
 		public boolean passable;
 		public boolean isCorridor = false;
 		public boolean isRoom = false;
+		public boolean isEmptySpace = false;
+
+		public int x;
+		public int y;
+
+		public GenerationTile( int x, int y )
+		{
+			this.x = x;
+			this.y = y;
+		}
 
 		// ----------------------------------------------------------------------
 		@Override

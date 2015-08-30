@@ -554,8 +554,8 @@ public class Level
 
 				MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
 				anim.leapHeight = 6;
-				i.icon.spriteAnimation = anim;
-				i.icon.renderDelay = delay;
+				i.getIcon().spriteAnimation = anim;
+				i.getIcon().renderDelay = delay;
 				delay += 0.02f;
 			}
 		}

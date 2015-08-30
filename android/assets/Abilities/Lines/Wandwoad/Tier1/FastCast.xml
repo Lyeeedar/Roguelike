@@ -6,7 +6,7 @@
 	<Cooldown>20</Cooldown>
 	<Range>1</Range>
 	
-	<<Icon>
+	<Icon>
 		<Name>Abilities/Wandwoad/FastCast</Name>
 		<Colour><RGB>220,220,220</RGB></Colour>
 	</Icon>

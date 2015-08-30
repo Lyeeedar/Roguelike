@@ -163,7 +163,7 @@ public class AStarPathfind
 
 	public boolean isColliding( int x, int y )
 	{
-		if ( x < 0 || y < 0 || x >= width || y >= height || !grid[x][y].getPassable( travelType ) ) { return true; }
+		if ( x < 0 || y < 0 || x >= width || y >= height || grid[x][y] == null || !grid[x][y].getPassable( travelType ) ) { return true; }
 		return false;
 	}
 
