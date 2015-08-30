@@ -119,7 +119,7 @@ public class EnvironmentEntity extends Entity
 				Level current = entity.tile.level;
 				SaveLevel save = Global.getLevel( (SaveLevel) entity.data.get( "Destination" ) );
 
-				LoadingScreen.Instance.set( save, current.player, "Stair: " + save.UID, null );
+				LoadingScreen.Instance.set( save, current.player, "Stair: " + current.UID, null );
 
 				RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
 			}
@@ -143,7 +143,7 @@ public class EnvironmentEntity extends Entity
 					{
 						HashMap<String, Object> eedata = new HashMap<String, Object>();
 						eedata.put( "Destination", new SaveLevel( levelUID ) );
-						eedata.put( "Stair: " + destinationLevel.UID, new Object() );
+						eedata.put( "Stair: " + levelUID, new Object() );
 						symbol.environmentEntityData = eedata;
 
 						break;
@@ -171,7 +171,7 @@ public class EnvironmentEntity extends Entity
 			entity.canTakeDamage = false;
 			entity.actions.add( action );
 			entity.data.put( "Destination", destinationLevel );
-			entity.data.put( "Stair: " + levelUID, new Object() );
+			entity.data.put( "Stair: " + destinationLevel.UID, new Object() );
 			entity.UID = "EnvironmentEntity DownStair: ID " + entity.hashCode();
 
 			return entity;

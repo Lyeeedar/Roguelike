@@ -184,7 +184,7 @@ public class RecursiveDockGenerator
 
 		percent = (int) ( ( 100.0f / 8.0f ) * generationIndex );
 
-		if ( generationIndex < 8 )
+		if ( generationIndex < 9 )
 		{
 			return false;
 		}
@@ -370,13 +370,13 @@ public class RecursiveDockGenerator
 		}
 
 		requiredRooms.sort( new Comparator<Room>()
-		{
+				{
 			@Override
 			public int compare( Room arg0, Room arg1 )
 			{
 				return arg0.comparisonString().compareTo( arg1.comparisonString() );
 			}
-		} );
+				} );
 	}
 
 	// ----------------------------------------------------------------------
@@ -716,14 +716,14 @@ public class RecursiveDockGenerator
 			tris.add( tri );
 		}
 		tris.sort( new Comparator<Triangle>()
-				{
+		{
 
 			@Override
 			public int compare( Triangle arg0, Triangle arg1 )
 			{
 				return arg0.compareTo( arg1 );
 			}
-				} );
+		} );
 
 		for ( Triangle tri : tris )
 		{
@@ -1152,7 +1152,6 @@ public class RecursiveDockGenerator
 	}
 
 	// ----------------------------------------------------------------------
-	// ----------------------------------------------------------------------
 	protected boolean isEmpty( int x, int y, Direction dir )
 	{
 		GenerationTile tile = tiles[x + dir.getX()][y + dir.getY()];
@@ -1160,13 +1159,11 @@ public class RecursiveDockGenerator
 	}
 
 	// ----------------------------------------------------------------------
-	// ----------------------------------------------------------------------
 	protected boolean isEmpty( GenerationTile tile )
 	{
 		return !tile.isCorridor && !tile.isRoom && !tile.isEmptySpace && tile.symbol.character != '#';
 	}
 
-	// ----------------------------------------------------------------------
 	// ----------------------------------------------------------------------
 	protected void placeFactions()
 	{
@@ -1273,7 +1270,6 @@ public class RecursiveDockGenerator
 		}
 	}
 
-	// ----------------------------------------------------------------------
 	// ----------------------------------------------------------------------
 	protected void createLevel()
 	{
