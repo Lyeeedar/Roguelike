@@ -16,6 +16,7 @@ import Roguelike.Sprite.SpriteEffect;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Util.EnumBitflag;
+import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
@@ -289,7 +290,7 @@ public abstract class Entity
 	public boolean hasDamage = false;
 
 	// ----------------------------------------------------------------------
-	public EnumMap<Statistic, Integer> statistics = Statistic.getStatisticsBlock();
+	public FastEnumMap<Statistic, Integer> statistics = Statistic.getStatisticsBlock();
 	public Array<StatusEffect> statusEffects = new Array<StatusEffect>( false, 16 );
 	public Array<StatusEffectStack> stacks = new Array<StatusEffectStack>();
 	public Inventory inventory = new Inventory();

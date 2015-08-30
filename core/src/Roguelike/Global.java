@@ -23,6 +23,7 @@ import Roguelike.Tiles.Point;
 import Roguelike.UI.MessageStack.Line;
 import Roguelike.UI.MessageStack.Message;
 import Roguelike.Util.EnumBitflag;
+import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
@@ -417,21 +418,25 @@ public class Global
 			}
 		}
 
-		public static HashMap<String, Integer> statsBlockToVariableBlock( EnumMap<Statistic, Integer> stats )
+		public static HashMap<String, Integer> statsBlockToVariableBlock( FastEnumMap<Statistic, Integer> stats )
 		{
 			HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
 
-			for ( Statistic key : stats.keySet() )
+			for ( Statistic key : Statistic.values() )
 			{
-				variableMap.put( key.toString().toLowerCase(), stats.get( key ) );
+				Integer val = stats.get( key );
+				if ( val != null )
+				{
+					variableMap.put( key.toString().toLowerCase(), val );
+				}
 			}
 
 			return variableMap;
 		}
 
-		public static EnumMap<Statistic, Integer> getStatisticsBlock()
+		public static FastEnumMap<Statistic, Integer> getStatisticsBlock()
 		{
-			EnumMap<Statistic, Integer> stats = new EnumMap<Statistic, Integer>( Statistic.class );
+			FastEnumMap<Statistic, Integer> stats = new FastEnumMap<Statistic, Integer>( Statistic.class );
 
 			for ( Statistic stat : Statistic.values() )
 			{
@@ -441,7 +446,7 @@ public class Global
 			return stats;
 		}
 
-		public static EnumMap<Statistic, Integer> load( Element xml, EnumMap<Statistic, Integer> values )
+		public static FastEnumMap<Statistic, Integer> load( Element xml, FastEnumMap<Statistic, Integer> values )
 		{
 			for ( int i = 0; i < xml.getChildCount(); i++ )
 			{
@@ -468,9 +473,9 @@ public class Global
 			return values;
 		}
 
-		public static EnumMap<Statistic, Integer> copy( EnumMap<Statistic, Integer> map )
+		public static FastEnumMap<Statistic, Integer> copy( FastEnumMap<Statistic, Integer> map )
 		{
-			EnumMap<Statistic, Integer> newMap = new EnumMap<Statistic, Integer>( Statistic.class );
+			FastEnumMap<Statistic, Integer> newMap = new FastEnumMap<Statistic, Integer>( Statistic.class );
 			for ( Statistic e : Statistic.values() )
 			{
 				newMap.put( e, map.get( e ) );
@@ -688,24 +693,24 @@ public class Global
 			level.player = player;
 
 			outer:
-			for ( int x = 0; x < level.width; x++ )
-			{
-				for ( int y = 0; y < level.height; y++ )
+				for ( int x = 0; x < level.width; x++ )
 				{
-					GameTile tile = level.getGameTile( x, y );
-					if ( tile.metaValue != null && tile.metaValue.equals( travelKey ) )
+					for ( int y = 0; y < level.height; y++ )
 					{
-						tile.addGameEntity( player );
-						break outer;
-					}
+						GameTile tile = level.getGameTile( x, y );
+						if ( tile.metaValue != null && tile.metaValue.equals( travelKey ) )
+						{
+							tile.addGameEntity( player );
+							break outer;
+						}
 
-						if ( tile.environmentEntity != null && tile.environmentEntity.data.containsKey( travelKey ) )
-					{
-						tile.addGameEntity( player );
-						break outer;
+					if ( tile.environmentEntity != null && tile.environmentEntity.data.containsKey( travelKey ) )
+						{
+							tile.addGameEntity( player );
+							break outer;
+						}
 					}
 				}
-			}
 		}
 
 		CurrentLevel.updateVisibleTiles();

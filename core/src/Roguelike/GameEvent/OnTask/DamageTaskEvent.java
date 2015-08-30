@@ -1,6 +1,5 @@
 package Roguelike.GameEvent.OnTask;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
@@ -10,6 +9,7 @@ import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.GameEvent.IGameObject;
+import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -19,7 +19,7 @@ import exp4j.Helpers.EquationHelper;
 public class DamageTaskEvent extends AbstractOnTaskEvent
 {
 	private String condition;
-	private EnumMap<Statistic, String> equations = new EnumMap<Statistic, String>( Statistic.class );
+	private FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
 	private String[] reliesOn;
 
 	@Override
@@ -49,7 +49,7 @@ public class DamageTaskEvent extends AbstractOnTaskEvent
 			if ( conditionVal == 0 ) { return false; }
 		}
 
-		EnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
+		FastEnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
 
 		for ( Statistic stat : Statistic.values() )
 		{

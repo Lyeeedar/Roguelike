@@ -31,6 +31,7 @@ public class SoundInstance
 	public HashSet<String> shoutFaction;
 	public String key;
 	public Object value;
+	public String text;
 
 	private SoundInstance()
 	{
@@ -46,6 +47,8 @@ public class SoundInstance
 	{
 		SoundInstance sound = new SoundInstance();
 		sound.sound = AssetManager.loadSound( xml.get( "Name" ) );
+
+		sound.text = xml.get( "Text" );
 
 		return sound;
 	}

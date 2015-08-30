@@ -1,6 +1,5 @@
 package Roguelike.Fields.OnTurnEffect;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
@@ -9,6 +8,7 @@ import Roguelike.Global;
 import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 import Roguelike.Fields.Field;
+import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -17,7 +17,7 @@ import exp4j.Helpers.EquationHelper;
 public class DamageOnTurnEffect extends AbstractOnTurnEffect
 {
 	private String condition;
-	private EnumMap<Statistic, String> equations = new EnumMap<Statistic, String>( Statistic.class );
+	private FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
 	private String[] reliesOn;
 
 	private void doDamage( Entity entity, Field field, float cost )
@@ -47,7 +47,7 @@ public class DamageOnTurnEffect extends AbstractOnTurnEffect
 			if ( conditionVal == 0 ) { return; }
 		}
 
-		EnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
+		FastEnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
 
 		for ( Statistic stat : Statistic.values() )
 		{

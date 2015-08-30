@@ -1,6 +1,5 @@
 package Roguelike.Ability.ActiveAbility.EffectType;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
@@ -13,6 +12,7 @@ import Roguelike.Entity.Entity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Items.Item;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -21,7 +21,7 @@ import exp4j.Helpers.EquationHelper;
 
 public class EffectTypeDamage extends AbstractEffectType
 {
-	private EnumMap<Statistic, String> equations = new EnumMap<Statistic, String>( Statistic.class );
+	private FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
 	private String[] reliesOn;
 
 	@Override
@@ -97,7 +97,7 @@ public class EffectTypeDamage extends AbstractEffectType
 			}
 		}
 
-		EnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
+		FastEnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
 
 		for ( Statistic stat : Statistic.values() )
 		{

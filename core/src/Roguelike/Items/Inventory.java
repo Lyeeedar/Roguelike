@@ -6,6 +6,7 @@ import java.util.Iterator;
 import Roguelike.Global.Statistic;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Items.Item.ItemCategory;
+import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -16,7 +17,7 @@ public class Inventory
 
 	public Array<Item> m_items = new Array<Item>();
 
-	private HashMap<EquipmentSlot, Item> m_equipment = new HashMap<EquipmentSlot, Item>();
+	private FastEnumMap<EquipmentSlot, Item> m_equipment = new FastEnumMap<EquipmentSlot, Item>( EquipmentSlot.class );
 
 	public void load( Element xml )
 	{

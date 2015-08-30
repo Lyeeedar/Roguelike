@@ -11,27 +11,34 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public class ActionShout extends AbstractAction
 {
 	private String key;
-	private SoundInstance sound;	
-	
+
 	@Override
-	public BehaviourTreeState evaluate(GameEntity entity)
+	public BehaviourTreeState evaluate( GameEntity entity )
 	{
-		Object value = getData(key, null);
-		
-		if (value == null)
+		SoundInstance sound = entity.soundBank.get( key );
+
+		if ( sound == null )
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
-		
-		entity.popup = new Label(key, Global.skin);
-		
+
+		Object value = getData( key, null );
+
+		if ( value == null )
+		{
+			State = BehaviourTreeState.FAILED;
+			return State;
+		}
+
+		entity.popup = new Label( sound.text, Global.skin );
+
 		sound.shoutFaction = entity.factions;
 		sound.key = key;
 		sound.value = value;
-		
-		sound.play(entity.tile);
-		
+
+		sound.play( entity.tile );
+
 		State = BehaviourTreeState.SUCCEEDED;
 		return State;
 	}
@@ -43,10 +50,8 @@ public class ActionShout extends AbstractAction
 	}
 
 	@Override
-	public void parse(Element xmlElement)
+	public void parse( Element xmlElement )
 	{
-		key = xmlElement.getAttribute("Key");
-		sound = SoundInstance.load(xmlElement.getChildByName("Sound"));
+		key = xmlElement.getAttribute( "Key" );
 	}
 }
-	
