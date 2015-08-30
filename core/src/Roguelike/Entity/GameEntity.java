@@ -46,6 +46,7 @@ public class GameEntity extends Entity
 	// ----------------------------------------------------------------------
 	public EnumBitflag<Passability> getTravelType()
 	{
+		recalculateMaps();
 		return travelType;
 	}
 
@@ -168,6 +169,10 @@ public class GameEntity extends Entity
 		e.internalLoad( name );
 
 		e.HP = e.getStatistic( Statistic.MAXHP );
+
+		e.statistics.put( Statistic.WALK, 1 );
+
+		e.recalculateMaps();
 
 		return e;
 	}

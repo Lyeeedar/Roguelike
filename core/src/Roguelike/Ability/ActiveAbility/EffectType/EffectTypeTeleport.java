@@ -79,6 +79,8 @@ public class EffectTypeTeleport extends AbstractEffectType
 
 	private GameTile getDestination( GameTile src, GameTile target, GameEntity entity )
 	{
+		if ( entity == null ) { return null; }
+
 		Direction dir = null;
 
 		if ( moveType == MoveType.TOWARDS )
@@ -110,7 +112,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 			Pools.freeAll( possibleTiles );
 		}
 
-		if ( style != Style.CHARGE )
+		if ( destination != null && style != Style.CHARGE )
 		{
 			if ( destination.getPassable( entity.getTravelType() ) && destination.entity == null )
 			{

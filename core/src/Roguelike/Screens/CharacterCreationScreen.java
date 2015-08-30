@@ -109,6 +109,10 @@ public class CharacterCreationScreen implements Screen
 			create();
 			created = true;
 		}
+		else
+		{
+			classList.reparse();
+		}
 
 		Gdx.input.setInputProcessor( stage );
 

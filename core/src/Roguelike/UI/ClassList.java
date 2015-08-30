@@ -29,6 +29,12 @@ public class ClassList extends TilePanel
 	public Array<ClassDesc> classes = new Array<ClassDesc>();
 	public ClassDesc chosen;
 
+	public void reparse()
+	{
+		classes.clear();
+		parse( "Classes/ClassList.xml" );
+	}
+
 	public void parse( String path )
 	{
 		XmlReader xmlReader = new XmlReader();

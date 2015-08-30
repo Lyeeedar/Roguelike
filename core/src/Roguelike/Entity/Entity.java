@@ -88,19 +88,19 @@ public abstract class Entity
 	// ----------------------------------------------------------------------
 	public HashMap<String, Integer> getVariableMap()
 	{
-		if ( isVariableMapDirty )
-		{
-			isVariableMapDirty = false;
-			calculateBaseVariableMap();
-			calculateVariableMap();
-			travelType = Passability.variableMapToTravelType( variableMap );
-		}
-
+		recalculateMaps();
 		return variableMap;
 	}
 
 	// ----------------------------------------------------------------------
 	public HashMap<String, Integer> getBaseVariableMap()
+	{
+		recalculateMaps();
+		return baseVariableMap;
+	}
+
+	// ----------------------------------------------------------------------
+	public void recalculateMaps()
 	{
 		if ( isVariableMapDirty )
 		{
@@ -109,8 +109,6 @@ public abstract class Entity
 			calculateVariableMap();
 			travelType = Passability.variableMapToTravelType( variableMap );
 		}
-
-		return baseVariableMap;
 	}
 
 	// ----------------------------------------------------------------------

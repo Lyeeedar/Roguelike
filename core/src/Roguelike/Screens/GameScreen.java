@@ -317,6 +317,30 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		font.draw( batch, "Frametime: " + storedFrametime, Global.Resolution[0] - 200, Global.Resolution[1] - 40 );
 
 		batch.end();
+
+		// limit fps
+		sleep( Global.FPS );
+	}
+
+	// ----------------------------------------------------------------------
+	public void sleep( int fps )
+	{
+		if ( fps > 0 )
+		{
+			diff = System.currentTimeMillis() - start;
+			long targetDelay = 1000 / fps;
+			if ( diff < targetDelay )
+			{
+				try
+				{
+					Thread.sleep( targetDelay - diff );
+				}
+				catch ( InterruptedException e )
+				{
+				}
+			}
+			start = System.currentTimeMillis();
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -1503,6 +1527,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// endregion Private Methods
 	// ####################################################################//
 	// region Data
+
+	// ----------------------------------------------------------------------
+	private long diff, start = System.currentTimeMillis();
 
 	// ----------------------------------------------------------------------
 	private float lastZoom;

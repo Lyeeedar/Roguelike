@@ -70,8 +70,8 @@ public class RecursiveDockGenerator
 		if ( generationIndex == 0 )
 		{
 			selectRooms();
-			generationIndex++;
 
+			generationIndex++;
 			generationText = "Partitioning Grid";
 		}
 		else if ( generationIndex == 1 )
@@ -87,16 +87,15 @@ public class RecursiveDockGenerator
 			if ( toBePlaced.size == 0 )
 			{
 				generationIndex++;
+				generationText = "Finding Doors";
 			}
 			else
 			{
 				width += 10;
 				height += 10;
 
-				System.out.println( "Failed to place all rooms. Retrying" );
+				System.out.println( "Failed to place all rooms. Increasing size to " + width + "," + height + "and retrying" );
 			}
-
-			generationText = "Finding Doors";
 		}
 		else if ( generationIndex == 2 )
 		{
@@ -106,21 +105,20 @@ public class RecursiveDockGenerator
 			}
 
 			generationIndex++;
-
 			generationText = "Marking Rooms";
 		}
 		else if ( generationIndex == 3 )
 		{
 			markRooms();
-			generationIndex++;
 
+			generationIndex++;
 			generationText = "Connecting Rooms";
 		}
 		else if ( generationIndex == 4 )
 		{
 			connectRooms();
-			generationIndex++;
 
+			generationIndex++;
 			generationText = "Placing Factions";
 
 			if ( DEBUG_OUTPUT )
@@ -142,15 +140,15 @@ public class RecursiveDockGenerator
 		else if ( generationIndex == 5 )
 		{
 			placeFactions();
-			generationIndex++;
 
+			generationIndex++;
 			generationText = "Marking Rooms Again?";
 		}
 		else if ( generationIndex == 6 )
 		{
 			markRooms();
-			generationIndex++;
 
+			generationIndex++;
 			generationText = "Filling empty spaces";
 		}
 		else if ( generationIndex == 7 )
@@ -158,7 +156,6 @@ public class RecursiveDockGenerator
 			identifyAndFillEmptySpaces();
 
 			generationIndex++;
-
 			generationText = "Creating Level";
 
 			if ( DEBUG_OUTPUT )
@@ -180,8 +177,8 @@ public class RecursiveDockGenerator
 		else if ( generationIndex == 8 )
 		{
 			createLevel();
-			generationIndex++;
 
+			generationIndex++;
 			generationText = "Completed";
 		}
 
@@ -1222,7 +1219,7 @@ public class RecursiveDockGenerator
 				int dist = Math.abs( room.x - largest.x ) + Math.abs( room.y - largest.y );
 				sortedRooms.add( new Pair( dist, room ) );
 			}
-			else
+			else if ( !room.faction.equalsIgnoreCase( "none" ) )
 			{
 				int influence = ran.nextInt( 80 ) + 10;
 
@@ -2208,12 +2205,6 @@ public class RecursiveDockGenerator
 			this.side = side;
 			this.pos = pos;
 		}
-	}
-
-	// ----------------------------------------------------------------------
-	public enum PathfindType
-	{
-		NONE, WALL, CORRIDOR
 	}
 
 	// ----------------------------------------------------------------------
