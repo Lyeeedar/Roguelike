@@ -121,6 +121,8 @@ public class Level
 				processPlayer();
 
 				updateAccumulator = 0;
+
+				inTurn = true;
 			}
 
 			if ( visibleList.size > 0 || invisibleList.size > 0 )
@@ -130,6 +132,20 @@ public class Level
 
 				// process visible
 				processVisibleList();
+			}
+			else if ( inTurn )
+			{
+				for ( ActiveAbility aa : Global.abilityPool.slottedActiveAbilities )
+				{
+					if ( aa != null )
+					{
+						aa.source = player.tile;
+						aa.hasValidTargets = aa.getValidTargets().size > 0;
+					}
+
+				}
+
+				inTurn = false;
 			}
 
 			if ( ActiveAbilities.size > 0 )
@@ -507,19 +523,41 @@ public class Level
 
 		if ( essence > 0 )
 		{
-			int blockSize = MathUtils.clamp( essence / 10, 10, 100 );
-
-			while ( essence > 0 )
+			if ( possibleTiles.size > 0 )
 			{
-				int block = Math.min( blockSize, essence );
-				essence -= block;
+				int blockSize = MathUtils.clamp( essence / 10, 10, 100 );
 
-				Point target = possibleTiles.random();
-				GameTile tile = getGameTile( target );
+				while ( essence > 0 )
+				{
+					int block = Math.min( blockSize, essence );
+					essence -= block;
 
-				tile.essence += block;
+					Point target = possibleTiles.random();
+					GameTile tile = getGameTile( target );
 
-				int[] diff = tile.getPosDiff( source );
+					tile.essence += block;
+
+					int[] diff = tile.getPosDiff( source );
+
+					Sprite sprite = AssetManager.loadSprite( "orb" );
+					MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
+					anim.leapHeight = 6;
+					sprite.spriteAnimation = anim;
+					sprite.renderDelay = delay;
+					delay += 0.02f;
+
+					float scale = 0.5f + 0.5f * ( MathUtils.clamp( block, 10.0f, 1000.0f ) / 1000.0f );
+					sprite.baseScale[0] = scale;
+					sprite.baseScale[1] = scale;
+
+					tile.spriteEffects.add( new SpriteEffect( sprite, Direction.CENTER, null ) );
+				}
+			}
+			else
+			{
+				source.essence += essence;
+
+				int[] diff = new int[] { 0, 0 };
 
 				Sprite sprite = AssetManager.loadSprite( "orb" );
 				MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
@@ -528,11 +566,11 @@ public class Level
 				sprite.renderDelay = delay;
 				delay += 0.02f;
 
-				float scale = 0.5f + 0.5f * ( MathUtils.clamp( block, 10.0f, 1000.0f ) / 1000.0f );
+				float scale = 0.5f + 0.5f * ( MathUtils.clamp( essence, 10.0f, 1000.0f ) / 1000.0f );
 				sprite.baseScale[0] = scale;
 				sprite.baseScale[1] = scale;
 
-				tile.spriteEffects.add( new SpriteEffect( sprite, Direction.CENTER, null ) );
+				source.spriteEffects.add( new SpriteEffect( sprite, Direction.CENTER, null ) );
 			}
 		}
 
@@ -1156,6 +1194,8 @@ public class Level
 	public String UID;
 
 	public GameEntity player;
+
+	public boolean inTurn = false;
 
 	public Color Ambient = new Color( 0.1f, 0.1f, 0.3f, 1.0f );
 

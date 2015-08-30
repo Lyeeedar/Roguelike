@@ -84,6 +84,8 @@ public class ActiveAbility implements IAbility, IGameObject
 
 	private boolean spentCost = false;
 
+	public boolean hasValidTargets = true;
+
 	// ----------------------------------------------------------------------
 	public int getRange()
 	{
@@ -96,6 +98,8 @@ public class ActiveAbility implements IAbility, IGameObject
 	// ----------------------------------------------------------------------
 	public boolean isAvailable()
 	{
+		if ( !hasValidTargets ) { return false; }
+
 		if ( cooldownAccumulator > 0 ) { return false; }
 
 		for ( AbstractCostType cost : costTypes )
@@ -194,6 +198,9 @@ public class ActiveAbility implements IAbility, IGameObject
 		table.add( descLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 		table.row();
 
+		table.add( new Label( "Range: " + getRange(), skin ) ).expandX().left();
+		table.row();
+
 		for ( AbstractCostType cost : costTypes )
 		{
 			String string = cost.toString( this );
@@ -214,6 +221,18 @@ public class ActiveAbility implements IAbility, IGameObject
 			label.setWrap( true );
 
 			table.add( label ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) ).padBottom( 5 );
+			table.row();
+		}
+
+		if ( !hasValidTargets )
+		{
+			table.add( new Label( "[RED]No valid targets", skin ) ).expandX().left();
+			table.row();
+		}
+
+		if ( cooldownAccumulator > 0 )
+		{
+			table.add( new Label( "[RED]On cooldown", skin ) ).expandX().left();
 			table.row();
 		}
 
