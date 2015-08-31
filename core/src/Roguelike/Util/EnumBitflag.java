@@ -4,6 +4,11 @@ public class EnumBitflag<T extends Enum<T>>
 {
 	private int bitflag = 0;
 
+	public EnumBitflag()
+	{
+
+	}
+
 	public EnumBitflag( T... vals )
 	{
 		for ( T val : vals )

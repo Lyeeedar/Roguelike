@@ -62,6 +62,25 @@ public class MainMenuScreen implements Screen
 
 		Table buttonTable = new Table();
 
+		HoverTextButton cbutton = new HoverTextButton( "Continue", normalFont, highlightFont );
+		cbutton.halign = HorizontalAlignment.RIGHT;
+		cbutton.addListener( new InputListener()
+		{
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				Global.load();
+			}
+		} );
+		buttonTable.add( cbutton ).expandX().fillX();
+		buttonTable.row();
+
 		HoverTextButton ngbutton = new HoverTextButton( "New Game", normalFont, highlightFont );
 		ngbutton.halign = HorizontalAlignment.RIGHT;
 		ngbutton.addListener( new InputListener()
@@ -78,8 +97,27 @@ public class MainMenuScreen implements Screen
 				RoguelikeGame.Instance.switchScreen( ScreenEnum.CHARACTERCREATION );
 			}
 		} );
-
 		buttonTable.add( ngbutton ).expandX().fillX();
+		buttonTable.row();
+
+		HoverTextButton obutton = new HoverTextButton( "Options", normalFont, highlightFont );
+		obutton.halign = HorizontalAlignment.RIGHT;
+		obutton.addListener( new InputListener()
+		{
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				OptionsScreen.Instance.screen = ScreenEnum.MAINMENU;
+				RoguelikeGame.Instance.switchScreen( ScreenEnum.OPTIONS );
+			}
+		} );
+		buttonTable.add( obutton ).expandX().fillX();
 		buttonTable.row();
 
 		HoverTextButton qbutton = new HoverTextButton( "Quit", normalFont, highlightFont );
@@ -98,7 +136,6 @@ public class MainMenuScreen implements Screen
 				Gdx.app.exit();
 			}
 		} );
-
 		buttonTable.add( qbutton ).expandX().fillX();
 		buttonTable.row();
 
@@ -147,6 +184,32 @@ public class MainMenuScreen implements Screen
 		batch.end();
 
 		stage.draw();
+
+		// limit fps
+		sleep( Global.FPS );
+	}
+
+	// ----------------------------------------------------------------------
+	private long diff, start = System.currentTimeMillis();
+
+	public void sleep( int fps )
+	{
+		if ( fps > 0 )
+		{
+			diff = System.currentTimeMillis() - start;
+			long targetDelay = 1000 / fps;
+			if ( diff < targetDelay )
+			{
+				try
+				{
+					Thread.sleep( targetDelay - diff );
+				}
+				catch ( InterruptedException e )
+				{
+				}
+			}
+			start = System.currentTimeMillis();
+		}
 	}
 
 	@Override

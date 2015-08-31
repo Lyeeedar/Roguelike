@@ -193,6 +193,32 @@ public class CharacterCreationScreen implements Screen
 		batch.end();
 
 		stage.draw();
+
+		// limit fps
+		sleep( Global.FPS );
+	}
+
+	// ----------------------------------------------------------------------
+	private long diff, start = System.currentTimeMillis();
+
+	public void sleep( int fps )
+	{
+		if ( fps > 0 )
+		{
+			diff = System.currentTimeMillis() - start;
+			long targetDelay = 1000 / fps;
+			if ( diff < targetDelay )
+			{
+				try
+				{
+					Thread.sleep( targetDelay - diff );
+				}
+				catch ( InterruptedException e )
+				{
+				}
+			}
+			start = System.currentTimeMillis();
+		}
 	}
 
 	@Override

@@ -4,6 +4,8 @@ import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.DungeonGeneration.RecursiveDockGenerator;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Levels.Level;
@@ -22,133 +24,184 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class LoadingScreen implements Screen
-{	
+{
 	public static LoadingScreen Instance;
 	boolean created = false;
-	
+
 	public LoadingScreen()
 	{
 		Instance = this;
 	}
-	
+
 	private void create()
 	{
-		BitmapFont font = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 60);
-		titleFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 55);
-		normalFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 30);
-		highlightFont = AssetManager.loadFont("Sprites/GUI/stan0755.ttf", 35);
+		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 60 );
+		titleFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 55 );
+		normalFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 30 );
+		highlightFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 35 );
 
 		skin = new Skin();
-		skin.addRegions(new TextureAtlas(Gdx.files.internal("GUI/uiskin.atlas")));
-		skin.add("default-font", font, BitmapFont.class);
-		skin.load(Gdx.files.internal("GUI/uiskin.json"));
+		skin.addRegions( new TextureAtlas( Gdx.files.internal( "GUI/uiskin.atlas" ) ) );
+		skin.add( "default-font", font, BitmapFont.class );
+		skin.load( Gdx.files.internal( "GUI/uiskin.json" ) );
 
-		stage = new Stage(new ScreenViewport());
+		stage = new Stage( new ScreenViewport() );
 		batch = new SpriteBatch();
-		
-		background = AssetManager.loadTexture("Sprites/GUI/Title.png");
-		white = AssetManager.loadTexture("Sprites/white.png");
+
+		background = AssetManager.loadTexture( "Sprites/GUI/Title.png" );
+		white = AssetManager.loadTexture( "Sprites/white.png" );
 	}
 
 	@Override
 	public void show()
 	{
-		if (!created)
+		if ( !created )
 		{
 			create();
 			created = true;
 		}
-		
-		Gdx.input.setInputProcessor(stage);
-		
-		camera = new OrthographicCamera(Global.Resolution[0], Global.Resolution[1]);
-		camera.translate(Global.Resolution[0] / 2, Global.Resolution[1] / 2);
-		camera.setToOrtho(false, Global.Resolution[0], Global.Resolution[1]);
+
+		Gdx.input.setInputProcessor( stage );
+
+		camera = new OrthographicCamera( Global.Resolution[0], Global.Resolution[1] );
+		camera.translate( Global.Resolution[0] / 2, Global.Resolution[1] / 2 );
+		camera.setToOrtho( false, Global.Resolution[0], Global.Resolution[1] );
 		camera.update();
-		
-		batch.setProjectionMatrix(camera.combined);
-		stage.getViewport().setCamera(camera);
-		stage.getViewport().setWorldWidth(Global.Resolution[0]);
-		stage.getViewport().setWorldHeight(Global.Resolution[1]);
-		stage.getViewport().setScreenWidth(Global.ScreenSize[0]);
-		stage.getViewport().setScreenHeight(Global.ScreenSize[1]);
+
+		batch.setProjectionMatrix( camera.combined );
+		stage.getViewport().setCamera( camera );
+		stage.getViewport().setWorldWidth( Global.Resolution[0] );
+		stage.getViewport().setWorldHeight( Global.Resolution[1] );
+		stage.getViewport().setScreenWidth( Global.ScreenSize[0] );
+		stage.getViewport().setScreenHeight( Global.ScreenSize[1] );
 	}
 
 	@Override
-	public void render(float delta)
+	public void render( float delta )
 	{
-		if (complete && event != null)
+		if ( complete && event != null )
 		{
 			generationString = "Executing Events";
 		}
-		
+
 		stage.act();
-		
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
+		Gdx.gl.glClearColor( 0, 0, 0, 1 );
+		Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
+
 		batch.begin();
-		
-		batch.draw(background, 0, 0, Global.Resolution[0], Global.Resolution[1]);
-		batch.draw(white, 0, Global.Resolution[1]/2-20, Global.Resolution[0]*((float)percent/100.0f), 40);
-		normalFont.draw(batch, generationString, Global.Resolution[0]/2, Global.Resolution[1]/2);
-		
+
+		batch.draw( background, 0, 0, Global.Resolution[0], Global.Resolution[1] );
+		batch.draw( white, 0, Global.Resolution[1] / 2 - 20, Global.Resolution[0] * ( percent / 100.0f ), 40 );
+		normalFont.draw( batch, generationString, Global.Resolution[0] / 2, Global.Resolution[1] / 2 );
+
 		batch.end();
-		
+
 		stage.draw();
-		
-		if (complete)
+
+		if ( complete )
 		{
-			if (event == null)
+			if ( event == null )
 			{
 				level.created = true;
-				Global.ChangeLevel(generator.getLevel(), player, travelType);
-				RoguelikeGame.Instance.switchScreen(ScreenEnum.GAME);
+				Global.ChangeLevel( generator.getLevel(), player, travelType );
+
+				Global.CurrentLevel.player.slottedActiveAbilities.clear();
+				Global.CurrentLevel.player.slottedPassiveAbilities.clear();
+
+				for ( ActiveAbility aa : Global.abilityPool.slottedActiveAbilities )
+				{
+					if ( aa != null )
+					{
+						aa.caster = Global.CurrentLevel.player;
+						Global.CurrentLevel.player.slottedActiveAbilities.add( aa );
+					}
+
+				}
+
+				for ( PassiveAbility pa : Global.abilityPool.slottedPassiveAbilities )
+				{
+					if ( pa != null )
+					{
+						Global.CurrentLevel.player.slottedPassiveAbilities.add( pa );
+					}
+				}
+
+				Global.CurrentLevel.player.isVariableMapDirty = true;
+				Global.abilityPool.isVariableMapDirty = false;
+
+				RoguelikeGame.Instance.switchScreen( ScreenEnum.GAME );
 			}
 			else
 			{
-				event.execute(generator.getLevel());
+				event.execute( generator.getLevel() );
 				event = null;
 			}
 		}
-		
+
 		complete = generator.generate();
 		percent = generator.percent;
 		generationString = generator.generationText;
+
+		// limit fps
+		sleep( Global.FPS );
+	}
+
+	// ----------------------------------------------------------------------
+	private long diff, start = System.currentTimeMillis();
+
+	public void sleep( int fps )
+	{
+		if ( fps > 0 )
+		{
+			diff = System.currentTimeMillis() - start;
+			long targetDelay = 1000 / fps;
+			if ( diff < targetDelay )
+			{
+				try
+				{
+					Thread.sleep( targetDelay - diff );
+				}
+				catch ( InterruptedException e )
+				{
+				}
+			}
+			start = System.currentTimeMillis();
+		}
 	}
 
 	@Override
-	public void resize(int width, int height)
+	public void resize( int width, int height )
 	{
 		Global.ScreenSize[0] = width;
 		Global.ScreenSize[1] = height;
 
-        float w = (float)Global.TargetResolution[0];
-        float h = (float)Global.TargetResolution[1];
-        
-        if (width < height)
-        {
-        	h = w * ((float)height/(float)width);
-        }
-        else
-        {
-        	w = h * ((float)width/(float)height);
-        }
-        
-        Global.Resolution[0] = (int)w;
-        Global.Resolution[1] = (int)h;	
-		
-		camera = new OrthographicCamera(Global.Resolution[0], Global.Resolution[1]);
-		camera.translate(Global.Resolution[0] / 2, Global.Resolution[1] / 2);
-		camera.setToOrtho(false, Global.Resolution[0], Global.Resolution[1]);
+		float w = Global.TargetResolution[0];
+		float h = Global.TargetResolution[1];
+
+		if ( width < height )
+		{
+			h = w * ( (float) height / (float) width );
+		}
+		else
+		{
+			w = h * ( (float) width / (float) height );
+		}
+
+		Global.Resolution[0] = (int) w;
+		Global.Resolution[1] = (int) h;
+
+		camera = new OrthographicCamera( Global.Resolution[0], Global.Resolution[1] );
+		camera.translate( Global.Resolution[0] / 2, Global.Resolution[1] / 2 );
+		camera.setToOrtho( false, Global.Resolution[0], Global.Resolution[1] );
 		camera.update();
-		
-		batch.setProjectionMatrix(camera.combined);
-		stage.getViewport().setCamera(camera);
-		stage.getViewport().setWorldWidth(Global.Resolution[0]);
-		stage.getViewport().setWorldHeight(Global.Resolution[1]);
-		stage.getViewport().setScreenWidth(Global.ScreenSize[0]);
-		stage.getViewport().setScreenHeight(Global.ScreenSize[1]);
+
+		batch.setProjectionMatrix( camera.combined );
+		stage.getViewport().setCamera( camera );
+		stage.getViewport().setWorldWidth( Global.Resolution[0] );
+		stage.getViewport().setWorldHeight( Global.Resolution[1] );
+		stage.getViewport().setScreenWidth( Global.ScreenSize[0] );
+		stage.getViewport().setScreenHeight( Global.ScreenSize[1] );
 	}
 
 	@Override
@@ -170,36 +223,36 @@ public class LoadingScreen implements Screen
 	public void dispose()
 	{
 	}
-	
-	public void set(SaveLevel level, GameEntity player, String travelType, PostGenerateEvent event)
+
+	public void set( SaveLevel level, GameEntity player, String travelType, PostGenerateEvent event )
 	{
 		this.level = level;
 		this.player = player;
 		this.travelType = travelType;
 		this.event = event;
-		
-		generator = new RecursiveDockGenerator(level);
-		
+
+		generator = new RecursiveDockGenerator( level );
+
 		this.percent = generator.percent;
 		this.generationString = generator.generationText;
 		this.complete = false;
 	}
-	
-	//----------------------------------------------------------------------
+
+	// ----------------------------------------------------------------------
 	public OrthographicCamera camera;
-	
+
 	Stage stage;
 	Skin skin;
-	
+
 	SpriteBatch batch;
 
 	BitmapFont titleFont;
 	BitmapFont normalFont;
 	BitmapFont highlightFont;
-	
+
 	Texture background;
 	Texture white;
-	
+
 	boolean complete;
 	String generationString;
 	int percent = 0;
@@ -208,9 +261,9 @@ public class LoadingScreen implements Screen
 	String travelType;
 	RecursiveDockGenerator generator;
 	PostGenerateEvent event;
-	
+
 	public static abstract class PostGenerateEvent
 	{
-		public abstract void execute(Level level);
+		public abstract void execute( Level level );
 	}
 }

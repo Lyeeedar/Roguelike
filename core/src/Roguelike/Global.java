@@ -12,6 +12,8 @@ import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.Levels.Level;
+import Roguelike.Save.SaveAbilityPool;
+import Roguelike.Save.SaveFile;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Screens.LoadingScreen;
@@ -37,6 +39,12 @@ import exp4j.Helpers.EquationHelper;
 
 public class Global
 {
+	// ----------------------------------------------------------------------
+	public static RoguelikeGame Game;
+
+	// ----------------------------------------------------------------------
+	public static AbstractApplicationChanger ApplicationChanger;
+
 	// ----------------------------------------------------------------------
 	public static boolean ANDROID = false;
 
@@ -636,6 +644,35 @@ public class Global
 		{
 			Tier1Elements = new Tier1Element[] { e1, e2 };
 		}
+	}
+
+	// ----------------------------------------------------------------------
+	public static void save()
+	{
+		SaveFile save = new SaveFile();
+
+		Global.AllLevels.get( Global.CurrentLevel.UID ).store( Global.CurrentLevel );
+		save.allLevels = Global.AllLevels;
+		save.currentLevel = Global.CurrentLevel.UID;
+
+		save.abilityPool = new SaveAbilityPool();
+		save.abilityPool.store( Global.abilityPool );
+
+		save.save();
+	}
+
+	// ----------------------------------------------------------------------
+	public static void load()
+	{
+		SaveFile save = new SaveFile();
+		save.load();
+
+		Global.AllLevels = save.allLevels;
+		Global.abilityPool = save.abilityPool.create();
+
+		SaveLevel level = Global.AllLevels.get( save.currentLevel );
+		LoadingScreen.Instance.set( level, null, null, null );
+		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
 	}
 
 	// ----------------------------------------------------------------------

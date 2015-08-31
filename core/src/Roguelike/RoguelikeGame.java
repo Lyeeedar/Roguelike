@@ -7,6 +7,7 @@ import Roguelike.Screens.GameOverScreen;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Screens.LoadingScreen;
 import Roguelike.Screens.MainMenuScreen;
+import Roguelike.Screens.OptionsScreen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
@@ -22,7 +23,7 @@ public class RoguelikeGame extends Game
 
 	public enum ScreenEnum
 	{
-		MAINMENU, GAME, GAMEOVER, LOADING, CHARACTERCREATION
+		MAINMENU, GAME, GAMEOVER, LOADING, CHARACTERCREATION, OPTIONS
 	}
 
 	public final HashMap<ScreenEnum, Screen> screens = new HashMap<ScreenEnum, Screen>();
@@ -35,6 +36,7 @@ public class RoguelikeGame extends Game
 		screens.put( ScreenEnum.GAMEOVER, new GameOverScreen() );
 		screens.put( ScreenEnum.LOADING, new LoadingScreen() );
 		screens.put( ScreenEnum.CHARACTERCREATION, new CharacterCreationScreen() );
+		screens.put( ScreenEnum.OPTIONS, new OptionsScreen() );
 
 		switchScreen( ScreenEnum.MAINMENU );
 	}

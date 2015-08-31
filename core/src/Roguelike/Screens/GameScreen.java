@@ -4,8 +4,6 @@ import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
-import Roguelike.RoguelikeGame;
-import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
@@ -16,9 +14,6 @@ import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Fields.Field;
 import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.Items.Item;
-import Roguelike.Save.SaveAbilityPool;
-import Roguelike.Save.SaveFile;
-import Roguelike.Save.SaveLevel;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
@@ -877,28 +872,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		if ( keycode == Keys.S )
 		{
-			SaveFile save = new SaveFile();
-
-			Global.AllLevels.get( Global.CurrentLevel.UID ).store( Global.CurrentLevel );
-			save.allLevels = Global.AllLevels;
-			save.currentLevel = Global.CurrentLevel.UID;
-
-			save.abilityPool = new SaveAbilityPool();
-			save.abilityPool.store( Global.abilityPool );
-
-			save.save();
+			Global.save();
 		}
 		else if ( keycode == Keys.L )
 		{
-			SaveFile save = new SaveFile();
-			save.load();
-
-			Global.AllLevels = save.allLevels;
-			Global.abilityPool = save.abilityPool.create();
-
-			SaveLevel level = Global.AllLevels.get( save.currentLevel );
-			LoadingScreen.Instance.set( level, null, null, null );
-			RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
+			Global.load();
 		}
 		else if ( keycode == Keys.W )
 		{

@@ -135,6 +135,8 @@ public class Level
 			}
 			else if ( inTurn )
 			{
+				Global.save();
+
 				for ( ActiveAbility aa : Global.abilityPool.slottedActiveAbilities )
 				{
 					if ( aa != null )
@@ -142,7 +144,6 @@ public class Level
 						aa.source = player.tile;
 						aa.hasValidTargets = aa.getValidTargets().size > 0;
 					}
-
 				}
 
 				inTurn = false;
