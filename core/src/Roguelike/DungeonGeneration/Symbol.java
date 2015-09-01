@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
+import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Pathfinding.PathfindingTile;
@@ -15,6 +16,8 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 //----------------------------------------------------------------------
 public class Symbol implements PathfindingTile
 {
+	public Room containingRoom;
+
 	public char character;
 
 	public Element tileData;

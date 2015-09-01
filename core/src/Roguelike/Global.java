@@ -49,6 +49,9 @@ public class Global
 	public static boolean ANDROID = false;
 
 	// ----------------------------------------------------------------------
+	public static float AnimationSpeed = 1;
+
+	// ----------------------------------------------------------------------
 	public static int FPS = 0;
 
 	// ----------------------------------------------------------------------
@@ -80,6 +83,9 @@ public class Global
 
 	// ----------------------------------------------------------------------
 	public static HashMap<String, SaveLevel> AllLevels = new HashMap<String, SaveLevel>();
+
+	// ----------------------------------------------------------------------
+	public static HashMap<String, Level> LoadedLevels = new HashMap<String, Level>();
 
 	// ----------------------------------------------------------------------
 	public static Mixer BGM;
@@ -671,7 +677,7 @@ public class Global
 		Global.abilityPool = save.abilityPool.create();
 
 		SaveLevel level = Global.AllLevels.get( save.currentLevel );
-		LoadingScreen.Instance.set( level, null, null, null );
+		LoadingScreen.Instance.set( level, null, null, null, true );
 		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
 	}
 
@@ -680,7 +686,7 @@ public class Global
 	{
 		AllLevels.clear();
 
-		SaveLevel firstLevel = new SaveLevel( "Forest", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
+		SaveLevel firstLevel = new SaveLevel( "Town", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
 		AllLevels.put( firstLevel.UID, firstLevel );
 
 		LoadingScreen.Instance.set( firstLevel, player, "PlayerSpawn", new PostGenerateEvent()
@@ -690,7 +696,7 @@ public class Global
 			{
 				abilityPool = AbilityPool.createAbilityPool( lines );
 			}
-		} );
+		}, true );
 
 		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
 	}
@@ -706,12 +712,14 @@ public class Global
 			}
 
 			CurrentLevel.player.tile.entity = null;
-			CurrentLevel.player = null;
+			// CurrentLevel.player = null;
 
 			// Save
 			SaveLevel save = new SaveLevel();
 			save.store( CurrentLevel );
 			AllLevels.put( save.UID, save );
+
+			CurrentLevel.player.tile.entity = CurrentLevel.player;
 		}
 
 		CurrentLevel = level;

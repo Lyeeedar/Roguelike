@@ -119,9 +119,12 @@ public class EnvironmentEntity extends Entity
 				Level current = entity.tile.level;
 				SaveLevel save = Global.getLevel( (SaveLevel) entity.data.get( "Destination" ) );
 
-				LoadingScreen.Instance.set( save, current.player, "Stair: " + current.UID, null );
+				boolean needsLoad = LoadingScreen.Instance.set( save, current.player, "Stair: " + current.UID, null, (Boolean) entity.data.get( "UnloadLevel" ) );
 
-				RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
+				if ( needsLoad )
+				{
+					RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
+				}
 			}
 		};
 
@@ -144,6 +147,7 @@ public class EnvironmentEntity extends Entity
 						HashMap<String, Object> eedata = new HashMap<String, Object>();
 						eedata.put( "Destination", new SaveLevel( levelUID ) );
 						eedata.put( "Stair: " + levelUID, new Object() );
+						eedata.put( "UnloadLevel", symbol.environmentData.getBoolean( "UnloadLevel", true ) );
 						symbol.environmentEntityData = eedata;
 
 						break;
@@ -172,6 +176,7 @@ public class EnvironmentEntity extends Entity
 			entity.actions.add( action );
 			entity.data.put( "Destination", destinationLevel );
 			entity.data.put( "Stair: " + destinationLevel.UID, new Object() );
+			entity.data.put( "UnloadLevel", data.getBoolean( "UnloadLevel", true ) );
 			entity.UID = "EnvironmentEntity DownStair: ID " + entity.hashCode();
 
 			return entity;
@@ -181,8 +186,8 @@ public class EnvironmentEntity extends Entity
 	// ----------------------------------------------------------------------
 	private static EnvironmentEntity CreateDoor()
 	{
-		final Sprite doorClosed = AssetManager.loadSprite( "Objects/Door0", 1, Color.WHITE, AnimationMode.NONE, null );
-		final Sprite doorOpen = AssetManager.loadSprite( "Objects/Door1", 1, Color.WHITE, AnimationMode.NONE, null );
+		final Sprite doorClosed = AssetManager.loadSprite( "Objects/DoorClosed", 1, Color.WHITE, AnimationMode.NONE, null );
+		final Sprite doorOpen = AssetManager.loadSprite( "Objects/DoorOpen", 1, Color.WHITE, AnimationMode.NONE, null );
 
 		ActivationAction action = new ActivationAction( "Open" )
 		{
@@ -196,14 +201,17 @@ public class EnvironmentEntity extends Entity
 					entity.passableBy.setBit( Passability.LIGHT );
 					entity.sprite = doorOpen;
 					name = "Close";
+
+					entity.data.put( "State", "Open" );
 				}
 				else
 				{
 					entity.passableBy = Passability.parse( "false" );
-					;
 					entity.passableBy.clearBit( Passability.LIGHT );
 					entity.sprite = doorClosed;
 					name = "Open";
+
+					entity.data.put( "State", "Closed" );
 				}
 			}
 		};
@@ -215,18 +223,7 @@ public class EnvironmentEntity extends Entity
 		entity.sprite = doorClosed;
 		entity.actions.add( action );
 		entity.UID = "EnvironmentEntity Door: ID " + entity.hashCode();
-
-		entity.statistics.put( Statistic.METAL_DEF, 50 );
-		entity.statistics.put( Statistic.METAL_HARDINESS, 50 );
-
-		entity.statistics.put( Statistic.WOOD_DEF, 50 );
-		entity.statistics.put( Statistic.WOOD_HARDINESS, 75 );
-
-		entity.statistics.put( Statistic.AIR_DEF, 50 );
-		entity.statistics.put( Statistic.AIR_HARDINESS, 50 );
-
-		entity.statistics.put( Statistic.WATER_DEF, 50 );
-		entity.statistics.put( Statistic.WATER_HARDINESS, 50 );
+		entity.canTakeDamage = false;
 
 		return entity;
 	}

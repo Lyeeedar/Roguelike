@@ -127,6 +127,14 @@ public class DungeonFileParser
 	// ----------------------------------------------------------------------
 	public static class DFPRoom
 	{
+		// ----------------------------------------------------------------------
+		public enum Orientation
+		{
+			EDGE, CENTRE, RANDOM, FIXED
+		}
+
+		public Orientation orientation;
+
 		public boolean isTransition;
 
 		public int minDepth = 0;
@@ -149,6 +157,8 @@ public class DungeonFileParser
 			room.maxDepth = xml.getIntAttribute( "Max", room.maxDepth );
 
 			room.faction = xml.get( "Faction", null );
+
+			room.orientation = Orientation.valueOf( xml.get( "Orientation", "Random" ).toUpperCase() );
 
 			Element rowsElement = xml.getChildByName( "Rows" );
 
@@ -183,14 +193,14 @@ public class DungeonFileParser
 					String content = handle.readString();
 
 					String[] lines = content.split( System.getProperty( "line.separator" ) );
-					room.height = lines.length;
+					room.width = lines.length;
 
 					String[][] rows = new String[lines.length][];
 					for ( int i = 0; i < lines.length; i++ )
 					{
 						rows[i] = lines[i].split( " " );
 
-						room.width = rows[i].length;
+						room.height = rows[i].length;
 					}
 
 					room.roomDef = new char[room.width][room.height];
@@ -230,7 +240,7 @@ public class DungeonFileParser
 			return room;
 		}
 
-		private Symbol getSymbol( char c )
+		public Symbol getSymbol( char c )
 		{
 			Symbol s = localSymbolMap.get( c );
 			if ( s == null )
@@ -239,8 +249,7 @@ public class DungeonFileParser
 			}
 			if ( s == null )
 			{
-				// System.out.println("Failed to find symbol for character '" +
-				// c +"'! Falling back to using '.'");
+				System.out.println( "Failed to find symbol for character '" + c + "'! Falling back to using '.'" );
 				s = sharedSymbolMap.get( '.' );
 			}
 
@@ -254,6 +263,7 @@ public class DungeonFileParser
 
 		public void fillRoom( Room room, Random ran, DungeonFileParser dfp )
 		{
+			room.roomData = this;
 			room.width = width;
 			room.height = height;
 			room.roomContents = new Symbol[width][height];

@@ -37,7 +37,7 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 		cfg.height = pref.getInteger( "resolutionY" );
 		cfg.fullscreen = pref.getBoolean( "fullscreen" );
 		cfg.vSyncEnabled = pref.getBoolean( "vSync" );
-		cfg.foregroundFPS = pref.getInteger( "fps" );
+		cfg.foregroundFPS = 0;
 		cfg.backgroundFPS = 2;
 		cfg.samples = pref.getInteger( "msaa" );
 
@@ -47,6 +47,7 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 		Global.ScreenSize[1] = cfg.height;
 
 		Global.FPS = pref.getInteger( "fps" );
+		Global.AnimationSpeed = 1.0f / pref.getFloat( "animspeed" );
 
 		return new LwjglApplication( game, cfg );
 	}
@@ -54,6 +55,8 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 	@Override
 	public void updateApplication( Preferences pref )
 	{
+		System.setProperty( "org.lwjgl.opengl.Window.undecorated", "" + pref.getBoolean( "borderless" ) );
+
 		int width = pref.getInteger( "resolutionX" );
 		int height = pref.getInteger( "resolutionY" );
 		boolean fullscreen = pref.getBoolean( "fullscreen" );
@@ -61,6 +64,7 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 		Global.Resolution[0] = width;
 		Global.Resolution[1] = height;
 		Global.FPS = pref.getInteger( "fps" );
+		Global.AnimationSpeed = 1.0f / pref.getFloat( "animspeed" );
 
 		Gdx.graphics.setDisplayMode( width, height, fullscreen );
 		Gdx.graphics.setVSync( pref.getBoolean( "vSync" ) );

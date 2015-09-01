@@ -21,6 +21,8 @@ public class BumpAnimation extends AbstractSpriteAnimation
 
 	public BumpAnimation( float duration, Direction direction )
 	{
+		duration *= Global.AnimationSpeed;
+
 		this.duration = duration;
 		this.direction = direction;
 	}

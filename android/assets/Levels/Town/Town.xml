@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Level>
+	<Ambient>
+		<Red>0.85</Red>
+		<Green>1</Green>
+		<Blue>0.6</Blue>
+		<Alpha>1</Alpha>
+	</Ambient>
+
+	<Sound>
+		<BGM>Heroic Age</BGM>
+		<Ambient />
+
+
+	</Sound>
+
+	<RoomGenerators />
+
+
+	<CorridorStyle>
+		<PathStyle>Straight</PathStyle>
+		<Width>1</Width>
+
+		<CentralConstant>
+			<TileData>
+				<Passable>true</Passable>
+				<Opaque>false</Opaque>
+				<Sprite>
+					<Name>dc-dngn/floor/dirt0</Name>
+				</Sprite>
+			</TileData>
+		</CentralConstant>
+	</CorridorStyle>
+
+	<Preprocessor>
+		<Starburst />
+	</Preprocessor>
+
+	<Factions>
+		<Major>
+			<NPC>1</NPC>
+		</Major>
+		<Minor />
+
+	</Factions>
+
+	<Symbols>
+
+		<Symbol>
+			<Char>.</Char>
+			<TileData>
+				<Opaque>false</Opaque>
+				<Passable>true</Passable>
+				<Sprite>
+					<Name>dc-dngn/floor/grass/grass0</Name>
+				</Sprite>
+			</TileData>
+		</Symbol>
+
+		<Symbol>
+			<Char>#</Char>
+			<TileData>
+				<Opaque>true</Opaque>
+				<Passable>false</Passable>
+				<Sprite>
+					<Name>dc-dngn/floor/grass/grass0</Name>
+				</Sprite>
+				<Sprite>
+					<Name>dc-dngn/wall/tree1_yellow</Name>
+					<Colour>
+						<Red>0.6</Red>
+						<Green>1</Green>
+						<Blue>0</Blue>
+					</Colour>
+				</Sprite>
+				<AmbientShadow>
+					<Factor>0.2</Factor>
+					<Range>2</Range>
+				</AmbientShadow>
+			</TileData>
+		</Symbol>
+
+	</Symbols>
+
+	<Required>
+		<PlayerSpawn>
+			<Faction>none</Faction>
+
+			<Orientation>Centre</Orientation>
+
+			<Symbols>
+				<Symbol Extends=".">
+					<Char>S</Char>
+					<MetaValue>PlayerSpawn</MetaValue>
+				</Symbol>
+			</Symbols>
+
+			<Rows>
+				<Row>#####</Row>
+				<Row>##.##</Row>
+				<Row>#.S.#</Row>
+				<Row>#..##</Row>
+				<Row>.....</Row>
+			</Rows>
+
+		</PlayerSpawn>
+
+		<Transition>
+
+			<Faction>none</Faction>
+
+			<Symbols>
+
+				<Symbol Extends=".">
+					<Char>v</Char>
+					<EnvironmentData>
+						<Type>Transition</Type>
+						<Destination>Forest</Destination>
+						<UnloadLevel>false</UnloadLevel>
+
+						<ExitRoom>
+							<Faction>none</Faction>
+
+							<Symbols>
+								<Symbol Extends=".">
+									<Char>^</Char>
+									<EnvironmentData>
+										<Type>Transition</Type>
+										<Destination>this</Destination>
+										<UnloadLevel>false</UnloadLevel>
+									</EnvironmentData>
+								</Symbol>
+							</Symbols>
+
+							<Rows>
+								<Row>#####</Row>
+								<Row>##^##</Row>
+								<Row>#.,.#</Row>
+								<Row>#,,.#</Row>
+								<Row>#,###</Row>
+							</Rows>
+						</ExitRoom>
+					</EnvironmentData>
+				</Symbol>
+			</Symbols>
+
+			<Rows>
+				<Row>#####</Row>
+				<Row>##v##</Row>
+				<Row>#,,##</Row>
+				<Row>#,###</Row>
+			</Rows>
+
+		</Transition>
+
+	</Required>
+
+	<Optional>
+
+		<Tavern>
+
+			<Symbols>
+
+				<Symbol>
+					<Char>H</Char>
+					<TileData>
+						<Opaque>true</Opaque>
+						<Passable>false</Passable>
+						<Sprite>
+							<Name>dc-dngn/wall/stone_brick1</Name>
+						</Sprite>
+						<AmbientShadow>
+							<Factor>0.1</Factor>
+							<Range>1</Range>
+						</AmbientShadow>
+					</TileData>
+				</Symbol>
+
+				<Symbol>
+					<Char>,</Char>
+					<TileData>
+						<Opaque>false</Opaque>
+						<Passable>true</Passable>
+						<CanFeature>false</CanFeature>
+						<Sprite>
+							<Name>Objects/WoodFloor</Name>
+						</Sprite>
+					</TileData>
+				</Symbol>
+
+				<Symbol Extends=",">
+					<Char>^</Char>
+					<EnvironmentData>
+						<Type>Transition</Type>
+						<Destination>this</Destination>
+					</EnvironmentData>
+				</Symbol>
+
+				<Symbol Extends=",">
+					<Char>c</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Objects/Chair</Name>
+						</Sprite>
+						<Passable>true</Passable>
+					</EnvironmentData>
+				</Symbol>
+
+				<Symbol Extends=",">
+					<Char>T</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Objects/Table</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+
+				<Symbol Extends=",">
+					<Char>I</Char>
+					<EnvironmentData>
+					    <MatchRoomRotation>true</MatchRoomRotation>
+						<Sprite>
+							<Name>Objects/Counter</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+
+				<Symbol Extends=",">
+					<Char>+</Char>
+					<EnvironmentData>
+						<Type>Door</Type>
+					</EnvironmentData>
+				</Symbol>
+
+				<Symbol>
+					<Char>w</Char>
+					<TileData>
+						<Sprite>
+							<Name>dc-dngn/wall/stone_brick1</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</TileData>
+					<EnvironmentData>
+						<Sprite>
+							<Name>dc-dngn/wall/dngn_transparent_wall</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+
+			</Symbols>
+
+			<Orientation>Edge</Orientation>
+
+			<Rows>Levels/Town/TavernGround</Rows>
+		</Tavern>
+
+	</Optional>
+
+</Level>

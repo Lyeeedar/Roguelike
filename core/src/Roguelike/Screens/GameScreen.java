@@ -4,6 +4,7 @@ import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
+import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
@@ -921,6 +922,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				prepareAbility( Global.abilityPool.slottedActiveAbilities[abilityIndex] );
 			}
+		}
+		else if ( keycode == Keys.ESCAPE )
+		{
+			OptionsScreen.Instance.screen = ScreenEnum.GAME;
+			Global.Game.switchScreen( ScreenEnum.OPTIONS );
 		}
 
 		return false;

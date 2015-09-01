@@ -28,6 +28,8 @@ public class MoveAnimation extends AbstractSpriteAnimation
 
 	public MoveAnimation( float duration, int[] diff, MoveEquation eqn )
 	{
+		duration *= Global.AnimationSpeed;
+
 		this.duration = duration;
 		this.diff = diff;
 		this.eqn = eqn;

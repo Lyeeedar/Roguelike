@@ -1,11 +1,15 @@
 package Roguelike.Screens;
 
+import java.text.DecimalFormat;
+
 import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame.ScreenEnum;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -24,7 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class OptionsScreen implements Screen
+public class OptionsScreen implements Screen, InputProcessor
 {
 	public static OptionsScreen Instance;
 
@@ -57,6 +61,14 @@ public class OptionsScreen implements Screen
 		table.add( buttons );
 		table.row();
 		table.add( options );
+
+		inputMultiplexer = new InputMultiplexer();
+
+		InputProcessor inputProcessorOne = this;
+		InputProcessor inputProcessorTwo = stage;
+
+		inputMultiplexer.addProcessor( inputProcessorTwo );
+		inputMultiplexer.addProcessor( inputProcessorOne );
 	}
 
 	public void createVideo()
@@ -98,6 +110,18 @@ public class OptionsScreen implements Screen
 			fps.setSelected( "" + prefs.getInteger( "fps" ) );
 		}
 
+		Label animLabel = new Label( "Animation Speed", skin );
+		final SelectBox<String> animspeed = new SelectBox<String>( skin );
+		animspeed.setItems( new String[] { "None", "0.25x", "0.5x", "0.75x", "1x", "2x", "4x", "8x" } );
+		if ( prefs.getFloat( "animspeed" ) == 0 )
+		{
+			animspeed.setSelected( "None" );
+		}
+		else
+		{
+			animspeed.setSelected( new DecimalFormat( "#.##" ).format( prefs.getFloat( "animspeed" ) ) + "x" );
+		}
+
 		Label msaaLabel = new Label( "MSAA Samples", skin );
 		final SelectBox<Integer> msaa = new SelectBox<Integer>( skin );
 		msaa.setItems( new Integer[] { 0, 2, 4, 8, 16, 32 } );
@@ -133,6 +157,18 @@ public class OptionsScreen implements Screen
 					prefs.putInteger( "fps", Integer.parseInt( fps.getSelected() ) );
 				}
 
+				if ( animspeed.getSelected().equals( "None" ) )
+				{
+					prefs.putFloat( "animspeed", 0 );
+				}
+				else
+				{
+					String s = animspeed.getSelected();
+					float val = Float.parseFloat( s.substring( 0, s.length() - 1 ) );
+
+					prefs.putFloat( "animspeed", val );
+				}
+
 				prefs.putInteger( "msaa", msaa.getSelected() );
 
 				prefs.flush();
@@ -166,6 +202,7 @@ public class OptionsScreen implements Screen
 				prefs.putBoolean( "vSync", true );
 				prefs.putInteger( "fps", 0 );
 				prefs.putInteger( "msaa", 16 );
+				prefs.putFloat( "animspeed", 1 );
 
 				prefs.flush();
 
@@ -197,6 +234,18 @@ public class OptionsScreen implements Screen
 					prefs.putInteger( "fps", Integer.parseInt( fps.getSelected() ) );
 				}
 
+				if ( animspeed.getSelected().equals( "None" ) )
+				{
+					prefs.putFloat( "animspeed", 0 );
+				}
+				else
+				{
+					String s = animspeed.getSelected();
+					float val = Float.parseFloat( s.substring( 0, s.length() - 1 ) );
+
+					prefs.putFloat( "animspeed", val );
+				}
+
 				prefs.putInteger( "msaa", msaa.getSelected() );
 
 				Global.ApplicationChanger.setToNativeResolution( prefs );
@@ -214,6 +263,9 @@ public class OptionsScreen implements Screen
 		options.row();
 		options.add( fpsLabel );
 		options.add( fps );
+		options.row();
+		options.add( animLabel );
+		options.add( animspeed );
 		options.row();
 		options.add( msaaLabel );
 		options.add( msaa );
@@ -234,7 +286,7 @@ public class OptionsScreen implements Screen
 
 		createVideo();
 
-		Gdx.input.setInputProcessor( stage );
+		Gdx.input.setInputProcessor( inputMultiplexer );
 
 		camera = new OrthographicCamera( Global.Resolution[0], Global.Resolution[1] );
 		camera.translate( Global.Resolution[0] / 2, Global.Resolution[1] / 2 );
@@ -252,11 +304,6 @@ public class OptionsScreen implements Screen
 	@Override
 	public void render( float delta )
 	{
-		if ( Gdx.input.isKeyPressed( Keys.ESCAPE ) )
-		{
-			Global.Game.switchScreen( screen );
-		}
-
 		stage.act();
 
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
@@ -368,4 +415,59 @@ public class OptionsScreen implements Screen
 	SpriteBatch batch;
 
 	Texture background;
+
+	public InputMultiplexer inputMultiplexer;
+
+	@Override
+	public boolean keyDown( int keycode )
+	{
+		if ( keycode == Keys.ESCAPE )
+		{
+			Global.Game.switchScreen( screen );
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean keyUp( int keycode )
+	{
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped( char character )
+	{
+		return false;
+	}
+
+	@Override
+	public boolean touchDown( int screenX, int screenY, int pointer, int button )
+	{
+		return false;
+	}
+
+	@Override
+	public boolean touchUp( int screenX, int screenY, int pointer, int button )
+	{
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged( int screenX, int screenY, int pointer )
+	{
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved( int screenX, int screenY )
+	{
+		return false;
+	}
+
+	@Override
+	public boolean scrolled( int amount )
+	{
+		return false;
+	}
 }

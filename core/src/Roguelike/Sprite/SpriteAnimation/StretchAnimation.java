@@ -31,6 +31,9 @@ public class StretchAnimation extends AbstractSpriteAnimation
 
 	public StretchAnimation( float duration, int[] diff, float padDuration, StretchEquation eqn )
 	{
+		duration *= Global.AnimationSpeed;
+		padDuration *= Global.AnimationSpeed;
+
 		this.duration = duration + padDuration;
 
 		this.diff = diff;

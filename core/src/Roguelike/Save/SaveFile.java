@@ -81,7 +81,7 @@ public class SaveFile
 		kryo.register( EnumSet.class, new EnumSetSerializer() );
 
 		kryo.register( Array.class, new Serializer<Array>()
-		{
+				{
 			{
 				setAcceptsNull( true );
 			}
@@ -152,10 +152,10 @@ public class SaveFile
 				}
 				return array;
 			}
-				} );
+		} );
 
 		kryo.register( Color.class, new Serializer<Color>()
-		{
+				{
 			@Override
 			public Color read( Kryo kryo, Input input, Class<Color> type )
 			{
@@ -169,10 +169,10 @@ public class SaveFile
 			{
 				output.writeInt( Color.rgba8888( color ) );
 			}
-				} );
+		} );
 
 		kryo.register( Sprite.class, new Serializer<Sprite>()
-		{
+				{
 			@Override
 			public Sprite read( Kryo kryo, Input input, Class<Sprite> type )
 			{
@@ -181,8 +181,10 @@ public class SaveFile
 				Color color = kryo.readObject( input, Color.class );
 				int modeVal = input.readInt();
 				AnimationMode mode = AnimationMode.values()[modeVal];
+				float[] scale = input.readFloats( 2 );
 
 				Sprite sprite = AssetManager.loadSprite( fileName, animDelay, color, mode, null );
+				sprite.baseScale = scale;
 				return sprite;
 			}
 
@@ -193,11 +195,12 @@ public class SaveFile
 				output.writeFloat( sprite.animationDelay );
 				kryo.writeObject( output, sprite.colour );
 				output.writeInt( sprite.animationState.mode.ordinal() );
+				output.writeFloats( sprite.baseScale );
 			}
-				} );
+		} );
 
 		kryo.register( Element.class, new Serializer<Element>()
-		{
+				{
 			@Override
 			public Element read( Kryo kryo, Input input, Class<Element> type )
 			{
@@ -213,6 +216,6 @@ public class SaveFile
 			{
 				output.writeString( element.toString() );
 			}
-				} );
+		} );
 	}
 }

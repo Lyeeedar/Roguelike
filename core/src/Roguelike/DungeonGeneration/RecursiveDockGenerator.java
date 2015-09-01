@@ -16,6 +16,7 @@ import Roguelike.Global.Passability;
 import Roguelike.DungeonGeneration.DungeonFileParser.CorridorFeature.PlacementMode;
 import Roguelike.DungeonGeneration.DungeonFileParser.CorridorStyle.PathStyle;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
+import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom.Orientation;
 import Roguelike.DungeonGeneration.FactionParser.Encounter;
 import Roguelike.DungeonGeneration.FactionParser.Feature;
 import Roguelike.DungeonGeneration.FactionParser.FeaturePlacementType;
@@ -370,13 +371,13 @@ public class RecursiveDockGenerator
 		}
 
 		requiredRooms.sort( new Comparator<Room>()
-				{
+		{
 			@Override
 			public int compare( Room arg0, Room arg1 )
 			{
 				return arg0.comparisonString().compareTo( arg1.comparisonString() );
 			}
-				} );
+		} );
 	}
 
 	// ----------------------------------------------------------------------
@@ -476,45 +477,154 @@ public class RecursiveDockGenerator
 
 				Room testRoom = toBePlaced.get( index );
 
-				// Check if the room fits, either at the default rotation or at
-				// 90 degrees
-				boolean fitsVertical = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
-				boolean fitsHorizontal = testRoom.height + padX2 <= width && testRoom.width + padY2 <= height;
+				boolean fits = false;
+				boolean rotate = false;
+				boolean flipVert = false;
+				boolean flipHori = false;
 
-				if ( fitsVertical || fitsHorizontal )
+				if ( testRoom.roomData.orientation == Orientation.RANDOM )
+				{
+					boolean fitsVertical = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
+					boolean fitsHorizontal = testRoom.height + padX2 <= width && testRoom.width + padY2 <= height;
+
+					if ( fitsVertical || fitsHorizontal )
+					{
+						fits = true;
+
+						// randomly flip
+						if ( ran.nextBoolean() )
+						{
+							flipVert = true;
+						}
+
+						if ( ran.nextBoolean() )
+						{
+							flipHori = true;
+						}
+
+						// if it fits on both directions, randomly pick one
+						if ( fitsVertical && fitsHorizontal )
+						{
+							if ( ran.nextBoolean() )
+							{
+								rotate = true;
+							}
+						}
+						else if ( fitsHorizontal )
+						{
+							rotate = true;
+						}
+					}
+				}
+				else if ( testRoom.roomData.orientation == Orientation.CENTRE )
+				{
+					int l = x + padX;
+					int r = this.width - ( x + testRoom.width + padX );
+					int b = y + padY;
+					int t = this.height - ( y + testRoom.height + padY );
+
+					if ( b <= l && b <= r && b <= t )
+					{
+						// Closest to bottom
+						// This is the default
+					}
+					else if ( t <= l && t <= r && t <= b )
+					{
+						// Closest to top
+						flipVert = true;
+					}
+					else if ( l <= r && l <= b && l <= t )
+					{
+						// Closest to Left
+						rotate = true;
+					}
+					else if ( r <= l && r <= b && r <= t )
+					{
+						// Closest to right
+						rotate = true;
+						flipVert = true;
+					}
+
+					if ( rotate )
+					{
+						fits = testRoom.height + padX2 <= width && testRoom.width + padY2 <= height;
+					}
+					else
+					{
+						fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
+					}
+				}
+				else if ( testRoom.roomData.orientation == Orientation.EDGE )
+				{
+					int l = x + padX;
+					int r = this.width - ( x + testRoom.width + padX );
+					int b = y + padY;
+					int t = this.height - ( y + testRoom.height + padY );
+
+					if ( t <= l && t <= r && t <= b )
+					{
+						// Closest to top
+						// This is the default orientation
+					}
+					else if ( l <= r && l <= b && l <= t )
+					{
+						// Closest to Left
+						rotate = true;
+						flipVert = true;
+					}
+					else if ( r <= l && r <= b && r <= t )
+					{
+						// Closest to right
+						rotate = true;
+					}
+					else if ( b <= l && b <= r && b <= t )
+					{
+						// Closest to bottom
+						flipVert = true;
+					}
+
+					if ( rotate )
+					{
+						fits = testRoom.height + padX2 <= width && testRoom.width + padY2 <= height;
+					}
+					else
+					{
+						fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
+					}
+				}
+				else
+				// if ( testRoom.roomData.orientation == Orientation.FIXED )
+				{
+					fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
+				}
+
+				// If it fits then place the room and rotate/flip as neccesary
+				if ( fits )
 				{
 					room = testRoom;
 					toBePlaced.removeIndex( index );
 
-					// randomly flip
-					if ( ran.nextBoolean() )
+					if ( flipVert )
 					{
 						room.flipVertical();
 					}
 
-					if ( ran.nextBoolean() )
+					if ( flipHori )
 					{
 						room.flipHorizontal();
 					}
 
-					// if it fits on both directions, randomly pick one
-					if ( fitsVertical && fitsHorizontal )
-					{
-						if ( ran.nextBoolean() )
-						{
-							room.rotate();
-						}
-					}
-					else if ( fitsHorizontal )
+					if ( rotate )
 					{
 						room.rotate();
+						room.wasRotated = true;
 					}
 				}
 			}
 		}
 
 		// failed to find a suitable predefined room, so create a new one
-		if ( room == null )
+		if ( room == null && dfp.roomGenerators.size > 0 )
 		{
 			int roomWidth = Math.min( ran.nextInt( maxRoomSize - minRoomSize ) + minRoomSize, width - padX2 );
 			int roomHeight = Math.min( ran.nextInt( maxRoomSize - minRoomSize ) + minRoomSize, height - padY2 );
@@ -525,6 +635,8 @@ public class RecursiveDockGenerator
 
 			room.generateRoomContents( ran, dfp );
 		}
+
+		if ( room == null ) { return; }
 
 		placedRooms.add( room );
 
@@ -716,14 +828,14 @@ public class RecursiveDockGenerator
 			tris.add( tri );
 		}
 		tris.sort( new Comparator<Triangle>()
-		{
+				{
 
 			@Override
 			public int compare( Triangle arg0, Triangle arg1 )
 			{
 				return arg0.compareTo( arg1 );
 			}
-		} );
+				} );
 
 		for ( Triangle tri : tris )
 		{
@@ -774,14 +886,14 @@ public class RecursiveDockGenerator
 					}
 
 					// Wipe out all features not placed by this path
-					if ( t.placerHashCode != path.hashCode() )
+					if ( !t.isRoom && t.placerHashCode != path.hashCode() )
 					{
 						t.symbol.environmentData = null;
 						t.symbol.environmentEntityData = null;
 					}
 
 					// Wipe out all features in the central square
-					if ( x > 0 && x < width - 1 && y > 0 && y < width - 1 )
+					if ( !t.isRoom && x > 0 && x < width - 1 && y > 0 && y < width - 1 )
 					{
 						t.symbol.environmentData = null;
 						t.symbol.environmentEntityData = null;
@@ -993,6 +1105,7 @@ public class RecursiveDockGenerator
 				{
 					GenerationTile tile = tiles[room.x + x][room.y + y];
 					Symbol symbol = room.roomContents[x][y];
+					symbol.containingRoom = room;
 
 					tile.passable = symbol.isPassable( GeneratorPassability );
 					tile.symbol = symbol;
@@ -1187,6 +1300,7 @@ public class RecursiveDockGenerator
 		String majorFactionName = dfp.getMajorFaction( ran );
 
 		FactionParser majorFaction = FactionParser.load( majorFactionName );
+		if ( majorFaction == null ) { return; }
 
 		factions.put( majorFaction, new Point( largest.x + largest.width / 2, largest.y + largest.height / 2 ) );
 
@@ -1388,6 +1502,15 @@ public class RecursiveDockGenerator
 							entity.location = location;
 							entity.sprite.rotation = location.getAngle();
 						}
+						else
+						{
+							if ( symbol.containingRoom != null
+									&& !symbol.containingRoom.wasRotated
+									&& symbol.environmentData.getBoolean( "MatchRoomRotation", false ) )
+							{
+								entity.sprite.rotation = Direction.EAST.getAngle();
+							}
+						}
 
 						newTile.addEnvironmentEntity( entity );
 					}
@@ -1466,6 +1589,12 @@ public class RecursiveDockGenerator
 	// ----------------------------------------------------------------------
 	public static class Room
 	{
+		// ----------------------------------------------------------------------
+		public boolean wasRotated = false;
+
+		// ----------------------------------------------------------------------
+		public DFPRoom roomData;
+
 		// ----------------------------------------------------------------------
 		public int width;
 		public int height;
@@ -1704,8 +1833,8 @@ public class RecursiveDockGenerator
 		// ----------------------------------------------------------------------
 		public void generateRoomContents( Random ran, DungeonFileParser dfp )
 		{
-			Symbol floor = dfp.sharedSymbolMap.get( '.' );
-			Symbol wall = dfp.sharedSymbolMap.get( '#' );
+			Symbol floor = roomData != null ? roomData.getSymbol( '.' ) : dfp.sharedSymbolMap.get( '.' );
+			Symbol wall = roomData != null ? roomData.getSymbol( '#' ) : dfp.sharedSymbolMap.get( '#' );
 
 			AbstractRoomGenerator generator = dfp.getRoomGenerator( ran );
 
@@ -1729,6 +1858,8 @@ public class RecursiveDockGenerator
 		// ----------------------------------------------------------------------
 		public void addFeatures( Random ran, DungeonFileParser dfp, FactionParser faction, int influence )
 		{
+			if ( faction == null ) { return; }
+
 			Symbol[][] roomCopy = new Symbol[width][height];
 			for ( int x = 0; x < width; x++ )
 			{
@@ -2011,7 +2142,9 @@ public class RecursiveDockGenerator
 							roomContents[point.x][point.y].tileData = roomCopy[point.x][point.y].tileData;
 						}
 
-						if ( s.hasEnvironmentEntity() && !s.getEnvironmentEntityPassable( GeneratorPassability ) )
+						if ( s.hasEnvironmentEntity()
+								&& !s.environmentData.get( "Type", "" ).equals( "Door" )
+								&& !s.getEnvironmentEntityPassable( GeneratorPassability ) )
 						{
 							roomContents[point.x][point.y].environmentData = roomCopy[point.x][point.y].environmentData;
 							roomContents[point.x][point.y].environmentEntityData = null;

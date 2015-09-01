@@ -79,6 +79,8 @@ public class LoadingScreen implements Screen
 	@Override
 	public void render( float delta )
 	{
+		if ( !doCreate ) { return; }
+
 		if ( complete && event != null )
 		{
 			generationString = "Executing Events";
@@ -101,42 +103,7 @@ public class LoadingScreen implements Screen
 
 		if ( complete )
 		{
-			if ( event == null )
-			{
-				level.created = true;
-				Global.ChangeLevel( generator.getLevel(), player, travelType );
-
-				Global.CurrentLevel.player.slottedActiveAbilities.clear();
-				Global.CurrentLevel.player.slottedPassiveAbilities.clear();
-
-				for ( ActiveAbility aa : Global.abilityPool.slottedActiveAbilities )
-				{
-					if ( aa != null )
-					{
-						aa.caster = Global.CurrentLevel.player;
-						Global.CurrentLevel.player.slottedActiveAbilities.add( aa );
-					}
-
-				}
-
-				for ( PassiveAbility pa : Global.abilityPool.slottedPassiveAbilities )
-				{
-					if ( pa != null )
-					{
-						Global.CurrentLevel.player.slottedPassiveAbilities.add( pa );
-					}
-				}
-
-				Global.CurrentLevel.player.isVariableMapDirty = true;
-				Global.abilityPool.isVariableMapDirty = false;
-
-				RoguelikeGame.Instance.switchScreen( ScreenEnum.GAME );
-			}
-			else
-			{
-				event.execute( generator.getLevel() );
-				event = null;
-			}
+			onComplete( generator.getLevel() );
 		}
 
 		complete = generator.generate();
@@ -145,6 +112,45 @@ public class LoadingScreen implements Screen
 
 		// limit fps
 		sleep( Global.FPS );
+	}
+
+	public void onComplete( Level level )
+	{
+		if ( event == null )
+		{
+			Global.ChangeLevel( level, player, travelType );
+
+			Global.CurrentLevel.player.slottedActiveAbilities.clear();
+			Global.CurrentLevel.player.slottedPassiveAbilities.clear();
+
+			for ( ActiveAbility aa : Global.abilityPool.slottedActiveAbilities )
+			{
+				if ( aa != null )
+				{
+					aa.caster = Global.CurrentLevel.player;
+					Global.CurrentLevel.player.slottedActiveAbilities.add( aa );
+				}
+
+			}
+
+			for ( PassiveAbility pa : Global.abilityPool.slottedPassiveAbilities )
+			{
+				if ( pa != null )
+				{
+					Global.CurrentLevel.player.slottedPassiveAbilities.add( pa );
+				}
+			}
+
+			Global.CurrentLevel.player.isVariableMapDirty = true;
+			Global.abilityPool.isVariableMapDirty = false;
+
+			RoguelikeGame.Instance.switchScreen( ScreenEnum.GAME );
+		}
+		else
+		{
+			event.execute( level );
+			event = null;
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -224,18 +230,43 @@ public class LoadingScreen implements Screen
 	{
 	}
 
-	public void set( SaveLevel level, GameEntity player, String travelType, PostGenerateEvent event )
+	public boolean set( SaveLevel level, GameEntity player, String travelType, PostGenerateEvent event, boolean unloadLevel )
 	{
-		this.level = level;
 		this.player = player;
 		this.travelType = travelType;
 		this.event = event;
+
+		if ( Global.CurrentLevel != null && !unloadLevel )
+		{
+			Global.LoadedLevels.put( Global.CurrentLevel.UID, Global.CurrentLevel );
+		}
+		else if ( Global.CurrentLevel != null && Global.LoadedLevels.containsKey( Global.CurrentLevel.UID ) )
+		{
+			Global.LoadedLevels.remove( Global.CurrentLevel.UID );
+		}
+
+		if ( Global.LoadedLevels.containsKey( level.UID ) )
+		{
+			Level loadedLevel = Global.LoadedLevels.get( level.UID );
+
+			if ( event != null )
+			{
+				onComplete( loadedLevel );
+			}
+			onComplete( loadedLevel );
+			doCreate = false;
+			return false;
+		}
+
+		this.level = level;
 
 		generator = new RecursiveDockGenerator( level );
 
 		this.percent = generator.percent;
 		this.generationString = generator.generationText;
 		this.complete = false;
+		doCreate = true;
+		return true;
 	}
 
 	// ----------------------------------------------------------------------
@@ -253,6 +284,7 @@ public class LoadingScreen implements Screen
 	Texture background;
 	Texture white;
 
+	boolean doCreate = false;
 	boolean complete;
 	String generationString;
 	int percent = 0;
