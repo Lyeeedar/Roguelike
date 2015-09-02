@@ -135,7 +135,7 @@ public class Level
 			}
 			else if ( inTurn )
 			{
-				Global.save();
+				// Global.save();
 
 				for ( ActiveAbility aa : Global.abilityPool.slottedActiveAbilities )
 				{
@@ -182,6 +182,10 @@ public class Level
 				GameTile tile = Grid[x][y];
 
 				tile.light.set( tile.ambientColour );
+				if ( affectedByDayNight )
+				{
+					tile.light.mul( Global.DayNightFactor );
+				}
 				getLightsForTile( tile, lightList, playerViewRange );
 
 				if ( tile.visible )
@@ -715,6 +719,7 @@ public class Level
 			float actionCost = task.cost * player.getActionDelay();
 
 			Global.AUT += actionCost;
+			Global.DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( Global.AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
 
 			Global.abilityPool.update( actionCost );
 
@@ -1204,6 +1209,8 @@ public class Level
 	public GameTile[][] Grid;
 	public int width;
 	public int height;
+
+	public boolean affectedByDayNight = false;
 
 	private final ShadowCastCache visibilityData = new ShadowCastCache();
 

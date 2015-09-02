@@ -5,6 +5,8 @@
 		<Green>1</Green>
 		<Blue>0.6</Blue>
 		<Alpha>1</Alpha>
+		
+		<AffectedByDayNight>true</AffectedByDayNight>
 	</Ambient>
 
 	<Sound>
@@ -53,6 +55,17 @@
 				<Passable>true</Passable>
 				<Sprite>
 					<Name>dc-dngn/floor/grass/grass0</Name>
+				</Sprite>
+			</TileData>
+		</Symbol>
+		
+		<Symbol>
+			<Char>,</Char>
+			<TileData>
+				<Opaque>false</Opaque>
+				<Passable>true</Passable>
+				<Sprite>
+					<Name>dc-dngn/floor/dirt0</Name>
 				</Sprite>
 			</TileData>
 		</Symbol>
@@ -233,6 +246,27 @@
 					<Char>+</Char>
 					<EnvironmentData>
 						<Type>Door</Type>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>t</Char>
+					<EnvironmentData>
+			            <AttachToWall>true</AttachToWall>
+			            <OverHead>true</OverHead>
+						<Sprite>
+							<Name>torch</Name>
+						</Sprite>
+						<Passable>true</Passable>
+						<Light>
+							<Colour>
+								<Green>0.8</Green>
+								<Red>1</Red>
+							</Colour>
+							<Intensity>5</Intensity>
+							<Flicker>2</Flicker>
+							<FlickerPeriod>0.5</FlickerPeriod>
+						</Light>
 					</EnvironmentData>
 				</Symbol>
 

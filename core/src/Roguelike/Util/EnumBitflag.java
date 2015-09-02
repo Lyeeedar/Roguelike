@@ -17,6 +17,11 @@ public class EnumBitflag<T extends Enum<T>>
 		}
 	}
 
+	public int getBitFlag()
+	{
+		return bitflag;
+	}
+
 	public void setAll( EnumBitflag<T> other )
 	{
 		bitflag |= other.bitflag;

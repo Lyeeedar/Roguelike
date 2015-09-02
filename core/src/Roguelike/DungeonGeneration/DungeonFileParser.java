@@ -308,6 +308,9 @@ public class DungeonFileParser
 	public Color ambient;
 
 	// ----------------------------------------------------------------------
+	public boolean affectedByDayNight = false;
+
+	// ----------------------------------------------------------------------
 	public String BGM;
 
 	// ----------------------------------------------------------------------
@@ -508,6 +511,7 @@ public class DungeonFileParser
 
 		Element ae = xmlElement.getChildByName( "Ambient" );
 		ambient = new Color( ae.getFloat( "Red" ), ae.getFloat( "Blue" ), ae.getFloat( "Green" ), ae.getFloat( "Alpha" ) );
+		affectedByDayNight = ae.getBoolean( "AffectedByDayNight", false );
 
 		Element soundElement = xmlElement.getChildByName( "Sound" );
 		BGM = soundElement.get( "BGM" );

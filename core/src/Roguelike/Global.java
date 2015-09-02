@@ -94,6 +94,9 @@ public class Global
 	public static float AUT = 0;
 
 	// ----------------------------------------------------------------------
+	public static float DayNightFactor = 1;
+
+	// ----------------------------------------------------------------------
 	public static AbilityPool abilityPool;
 
 	// ----------------------------------------------------------------------
@@ -178,6 +181,11 @@ public class Global
 		public float getAngle()
 		{
 			return angle;
+		}
+
+		public Direction getOpposite()
+		{
+			return getDirection( x * -1, y * -1 );
 		}
 
 		public Direction getClockwise()

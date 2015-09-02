@@ -2,19 +2,15 @@ package Roguelike.Save;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.HashMap;
 
-import kryo.EnumMapSerializer;
-import kryo.EnumSetSerializer;
 import kryo.FastEnumMapSerializer;
 import Roguelike.AssetManager;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationMode;
 import Roguelike.Util.FastEnumMap;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
@@ -34,15 +30,7 @@ public class SaveFile
 	{
 		Kryo kryo = new Kryo();
 		registerSerializers( kryo );
-		Output output = null;
-		try
-		{
-			output = new Output( new FileOutputStream( "save.dat" ) );
-		}
-		catch ( FileNotFoundException e )
-		{
-			e.printStackTrace();
-		}
+		Output output = new Output( Gdx.files.local( "save.dat" ).write( false ) );
 
 		output.writeString( currentLevel );
 		kryo.writeObject( output, allLevels );
@@ -76,12 +64,8 @@ public class SaveFile
 	{
 		kryo.register( FastEnumMap.class, new FastEnumMapSerializer() );
 
-		kryo.register( EnumMap.class, new EnumMapSerializer() );
-
-		kryo.register( EnumSet.class, new EnumSetSerializer() );
-
 		kryo.register( Array.class, new Serializer<Array>()
-				{
+		{
 			{
 				setAcceptsNull( true );
 			}
@@ -152,10 +136,10 @@ public class SaveFile
 				}
 				return array;
 			}
-		} );
+				} );
 
 		kryo.register( Color.class, new Serializer<Color>()
-				{
+		{
 			@Override
 			public Color read( Kryo kryo, Input input, Class<Color> type )
 			{
@@ -169,10 +153,10 @@ public class SaveFile
 			{
 				output.writeInt( Color.rgba8888( color ) );
 			}
-		} );
+				} );
 
 		kryo.register( Sprite.class, new Serializer<Sprite>()
-				{
+		{
 			@Override
 			public Sprite read( Kryo kryo, Input input, Class<Sprite> type )
 			{
@@ -197,10 +181,10 @@ public class SaveFile
 				output.writeInt( sprite.animationState.mode.ordinal() );
 				output.writeFloats( sprite.baseScale );
 			}
-		} );
+				} );
 
 		kryo.register( Element.class, new Serializer<Element>()
-				{
+		{
 			@Override
 			public Element read( Kryo kryo, Input input, Class<Element> type )
 			{
@@ -216,6 +200,6 @@ public class SaveFile
 			{
 				output.writeString( element.toString() );
 			}
-		} );
+				} );
 	}
 }

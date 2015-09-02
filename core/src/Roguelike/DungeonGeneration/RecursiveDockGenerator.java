@@ -842,6 +842,43 @@ public class RecursiveDockGenerator
 			calculatePaths( paths, tri, ignoredPaths, addedPaths );
 		}
 
+		for ( Pnt room : roomPnts )
+		{
+			int rx = (int) room.coord( 0 );
+			int ry = (int) room.coord( 1 );
+
+			Pnt closest = null;
+			int closestDist = Integer.MAX_VALUE;
+			boolean found = false;
+			outer:
+				for ( Pnt[] path : paths )
+				{
+					for ( Pnt p : path )
+					{
+						int px = (int) p.coord( 0 );
+						int py = (int) p.coord( 1 );
+
+						if ( rx == px && ry == py )
+						{
+							found = true;
+							break outer;
+						}
+
+						int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
+						if ( tempDist < closestDist )
+						{
+							closestDist = tempDist;
+							closest = p;
+						}
+					}
+				}
+
+			if ( !found )
+			{
+				paths.add( new Pnt[] { room, closest } );
+			}
+		}
+
 		for ( Pnt[] p : paths )
 		{
 			int x1 = (int) p[0].coord( 0 );
@@ -1240,24 +1277,37 @@ public class RecursiveDockGenerator
 	// ----------------------------------------------------------------------
 	protected void floodFillEmptySpace( int x, int y, HashSet<GenerationTile> output )
 	{
-		if ( output.contains( tiles[x][y] ) ) { return; }
+		Array<int[]> toBeProcessed = new Array<int[]>();
+		toBeProcessed.add( new int[] { x, y } );
 
-		output.add( tiles[x][y] );
-
-		for ( Direction dir : Direction.values() )
+		while ( toBeProcessed.size > 0 )
 		{
-			if ( dir.isCardinal() )
+			int[] point = toBeProcessed.pop();
+			x = point[0];
+			y = point[1];
+
+			if ( output.contains( tiles[x][y] ) )
 			{
-				int nx = x + dir.getX();
-				int ny = y + dir.getY();
+				continue;
+			}
 
-				if ( isEmpty( tiles[nx][ny] ) )
+			output.add( tiles[x][y] );
+
+			for ( Direction dir : Direction.values() )
+			{
+				if ( dir.isCardinal() )
 				{
-					// check neighbours
+					int nx = x + dir.getX();
+					int ny = y + dir.getY();
 
-					if ( isEmpty( nx, ny, dir.getClockwise() ) || isEmpty( nx, ny, dir.getAnticlockwise() ) )
+					if ( isEmpty( tiles[nx][ny] ) )
 					{
-						floodFillEmptySpace( nx, ny, output );
+						// check neighbours
+
+						if ( isEmpty( nx, ny, dir.getClockwise() ) || isEmpty( nx, ny, dir.getAnticlockwise() ) )
+						{
+							toBeProcessed.add( new int[] { nx, ny } );
+						}
 					}
 				}
 			}
@@ -1431,6 +1481,7 @@ public class RecursiveDockGenerator
 		GameTile[][] actualTiles = new GameTile[width][height];
 		level = new Level( actualTiles );
 		level.Ambient = dfp.ambient;
+		level.affectedByDayNight = dfp.affectedByDayNight;
 		level.bgmName = dfp.BGM;
 		level.ambientSounds.addAll( dfp.ambientSounds );
 
@@ -1468,7 +1519,7 @@ public class RecursiveDockGenerator
 								HashSet<Direction> validDirections = new HashSet<Direction>();
 								for ( Direction dir : Direction.values() )
 								{
-									boolean passable = symbolGrid[x + dir.getX()][y + dir.getY()] == dfp.sharedSymbolMap.get( '#' );
+									boolean passable = symbolGrid[x + dir.getX()][y + dir.getY()].getTileData().passableBy.getBitFlag() != 0;
 									if ( !passable )
 									{
 										validDirections.add( dir );
@@ -1491,11 +1542,30 @@ public class RecursiveDockGenerator
 										}
 									}
 
+									// If that failed then just try the cardinal
+									// directions
+									if ( location == Direction.CENTER )
+									{
+										for ( Direction dir : Direction.values() )
+										{
+											if ( dir.isCardinal() )
+											{
+												if ( validDirections.contains( dir ) )
+												{
+													location = dir;
+													break;
+												}
+											}
+										}
+									}
+
 									// else pick random
 									if ( location == Direction.CENTER )
 									{
 										location = validDirections.toArray( new Direction[validDirections.size()] )[ran.nextInt( validDirections.size() )];
 									}
+
+									location = location.getOpposite();
 								}
 							}
 
