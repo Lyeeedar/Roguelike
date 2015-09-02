@@ -617,7 +617,23 @@ public class RecursiveDockGenerator
 					if ( rotate )
 					{
 						room.rotate();
-						room.wasRotated = true;
+					}
+
+					if ( flipVert && rotate )
+					{
+						room.orientation = Direction.WEST;
+					}
+					else if ( flipVert )
+					{
+						room.orientation = Direction.SOUTH;
+					}
+					else if ( rotate )
+					{
+						room.orientation = Direction.EAST;
+					}
+					else
+					{
+						room.orientation = Direction.NORTH;
 					}
 				}
 			}
@@ -925,6 +941,7 @@ public class RecursiveDockGenerator
 					// Wipe out all features not placed by this path
 					if ( !t.isRoom && t.placerHashCode != path.hashCode() )
 					{
+						t.symbol = t.symbol.copy();
 						t.symbol.environmentData = null;
 						t.symbol.environmentEntityData = null;
 					}
@@ -932,6 +949,7 @@ public class RecursiveDockGenerator
 					// Wipe out all features in the central square
 					if ( !t.isRoom && x > 0 && x < width - 1 && y > 0 && y < width - 1 )
 					{
+						t.symbol = t.symbol.copy();
 						t.symbol.environmentData = null;
 						t.symbol.environmentEntityData = null;
 					}
@@ -1575,10 +1593,10 @@ public class RecursiveDockGenerator
 						else
 						{
 							if ( symbol.containingRoom != null
-									&& !symbol.containingRoom.wasRotated
+									&& symbol.containingRoom.orientation != Direction.CENTER
 									&& symbol.environmentData.getBoolean( "MatchRoomRotation", false ) )
 							{
-								entity.sprite.rotation = Direction.EAST.getAngle();
+								entity.sprite.rotation = symbol.containingRoom.orientation.getAngle();
 							}
 						}
 
@@ -1660,7 +1678,7 @@ public class RecursiveDockGenerator
 	public static class Room
 	{
 		// ----------------------------------------------------------------------
-		public boolean wasRotated = false;
+		public Direction orientation = Direction.CENTER;
 
 		// ----------------------------------------------------------------------
 		public DFPRoom roomData;

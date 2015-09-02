@@ -672,6 +672,8 @@ public class Global
 		save.abilityPool = new SaveAbilityPool();
 		save.abilityPool.store( Global.abilityPool );
 
+		save.AUT = AUT;
+
 		save.save();
 	}
 
@@ -687,11 +689,17 @@ public class Global
 		SaveLevel level = Global.AllLevels.get( save.currentLevel );
 		LoadingScreen.Instance.set( level, null, null, null, true );
 		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
+
+		AUT = save.AUT;
+		DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
 	}
 
 	// ----------------------------------------------------------------------
 	public static void newGame( GameEntity player, final String lines )
 	{
+		AUT = 0;
+		DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
+
 		AllLevels.clear();
 
 		SaveLevel firstLevel = new SaveLevel( "Town", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );

@@ -124,7 +124,11 @@ public class GameTile implements PathfindingTile
 
 		if ( oldTile != null )
 		{
-			oldTile.entity = null;
+			if ( oldTile.entity == obj )
+			{
+				oldTile.entity = null;
+			}
+
 			return getPosDiff( oldTile );
 		}
 

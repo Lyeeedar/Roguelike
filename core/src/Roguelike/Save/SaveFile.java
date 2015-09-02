@@ -25,6 +25,7 @@ public class SaveFile
 	public String currentLevel;
 	public HashMap<String, SaveLevel> allLevels;
 	public SaveAbilityPool abilityPool;
+	public float AUT;
 
 	public void save()
 	{
@@ -35,6 +36,7 @@ public class SaveFile
 		output.writeString( currentLevel );
 		kryo.writeObject( output, allLevels );
 		kryo.writeObject( output, abilityPool );
+		output.writeFloat( AUT );
 
 		output.close();
 	}
@@ -56,6 +58,7 @@ public class SaveFile
 		currentLevel = input.readString();
 		allLevels = kryo.readObject( input, HashMap.class );
 		abilityPool = kryo.readObject( input, SaveAbilityPool.class );
+		AUT = input.readFloat();
 
 		input.close();
 	}

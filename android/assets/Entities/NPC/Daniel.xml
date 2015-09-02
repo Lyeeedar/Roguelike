@@ -1,0 +1,24 @@
+<Entity>
+	<Name>Daniel</Name>
+	
+	<Factions>
+		<Faction>Player</Faction>
+	</Factions>
+	
+	<AI>basicMonster</AI>
+	<Essence>0</Essence>
+	
+	<CanSwap>true</CanSwap>
+	
+	<Sprite>
+		<Name>Characters/WiseMan</Name>
+		<UpdateRate>0.5</UpdateRate>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<Statistics>
+		<MaxHP>130000</MaxHP>
+		<Range>1</<Range>	
+	</Statistics>
+	
+</Entity>

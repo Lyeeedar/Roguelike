@@ -96,28 +96,6 @@
 	</Symbols>
 
 	<Required>
-		<PlayerSpawn>
-			<Faction>none</Faction>
-
-			<Orientation>Centre</Orientation>
-
-			<Symbols>
-				<Symbol Extends=".">
-					<Char>S</Char>
-					<MetaValue>PlayerSpawn</MetaValue>
-				</Symbol>
-			</Symbols>
-
-			<Rows>
-				<Row>#####</Row>
-				<Row>##.##</Row>
-				<Row>#.S.#</Row>
-				<Row>#..##</Row>
-				<Row>.....</Row>
-			</Rows>
-
-		</PlayerSpawn>
-
 		<Transition>
 
 			<Faction>none</Faction>
@@ -165,6 +143,162 @@
 			</Rows>
 
 		</Transition>
+		
+		<Home>
+
+			<Symbols>
+
+				<Symbol>
+					<Char>H</Char>
+					<TileData>
+						<Opaque>true</Opaque>
+						<Passable>false</Passable>
+						<Sprite>
+							<Name>dc-dngn/wall/stone_brick1</Name>
+						</Sprite>
+						<AmbientShadow>
+							<Factor>0.1</Factor>
+							<Range>1</Range>
+						</AmbientShadow>
+					</TileData>
+				</Symbol>
+
+				<Symbol>
+					<Char>,</Char>
+					<TileData>
+						<Opaque>false</Opaque>
+						<Passable>true</Passable>
+						<CanFeature>false</CanFeature>
+						<Sprite>
+							<Name>Objects/WoodFloor</Name>
+						</Sprite>
+					</TileData>
+				</Symbol>
+
+				<Symbol Extends=",">
+					<Char>^</Char>
+					<EnvironmentData>
+						<Type>Transition</Type>
+						<Destination>this</Destination>
+					</EnvironmentData>
+				</Symbol>
+
+				<Symbol Extends=",">
+					<Char>c</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Objects/Chair</Name>
+						</Sprite>
+						<Passable>true</Passable>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends="c">
+					<Char>C</Char>
+					<EntityData>NPC/Daniel</EntityData>
+				</Symbol>
+
+				<Symbol Extends=",">
+					<Char>T</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Objects/Table</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>b</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Objects/Bed</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>s</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Objects/Bookshelf</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>p</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Objects/Pot</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>S</Char>
+					<MetaValue>PlayerSpawn</MetaValue>
+				</Symbol>
+
+				<Symbol Extends=",">
+					<Char>+</Char>
+					<EnvironmentData>
+						<Type>Door</Type>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>t</Char>
+					<EnvironmentData>
+			            <AttachToWall>true</AttachToWall>
+			            <OverHead>true</OverHead>
+						<Sprite>
+							<Name>torch</Name>
+						</Sprite>
+						<Passable>true</Passable>
+						<Light>
+							<Colour>
+								<Green>0.8</Green>
+								<Red>1</Red>
+							</Colour>
+							<Intensity>5</Intensity>
+							<Flicker>2</Flicker>
+							<FlickerPeriod>0.5</FlickerPeriod>
+						</Light>
+					</EnvironmentData>
+				</Symbol>
+
+				<Symbol>
+					<Char>w</Char>
+					<TileData>
+						<Sprite>
+							<Name>Objects/WoodFloor</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</TileData>
+					<EnvironmentData>
+						<Sprite>
+							<Name>dc-dngn/wall/dngn_transparent_wall</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+
+			</Symbols>
+
+			<Orientation>Edge</Orientation>
+
+			<Rows>Levels/Town/HomeGround</Rows>
+		</Home>
 
 	</Required>
 

@@ -1,6 +1,5 @@
 TODO
 
-- [ ] save and quit option. COntinue option
 - [ ] option screen (music volume, animation speed, resolution, fps, fullscreen)
 
 - [ ] charcater stats panel
