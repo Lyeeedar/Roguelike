@@ -1,0 +1,8 @@
+<Dialogue>
+    
+    <Chunk>
+        <Text>Hey there $player$! Good to see you finally awake. Ready to go out and explore the world?</Text>
+        <Text>Have fun out there!</Text>
+    </Chunk>
+    
+</Dialogue>

@@ -88,6 +88,12 @@ public class Global
 	public static HashMap<String, Level> LoadedLevels = new HashMap<String, Level>();
 
 	// ----------------------------------------------------------------------
+	public static HashMap<String, Integer> GlobalVariables = new HashMap<String, Integer>();
+
+	// ----------------------------------------------------------------------
+	public static HashMap<String, String> GlobalNames = new HashMap<String, String>();
+
+	// ----------------------------------------------------------------------
 	public static Mixer BGM;
 
 	// ----------------------------------------------------------------------
@@ -697,10 +703,17 @@ public class Global
 	// ----------------------------------------------------------------------
 	public static void newGame( GameEntity player, final String lines )
 	{
+		player.popup = "It's time to kickass and chew gum, but I'm all out of gum. Wait... What the hell is gum? Man that is really quite the philosphical question, who knows what gum is. A person? A place? An alternative universe filled if cold and uncaring gods? Who knows. All I know is that im here now, and I'm gonna kick some butt.";
+		player.popupDuration = 1;
+
 		AUT = 0;
 		DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
 
 		AllLevels.clear();
+		GlobalVariables.clear();
+		GlobalNames.clear();
+
+		GlobalNames.put( "player", PlayerName );
 
 		SaveLevel firstLevel = new SaveLevel( "Town", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
 		AllLevels.put( firstLevel.UID, firstLevel );
@@ -775,6 +788,8 @@ public class Global
 		}
 
 		CurrentLevel.updateVisibleTiles();
+
+		save();
 	}
 
 	// ----------------------------------------------------------------------
@@ -918,6 +933,32 @@ public class Global
 		float val = scaleRange * alpha;
 
 		return (int) Math.floor( val );
+	}
+
+	// ----------------------------------------------------------------------
+	public static String expandNames( String input )
+	{
+		String[] split = input.split( "\\$" );
+
+		boolean skip = !input.startsWith( "$" );
+
+		String output = "";
+
+		for ( int i = 0; i < split.length; i++ )
+		{
+			if ( skip )
+			{
+				output += split[i];
+			}
+			else
+			{
+				output += GlobalNames.get( split[i].toLowerCase() );
+			}
+
+			skip = !skip;
+		}
+
+		return output;
 	}
 
 	// ----------------------------------------------------------------------

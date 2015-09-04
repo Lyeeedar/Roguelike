@@ -69,6 +69,11 @@ public class EnvironmentEntity extends Entity
 		}
 
 		stacks = stackStatusEffects();
+
+		if ( popupDuration > 0 )
+		{
+			popupDuration -= cost;
+		}
 	}
 
 	// ----------------------------------------------------------------------

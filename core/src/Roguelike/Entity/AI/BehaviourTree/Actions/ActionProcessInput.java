@@ -71,19 +71,28 @@ public class ActionProcessInput extends AbstractAction
 			GameTile tile = entity.tile.level.getGameTile( targetPos );
 
 			boolean entityWithinRange = false;
-			if ( tile != null
-					&& tile.environmentEntity != null
-					&& !tile.environmentEntity.canTakeDamage
-					&& !tile.environmentEntity.passableBy.intersect( Global.CurrentLevel.player.getTravelType() ) )
+			boolean dialogueWithinRange = false;
+
+			if ( tile != null )
 			{
-				for ( ActivationAction action : tile.environmentEntity.actions )
+				if ( tile.environmentEntity != null
+						&& !tile.environmentEntity.canTakeDamage
+						&& !tile.environmentEntity.passableBy.intersect( Global.CurrentLevel.player.getTravelType() ) )
 				{
-					if ( action.visible )
+					for ( ActivationAction action : tile.environmentEntity.actions )
 					{
-						entityWithinRange = Math.abs( Global.CurrentLevel.player.tile.x - tile.x ) <= 1
-								&& Math.abs( Global.CurrentLevel.player.tile.y - tile.y ) <= 1;
-						break;
+						if ( action.visible )
+						{
+							entityWithinRange = Math.abs( Global.CurrentLevel.player.tile.x - tile.x ) <= 1
+									&& Math.abs( Global.CurrentLevel.player.tile.y - tile.y ) <= 1;
+							break;
+						}
 					}
+				}
+				else if ( tile.entity != null && tile.entity.isAllies( entity ) && tile.entity.dialogue != null )
+				{
+					dialogueWithinRange = Math.abs( Global.CurrentLevel.player.tile.x - tile.x ) <= 1
+							&& Math.abs( Global.CurrentLevel.player.tile.y - tile.y ) <= 1;
 				}
 			}
 
@@ -104,6 +113,11 @@ public class ActionProcessInput extends AbstractAction
 						break;
 					}
 				}
+			}
+			else if ( dialogueWithinRange )
+			{
+				tile.entity.dialogue.initialiseDialogue();
+				tile.entity.dialogue.advance();
 			}
 			else
 			{

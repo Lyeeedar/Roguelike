@@ -5,6 +5,8 @@
 		<Faction>Player</Faction>
 	</Factions>
 	
+	<Dialogue>Dialogue/Daniel</Dialogue>
+	
 	<AI>basicMonster</AI>
 	<Essence>0</Essence>
 	

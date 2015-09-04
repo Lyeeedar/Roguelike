@@ -46,6 +46,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -65,6 +67,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -94,6 +97,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		bag = AssetManager.loadTextureRegion( "Sprites/bag.png" );
 		orb = AssetManager.loadTextureRegion( "Sprites/orb.png" );
 		border = AssetManager.loadSprite( "GUI/frame" );
+		speechBubbleArrow = AssetManager.loadTextureRegion( "Sprites/GUI/SpeechBubbleArrow.png" );
+		speechBubbleBackground = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/SpeechBubble.png" ), 10, 10, 10, 10 );
 
 		gestureDetector = new GestureDetector( this );
 		gestureDetector.setLongPressSeconds( 0.5f );
@@ -263,6 +268,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		overHead.clear();
 		underFields.clear();
 		overFields.clear();
+		entitiesWithSpeech.clear();
 
 		renderVisibleTiles( offsetx, offsety, tileSize3 );
 		renderSeenTiles( offsetx, offsety, tileSize3 );
@@ -303,6 +309,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		stage.draw();
 
 		batch.begin();
+
+		renderSpeechBubbles( offsetx, offsety, delta );
 
 		if ( dragDropPayload != null && dragDropPayload.shouldDraw() )
 		{
@@ -378,30 +386,36 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 					if ( gtile.environmentEntity != null )
 					{
-						if ( gtile.environmentEntity.overHead )
+						EnvironmentEntity entity = gtile.environmentEntity;
+
+						if ( entity.overHead )
 						{
-							overHead.add( gtile.environmentEntity );
+							overHead.add( entity );
 						}
 						else
 						{
 							int cx = x * Global.TileSize + offsetx;
 							int cy = y * Global.TileSize + offsety;
 
-							if ( gtile.environmentEntity.location == Direction.CENTER )
+							if ( entity.location == Direction.CENTER )
 							{
-								gtile.environmentEntity.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
+								entity.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
 							}
 							else
 							{
-								Direction dir = gtile.environmentEntity.location;
-								gtile.environmentEntity.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+								Direction dir = entity.location;
+								entity.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
 							}
 
-							if ( gtile.environmentEntity.HP < gtile.environmentEntity.statistics.get( Statistic.MAXHP )
-									|| gtile.environmentEntity.stacks.size > 0 )
+							if ( entity.HP < entity.statistics.get( Statistic.MAXHP ) || entity.stacks.size > 0 )
 							{
-								hpBars.add( gtile.environmentEntity );
+								hpBars.add( entity );
 							}
+						}
+
+						if ( entity.tile.visible && entity.popup != null )
+						{
+							entitiesWithSpeech.add( entity );
 						}
 					}
 
@@ -410,6 +424,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					if ( entity != null )
 					{
 						toBeDrawn.add( entity );
+
+						if ( entity.tile.visible && entity.popup != null )
+						{
+							entitiesWithSpeech.add( entity );
+						}
 					}
 
 					batch.setColor( Color.WHITE );
@@ -810,6 +829,71 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
+	private void renderSpeechBubbles( int offsetx, int offsety, float delta )
+	{
+		for ( Entity entity : entitiesWithSpeech )
+		{
+			if ( entity.popupDuration <= 0 )
+			{
+				entity.popupFade -= delta;
+
+				if ( entity.popupFade <= 0 )
+				{
+					entity.popup = null;
+					continue;
+				}
+			}
+
+			int x = entity.tile.x;
+			int y = entity.tile.y;
+
+			y += 1;
+
+			int cx = x * Global.TileSize + offsetx + Global.TileSize / 2;
+			int cy = y * Global.TileSize + offsety;
+
+			if ( entity.sprite.spriteAnimation != null )
+			{
+				int[] offset = entity.sprite.spriteAnimation.getRenderOffset();
+				cx += offset[0];
+				cy += offset[1];
+			}
+
+			float left = cx - ( layout.width / 2 ) - 10;
+
+			if ( left < 0 )
+			{
+				left = 0;
+			}
+
+			float right = left + layout.width + 20;
+
+			if ( right >= stage.getWidth() )
+			{
+				left -= right - stage.getWidth();
+			}
+
+			String message = entity.popup;
+
+			float alpha = 1;
+			if ( entity.popupDuration <= 0 )
+			{
+				alpha *= entity.popupFade;
+			}
+
+			tempColour.set( 1, 1, 1, alpha );
+			batch.setColor( tempColour );
+
+			layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
+
+			speechBubbleBackground.draw( batch, left, cy, layout.width + 20, layout.height + 20 );
+			batch.draw( speechBubbleArrow, cx - 4, cy - 6, 8, 8 );
+
+			font.draw( batch, layout, left + 10, cy + layout.height + 10 );
+		}
+	}
+
+	// ----------------------------------------------------------------------
 	@Override
 	public void resize( int width, int height )
 	{
@@ -850,6 +934,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public void pause()
 	{
+		Global.save();
 	}
 
 	// ----------------------------------------------------------------------
@@ -1269,26 +1354,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
-	public void addPopupBubble( Entity entity )
-	{
-		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
-
-		int x = entity.tile.x;
-		int y = entity.tile.y;
-
-		int cx = x * Global.TileSize + offsetx;
-		int cy = y * Global.TileSize + offsety;
-
-		entity.popup.addAction( new SequenceAction( Actions.fadeOut( 2 ), Actions.removeActor() ) );
-		entity.popup.setPosition( cx, cy + Global.TileSize / 2 );
-		stage.addActor( entity.popup );
-		entity.popup.setVisible( true );
-
-		entity.popup = null;
-	}
-
-	// ----------------------------------------------------------------------
 	public void addActorDamageAction( Entity entity )
 	{
 		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
@@ -1549,6 +1614,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private float fpsAccumulator;
 	private float frametime;
 	private BitmapFont font;
+	private final GlyphLayout layout = new GlyphLayout();
 
 	// ----------------------------------------------------------------------
 	private BitmapFont contextMenuNormalFont;
@@ -1579,6 +1645,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public InputMultiplexer inputMultiplexer;
 	private TextureRegion bag;
 	private TextureRegion orb;
+	private TextureRegion speechBubbleArrow;
+	private NinePatch speechBubbleBackground;
+	private Color tempColour = new Color();
 
 	private Tooltip tooltip;
 
@@ -1590,6 +1659,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private Array<Entity> hpBars = new Array<Entity>();
 	private Array<Field> underFields = new Array<Field>();
 	private Array<Field> overFields = new Array<Field>();
+	private Array<Entity> entitiesWithSpeech = new Array<Entity>();
 
 	// ----------------------------------------------------------------------
 	private Sprite border;

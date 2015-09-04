@@ -12,6 +12,7 @@ import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
+import Roguelike.Dialogue.DialogueManager;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.GameEvent.GameEventHandler;
@@ -104,6 +105,11 @@ public class GameEntity extends Entity
 		}
 
 		stacks = stackStatusEffects();
+
+		if ( popupDuration > 0 )
+		{
+			popupDuration -= cost;
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -272,6 +278,12 @@ public class GameEntity extends Entity
 				slottedPassiveAbilities.add( ab );
 			}
 		}
+
+		String dialoguePath = xmlElement.get( "Dialogue", null );
+		if ( dialoguePath != null )
+		{
+			dialogue = DialogueManager.load( dialoguePath, this );
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -348,6 +360,9 @@ public class GameEntity extends Entity
 	public float actionDelayAccumulator;
 	public boolean canSwap;
 	public boolean canMove;
+
+	// ----------------------------------------------------------------------
+	public DialogueManager dialogue;
 
 	// ----------------------------------------------------------------------
 	public HashSet<String> factions = new HashSet<String>();

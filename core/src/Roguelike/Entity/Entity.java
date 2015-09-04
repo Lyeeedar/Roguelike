@@ -18,7 +18,6 @@ import Roguelike.Tiles.GameTile;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -299,7 +298,9 @@ public abstract class Entity
 	public String name;
 
 	// ----------------------------------------------------------------------
-	public Actor popup;
+	public String popup;
+	public float popupDuration = 0;
+	public float popupFade = 0;
 
 	// ----------------------------------------------------------------------
 	public Sprite sprite;

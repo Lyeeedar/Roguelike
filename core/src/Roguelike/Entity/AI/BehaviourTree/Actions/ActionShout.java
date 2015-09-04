@@ -1,11 +1,9 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
-import Roguelike.Global;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Sound.SoundInstance;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionShout extends AbstractAction
@@ -31,7 +29,8 @@ public class ActionShout extends AbstractAction
 			return State;
 		}
 
-		entity.popup = new Label( sound.text, Global.skin );
+		entity.popup = sound.text;
+		entity.popupDuration = 1;
 
 		sound.shoutFaction = entity.factions;
 		sound.key = key;

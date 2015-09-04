@@ -459,11 +459,6 @@ public class Level
 					{
 						GameScreen.Instance.addActorHealingAction( e );
 					}
-
-					if ( e.popup != null )
-					{
-						GameScreen.Instance.addPopupBubble( e );
-					}
 				}
 				else
 				{
@@ -480,6 +475,11 @@ public class Level
 				else if ( e == player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
 					RoguelikeGame.Instance.switchScreen( ScreenEnum.GAMEOVER );
+				}
+
+				if ( e.popupDuration <= 0 && e.popupFade <= 0 )
+				{
+					e.popupFade = 1;
 				}
 			}
 		}
@@ -498,6 +498,11 @@ public class Level
 					e.tile.environmentEntity = null;
 
 					dropItems( e.getInventory(), e.tile, e.essence );
+				}
+
+				if ( e.popupDuration <= 0 && e.popupFade <= 0 )
+				{
+					e.popupFade = 1;
 				}
 			}
 		}
