@@ -1,6 +1,5 @@
 package Roguelike.GameEvent;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 
 import Roguelike.Global.Statistic;
@@ -16,6 +15,7 @@ import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.GameEvent.OnDeath.AbstractOnDeathEvent;
 import Roguelike.GameEvent.OnTask.AbstractOnTaskEvent;
 import Roguelike.GameEvent.OnTurn.AbstractOnTurnEvent;
+import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -45,9 +45,9 @@ public abstract class GameEventHandler implements IGameObject
 		return val;
 	}
 
-	public EnumMap<Statistic, Integer> getStatistics( HashMap<String, Integer> variableMap )
+	public FastEnumMap<Statistic, Integer> getStatistics( HashMap<String, Integer> variableMap )
 	{
-		EnumMap<Statistic, Integer> newMap = new EnumMap<Statistic, Integer>( Statistic.class );
+		FastEnumMap<Statistic, Integer> newMap = new FastEnumMap<Statistic, Integer>( Statistic.class );
 
 		for ( Statistic stat : Statistic.values() )
 		{
@@ -57,7 +57,7 @@ public abstract class GameEventHandler implements IGameObject
 		return newMap;
 	}
 
-	public EnumMap<Statistic, String> getStatisticsObject()
+	public FastEnumMap<Statistic, String> getStatisticsObject()
 	{
 		return constantEvent.equations;
 	}

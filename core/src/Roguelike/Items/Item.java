@@ -1,7 +1,6 @@
 package Roguelike.Items;
 
 import java.io.IOException;
-import java.util.EnumMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -14,6 +13,7 @@ import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Lights.Light;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -29,7 +29,7 @@ public class Item extends GameEventHandler
 {
 	/*
 	 * IDEAS:
-	 * 
+	 *
 	 * Unlock extra power after condition (absorb x essence, kill x enemy)
 	 */
 
@@ -81,7 +81,7 @@ public class Item extends GameEventHandler
 	public Light light;
 	public boolean canDrop = true;
 	public String dropChanceEqn;
-	public EnumMap<Tier1Element, Integer> elementalStats = Tier1Element.getElementBlock();
+	public FastEnumMap<Tier1Element, Integer> elementalStats = Tier1Element.getElementBlock();
 
 	private int range = -1000;
 

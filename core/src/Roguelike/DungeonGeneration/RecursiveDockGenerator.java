@@ -2414,8 +2414,13 @@ public class RecursiveDockGenerator
 	// ----------------------------------------------------------------------
 	public static class RoomDoor
 	{
-		public final Direction side;
-		public final int[] pos;
+		public Direction side;
+		public int[] pos;
+
+		public RoomDoor()
+		{
+
+		}
 
 		public RoomDoor( Direction side, int[] pos )
 		{

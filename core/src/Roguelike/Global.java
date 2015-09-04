@@ -1,12 +1,12 @@
 package Roguelike;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Ability.AbilityPool;
+import Roguelike.Dialogue.DialogueManager;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
@@ -47,6 +47,9 @@ public class Global
 
 	// ----------------------------------------------------------------------
 	public static boolean ANDROID = false;
+
+	// ----------------------------------------------------------------------
+	public static DialogueManager CurrentDialogue = null;
 
 	// ----------------------------------------------------------------------
 	public static float AnimationSpeed = 1;
@@ -573,9 +576,9 @@ public class Global
 			Colors.put( this.toString(), this.Colour );
 		}
 
-		public static EnumMap<Tier1Element, Integer> getElementBlock()
+		public static FastEnumMap<Tier1Element, Integer> getElementBlock()
 		{
-			EnumMap<Tier1Element, Integer> map = new EnumMap<Tier1Element, Integer>( Tier1Element.class );
+			FastEnumMap<Tier1Element, Integer> map = new FastEnumMap<Tier1Element, Integer>( Tier1Element.class );
 
 			for ( Tier1Element el : Tier1Element.values() )
 			{
@@ -585,7 +588,7 @@ public class Global
 			return map;
 		}
 
-		public static EnumMap<Tier1Element, Integer> load( Element xml, EnumMap<Tier1Element, Integer> values )
+		public static FastEnumMap<Tier1Element, Integer> load( Element xml, FastEnumMap<Tier1Element, Integer> values )
 		{
 			for ( int i = 0; i < xml.getChildCount(); i++ )
 			{
@@ -611,9 +614,9 @@ public class Global
 			return values;
 		}
 
-		public static EnumMap<Tier1Element, Integer> copy( EnumMap<Tier1Element, Integer> map )
+		public static FastEnumMap<Tier1Element, Integer> copy( FastEnumMap<Tier1Element, Integer> map )
 		{
-			EnumMap<Tier1Element, Integer> newMap = new EnumMap<Tier1Element, Integer>( Tier1Element.class );
+			FastEnumMap<Tier1Element, Integer> newMap = new FastEnumMap<Tier1Element, Integer>( Tier1Element.class );
 			for ( Tier1Element e : Tier1Element.values() )
 			{
 				newMap.put( e, map.get( e ) );
@@ -672,8 +675,10 @@ public class Global
 		SaveFile save = new SaveFile();
 
 		Global.AllLevels.get( Global.CurrentLevel.UID ).store( Global.CurrentLevel );
-		save.allLevels = Global.AllLevels;
+		save.allLevels = (HashMap<String, SaveLevel>) Global.AllLevels.clone();
 		save.currentLevel = Global.CurrentLevel.UID;
+		save.globalVariables = (HashMap<String, Integer>) GlobalVariables.clone();
+		save.globalNames = (HashMap<String, String>) GlobalNames.clone();
 
 		save.abilityPool = new SaveAbilityPool();
 		save.abilityPool.store( Global.abilityPool );
@@ -689,8 +694,10 @@ public class Global
 		SaveFile save = new SaveFile();
 		save.load();
 
-		Global.AllLevels = save.allLevels;
+		Global.AllLevels = (HashMap<String, SaveLevel>) save.allLevels.clone();
 		Global.abilityPool = save.abilityPool.create();
+		Global.GlobalVariables = (HashMap<String, Integer>) save.globalVariables.clone();
+		Global.GlobalNames = (HashMap<String, String>) save.globalNames.clone();
 
 		SaveLevel level = Global.AllLevels.get( save.currentLevel );
 		LoadingScreen.Instance.set( level, null, null, null, true );
@@ -767,24 +774,24 @@ public class Global
 			level.player = player;
 
 			outer:
-			for ( int x = 0; x < level.width; x++ )
-			{
-				for ( int y = 0; y < level.height; y++ )
+				for ( int x = 0; x < level.width; x++ )
 				{
-					GameTile tile = level.getGameTile( x, y );
-					if ( tile.metaValue != null && tile.metaValue.equals( travelKey ) )
+					for ( int y = 0; y < level.height; y++ )
 					{
-						tile.addGameEntity( player );
-						break outer;
-					}
+						GameTile tile = level.getGameTile( x, y );
+						if ( tile.metaValue != null && tile.metaValue.equals( travelKey ) )
+						{
+							tile.addGameEntity( player );
+							break outer;
+						}
 
-						if ( tile.environmentEntity != null && tile.environmentEntity.data.containsKey( travelKey ) )
-					{
-						tile.addGameEntity( player );
-						break outer;
+					if ( tile.environmentEntity != null && tile.environmentEntity.data.containsKey( travelKey ) )
+						{
+							tile.addGameEntity( player );
+							break outer;
+						}
 					}
 				}
-			}
 		}
 
 		CurrentLevel.updateVisibleTiles();

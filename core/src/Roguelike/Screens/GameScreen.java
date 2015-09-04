@@ -1020,6 +1020,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			OptionsScreen.Instance.screen = ScreenEnum.GAME;
 			Global.Game.switchScreen( ScreenEnum.OPTIONS );
 		}
+		else
+		{
+			if ( Global.CurrentDialogue != null )
+			{
+				Global.CurrentDialogue.advance();
+			}
+		}
 
 		return false;
 	}
@@ -1068,53 +1075,60 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		clearContextMenu();
 
-		Vector3 mousePos = camera.unproject( new Vector3( screenX, screenY, 0 ) );
-
-		int mousePosX = (int) mousePos.x;
-		int mousePosY = (int) mousePos.y;
-
-		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
-
-		int x = ( mousePosX - offsetx ) / Global.TileSize;
-		int y = ( mousePosY - offsety ) / Global.TileSize;
-
-		if ( preparedAbility != null )
+		if ( Global.CurrentDialogue != null )
 		{
-			if ( button == Buttons.LEFT )
-			{
-				if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height )
-				{
-					GameTile tile = Global.CurrentLevel.getGameTile( x, y );
-					if ( preparedAbility.isTargetValid( tile, abilityTiles ) )
-					{
-						Global.CurrentLevel.player.tasks.add( new TaskUseAbility( Pools.obtain( Point.class ).set( x, y ), preparedAbility ) );
-					}
-				}
-			}
-			preparedAbility = null;
+			Global.CurrentDialogue.advance();
 		}
 		else
 		{
-			if ( button == Buttons.RIGHT )
+			Vector3 mousePos = camera.unproject( new Vector3( screenX, screenY, 0 ) );
+
+			int mousePosX = (int) mousePos.x;
+			int mousePosY = (int) mousePos.y;
+
+			int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+			int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+
+			int x = ( mousePosX - offsetx ) / Global.TileSize;
+			int y = ( mousePosY - offsety ) / Global.TileSize;
+
+			if ( preparedAbility != null )
 			{
-				rightClick( screenX, screenY );
+				if ( button == Buttons.LEFT )
+				{
+					if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height )
+					{
+						GameTile tile = Global.CurrentLevel.getGameTile( x, y );
+						if ( preparedAbility.isTargetValid( tile, abilityTiles ) )
+						{
+							Global.CurrentLevel.player.tasks.add( new TaskUseAbility( Pools.obtain( Point.class ).set( x, y ), preparedAbility ) );
+						}
+					}
+				}
+				preparedAbility = null;
 			}
 			else
 			{
-				if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height && Global.CurrentLevel.getSeenTile( x, y ).seen )
+				if ( button == Buttons.RIGHT )
 				{
-					Global.CurrentLevel.player.AI.setData( "ClickPos", Pools.obtain( Point.class ).set( x, y ) );
+					rightClick( screenX, screenY );
 				}
 				else
 				{
-					x = MathUtils.clamp( x, -1, 1 );
-					y = MathUtils.clamp( y, -1, 1 );
+					if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height && Global.CurrentLevel.getSeenTile( x, y ).seen )
+					{
+						Global.CurrentLevel.player.AI.setData( "ClickPos", Pools.obtain( Point.class ).set( x, y ) );
+					}
+					else
+					{
+						x = MathUtils.clamp( x, -1, 1 );
+						y = MathUtils.clamp( y, -1, 1 );
 
-					x += Global.CurrentLevel.player.tile.x;
-					y += Global.CurrentLevel.player.tile.y;
+						x += Global.CurrentLevel.player.tile.x;
+						y += Global.CurrentLevel.player.tile.y;
 
-					Global.CurrentLevel.player.AI.setData( "ClickPos", Pools.obtain( Point.class ).set( x, y ) );
+						Global.CurrentLevel.player.AI.setData( "ClickPos", Pools.obtain( Point.class ).set( x, y ) );
+					}
 				}
 			}
 		}

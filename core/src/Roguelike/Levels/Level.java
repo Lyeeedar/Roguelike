@@ -113,7 +113,7 @@ public class Level
 			}
 		}
 
-		if ( !hasActiveEffects() )
+		if ( !hasActiveEffects() && Global.CurrentDialogue == null )
 		{
 			// Do player move and fill lists
 			if ( visibleList.size == 0 && invisibleList.size == 0 && updateAccumulator >= updateDeltaStep && !hasAbilitiesToUpdate() )

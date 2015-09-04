@@ -1,6 +1,5 @@
 package Roguelike.Tiles;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +16,7 @@ import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Util.EnumBitflag;
+import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
@@ -38,7 +38,7 @@ public class GameTile implements PathfindingTile
 
 	public GameEntity entity;
 	public EnvironmentEntity environmentEntity;
-	public EnumMap<FieldLayer, Field> fields = new EnumMap<FieldLayer, Field>( FieldLayer.class );
+	public FastEnumMap<FieldLayer, Field> fields = new FastEnumMap<FieldLayer, Field>( FieldLayer.class );
 	public boolean hasFields;
 
 	public Level level;

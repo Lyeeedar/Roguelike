@@ -1,6 +1,5 @@
 package Roguelike.Entity;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 
 import Roguelike.AssetManager;
@@ -73,9 +72,9 @@ public abstract class Entity
 	}
 
 	// ----------------------------------------------------------------------
-	private EnumMap<Statistic, Integer> getStatistics()
+	private FastEnumMap<Statistic, Integer> getStatistics()
 	{
-		EnumMap<Statistic, Integer> newMap = new EnumMap<Statistic, Integer>( Statistic.class );
+		FastEnumMap<Statistic, Integer> newMap = new FastEnumMap<Statistic, Integer>( Statistic.class );
 
 		for ( Statistic stat : Statistic.values() )
 		{

@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import Roguelike.Entity.Entity;
 
 import com.badlogic.gdx.Gdx;
@@ -56,6 +57,7 @@ public class DialogueManager
 				if ( processCondition( dialogueChunks.get( i ).condition, dialogueChunks.get( i ).reliesOn ) )
 				{
 					currentDialogue = i;
+					Global.CurrentDialogue = this;
 					break;
 				}
 			}
@@ -67,7 +69,16 @@ public class DialogueManager
 	{
 		if ( currentDialogue >= 0 )
 		{
-			dialogueChunks.get( currentDialogue ).dialogue.advance();
+			boolean finished = dialogueChunks.get( currentDialogue ).dialogue.advance();
+
+			if ( finished )
+			{
+				Global.CurrentDialogue = null;
+			}
+			else
+			{
+				Global.CurrentDialogue = this;
+			}
 		}
 	}
 

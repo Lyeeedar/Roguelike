@@ -12,7 +12,7 @@ public class DialogueActionText extends AbstractDialogueAction
 	public boolean process()
 	{
 		manager.entity.popup = Global.expandNames( text );
-		manager.entity.popupDuration = 10;
+		manager.entity.popupDuration = 2;
 
 		return true;
 	}

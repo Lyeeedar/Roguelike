@@ -26,6 +26,8 @@ public class SaveFile
 	public HashMap<String, SaveLevel> allLevels;
 	public SaveAbilityPool abilityPool;
 	public float AUT;
+	public HashMap<String, Integer> globalVariables;
+	public HashMap<String, String> globalNames;
 
 	public void save()
 	{
@@ -37,6 +39,8 @@ public class SaveFile
 		kryo.writeObject( output, allLevels );
 		kryo.writeObject( output, abilityPool );
 		output.writeFloat( AUT );
+		kryo.writeObject( output, globalVariables );
+		kryo.writeObject( output, globalNames );
 
 		output.close();
 	}
@@ -59,6 +63,8 @@ public class SaveFile
 		allLevels = kryo.readObject( input, HashMap.class );
 		abilityPool = kryo.readObject( input, SaveAbilityPool.class );
 		AUT = input.readFloat();
+		globalVariables = kryo.readObject( input, HashMap.class );
+		globalNames = kryo.readObject( input, HashMap.class );
 
 		input.close();
 	}
@@ -68,7 +74,7 @@ public class SaveFile
 		kryo.register( FastEnumMap.class, new FastEnumMapSerializer() );
 
 		kryo.register( Array.class, new Serializer<Array>()
-		{
+				{
 			{
 				setAcceptsNull( true );
 			}
@@ -139,10 +145,10 @@ public class SaveFile
 				}
 				return array;
 			}
-				} );
+		} );
 
 		kryo.register( Color.class, new Serializer<Color>()
-		{
+				{
 			@Override
 			public Color read( Kryo kryo, Input input, Class<Color> type )
 			{
@@ -156,10 +162,10 @@ public class SaveFile
 			{
 				output.writeInt( Color.rgba8888( color ) );
 			}
-				} );
+		} );
 
 		kryo.register( Sprite.class, new Serializer<Sprite>()
-		{
+				{
 			@Override
 			public Sprite read( Kryo kryo, Input input, Class<Sprite> type )
 			{
@@ -184,10 +190,10 @@ public class SaveFile
 				output.writeInt( sprite.animationState.mode.ordinal() );
 				output.writeFloats( sprite.baseScale );
 			}
-				} );
+		} );
 
 		kryo.register( Element.class, new Serializer<Element>()
-		{
+				{
 			@Override
 			public Element read( Kryo kryo, Input input, Class<Element> type )
 			{
@@ -203,6 +209,6 @@ public class SaveFile
 			{
 				output.writeString( element.toString() );
 			}
-				} );
+		} );
 	}
 }

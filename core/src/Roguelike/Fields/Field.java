@@ -1,7 +1,6 @@
 package Roguelike.Fields;
 
 import java.io.IOException;
-import java.util.EnumMap;
 import java.util.HashMap;
 
 import Roguelike.AssetManager;
@@ -17,6 +16,7 @@ import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Util.EnumBitflag;
+import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
@@ -126,7 +126,7 @@ public class Field implements IGameObject
 		Field newField = copy();
 		newField.stacks = stacks;
 
-		EnumMap<FieldLayer, Field> fieldStore = new EnumMap<FieldLayer, Field>( FieldLayer.class );
+		FastEnumMap<FieldLayer, Field> fieldStore = new FastEnumMap<FieldLayer, Field>( FieldLayer.class );
 
 		for ( FieldLayer layer : FieldLayer.values() )
 		{

@@ -1,5 +1,7 @@
 package Roguelike.Save;
 
+import java.util.HashMap;
+
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Items.Inventory;
@@ -19,52 +21,64 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 	public Array<CooldownWrapper> abilityCooldown = new Array<CooldownWrapper>();
 	public Inventory inventory;
 	public String UID;
+	public HashMap<String, Integer> dialogueData = new HashMap<String, Integer>();
+
 	// need to save ai
 
 	@Override
-	public void store(GameEntity obj)
+	public void store( GameEntity obj )
 	{
 		fileName = obj.fileName;
 		hp = obj.HP;
 		essence = obj.essence;
-		pos.set(obj.tile.x, obj.tile.y);
-		for (StatusEffect status : obj.statusEffects)
-		{			
-			statuses.add(status);
+		pos.set( obj.tile.x, obj.tile.y );
+		for ( StatusEffect status : obj.statusEffects )
+		{
+			statuses.add( status );
 		}
 		inventory = obj.inventory;
-		
-		for (ActiveAbility aa : obj.slottedActiveAbilities)
+
+		for ( ActiveAbility aa : obj.slottedActiveAbilities )
 		{
-			abilityCooldown.add(new CooldownWrapper(aa.cooldownAccumulator));
+			abilityCooldown.add( new CooldownWrapper( aa.cooldownAccumulator ) );
 		}
-		
+
 		UID = obj.UID;
+
+		if ( obj.dialogue != null )
+		{
+			dialogueData = (HashMap<String, Integer>) obj.dialogue.data.clone();
+		}
 	}
 
 	@Override
 	public GameEntity create()
 	{
-		GameEntity entity = GameEntity.load(fileName);
-		
+		GameEntity entity = GameEntity.load( fileName );
+
 		entity.essence = essence;
 		entity.HP = hp;
-		for (StatusEffect saveStatus : statuses)
+		for ( StatusEffect saveStatus : statuses )
 		{
-			entity.addStatusEffect(saveStatus);
+			entity.addStatusEffect( saveStatus );
 		}
 		entity.inventory = inventory;
-		
-		if (!isPlayer) 
+
+		if ( !isPlayer )
 		{
-			for (int i = 0; i < abilityCooldown.size; i++)
+			for ( int i = 0; i < abilityCooldown.size; i++ )
 			{
-				entity.slottedActiveAbilities.get(i).cooldownAccumulator = abilityCooldown.get(i).val;
+				entity.slottedActiveAbilities.get( i ).cooldownAccumulator = abilityCooldown.get( i ).val;
 			}
-		}		
-		
+		}
+
 		entity.UID = UID;
-		
+
+		if ( entity.dialogue != null )
+		{
+			entity.dialogue.data = (HashMap<String, Integer>) dialogueData.clone();
+		}
+
 		return entity;
 	}
 
@@ -72,13 +86,13 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 	public static class CooldownWrapper
 	{
 		public float val;
-		
+
 		public CooldownWrapper()
 		{
-		
+
 		}
-		
-		public CooldownWrapper(float val)
+
+		public CooldownWrapper( float val )
 		{
 			this.val = val;
 		}

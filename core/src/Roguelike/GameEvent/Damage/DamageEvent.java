@@ -1,6 +1,5 @@
 package Roguelike.GameEvent.Damage;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
@@ -8,6 +7,7 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
 import Roguelike.Global.Tier1Element;
 import Roguelike.GameEvent.IGameObject;
+import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -17,7 +17,7 @@ import exp4j.Helpers.EquationHelper;
 public class DamageEvent extends AbstractOnDamageEvent
 {
 	private String condition;
-	private EnumMap<Tier1Element, String> equations = new EnumMap<Tier1Element, String>( Tier1Element.class );
+	private FastEnumMap<Tier1Element, String> equations = new FastEnumMap<Tier1Element, String>( Tier1Element.class );
 	private String[] reliesOn;
 
 	@Override
@@ -38,7 +38,7 @@ public class DamageEvent extends AbstractOnDamageEvent
 			if ( conditionVal == 0 ) { return false; }
 		}
 
-		EnumMap<Tier1Element, Integer> els = Tier1Element.getElementBlock();
+		FastEnumMap<Tier1Element, Integer> els = Tier1Element.getElementBlock();
 
 		for ( Tier1Element el : Tier1Element.values() )
 		{

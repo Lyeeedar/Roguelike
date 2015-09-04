@@ -1,6 +1,5 @@
 package Roguelike.GameEvent.Constant;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
@@ -8,6 +7,7 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
 import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
+import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -16,7 +16,7 @@ import exp4j.Helpers.EquationHelper;
 
 public class ConstantEvent
 {
-	public EnumMap<Statistic, String> equations = new EnumMap<Statistic, String>( Statistic.class );
+	public FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
 	private String[] reliesOn;
 
 	public void parse( Element xml )

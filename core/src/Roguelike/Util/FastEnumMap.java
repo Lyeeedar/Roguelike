@@ -18,12 +18,12 @@ public class FastEnumMap<T extends Enum<T>, V>
 		items = (V[]) new Object[keyType.getEnumConstants().length];
 	}
 
-	public int size()
+	public int numItems()
 	{
 		return items.length;
 	}
 
-	public int numItems()
+	public int size()
 	{
 		int count = 0;
 
