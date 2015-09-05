@@ -1,5 +1,7 @@
 package Roguelike.Dialogue;
 
+import Roguelike.Dialogue.DialogueManager.ReturnType;
+
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -11,21 +13,20 @@ public class Dialogue
 	public DialogueManager manager;
 
 	// ----------------------------------------------------------------------
-	public boolean advance()
+	public ReturnType advance()
 	{
-		boolean shouldAdvance = actions.get( index ).process();
-		if ( shouldAdvance )
+		ReturnType returnType = actions.get( index ).process();
+		if ( returnType == ReturnType.COMPLETED )
 		{
 			index++;
 		}
-
-		if ( index == actions.size )
+		else if ( returnType == ReturnType.ADVANCE )
 		{
-			index = 0;
-			return true;
+			index++;
+			return advance();
 		}
 
-		return false;
+		return returnType;
 	}
 
 	// ----------------------------------------------------------------------

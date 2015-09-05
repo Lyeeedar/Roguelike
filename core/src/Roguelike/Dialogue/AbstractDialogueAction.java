@@ -2,6 +2,8 @@ package Roguelike.Dialogue;
 
 import java.util.HashMap;
 
+import Roguelike.Dialogue.DialogueManager.ReturnType;
+
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
@@ -12,7 +14,7 @@ public abstract class AbstractDialogueAction
 	public DialogueManager manager;
 
 	// ----------------------------------------------------------------------
-	public abstract boolean process();
+	public abstract ReturnType process();
 
 	// ----------------------------------------------------------------------
 	public abstract void parse( Element xml );
@@ -45,5 +47,7 @@ public abstract class AbstractDialogueAction
 	static
 	{
 		ClassMap.put( "TEXT", DialogueActionText.class );
+		ClassMap.put( "INPUT", DialogueActionInput.class );
+		ClassMap.put( "BRANCH", DialogueActionBranch.class );
 	}
 }

@@ -47,7 +47,7 @@ public class FastEnumMapSerializer extends Serializer<FastEnumMap<? extends Enum
 		// without using reflection.
 		// This will work for empty original maps as well.
 		final FastEnumMap copy = new FastEnumMap( original );
-		for ( int i = 0; i < copy.size(); i++ )
+		for ( int i = 0; i < copy.numItems(); i++ )
 		{
 			copy.put( i, kryo.copy( original.get( i ) ) );
 		}
@@ -85,7 +85,7 @@ public class FastEnumMapSerializer extends Serializer<FastEnumMap<? extends Enum
 	public void write( final Kryo kryo, final Output output, final FastEnumMap<? extends Enum<?>, ?> map )
 	{
 		kryo.writeClass( output, getKeyType( map ) );
-		output.writeInt( map.size(), true );
+		output.writeInt( map.size, true );
 		for ( int i = 0; i < map.numItems(); i++ )
 		{
 			Object val = map.get( i );

@@ -4,6 +4,7 @@ public class FastEnumMap<T extends Enum<T>, V>
 {
 	private Class<T> keyType;
 	private V[] items;
+	public int size;
 
 	@SuppressWarnings( "unchecked" )
 	public FastEnumMap( Class<T> keyType )
@@ -12,6 +13,7 @@ public class FastEnumMap<T extends Enum<T>, V>
 		items = (V[]) new Object[keyType.getEnumConstants().length];
 	}
 
+	@SuppressWarnings( "unchecked" )
 	public FastEnumMap( FastEnumMap<?, ?> other )
 	{
 		this.keyType = (Class<T>) other.keyType;
@@ -23,7 +25,7 @@ public class FastEnumMap<T extends Enum<T>, V>
 		return items.length;
 	}
 
-	public int size()
+	public void calculateSize()
 	{
 		int count = 0;
 
@@ -35,17 +37,21 @@ public class FastEnumMap<T extends Enum<T>, V>
 			}
 		}
 
-		return count;
+		size = count;
 	}
 
 	public void put( T key, V value )
 	{
 		items[key.ordinal()] = value;
+
+		calculateSize();
 	}
 
 	public void remove( T key )
 	{
 		items[key.ordinal()] = null;
+
+		calculateSize();
 	}
 
 	public V get( T key )
@@ -61,11 +67,15 @@ public class FastEnumMap<T extends Enum<T>, V>
 	public void put( int index, V value )
 	{
 		items[index] = value;
+
+		calculateSize();
 	}
 
 	public void remove( int index )
 	{
 		items[index] = null;
+
+		calculateSize();
 	}
 
 	public V get( int index )

@@ -274,7 +274,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		renderSeenTiles( offsetx, offsety, tileSize3 );
 		renderItems( offsetx, offsety );
 		renderFields( underFields, offsetx, offsety );
-		renderCursor( offsetx, offsety, mousex, mousey, delta );
+		if ( Global.CurrentDialogue == null )
+		{
+			renderCursor( offsetx, offsety, mousex, mousey, delta );
+		}
 		renderGameEntities( offsetx, offsety, tileSize3 );
 		renderOverheadEntities( offsetx, offsety, tileSize3 );
 		renderHpBars( offsetx, offsety );
@@ -283,32 +286,35 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		renderFields( overFields, offsetx, offsety );
 		renderEssence( offsetx, offsety );
 
-		if ( preparedAbility != null )
+		if ( Global.CurrentDialogue == null )
 		{
-			batch.setColor( 0.3f, 0.6f, 0.8f, 0.5f );
-			for ( Point tile : abilityTiles )
+			if ( preparedAbility != null )
 			{
-				batch.draw( white, tile.x * Global.TileSize + offsetx, tile.y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
+				batch.setColor( 0.3f, 0.6f, 0.8f, 0.5f );
+				for ( Point tile : abilityTiles )
+				{
+					batch.draw( white, tile.x * Global.TileSize + offsetx, tile.y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
+				}
 			}
+
+			if ( Global.ANDROID )
+			{
+				EntityStatusRenderer.draw( Global.CurrentLevel.player, batch, Global.Resolution[0] - ( Global.Resolution[0] / 4 ) - 120, Global.Resolution[1] - 120, Global.Resolution[0] / 4, 100, 1.0f / 4.0f );
+			}
+			else
+			{
+				font.draw( batch, Global.PlayerName + " the " + Global.PlayerTitle, 20, Global.Resolution[1] - 20 );
+				font.draw( batch, "Essence: " + Global.CurrentLevel.player.essence, 20, Global.Resolution[1] - 40 );
+				EntityStatusRenderer.draw( Global.CurrentLevel.player, batch, 20, Global.Resolution[1] - 160, Global.Resolution[0] / 4, 100, 1.0f / 4.0f );
+			}
+
+			batch.end();
+
+			stage.act( delta );
+			stage.draw();
+
+			batch.begin();
 		}
-
-		if ( Global.ANDROID )
-		{
-			EntityStatusRenderer.draw( Global.CurrentLevel.player, batch, Global.Resolution[0] - ( Global.Resolution[0] / 4 ) - 120, Global.Resolution[1] - 120, Global.Resolution[0] / 4, 100, 1.0f / 4.0f );
-		}
-		else
-		{
-			font.draw( batch, Global.PlayerName + " the " + Global.PlayerTitle, 20, Global.Resolution[1] - 20 );
-			font.draw( batch, "Essence: " + Global.CurrentLevel.player.essence, 20, Global.Resolution[1] - 40 );
-			EntityStatusRenderer.draw( Global.CurrentLevel.player, batch, 20, Global.Resolution[1] - 160, Global.Resolution[0] / 4, 100, 1.0f / 4.0f );
-		}
-
-		batch.end();
-
-		stage.act( delta );
-		stage.draw();
-
-		batch.begin();
 
 		renderSpeechBubbles( offsetx, offsety, delta );
 
@@ -859,6 +865,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				cy += offset[1];
 			}
 
+			String message = entity.popup;
+			layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
+
 			float left = cx - ( layout.width / 2 ) - 10;
 
 			if ( left < 0 )
@@ -873,8 +882,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				left -= right - stage.getWidth();
 			}
 
-			String message = entity.popup;
-
 			float alpha = 1;
 			if ( entity.popupDuration <= 0 )
 			{
@@ -884,12 +891,68 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			tempColour.set( 1, 1, 1, alpha );
 			batch.setColor( tempColour );
 
-			layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
-
 			speechBubbleBackground.draw( batch, left, cy, layout.width + 20, layout.height + 20 );
 			batch.draw( speechBubbleArrow, cx - 4, cy - 6, 8, 8 );
 
 			font.draw( batch, layout, left + 10, cy + layout.height + 10 );
+		}
+
+		if ( Global.CurrentDialogue != null && Global.CurrentDialogue.currentInput != null )
+		{
+			int x = Global.CurrentDialogue.entity.tile.x;
+			int y = Global.CurrentDialogue.entity.tile.y;
+
+			int cx = x * Global.TileSize + offsetx + Global.TileSize / 2;
+			int cy = y * Global.TileSize + offsety;
+
+			float layoutwidth = 0;
+			float layoutheight = 0;
+			for ( int i = 0; i < Global.CurrentDialogue.currentInput.choices.size; i++ )
+			{
+				String message = ( i + 1 ) + ": " + Global.CurrentDialogue.currentInput.choices.get( i );
+
+				layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
+				if ( layout.width > layoutwidth )
+				{
+					layoutwidth = layout.width;
+				}
+				layoutheight += layout.height + 10;
+			}
+
+			cy -= layoutheight + 20;
+
+			float left = cx - ( layoutwidth / 2 ) - 10;
+
+			if ( left < 0 )
+			{
+				left = 0;
+			}
+
+			float right = left + layoutwidth + 20;
+
+			if ( right >= stage.getWidth() )
+			{
+				left -= right - stage.getWidth();
+			}
+
+			speechBubbleBackground.draw( batch, left, cy, layoutwidth + 20, layoutheight + 20 );
+
+			float voffset = 5;
+			for ( int i = Global.CurrentDialogue.currentInput.choices.size - 1; i >= 0; i-- )
+			{
+				String message = ( i + 1 ) + ": " + Global.CurrentDialogue.currentInput.choices.get( i );
+
+				if ( Global.CurrentDialogue.mouseOverInput == i )
+				{
+					message = "[GREEN]" + message;
+				}
+
+				layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
+
+				font.draw( batch, layout, left + 10, cy + layout.height + 10 + voffset );
+
+				voffset += layout.height + 10;
+			}
 		}
 	}
 
@@ -963,7 +1026,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean keyDown( int keycode )
 	{
-		if ( keycode == Keys.S )
+		if ( Global.CurrentDialogue != null )
+		{
+			Global.CurrentDialogue.advance();
+		}
+		else if ( keycode == Keys.S )
 		{
 			Global.save();
 		}
@@ -1020,13 +1087,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			OptionsScreen.Instance.screen = ScreenEnum.GAME;
 			Global.Game.switchScreen( ScreenEnum.OPTIONS );
 		}
-		else
-		{
-			if ( Global.CurrentDialogue != null )
-			{
-				Global.CurrentDialogue.advance();
-			}
-		}
 
 		return false;
 	}
@@ -1077,6 +1137,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		if ( Global.CurrentDialogue != null )
 		{
+			if ( Global.CurrentDialogue.currentInput != null )
+			{
+				Global.CurrentDialogue.currentInput.answer = Global.CurrentDialogue.mouseOverInput + 1;
+			}
+
 			Global.CurrentDialogue.advance();
 		}
 		else
@@ -1164,8 +1229,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			tooltip = null;
 		}
 
-		mouseOverUI = false;
-
 		Vector3 mousePos = camera.unproject( new Vector3( screenX, screenY, 0 ) );
 
 		mousePosX = (int) mousePos.x;
@@ -1176,32 +1239,95 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
 		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
 
-		int x = ( mousePosX - offsetx ) / Global.TileSize;
-		int y = ( mousePosY - offsety ) / Global.TileSize;
-
-		if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height )
+		if ( Global.CurrentDialogue != null )
 		{
-			GameTile tile = Global.CurrentLevel.getGameTile( x, y );
-
-			if ( tile.entity != null )
+			if ( Global.CurrentDialogue.currentInput != null )
 			{
-				Table table = EntityStatusRenderer.getMouseOverTable( tile.entity, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, 1.0f / 8.0f, mousePosX, mousePosY, skin );
+				int x = Global.CurrentDialogue.entity.tile.x;
+				int y = Global.CurrentDialogue.entity.tile.y;
+
+				int cx = x * Global.TileSize + offsetx + Global.TileSize / 2;
+				int cy = y * Global.TileSize + offsety;
+
+				float layoutwidth = 0;
+				float layoutheight = 0;
+				for ( int i = 0; i < Global.CurrentDialogue.currentInput.choices.size; i++ )
+				{
+					String message = ( i + 1 ) + ": " + Global.CurrentDialogue.currentInput.choices.get( i );
+
+					layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
+					if ( layout.width > layoutwidth )
+					{
+						layoutwidth = layout.width;
+					}
+					layoutheight += layout.height + 10;
+				}
+
+				cy -= layoutheight + 20;
+
+				float left = cx - ( layoutwidth / 2 ) - 10;
+
+				if ( left < 0 )
+				{
+					left = 0;
+				}
+
+				float right = left + layoutwidth + 20;
+
+				if ( right >= stage.getWidth() )
+				{
+					left -= right - stage.getWidth();
+				}
+
+				Global.CurrentDialogue.mouseOverInput = -1;
+
+				float voffset = 5;
+				for ( int i = Global.CurrentDialogue.currentInput.choices.size - 1; i >= 0; i-- )
+				{
+					String message = ( i + 1 ) + ": " + Global.CurrentDialogue.currentInput.choices.get( i );
+					layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
+
+					if ( mousePosX >= left && mousePosX <= right && mousePosY <= cy + layout.height + 10 + voffset && mousePosY >= cy + 10 + voffset )
+					{
+						Global.CurrentDialogue.mouseOverInput = i;
+						break;
+					}
+
+					voffset += layout.height + 10;
+				}
+			}
+		}
+		else
+		{
+			mouseOverUI = false;
+
+			int x = ( mousePosX - offsetx ) / Global.TileSize;
+			int y = ( mousePosY - offsety ) / Global.TileSize;
+
+			if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height )
+			{
+				GameTile tile = Global.CurrentLevel.getGameTile( x, y );
+
+				if ( tile.entity != null )
+				{
+					Table table = EntityStatusRenderer.getMouseOverTable( tile.entity, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, 1.0f / 8.0f, mousePosX, mousePosY, skin );
+
+					if ( table != null )
+					{
+						tooltip = new Tooltip( table, skin, stage );
+						tooltip.show( mousePosX, mousePosY );
+					}
+				}
+			}
+
+			{
+				Table table = EntityStatusRenderer.getMouseOverTable( Global.CurrentLevel.player, 20, Global.Resolution[1] - 120, Global.Resolution[0] / 4, 100, 1.0f / 4.0f, mousePosX, mousePosY, skin );
 
 				if ( table != null )
 				{
 					tooltip = new Tooltip( table, skin, stage );
 					tooltip.show( mousePosX, mousePosY );
 				}
-			}
-		}
-
-		{
-			Table table = EntityStatusRenderer.getMouseOverTable( Global.CurrentLevel.player, 20, Global.Resolution[1] - 120, Global.Resolution[0] / 4, 100, 1.0f / 4.0f, mousePosX, mousePosY, skin );
-
-			if ( table != null )
-			{
-				tooltip = new Tooltip( table, skin, stage );
-				tooltip.show( mousePosX, mousePosY );
 			}
 		}
 
@@ -1227,24 +1353,31 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void rightClick( float screenX, float screenY )
 	{
-		Vector3 mousePos = camera.unproject( new Vector3( screenX, screenY, 0 ) );
-
-		int mousePosX = (int) mousePos.x;
-		int mousePosY = (int) mousePos.y;
-
-		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
-
-		int x = ( mousePosX - offsetx ) / Global.TileSize;
-		int y = ( mousePosY - offsety ) / Global.TileSize;
-
-		GameTile tile = null;
-		if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height )
+		if ( Global.CurrentDialogue != null )
 		{
-			tile = Global.CurrentLevel.getGameTile( x, y );
+			Global.CurrentDialogue.advance();
 		}
+		else
+		{
+			Vector3 mousePos = camera.unproject( new Vector3( screenX, screenY, 0 ) );
 
-		createContextMenu( mousePosX, mousePosY, tile );
+			int mousePosX = (int) mousePos.x;
+			int mousePosY = (int) mousePos.y;
+
+			int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
+			int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+
+			int x = ( mousePosX - offsetx ) / Global.TileSize;
+			int y = ( mousePosY - offsety ) / Global.TileSize;
+
+			GameTile tile = null;
+			if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height )
+			{
+				tile = Global.CurrentLevel.getGameTile( x, y );
+			}
+
+			createContextMenu( mousePosX, mousePosY, tile );
+		}
 	}
 
 	// endregion InputProcessor

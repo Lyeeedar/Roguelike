@@ -18,10 +18,19 @@ import exp4j.Helpers.EquationHelper;
 public class DialogueManager
 {
 	// ----------------------------------------------------------------------
+	public enum ReturnType
+	{
+		RUNNING, COMPLETED, ADVANCE
+	}
+
+	// ----------------------------------------------------------------------
 	public HashMap<String, Integer> data = new HashMap<String, Integer>();
 	public Array<DialogueChunkWrapper> dialogueChunks = new Array<DialogueChunkWrapper>();
+
 	public int currentDialogue = -1;
 	public Entity entity;
+	public DialogueActionInput currentInput;
+	public int mouseOverInput = -1;
 
 	// ----------------------------------------------------------------------
 	public boolean processCondition( String condition, String[] reliesOn )
@@ -58,6 +67,7 @@ public class DialogueManager
 				{
 					currentDialogue = i;
 					Global.CurrentDialogue = this;
+					dialogueChunks.get( currentDialogue ).dialogue.index = 0;
 					break;
 				}
 			}
@@ -69,11 +79,12 @@ public class DialogueManager
 	{
 		if ( currentDialogue >= 0 )
 		{
-			boolean finished = dialogueChunks.get( currentDialogue ).dialogue.advance();
+			dialogueChunks.get( currentDialogue ).dialogue.advance();
 
-			if ( finished )
+			if ( dialogueChunks.get( currentDialogue ).dialogue.index == dialogueChunks.get( currentDialogue ).dialogue.actions.size )
 			{
 				Global.CurrentDialogue = null;
+				currentDialogue = -1;
 			}
 			else
 			{
@@ -124,8 +135,8 @@ public class DialogueManager
 
 		public void parse( Element xml, DialogueManager manager )
 		{
-			condition = xml.getAttribute( "Condition", "1" );
-			reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
+			condition = xml.getAttribute( "Condition", "1" ).toLowerCase();
+			reliesOn = xml.getAttribute( "ReliesOn", "" ).toLowerCase().split( "," );
 			dialogue = Dialogue.load( xml, manager );
 		}
 

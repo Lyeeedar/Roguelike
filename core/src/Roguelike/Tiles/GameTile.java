@@ -76,7 +76,7 @@ public class GameTile implements PathfindingTile
 
 	public final void processFieldEffectsForEntity( Entity e, float cost )
 	{
-		if ( fields.size() > 0 )
+		if ( fields.size > 0 )
 		{
 			for ( FieldLayer layer : FieldLayer.values() )
 			{
@@ -102,7 +102,7 @@ public class GameTile implements PathfindingTile
 
 			fields.remove( layer );
 
-			hasFields = fields.size() > 0;
+			hasFields = fields.size > 0;
 		}
 	}
 
@@ -112,7 +112,7 @@ public class GameTile implements PathfindingTile
 		fields.put( field.layer, field );
 		field.tile = this;
 
-		hasFields = fields.size() > 0;
+		hasFields = fields.size > 0;
 	}
 
 	public final int[] addGameEntity( GameEntity obj )
@@ -153,7 +153,7 @@ public class GameTile implements PathfindingTile
 	@Override
 	public final boolean getPassable( EnumBitflag<Passability> travelType )
 	{
-		if ( fields.size() > 0 )
+		if ( fields.size > 0 )
 		{
 			for ( FieldLayer layer : FieldLayer.values() )
 			{

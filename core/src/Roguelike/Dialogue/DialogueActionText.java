@@ -1,6 +1,7 @@
 package Roguelike.Dialogue;
 
 import Roguelike.Global;
+import Roguelike.Dialogue.DialogueManager.ReturnType;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -9,12 +10,12 @@ public class DialogueActionText extends AbstractDialogueAction
 	public String text;
 
 	@Override
-	public boolean process()
+	public ReturnType process()
 	{
 		manager.entity.popup = Global.expandNames( text );
 		manager.entity.popupDuration = 2;
 
-		return true;
+		return ReturnType.COMPLETED;
 	}
 
 	@Override

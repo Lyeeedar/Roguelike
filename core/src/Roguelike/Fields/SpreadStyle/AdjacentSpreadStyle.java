@@ -46,7 +46,7 @@ public class AdjacentSpreadStyle extends AbstractSpreadStyle
 				{
 					check = true;
 				}
-				else if ( tile.fields.size() > 0 && spreadTags.length > 0 )
+				else if ( tile.fields.size > 0 && spreadTags.length > 0 )
 				{
 					outer:
 					for ( FieldLayer layer : FieldLayer.values() )

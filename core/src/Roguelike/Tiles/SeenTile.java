@@ -53,12 +53,12 @@ public class SeenTile
 		if ( tile.hasFields )
 		{
 			// Update field history list size
-			if ( fieldHistory.size != tile.fields.size() )
+			if ( fieldHistory.size != tile.fields.size )
 			{
 				Pools.freeAll( fieldHistory );
 				fieldHistory.clear();
 
-				for ( int i = 0; i < tile.fields.size(); i++ )
+				for ( int i = 0; i < tile.fields.size; i++ )
 				{
 					fieldHistory.add( Pools.obtain( SeenHistoryItem.class ) );
 				}

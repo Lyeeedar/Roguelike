@@ -2,6 +2,22 @@
     
     <Chunk>
         <Text>Hey there $player$! Good to see you finally awake. Ready to go out and explore the world?</Text>
+        <Input Key="Response">
+            <Choice>Morning old man.</Choice>
+            <Choice>Shuddup!</Choice>
+            <Choice>Why the heck do you think I have my sword and shield out already?!</Choice>
+        </Input>
+        <Branch>
+            <Branch Condition="Response==1">
+                <Text>Good morning to you too.</Text>
+            </Branch>
+            <Branch Condition="Response==2">
+                <Text>I will not shut up!</Text>
+            </Branch>
+            <Branch Condition="Response==3">
+                <Text>I don't know. Maybe you slept on them. I'm not a physic.</Text>
+            </Branch>
+        </Branch>
         <Text>Have fun out there!</Text>
     </Chunk>
     
