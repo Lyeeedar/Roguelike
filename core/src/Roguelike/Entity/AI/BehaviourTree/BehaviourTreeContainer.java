@@ -2,16 +2,16 @@ package Roguelike.Entity.AI.BehaviourTree;
 
 public abstract class BehaviourTreeContainer extends BehaviourTreeNode
 {
-	//----------------------------------------------------------------------
-	public void setDataTree(String key, Object value)
+	// ----------------------------------------------------------------------
+	public void setDataTree( String key, Object value )
 	{
-		if (Parent == null)
+		if ( Parent == null )
 		{
-			setData(key, value);
+			setData( key, value );
 		}
 		else
 		{
-			Parent.setDataTree(key, value);
+			Parent.setDataTree( key, value );
 		}
 	}
 }

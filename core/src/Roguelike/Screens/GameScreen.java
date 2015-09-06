@@ -1028,6 +1028,15 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		if ( Global.CurrentDialogue != null )
 		{
+			if ( keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
+			{
+				int val = keycode - Keys.NUM_0;
+				if ( val <= Global.CurrentDialogue.currentInput.choices.size )
+				{
+					Global.CurrentDialogue.currentInput.answer = val;
+				}
+			}
+
 			Global.CurrentDialogue.advance();
 		}
 		else if ( keycode == Keys.S )
@@ -1080,6 +1089,21 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			if ( Global.abilityPool.slottedActiveAbilities[abilityIndex] != null && Global.abilityPool.slottedActiveAbilities[abilityIndex].isAvailable() )
 			{
 				prepareAbility( Global.abilityPool.slottedActiveAbilities[abilityIndex] );
+			}
+		}
+		else if ( keycode == Keys.ENTER )
+		{
+			if ( Global.CurrentLevel.player.tile.environmentEntity != null )
+			{
+				for ( ActivationAction action : Global.CurrentLevel.player.tile.environmentEntity.actions )
+				{
+					if ( action.visible )
+					{
+						action.activate( Global.CurrentLevel.player.tile.environmentEntity );
+						Global.CurrentLevel.player.tasks.add( new TaskWait() );
+						break;
+					}
+				}
 			}
 		}
 		else if ( keycode == Keys.ESCAPE )

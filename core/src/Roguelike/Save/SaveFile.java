@@ -6,8 +6,46 @@ import java.util.HashMap;
 
 import kryo.FastEnumMapSerializer;
 import Roguelike.AssetManager;
+import Roguelike.Global;
+import Roguelike.Global.Direction;
+import Roguelike.Global.Statistic;
+import Roguelike.Global.Tier1Element;
+import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
+import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom.Orientation;
+import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
+import Roguelike.DungeonGeneration.RecursiveDockGenerator.RoomDoor;
+import Roguelike.DungeonGeneration.Symbol;
+import Roguelike.GameEvent.Constant.ConstantEvent;
+import Roguelike.GameEvent.Damage.DamageEvent;
+import Roguelike.GameEvent.Damage.FieldEvent;
+import Roguelike.GameEvent.Damage.HealEvent;
+import Roguelike.GameEvent.Damage.StatusEvent;
+import Roguelike.GameEvent.OnDeath.FieldOnDeathEvent;
+import Roguelike.GameEvent.OnDeath.HealOnDeathEvent;
+import Roguelike.GameEvent.OnTask.CancelTaskEvent;
+import Roguelike.GameEvent.OnTask.CostTaskEvent;
+import Roguelike.GameEvent.OnTask.DamageTaskEvent;
+import Roguelike.GameEvent.OnTask.StatusTaskEvent;
+import Roguelike.GameEvent.OnTurn.DamageOverTimeEvent;
+import Roguelike.GameEvent.OnTurn.HealOverTimeEvent;
+import Roguelike.Items.Inventory;
+import Roguelike.Items.Item;
+import Roguelike.Items.Item.EquipmentSlot;
+import Roguelike.Items.Item.ItemCategory;
+import Roguelike.Lights.Light;
+import Roguelike.Pathfinding.ShadowCastCache;
+import Roguelike.Save.SaveAbilityPool.SaveAbilityLine;
+import Roguelike.Save.SaveAbilityPool.SaveAbilityPoolItem;
+import Roguelike.Save.SaveGameEntity.CooldownWrapper;
+import Roguelike.Save.SaveLevel.SaveEssence;
+import Roguelike.Save.SaveLevel.SaveLevelItem;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationMode;
+import Roguelike.Sprite.Sprite.AnimationState;
+import Roguelike.StatusEffect.StatusEffect;
+import Roguelike.Tiles.Point;
+import Roguelike.Tiles.SeenTile.SeenHistoryItem;
+import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.Gdx;
@@ -32,7 +70,12 @@ public class SaveFile
 	public void save()
 	{
 		Kryo kryo = new Kryo();
+		kryo.setRegistrationRequired( true );
+		kryo.setAsmEnabled( Global.ANDROID );
+
 		registerSerializers( kryo );
+		registerClasses( kryo );
+
 		Output output = new Output( Gdx.files.local( "save.dat" ).write( false ) );
 
 		output.writeString( currentLevel );
@@ -48,7 +91,12 @@ public class SaveFile
 	public void load()
 	{
 		Kryo kryo = new Kryo();
+		kryo.setRegistrationRequired( true );
+		kryo.setAsmEnabled( Global.ANDROID );
+
 		registerSerializers( kryo );
+		registerClasses( kryo );
+
 		Input input = null;
 		try
 		{
@@ -210,5 +258,73 @@ public class SaveFile
 				output.writeString( element.toString() );
 			}
 		} );
+	}
+
+	private void registerClasses( Kryo kryo )
+	{
+		kryo.register( SaveAbilityPool.class );
+		kryo.register( SaveEnvironmentEntity.class );
+		kryo.register( SaveField.class );
+		kryo.register( SaveFile.class );
+		kryo.register( SaveGameEntity.class );
+		kryo.register( SaveLevel.class );
+		kryo.register( SaveSeenTile.class );
+		kryo.register( SaveSeenTile[].class );
+		kryo.register( SaveSeenTile[][].class );
+
+		kryo.register( SaveAbilityLine.class );
+		kryo.register( SaveAbilityPoolItem.class );
+		kryo.register( SaveAbilityPoolItem[].class );
+		kryo.register( CooldownWrapper.class );
+		kryo.register( SaveEssence.class );
+		kryo.register( SaveLevelItem.class );
+
+		kryo.register( Point.class );
+		kryo.register( StatusEffect.class );
+		kryo.register( Inventory.class );
+		kryo.register( Element.class );
+		kryo.register( DFPRoom.class );
+		kryo.register( SeenHistoryItem.class );
+		kryo.register( Item.class );
+		kryo.register( Light.class );
+		kryo.register( ShadowCastCache.class );
+		kryo.register( EnumBitflag.class );
+		kryo.register( Symbol.class );
+		kryo.register( Symbol[].class );
+		kryo.register( Symbol[][].class );
+		kryo.register( Room.class );
+		kryo.register( RoomDoor.class );
+		kryo.register( Orientation.class );
+		kryo.register( AnimationState.class );
+		kryo.register( AnimationMode.class );
+
+		kryo.register( HashMap.class );
+		kryo.register( String[].class );
+		kryo.register( int[].class );
+		kryo.register( Object.class );
+		kryo.register( char[].class );
+		kryo.register( char[][].class );
+		kryo.register( Float[].class );
+		kryo.register( Float[][].class );
+
+		kryo.register( EquipmentSlot.class );
+		kryo.register( ItemCategory.class );
+		kryo.register( Statistic.class );
+		kryo.register( Direction.class );
+		kryo.register( Tier1Element.class );
+
+		kryo.register( ConstantEvent.class );
+		kryo.register( DamageEvent.class );
+		kryo.register( FieldEvent.class );
+		kryo.register( HealEvent.class );
+		kryo.register( StatusEvent.class );
+		kryo.register( FieldOnDeathEvent.class );
+		kryo.register( HealOnDeathEvent.class );
+		kryo.register( CancelTaskEvent.class );
+		kryo.register( CostTaskEvent.class );
+		kryo.register( DamageTaskEvent.class );
+		kryo.register( StatusTaskEvent.class );
+		kryo.register( DamageOverTimeEvent.class );
+		kryo.register( HealOverTimeEvent.class );
 	}
 }

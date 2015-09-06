@@ -1,12 +1,24 @@
-<Priority>
-	<Import Path="useAbility.xml"></Import>
-	<Import Path="attackClosest.xml"></Import>
-	<Sequence>
-	    <CheckValue Condition="hp<maxhp" />
-	    <Rest />
-	</Sequence>
-	<Random>
-		<Wait></Wait>
-		<Import Path="wander.xml"></Import>
-	</Random>
-</Priority>
+<Any>
+    <ClearValue Key="Enemy"></ClearValue>
+    
+    <GetAllVisible Type="Tiles" Key="Tiles"></GetAllVisible>
+    <GetAllVisible Type="Enemies" SrcKey="Tiles" Key="Enemies"></GetAllVisible>
+    <GetAllVisible Type="Allies" SrcKey="Tiles" Key="Allies"></GetAllVisible>
+    <PickClosest InputKey="Enemies" OutputKey="Enemy"></PickClosest>
+    <ConvertTo InputKey="Enemy" OutputKey="EnemyPos" Type="Position"></ConvertTo>
+    
+    <Priority>
+        <Import Path="useAbility.xml"></Import>
+		<Import Path="attackClosest.xml"></Import>
+		<Sequence>
+		    <CheckValue Condition="hp<maxhp" />
+		    <Rest />
+		</Sequence>
+		<Random>
+			<Wait></Wait>
+			<Import Path="wander.xml"></Import>
+		</Random>
+    </Priority>
+    
+    <!--Exclaim Key="Tiles"></Exclaim-->
+</Any>

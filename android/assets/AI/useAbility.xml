@@ -9,8 +9,6 @@
 		</Sequence>
 		<Sequence>
 			<CheckValue Key="Ability"></CheckValue>
-			<GetAllVisible Type="Enemies" Key="Enemies"></GetAllVisible>
-			<PickClosest InputKey="Enemies" OutputKey="Enemy"></PickClosest>
 			<ConvertTo InputKey="Enemy" OutputKey="Pos" Type="Position"></ConvertTo>
 		</Sequence>
 	</Any>

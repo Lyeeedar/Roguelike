@@ -243,6 +243,72 @@
 				</Symbol>
 				
 				<Symbol Extends=",">
+					<Char>E</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Steampunk/PipeEnd</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>-</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Steampunk/Pipe</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>m</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Steampunk/MachinePipeConnection</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>v</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Steampunk/VatMachine</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>j</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Steampunk/VatJoinMachine</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+					<Char>o</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Steampunk/VatExit</Name>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends=",">
 					<Char>S</Char>
 					<MetaValue>PlayerSpawn</MetaValue>
 				</Symbol>
@@ -295,7 +361,7 @@
 
 			</Symbols>
 
-			<Orientation>Edge</Orientation>
+			<Orientation>Rotated</Orientation>
 
 			<Rows>Levels/Town/HomeGround</Rows>
 		</Home>

@@ -4,7 +4,6 @@
 			<Invert>
 				<CheckValue Key="Pos"></CheckValue>
 			</Invert>
-			<GetAllVisible Type="Tiles" Key="Tiles"></GetAllVisible>
 			<PickRandom InputKey="Tiles" OutputKey="Tile"></PickRandom>
 			<ConvertTo InputKey="Tile" OutputKey="Pos" Type="Position"></ConvertTo>
 		</Sequence>

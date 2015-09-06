@@ -130,7 +130,7 @@ public class DungeonFileParser
 		// ----------------------------------------------------------------------
 		public enum Orientation
 		{
-			EDGE, CENTRE, RANDOM, FIXED
+			EDGE, CENTRE, RANDOM, ROTATED, FIXED
 		}
 
 		public Orientation orientation;

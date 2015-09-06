@@ -710,9 +710,6 @@ public class Global
 	// ----------------------------------------------------------------------
 	public static void newGame( GameEntity player, final String lines )
 	{
-		player.popup = "It's time to kickass and chew gum, but I'm all out of gum. Wait... What the hell is gum? Man that is really quite the philosphical question, who knows what gum is. A person? A place? An alternative universe filled if cold and uncaring gods? Who knows. All I know is that im here now, and I'm gonna kick some butt.";
-		player.popupDuration = 1;
-
 		AUT = 0;
 		DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
 
@@ -774,24 +771,24 @@ public class Global
 			level.player = player;
 
 			outer:
-				for ( int x = 0; x < level.width; x++ )
+			for ( int x = 0; x < level.width; x++ )
+			{
+				for ( int y = 0; y < level.height; y++ )
 				{
-					for ( int y = 0; y < level.height; y++ )
+					GameTile tile = level.getGameTile( x, y );
+					if ( tile.metaValue != null && tile.metaValue.equals( travelKey ) )
 					{
-						GameTile tile = level.getGameTile( x, y );
-						if ( tile.metaValue != null && tile.metaValue.equals( travelKey ) )
-						{
-							tile.addGameEntity( player );
-							break outer;
-						}
+						tile.addGameEntity( player );
+						break outer;
+					}
 
-					if ( tile.environmentEntity != null && tile.environmentEntity.data.containsKey( travelKey ) )
-						{
-							tile.addGameEntity( player );
-							break outer;
-						}
+						if ( tile.environmentEntity != null && tile.environmentEntity.data.containsKey( travelKey ) )
+					{
+						tile.addGameEntity( player );
+						break outer;
 					}
 				}
+			}
 		}
 
 		CurrentLevel.updateVisibleTiles();

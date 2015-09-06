@@ -371,13 +371,13 @@ public class RecursiveDockGenerator
 		}
 
 		requiredRooms.sort( new Comparator<Room>()
-		{
+				{
 			@Override
 			public int compare( Room arg0, Room arg1 )
 			{
 				return arg0.comparisonString().compareTo( arg1.comparisonString() );
 			}
-		} );
+				} );
 	}
 
 	// ----------------------------------------------------------------------
@@ -592,8 +592,18 @@ public class RecursiveDockGenerator
 						fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
 					}
 				}
+				else if ( testRoom.roomData.orientation == Orientation.ROTATED )
+				{
+					fits = testRoom.height + padX2 <= width && testRoom.width + padY2 <= height;
+
+					if ( fits )
+					{
+						rotate = true;
+						flipVert = true;
+					}
+				}
 				else
-				// if ( testRoom.roomData.orientation == Orientation.FIXED )
+					// if ( testRoom.roomData.orientation == Orientation.FIXED )
 				{
 					fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
 				}
@@ -844,14 +854,14 @@ public class RecursiveDockGenerator
 			tris.add( tri );
 		}
 		tris.sort( new Comparator<Triangle>()
-				{
+		{
 
 			@Override
 			public int compare( Triangle arg0, Triangle arg1 )
 			{
 				return arg0.compareTo( arg1 );
 			}
-				} );
+		} );
 
 		for ( Triangle tri : tris )
 		{
@@ -867,27 +877,27 @@ public class RecursiveDockGenerator
 			int closestDist = Integer.MAX_VALUE;
 			boolean found = false;
 			outer:
-				for ( Pnt[] path : paths )
+			for ( Pnt[] path : paths )
+			{
+				for ( Pnt p : path )
 				{
-					for ( Pnt p : path )
+					int px = (int) p.coord( 0 );
+					int py = (int) p.coord( 1 );
+
+					if ( rx == px && ry == py )
 					{
-						int px = (int) p.coord( 0 );
-						int py = (int) p.coord( 1 );
+						found = true;
+						break outer;
+					}
 
-						if ( rx == px && ry == py )
-						{
-							found = true;
-							break outer;
-						}
-
-						int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
-						if ( tempDist < closestDist )
-						{
-							closestDist = tempDist;
-							closest = p;
-						}
+					int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
+					if ( tempDist < closestDist )
+					{
+						closestDist = tempDist;
+						closest = p;
 					}
 				}
+			}
 
 			if ( !found )
 			{
