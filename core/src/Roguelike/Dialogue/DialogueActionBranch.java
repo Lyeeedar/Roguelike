@@ -1,14 +1,9 @@
 package Roguelike.Dialogue;
 
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
-import Roguelike.Global;
 import Roguelike.Dialogue.DialogueManager.ReturnType;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
-
-import exp4j.Helpers.EquationHelper;
 
 public class DialogueActionBranch extends AbstractDialogueAction
 {
@@ -35,7 +30,7 @@ public class DialogueActionBranch extends AbstractDialogueAction
 		{
 			ReturnType returnType = branches.get( currentBranch ).dialogue.advance();
 
-			if ( branches.get( currentBranch ).dialogue.index == branches.get( currentBranch ).dialogue.actions.size )
+			if ( returnType != ReturnType.RUNNING && branches.get( currentBranch ).dialogue.index == branches.get( currentBranch ).dialogue.actions.size )
 			{
 				currentBranch = -1;
 			}
@@ -46,32 +41,6 @@ public class DialogueActionBranch extends AbstractDialogueAction
 		{
 			return ReturnType.ADVANCE;
 		}
-	}
-
-	// ----------------------------------------------------------------------
-	public boolean processCondition( String condition, String[] reliesOn )
-	{
-		for ( String name : reliesOn )
-		{
-			if ( !manager.data.containsKey( name ) && !Global.GlobalVariables.containsKey( name ) )
-			{
-				manager.data.put( name, 0 );
-			}
-		}
-
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-		EquationHelper.setVariableNames( expB, manager.data, "" );
-		EquationHelper.setVariableNames( expB, Global.GlobalVariables, "" );
-
-		Expression exp = EquationHelper.tryBuild( expB );
-		if ( exp == null ) { return false; }
-
-		EquationHelper.setVariableValues( exp, manager.data, "" );
-		EquationHelper.setVariableValues( exp, Global.GlobalVariables, "" );
-
-		int raw = (int) exp.evaluate();
-
-		return raw > 0;
 	}
 
 	@Override

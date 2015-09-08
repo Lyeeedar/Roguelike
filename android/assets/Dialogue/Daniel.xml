@@ -3,10 +3,9 @@
     <Exclamations>
 	    <SeePlayer Cooldown="50">
 	        <Exclamation>
-	            <Text>Good morning $player$! Come over here and chat to me.</Text>
+	            <Text>Oh hey, it lives! Come over here and chat to me.</Text>
 	            <Sound>
-	                <Name>hey</Name>
-	                <Pitch>0.8f</Pitch>
+	                <Name>Male/Greeting</Name>
 	            </Sound>
 	        </Exclamation>
 	    </SeePlayer>
@@ -15,38 +14,63 @@
     <Dialogue>
 	    <Chunk>
 	        <Text>
-	            <Text>Hey there $player$! Good to see you finally awake. Ready to go out and explore the world?</Text>
-	            <Sound><Name>ahh</Name><Pitch>0.8f</Pitch></Sound>
+	            <Text>So finally joined the world of the living. How do you feel?</Text>
+	            <Sound><Name>Male/Greeting</Name></Sound>
 	        </Text>
 	        <Input Key="Response">
-	            <Choice>Morning old man.</Choice>
-	            <Choice>Shuddup!</Choice>
-	            <Choice>Why the heck do you think I have my sword and shield out already?!</Choice>
+	            <Choice>I um... What?</Choice>
 	        </Input>
-	        <Branch>
-	            <Branch Condition="Response==1">
-	                <Text>
-	                    <Text>Good morning to you too.</Text>
-	                    <Sound><Name>hohoho</Name><Pitch>0.8f</Pitch></Sound>
-	                </Text>
-	            </Branch>
-	            <Branch Condition="Response==2">
-	                <Text>
-	                    <Text>I will not shut up!</Text>
-	                    <Sound><Name>grr</Name><Pitch>0.8f</Pitch></Sound>
-	                </Text>
-	            </Branch>
-	            <Branch Condition="Response==3">
-	                <Text>
-	                    <Text>I don't know. Maybe you slept on them. I'm not a physic.</Text>
-	                    <Sound><Name>hmm</Name><Pitch>0.8f</Pitch></Sound>
-	                </Text>
-	            </Branch>
-	        </Branch>
 	        <Text>
-	            <Text>Have fun out there!</Text>
-	            <Sound><Name>hohoho</Name><Pitch>0.8f</Pitch></Sound>          
-	       </Text>
+	            <Text>Do you remember anything at all? Like your name?</Text>
+	            <Sound><Name>Male/Neutral</Name></Sound>
+	        </Text>
+	        <Input Key="Response">
+	            <Choice>My name? Name... I think my name is $player$?</Choice>
+	        </Input>
+	        <Text>
+	            <Text>$player$? That's a good name. I'm Daniel, pleased to meet you.</Text>
+	            <Sound><Name>Male/Agreement</Name></Sound>
+	        </Text>
+	        <SetVariable>
+			    <Key>ExitLoop</Key>
+			    <Value>0</Value>
+		    </SetVariable>
+	        <Loop Condition="ExitLoop" ReliesOn="ExitLoop">
+	             <Input Key="Response">
+		            <Choice>Where am I?</Choice>
+		            <Choice>What's going on?</Choice>
+		            <Choice>Who am I?</Choice>
+		            <Choice>That's all I want to know for now.</Choice>
+		        </Input>
+		        <Branch>
+		            <Branch Condition="Response==1">
+		                <Text>
+				            <Text>A small town called Reach on the plane of Aether.</Text>
+				            <Sound><Name>Male/Neutral</Name></Sound>
+				        </Text>
+		            </Branch>
+		            <Branch Condition="Response==2">
+		                <Text>
+				            <Text>You have just come to life.</Text>
+				            <Sound><Name>Male/Neutral</Name></Sound>
+				        </Text>
+		            </Branch>
+		            <Branch Condition="Response==3">
+		                <Text>
+				            <Text>You are a human.</Text>
+				            <Sound><Name>Male/Neutral</Name></Sound>
+				        </Text>
+		            </Branch>
+		            <Branch Condition="Response==4">
+		                <SetVariable>
+		                    <Key>ExitLoop</Key>
+		                    <Value>1</Value>
+		                </SetVariable>
+		            </Branch>
+		        </Branch>
+	        </Loop>
+	       
+	        
 	    </Chunk>
     </Dialogue>
     

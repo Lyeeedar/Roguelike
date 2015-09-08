@@ -15,6 +15,8 @@ public class Dialogue
 	// ----------------------------------------------------------------------
 	public ReturnType advance()
 	{
+		if ( index == actions.size ) { return ReturnType.COMPLETED; }
+
 		ReturnType returnType = actions.get( index ).process();
 		if ( returnType == ReturnType.COMPLETED )
 		{
@@ -23,6 +25,8 @@ public class Dialogue
 		else if ( returnType == ReturnType.ADVANCE )
 		{
 			index++;
+
+			if ( index == actions.size ) { return ReturnType.ADVANCE; }
 			return advance();
 		}
 

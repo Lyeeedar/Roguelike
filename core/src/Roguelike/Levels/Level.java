@@ -688,6 +688,12 @@ public class Level
 			sprite.update( delta );
 		}
 
+		if ( tile.tileData.raisedSprite != null )
+		{
+			tile.tileData.raisedSprite.frontSprite.update( delta );
+			tile.tileData.raisedSprite.topSprite.update( delta );
+		}
+
 		if ( tile.hasFields )
 		{
 			for ( FieldLayer layer : FieldLayer.values() )

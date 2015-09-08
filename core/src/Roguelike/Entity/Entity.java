@@ -283,6 +283,7 @@ public abstract class Entity
 		displayedPopup = "";
 		popupDuration = duration;
 		popupFade = 1;
+		popupAccumulator = 0;
 	}
 
 	// ----------------------------------------------------------------------

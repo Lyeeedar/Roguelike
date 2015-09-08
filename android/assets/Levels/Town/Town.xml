@@ -177,9 +177,17 @@
 					<TileData>
 						<Opaque>true</Opaque>
 						<Passable>false</Passable>
-						<Sprite>
-							<Name>dc-dngn/wall/stone_brick1</Name>
-						</Sprite>
+						<RaisedSprite>
+						    <Name>StoneWall</Name>
+						    
+						    <Front>
+						        <Name>Level/stone_wall_front</Name>
+						    </Front>
+						    
+						    <Top>
+						        <Name>Level/stone_wall_top</Name>
+						    </Top>
+						</RaisedSprite>
 						<AmbientShadow>
 							<Factor>0.1</Factor>
 							<Range>1</Range>
@@ -324,9 +332,17 @@
 				<Symbol>
 					<Char>w</Char>
 					<TileData>
-						<Sprite>
-							<Name>Objects/WoodFloor</Name>
-						</Sprite>
+						<RaisedSprite>
+						    <Name>StoneWall</Name>
+						    
+						    <Front>
+						        <Name>Objects/WoodFloor</Name>
+						    </Front>
+						    
+						    <Top>
+						        <Name>Objects/WoodFloor</Name>
+						    </Top>
+						</RaisedSprite>
 						<Passable>false</Passable>
 						<Opaque>false</Opaque>
 					</TileData>
@@ -359,9 +375,17 @@
 					<TileData>
 						<Opaque>true</Opaque>
 						<Passable>false</Passable>
-						<Sprite>
-							<Name>dc-dngn/wall/stone_brick1</Name>
-						</Sprite>
+						<RaisedSprite>
+						    <Name>StoneWall</Name>
+						    
+						    <Front>
+						        <Name>Level/stone_wall_front</Name>
+						    </Front>
+						    
+						    <Top>
+						        <Name>Level/stone_wall_top</Name>
+						    </Top>
+						</RaisedSprite>
 						<AmbientShadow>
 							<Factor>0.1</Factor>
 							<Range>1</Range>
@@ -453,9 +477,17 @@
 				<Symbol>
 					<Char>w</Char>
 					<TileData>
-						<Sprite>
-							<Name>dc-dngn/wall/stone_brick1</Name>
-						</Sprite>
+						<RaisedSprite>
+						    <Name>StoneWall</Name>
+						    
+						    <Front>
+						        <Name>Objects/WoodFloor</Name>
+						    </Front>
+						    
+						    <Top>
+						        <Name>Objects/WoodFloor</Name>
+						    </Top>
+						</RaisedSprite>
 						<Passable>false</Passable>
 						<Opaque>false</Opaque>
 					</TileData>
