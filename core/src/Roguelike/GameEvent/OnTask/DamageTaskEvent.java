@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
-public class DamageTaskEvent extends AbstractOnTaskEvent
+public final class DamageTaskEvent extends AbstractOnTaskEvent
 {
 	private String condition;
 	private FastEnumMap<Statistic, Integer> scaleLevel = new FastEnumMap<Statistic, Integer>( Statistic.class );

@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
-public class HealEvent extends AbstractOnDamageEvent
+public final class HealEvent extends AbstractOnDamageEvent
 {
 	private String condition;
 	private String attacker;

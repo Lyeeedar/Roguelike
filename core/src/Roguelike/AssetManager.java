@@ -1,5 +1,6 @@
 package Roguelike;
 
+import java.nio.IntBuffer;
 import java.util.HashMap;
 
 import Roguelike.Sound.SoundInstance;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
@@ -22,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class AssetManager
@@ -74,8 +77,20 @@ public class AssetManager
 		return sound;
 	}
 
-	private static final PixmapPacker packer = new PixmapPacker( 1024, 1024, Format.RGBA8888, 2, true );
+	private static PixmapPacker packer;
 	private static final TextureAtlas atlas = new TextureAtlas();
+
+	private static void setupPacker()
+	{
+		IntBuffer intBuffer = BufferUtils.newIntBuffer( 16 );
+		Gdx.gl20.glGetIntegerv( GL20.GL_MAX_TEXTURE_SIZE, intBuffer );
+
+		int size = intBuffer.get();
+
+		size = Math.min( 4096, size );
+
+		packer = new PixmapPacker( size, size, Format.RGBA8888, 2, true );
+	}
 
 	private static HashMap<String, TextureRegion> loadedTextureRegions = new HashMap<String, TextureRegion>();
 
@@ -88,6 +103,11 @@ public class AssetManager
 		{
 			loadedTextureRegions.put( path, null );
 			return null;
+		}
+
+		if ( packer == null )
+		{
+			setupPacker();
 		}
 
 		Pixmap pixmap = new Pixmap( file );

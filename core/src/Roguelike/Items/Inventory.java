@@ -11,7 +11,7 @@ import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-public class Inventory
+public final class Inventory
 {
 	public boolean isVariableMapDirty = true;
 

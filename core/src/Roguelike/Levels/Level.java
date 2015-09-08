@@ -192,6 +192,7 @@ public class Level
 				{
 					updateSpritesForTile( tile, delta );
 					updateSpriteEffectsForTile( tile, delta );
+					updatePopupsForTile( tile, delta );
 				}
 				else
 				{
@@ -449,13 +450,13 @@ public class Level
 			{
 				if ( tile.visible )
 				{
-					if ( e.hasDamage )
+					if ( e.canTakeDamage && e.hasDamage )
 					{
 						GameScreen.Instance.addActorDamageAction( e );
 						e.hasDamage = false;
 					}
 
-					if ( e.healingAccumulator > 0 )
+					if ( e.canTakeDamage && e.healingAccumulator > 0 )
 					{
 						GameScreen.Instance.addActorHealingAction( e );
 					}
@@ -466,7 +467,7 @@ public class Level
 					e.healingAccumulator = 0;
 				}
 
-				if ( e != player && e.HP <= 0 && !hasActiveEffects( e ) )
+				if ( e.canTakeDamage && e != player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
 					e.tile.entity = null;
 
@@ -477,7 +478,7 @@ public class Level
 					RoguelikeGame.Instance.switchScreen( ScreenEnum.GAMEOVER );
 				}
 
-				if ( e.popupDuration <= 0 && e.popupFade <= 0 )
+				if ( e.popupDuration <= 0 && e.popup != null && e.popup.length() == e.displayedPopup.length() && e.popupFade <= 0 )
 				{
 					e.popupFade = 1;
 				}
@@ -488,12 +489,12 @@ public class Level
 			Entity e = tile.environmentEntity;
 			if ( e != null )
 			{
-				if ( e.damageAccumulator > 0 && tile.visible )
+				if ( e.canTakeDamage && e.damageAccumulator > 0 && tile.visible )
 				{
 					GameScreen.Instance.addActorDamageAction( e );
 				}
 
-				if ( e != player && e.HP <= 0 && !hasActiveEffects( e ) )
+				if ( e.canTakeDamage && e != player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
 					e.tile.environmentEntity = null;
 
@@ -640,6 +641,27 @@ public class Level
 	// endregion Cleanup
 	// ####################################################################//
 	// region Update
+
+	private void updatePopupsForTile( GameTile tile, float delta )
+	{
+		if ( tile.entity != null )
+		{
+			if ( tile.entity.popup != null )
+			{
+				if ( tile.entity.displayedPopup.length() < tile.entity.popup.length() )
+				{
+					tile.entity.popupAccumulator += delta;
+
+					while ( tile.entity.popupAccumulator >= 0 && tile.entity.displayedPopup.length() < tile.entity.popup.length() )
+					{
+						tile.entity.popupAccumulator -= 0.01f;
+
+						tile.entity.displayedPopup = tile.entity.popup.substring( 0, tile.entity.displayedPopup.length() + 1 );
+					}
+				}
+			}
+		}
+	}
 
 	private void updateSpriteEffectsForTile( GameTile tile, float delta )
 	{

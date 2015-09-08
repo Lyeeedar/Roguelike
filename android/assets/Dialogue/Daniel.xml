@@ -1,24 +1,53 @@
 <Dialogue>
     
-    <Chunk>
-        <Text>Hey there $player$! Good to see you finally awake. Ready to go out and explore the world?</Text>
-        <Input Key="Response">
-            <Choice>Morning old man.</Choice>
-            <Choice>Shuddup!</Choice>
-            <Choice>Why the heck do you think I have my sword and shield out already?!</Choice>
-        </Input>
-        <Branch>
-            <Branch Condition="Response==1">
-                <Text>Good morning to you too.</Text>
-            </Branch>
-            <Branch Condition="Response==2">
-                <Text>I will not shut up!</Text>
-            </Branch>
-            <Branch Condition="Response==3">
-                <Text>I don't know. Maybe you slept on them. I'm not a physic.</Text>
-            </Branch>
-        </Branch>
-        <Text>Have fun out there!</Text>
-    </Chunk>
+    <Exclamations>
+	    <SeePlayer Cooldown="50">
+	        <Exclamation>
+	            <Text>Good morning $player$! Come over here and chat to me.</Text>
+	            <Sound>
+	                <Name>hey</Name>
+	                <Pitch>0.8f</Pitch>
+	            </Sound>
+	        </Exclamation>
+	    </SeePlayer>
+	</Exclamations>
+    
+    <Dialogue>
+	    <Chunk>
+	        <Text>
+	            <Text>Hey there $player$! Good to see you finally awake. Ready to go out and explore the world?</Text>
+	            <Sound><Name>ahh</Name><Pitch>0.8f</Pitch></Sound>
+	        </Text>
+	        <Input Key="Response">
+	            <Choice>Morning old man.</Choice>
+	            <Choice>Shuddup!</Choice>
+	            <Choice>Why the heck do you think I have my sword and shield out already?!</Choice>
+	        </Input>
+	        <Branch>
+	            <Branch Condition="Response==1">
+	                <Text>
+	                    <Text>Good morning to you too.</Text>
+	                    <Sound><Name>hohoho</Name><Pitch>0.8f</Pitch></Sound>
+	                </Text>
+	            </Branch>
+	            <Branch Condition="Response==2">
+	                <Text>
+	                    <Text>I will not shut up!</Text>
+	                    <Sound><Name>grr</Name><Pitch>0.8f</Pitch></Sound>
+	                </Text>
+	            </Branch>
+	            <Branch Condition="Response==3">
+	                <Text>
+	                    <Text>I don't know. Maybe you slept on them. I'm not a physic.</Text>
+	                    <Sound><Name>hmm</Name><Pitch>0.8f</Pitch></Sound>
+	                </Text>
+	            </Branch>
+	        </Branch>
+	        <Text>
+	            <Text>Have fun out there!</Text>
+	            <Sound><Name>hohoho</Name><Pitch>0.8f</Pitch></Sound>          
+	       </Text>
+	    </Chunk>
+    </Dialogue>
     
 </Dialogue>

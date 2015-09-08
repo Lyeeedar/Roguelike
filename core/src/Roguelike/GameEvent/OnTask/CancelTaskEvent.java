@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
-public class CancelTaskEvent extends AbstractOnTaskEvent
+public final class CancelTaskEvent extends AbstractOnTaskEvent
 {
 	private String condition;
 	private String[] reliesOn;

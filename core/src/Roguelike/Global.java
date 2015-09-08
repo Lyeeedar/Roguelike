@@ -719,6 +719,7 @@ public class Global
 
 		GlobalNames.put( "player", PlayerName );
 
+		player.setPopupText( "Urgh... Where am I... Who am I...", 2 );
 		SaveLevel firstLevel = new SaveLevel( "Town", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
 		AllLevels.put( firstLevel.UID, firstLevel );
 

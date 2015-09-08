@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
-public class HealOverTimeEvent extends AbstractOnTurnEvent
+public final class HealOverTimeEvent extends AbstractOnTurnEvent
 {
 	String condition;
 

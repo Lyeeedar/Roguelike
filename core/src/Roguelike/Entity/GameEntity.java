@@ -19,7 +19,6 @@ import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
-import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.Point;
@@ -109,6 +108,11 @@ public class GameEntity extends Entity
 		if ( popupDuration > 0 )
 		{
 			popupDuration -= cost;
+		}
+
+		if ( dialogue != null && dialogue.exclamationManager != null )
+		{
+			dialogue.exclamationManager.update( cost );
 		}
 	}
 
@@ -213,17 +217,6 @@ public class GameEntity extends Entity
 		canSwap = xmlElement.getBoolean( "CanSwap", false );
 		canMove = xmlElement.getBoolean( "CanMove", true );
 		essence = xmlElement.getInt( "Essence", MathUtils.random( 100 ) );
-
-		Element soundbankElement = xmlElement.getChildByName( "SoundBank" );
-		if ( soundbankElement != null )
-		{
-			for ( int i = 0; i < soundbankElement.getChildCount(); i++ )
-			{
-				Element soundElement = soundbankElement.getChild( i );
-
-				soundBank.put( soundElement.getName(), SoundInstance.load( soundElement ) );
-			}
-		}
 
 		Element factionElement = xmlElement.getChildByName( "Factions" );
 		if ( factionElement != null )
@@ -344,9 +337,6 @@ public class GameEntity extends Entity
 	public boolean seen = false;
 
 	public String fileName;
-
-	// ----------------------------------------------------------------------
-	public HashMap<String, SoundInstance> soundBank = new HashMap<String, SoundInstance>();
 
 	// ----------------------------------------------------------------------
 	public Array<PassiveAbility> slottedPassiveAbilities = new Array<PassiveAbility>();

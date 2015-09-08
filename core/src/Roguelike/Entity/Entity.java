@@ -62,6 +62,8 @@ public abstract class Entity
 			inventory.load( inventoryElement );
 		}
 
+		canTakeDamage = xml.getBoolean( "CanTakeDamage", canTakeDamage );
+
 		UID = getClass().getSimpleName() + " " + name + ": ID " + hashCode();
 	}
 
@@ -275,6 +277,15 @@ public abstract class Entity
 	}
 
 	// ----------------------------------------------------------------------
+	public void setPopupText( String text, float duration )
+	{
+		popup = text;
+		displayedPopup = "";
+		popupDuration = duration;
+		popupFade = 1;
+	}
+
+	// ----------------------------------------------------------------------
 	public boolean isVariableMapDirty = true;
 
 	// ----------------------------------------------------------------------
@@ -298,8 +309,10 @@ public abstract class Entity
 
 	// ----------------------------------------------------------------------
 	public String popup;
+	public String displayedPopup;
 	public float popupDuration = 0;
 	public float popupFade = 0;
+	public float popupAccumulator = 0;
 
 	// ----------------------------------------------------------------------
 	public Sprite sprite;

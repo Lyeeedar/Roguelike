@@ -1,6 +1,6 @@
 package Roguelike.Util;
 
-public class EnumBitflag<T extends Enum<T>>
+public final class EnumBitflag<T extends Enum<T>>
 {
 	private int bitflag = 0;
 

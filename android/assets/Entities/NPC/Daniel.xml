@@ -11,6 +11,8 @@
 	<Essence>0</Essence>
 	
 	<CanSwap>true</CanSwap>
+	<CanMove>false</CanMove>
+	<CanTakeDamage>false</CanTakeDamage>
 	
 	<Sprite>
 		<Name>Characters/WiseMan</Name>
@@ -20,7 +22,7 @@
 	
 	<Statistics>
 		<MaxHP>130000</MaxHP>
-		<Range>1</<Range>	
+		<Range>5</<Range>	
 	</Statistics>
 	
 </Entity>

@@ -20,5 +20,5 @@
 		</Random>
     </Priority>
     
-    <!--Exclaim Key="Tiles"></Exclaim-->
+    <Exclaim TilesKey="Tiles"></Exclaim>
 </Any>

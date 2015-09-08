@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
-public class DamageOverTimeEvent extends AbstractOnTurnEvent
+public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 {
 	private String condition;
 	private FastEnumMap<Statistic, Integer> scaleLevel = new FastEnumMap<Statistic, Integer>( Statistic.class );

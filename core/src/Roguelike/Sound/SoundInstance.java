@@ -31,7 +31,6 @@ public class SoundInstance
 	public HashSet<String> shoutFaction;
 	public String key;
 	public Object value;
-	public String text;
 
 	private SoundInstance()
 	{
@@ -47,8 +46,15 @@ public class SoundInstance
 	{
 		SoundInstance sound = new SoundInstance();
 		sound.sound = AssetManager.loadSound( xml.get( "Name" ) );
+		sound.range = xml.getInt( "Range", 10 );
+		sound.falloffMin = xml.getInt( "FalloffMin", 5 );
+		sound.volume = xml.getFloat( "Volume", 0.5f );
 
-		sound.text = xml.get( "Text", "" );
+		sound.minPitch = xml.getFloat( "Pitch", sound.minPitch );
+		sound.minPitch = xml.getFloat( "Pitch", sound.maxPitch );
+
+		sound.minPitch = xml.getFloat( "MinPitch", sound.minPitch );
+		sound.maxPitch = xml.getFloat( "MaxPitch", sound.maxPitch );
 
 		return sound;
 	}

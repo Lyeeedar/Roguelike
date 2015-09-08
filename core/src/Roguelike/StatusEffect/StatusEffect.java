@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-public class StatusEffect extends GameEventHandler
+public final class StatusEffect extends GameEventHandler
 {
 	public String name;
 	private String description;
@@ -171,7 +171,7 @@ public class StatusEffect extends GameEventHandler
 
 /*
  * IDEAS
- * 
+ *
  * DOT HOT STAT BUFF STAT DEBUFF BLOCK ON HIT DRAIN DELAYED EXPLOSION TELEPORT
  * ON HIT SLEEP INSANITY TURN DELAY HASTE STOP
  */

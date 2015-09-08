@@ -32,6 +32,8 @@ public class FactionParser
 
 	public Encounter getEncounter( Random ran, int influence )
 	{
+		if ( encounters.size == 0 ) { return null; }
+
 		if ( influence == 100 ) { return encounters.get( encounters.size - 1 ); }
 
 		Array<Encounter> validEncounters = new Array<Encounter>();
@@ -58,14 +60,14 @@ public class FactionParser
 		return null;
 	}
 
-	private void internalLoad( String name )
+	private void internalLoad( String faction, String path )
 	{
 		XmlReader xml = new XmlReader();
 		Element xmlElement = null;
 
 		try
 		{
-			xmlElement = xml.parse( Gdx.files.internal( "Entities/Enemies/" + name + "/" + name + ".xml" ) );
+			xmlElement = xml.parse( Gdx.files.internal( "Entities/" + path + "/" + faction + ".xml" ) );
 		}
 		catch ( IOException e )
 		{
@@ -73,28 +75,40 @@ public class FactionParser
 		}
 
 		Element featuresElement = xmlElement.getChildByName( "Features" );
-		for ( Element featureElement : featuresElement.getChildrenByName( "Feature" ) )
+		if ( featuresElement != null )
 		{
-			Feature feature = Feature.load( featureElement );
-			features.get( feature.type ).add( feature );
+			for ( Element featureElement : featuresElement.getChildrenByName( "Feature" ) )
+			{
+				Feature feature = Feature.load( featureElement );
+				features.get( feature.type ).add( feature );
+			}
 		}
 
 		Element encounterElement = xmlElement.getChildByName( "Encounters" );
 
-		for ( Element encounter : encounterElement.getChildrenByName( "Encounter" ) )
+		if ( encounterElement != null )
 		{
-			Encounter enc = Encounter.load( encounter, name );
-			encounters.add( enc );
+			for ( Element encounter : encounterElement.getChildrenByName( "Encounter" ) )
+			{
+				Encounter enc = Encounter.load( encounter, path );
+				encounters.add( enc );
+			}
 		}
 	}
 
 	public static FactionParser load( String faction )
 	{
-		if ( !Gdx.files.internal( "Entities/Enemies/" + faction + "/" + faction + ".xml" ).exists() ) { return null; }
+		String path = "Enemies/" + faction;
+		if ( !Gdx.files.internal( "Entities/" + path + "/" + faction + ".xml" ).exists() )
+		{
+			path = "NPC/" + faction;
+
+			if ( !Gdx.files.internal( "Entities/" + path + "/" + faction + ".xml" ).exists() ) { return null; }
+		}
 
 		FactionParser fp = new FactionParser();
 
-		fp.internalLoad( faction );
+		fp.internalLoad( faction, path );
 
 		return fp;
 	}
@@ -140,7 +154,7 @@ public class FactionParser
 			return mobArr;
 		}
 
-		public static Encounter load( Element xml, String name )
+		public static Encounter load( Element xml, String path )
 		{
 			Encounter enc = new Encounter();
 			enc.minRange = xml.getInt( "RangeMin", 0 );
@@ -168,7 +182,7 @@ public class FactionParser
 				{
 				}
 
-				mobs.add( new Mob( "Enemies/" + name + "/" + encEl.getName(), weight ) );
+				mobs.add( new Mob( path + "/" + encEl.getName(), weight ) );
 				enc.totalMobWeight += weight;
 			}
 

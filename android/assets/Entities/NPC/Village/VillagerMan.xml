@@ -1,0 +1,27 @@
+<Entity>
+	<Name>Man</Name>
+	
+	<Factions>
+		<Faction>Player</Faction>
+	</Factions>
+	
+	<Dialogue>Dialogue/VillagerMan</Dialogue>
+	
+	<AI>basicMonster</AI>
+	<Essence>0</Essence>
+	
+	<CanSwap>true</CanSwap>
+	<CanMove>true</CanMove>
+	
+	<Sprite>
+		<Name>Characters/Man</Name>
+		<UpdateRate>0.5</UpdateRate>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<Statistics>
+		<MaxHP>130000</MaxHP>
+		<Range>3</<Range>	
+	</Statistics>
+	
+</Entity>

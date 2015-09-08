@@ -10,7 +10,7 @@ import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
 
-public class SaveGameEntity extends SaveableObject<GameEntity>
+public final class SaveGameEntity extends SaveableObject<GameEntity>
 {
 	public String fileName;
 	public int hp;
@@ -83,7 +83,7 @@ public class SaveGameEntity extends SaveableObject<GameEntity>
 	}
 
 	// Neccessary due to Kryo issue with boxed primitives.
-	public static class CooldownWrapper
+	public static final class CooldownWrapper
 	{
 		public float val;
 

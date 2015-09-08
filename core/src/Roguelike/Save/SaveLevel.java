@@ -11,7 +11,7 @@ import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
 
-public class SaveLevel extends SaveableObject<Level>
+public final class SaveLevel extends SaveableObject<Level>
 {
 	public String fileName;
 	public int depth;
@@ -196,7 +196,7 @@ public class SaveLevel extends SaveableObject<Level>
 		UID = "Level " + fileName + ": Depth " + depth + ": ID " + this.hashCode();
 	}
 
-	public static class SaveEssence
+	public static final class SaveEssence
 	{
 		public int essence;
 		public Point pos = new Point();
@@ -214,7 +214,7 @@ public class SaveLevel extends SaveableObject<Level>
 		}
 	}
 
-	public static class SaveLevelItem
+	public static final class SaveLevelItem
 	{
 		public Point pos = new Point();
 		public Item item;

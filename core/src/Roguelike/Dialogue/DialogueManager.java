@@ -33,23 +33,28 @@ public class DialogueManager
 	public int mouseOverInput = -1;
 
 	// ----------------------------------------------------------------------
+	public ExclamationManager exclamationManager;
+
+	// ----------------------------------------------------------------------
 	public boolean processCondition( String condition, String[] reliesOn )
 	{
 		for ( String name : reliesOn )
 		{
-			if ( !data.containsKey( name.toLowerCase() ) )
+			if ( !data.containsKey( name ) && !Global.GlobalVariables.containsKey( name ) )
 			{
-				data.put( name.toLowerCase(), 0 );
+				data.put( name, 0 );
 			}
 		}
 
 		ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
 		EquationHelper.setVariableNames( expB, data, "" );
+		EquationHelper.setVariableNames( expB, Global.GlobalVariables, "" );
 
 		Expression exp = EquationHelper.tryBuild( expB );
 		if ( exp == null ) { return false; }
 
 		EquationHelper.setVariableValues( exp, data, "" );
+		EquationHelper.setVariableValues( exp, Global.GlobalVariables, "" );
 
 		int raw = (int) exp.evaluate();
 
@@ -96,10 +101,20 @@ public class DialogueManager
 	// ----------------------------------------------------------------------
 	public void parse( Element xml )
 	{
-		for ( int i = 0; i < xml.getChildCount(); i++ )
+		Element exclamations = xml.getChildByName( "Exclamations" );
+		if ( exclamations != null )
 		{
-			Element child = xml.getChild( i );
-			dialogueChunks.add( DialogueChunkWrapper.load( child, this ) );
+			exclamationManager = ExclamationManager.load( exclamations );
+		}
+
+		Element dialogue = xml.getChildByName( "Dialogue" );
+		if ( dialogue != null )
+		{
+			for ( int i = 0; i < dialogue.getChildCount(); i++ )
+			{
+				Element child = dialogue.getChild( i );
+				dialogueChunks.add( DialogueChunkWrapper.load( child, this ) );
+			}
 		}
 	}
 

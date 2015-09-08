@@ -25,11 +25,11 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
-public class Item extends GameEventHandler
+public final class Item extends GameEventHandler
 {
 	/*
 	 * IDEAS:
-	 *
+	 * 
 	 * Unlock extra power after condition (absorb x essence, kill x enemy)
 	 */
 

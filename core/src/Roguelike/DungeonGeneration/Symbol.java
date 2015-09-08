@@ -14,7 +14,7 @@ import Roguelike.Util.EnumBitflag;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 //----------------------------------------------------------------------
-public class Symbol implements PathfindingTile
+public final class Symbol implements PathfindingTile
 {
 	public Room containingRoom;
 

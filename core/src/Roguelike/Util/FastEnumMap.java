@@ -1,6 +1,6 @@
 package Roguelike.Util;
 
-public class FastEnumMap<T extends Enum<T>, V>
+public final class FastEnumMap<T extends Enum<T>, V>
 {
 	private Class<T> keyType;
 	private V[] items;

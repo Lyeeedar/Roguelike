@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
-public class CostTaskEvent extends AbstractOnTaskEvent
+public final class CostTaskEvent extends AbstractOnTaskEvent
 {
 	private String condition;
 	private String[] reliesOn;

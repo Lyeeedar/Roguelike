@@ -12,12 +12,9 @@
 	<Sound>
 		<BGM>Heroic Age</BGM>
 		<Ambient />
-
-
 	</Sound>
 
 	<RoomGenerators />
-
 
 	<CorridorStyle>
 		<PathStyle>Straight</PathStyle>
@@ -32,15 +29,38 @@
 				</Sprite>
 			</TileData>
 		</CentralConstant>
+		
+		<SideRecurring>
+	        <PlacementMode>Alternate</PlacementMode>
+	        <Interval>10</Interval>
+	        <Name>Torch</Name>
+	        <EnvironmentData>
+				<Sprite>
+					<Name>Steampunk/StreetLamp</Name>
+				</Sprite>
+				<Passable>false</Passable>
+				<Opaque>false</Opaque>
+				<Light>
+					<Colour>
+						<Green>0.8</Green>
+						<Red>1</Red>
+					</Colour>
+					<Intensity>5</Intensity>
+					<Flicker>2</Flicker>
+					<FlickerPeriod>0.5</FlickerPeriod>
+				</Light>
+			</EnvironmentData>
+	    </SideRecurring>
+		
 	</CorridorStyle>
 
 	<Preprocessor>
-		<Starburst />
+		<Basic />
 	</Preprocessor>
 
 	<Factions>
 		<Major>
-			<NPC>1</NPC>
+			<Village>1</Village>
 		</Major>
 		<Minor />
 
@@ -134,6 +154,8 @@
 					</EnvironmentData>
 				</Symbol>
 			</Symbols>
+			
+			<Orientation>Centre</Orientation>
 
 			<Rows>
 				<Row>#####</Row>
@@ -145,6 +167,8 @@
 		</Transition>
 		
 		<Home>
+		    
+		    <Faction>none</Faction>
 
 			<Symbols>
 
@@ -243,34 +267,12 @@
 				</Symbol>
 				
 				<Symbol Extends=",">
-					<Char>E</Char>
-					<EnvironmentData>
-						<Sprite>
-							<Name>Steampunk/PipeEnd</Name>
-						</Sprite>
-						<Passable>false</Passable>
-						<Opaque>false</Opaque>
-					</EnvironmentData>
-				</Symbol>
-				
-				<Symbol Extends=",">
-					<Char>-</Char>
-					<EnvironmentData>
-						<Sprite>
-							<Name>Steampunk/Pipe</Name>
-						</Sprite>
-						<Passable>false</Passable>
-						<Opaque>false</Opaque>
-					</EnvironmentData>
-				</Symbol>
-				
-				<Symbol Extends=",">
 					<Char>m</Char>
 					<EnvironmentData>
 						<Sprite>
-							<Name>Steampunk/MachinePipeConnection</Name>
+							<Name>Steampunk/MetalPlate</Name>
 						</Sprite>
-						<Passable>false</Passable>
+						<Passable>true</Passable>
 						<Opaque>false</Opaque>
 					</EnvironmentData>
 				</Symbol>
@@ -279,36 +281,14 @@
 					<Char>v</Char>
 					<EnvironmentData>
 						<Sprite>
-							<Name>Steampunk/VatMachine</Name>
+							<Name>Steampunk/Vat</Name>
 						</Sprite>
 						<Passable>false</Passable>
 						<Opaque>false</Opaque>
 					</EnvironmentData>
 				</Symbol>
 				
-				<Symbol Extends=",">
-					<Char>j</Char>
-					<EnvironmentData>
-						<Sprite>
-							<Name>Steampunk/VatJoinMachine</Name>
-						</Sprite>
-						<Passable>false</Passable>
-						<Opaque>false</Opaque>
-					</EnvironmentData>
-				</Symbol>
-				
-				<Symbol Extends=",">
-					<Char>o</Char>
-					<EnvironmentData>
-						<Sprite>
-							<Name>Steampunk/VatExit</Name>
-						</Sprite>
-						<Passable>false</Passable>
-						<Opaque>false</Opaque>
-					</EnvironmentData>
-				</Symbol>
-				
-				<Symbol Extends=",">
+				<Symbol Extends="m">
 					<Char>S</Char>
 					<MetaValue>PlayerSpawn</MetaValue>
 				</Symbol>
@@ -361,7 +341,7 @@
 
 			</Symbols>
 
-			<Orientation>Rotated</Orientation>
+			<Orientation>Centre</Orientation>
 
 			<Rows>Levels/Town/HomeGround</Rows>
 		</Home>
@@ -486,6 +466,11 @@
 						<Passable>false</Passable>
 						<Opaque>false</Opaque>
 					</EnvironmentData>
+				</Symbol>
+				
+				<Symbol Extends="c">
+				    <Char>d</Char>
+				    <EntityData>NPC/Village/Drunkard</EntityData>
 				</Symbol>
 
 			</Symbols>

@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
-public class StatusTaskEvent extends AbstractOnTaskEvent
+public final class StatusTaskEvent extends AbstractOnTaskEvent
 {
 	private String condition;
 	private String[] reliesOn;

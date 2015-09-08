@@ -1,0 +1,28 @@
+<Entity>
+	<Name>Drunkard</Name>
+	
+	<Factions>
+		<Faction>Player</Faction>
+	</Factions>
+	
+	<Dialogue>Dialogue/Drunkard</Dialogue>
+	
+	<AI>basicMonster</AI>
+	<Essence>0</Essence>
+	
+	<CanSwap>true</CanSwap>
+	<CanMove>false</CanMove>
+	<CanTakeDamage>false</CanTakeDamage>
+	
+	<Sprite>
+		<Name>Characters/Drunkard</Name>
+		<UpdateRate>0.5</UpdateRate>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<Statistics>
+		<MaxHP>130000</MaxHP>
+		<Range>1</<Range>	
+	</Statistics>
+	
+</Entity>

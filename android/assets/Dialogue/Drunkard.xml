@@ -1,0 +1,34 @@
+<Data>
+    <Exclamations> 
+        <SeePlayer Cooldown="10">
+	        <Exclamation Condition="rnd(1)<0.3">
+	            <Text>... hic...</Text>
+	            <Sound>
+	                <Name>hey</Name>
+	                <Pitch>1</Pitch>
+	            </Sound>
+	        </Exclamation>
+	        <Exclamation Condition="rnd(1)<0.3">
+	            <Text>... Glug glug glug glug...</Text>
+	            <Sound>
+	                <Name>hey</Name>
+	                <Pitch>1</Pitch>
+	            </Sound>
+	        </Exclamation>
+	        <Exclamation Condition="rnd(1)<0.3">
+	            <Text>... O'coursh I'm not drunk...</Text>
+	            <Sound>
+	                <Name>hey</Name>
+	                <Pitch>1</Pitch>
+	            </Sound>
+	        </Exclamation>
+	        <Exclamation>
+	            <Text>... More beer!...</Text>
+	            <Sound>
+	                <Name>hey</Name>
+	                <Pitch>1</Pitch>
+	            </Sound>
+	        </Exclamation>
+	    </SeePlayer>
+    </Exclamations>
+</Data>

@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 
-public class SaveSeenTile extends SaveableObject<SeenTile>
+public final class SaveSeenTile extends SaveableObject<SeenTile>
 {
 	public boolean seen = false;
 

@@ -3,7 +3,7 @@ package Roguelike.Tiles;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 
-public class Point implements Poolable
+public final class Point implements Poolable
 {
 	public int x;
 	public int y;

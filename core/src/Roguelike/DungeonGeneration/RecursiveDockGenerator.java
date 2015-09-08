@@ -53,7 +53,7 @@ public class RecursiveDockGenerator
 			height = 50;
 		}
 
-		minPadding = ( dfp.corridorStyle.minWidth / 2 ) + 1;
+		minPadding = ( dfp.corridorStyle.width / 2 ) + 1;
 		maxPadding += minPadding;
 		paddedMinRoom = minRoomSize + minPadding * 2;
 
@@ -371,13 +371,13 @@ public class RecursiveDockGenerator
 		}
 
 		requiredRooms.sort( new Comparator<Room>()
-				{
+		{
 			@Override
 			public int compare( Room arg0, Room arg1 )
 			{
 				return arg0.comparisonString().compareTo( arg1.comparisonString() );
 			}
-				} );
+		} );
 	}
 
 	// ----------------------------------------------------------------------
@@ -603,7 +603,7 @@ public class RecursiveDockGenerator
 					}
 				}
 				else
-					// if ( testRoom.roomData.orientation == Orientation.FIXED )
+				// if ( testRoom.roomData.orientation == Orientation.FIXED )
 				{
 					fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
 				}
@@ -824,11 +824,11 @@ public class RecursiveDockGenerator
 
 				if ( door.side == Direction.WEST )
 				{
-					x -= dfp.corridorStyle.minWidth - 1;
+					x -= dfp.corridorStyle.width - 1;
 				}
 				else if ( door.side == Direction.NORTH )
 				{
-					y -= dfp.corridorStyle.minWidth - 1;
+					y -= dfp.corridorStyle.width - 1;
 				}
 
 				Pnt p = new Pnt( x, y );
@@ -854,14 +854,14 @@ public class RecursiveDockGenerator
 			tris.add( tri );
 		}
 		tris.sort( new Comparator<Triangle>()
-		{
+				{
 
 			@Override
 			public int compare( Triangle arg0, Triangle arg1 )
 			{
 				return arg0.compareTo( arg1 );
 			}
-		} );
+				} );
 
 		for ( Triangle tri : tris )
 		{
@@ -877,27 +877,27 @@ public class RecursiveDockGenerator
 			int closestDist = Integer.MAX_VALUE;
 			boolean found = false;
 			outer:
-			for ( Pnt[] path : paths )
-			{
-				for ( Pnt p : path )
+				for ( Pnt[] path : paths )
 				{
-					int px = (int) p.coord( 0 );
-					int py = (int) p.coord( 1 );
-
-					if ( rx == px && ry == py )
+					for ( Pnt p : path )
 					{
-						found = true;
-						break outer;
-					}
+						int px = (int) p.coord( 0 );
+						int py = (int) p.coord( 1 );
 
-					int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
-					if ( tempDist < closestDist )
-					{
-						closestDist = tempDist;
-						closest = p;
+						if ( rx == px && ry == py )
+						{
+							found = true;
+							break outer;
+						}
+
+						int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
+						if ( tempDist < closestDist )
+						{
+							closestDist = tempDist;
+							closest = p;
+						}
 					}
 				}
-			}
 
 			if ( !found )
 			{
@@ -912,7 +912,7 @@ public class RecursiveDockGenerator
 			int x2 = (int) p[1].coord( 0 );
 			int y2 = (int) p[1].coord( 1 );
 
-			AStarPathfind pathFind = new AStarPathfind( tiles, x1, y1, x2, y2, false, true, dfp.corridorStyle.minWidth, GeneratorPassability );
+			AStarPathfind pathFind = new AStarPathfind( tiles, x1, y1, x2, y2, false, true, dfp.corridorStyle.width, GeneratorPassability );
 			Array<Point> path = pathFind.getPath();
 
 			carveCorridor( path );
@@ -928,7 +928,7 @@ public class RecursiveDockGenerator
 		int sideCount = 0;
 		boolean placementAlternator = true;
 
-		int width = dfp.corridorStyle.minWidth;
+		int width = dfp.corridorStyle.width;
 
 		for ( int i = 0; i < path.size; i++ )
 		{
@@ -1004,56 +1004,86 @@ public class RecursiveDockGenerator
 					Symbol wall = dfp.sharedSymbolMap.get( '#' );
 					if ( path.get( i - 1 ).x != pos.x )
 					{
-						if ( placeTop && tiles[pos.x + width / 2][pos.y - 1].symbol == wall )
+						if ( dfp.corridorStyle.width == 1 )
 						{
-							t = tiles[pos.x + width / 2][pos.y];
-							t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
-							t.symbol.attachLocation = Direction.NORTH;
-							t.placerHashCode = path.hashCode();
-						}
+							if ( placeTop && isEmpty( tiles[pos.x + width / 2][pos.y - 1] ) )
+							{
+								t = tiles[pos.x + width / 2][pos.y - 1];
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol.attachLocation = Direction.NORTH;
+								t.placerHashCode = path.hashCode();
+							}
 
-						if ( placeBottom && tiles[pos.x + width / 2][pos.y + width].symbol == wall )
+							if ( placeBottom && isEmpty( tiles[pos.x + width / 2][pos.y + width] ) )
+							{
+								t = tiles[pos.x + width / 2][pos.y + width];
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol.attachLocation = Direction.SOUTH;
+								t.placerHashCode = path.hashCode();
+							}
+						}
+						else
 						{
-							t = tiles[pos.x + width / 2][pos.y + width - 1];
-							t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
-							t.symbol.attachLocation = Direction.SOUTH;
-							t.placerHashCode = path.hashCode();
+							if ( placeTop && tiles[pos.x + width / 2][pos.y - 1].symbol == wall )
+							{
+								t = tiles[pos.x + width / 2][pos.y];
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol.attachLocation = Direction.NORTH;
+								t.placerHashCode = path.hashCode();
+							}
+
+							if ( placeBottom && tiles[pos.x + width / 2][pos.y + width].symbol == wall )
+							{
+								t = tiles[pos.x + width / 2][pos.y + width - 1];
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol.attachLocation = Direction.SOUTH;
+								t.placerHashCode = path.hashCode();
+							}
 						}
 					}
 					else
 					{
-						if ( placeTop && tiles[pos.x - 1][pos.y + width / 2].symbol == wall )
+						if ( dfp.corridorStyle.width == 1 )
 						{
-							t = tiles[pos.x][pos.y + width / 2];
-							t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
-							t.symbol.attachLocation = Direction.EAST;
-							t.placerHashCode = path.hashCode();
-						}
+							if ( placeTop && isEmpty( tiles[pos.x - 1][pos.y + width / 2] ) )
+							{
+								t = tiles[pos.x - 1][pos.y + width / 2];
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol.attachLocation = Direction.EAST;
+								t.placerHashCode = path.hashCode();
+							}
 
-						if ( placeBottom && tiles[pos.x + width][pos.y + width / 2].symbol == wall )
+							if ( placeBottom && isEmpty( tiles[pos.x + width][pos.y + width / 2] ) )
+							{
+								t = tiles[pos.x + width][pos.y + width / 2];
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol.attachLocation = Direction.WEST;
+								t.placerHashCode = path.hashCode();
+							}
+						}
+						else
 						{
-							t = tiles[pos.x + width - 1][pos.y + width / 2];
-							t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
-							t.symbol.attachLocation = Direction.WEST;
-							t.placerHashCode = path.hashCode();
+							if ( placeTop && tiles[pos.x - 1][pos.y + width / 2].symbol == wall )
+							{
+								t = tiles[pos.x][pos.y + width / 2];
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol.attachLocation = Direction.EAST;
+								t.placerHashCode = path.hashCode();
+							}
+
+							if ( placeBottom && tiles[pos.x + width][pos.y + width / 2].symbol == wall )
+							{
+								t = tiles[pos.x + width - 1][pos.y + width / 2];
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol.attachLocation = Direction.WEST;
+								t.placerHashCode = path.hashCode();
+							}
 						}
 					}
 
 					sideCount = 0;
 					placementAlternator = !placementAlternator;
 				}
-			}
-
-			if ( dfp.corridorStyle.maxWidth != dfp.corridorStyle.minWidth )
-			{
-				int targetWidth = i > path.size - 3 ? dfp.corridorStyle.minWidth : dfp.corridorStyle.minWidth
-						+ ran.nextInt( dfp.corridorStyle.maxWidth - dfp.corridorStyle.minWidth );
-
-				int total = width + targetWidth;
-
-				width = total / 2;
-
-				System.out.println( width );
 			}
 		}
 	}
@@ -1685,7 +1715,7 @@ public class RecursiveDockGenerator
 	// region Classes
 
 	// ----------------------------------------------------------------------
-	public static class Room
+	public static final class Room
 	{
 		// ----------------------------------------------------------------------
 		public Direction orientation = Direction.CENTER;
@@ -1857,19 +1887,19 @@ public class RecursiveDockGenerator
 				if ( doorSide == 0 )
 				{
 					x = 0;
-					y = 1 + ran.nextInt( height - ( 1 + dfp.corridorStyle.minWidth ) );
+					y = 1 + ran.nextInt( height - ( 1 + dfp.corridorStyle.width ) );
 
-					for ( int c = 0; c < dfp.corridorStyle.minWidth; c++ )
+					for ( int c = 0; c < dfp.corridorStyle.width; c++ )
 					{
 						roomContents[x][y + c] = floor;
 					}
 				}
 				else if ( doorSide == 1 )
 				{
-					x = 1 + ran.nextInt( width - ( 1 + dfp.corridorStyle.minWidth ) );
+					x = 1 + ran.nextInt( width - ( 1 + dfp.corridorStyle.width ) );
 					y = 0;
 
-					for ( int c = 0; c < dfp.corridorStyle.minWidth; c++ )
+					for ( int c = 0; c < dfp.corridorStyle.width; c++ )
 					{
 						roomContents[x + c][y] = floor;
 					}
@@ -1877,19 +1907,19 @@ public class RecursiveDockGenerator
 				else if ( doorSide == 2 )
 				{
 					x = width - 1;
-					y = 1 + ran.nextInt( height - ( 1 + dfp.corridorStyle.minWidth ) );
+					y = 1 + ran.nextInt( height - ( 1 + dfp.corridorStyle.width ) );
 
-					for ( int c = 0; c < dfp.corridorStyle.minWidth; c++ )
+					for ( int c = 0; c < dfp.corridorStyle.width; c++ )
 					{
 						roomContents[x][y + c] = floor;
 					}
 				}
 				else if ( doorSide == 3 )
 				{
-					x = 1 + ran.nextInt( width - ( 1 + dfp.corridorStyle.minWidth ) );
+					x = 1 + ran.nextInt( width - ( 1 + dfp.corridorStyle.width ) );
 					y = height - 1;
 
-					for ( int c = 0; c < dfp.corridorStyle.minWidth; c++ )
+					for ( int c = 0; c < dfp.corridorStyle.width; c++ )
 					{
 						roomContents[x + c][y] = floor;
 					}
@@ -1904,9 +1934,9 @@ public class RecursiveDockGenerator
 						done = true;
 					}
 
-					for ( int ix = 0; ix < dfp.corridorStyle.minWidth; ix++ )
+					for ( int ix = 0; ix < dfp.corridorStyle.width; ix++ )
 					{
-						for ( int iy = 0; iy < dfp.corridorStyle.minWidth; iy++ )
+						for ( int iy = 0; iy < dfp.corridorStyle.width; iy++ )
 						{
 							int nx = pos.x + ix;
 							int ny = pos.y + iy;
@@ -2273,17 +2303,20 @@ public class RecursiveDockGenerator
 				// place mobs
 				Encounter enc = faction.getEncounter( ran, influence );
 
-				for ( String mob : enc.getMobsToPlace( influence, spawnList.size ) )
+				if ( enc != null )
 				{
-					if ( spawnList.size == 0 )
+					for ( String mob : enc.getMobsToPlace( influence, spawnList.size ) )
 					{
-						break;
+						if ( spawnList.size == 0 )
+						{
+							break;
+						}
+
+						int[] pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
+
+						roomContents[pos[0]][pos[1]] = roomContents[pos[0]][pos[1]].copy();
+						roomContents[pos[0]][pos[1]].entityData = mob;
 					}
-
-					int[] pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
-
-					roomContents[pos[0]][pos[1]] = roomContents[pos[0]][pos[1]].copy();
-					roomContents[pos[0]][pos[1]].entityData = mob;
 				}
 			}
 		}
@@ -2291,9 +2324,9 @@ public class RecursiveDockGenerator
 		// ----------------------------------------------------------------------
 		private void addDoor( int pos, int space, Direction dir, Random ran, DungeonFileParser dfp )
 		{
-			if ( space >= dfp.corridorStyle.minWidth )
+			if ( space >= dfp.corridorStyle.width )
 			{
-				int offset = space > dfp.corridorStyle.minWidth ? ran.nextInt( space - dfp.corridorStyle.minWidth ) : 0;
+				int offset = space > dfp.corridorStyle.width ? ran.nextInt( space - dfp.corridorStyle.width ) : 0;
 
 				if ( dir == Direction.WEST )
 				{
@@ -2422,7 +2455,7 @@ public class RecursiveDockGenerator
 	}
 
 	// ----------------------------------------------------------------------
-	public static class RoomDoor
+	public static final class RoomDoor
 	{
 		public Direction side;
 		public int[] pos;

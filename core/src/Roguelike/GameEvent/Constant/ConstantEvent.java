@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
-public class ConstantEvent
+public final class ConstantEvent
 {
 	public FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
 	private String[] reliesOn;

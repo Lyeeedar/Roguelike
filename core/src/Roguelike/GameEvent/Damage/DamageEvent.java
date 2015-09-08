@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
-public class DamageEvent extends AbstractOnDamageEvent
+public final class DamageEvent extends AbstractOnDamageEvent
 {
 	private String condition;
 	private FastEnumMap<Tier1Element, String> equations = new FastEnumMap<Tier1Element, String>( Tier1Element.class );

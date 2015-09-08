@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
-public class Sprite
+public final class Sprite
 {
 	public enum AnimationMode
 	{
@@ -190,7 +190,7 @@ public class Sprite
 		return sprite;
 	}
 
-	public static class AnimationState
+	public static final class AnimationState
 	{
 		public AnimationMode mode;
 

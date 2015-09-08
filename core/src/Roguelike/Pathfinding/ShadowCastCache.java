@@ -8,7 +8,7 @@ import Roguelike.Util.EnumBitflag;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 
-public class ShadowCastCache
+public final class ShadowCastCache
 {
 	private final EnumBitflag<Passability> LightPassability;
 

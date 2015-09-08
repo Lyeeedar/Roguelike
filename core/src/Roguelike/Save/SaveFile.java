@@ -1,8 +1,9 @@
 package Roguelike.Save;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import kryo.FastEnumMapSerializer;
 import Roguelike.AssetManager;
@@ -58,8 +59,10 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-public class SaveFile
+public final class SaveFile
 {
+	private static Kryo kryo;
+
 	public String currentLevel;
 	public HashMap<String, SaveLevel> allLevels;
 	public SaveAbilityPool abilityPool;
@@ -69,14 +72,17 @@ public class SaveFile
 
 	public void save()
 	{
-		Kryo kryo = new Kryo();
-		kryo.setRegistrationRequired( true );
-		kryo.setAsmEnabled( Global.ANDROID );
+		setupKryo();
 
-		registerSerializers( kryo );
-		registerClasses( kryo );
-
-		Output output = new Output( Gdx.files.local( "save.dat" ).write( false ) );
+		Output output = null;
+		try
+		{
+			output = new Output( new GZIPOutputStream( Gdx.files.local( "save.dat" ).write( false ) ) );
+		}
+		catch ( IOException e )
+		{
+			e.printStackTrace();
+		}
 
 		output.writeString( currentLevel );
 		kryo.writeObject( output, allLevels );
@@ -86,23 +92,20 @@ public class SaveFile
 		kryo.writeObject( output, globalNames );
 
 		output.close();
+
+		System.out.println( "Saved" );
 	}
 
 	public void load()
 	{
-		Kryo kryo = new Kryo();
-		kryo.setRegistrationRequired( true );
-		kryo.setAsmEnabled( Global.ANDROID );
-
-		registerSerializers( kryo );
-		registerClasses( kryo );
+		setupKryo();
 
 		Input input = null;
 		try
 		{
-			input = new Input( new FileInputStream( "save.dat" ) );
+			input = new Input( new GZIPInputStream( Gdx.files.local( "save.dat" ).read() ) );
 		}
-		catch ( FileNotFoundException e )
+		catch ( IOException e )
 		{
 			e.printStackTrace();
 		}
@@ -117,12 +120,25 @@ public class SaveFile
 		input.close();
 	}
 
+	private void setupKryo()
+	{
+		if ( kryo == null )
+		{
+			kryo = new Kryo();
+			kryo.setRegistrationRequired( true );
+			kryo.setAsmEnabled( Global.ANDROID );
+
+			registerSerializers( kryo );
+			registerClasses( kryo );
+		}
+	}
+
 	private void registerSerializers( Kryo kryo )
 	{
 		kryo.register( FastEnumMap.class, new FastEnumMapSerializer() );
 
 		kryo.register( Array.class, new Serializer<Array>()
-				{
+		{
 			{
 				setAcceptsNull( true );
 			}
@@ -193,10 +209,10 @@ public class SaveFile
 				}
 				return array;
 			}
-		} );
+				} );
 
 		kryo.register( Color.class, new Serializer<Color>()
-				{
+		{
 			@Override
 			public Color read( Kryo kryo, Input input, Class<Color> type )
 			{
@@ -210,10 +226,10 @@ public class SaveFile
 			{
 				output.writeInt( Color.rgba8888( color ) );
 			}
-		} );
+				} );
 
 		kryo.register( Sprite.class, new Serializer<Sprite>()
-				{
+		{
 			@Override
 			public Sprite read( Kryo kryo, Input input, Class<Sprite> type )
 			{
@@ -238,10 +254,10 @@ public class SaveFile
 				output.writeInt( sprite.animationState.mode.ordinal() );
 				output.writeFloats( sprite.baseScale );
 			}
-		} );
+				} );
 
 		kryo.register( Element.class, new Serializer<Element>()
-				{
+		{
 			@Override
 			public Element read( Kryo kryo, Input input, Class<Element> type )
 			{
@@ -257,7 +273,7 @@ public class SaveFile
 			{
 				output.writeString( element.toString() );
 			}
-		} );
+				} );
 	}
 
 	private void registerClasses( Kryo kryo )

@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
-public class StatusEvent extends AbstractOnDamageEvent
+public final class StatusEvent extends AbstractOnDamageEvent
 {
 	public String condition;
 	public Element attackerStatus;

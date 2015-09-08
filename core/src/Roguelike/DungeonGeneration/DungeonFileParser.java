@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public class DungeonFileParser
 {
 	// ----------------------------------------------------------------------
-	public static class CorridorStyle
+	public static final class CorridorStyle
 	{
 		public enum PathStyle
 		{
@@ -28,8 +28,7 @@ public class DungeonFileParser
 
 		public PathStyle pathStyle = PathStyle.STRAIGHT;
 
-		public int minWidth;
-		public int maxWidth;
+		public int width;
 
 		public CorridorFeature centralConstant;
 		public CorridorFeature centralRecurring;
@@ -39,12 +38,7 @@ public class DungeonFileParser
 		{
 			pathStyle = PathStyle.valueOf( xml.get( "PathStyle", "Straight" ).toUpperCase() );
 
-			if ( xml.getInt( "Width", -1 ) != -1 )
-			{
-				minWidth = maxWidth = xml.getInt( "Width" );
-			}
-			minWidth = xml.getInt( "MinWidth", minWidth );
-			maxWidth = xml.getInt( "MaxWidth", maxWidth );
+			width = xml.getInt( "Width", 1 );
 
 			Element centralConstantElement = xml.getChildByName( "CentralConstant" );
 			if ( centralConstantElement != null )
@@ -67,7 +61,7 @@ public class DungeonFileParser
 	}
 
 	// ----------------------------------------------------------------------
-	public static class CorridorFeature
+	public static final class CorridorFeature
 	{
 		public enum PlacementMode
 		{
@@ -105,14 +99,14 @@ public class DungeonFileParser
 	}
 
 	// ----------------------------------------------------------------------
-	public static class RoomGenerator
+	public static final class RoomGenerator
 	{
 		public AbstractRoomGenerator generator;
 		public int weight;
 	}
 
 	// ----------------------------------------------------------------------
-	public static class Faction
+	public static final class Faction
 	{
 		public String name;
 		public int weight;
@@ -125,7 +119,7 @@ public class DungeonFileParser
 	}
 
 	// ----------------------------------------------------------------------
-	public static class DFPRoom
+	public static final class DFPRoom
 	{
 		// ----------------------------------------------------------------------
 		public enum Orientation

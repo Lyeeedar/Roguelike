@@ -2,6 +2,7 @@ package Roguelike.Dialogue;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import Roguelike.Dialogue.DialogueManager.ReturnType;
 
 import com.badlogic.gdx.utils.Array;
@@ -52,19 +53,21 @@ public class DialogueActionBranch extends AbstractDialogueAction
 	{
 		for ( String name : reliesOn )
 		{
-			if ( !manager.data.containsKey( name.toLowerCase() ) )
+			if ( !manager.data.containsKey( name ) && !Global.GlobalVariables.containsKey( name ) )
 			{
-				manager.data.put( name.toLowerCase(), 0 );
+				manager.data.put( name, 0 );
 			}
 		}
 
 		ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
 		EquationHelper.setVariableNames( expB, manager.data, "" );
+		EquationHelper.setVariableNames( expB, Global.GlobalVariables, "" );
 
 		Expression exp = EquationHelper.tryBuild( expB );
 		if ( exp == null ) { return false; }
 
 		EquationHelper.setVariableValues( exp, manager.data, "" );
+		EquationHelper.setVariableValues( exp, Global.GlobalVariables, "" );
 
 		int raw = (int) exp.evaluate();
 

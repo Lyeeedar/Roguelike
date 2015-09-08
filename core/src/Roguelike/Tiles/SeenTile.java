@@ -165,7 +165,7 @@ public class SeenTile
 		}
 	}
 
-	public static class SeenHistoryItem
+	public static final class SeenHistoryItem
 	{
 		public Sprite sprite;
 		public AnimationState animationState = new AnimationState();
