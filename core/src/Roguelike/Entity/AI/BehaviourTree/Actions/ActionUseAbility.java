@@ -15,32 +15,32 @@ public class ActionUseAbility extends AbstractAction
 	String abilityKey;
 
 	@Override
-	public BehaviourTreeState evaluate(GameEntity entity)
+	public BehaviourTreeState evaluate( GameEntity entity )
 	{
-		ActiveAbility ability = (ActiveAbility)getData(abilityKey, null);
-		
+		ActiveAbility ability = (ActiveAbility) getData( abilityKey, null );
+
 		// if no target or ability, fail
-		if (ability == null)
+		if ( ability == null )
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
-		
+
 		ability.caster = entity;
-		ability.source = entity.tile;
-		
+		ability.source = entity.tile[0][0];
+
 		Array<Point> validTargets = ability.getValidTargets();
-		
-		if (validTargets.size == 0)
+
+		if ( validTargets.size == 0 )
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
-		
-		entity.tasks.add(new TaskUseAbility(validTargets.get(0).copy(), ability));
-		
-		Pools.freeAll(validTargets);
-		
+
+		entity.tasks.add( new TaskUseAbility( validTargets.get( 0 ).copy(), ability ) );
+
+		Pools.freeAll( validTargets );
+
 		State = BehaviourTreeState.SUCCEEDED;
 		return State;
 	}
@@ -51,8 +51,8 @@ public class ActionUseAbility extends AbstractAction
 	}
 
 	@Override
-	public void parse(Element xmlElement)
+	public void parse( Element xmlElement )
 	{
-		abilityKey = xmlElement.getAttribute("Key");
+		abilityKey = xmlElement.getAttribute( "Key" );
 	}
 }

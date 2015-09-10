@@ -14,41 +14,41 @@ public class ActionConvertTo extends AbstractAction
 	{
 		POSITION
 	}
-	
+
 	ConvertType Type;
 	String InputKey;
 	String OutputKey;
 
 	@Override
-	public BehaviourTreeState evaluate(GameEntity entity)
+	public BehaviourTreeState evaluate( GameEntity entity )
 	{
-		Object o = getData(InputKey, null);
-		
-		if (o == null)
+		Object o = getData( InputKey, null );
+
+		if ( o == null )
 		{
 			State = BehaviourTreeState.FAILED;
 		}
 		else
 		{
-			if (Type == ConvertType.POSITION)
+			if ( Type == ConvertType.POSITION )
 			{
-				Object storedVal = getData(OutputKey, null);
-				if (storedVal != null && storedVal instanceof Point) 
-				{ 
-					Pools.free((Point)storedVal); 
-					setData(OutputKey, null); 
-				}
-				
-				if (o instanceof GameTile)
+				Object storedVal = getData( OutputKey, null );
+				if ( storedVal != null && storedVal instanceof Point )
 				{
-					GameTile gt = (GameTile)o;					
-					setData(OutputKey, Pools.obtain(Point.class).set(gt.x, gt.y));					
+					Pools.free( storedVal );
+					setData( OutputKey, null );
+				}
+
+				if ( o instanceof GameTile )
+				{
+					GameTile gt = (GameTile) o;
+					setData( OutputKey, Pools.obtain( Point.class ).set( gt.x, gt.y ) );
 					State = BehaviourTreeState.SUCCEEDED;
 				}
-				else if (o instanceof GameEntity)
+				else if ( o instanceof GameEntity )
 				{
-					GameEntity e = (GameEntity)o;					
-					setData(OutputKey, Pools.obtain(Point.class).set(e.tile.x, e.tile.y));					
+					GameEntity e = (GameEntity) o;
+					setData( OutputKey, Pools.obtain( Point.class ).set( e.tile[0][0].x, e.tile[0][0].y ) );
 					State = BehaviourTreeState.SUCCEEDED;
 				}
 				else
@@ -57,7 +57,7 @@ public class ActionConvertTo extends AbstractAction
 				}
 			}
 		}
-		
+
 		return State;
 	}
 
@@ -67,11 +67,11 @@ public class ActionConvertTo extends AbstractAction
 	}
 
 	@Override
-	public void parse(Element xmlElement)
+	public void parse( Element xmlElement )
 	{
-		Type = ConvertType.valueOf(xmlElement.getAttribute("Type").toUpperCase());
-		InputKey = xmlElement.getAttribute("InputKey");
-		OutputKey = xmlElement.getAttribute("OutputKey");
+		Type = ConvertType.valueOf( xmlElement.getAttribute( "Type" ).toUpperCase() );
+		InputKey = xmlElement.getAttribute( "InputKey" );
+		OutputKey = xmlElement.getAttribute( "OutputKey" );
 	}
 
 }

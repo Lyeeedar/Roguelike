@@ -141,7 +141,7 @@ public class Level
 				{
 					if ( aa != null )
 					{
-						aa.source = player.tile;
+						aa.source = player.tile[0][0];
 						aa.hasValidTargets = aa.getValidTargets().size > 0;
 					}
 				}
@@ -215,7 +215,7 @@ public class Level
 					{
 						int lx = t.x;
 						int ly = t.y;
-						if ( checkLightCloseEnough( lx, ly, (int) aa.light.baseIntensity, player.tile.x, player.tile.y, playerViewRange ) )
+						if ( checkLightCloseEnough( lx, ly, (int) aa.light.baseIntensity, player.tile[0][0].x, player.tile[0][0].y, playerViewRange ) )
 						{
 							Light light = aa.light.copy();
 							light.lx = lx;
@@ -250,7 +250,7 @@ public class Level
 			}
 		}
 
-		Array<Point> output = visibilityData.getShadowCast( Grid, player.tile.x, player.tile.y, player.getVariable( Statistic.RANGE ) );
+		Array<Point> output = visibilityData.getShadowCast( Grid, player.tile[0][0].x, player.tile[0][0].y, player.getVariable( Statistic.RANGE ) );
 
 		for ( Point tilePos : output )
 		{
@@ -353,8 +353,8 @@ public class Level
 		int lx = tile.x;
 		int ly = tile.y;
 
-		int px = player.tile.x;
-		int py = player.tile.y;
+		int px = player.tile[0][0].x;
+		int py = player.tile[0][0].y;
 
 		if ( tile.hasFields )
 		{
@@ -469,9 +469,9 @@ public class Level
 
 				if ( e.canTakeDamage && e != player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
-					e.tile.entity = null;
+					e.tile[0][0].entity = null;
 
-					dropItems( e.getInventory(), e.tile, e.essence );
+					dropItems( e.getInventory(), e.tile[0][0], e.essence );
 				}
 				else if ( e == player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
@@ -496,9 +496,9 @@ public class Level
 
 				if ( e.canTakeDamage && e != player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
-					e.tile.environmentEntity = null;
+					e.tile[0][0].environmentEntity = null;
 
-					dropItems( e.getInventory(), e.tile, e.essence );
+					dropItems( e.getInventory(), e.tile[0][0], e.essence );
 				}
 
 				if ( e.popupDuration <= 0 && e.popupFade <= 0 )
@@ -784,15 +784,15 @@ public class Level
 				}
 			}
 
-			if ( player.tile.essence > 0 )
+			if ( player.tile[0][0].essence > 0 )
 			{
-				GameScreen.Instance.addActorEssenceAction( player, player.tile.essence );
+				GameScreen.Instance.addActorEssenceAction( player, player.tile[0][0].essence );
 
-				player.essence += player.tile.essence;
-				player.tile.essence = 0;
+				player.essence += player.tile[0][0].essence;
+				player.tile[0][0].essence = 0;
 			}
 
-			player.tile.processFieldEffectsForEntity( player, actionCost );
+			player.tile[0][0].processFieldEffectsForEntity( player, actionCost );
 
 			// check if enemy visible
 			if ( enemyVisible() )
@@ -849,7 +849,7 @@ public class Level
 					float actionCost = task.cost * e.getActionDelay();
 					e.actionDelayAccumulator -= actionCost * e.getActionDelay();
 
-					e.tile.processFieldEffectsForEntity( e, actionCost );
+					e.tile[0][0].processFieldEffectsForEntity( e, actionCost );
 				}
 				else
 				{
@@ -861,7 +861,7 @@ public class Level
 			{
 				itr.remove();
 			}
-			else if ( !e.tile.visible )
+			else if ( !e.tile[0][0].visible )
 			{
 				// If entity is now invisible, submit to the invisible list to
 				// be processed
@@ -914,7 +914,7 @@ public class Level
 						float actionCost = task.cost * e.getActionDelay();
 						e.actionDelayAccumulator -= actionCost * e.getActionDelay();
 
-						e.tile.processFieldEffectsForEntity( e, actionCost );
+						e.tile[0][0].processFieldEffectsForEntity( e, actionCost );
 					}
 					else
 					{
@@ -926,7 +926,7 @@ public class Level
 				{
 					itr.remove();
 				}
-				else if ( e.tile.visible )
+				else if ( e.tile[0][0].visible )
 				{
 					// If entity is now visible, submit to the visible list to
 					// be processed
@@ -947,7 +947,7 @@ public class Level
 				GameEntity e = Grid[x][y].entity;
 				if ( e != null && e != player )
 				{
-					if ( e.tile.visible )
+					if ( e.tile[0][0].visible )
 					{
 						e.seen = true;
 					}
@@ -956,7 +956,7 @@ public class Level
 						continue;
 					}
 
-					if ( Math.min( Math.abs( x - player.tile.x ), Math.abs( y - player.tile.y ) ) > 25 )
+					if ( Math.min( Math.abs( x - player.tile[0][0].x ), Math.abs( y - player.tile[0][0].y ) ) > 25 )
 					{
 						continue;
 					}
@@ -1190,7 +1190,7 @@ public class Level
 
 	private boolean hasActiveEffects( Entity e )
 	{
-		if ( e.tile.spriteEffects.size > 0 ) { return true; }
+		if ( e.tile[0][0].spriteEffects.size > 0 ) { return true; }
 
 		boolean activeEffects = false;
 

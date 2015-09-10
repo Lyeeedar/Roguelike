@@ -45,11 +45,6 @@ public class AStarPathfind
 
 	private PriorityQueue<Node> openList = new PriorityQueue<Node>();
 
-	public AStarPathfind( PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, boolean findOptimal, EnumBitflag<Passability> travelType )
-	{
-		this( grid, startx, starty, endx, endy, canMoveDiagonal, findOptimal, 1, travelType );
-	}
-
 	public AStarPathfind( PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, boolean findOptimal, int actorSize, EnumBitflag<Passability> travelType )
 	{
 		this.grid = grid;

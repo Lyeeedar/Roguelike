@@ -228,8 +228,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		Global.CurrentLevel.update( delta );
 
-		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile[0][0].x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile[0][0].y * Global.TileSize;
 
 		if ( Global.CurrentLevel.player.sprite.spriteAnimation instanceof MoveAnimation )
 		{
@@ -434,7 +434,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							}
 						}
 
-						if ( entity.tile.visible && entity.popup != null )
+						if ( entity.tile[0][0].visible && entity.popup != null )
 						{
 							entitiesWithSpeech.add( entity );
 						}
@@ -446,7 +446,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					{
 						toBeDrawn.add( entity );
 
-						if ( entity.tile.visible && entity.popup != null )
+						if ( entity.tile[0][0].visible && entity.popup != null )
 						{
 							entitiesWithSpeech.add( entity );
 						}
@@ -681,13 +681,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		for ( GameEntity entity : toBeDrawn )
 		{
-			int x = entity.tile.x;
-			int y = entity.tile.y;
+			int x = entity.tile[0][0].x;
+			int y = entity.tile[0][0].y;
 
 			int cx = x * Global.TileSize + offsetx;
 			int cy = y * Global.TileSize + offsety;
 
-			batch.setColor( entity.tile.light );
+			batch.setColor( entity.tile[0][0].light );
 
 			entity.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
 
@@ -711,8 +711,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			for ( EnvironmentEntity ee : overHead )
 			{
-				int cx = ee.tile.x * Global.TileSize + offsetx;
-				int cy = ee.tile.y * Global.TileSize + offsety;
+				int cx = ee.tile[0][0].x * Global.TileSize + offsetx;
+				int cy = ee.tile[0][0].y * Global.TileSize + offsety;
 
 				if ( ee.location == Direction.CENTER )
 				{
@@ -737,8 +737,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		for ( Entity e : hpBars )
 		{
-			int x = e.tile.x;
-			int y = e.tile.y;
+			int x = e.tile[0][0].x;
+			int y = e.tile[0][0].y;
 
 			int cx = x * Global.TileSize + offsetx;
 			int cy = y * Global.TileSize + offsety;
@@ -854,7 +854,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		for ( Entity entity : entitiesWithSpeech )
 		{
-			if ( entity.popupDuration <= 0 )
+			if ( entity.popupDuration <= 0 && entity.displayedPopup.length() == entity.popup.length() )
 			{
 				entity.popupFade -= delta;
 
@@ -865,8 +865,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 			}
 
-			int x = entity.tile.x;
-			int y = entity.tile.y;
+			int x = entity.tile[0][0].x;
+			int y = entity.tile[0][0].y;
 
 			y += 1;
 
@@ -897,9 +897,14 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			}
 
 			float alpha = 1;
-			if ( entity.popupDuration <= 0 )
+			if ( entity.popupDuration <= 0 && entity.displayedPopup.length() == entity.popup.length() )
 			{
 				alpha *= entity.popupFade;
+
+				if ( alpha < 0 )
+				{
+					alpha = 0;
+				}
 			}
 
 			float width = layout.width;
@@ -920,8 +925,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			int padding = Global.ANDROID ? 20 : 10;
 
-			int x = Global.CurrentDialogue.entity.tile.x;
-			int y = Global.CurrentDialogue.entity.tile.y;
+			int x = Global.CurrentDialogue.entity.tile[0][0].x;
+			int y = Global.CurrentDialogue.entity.tile[0][0].y;
 
 			int cx = x * Global.TileSize + offsetx + Global.TileSize / 2;
 			int cy = y * Global.TileSize + offsety;
@@ -1079,27 +1084,27 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			Field field = Field.load( "Water" );
 			field.stacks = 10;
-			GameTile playerTile = Global.CurrentLevel.player.tile;
+			GameTile playerTile = Global.CurrentLevel.player.tile[0][0];
 			field.trySpawnInTile( playerTile, 10 );
 		}
 		else if ( keycode == Keys.F )
 		{
 			Field field = Field.load( "Fire" );
 			field.stacks = 1;
-			GameTile playerTile = Global.CurrentLevel.player.tile;
+			GameTile playerTile = Global.CurrentLevel.player.tile[0][0];
 			field.trySpawnInTile( playerTile, 1 );
 		}
 		else if ( keycode == Keys.G )
 		{
 			Field field = Field.load( "IceFog" );
 			field.stacks = 4;
-			GameTile playerTile = Global.CurrentLevel.player.tile;
+			GameTile playerTile = Global.CurrentLevel.player.tile[0][0];
 			field.trySpawnInTile( playerTile, 4 );
 		}
 		else if ( keycode == Keys.H )
 		{
 			Field field = Field.load( "Static" );
-			GameTile playerTile = Global.CurrentLevel.player.tile;
+			GameTile playerTile = Global.CurrentLevel.player.tile[0][0];
 			GameTile newTile = playerTile.level.getGameTile( playerTile.x + 1, playerTile.y + 1 );
 			field.trySpawnInTile( newTile, 10 );
 		}
@@ -1121,13 +1126,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 		else if ( keycode == Keys.ENTER )
 		{
-			if ( Global.CurrentLevel.player.tile.environmentEntity != null )
+			if ( Global.CurrentLevel.player.tile[0][0].environmentEntity != null )
 			{
-				for ( ActivationAction action : Global.CurrentLevel.player.tile.environmentEntity.actions )
+				for ( ActivationAction action : Global.CurrentLevel.player.tile[0][0].environmentEntity.actions )
 				{
 					if ( action.visible )
 					{
-						action.activate( Global.CurrentLevel.player.tile.environmentEntity );
+						action.activate( Global.CurrentLevel.player.tile[0][0].environmentEntity );
 						Global.CurrentLevel.player.tasks.add( new TaskWait() );
 						break;
 					}
@@ -1220,8 +1225,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			int mousePosX = (int) mousePos.x;
 			int mousePosY = (int) mousePos.y;
 
-			int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-			int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+			int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile[0][0].x * Global.TileSize;
+			int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile[0][0].y * Global.TileSize;
 
 			int x = ( mousePosX - offsetx ) / Global.TileSize;
 			int y = ( mousePosY - offsety ) / Global.TileSize;
@@ -1258,8 +1263,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						x = MathUtils.clamp( x, -1, 1 );
 						y = MathUtils.clamp( y, -1, 1 );
 
-						x += Global.CurrentLevel.player.tile.x;
-						y += Global.CurrentLevel.player.tile.y;
+						x += Global.CurrentLevel.player.tile[0][0].x;
+						y += Global.CurrentLevel.player.tile[0][0].y;
 
 						Global.CurrentLevel.player.AI.setData( "ClickPos", Pools.obtain( Point.class ).set( x, y ) );
 					}
@@ -1315,8 +1320,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 			stage.setScrollFocus( null );
 
-			int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-			int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+			int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile[0][0].x * Global.TileSize;
+			int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile[0][0].y * Global.TileSize;
 
 			mouseOverUI = false;
 
@@ -1363,11 +1368,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		mousePosX = (int) mousePos.x;
 		mousePosY = (int) mousePos.y;
 
-		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile[0][0].x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile[0][0].y * Global.TileSize;
 
-		int x = Global.CurrentDialogue.entity.tile.x;
-		int y = Global.CurrentDialogue.entity.tile.y;
+		int x = Global.CurrentDialogue.entity.tile[0][0].x;
+		int y = Global.CurrentDialogue.entity.tile[0][0].y;
 
 		int cx = x * Global.TileSize + offsetx + Global.TileSize / 2;
 		int cy = y * Global.TileSize + offsety;
@@ -1448,8 +1453,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			int mousePosX = (int) mousePos.x;
 			int mousePosY = (int) mousePos.y;
 
-			int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-			int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+			int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile[0][0].x * Global.TileSize;
+			int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile[0][0].y * Global.TileSize;
 
 			int x = ( mousePosX - offsetx ) / Global.TileSize;
 			int y = ( mousePosY - offsety ) / Global.TileSize;
@@ -1554,7 +1559,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		preparedAbility = aa;
 		preparedAbility.caster = Global.CurrentLevel.player;
-		preparedAbility.source = Global.CurrentLevel.player.tile;
+		preparedAbility.source = Global.CurrentLevel.player.tile[0][0];
 
 		if ( abilityTiles != null )
 		{
@@ -1587,11 +1592,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void addActorDamageAction( Entity entity )
 	{
-		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile[0][0].x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile[0][0].y * Global.TileSize;
 
-		int x = entity.tile.x;
-		int y = entity.tile.y;
+		int x = entity.tile[0][0].x;
+		int y = entity.tile[0][0].y;
 
 		int cx = x * Global.TileSize + offsetx;
 		int cy = y * Global.TileSize + offsety;
@@ -1610,11 +1615,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void addActorEssenceAction( Entity entity, int essence )
 	{
-		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile[0][0].x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile[0][0].y * Global.TileSize;
 
-		int x = entity.tile.x;
-		int y = entity.tile.y;
+		int x = entity.tile[0][0].x;
+		int y = entity.tile[0][0].y;
 
 		int cx = x * Global.TileSize + offsetx;
 		int cy = y * Global.TileSize + offsety;
@@ -1631,11 +1636,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void addActorHealingAction( Entity entity )
 	{
-		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile.x * Global.TileSize;
-		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile.y * Global.TileSize;
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile[0][0].x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile[0][0].y * Global.TileSize;
 
-		int x = entity.tile.x;
-		int y = entity.tile.y;
+		int x = entity.tile[0][0].x;
+		int y = entity.tile[0][0].y;
 
 		int cx = x * Global.TileSize + offsetx;
 		int cy = y * Global.TileSize + offsety;
@@ -1682,7 +1687,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		boolean entityWithinRange = false;
 		if ( tile != null && tile.environmentEntity != null )
 		{
-			entityWithinRange = Math.abs( Global.CurrentLevel.player.tile.x - tile.x ) <= 1 && Math.abs( Global.CurrentLevel.player.tile.y - tile.y ) <= 1;
+			entityWithinRange = Math.abs( Global.CurrentLevel.player.tile[0][0].x - tile.x ) <= 1
+					&& Math.abs( Global.CurrentLevel.player.tile[0][0].y - tile.y ) <= 1;
 		}
 
 		Table table = new Table();

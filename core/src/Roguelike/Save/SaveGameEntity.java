@@ -31,7 +31,7 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		fileName = obj.fileName;
 		hp = obj.HP;
 		essence = obj.essence;
-		pos.set( obj.tile.x, obj.tile.y );
+		pos.set( obj.tile[0][0].x, obj.tile[0][0].y );
 		for ( StatusEffect status : obj.statusEffects )
 		{
 			statuses.add( status );

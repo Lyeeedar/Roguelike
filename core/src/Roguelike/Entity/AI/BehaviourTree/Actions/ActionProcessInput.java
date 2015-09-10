@@ -56,7 +56,7 @@ public class ActionProcessInput extends AbstractAction
 
 			if ( x != 0 || y != 0 || space )
 			{
-				targetPos = Pools.obtain( Point.class ).set( entity.tile.x + x, entity.tile.y + y );
+				targetPos = Pools.obtain( Point.class ).set( entity.tile[0][0].x + x, entity.tile[0][0].y + y );
 			}
 		}
 
@@ -68,7 +68,7 @@ public class ActionProcessInput extends AbstractAction
 				Pools.free( oldPos );
 			}
 
-			GameTile tile = entity.tile.level.getGameTile( targetPos );
+			GameTile tile = entity.tile[0][0].level.getGameTile( targetPos );
 
 			boolean entityWithinRange = false;
 			boolean dialogueWithinRange = false;
@@ -83,20 +83,20 @@ public class ActionProcessInput extends AbstractAction
 					{
 						if ( action.visible )
 						{
-							entityWithinRange = Math.abs( Global.CurrentLevel.player.tile.x - tile.x ) <= 1
-									&& Math.abs( Global.CurrentLevel.player.tile.y - tile.y ) <= 1;
+							entityWithinRange = Math.abs( Global.CurrentLevel.player.tile[0][0].x - tile.x ) <= 1
+									&& Math.abs( Global.CurrentLevel.player.tile[0][0].y - tile.y ) <= 1;
 							break;
 						}
 					}
 				}
 				else if ( tile.entity != null && tile.entity.isAllies( entity ) && tile.entity.dialogue != null )
 				{
-					dialogueWithinRange = Math.abs( Global.CurrentLevel.player.tile.x - tile.x ) <= 1
-							&& Math.abs( Global.CurrentLevel.player.tile.y - tile.y ) <= 1;
+					dialogueWithinRange = Math.abs( Global.CurrentLevel.player.tile[0][0].x - tile.x ) <= 1
+							&& Math.abs( Global.CurrentLevel.player.tile[0][0].y - tile.y ) <= 1;
 				}
 			}
 
-			if ( targetPos.x == entity.tile.x && targetPos.y == entity.tile.y )
+			if ( targetPos.x == entity.tile[0][0].x && targetPos.y == entity.tile[0][0].y )
 			{
 				entity.tasks.add( new TaskWait() );
 

@@ -15,23 +15,23 @@ public class ActionPickClosest extends AbstractAction
 	String outputKey;
 
 	@Override
-	public BehaviourTreeState evaluate(GameEntity entity)
+	public BehaviourTreeState evaluate( GameEntity entity )
 	{
-		Object obj = getData(inputKey, null);
-		
-		if (obj == null || !(obj instanceof Iterable))
+		Object obj = getData( inputKey, null );
+
+		if ( obj == null || !( obj instanceof Iterable ) )
 		{
 			State = BehaviourTreeState.FAILED;
 		}
 		else
 		{
 			Array<Object> array = new Array<Object>();
-			for (Object o : (Iterable)obj)
+			for ( Object o : (Iterable) obj )
 			{
-				array.add(o);
+				array.add( o );
 			}
 
-			if (array.size == 0)
+			if ( array.size == 0 )
 			{
 				State = BehaviourTreeState.FAILED;
 			}
@@ -39,47 +39,47 @@ public class ActionPickClosest extends AbstractAction
 			{
 				float best = Float.MAX_VALUE;
 				Object bestObj = null;
-				
-				for (Object o : array)
+
+				for ( Object o : array )
 				{
-					if (o instanceof Point)
+					if ( o instanceof Point )
 					{
-						Point pos = (Point)o;
-						float tmp = Vector2.dst2(entity.tile.x, entity.tile.y, pos.x, pos.y);
-						
-						if (tmp < best)
+						Point pos = (Point) o;
+						float tmp = Vector2.dst2( entity.tile[0][0].x, entity.tile[0][0].y, pos.x, pos.y );
+
+						if ( tmp < best )
 						{
 							best = tmp;
 							bestObj = o;
 						}
 					}
-					else if (o instanceof GameEntity)
+					else if ( o instanceof GameEntity )
 					{
-						GameEntity pos = (GameEntity)o;
-						float tmp = Vector2.dst2(entity.tile.x, entity.tile.y, pos.tile.x, pos.tile.y);
-						
-						if (tmp < best)
+						GameEntity pos = (GameEntity) o;
+						float tmp = Vector2.dst2( entity.tile[0][0].x, entity.tile[0][0].y, pos.tile[0][0].x, pos.tile[0][0].y );
+
+						if ( tmp < best )
 						{
 							best = tmp;
 							bestObj = o;
 						}
 					}
-					else if (o instanceof GameTile)
+					else if ( o instanceof GameTile )
 					{
-						GameTile pos = (GameTile)o;
-						float tmp = Vector2.dst2(entity.tile.x, entity.tile.y, pos.x, pos.y);
-						
-						if (tmp < best)
+						GameTile pos = (GameTile) o;
+						float tmp = Vector2.dst2( entity.tile[0][0].x, entity.tile[0][0].y, pos.x, pos.y );
+
+						if ( tmp < best )
 						{
 							best = tmp;
 							bestObj = o;
 						}
 					}
 				}
-				
-				if (bestObj != null)
+
+				if ( bestObj != null )
 				{
-					setData(outputKey, bestObj);				
+					setData( outputKey, bestObj );
 					State = BehaviourTreeState.SUCCEEDED;
 				}
 				else
@@ -87,10 +87,9 @@ public class ActionPickClosest extends AbstractAction
 					State = BehaviourTreeState.FAILED;
 				}
 			}
-			
+
 		}
-		
-		
+
 		return State;
 	}
 
@@ -100,10 +99,10 @@ public class ActionPickClosest extends AbstractAction
 	}
 
 	@Override
-	public void parse(Element xmlElement)
+	public void parse( Element xmlElement )
 	{
-		inputKey = xmlElement.getAttribute("InputKey");
-		outputKey = xmlElement.getAttribute("OutputKey");
+		inputKey = xmlElement.getAttribute( "InputKey" );
+		outputKey = xmlElement.getAttribute( "OutputKey" );
 	}
 
 }

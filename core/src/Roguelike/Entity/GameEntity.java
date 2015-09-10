@@ -57,7 +57,7 @@ public class GameEntity extends Entity
 	{
 		super.applyDamage( dam, damager );
 
-		AI.setData( "EnemyPos", Pools.obtain( Point.class ).set( damager.tile.x, damager.tile.y ) );
+		AI.setData( "EnemyPos", Pools.obtain( Point.class ).set( damager.tile[0][0].x, damager.tile[0][0].y ) );
 	}
 
 	// ----------------------------------------------------------------------

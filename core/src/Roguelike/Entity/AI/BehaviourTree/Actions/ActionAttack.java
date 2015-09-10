@@ -12,36 +12,36 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public class ActionAttack extends AbstractAction
 {
 	public String key;
-	
+
 	@Override
-	public BehaviourTreeState evaluate(GameEntity entity)
+	public BehaviourTreeState evaluate( GameEntity entity )
 	{
-		Point target = (Point)getData(key, null);
-		
+		Point target = (Point) getData( key, null );
+
 		// if no target, fail
-		if (target == null)
+		if ( target == null )
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
-		
-		TaskAttack task = new TaskAttack(Direction.getDirection(target.x-entity.tile.x, target.y-entity.tile.y));
-		GameTile targetTile = entity.tile.level.getGameTile(target);
-		if (targetTile.environmentEntity != null && targetTile.environmentEntity.canTakeDamage && task.canAttackTile(entity, targetTile))
+
+		TaskAttack task = new TaskAttack( Direction.getDirection( target.x - entity.tile[0][0].x, target.y - entity.tile[0][0].y ) );
+		GameTile targetTile = entity.tile[0][0].level.getGameTile( target );
+		if ( targetTile.environmentEntity != null && targetTile.environmentEntity.canTakeDamage && task.canAttackTile( entity, targetTile ) )
 		{
-			entity.tasks.add(task);
-			
+			entity.tasks.add( task );
+
 			State = BehaviourTreeState.SUCCEEDED;
 			return State;
 		}
-		else if (task.checkHitSomething(entity))
+		else if ( task.checkHitSomething( entity ) )
 		{
-			entity.tasks.add(task);
-			
+			entity.tasks.add( task );
+
 			State = BehaviourTreeState.SUCCEEDED;
 			return State;
 		}
-		
+
 		State = BehaviourTreeState.FAILED;
 		return State;
 	}
@@ -52,8 +52,8 @@ public class ActionAttack extends AbstractAction
 	}
 
 	@Override
-	public void parse(Element xmlElement)
+	public void parse( Element xmlElement )
 	{
-		key = xmlElement.getAttribute("Key");
+		key = xmlElement.getAttribute( "Key" );
 	}
 }

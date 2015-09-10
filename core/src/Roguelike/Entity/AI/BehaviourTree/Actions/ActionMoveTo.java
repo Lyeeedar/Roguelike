@@ -31,13 +31,13 @@ public class ActionMoveTo extends AbstractAction
 		}
 
 		// if we arrived at our target, succeed
-		if ( entity.tile.x == target.x && entity.tile.y == target.y )
+		if ( entity.tile[0][0].x == target.x && entity.tile[0][0].y == target.y )
 		{
 			State = BehaviourTreeState.SUCCEEDED;
 			return State;
 		}
 
-		Pathfinder pathFinder = new Pathfinder( entity.tile.level.getGrid(), entity.tile.x, entity.tile.y, target.x, target.y, true );
+		Pathfinder pathFinder = new Pathfinder( entity.tile[0][0].level.getGrid(), entity.tile[0][0].x, entity.tile[0][0].y, target.x, target.y, true, entity.size );
 		Array<Point> path = pathFinder.getPath( entity.getTravelType() );
 
 		// if couldnt find a valid path, fail
@@ -48,7 +48,7 @@ public class ActionMoveTo extends AbstractAction
 			return State;
 		}
 
-		GameTile nextTile = entity.tile.level.getGameTile( path.get( 1 ) );
+		GameTile nextTile = entity.tile[0][0].level.getGameTile( path.get( 1 ) );
 		// if next step is impassable then fail
 		if ( !nextTile.getPassable( entity.getTravelType() ) )
 		{

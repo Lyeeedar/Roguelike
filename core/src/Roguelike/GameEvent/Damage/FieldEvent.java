@@ -66,13 +66,13 @@ public final class FieldEvent extends AbstractOnDamageEvent
 		if ( attackerField != null )
 		{
 			Field field = Field.load( attackerField );
-			field.trySpawnInTile( obj.attacker.tile, stacks );
+			field.trySpawnInTile( obj.attacker.tile[0][0], stacks );
 		}
 
 		if ( defenderField != null )
 		{
 			Field field = Field.load( defenderField );
-			field.trySpawnInTile( obj.defender.tile, stacks );
+			field.trySpawnInTile( obj.defender.tile[0][0], stacks );
 		}
 
 		return true;

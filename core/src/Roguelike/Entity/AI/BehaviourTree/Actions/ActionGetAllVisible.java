@@ -34,11 +34,11 @@ public class ActionGetAllVisible extends AbstractAction
 		}
 		else
 		{
-			Array<Point> output = cache.getShadowCast( entity.tile.level.getGrid(), entity.tile.x, entity.tile.y, entity.getVariable( Statistic.RANGE ) );
+			Array<Point> output = cache.getShadowCast( entity.tile[0][0].level.getGrid(), entity.tile[0][0].x, entity.tile[0][0].y, entity.getVariable( Statistic.RANGE ) );
 			visibleTiles = new Array<GameTile>();
 			for ( Point tile : output )
 			{
-				visibleTiles.add( entity.tile.level.getGameTile( tile ) );
+				visibleTiles.add( entity.tile[0][0].level.getGameTile( tile ) );
 			}
 		}
 

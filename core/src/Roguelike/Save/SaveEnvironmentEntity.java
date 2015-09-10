@@ -25,7 +25,7 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 	public void store( EnvironmentEntity obj )
 	{
 		hp = obj.HP;
-		pos.set( obj.tile.x, obj.tile.y );
+		pos.set( obj.tile[0][0].x, obj.tile[0][0].y );
 		for ( StatusEffect status : obj.statusEffects )
 		{
 			statuses.add( status );
@@ -37,7 +37,7 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 		creationData = obj.creationData;
 		data = (HashMap<String, Object>) obj.data.clone();
 
-		levelUID = obj.tile.level.UID;
+		levelUID = obj.tile[0][0].level.UID;
 	}
 
 	@Override

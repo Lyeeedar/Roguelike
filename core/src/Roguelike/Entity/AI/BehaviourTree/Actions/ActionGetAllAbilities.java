@@ -14,27 +14,27 @@ public class ActionGetAllAbilities extends AbstractAction
 	private String Key;
 
 	@Override
-	public BehaviourTreeState evaluate(GameEntity entity)
+	public BehaviourTreeState evaluate( GameEntity entity )
 	{
 		Array<ActiveAbility> abilities = new Array<ActiveAbility>();
-		
-		for (ActiveAbility ab : entity.slottedActiveAbilities)
+
+		for ( ActiveAbility ab : entity.slottedActiveAbilities )
 		{
-			if (ab != null && ab.cooldownAccumulator <= 0)
+			if ( ab != null && ab.cooldownAccumulator <= 0 )
 			{
 				ab.caster = entity;
-				ab.source = entity.tile;
-				
+				ab.source = entity.tile[0][0];
+
 				Array<Point> validTargets = ab.getValidTargets();
-				if (validTargets.size > 0)
+				if ( validTargets.size > 0 )
 				{
-					abilities.add(ab);
+					abilities.add( ab );
 				}
-				Pools.freeAll(validTargets);
+				Pools.freeAll( validTargets );
 			}
-		}		
-		
-		setData(Key, abilities);
+		}
+
+		setData( Key, abilities );
 		State = abilities.size > 0 ? BehaviourTreeState.SUCCEEDED : BehaviourTreeState.FAILED;
 		return State;
 	}
@@ -45,9 +45,9 @@ public class ActionGetAllAbilities extends AbstractAction
 	}
 
 	@Override
-	public void parse(Element xmlElement)
+	public void parse( Element xmlElement )
 	{
-		Key = xmlElement.getAttribute("Key");
+		Key = xmlElement.getAttribute( "Key" );
 	}
 
 }

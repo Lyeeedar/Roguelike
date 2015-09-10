@@ -30,7 +30,7 @@ public class DialogueActionSetVariable extends AbstractDialogueAction
 	public void parse( Element xml )
 	{
 		isGlobal = xml.getBoolean( "Global", false );
-		key = xml.get( "Key" );
+		key = xml.get( "Key" ).toLowerCase();
 		value = xml.getInt( "Value" );
 	}
 

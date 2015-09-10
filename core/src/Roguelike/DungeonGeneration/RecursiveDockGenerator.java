@@ -1557,6 +1557,22 @@ public class RecursiveDockGenerator
 				GameTile newTile = new GameTile( x, y, level, symbol.getTileData() );
 				newTile.metaValue = symbol.metaValue;
 
+				newTile.metaValue = symbol.metaValue;
+
+				actualTiles[x][y] = newTile;
+
+				// System.out.print(symbol.character);
+			}
+			// System.out.print("\n");
+		}
+
+		for ( int x = 0; x < width; x++ )
+		{
+			for ( int y = 0; y < height; y++ )
+			{
+				Symbol symbol = symbolGrid[x][y];
+				GameTile newTile = actualTiles[x][y];
+
 				if ( symbol.hasEnvironmentEntity() )
 				{
 					EnvironmentEntity entity = symbol.getEnvironmentEntity( saveLevel.UID );
@@ -1649,14 +1665,7 @@ public class RecursiveDockGenerator
 					GameEntity e = symbol.getGameEntity();
 					newTile.addGameEntity( e );
 				}
-
-				newTile.metaValue = symbol.metaValue;
-
-				actualTiles[x][y] = newTile;
-
-				// System.out.print(symbol.character);
 			}
-			// System.out.print("\n");
 		}
 
 		saveLevel.addSavedLevelContents( level );
@@ -2258,7 +2267,7 @@ public class RecursiveDockGenerator
 						continue;
 					}
 
-					AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false, GeneratorPassability );
+					AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false, 1, GeneratorPassability );
 					Array<Point> path = pathfind.getPath();
 
 					for ( Point point : path )

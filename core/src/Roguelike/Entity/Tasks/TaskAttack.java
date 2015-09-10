@@ -33,7 +33,7 @@ public class TaskAttack extends AbstractTask
 	public boolean checkHitSomething( GameEntity obj )
 	{
 		// Collect data
-		GameTile oldTile = obj.tile;
+		GameTile oldTile = obj.tile[0][0];
 
 		int newX = oldTile.x + dir.getX();
 		int newY = oldTile.y + dir.getY();
@@ -69,7 +69,7 @@ public class TaskAttack extends AbstractTask
 	public boolean canAttackTile( GameEntity obj, GameTile tile )
 	{
 		// Collect data
-		GameTile oldTile = obj.tile;
+		GameTile oldTile = obj.tile[0][0];
 
 		int newX = oldTile.x + dir.getX();
 		int newY = oldTile.y + dir.getY();
@@ -157,7 +157,7 @@ public class TaskAttack extends AbstractTask
 		{
 			if ( tile.entity != null && !tile.entity.isAllies( entity ) )
 			{
-				int dist = Math.abs( tile.x - entity.tile.x ) + Math.abs( tile.y - entity.tile.y );
+				int dist = Math.abs( tile.x - entity.tile[0][0].x ) + Math.abs( tile.y - entity.tile[0][0].y );
 
 				if ( dist < closest )
 				{
@@ -167,7 +167,7 @@ public class TaskAttack extends AbstractTask
 			}
 			else if ( tile.environmentEntity != null && tile.environmentEntity.canTakeDamage )
 			{
-				int dist = Math.abs( tile.x - entity.tile.x ) + Math.abs( tile.y - entity.tile.y );
+				int dist = Math.abs( tile.x - entity.tile[0][0].x ) + Math.abs( tile.y - entity.tile[0][0].y );
 
 				if ( dist < closest )
 				{
@@ -197,7 +197,7 @@ public class TaskAttack extends AbstractTask
 
 			Sprite sprite = hitEffect.copy();
 
-			int[] diff = bestTarget.getPosDiff( entity.tile );
+			int[] diff = bestTarget.getPosDiff( entity.tile[0][0] );
 			float distMoved = (float) Math.sqrt( diff[0] * diff[0] + diff[1] * diff[1] ) / Global.TileSize;
 
 			sprite.spriteAnimation = new MoveAnimation( 0.025f * distMoved, diff, MoveEquation.LINEAR );
@@ -268,7 +268,7 @@ public class TaskAttack extends AbstractTask
 	public void processTask( GameEntity obj )
 	{
 		// Collect data
-		GameTile oldTile = obj.tile;
+		GameTile oldTile = obj.tile[0][0];
 
 		int newX = oldTile.x + dir.getX();
 		int newY = oldTile.y + dir.getY();

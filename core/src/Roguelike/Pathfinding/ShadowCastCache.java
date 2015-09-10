@@ -46,6 +46,7 @@ public final class ShadowCastCache
 	private int lastx;
 	private int lasty;
 	private Array<Point> opaqueTiles = new Array<Point>();
+	private Array<Point> clearTiles = new Array<Point>();
 	private Array<Point> shadowCastOutput = new Array<Point>();
 
 	public Array<Point> getShadowCast( GameTile[][] grid, int x, int y, int range )
@@ -71,6 +72,19 @@ public final class ShadowCastCache
 					break;
 				}
 			}
+
+			if ( !recalculate )
+			{
+				for ( Point pos : clearTiles )
+				{
+					GameTile tile = grid[pos.x][pos.y];
+					if ( !tile.getPassable( LightPassability ) )
+					{
+						recalculate = true; // something has moved
+						break;
+					}
+				}
+			}
 		}
 
 		if ( recalculate )
@@ -81,14 +95,20 @@ public final class ShadowCastCache
 			ShadowCaster shadow = new ShadowCaster( grid, range );
 			shadow.ComputeFOV( x, y, shadowCastOutput );
 
-			// build list of opaque
+			// build list of clear/opaque
 			opaqueTiles.clear();
+			clearTiles.clear();
+
 			for ( Point pos : shadowCastOutput )
 			{
 				GameTile tile = grid[pos.x][pos.y];
 				if ( !tile.getPassable( LightPassability ) )
 				{
 					opaqueTiles.add( pos );
+				}
+				else
+				{
+					clearTiles.add( pos );
 				}
 			}
 			lastx = x;

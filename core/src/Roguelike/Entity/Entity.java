@@ -38,7 +38,15 @@ public abstract class Entity
 	protected void baseInternalLoad( Element xml )
 	{
 		name = xml.get( "Name", name );
+
+		size = xml.getInt( "Size", size );
+		tile = new GameTile[size][size];
+
 		sprite = xml.getChildByName( "Sprite" ) != null ? AssetManager.loadSprite( xml.getChildByName( "Sprite" ) ) : sprite;
+		if ( sprite != null )
+		{
+			sprite.size = size;
+		}
 
 		Element lightElement = xml.getChildByName( "Light" );
 		if ( lightElement != null )
@@ -321,7 +329,8 @@ public abstract class Entity
 	public Array<SpriteEffect> spriteEffects = new Array<SpriteEffect>( false, 16 );
 
 	// ----------------------------------------------------------------------
-	public GameTile tile;
+	public GameTile[][] tile = new GameTile[1][1];
+	public int size = 1;
 
 	// ----------------------------------------------------------------------
 	public int HP = 1;

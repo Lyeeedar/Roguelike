@@ -71,7 +71,7 @@ public final class FieldOnDeathEvent extends AbstractOnDeathEvent
 		}
 
 		Field field = Field.load( fieldName );
-		field.trySpawnInTile( entity.tile, stacks );
+		field.trySpawnInTile( entity.tile[0][0], stacks );
 
 		return true;
 	}

@@ -303,7 +303,10 @@ public class ActiveAbility implements IAbility, IGameObject
 
 			if ( useSprite != null )
 			{
-				caster.tile.spriteEffects.add( new SpriteEffect( useSprite.copy(), Direction.CENTER, light != null ? light.copyNoFlag() : null ) );
+				Sprite sprite = useSprite.copy();
+				sprite.size = caster.size;
+
+				caster.tile[0][0].spriteEffects.add( new SpriteEffect( sprite, Direction.CENTER, light != null ? light.copyNoFlag() : null ) );
 			}
 		}
 
@@ -482,7 +485,7 @@ public class ActiveAbility implements IAbility, IGameObject
 			if ( screenshake > 0 )
 			{
 				// check distance for screenshake
-				float dist = Vector2.dst( epicenter.x, epicenter.y, epicenter.level.player.tile.x, epicenter.level.player.tile.y );
+				float dist = Vector2.dst( epicenter.x, epicenter.y, epicenter.level.player.tile[0][0].x, epicenter.level.player.tile[0][0].y );
 				float shakeRadius = screenshake;
 				if ( aoe != 0 && dist > aoe )
 				{

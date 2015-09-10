@@ -169,7 +169,7 @@ public class ExclamationManager
 
 					if ( wrapper.sound != null )
 					{
-						wrapper.sound.play( entity.tile );
+						wrapper.sound.play( entity.tile[0][0] );
 					}
 
 					break;

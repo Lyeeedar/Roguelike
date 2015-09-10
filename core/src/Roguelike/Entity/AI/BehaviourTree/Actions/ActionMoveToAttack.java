@@ -73,7 +73,7 @@ public class ActionMoveToAttack extends AbstractAction
 			for ( int i = 0; i < range; i++ )
 			{
 				Point newPos = Pools.obtain( Point.class ).set( target.x + dir.getX() * ( i + 1 ), target.y + dir.getY() * ( i + 1 ) );
-				GameTile tile = entity.tile.level.getGameTile( newPos );
+				GameTile tile = entity.tile[0][0].level.getGameTile( newPos );
 
 				if ( !tile.getPassable( WeaponPassability ) )
 				{
@@ -91,19 +91,19 @@ public class ActionMoveToAttack extends AbstractAction
 
 		for ( Point pos : possibleTiles )
 		{
-			if ( pos.x == entity.tile.x && pos.y == entity.tile.y )
+			if ( pos.x == entity.tile[0][0].x && pos.y == entity.tile[0][0].y )
 			{
 				Pools.freeAll( possibleTiles );
 				State = BehaviourTreeState.SUCCEEDED;
 				return State;
 			}
 
-			Pathfinder pathFinder = new Pathfinder( entity.tile.level.getGrid(), entity.tile.x, entity.tile.y, pos.x, pos.y, true );
+			Pathfinder pathFinder = new Pathfinder( entity.tile[0][0].level.getGrid(), entity.tile[0][0].x, entity.tile[0][0].y, pos.x, pos.y, true, entity.size );
 			Array<Point> path = pathFinder.getPath( entity.getTravelType() );
 
 			if ( path.size > 1 && path.size < bestDist )
 			{
-				if ( entity.tile.level.getGameTile( path.get( 1 ) ).getPassable( entity.getTravelType() ) )
+				if ( entity.tile[0][0].level.getGameTile( path.get( 1 ) ).getPassable( entity.getTravelType() ) )
 				{
 					bestDist = path.size;
 

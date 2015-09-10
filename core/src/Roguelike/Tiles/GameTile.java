@@ -65,13 +65,27 @@ public class GameTile implements PathfindingTile
 
 	public final void addEnvironmentEntity( EnvironmentEntity entity )
 	{
-		if ( entity.tile != null )
+		for ( int x = 0; x < entity.size; x++ )
 		{
-			entity.tile.environmentEntity = null;
+			for ( int y = 0; y < entity.size; y++ )
+			{
+				GameTile tile = entity.tile[x][y];
+				if ( tile != null && tile.environmentEntity == entity )
+				{
+					tile.environmentEntity = null;
+				}
+			}
 		}
 
-		environmentEntity = entity;
-		entity.tile = this;
+		for ( int x = 0; x < entity.size; x++ )
+		{
+			for ( int y = 0; y < entity.size; y++ )
+			{
+				GameTile tile = level.Grid[this.x + x][this.y + y];
+				tile.environmentEntity = entity;
+				entity.tile[x][y] = tile;
+			}
+		}
 	}
 
 	public final void processFieldEffectsForEntity( Entity e, float cost )
@@ -117,20 +131,31 @@ public class GameTile implements PathfindingTile
 
 	public final int[] addGameEntity( GameEntity obj )
 	{
-		GameTile oldTile = obj.tile;
+		GameTile oldTile = obj.tile[0][0];
 
-		entity = obj;
-		obj.tile = this;
-
-		if ( oldTile != null )
+		for ( int x = 0; x < obj.size; x++ )
 		{
-			if ( oldTile.entity == obj )
+			for ( int y = 0; y < obj.size; y++ )
 			{
-				oldTile.entity = null;
+				GameTile tile = obj.tile[x][y];
+				if ( tile != null && tile.entity == obj )
+				{
+					tile.entity = null;
+				}
 			}
-
-			return getPosDiff( oldTile );
 		}
+
+		for ( int x = 0; x < obj.size; x++ )
+		{
+			for ( int y = 0; y < obj.size; y++ )
+			{
+				GameTile tile = level.Grid[this.x + x][this.y + y];
+				tile.entity = obj;
+				obj.tile[x][y] = tile;
+			}
+		}
+
+		if ( oldTile != null ) { return getPosDiff( oldTile ); }
 
 		return new int[] { 0, 0 };
 	}

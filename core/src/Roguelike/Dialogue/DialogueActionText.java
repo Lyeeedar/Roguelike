@@ -18,7 +18,7 @@ public class DialogueActionText extends AbstractDialogueAction
 
 		if ( sound != null )
 		{
-			sound.play( manager.entity.tile );
+			sound.play( manager.entity.tile[0][0] );
 		}
 
 		return ReturnType.COMPLETED;

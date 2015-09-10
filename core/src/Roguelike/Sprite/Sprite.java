@@ -29,6 +29,8 @@ public final class Sprite
 
 	public float rotation;
 
+	public int size = 1;
+
 	public Array<TextureRegion> textures;
 
 	public AbstractSpriteAnimation spriteAnimation;
@@ -156,6 +158,9 @@ public final class Sprite
 	private void drawTexture( Batch batch, TextureRegion texture, int x, int y, int width, int height, float scaleX, float scaleY, AnimationState animationState )
 	{
 		if ( renderDelay > 0 ) { return; }
+
+		width = width * size;
+		height = height * size;
 
 		if ( animationState.mode == AnimationMode.SHRINK && animationState.isShrunk )
 		{

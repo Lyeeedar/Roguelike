@@ -1,7 +1,5 @@
 package Roguelike.Pathfinding;
 
-import java.util.HashSet;
-
 import Roguelike.Global.Passability;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
@@ -16,9 +14,9 @@ public class Pathfinder
 	private int endy;
 	private PathfindingTile[][] Grid;
 	private boolean canMoveDiagonal;
-	private HashSet<String> factions;
+	private int size;
 
-	public Pathfinder( PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal )
+	public Pathfinder( PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, int size )
 	{
 		this.startx = startx;
 		this.starty = starty;
@@ -26,12 +24,12 @@ public class Pathfinder
 		this.endy = endy;
 		this.Grid = grid;
 		this.canMoveDiagonal = canMoveDiagonal;
-		this.factions = factions;
+		this.size = size;
 	}
 
 	public Array<Point> getPath( EnumBitflag<Passability> travelType )
 	{
-		AStarPathfind astar = new AStarPathfind( Grid, startx, starty, endx, endy, canMoveDiagonal, false, travelType );
+		AStarPathfind astar = new AStarPathfind( Grid, startx, starty, endx, endy, canMoveDiagonal, false, size, travelType );
 		Array<Point> path = astar.getPath();
 
 		if ( path == null )
@@ -132,7 +130,7 @@ public class Pathfinder
 
 		private static void path( TestTile[][] grid, int startx, int starty, int endx, int endy )
 		{
-			AStarPathfind astar = new AStarPathfind( grid, startx, starty, endx, endy, false, true, new EnumBitflag<Passability>() );
+			AStarPathfind astar = new AStarPathfind( grid, startx, starty, endx, endy, false, true, 1, new EnumBitflag<Passability>() );
 			Array<Point> path = astar.getPath();
 
 			for ( Point step : path )

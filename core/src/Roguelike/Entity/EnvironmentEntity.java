@@ -121,7 +121,7 @@ public class EnvironmentEntity extends Entity
 			@Override
 			public void activate( EnvironmentEntity entity )
 			{
-				Level current = entity.tile.level;
+				Level current = entity.tile[0][0].level;
 				SaveLevel save = Global.getLevel( (SaveLevel) entity.data.get( "Destination" ) );
 
 				boolean needsLoad = LoadingScreen.Instance.set( save, current.player, "Stair: " + current.UID, null, (Boolean) entity.data.get( "UnloadLevel" ) );
@@ -284,7 +284,7 @@ public class EnvironmentEntity extends Entity
 						{
 							String UID = (String) entity.data.get( key );
 
-							GameEntity ge = (GameEntity) entity.tile.level.getEntityWithUID( UID );
+							GameEntity ge = (GameEntity) entity.tile[0][0].level.getEntityWithUID( UID );
 
 							if ( ge == null )
 							{
@@ -306,7 +306,7 @@ public class EnvironmentEntity extends Entity
 					{
 						GameEntity ge = GameEntity.load( entityName );
 
-						GameTile tile = entity.tile;
+						GameTile tile = entity.tile[0][0];
 						int x = tile.x;
 						int y = tile.y;
 

@@ -180,7 +180,7 @@ public class InventoryPanel extends Table
 				else
 				{
 					Global.CurrentLevel.player.getInventory().removeItem( item );
-					Global.CurrentLevel.player.tile.items.add( item );
+					Global.CurrentLevel.player.tile[0][0].items.add( item );
 				}
 			}
 			else
@@ -239,7 +239,7 @@ public class InventoryPanel extends Table
 		public void populateTileData()
 		{
 			tileData.clear();
-			for ( Item item : Global.CurrentLevel.player.tile.items )
+			for ( Item item : Global.CurrentLevel.player.tile[0][0].items )
 			{
 				tileData.add( item );
 			}
@@ -257,7 +257,7 @@ public class InventoryPanel extends Table
 		public void handleDataClicked( Object data, InputEvent event, float x, float y )
 		{
 			Item item = (Item) data;
-			Global.CurrentLevel.player.tile.items.removeValue( item, true );
+			Global.CurrentLevel.player.tile[0][0].items.removeValue( item, true );
 			Global.CurrentLevel.player.getInventory().addItem( item );
 		}
 
