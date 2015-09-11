@@ -5,7 +5,7 @@ import Roguelike.Util.EnumBitflag;
 
 public interface PathfindingTile
 {
-	public boolean getPassable( EnumBitflag<Passability> travelType );
+	public boolean getPassable( EnumBitflag<Passability> travelType, Object self );
 
 	public int getInfluence();
 }

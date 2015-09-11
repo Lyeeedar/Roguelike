@@ -15,8 +15,9 @@ public class Pathfinder
 	private PathfindingTile[][] Grid;
 	private boolean canMoveDiagonal;
 	private int size;
+	private Object self;
 
-	public Pathfinder( PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, int size )
+	public Pathfinder( PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, int size, Object self )
 	{
 		this.startx = startx;
 		this.starty = starty;
@@ -25,16 +26,17 @@ public class Pathfinder
 		this.Grid = grid;
 		this.canMoveDiagonal = canMoveDiagonal;
 		this.size = size;
+		this.self = self;
 	}
 
 	public Array<Point> getPath( EnumBitflag<Passability> travelType )
 	{
-		AStarPathfind astar = new AStarPathfind( Grid, startx, starty, endx, endy, canMoveDiagonal, false, size, travelType );
+		AStarPathfind astar = new AStarPathfind( Grid, startx, starty, endx, endy, canMoveDiagonal, false, size, travelType, self );
 		Array<Point> path = astar.getPath();
 
 		if ( path == null )
 		{
-			path = BresenhamLine.line( startx, starty, endx, endy, Grid, true, Integer.MAX_VALUE, travelType );
+			path = BresenhamLine.line( startx, starty, endx, endy, Grid, true, Integer.MAX_VALUE, travelType, self );
 		}
 
 		return path;
@@ -48,7 +50,7 @@ public class Pathfinder
 			public boolean passable = true;
 
 			@Override
-			public boolean getPassable( EnumBitflag<Passability> travelType )
+			public boolean getPassable( EnumBitflag<Passability> travelType, Object self )
 			{
 				return true;
 			}
@@ -130,7 +132,7 @@ public class Pathfinder
 
 		private static void path( TestTile[][] grid, int startx, int starty, int endx, int endy )
 		{
-			AStarPathfind astar = new AStarPathfind( grid, startx, starty, endx, endy, false, true, 1, new EnumBitflag<Passability>() );
+			AStarPathfind astar = new AStarPathfind( grid, startx, starty, endx, endy, false, true, 1, new EnumBitflag<Passability>(), null );
 			Array<Point> path = astar.getPath();
 
 			for ( Point step : path )

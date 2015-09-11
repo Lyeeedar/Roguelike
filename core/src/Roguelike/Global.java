@@ -719,6 +719,10 @@ public class Global
 
 		GlobalNames.put( "player", PlayerName );
 
+		// player.size = 2;
+		// player.sprite.size = 2;
+		// player.tile = new GameTile[2][2];
+
 		player.setPopupText( "Urgh... Where am I... Who am I...", 2 );
 		SaveLevel firstLevel = new SaveLevel( "Town", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
 		AllLevels.put( firstLevel.UID, firstLevel );
@@ -772,24 +776,24 @@ public class Global
 			level.player = player;
 
 			outer:
-			for ( int x = 0; x < level.width; x++ )
-			{
-				for ( int y = 0; y < level.height; y++ )
+				for ( int x = 0; x < level.width; x++ )
 				{
-					GameTile tile = level.getGameTile( x, y );
-					if ( tile.metaValue != null && tile.metaValue.equals( travelKey ) )
+					for ( int y = 0; y < level.height; y++ )
 					{
-						tile.addGameEntity( player );
-						break outer;
-					}
+						GameTile tile = level.getGameTile( x, y );
+						if ( tile.metaValue != null && tile.metaValue.equals( travelKey ) )
+						{
+							tile.addGameEntity( player );
+							break outer;
+						}
 
-						if ( tile.environmentEntity != null && tile.environmentEntity.data.containsKey( travelKey ) )
-					{
-						tile.addGameEntity( player );
-						break outer;
+					if ( tile.environmentEntity != null && tile.environmentEntity.data.containsKey( travelKey ) )
+						{
+							tile.addGameEntity( player );
+							break outer;
+						}
 					}
 				}
-			}
 		}
 
 		CurrentLevel.updateVisibleTiles();

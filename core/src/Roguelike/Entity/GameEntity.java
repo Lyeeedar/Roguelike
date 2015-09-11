@@ -330,6 +330,24 @@ public class GameEntity extends Entity
 		}
 	}
 
+	// ----------------------------------------------------------------------
+	@Override
+	public void removeFromTile()
+	{
+		for ( int x = 0; x < size; x++ )
+		{
+			for ( int y = 0; y < size; y++ )
+			{
+				if ( tile[x][y] != null && tile[x][y].entity == this )
+				{
+					tile[x][y].entity = null;
+				}
+
+				tile[x][y] = null;
+			}
+		}
+	}
+
 	// endregion Public Methods
 	// ####################################################################//
 	// region Data

@@ -250,7 +250,7 @@ public class Level
 			}
 		}
 
-		Array<Point> output = visibilityData.getShadowCast( Grid, player.tile[0][0].x, player.tile[0][0].y, player.getVariable( Statistic.RANGE ) );
+		Array<Point> output = visibilityData.getShadowCast( Grid, player.tile[0][0].x, player.tile[0][0].y, player.getVariable( Statistic.RANGE ), player );
 
 		for ( Point tilePos : output )
 		{
@@ -326,7 +326,7 @@ public class Level
 
 	private void calculateSingleLight( Light l )
 	{
-		Array<Point> output = l.shadowCastCache.getShadowCast( Grid, l.lx, l.ly, (int) l.baseIntensity );
+		Array<Point> output = l.shadowCastCache.getShadowCast( Grid, l.lx, l.ly, (int) l.baseIntensity, null );
 
 		for ( Point tilePos : output )
 		{
@@ -373,7 +373,7 @@ public class Level
 			}
 		}
 
-		if ( tile.environmentEntity != null && tile.environmentEntity.light != null )
+		if ( tile.environmentEntity != null && tile.environmentEntity.light != null && tile.environmentEntity.tile[0][0] == tile )
 		{
 			if ( checkLightCloseEnough( lx, ly, (int) tile.environmentEntity.light.baseIntensity, px, py, viewRange ) )
 			{
@@ -399,7 +399,7 @@ public class Level
 			}
 		}
 
-		if ( tile.entity != null )
+		if ( tile.entity != null && tile.entity.tile[0][0] == tile )
 		{
 			tempLightList.clear();
 			tile.entity.getLight( tempLightList );
@@ -469,9 +469,8 @@ public class Level
 
 				if ( e.canTakeDamage && e != player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
-					e.tile[0][0].entity = null;
-
-					dropItems( e.getInventory(), e.tile[0][0], e.essence );
+					dropItems( e.getInventory(), e.tile[0][0], e.essence, e );
+					e.removeFromTile();
 				}
 				else if ( e == player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
@@ -496,9 +495,8 @@ public class Level
 
 				if ( e.canTakeDamage && e != player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
-					e.tile[0][0].environmentEntity = null;
-
-					dropItems( e.getInventory(), e.tile[0][0], e.essence );
+					dropItems( e.getInventory(), e.tile[0][0], e.essence, e );
+					e.removeFromTile();
 				}
 
 				if ( e.popupDuration <= 0 && e.popupFade <= 0 )
@@ -509,10 +507,10 @@ public class Level
 		}
 	}
 
-	private void dropItems( Inventory inventory, GameTile source, int essence )
+	private void dropItems( Inventory inventory, GameTile source, int essence, Object obj )
 	{
 		Array<Point> possibleTiles = new Array<Point>();
-		ShadowCaster sc = new ShadowCaster( Grid, 3, ItemDropPassability );
+		ShadowCaster sc = new ShadowCaster( Grid, 3, ItemDropPassability, obj );
 		sc.ComputeFOV( source.x, source.y, possibleTiles );
 
 		// remove nonpassable tiles
@@ -523,7 +521,7 @@ public class Level
 
 			GameTile tile = getGameTile( pos );
 
-			if ( !tile.getPassable( ItemDropPassability ) )
+			if ( !tile.getPassable( ItemDropPassability, obj ) )
 			{
 				itr.remove();
 				Pools.free( pos );
@@ -644,7 +642,7 @@ public class Level
 
 	private void updatePopupsForTile( GameTile tile, float delta )
 	{
-		if ( tile.entity != null )
+		if ( tile.entity != null && tile.entity.tile[0][0] == tile )
 		{
 			if ( tile.entity.popup != null )
 			{
@@ -706,12 +704,12 @@ public class Level
 			}
 		}
 
-		if ( tile.environmentEntity != null )
+		if ( tile.environmentEntity != null && tile.environmentEntity.tile[0][0] == tile )
 		{
 			tile.environmentEntity.sprite.update( delta );
 		}
 
-		if ( tile.entity != null )
+		if ( tile.entity != null && tile.entity.tile[0][0] == tile )
 		{
 			tile.entity.sprite.update( delta );
 		}
@@ -945,7 +943,7 @@ public class Level
 			{
 				boolean visible = Grid[x][y].visible;
 				GameEntity e = Grid[x][y].entity;
-				if ( e != null && e != player )
+				if ( e != null && e != player && e.tile[0][0] == Grid[x][y] )
 				{
 					if ( e.tile[0][0].visible )
 					{
@@ -1067,7 +1065,7 @@ public class Level
 		{
 			for ( int y = 0; y < height; y++ )
 			{
-				if ( Grid[x][y].entity != null )
+				if ( Grid[x][y].entity != null && Grid[x][y].entity.tile[0][0] == Grid[x][y] )
 				{
 					list.add( Grid[x][y].entity );
 				}
@@ -1081,7 +1079,7 @@ public class Level
 		{
 			for ( int y = 0; y < height; y++ )
 			{
-				if ( Grid[x][y].environmentEntity != null )
+				if ( Grid[x][y].environmentEntity != null && Grid[x][y].environmentEntity.tile[0][0] == Grid[x][y] )
 				{
 					list.add( Grid[x][y].environmentEntity );
 				}

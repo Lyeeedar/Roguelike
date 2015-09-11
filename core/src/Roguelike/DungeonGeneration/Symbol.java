@@ -168,7 +168,7 @@ public final class Symbol implements PathfindingTile
 	}
 
 	@Override
-	public boolean getPassable( EnumBitflag<Passability> travelType )
+	public boolean getPassable( EnumBitflag<Passability> travelType, Object self )
 	{
 		return isPassable( travelType );
 	}

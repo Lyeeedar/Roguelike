@@ -65,17 +65,7 @@ public class GameTile implements PathfindingTile
 
 	public final void addEnvironmentEntity( EnvironmentEntity entity )
 	{
-		for ( int x = 0; x < entity.size; x++ )
-		{
-			for ( int y = 0; y < entity.size; y++ )
-			{
-				GameTile tile = entity.tile[x][y];
-				if ( tile != null && tile.environmentEntity == entity )
-				{
-					tile.environmentEntity = null;
-				}
-			}
-		}
+		entity.removeFromTile();
 
 		for ( int x = 0; x < entity.size; x++ )
 		{
@@ -133,17 +123,7 @@ public class GameTile implements PathfindingTile
 	{
 		GameTile oldTile = obj.tile[0][0];
 
-		for ( int x = 0; x < obj.size; x++ )
-		{
-			for ( int y = 0; y < obj.size; y++ )
-			{
-				GameTile tile = obj.tile[x][y];
-				if ( tile != null && tile.entity == obj )
-				{
-					tile.entity = null;
-				}
-			}
-		}
+		obj.removeFromTile();
 
 		for ( int x = 0; x < obj.size; x++ )
 		{
@@ -176,7 +156,7 @@ public class GameTile implements PathfindingTile
 	}
 
 	@Override
-	public final boolean getPassable( EnumBitflag<Passability> travelType )
+	public final boolean getPassable( EnumBitflag<Passability> travelType, Object self )
 	{
 		if ( fields.size > 0 )
 		{
@@ -194,13 +174,13 @@ public class GameTile implements PathfindingTile
 			}
 		}
 
-		if ( environmentEntity != null && !environmentEntity.passableBy.intersect( travelType ) ) { return false; }
+		if ( environmentEntity != null && environmentEntity != self && !environmentEntity.passableBy.intersect( travelType ) ) { return false; }
 
 		boolean passable = tileData.passableBy.intersect( travelType );
 
 		if ( !passable ) { return false; }
 
-		return entity == null || travelType.contains( Passability.ENTITY );
+		return entity == null || entity == self || travelType.contains( Passability.ENTITY );
 	}
 
 	@Override

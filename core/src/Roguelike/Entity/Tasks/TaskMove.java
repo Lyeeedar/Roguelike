@@ -24,27 +24,49 @@ public class TaskMove extends AbstractTask
 		int newX = oldTile.x + dir.getX();
 		int newY = oldTile.y + dir.getY();
 
-		GameTile newTile = oldTile.level.getGameTile( newX, newY );
+		boolean canMove = obj.canMove;
 
-		if ( newTile.entity != null )
+		if ( canMove )
 		{
-			// Swap positions if possible
-			if ( obj.isAllies( newTile.entity ) )
+			for ( int x = 0; x < obj.size; x++ )
 			{
-				if ( obj.canSwap && obj.canMove && newTile.entity.canMove )
+				for ( int y = 0; y < obj.size; y++ )
 				{
-					int[] diff1 = oldTile.addGameEntity( newTile.entity );
-					int[] diff2 = newTile.addGameEntity( obj );
+					GameTile newTile = oldTile.level.getGameTile( newX + x, newY + y );
 
-					newTile.entity.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff1, MoveEquation.SMOOTHSTEP );
-					obj.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff2, MoveEquation.SMOOTHSTEP );
+					if ( newTile.entity != null && newTile.entity != obj )
+					{
+						// Swap positions if possible
+						if ( obj.size == 1 && obj.isAllies( newTile.entity ) )
+						{
+							if ( obj.canSwap && obj.canMove && newTile.entity.canMove )
+							{
+								int[] diff1 = oldTile.addGameEntity( newTile.entity );
+								int[] diff2 = newTile.addGameEntity( obj );
+
+								newTile.entity.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff1, MoveEquation.SMOOTHSTEP );
+								obj.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff2, MoveEquation.SMOOTHSTEP );
+							}
+						}
+						else
+						{
+							canMove = false;
+							break;
+						}
+					}
+					else if ( !newTile.getPassable( obj.getTravelType(), obj ) )
+					{
+						canMove = false;
+						break;
+					}
 				}
 			}
 		}
-		else if ( obj.canMove && newTile.getPassable( obj.getTravelType() ) )
-		{
-			int[] diff = newTile.addGameEntity( obj );
 
+		if ( canMove )
+		{
+			GameTile newTile = oldTile.level.getGameTile( newX, newY );
+			int[] diff = newTile.addGameEntity( obj );
 			obj.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff, MoveEquation.SMOOTHSTEP );
 		}
 	}

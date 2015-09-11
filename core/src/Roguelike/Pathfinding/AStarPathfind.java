@@ -32,6 +32,7 @@ public class AStarPathfind
 	private final int actorSize;
 	private final boolean findOptimal;
 	private final EnumBitflag<Passability> travelType;
+	private final Object self;
 
 	private final int startx;
 	private final int starty;
@@ -45,7 +46,7 @@ public class AStarPathfind
 
 	private PriorityQueue<Node> openList = new PriorityQueue<Node>();
 
-	public AStarPathfind( PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, boolean findOptimal, int actorSize, EnumBitflag<Passability> travelType )
+	public AStarPathfind( PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, boolean findOptimal, int actorSize, EnumBitflag<Passability> travelType, Object self )
 	{
 		this.grid = grid;
 		this.width = grid.length;
@@ -54,6 +55,7 @@ public class AStarPathfind
 		this.actorSize = actorSize;
 		this.findOptimal = findOptimal;
 		this.travelType = travelType;
+		this.self = self;
 
 		this.startx = startx;
 		this.starty = starty;
@@ -158,7 +160,7 @@ public class AStarPathfind
 
 	public boolean isColliding( int x, int y )
 	{
-		if ( x < 0 || y < 0 || x >= width || y >= height || grid[x][y] == null || !grid[x][y].getPassable( travelType ) ) { return true; }
+		if ( x < 0 || y < 0 || x >= width || y >= height || grid[x][y] == null || !grid[x][y].getPassable( travelType, self ) ) { return true; }
 		return false;
 	}
 

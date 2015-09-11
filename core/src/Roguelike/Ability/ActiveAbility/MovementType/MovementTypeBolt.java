@@ -31,7 +31,7 @@ public class MovementTypeBolt extends AbstractMovementType
 	@Override
 	public void init( ActiveAbility ab, int endx, int endy )
 	{
-		Array<Point> fullpath = BresenhamLine.line( ab.source.x, ab.source.y, endx, endy, ab.source.level.getGrid(), false, ab.getRange() + 1, BoltPassability );
+		Array<Point> fullpath = BresenhamLine.line( ab.source.x, ab.source.y, endx, endy, ab.source.level.getGrid(), false, ab.getRange() + 1, BoltPassability, ab.caster );
 
 		Array<Point> actualpath = new Array<Point>( fullpath.size );
 		for ( int i = 1; i < ab.getRange() + 1 && i < fullpath.size; i++ )

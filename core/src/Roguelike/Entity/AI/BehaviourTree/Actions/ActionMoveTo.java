@@ -37,7 +37,7 @@ public class ActionMoveTo extends AbstractAction
 			return State;
 		}
 
-		Pathfinder pathFinder = new Pathfinder( entity.tile[0][0].level.getGrid(), entity.tile[0][0].x, entity.tile[0][0].y, target.x, target.y, true, entity.size );
+		Pathfinder pathFinder = new Pathfinder( entity.tile[0][0].level.getGrid(), entity.tile[0][0].x, entity.tile[0][0].y, target.x, target.y, true, entity.size, entity );
 		Array<Point> path = pathFinder.getPath( entity.getTravelType() );
 
 		// if couldnt find a valid path, fail
@@ -50,7 +50,7 @@ public class ActionMoveTo extends AbstractAction
 
 		GameTile nextTile = entity.tile[0][0].level.getGameTile( path.get( 1 ) );
 		// if next step is impassable then fail
-		if ( !nextTile.getPassable( entity.getTravelType() ) )
+		if ( !nextTile.getPassable( entity.getTravelType(), entity ) )
 		{
 			Pools.freeAll( path );
 			State = BehaviourTreeState.FAILED;

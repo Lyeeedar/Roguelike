@@ -49,7 +49,7 @@ public final class ShadowCastCache
 	private Array<Point> clearTiles = new Array<Point>();
 	private Array<Point> shadowCastOutput = new Array<Point>();
 
-	public Array<Point> getShadowCast( GameTile[][] grid, int x, int y, int range )
+	public Array<Point> getShadowCast( GameTile[][] grid, int x, int y, int range, Object caster )
 	{
 		boolean recalculate = false;
 
@@ -66,7 +66,7 @@ public final class ShadowCastCache
 			for ( Point pos : opaqueTiles )
 			{
 				GameTile tile = grid[pos.x][pos.y];
-				if ( tile.getPassable( LightPassability ) )
+				if ( tile.getPassable( LightPassability, caster ) )
 				{
 					recalculate = true; // something has moved
 					break;
@@ -78,7 +78,7 @@ public final class ShadowCastCache
 				for ( Point pos : clearTiles )
 				{
 					GameTile tile = grid[pos.x][pos.y];
-					if ( !tile.getPassable( LightPassability ) )
+					if ( !tile.getPassable( LightPassability, caster ) )
 					{
 						recalculate = true; // something has moved
 						break;
@@ -102,7 +102,7 @@ public final class ShadowCastCache
 			for ( Point pos : shadowCastOutput )
 			{
 				GameTile tile = grid[pos.x][pos.y];
-				if ( !tile.getPassable( LightPassability ) )
+				if ( !tile.getPassable( LightPassability, caster ) )
 				{
 					opaqueTiles.add( pos );
 				}

@@ -405,7 +405,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 					}
 
-					if ( gtile.environmentEntity != null )
+					if ( gtile.environmentEntity != null && gtile.environmentEntity.tile[0][0] == gtile )
 					{
 						EnvironmentEntity entity = gtile.environmentEntity;
 
@@ -442,7 +442,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 					GameEntity entity = gtile.entity;
 
-					if ( entity != null )
+					if ( entity != null && entity.tile[0][0] == gtile )
 					{
 						toBeDrawn.add( entity );
 

@@ -255,7 +255,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	{
 		Array<Point> validTargets = new Array<Point>();
 
-		Array<Point> output = cache.getShadowCast( source.level.getGrid(), source.x, source.y, getRange() );
+		Array<Point> output = cache.getShadowCast( source.level.getGrid(), source.x, source.y, getRange(), caster );
 
 		for ( Point tilePos : output )
 		{
@@ -370,7 +370,7 @@ public class ActiveAbility implements IAbility, IGameObject
 			{
 				Array<Point> output = new Array<Point>();
 
-				ShadowCaster shadow = new ShadowCaster( epicenter.level.getGrid(), aoe, abilityPassability );
+				ShadowCaster shadow = new ShadowCaster( epicenter.level.getGrid(), aoe, abilityPassability, caster );
 				shadow.ComputeFOV( epicenter.x, epicenter.y, output );
 
 				for ( Point tilePos : output )
@@ -391,7 +391,7 @@ public class ActiveAbility implements IAbility, IGameObject
 
 				Array<Point> output = new Array<Point>();
 
-				ShadowCaster shadow = new ShadowCaster( epicenter.level.getGrid(), this.cone, abilityPassability );
+				ShadowCaster shadow = new ShadowCaster( epicenter.level.getGrid(), this.cone, abilityPassability, caster );
 				shadow.ComputeFOV( epicenter.x, epicenter.y, output );
 
 				for ( Point tilePos : cone )

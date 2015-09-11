@@ -30,19 +30,87 @@ public class TaskAttack extends AbstractTask
 		this.dir = dir;
 	}
 
+	public Array<GameTile> buildHitTileArray( GameEntity attacker, Direction dir )
+	{
+		if ( dir.isCardinal() )
+		{
+			Item wep = attacker.getInventory().getEquip( EquipmentSlot.MAINWEAPON );
+
+			int xstep = 0;
+			int ystep = 0;
+
+			int sx = 0;
+			int sy = 0;
+
+			if ( dir == Direction.NORTH )
+			{
+				sx = 0;
+				sy = attacker.size - 1;
+
+				xstep = 1;
+				ystep = 0;
+			}
+			else if ( dir == Direction.SOUTH )
+			{
+				sx = 0;
+				sy = 0;
+
+				xstep = 1;
+				ystep = 0;
+			}
+			else if ( dir == Direction.EAST )
+			{
+				sx = attacker.size - 1;
+				sy = 0;
+
+				xstep = 0;
+				ystep = 1;
+			}
+			else if ( dir == Direction.WEST )
+			{
+				sx = 0;
+				sy = 0;
+
+				xstep = 0;
+				ystep = 1;
+			}
+
+			Array<GameTile> hitTiles = new Array<GameTile>();
+
+			for ( int i = 0; i < attacker.size; i++ )
+			{
+				GameTile oldTile = attacker.tile[sx + xstep * i][sy + ystep * i];
+
+				int newX = oldTile.x + dir.getX();
+				int newY = oldTile.y + dir.getY();
+
+				GameTile newTile = oldTile.level.getGameTile( newX, newY );
+
+				hitTiles.addAll( getHitTiles( oldTile, newTile, attacker, wep ) );
+			}
+
+			return hitTiles;
+		}
+		else
+		{
+			// Collect data
+			GameTile oldTile = attacker.tile[Math.max( 0, dir.getX() ) * ( attacker.size - 1 )][Math.max( 0, dir.getY() ) * ( attacker.size - 1 )];
+
+			int newX = oldTile.x + dir.getX();
+			int newY = oldTile.y + dir.getY();
+
+			GameTile newTile = oldTile.level.getGameTile( newX, newY );
+
+			Item wep = attacker.getInventory().getEquip( EquipmentSlot.MAINWEAPON );
+
+			Array<GameTile> hitTiles = getHitTiles( oldTile, newTile, attacker, wep );
+			return hitTiles;
+		}
+	}
+
 	public boolean checkHitSomething( GameEntity obj )
 	{
-		// Collect data
-		GameTile oldTile = obj.tile[0][0];
-
-		int newX = oldTile.x + dir.getX();
-		int newY = oldTile.y + dir.getY();
-
-		GameTile newTile = oldTile.level.getGameTile( newX, newY );
-
-		Item wep = obj.getInventory().getEquip( EquipmentSlot.MAINWEAPON );
-
-		Array<GameTile> hitTiles = getHitTiles( oldTile, newTile, obj, wep );
+		Array<GameTile> hitTiles = buildHitTileArray( obj, dir );
 
 		// Check if should attack something
 		boolean hitSomething = false;
@@ -55,30 +123,12 @@ public class TaskAttack extends AbstractTask
 			}
 		}
 
-		// if (newTile.environmentEntity != null &&
-		// newTile.environmentEntity.canTakeDamage &&
-		// !Passability.isPassable(newTile.environmentEntity.passableBy,
-		// obj.getTravelType()))
-		// {
-		// hitSomething = true;
-		// }
-
 		return hitSomething;
 	}
 
 	public boolean canAttackTile( GameEntity obj, GameTile tile )
 	{
-		// Collect data
-		GameTile oldTile = obj.tile[0][0];
-
-		int newX = oldTile.x + dir.getX();
-		int newY = oldTile.y + dir.getY();
-
-		GameTile newTile = oldTile.level.getGameTile( newX, newY );
-
-		Item wep = obj.getInventory().getEquip( EquipmentSlot.MAINWEAPON );
-
-		Array<GameTile> hitTiles = getHitTiles( oldTile, newTile, obj, wep );
+		Array<GameTile> hitTiles = buildHitTileArray( obj, dir );
 
 		for ( GameTile t : hitTiles )
 		{
@@ -254,7 +304,7 @@ public class TaskAttack extends AbstractTask
 
 				hitTiles.add( tile );
 
-				if ( !tile.getPassable( WeaponPassability ) )
+				if ( !tile.getPassable( WeaponPassability, entity ) )
 				{
 					break;
 				}
@@ -277,7 +327,7 @@ public class TaskAttack extends AbstractTask
 
 		Item wep = obj.getInventory().getEquip( EquipmentSlot.MAINWEAPON );
 
-		Array<GameTile> hitTiles = getHitTiles( oldTile, newTile, obj, wep );
+		Array<GameTile> hitTiles = buildHitTileArray( obj, dir );
 
 		// Check if should attack something
 		boolean hitSomething = false;

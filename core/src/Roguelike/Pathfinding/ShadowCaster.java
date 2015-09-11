@@ -30,6 +30,7 @@ public class ShadowCaster
 	private final int range;
 	private final PathfindingTile[][] grid;
 	private final EnumBitflag<Passability> travelType;
+	private final Object self;
 
 	private int startX;
 	private int startY;
@@ -39,13 +40,15 @@ public class ShadowCaster
 		this.grid = grid;
 		this.range = range;
 		this.travelType = ShadowPassability;
+		this.self = null;
 	}
 
-	public ShadowCaster( PathfindingTile[][] grid, int range, EnumBitflag<Passability> travelType )
+	public ShadowCaster( PathfindingTile[][] grid, int range, EnumBitflag<Passability> travelType, Object self )
 	{
 		this.grid = grid;
 		this.range = range;
 		this.travelType = travelType;
+		this.self = self;
 	}
 
 	// Takes a circle in the form of a center point and radius, and a function
@@ -301,7 +304,7 @@ public class ShadowCaster
 			return false;
 		}
 
-		boolean opaque = !grid[pos.x][pos.y].getPassable( travelType );
+		boolean opaque = !grid[pos.x][pos.y].getPassable( travelType, self );
 
 		Pools.free( pos );
 

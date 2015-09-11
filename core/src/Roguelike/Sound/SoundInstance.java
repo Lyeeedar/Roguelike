@@ -79,7 +79,7 @@ public class SoundInstance
 
 						if ( t.entity != null )
 						{
-							AStarPathfind astar = new AStarPathfind( tile.level.getGrid(), tile.x, tile.y, x, y, true, false, 1, SoundPassability );
+							AStarPathfind astar = new AStarPathfind( tile.level.getGrid(), tile.x, tile.y, x, y, true, false, 1, SoundPassability, null );
 							Array<Point> path = astar.getPath();
 
 							if ( path != null && path.size < maxAudibleDist )
@@ -109,7 +109,7 @@ public class SoundInstance
 		}
 		else
 		{
-			AStarPathfind astar = new AStarPathfind( tile.level.getGrid(), tile.x, tile.y, tile.level.player.tile[0][0].x, tile.level.player.tile[0][0].y, true, false, 1, SoundPassability );
+			AStarPathfind astar = new AStarPathfind( tile.level.getGrid(), tile.x, tile.y, tile.level.player.tile[0][0].x, tile.level.player.tile[0][0].y, true, false, 1, SoundPassability, null );
 			Array<Point> path = astar.getPath();
 
 			if ( path != null )

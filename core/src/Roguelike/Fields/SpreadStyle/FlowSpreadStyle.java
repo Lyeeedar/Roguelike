@@ -39,7 +39,7 @@ public class FlowSpreadStyle extends AbstractSpreadStyle
 						validTiles.add( tile );
 					}
 				}
-				else if ( tile.getPassable( travelType ) )
+				else if ( tile.getPassable( travelType, null ) )
 				{
 					validTiles.add( tile );
 				}

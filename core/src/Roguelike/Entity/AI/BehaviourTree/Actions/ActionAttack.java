@@ -25,7 +25,26 @@ public class ActionAttack extends AbstractAction
 			return State;
 		}
 
-		TaskAttack task = new TaskAttack( Direction.getDirection( target.x - entity.tile[0][0].x, target.y - entity.tile[0][0].y ) );
+		int cx = 0;
+		int cy = 0;
+		int dst = Integer.MAX_VALUE;
+
+		for ( int x = 0; x < entity.size; x++ )
+		{
+			for ( int y = 0; y < entity.size; y++ )
+			{
+				int tmpdst = Math.abs( target.x - ( entity.tile[0][0].x + x ) ) + Math.abs( target.y - ( entity.tile[0][0].y + y ) );
+
+				if ( tmpdst < dst )
+				{
+					dst = tmpdst;
+					cx = entity.tile[0][0].x + x;
+					cy = entity.tile[0][0].y + y;
+				}
+			}
+		}
+
+		TaskAttack task = new TaskAttack( Direction.getDirection( target.x - cx, target.y - cy ) );
 		GameTile targetTile = entity.tile[0][0].level.getGameTile( target );
 		if ( targetTile.environmentEntity != null && targetTile.environmentEntity.canTakeDamage && task.canAttackTile( entity, targetTile ) )
 		{

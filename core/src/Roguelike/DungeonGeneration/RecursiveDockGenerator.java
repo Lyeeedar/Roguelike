@@ -371,13 +371,13 @@ public class RecursiveDockGenerator
 		}
 
 		requiredRooms.sort( new Comparator<Room>()
-		{
+				{
 			@Override
 			public int compare( Room arg0, Room arg1 )
 			{
 				return arg0.comparisonString().compareTo( arg1.comparisonString() );
 			}
-		} );
+				} );
 	}
 
 	// ----------------------------------------------------------------------
@@ -603,7 +603,7 @@ public class RecursiveDockGenerator
 					}
 				}
 				else
-				// if ( testRoom.roomData.orientation == Orientation.FIXED )
+					// if ( testRoom.roomData.orientation == Orientation.FIXED )
 				{
 					fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
 				}
@@ -854,14 +854,14 @@ public class RecursiveDockGenerator
 			tris.add( tri );
 		}
 		tris.sort( new Comparator<Triangle>()
-				{
+		{
 
 			@Override
 			public int compare( Triangle arg0, Triangle arg1 )
 			{
 				return arg0.compareTo( arg1 );
 			}
-				} );
+		} );
 
 		for ( Triangle tri : tris )
 		{
@@ -877,27 +877,27 @@ public class RecursiveDockGenerator
 			int closestDist = Integer.MAX_VALUE;
 			boolean found = false;
 			outer:
-				for ( Pnt[] path : paths )
+			for ( Pnt[] path : paths )
+			{
+				for ( Pnt p : path )
 				{
-					for ( Pnt p : path )
+					int px = (int) p.coord( 0 );
+					int py = (int) p.coord( 1 );
+
+					if ( rx == px && ry == py )
 					{
-						int px = (int) p.coord( 0 );
-						int py = (int) p.coord( 1 );
+						found = true;
+						break outer;
+					}
 
-						if ( rx == px && ry == py )
-						{
-							found = true;
-							break outer;
-						}
-
-						int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
-						if ( tempDist < closestDist )
-						{
-							closestDist = tempDist;
-							closest = p;
-						}
+					int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
+					if ( tempDist < closestDist )
+					{
+						closestDist = tempDist;
+						closest = p;
 					}
 				}
+			}
 
 			if ( !found )
 			{
@@ -912,7 +912,7 @@ public class RecursiveDockGenerator
 			int x2 = (int) p[1].coord( 0 );
 			int y2 = (int) p[1].coord( 1 );
 
-			AStarPathfind pathFind = new AStarPathfind( tiles, x1, y1, x2, y2, false, true, dfp.corridorStyle.width, GeneratorPassability );
+			AStarPathfind pathFind = new AStarPathfind( tiles, x1, y1, x2, y2, false, true, dfp.corridorStyle.width, GeneratorPassability, null );
 			Array<Point> path = pathFind.getPath();
 
 			carveCorridor( path );
@@ -2267,7 +2267,7 @@ public class RecursiveDockGenerator
 						continue;
 					}
 
-					AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false, 1, GeneratorPassability );
+					AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false, 1, GeneratorPassability, null );
 					Array<Point> path = pathfind.getPath();
 
 					for ( Point point : path )
@@ -2504,7 +2504,7 @@ public class RecursiveDockGenerator
 
 		// ----------------------------------------------------------------------
 		@Override
-		public boolean getPassable( EnumBitflag<Passability> travelType )
+		public boolean getPassable( EnumBitflag<Passability> travelType, Object self )
 		{
 			return passable;
 		}

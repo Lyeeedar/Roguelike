@@ -1,0 +1,25 @@
+<Entity>
+	<Name>Kitsune</Name>
+
+	<Size>2</Size>
+	
+	<Sprite>
+		<Name>Large/Kitsune</Name>
+		<AnimationMode>Shrink</AnimationMode>
+	</Sprite>
+	
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Kitsune</Faction>
+	</Factions>
+	
+	<Statistics>
+		<MaxHP>1000</MaxHP>
+		<Range>6</<Range>
+		
+		<Wood_Atk>10</Wood_Atk>
+		<Levitate>1</Levitate>
+	</Statistics>
+	
+</Entity>

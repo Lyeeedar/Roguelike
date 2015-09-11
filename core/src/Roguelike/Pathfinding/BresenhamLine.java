@@ -43,7 +43,7 @@ public class BresenhamLine
 		return path;
 	}
 
-	public static Array<Point> line( int x, int y, int x2, int y2, PathfindingTile[][] Grid, boolean checkPassable, int range, EnumBitflag<Passability> travelType )
+	public static Array<Point> line( int x, int y, int x2, int y2, PathfindingTile[][] Grid, boolean checkPassable, int range, EnumBitflag<Passability> travelType, Object self )
 	{
 		x = MathUtils.clamp( x, 0, Grid.length - 1 );
 		x2 = MathUtils.clamp( x2, 0, Grid.length - 1 );
@@ -100,7 +100,7 @@ public class BresenhamLine
 				y += dy2;
 			}
 
-			if ( x < 0 || y < 0 || x >= Grid.length - 1 || y >= Grid[0].length - 1 || ( checkPassable && !Grid[x][y].getPassable( travelType ) ) )
+			if ( x < 0 || y < 0 || x >= Grid.length - 1 || y >= Grid[0].length - 1 || ( checkPassable && !Grid[x][y].getPassable( travelType, self ) ) )
 			{
 				break;
 			}

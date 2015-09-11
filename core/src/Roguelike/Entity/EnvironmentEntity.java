@@ -101,6 +101,23 @@ public class EnvironmentEntity extends Entity
 
 	// ----------------------------------------------------------------------
 	@Override
+	public void removeFromTile()
+	{
+		for ( int x = 0; x < size; x++ )
+		{
+			for ( int y = 0; y < size; y++ )
+			{
+				if ( tile[x][y] != null )
+				{
+					tile[x][y].environmentEntity = null;
+					tile[x][y] = null;
+				}
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
 	public Array<GameEventHandler> getAllHandlers()
 	{
 		Array<GameEventHandler> handlers = new Array<GameEventHandler>();
@@ -319,7 +336,7 @@ public class EnvironmentEntity extends Entity
 
 							GameTile ntile = tile.level.getGameTile( nx, ny );
 
-							if ( ntile != null && ntile.getPassable( ge.getTravelType() ) && ntile.entity == null )
+							if ( ntile != null && ntile.getPassable( ge.getTravelType(), null ) && ntile.entity == null )
 							{
 								spawnTile = ntile;
 								break;
