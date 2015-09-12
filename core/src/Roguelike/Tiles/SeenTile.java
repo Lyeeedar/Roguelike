@@ -83,7 +83,7 @@ public class SeenTile
 		}
 
 		// Store environment history
-		if ( tile.environmentEntity != null )
+		if ( tile.environmentEntity != null && tile.environmentEntity.tile[0][0] == tile )
 		{
 			if ( environmentHistory == null )
 			{
@@ -100,7 +100,7 @@ public class SeenTile
 		}
 
 		// Store entity history
-		if ( tile.entity != null && tile.entity != player )
+		if ( tile.entity != null && tile.entity != player && tile.entity.tile[0][0] == tile )
 		{
 			if ( entityHistory == null )
 			{

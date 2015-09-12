@@ -199,6 +199,27 @@ public class TaskAttack extends AbstractTask
 	{
 		// if bow only hit closest
 
+		int cx = 0;
+		int cy = 0;
+		int dst = Integer.MAX_VALUE;
+
+		for ( int x = 0; x < entity.size; x++ )
+		{
+			for ( int y = 0; y < entity.size; y++ )
+			{
+				int tmpdst = Math.abs( newTile.x - ( entity.tile[0][0].x + x ) ) + Math.abs( newTile.y - ( entity.tile[0][0].y + y ) );
+
+				if ( tmpdst < dst )
+				{
+					dst = tmpdst;
+					cx = entity.tile[0][0].x + x;
+					cy = entity.tile[0][0].y + y;
+				}
+			}
+		}
+
+		GameTile source = entity.tile[cx][cy];
+
 		GameTile bestTarget = null;
 
 		// Find closest game entity first
@@ -207,7 +228,7 @@ public class TaskAttack extends AbstractTask
 		{
 			if ( tile.entity != null && !tile.entity.isAllies( entity ) )
 			{
-				int dist = Math.abs( tile.x - entity.tile[0][0].x ) + Math.abs( tile.y - entity.tile[0][0].y );
+				int dist = Math.abs( tile.x - source.x ) + Math.abs( tile.y - source.y );
 
 				if ( dist < closest )
 				{
@@ -217,7 +238,7 @@ public class TaskAttack extends AbstractTask
 			}
 			else if ( tile.environmentEntity != null && tile.environmentEntity.canTakeDamage )
 			{
-				int dist = Math.abs( tile.x - entity.tile[0][0].x ) + Math.abs( tile.y - entity.tile[0][0].y );
+				int dist = Math.abs( tile.x - source.x ) + Math.abs( tile.y - source.y );
 
 				if ( dist < closest )
 				{
@@ -247,7 +268,7 @@ public class TaskAttack extends AbstractTask
 
 			Sprite sprite = hitEffect.copy();
 
-			int[] diff = bestTarget.getPosDiff( entity.tile[0][0] );
+			int[] diff = bestTarget.getPosDiff( source );
 			float distMoved = (float) Math.sqrt( diff[0] * diff[0] + diff[1] * diff[1] ) / Global.TileSize;
 
 			sprite.spriteAnimation = new MoveAnimation( 0.025f * distMoved, diff, MoveEquation.LINEAR );

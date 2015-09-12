@@ -9,7 +9,7 @@ public class StretchAnimation extends AbstractSpriteAnimation
 {
 	public enum StretchEquation
 	{
-		EXTEND, REVERSEEXTEND
+		EXTEND, REVERSEEXTEND, EXPAND
 	}
 
 	private float duration;
@@ -64,6 +64,11 @@ public class StretchAnimation extends AbstractSpriteAnimation
 			offset[1] = (int) ( ( diff[1] / 2 ) * ( 1 - alpha ) );
 
 			scale[1] = 1 + finalScale * ( 1 - alpha );
+		}
+		else if ( eqn == StretchEquation.EXPAND )
+		{
+			scale[0] = alpha;
+			scale[1] = alpha;
 		}
 
 		return time > duration;

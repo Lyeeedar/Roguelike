@@ -80,6 +80,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	public Sprite Icon;
 	private Sprite movementSprite;
 	private Sprite hitSprite;
+	private boolean singleSprite = false;
 	private Sprite useSprite;
 
 	private boolean spentCost = false;
@@ -146,6 +147,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		aa.movementSprite = movementSprite != null ? movementSprite.copy() : null;
 		aa.hitSprite = hitSprite != null ? hitSprite.copy() : null;
 		aa.useSprite = useSprite != null ? useSprite.copy() : null;
+		aa.singleSprite = singleSprite;
 
 		return aa;
 	}
@@ -273,6 +275,27 @@ public class ActiveAbility implements IAbility, IGameObject
 	// ----------------------------------------------------------------------
 	public void lockTarget( GameTile tile )
 	{
+		int cx = 0;
+		int cy = 0;
+		int dst = Integer.MAX_VALUE;
+
+		for ( int x = 0; x < caster.size; x++ )
+		{
+			for ( int y = 0; y < caster.size; y++ )
+			{
+				int tmpdst = Math.abs( tile.x - ( caster.tile[0][0].x + x ) ) + Math.abs( tile.y - ( caster.tile[0][0].y + y ) );
+
+				if ( tmpdst < dst )
+				{
+					dst = tmpdst;
+					cx = x;
+					cy = y;
+				}
+			}
+		}
+
+		source = caster.tile[cx][cy];
+
 		movementType.init( this, tile.x, tile.y );
 	}
 
@@ -448,7 +471,7 @@ public class ActiveAbility implements IAbility, IGameObject
 					effect.update( this, 1, tile );
 				}
 
-				if ( getHitSprite() != null )
+				if ( getHitSprite() != null && ( aoe == 0 || !singleSprite ) )
 				{
 					int[] diff = tile.getPosDiff( epicenter );
 
@@ -480,6 +503,33 @@ public class ActiveAbility implements IAbility, IGameObject
 
 					tile.spriteEffects.add( effect );
 				}
+			}
+
+			if ( getHitSprite() != null && aoe > 0 && singleSprite )
+			{
+				int ex = epicenter.x - aoe;
+				int ey = epicenter.y - aoe;
+
+				GameTile tile = epicenter.level.getGameTile( ex, ey );
+				int[] diff = tile.getPosDiff( epicenter );
+
+				Sprite sprite = getHitSprite().copy();
+				if ( sprite.spriteAnimation != null )
+				{
+					int distMoved = ( Math.abs( diff[0] ) + Math.abs( diff[1] ) ) / Global.TileSize;
+					sprite.spriteAnimation.set( 0.05f * distMoved, diff );
+				}
+				sprite.size = aoe * 2 + 1;
+
+				SpriteEffect effect = new SpriteEffect( sprite, Direction.CENTER, light != null ? light.copyNoFlag() : null );
+
+				SoundInstance sound = sprite.sound;
+				if ( sound != null )
+				{
+					sound.play( tile );
+				}
+
+				tile.spriteEffects.add( effect );
 			}
 
 			if ( screenshake > 0 )
@@ -548,8 +598,14 @@ public class ActiveAbility implements IAbility, IGameObject
 
 		Icon = xmlElement.getChildByName( "Icon" ) != null ? AssetManager.loadSprite( xmlElement.getChildByName( "Icon" ) ) : Icon;
 		movementSprite = xmlElement.getChildByName( "MovementSprite" ) != null ? AssetManager.loadSprite( xmlElement.getChildByName( "MovementSprite" ) ) : movementSprite;
-		hitSprite = xmlElement.getChildByName( "HitSprite" ) != null ? AssetManager.loadSprite( xmlElement.getChildByName( "HitSprite" ) ) : hitSprite;
 		useSprite = xmlElement.getChildByName( "UseSprite" ) != null ? AssetManager.loadSprite( xmlElement.getChildByName( "UseSprite" ) ) : useSprite;
+
+		Element hitSpriteEl = xmlElement.getChildByName( "HitSprite" );
+		if ( hitSpriteEl != null )
+		{
+			hitSprite = AssetManager.loadSprite( xmlElement.getChildByName( "HitSprite" ) );
+			singleSprite = hitSpriteEl.getBoolean( "SingleSprite", false );
+		}
 
 		Element lightElement = xmlElement.getChildByName( "Light" );
 		if ( lightElement != null )

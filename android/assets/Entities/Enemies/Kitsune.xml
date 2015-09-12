@@ -22,4 +22,39 @@
 		<Levitate>1</Levitate>
 	</Statistics>
 	
+	<ActiveAbilities>
+		
+		<Laser>
+			<Cooldown>3</Cooldown>
+			<Range>5</Range>
+			<AOE>1</AOE>
+			
+			<MovementSprite>
+			    <Name>AbilitySprites/LaserBeam/LaserBeam</Name>
+				<UpdateRate>0.1</UpdateRate>
+				<Animation>
+				    <Stretch>
+				        <Equation>Extend</Equation>
+				    </Stretch>
+				</Animation>
+			</MovementSprite>	
+			
+			<HitSprite>
+				<Name>AbilitySprites/Explosion/Explosion</Name>
+				<UpdateRate>0.05</UpdateRate>
+				<SingleSprite>true</SingleSprite>
+			</HitSprite>
+					
+			<Targeting><Entity Type="Enemy"/></Targeting>	
+			<Movement><Smite/></Movement>
+			
+			<Effect>
+				<Damage>
+					<Air_ATK>30</Air_ATK>
+				</Damage>
+			</Effect>
+		</Laser>
+	
+	</ActiveAbilities>
+	
 </Entity>
