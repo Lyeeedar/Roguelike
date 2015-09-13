@@ -1,19 +1,24 @@
 package Roguelike.DungeonGeneration.RoomGenerators;
 
-import com.badlogic.gdx.math.MathUtils;
+import java.util.Random;
+
+import Roguelike.Global.Direction;
 
 public class MidpointDisplacement
 {
 	public float deepWaterThreshold, shallowWaterThreshold, desertThreshold, plainsThreshold, grasslandThreshold, forestThreshold, hillsThreshold,
-	mountainsThreshold;
+			mountainsThreshold;
 
 	public int n;
 	public int wmult, hmult;
 
 	public float smoothness;
 
-	public MidpointDisplacement()
+	private final Random ran;
+
+	public MidpointDisplacement( Random ran )
 	{
+		this.ran = ran;
 
 		// the thresholds which determine cutoffs for different terrain types
 		deepWaterThreshold = 0.5f;
@@ -27,16 +32,16 @@ public class MidpointDisplacement
 
 		// n partly controls the size of the map, but mostly controls the level
 		// of detail available
-		n = 7;
+		n = 5;
 
 		// wmult and hmult are the width and height multipliers. They set how
 		// separate regions there are
-		wmult = 6;
-		hmult = 4;
+		wmult = 3;
+		hmult = 3;
 
 		// Smoothness controls how smooth the resultant terain is. Higher = more
 		// smooth
-		smoothness = 2f;
+		smoothness = 3f;
 	}
 
 	public int[][] getMap()
@@ -60,12 +65,30 @@ public class MidpointDisplacement
 		// is decreased by a factor of "smoothness"
 		float h = 1;
 
+		for ( int i = 0; i < width; i++ )
+		{
+			for ( int j = 0; j < height; j++ )
+			{
+				if ( i == 0 || j == 0 || i == width - 1 || j == height - 1 )
+				{
+					map[i][j] = 0;
+				}
+				else
+				{
+					map[i][j] = -1;
+				}
+			}
+		}
+
 		// Initialize the grid points
 		for ( int i = 0; i < width; i += 2 * step )
 		{
 			for ( int j = 0; j < height; j += 2 * step )
 			{
-				map[i][j] = MathUtils.random( 2 * h );
+				if ( map[i][j] == -1 )
+				{
+					map[i][j] = ran.nextFloat() * ( 2 * h );
+				}
 			}
 		}
 
@@ -77,13 +100,18 @@ public class MidpointDisplacement
 			{
 				for ( int y = step; y < height; y += 2 * step )
 				{
+					if ( map[x][y] != -1 )
+					{
+						continue;
+					}
+
 					sum = map[x - step][y - step] + // down-left
 							map[x - step][y + step]
 									+ // up-left
 									map[x + step][y - step]
 											+ // down-right
 											map[x + step][y + step]; // up-right
-					map[x][y] = sum / 4 + MathUtils.random( -h, h );
+					map[x][y] = sum / 4 + ( -h + ran.nextFloat() * ( h - -h ) );
 				}
 			}
 
@@ -92,6 +120,11 @@ public class MidpointDisplacement
 			{
 				for ( int y = step * ( 1 - ( x / step ) % 2 ); y < height; y += 2 * step )
 				{
+					if ( map[x][y] != -1 )
+					{
+						continue;
+					}
+
 					sum = 0;
 					count = 0;
 					if ( x - step >= 0 )
@@ -114,7 +147,7 @@ public class MidpointDisplacement
 						sum += map[x][y + step];
 						count++;
 					}
-					if ( count > 0 ) map[x][y] = sum / count + MathUtils.random( -h, h );
+					if ( count > 0 ) map[x][y] = sum / count + ( -h + ran.nextFloat() * ( h - -h ) );
 					else map[x][y] = 0;
 				}
 
@@ -150,6 +183,32 @@ public class MidpointDisplacement
 				else if ( map[row][col] < hillsThreshold ) returnMap[row][col] = 6;
 				else if ( map[row][col] < mountainsThreshold ) returnMap[row][col] = 7;
 				else returnMap[row][col] = 8;
+			}
+		}
+
+		// Removed isolated islands
+		for ( int x = 1; x < returnMap.length - 1; x++ )
+		{
+			for ( int y = 1; y < returnMap[0].length - 1; y++ )
+			{
+				int val = returnMap[x][y];
+
+				int counter = 0;
+				for ( Direction dir : Direction.values() )
+				{
+					if ( dir.isCardinal() )
+					{
+						if ( returnMap[x + dir.getX()][y + dir.getY()] != val )
+						{
+							counter++;
+						}
+					}
+				}
+
+				if ( counter == 4 )
+				{
+					returnMap[x][y] = returnMap[x][y - 1];
+				}
 			}
 		}
 

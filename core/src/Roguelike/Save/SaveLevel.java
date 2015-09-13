@@ -62,7 +62,10 @@ public final class SaveLevel extends SaveableObject<Level>
 		UID = obj.UID;
 
 		requiredRooms.clear();
-		requiredRooms.addAll( obj.requiredRooms );
+		if ( obj.requiredRooms != null )
+		{
+			requiredRooms.addAll( obj.requiredRooms );
+		}
 
 		gameEntities.clear();
 		Array<GameEntity> tempGameEntities = new Array<GameEntity>( false, 16 );

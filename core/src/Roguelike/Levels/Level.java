@@ -242,22 +242,36 @@ public class Level
 
 	public void updateVisibleTiles()
 	{
-		for ( int x = 0; x < width; x++ )
+		if ( !isVisionRestricted )
 		{
-			for ( int y = 0; y < height; y++ )
+			for ( int x = 0; x < width; x++ )
 			{
-				Grid[x][y].visible = false;
+				for ( int y = 0; y < height; y++ )
+				{
+					Grid[x][y].visible = true;
+					SeenGrid[x][y].seen = true;
+				}
 			}
 		}
-
-		Array<Point> output = visibilityData.getShadowCast( Grid, player.tile[0][0].x, player.tile[0][0].y, player.getVariable( Statistic.RANGE ), player );
-
-		for ( Point tilePos : output )
+		else
 		{
-			getGameTile( tilePos ).visible = true;
-		}
+			for ( int x = 0; x < width; x++ )
+			{
+				for ( int y = 0; y < height; y++ )
+				{
+					Grid[x][y].visible = false;
+				}
+			}
 
-		updateSeenGrid();
+			Array<Point> output = visibilityData.getShadowCast( Grid, player.tile[0][0].x, player.tile[0][0].y, player.getVariable( Statistic.RANGE ), player );
+
+			for ( Point tilePos : output )
+			{
+				getGameTile( tilePos ).visible = true;
+			}
+
+			updateSeenGrid();
+		}
 	}
 
 	private void updateSeenGrid()
@@ -1234,7 +1248,10 @@ public class Level
 
 	public boolean inTurn = false;
 
+	public boolean isVisionRestricted = true;
+
 	public Color Ambient = new Color( 0.1f, 0.1f, 0.3f, 1.0f );
+	public Sprite background;
 
 	public SeenTile[][] SeenGrid;
 	public GameTile[][] Grid;

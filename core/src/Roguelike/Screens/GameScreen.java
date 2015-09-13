@@ -354,6 +354,15 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
+	private void renderBackground( int offsetx, int offsety )
+	{
+		if ( Global.CurrentLevel.background != null )
+		{
+			Sprite sprite = Global.CurrentLevel.background;
+		}
+	}
+
+	// ----------------------------------------------------------------------
 	private void renderVisibleTiles( int offsetx, int offsety, int tileSize3 )
 	{
 		for ( int x = 0; x < Global.CurrentLevel.width; x++ )
@@ -1430,9 +1439,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		if ( !mouseOverUI )
 		{
 			Global.TileSize -= amount * 5;
-			if ( Global.TileSize < 8 )
+			if ( Global.TileSize < 2 )
 			{
-				Global.TileSize = 8;
+				Global.TileSize = 2;
 			}
 		}
 
@@ -1535,9 +1544,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		lastZoom = distance;
 
 		Global.TileSize -= amount / 10.0f;
-		if ( Global.TileSize < 8 )
+		if ( Global.TileSize < 2 )
 		{
-			Global.TileSize = 8;
+			Global.TileSize = 2;
 		}
 
 		return false;

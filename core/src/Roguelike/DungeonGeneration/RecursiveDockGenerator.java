@@ -36,7 +36,7 @@ import Roguelike.Util.ImageUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 
-public class RecursiveDockGenerator
+public class RecursiveDockGenerator extends AbstractDungeonGenerator
 {
 	// ####################################################################//
 	// region Constructor
@@ -66,6 +66,7 @@ public class RecursiveDockGenerator
 
 	// ----------------------------------------------------------------------
 	// Designed to be called until returns true
+	@Override
 	public boolean generate()
 	{
 		if ( generationIndex == 0 )
@@ -196,6 +197,7 @@ public class RecursiveDockGenerator
 	}
 
 	// ----------------------------------------------------------------------
+	@Override
 	public Level getLevel()
 	{
 		return level;
@@ -1682,11 +1684,6 @@ public class RecursiveDockGenerator
 
 	// ----------------------------------------------------------------------
 	public static final EnumBitflag<Passability> GeneratorPassability = new EnumBitflag<Passability>( Passability.WALK );
-
-	public int percent;
-	public String generationText = "Selecting Rooms";
-
-	private int generationIndex = 0;
 
 	public SaveLevel saveLevel;
 

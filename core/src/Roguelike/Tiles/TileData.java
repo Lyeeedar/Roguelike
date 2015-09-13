@@ -28,6 +28,12 @@ public class TileData
 
 	}
 
+	public TileData( EnumBitflag<Passability> passableBy, Sprite... sprites )
+	{
+		this.sprites = sprites;
+		this.passableBy = passableBy;
+	}
+
 	public static TileData parse( Element xml )
 	{
 		TileData data = new TileData();
