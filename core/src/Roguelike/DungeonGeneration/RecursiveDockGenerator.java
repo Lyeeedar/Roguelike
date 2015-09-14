@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Random;
 
 import PaulChew.Pnt;
@@ -15,20 +14,11 @@ import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.DungeonGeneration.DungeonFileParser.CorridorFeature.PlacementMode;
 import Roguelike.DungeonGeneration.DungeonFileParser.CorridorStyle.PathStyle;
-import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom.Orientation;
-import Roguelike.DungeonGeneration.FactionParser.Encounter;
-import Roguelike.DungeonGeneration.FactionParser.Feature;
-import Roguelike.DungeonGeneration.FactionParser.FeaturePlacementType;
-import Roguelike.DungeonGeneration.RoomGenerators.AbstractRoomGenerator;
-import Roguelike.Entity.EnvironmentEntity;
-import Roguelike.Entity.GameEntity;
-import Roguelike.Levels.Level;
+import Roguelike.DungeonGeneration.Room.RoomDoor;
 import Roguelike.Pathfinding.AStarPathfind;
-import Roguelike.Pathfinding.BresenhamLine;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Save.SaveLevel;
-import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.ImageUtils;
@@ -42,22 +32,9 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 	// region Constructor
 
 	// ----------------------------------------------------------------------
-	public RecursiveDockGenerator( SaveLevel level )
+	public RecursiveDockGenerator()
 	{
-		this.saveLevel = level;
-		dfp = DungeonFileParser.load( level.fileName + "/" + level.fileName );
 
-		if ( Global.ANDROID )
-		{
-			width = 50;
-			height = 50;
-		}
-
-		minPadding = ( dfp.corridorStyle.width / 2 ) + 1;
-		maxPadding += minPadding;
-		paddedMinRoom = minRoomSize + minPadding * 2;
-
-		ran = new Random( level.seed );
 	}
 
 	// endregion Constructor
@@ -178,7 +155,16 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 		}
 		else if ( generationIndex == 8 )
 		{
-			createLevel();
+			// flatten to symbol grid
+			Symbol[][] symbolGrid = new Symbol[width][height];
+			for ( int x = 0; x < width; x++ )
+			{
+				for ( int y = 0; y < height; y++ )
+				{
+					symbolGrid[x][y] = tiles[x][y].symbol;
+				}
+			}
+			level = createLevel( symbolGrid, dfp.getSymbol( '#' ) );
 
 			generationIndex++;
 			generationText = "Completed";
@@ -198,189 +184,32 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 	// ----------------------------------------------------------------------
 	@Override
-	public Level getLevel()
+	public void setup( SaveLevel level, DungeonFileParser dfp )
 	{
-		return level;
-	}
+		this.saveLevel = level;
+		this.dfp = dfp;
 
-	// ----------------------------------------------------------------------
-	public static Symbol[][] minimiseGrid( Symbol[][] grid, Symbol wall )
-	{
-		int width = grid.length;
-		int height = grid[0].length;
-
-		int minx = -1;
-		int miny = -1;
-		int maxx = -1;
-		int maxy = -1;
-
-		boolean complete = false;
-
-		// find min x
-		for ( int x = 0; x < width; x++ )
+		if ( Global.ANDROID )
 		{
-			for ( int y = 0; y < height; y++ )
-			{
-				Symbol s = grid[x][y];
-				if ( s.character != wall.character )
-				{
-					minx = x - 1;
-
-					complete = true;
-					break;
-				}
-			}
-			if ( complete )
-			{
-				break;
-			}
+			width = 50;
+			height = 50;
 		}
-		if ( minx == -1 ) { return grid; }
-
-		// find min y
-		complete = false;
-		for ( int y = 0; y < height; y++ )
+		else
 		{
-			for ( int x = minx; x < width; x++ )
-			{
-				Symbol s = grid[x][y];
-				if ( s.character != wall.character )
-				{
-					miny = y - 1;
-
-					complete = true;
-					break;
-				}
-			}
-			if ( complete )
-			{
-				break;
-			}
-		}
-		if ( miny == -1 ) { return grid; }
-
-		// find max x
-		complete = false;
-		for ( int x = width - 1; x >= minx; x-- )
-		{
-			for ( int y = miny; y < height; y++ )
-			{
-				Symbol s = grid[x][y];
-				if ( s.character != wall.character )
-				{
-					maxx = x + 2;
-
-					complete = true;
-					break;
-				}
-			}
-			if ( complete )
-			{
-				break;
-			}
-		}
-		if ( maxx == -1 ) { return grid; }
-
-		// find max y
-		complete = false;
-		for ( int y = height - 1; y >= miny; y-- )
-		{
-			for ( int x = minx; x < maxx; x++ )
-			{
-				Symbol s = grid[x][y];
-				if ( s.character != wall.character )
-				{
-					maxy = y + 2;
-
-					complete = true;
-					break;
-				}
-			}
-			if ( complete )
-			{
-				break;
-			}
-		}
-		if ( maxy == -1 ) { return grid; }
-
-		// minimise room
-		int newwidth = maxx - minx;
-		int newheight = maxy - miny;
-
-		Symbol[][] newgrid = new Symbol[newwidth][newheight];
-
-		for ( int x = 0; x < newwidth; x++ )
-		{
-			for ( int y = 0; y < newheight; y++ )
-			{
-				newgrid[x][y] = grid[minx + x][miny + y];
-			}
+			width = 75;
+			height = 75;
 		}
 
-		return newgrid;
+		minPadding = ( dfp.corridorStyle.width / 2 ) + 1;
+		maxPadding += minPadding;
+		paddedMinRoom = minRoomSize + minPadding * 2;
+
+		ran = new Random( level.seed );
 	}
 
 	// endregion Public Methods
 	// ####################################################################//
 	// region Private Methods
-
-	// ----------------------------------------------------------------------
-	protected void selectRooms()
-	{
-		for ( DFPRoom r : dfp.getRequiredRooms( saveLevel.depth ) )
-		{
-			if ( r.isTransition )
-			{
-				if ( !saveLevel.created )
-				{
-					additionalRooms.add( r );
-				}
-			}
-			else
-			{
-				Room room = new Room();
-				r.fillRoom( room, ran, dfp );
-				requiredRooms.add( room );
-			}
-		}
-
-		if ( dfp.optionalRooms.size > 0 )
-		{
-			DFPRoom r = dfp.optionalRooms.get( ran.nextInt( dfp.optionalRooms.size ) );
-
-			if ( r.isTransition )
-			{
-				if ( !saveLevel.created )
-				{
-					additionalRooms.add( r );
-				}
-			}
-			else
-			{
-				Room room = new Room();
-				r.fillRoom( room, ran, dfp );
-				requiredRooms.add( room );
-			}
-		}
-
-		additionalRooms.addAll( saveLevel.requiredRooms );
-
-		for ( DFPRoom r : additionalRooms )
-		{
-			Room room = new Room();
-			r.fillRoom( room, ran, dfp );
-			requiredRooms.add( room );
-		}
-
-		requiredRooms.sort( new Comparator<Room>()
-				{
-			@Override
-			public int compare( Room arg0, Room arg1 )
-			{
-				return arg0.comparisonString().compareTo( arg1.comparisonString() );
-			}
-				} );
-	}
 
 	// ----------------------------------------------------------------------
 	protected void fillGridBase()
@@ -605,7 +434,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					}
 				}
 				else
-					// if ( testRoom.roomData.orientation == Orientation.FIXED )
+				// if ( testRoom.roomData.orientation == Orientation.FIXED )
 				{
 					fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
 				}
@@ -856,14 +685,14 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			tris.add( tri );
 		}
 		tris.sort( new Comparator<Triangle>()
-		{
+				{
 
 			@Override
 			public int compare( Triangle arg0, Triangle arg1 )
 			{
 				return arg0.compareTo( arg1 );
 			}
-		} );
+				} );
 
 		for ( Triangle tri : tris )
 		{
@@ -879,27 +708,27 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			int closestDist = Integer.MAX_VALUE;
 			boolean found = false;
 			outer:
-			for ( Pnt[] path : paths )
-			{
-				for ( Pnt p : path )
+				for ( Pnt[] path : paths )
 				{
-					int px = (int) p.coord( 0 );
-					int py = (int) p.coord( 1 );
-
-					if ( rx == px && ry == py )
+					for ( Pnt p : path )
 					{
-						found = true;
-						break outer;
-					}
+						int px = (int) p.coord( 0 );
+						int py = (int) p.coord( 1 );
 
-					int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
-					if ( tempDist < closestDist )
-					{
-						closestDist = tempDist;
-						closest = p;
+						if ( rx == px && ry == py )
+						{
+							found = true;
+							break outer;
+						}
+
+						int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
+						if ( tempDist < closestDist )
+						{
+							closestDist = tempDist;
+							closest = p;
+						}
 					}
 				}
-			}
 
 			if ( !found )
 			{
@@ -945,7 +774,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 				{
 					t = tiles[pos.x + x][pos.y + y];
 
-					if ( t.symbol == dfp.sharedSymbolMap.get( '#' ) )
+					if ( t.symbol.character == '#' )
 					{
 						t.symbol = dfp.sharedSymbolMap.get( '.' );
 					}
@@ -1003,7 +832,6 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							|| dfp.corridorStyle.sideRecurring.placementMode == PlacementMode.BOTTOM
 							|| ( dfp.corridorStyle.sideRecurring.placementMode == PlacementMode.ALTERNATE && !placementAlternator );
 
-					Symbol wall = dfp.sharedSymbolMap.get( '#' );
 					if ( path.get( i - 1 ).x != pos.x )
 					{
 						if ( dfp.corridorStyle.width == 1 )
@@ -1026,7 +854,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 						}
 						else
 						{
-							if ( placeTop && tiles[pos.x + width / 2][pos.y - 1].symbol == wall )
+							if ( placeTop && tiles[pos.x + width / 2][pos.y - 1].symbol.character == '#' )
 							{
 								t = tiles[pos.x + width / 2][pos.y];
 								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
@@ -1034,7 +862,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 								t.placerHashCode = path.hashCode();
 							}
 
-							if ( placeBottom && tiles[pos.x + width / 2][pos.y + width].symbol == wall )
+							if ( placeBottom && tiles[pos.x + width / 2][pos.y + width].symbol.character == '#' )
 							{
 								t = tiles[pos.x + width / 2][pos.y + width - 1];
 								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
@@ -1065,7 +893,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 						}
 						else
 						{
-							if ( placeTop && tiles[pos.x - 1][pos.y + width / 2].symbol == wall )
+							if ( placeTop && tiles[pos.x - 1][pos.y + width / 2].symbol.character == '#' )
 							{
 								t = tiles[pos.x][pos.y + width / 2];
 								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
@@ -1073,7 +901,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 								t.placerHashCode = path.hashCode();
 							}
 
-							if ( placeBottom && tiles[pos.x + width][pos.y + width / 2].symbol == wall )
+							if ( placeBottom && tiles[pos.x + width][pos.y + width / 2].symbol.character == '#' )
 							{
 								t = tiles[pos.x + width - 1][pos.y + width / 2];
 								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
@@ -1297,7 +1125,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 						int influence = dist;
 						if ( influence > 0 )
 						{
-							float fract = (float) influence / (float) ( width + height );
+							float fract = influence / (float) ( width + height );
 							influence = (int) ( fract * 100 );
 						}
 
@@ -1473,7 +1301,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 				int influence = pair.dist;
 				if ( influence > 0 )
 				{
-					float fract = (float) influence / (float) ( width + height );
+					float fract = influence / (float) ( width + height );
 					influence = (int) ( fract * 100 );
 				}
 
@@ -1494,190 +1322,6 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 		}
 	}
 
-	// ----------------------------------------------------------------------
-	protected void createLevel()
-	{
-		// flatten to symbol grid
-		Symbol[][] symbolGrid = new Symbol[width][height];
-		for ( int x = 0; x < width; x++ )
-		{
-			for ( int y = 0; y < height; y++ )
-			{
-				symbolGrid[x][y] = tiles[x][y].symbol;
-			}
-		}
-
-		if ( DEBUG_OUTPUT )
-		{
-			for ( int x = 0; x < width; x++ )
-			{
-				for ( int y = 0; y < height; y++ )
-				{
-					System.out.print( symbolGrid[x][y].character );
-				}
-				System.out.print( "\n" );
-			}
-			System.out.println( "\n" );
-		}
-
-		// minimise
-		symbolGrid = RecursiveDockGenerator.minimiseGrid( symbolGrid, dfp.sharedSymbolMap.get( '#' ) );
-		width = symbolGrid.length;
-		height = symbolGrid[0].length;
-
-		if ( DEBUG_OUTPUT )
-		{
-			for ( int x = 0; x < width; x++ )
-			{
-				for ( int y = 0; y < height; y++ )
-				{
-					System.out.print( symbolGrid[x][y].character );
-				}
-				System.out.print( "\n" );
-			}
-			System.out.println( "\n" );
-		}
-
-		GameTile[][] actualTiles = new GameTile[width][height];
-		level = new Level( actualTiles );
-		level.Ambient = dfp.ambient;
-		level.affectedByDayNight = dfp.affectedByDayNight;
-		level.bgmName = dfp.BGM;
-		level.ambientSounds.addAll( dfp.ambientSounds );
-
-		level.depth = saveLevel.depth;
-		level.fileName = saveLevel.fileName;
-		level.seed = saveLevel.seed;
-		level.requiredRooms = additionalRooms;
-
-		for ( int x = 0; x < width; x++ )
-		{
-			for ( int y = 0; y < height; y++ )
-			{
-				Symbol symbol = symbolGrid[x][y];
-
-				GameTile newTile = new GameTile( x, y, level, symbol.getTileData() );
-				newTile.metaValue = symbol.metaValue;
-
-				newTile.metaValue = symbol.metaValue;
-
-				actualTiles[x][y] = newTile;
-
-				// System.out.print(symbol.character);
-			}
-			// System.out.print("\n");
-		}
-
-		for ( int x = 0; x < width; x++ )
-		{
-			for ( int y = 0; y < height; y++ )
-			{
-				Symbol symbol = symbolGrid[x][y];
-				GameTile newTile = actualTiles[x][y];
-
-				if ( symbol.hasEnvironmentEntity() )
-				{
-					EnvironmentEntity entity = symbol.getEnvironmentEntity( saveLevel.UID );
-
-					if ( !saveLevel.created || !entity.canTakeDamage )
-					{
-						if ( entity.attachToWall )
-						{
-							Direction location = Direction.CENTER;
-
-							if ( symbol.attachLocation != null )
-							{
-								location = symbol.attachLocation;
-							}
-							else
-							{
-								// get direction
-								HashSet<Direction> validDirections = new HashSet<Direction>();
-								for ( Direction dir : Direction.values() )
-								{
-									boolean passable = symbolGrid[x + dir.getX()][y + dir.getY()].getTileData().passableBy.getBitFlag() != 0;
-									if ( !passable )
-									{
-										validDirections.add( dir );
-									}
-								}
-
-								if ( validDirections.size() > 0 )
-								{
-									// look for direction with full surround
-									for ( Direction dir : Direction.values() )
-									{
-										boolean acwvalid = validDirections.contains( dir.getAnticlockwise() );
-										boolean valid = validDirections.contains( dir );
-										boolean cwvalid = validDirections.contains( dir.getClockwise() );
-
-										if ( acwvalid && valid && cwvalid )
-										{
-											location = dir;
-											break;
-										}
-									}
-
-									// If that failed then just try the cardinal
-									// directions
-									if ( location == Direction.CENTER )
-									{
-										for ( Direction dir : Direction.values() )
-										{
-											if ( dir.isCardinal() )
-											{
-												if ( validDirections.contains( dir ) )
-												{
-													location = dir;
-													break;
-												}
-											}
-										}
-									}
-
-									// else pick random
-									if ( location == Direction.CENTER )
-									{
-										location = validDirections.toArray( new Direction[validDirections.size()] )[ran.nextInt( validDirections.size() )];
-									}
-
-									location = location.getOpposite();
-								}
-							}
-
-							entity.location = location;
-							entity.sprite.rotation = location.getAngle();
-						}
-						else
-						{
-							if ( symbol.containingRoom != null
-									&& symbol.containingRoom.orientation != Direction.CENTER
-									&& symbol.environmentData.getBoolean( "MatchRoomRotation", false ) )
-							{
-								entity.sprite.rotation = symbol.containingRoom.orientation.getAngle();
-							}
-						}
-
-						newTile.addEnvironmentEntity( entity );
-					}
-				}
-
-				if ( !saveLevel.created && symbol.hasGameEntity() )
-				{
-					GameEntity e = symbol.getGameEntity();
-					newTile.addGameEntity( e );
-				}
-			}
-		}
-
-		saveLevel.addSavedLevelContents( level );
-
-		level.depth = saveLevel.depth;
-		level.UID = saveLevel.UID;
-
-		level.calculateAmbient();
-	}
-
 	// endregion Private Methods
 	// ####################################################################//
 	// region Data
@@ -1685,16 +1329,9 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 	// ----------------------------------------------------------------------
 	public static final EnumBitflag<Passability> GeneratorPassability = new EnumBitflag<Passability>( Passability.WALK );
 
-	public SaveLevel saveLevel;
-
-	private static final boolean DEBUG_OUTPUT = true;
 	private static final int DEBUG_SIZE = 16;
 
 	private GenerationTile[][] tiles;
-	public Random ran;
-
-	private int width = 50;
-	private int height = 50;
 
 	private int minPadding = 1;
 	private int maxPadding = 3;
@@ -1704,779 +1341,11 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 	private int paddedMinRoom;
 
-	public Array<DFPRoom> additionalRooms = new Array<DFPRoom>();
-	private Array<Room> requiredRooms = new Array<Room>();
-	public Array<Room> toBePlaced = new Array<Room>();
-
-	private Array<Room> placedRooms = new Array<Room>();
-
 	private HashMap<FactionParser, Point> factions = new HashMap<FactionParser, Point>();
-
-	public DungeonFileParser dfp;
-
-	private Level level;
 
 	// endregion Data
 	// ####################################################################//
 	// region Classes
-
-	// ----------------------------------------------------------------------
-	public static final class Room
-	{
-		// ----------------------------------------------------------------------
-		public Direction orientation = Direction.CENTER;
-
-		// ----------------------------------------------------------------------
-		public DFPRoom roomData;
-
-		// ----------------------------------------------------------------------
-		public int width;
-		public int height;
-
-		// ----------------------------------------------------------------------
-		public int x;
-		public int y;
-
-		// ----------------------------------------------------------------------
-		public Array<RoomDoor> doors = new Array<RoomDoor>();
-
-		// ----------------------------------------------------------------------
-		public Symbol[][] roomContents;
-
-		// ----------------------------------------------------------------------
-		public String faction;
-
-		// ----------------------------------------------------------------------
-		private String comparisonString;
-
-		public String comparisonString()
-		{
-			if ( comparisonString == null )
-			{
-				comparisonString = "";
-
-				for ( int x = 0; x < width; x++ )
-				{
-					for ( int y = 0; y < height; y++ )
-					{
-						comparisonString += roomContents[x][y].character;
-					}
-				}
-			}
-
-			return comparisonString;
-		}
-
-		// ----------------------------------------------------------------------
-		public void rotate()
-		{
-			Symbol[][] newContents = new Symbol[height][width];
-
-			for ( int x = 0; x < width; x++ )
-			{
-				for ( int y = 0; y < height; y++ )
-				{
-					newContents[y][x] = roomContents[x][y];
-				}
-			}
-
-			roomContents = newContents;
-
-			int temp = height;
-			height = width;
-			width = temp;
-		}
-
-		// ----------------------------------------------------------------------
-		public void flipVertical()
-		{
-			for ( int x = 0; x < width; x++ )
-			{
-				for ( int y = 0; y < height / 2; y++ )
-				{
-					Symbol temp = roomContents[x][y];
-					roomContents[x][y] = roomContents[x][height - y - 1];
-					roomContents[x][height - y - 1] = temp;
-				}
-			}
-		}
-
-		// ----------------------------------------------------------------------
-		public void flipHorizontal()
-		{
-			for ( int x = 0; x < width / 2; x++ )
-			{
-				for ( int y = 0; y < height; y++ )
-				{
-					Symbol temp = roomContents[x][y];
-					roomContents[x][y] = roomContents[width - x - 1][y];
-					roomContents[width - x - 1][y] = temp;
-				}
-			}
-		}
-
-		// ----------------------------------------------------------------------
-		public void generateRoomContents( Random ran, DungeonFileParser dfp, Symbol floor, Symbol wall, AbstractRoomGenerator generator )
-		{
-			roomContents = new Symbol[width][height];
-
-			for ( int i = 0; i < 20; i++ )
-			{
-				if ( generator != null )
-				{
-					generator.process( roomContents, floor, wall, ran, dfp );
-				}
-				else
-				{
-					for ( int x = 0; x < width; x++ )
-					{
-						for ( int y = 0; y < height; y++ )
-						{
-							roomContents[x][y] = floor;
-						}
-					}
-				}
-
-				int count = 0;
-				// Ensure solid outer wall and count floor
-				for ( int x = 0; x < width; x++ )
-				{
-					for ( int y = 0; y < height; y++ )
-					{
-						if ( x == 0 || x == width - 1 || y == 0 || y == height - 1 )
-						{
-							roomContents[x][y] = wall;
-						}
-
-						if ( roomContents[x][y] == null )
-						{
-							roomContents[x][y] = wall;
-						}
-
-						if ( roomContents[x][y] == floor )
-						{
-							count++;
-						}
-					}
-				}
-
-				if ( count > ( width * height ) / 4 )
-				{
-					break;
-				}
-				else
-				{
-					// System.out.println("Not enough room tiles filled ("+count+" / "
-					// + (width*height) + ").");
-				}
-			}
-
-			// minimise room size
-			roomContents = RecursiveDockGenerator.minimiseGrid( roomContents, wall );
-			width = roomContents.length;
-			height = roomContents[0].length;
-
-			// Place corridor connections
-			// Sides
-			// 1
-			// 0 2
-			// 3
-
-			int numDoors = (int) ( Math.max( 0, ran.nextGaussian() ) * 3 ) + 1;
-			for ( int i = 0; i < numDoors; i++ )
-			{
-				int doorSide = ran.nextInt( 4 );
-
-				int x = 0;
-				int y = 0;
-
-				if ( doorSide == 0 )
-				{
-					x = 0;
-					y = 1 + ran.nextInt( height - ( 1 + dfp.corridorStyle.width ) );
-
-					for ( int c = 0; c < dfp.corridorStyle.width; c++ )
-					{
-						roomContents[x][y + c] = floor;
-					}
-				}
-				else if ( doorSide == 1 )
-				{
-					x = 1 + ran.nextInt( width - ( 1 + dfp.corridorStyle.width ) );
-					y = 0;
-
-					for ( int c = 0; c < dfp.corridorStyle.width; c++ )
-					{
-						roomContents[x + c][y] = floor;
-					}
-				}
-				else if ( doorSide == 2 )
-				{
-					x = width - 1;
-					y = 1 + ran.nextInt( height - ( 1 + dfp.corridorStyle.width ) );
-
-					for ( int c = 0; c < dfp.corridorStyle.width; c++ )
-					{
-						roomContents[x][y + c] = floor;
-					}
-				}
-				else if ( doorSide == 3 )
-				{
-					x = 1 + ran.nextInt( width - ( 1 + dfp.corridorStyle.width ) );
-					y = height - 1;
-
-					for ( int c = 0; c < dfp.corridorStyle.width; c++ )
-					{
-						roomContents[x + c][y] = floor;
-					}
-				}
-
-				Array<Point> path = BresenhamLine.lineNoDiag( x, y, width / 2, height / 2 );
-				for ( Point pos : path )
-				{
-					boolean done = false;
-					if ( roomContents[pos.x][pos.y] == floor )
-					{
-						done = true;
-					}
-
-					for ( int ix = 0; ix < dfp.corridorStyle.width; ix++ )
-					{
-						for ( int iy = 0; iy < dfp.corridorStyle.width; iy++ )
-						{
-							int nx = pos.x + ix;
-							int ny = pos.y + iy;
-
-							if ( nx < width && ny < height )
-							{
-								roomContents[nx][ny] = floor;
-							}
-						}
-					}
-
-					if ( generator.ensuresConnectivity && done )
-					{
-						break;
-					}
-				}
-
-				Pools.freeAll( path );
-			}
-		}
-
-		// ----------------------------------------------------------------------
-		public void generateRoomContents( Random ran, DungeonFileParser dfp )
-		{
-			Symbol floor = roomData != null ? roomData.getSymbol( '.' ) : dfp.sharedSymbolMap.get( '.' );
-			Symbol wall = roomData != null ? roomData.getSymbol( '#' ) : dfp.sharedSymbolMap.get( '#' );
-
-			AbstractRoomGenerator generator = dfp.getRoomGenerator( ran );
-
-			generateRoomContents( ran, dfp, floor, wall, generator );
-		}
-
-		// ----------------------------------------------------------------------
-		private boolean isPosEnclosed( int x, int y )
-		{
-			boolean top = x + 1 >= width || !roomContents[x + 1][y].isPassable( GeneratorPassability );
-			boolean bottom = x - 1 < 0 || !roomContents[x - 1][y].isPassable( GeneratorPassability );
-			boolean left = y - 1 < 0 || !roomContents[x][y - 1].isPassable( GeneratorPassability );
-			boolean right = y + 1 >= height || !roomContents[x][y + 1].isPassable( GeneratorPassability );
-
-			if ( top && bottom ) { return true; }
-			if ( left && right ) { return true; }
-
-			return false;
-		}
-
-		// ----------------------------------------------------------------------
-		public void addFeatures( Random ran, DungeonFileParser dfp, FactionParser faction, int influence )
-		{
-			if ( faction == null ) { return; }
-
-			Symbol[][] roomCopy = new Symbol[width][height];
-			for ( int x = 0; x < width; x++ )
-			{
-				for ( int y = 0; y < height; y++ )
-				{
-					roomCopy[x][y] = roomContents[x][y];
-				}
-			}
-
-			// build the any list
-			Array<int[]> validList = new Array<int[]>();
-			for ( int x = 1; x < width - 1; x++ )
-			{
-				for ( int y = 1; y < height - 1; y++ )
-				{
-					if ( roomContents[x][y] != null && roomContents[x][y].isPassable( GeneratorPassability ) )
-					{
-						int[] pos = { x, y };
-
-						if ( !isPosEnclosed( x, y ) )
-						{
-							validList.add( pos );
-						}
-					}
-				}
-			}
-
-			// start placing features
-
-			// Do furthest
-			{
-				Array<Feature> features = faction.features.get( FeaturePlacementType.FURTHEST );
-
-				for ( Feature f : features )
-				{
-					// Skip if out of range
-					if ( influence < f.minRange || influence > f.maxRange )
-					{
-						continue;
-					}
-
-					// Build list
-					PriorityQueue<FeatureTile> furthestList = new PriorityQueue<FeatureTile>();
-					for ( int[] tile : validList )
-					{
-						int x = tile[0];
-						int y = tile[1];
-
-						if ( roomContents[x][y].getTileData().canFeature
-								&& roomContents[x][y].isPassable( GeneratorPassability )
-								&& ( f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity() ) )
-						{
-							furthestList.add( new FeatureTile( tile, doors ) );
-						}
-					}
-
-					// Skip if no valid tiles
-					if ( furthestList.size() == 0 )
-					{
-						break;
-					}
-
-					// calculate num features to place
-					int numTilesToPlace = f.getNumTilesToPlace( influence, furthestList.size() );
-
-					// Place the features
-					for ( int i = 0; i < numTilesToPlace; i++ )
-					{
-						int[] pos = furthestList.poll().pos;
-
-						roomContents[pos[0]][pos[1]] = f.getAsSymbol( roomContents[pos[0]][pos[1]] );
-
-						if ( furthestList.size() == 0 )
-						{
-							break;
-						}
-					}
-				}
-			}
-
-			// Do wall
-			{
-				Array<Feature> features = faction.features.get( FeaturePlacementType.WALL );
-
-				for ( Feature f : features )
-				{
-					if ( influence < f.minRange || influence > f.maxRange )
-					{
-						continue;
-					}
-
-					// Build list
-					Array<int[]> wallList = new Array<int[]>();
-					for ( int[] tile : validList )
-					{
-						int x = tile[0];
-						int y = tile[1];
-
-						if ( roomContents[x][y].getTileData().canFeature
-								&& roomContents[x][y].isPassable( GeneratorPassability )
-								&& ( f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity() ) )
-						{
-							boolean isWall = false;
-							for ( Direction d : Direction.values() )
-							{
-								int nx = x + d.getX();
-								int ny = y + d.getY();
-
-								if ( nx >= 0 && nx < width && ny >= 0 && ny < height )
-								{
-									if ( roomContents[nx][ny] != null && !roomContents[nx][ny].isPassable( GeneratorPassability ) )
-									{
-										isWall = true;
-										break;
-									}
-								}
-							}
-
-							if ( isWall )
-							{
-								wallList.add( tile );
-							}
-						}
-					}
-
-					if ( wallList.size == 0 )
-					{
-						break;
-					}
-
-					int numTilesToPlace = f.getNumTilesToPlace( influence, wallList.size );
-
-					for ( int i = 0; i < numTilesToPlace; i++ )
-					{
-						int[] pos = wallList.removeIndex( ran.nextInt( wallList.size ) );
-
-						roomContents[pos[0]][pos[1]] = f.getAsSymbol( roomContents[pos[0]][pos[1]] );
-
-						if ( wallList.size == 0 )
-						{
-							break;
-						}
-					}
-				}
-			}
-
-			// Do centre
-			{
-				Array<Feature> features = faction.features.get( FeaturePlacementType.CENTRE );
-
-				for ( Feature f : features )
-				{
-					if ( influence < f.minRange || influence > f.maxRange )
-					{
-						continue;
-					}
-
-					// Build list
-					Array<int[]> centreList = new Array<int[]>();
-					for ( int[] tile : validList )
-					{
-						int x = tile[0];
-						int y = tile[1];
-
-						if ( roomContents[x][y].getTileData().canFeature
-								&& roomContents[x][y].isPassable( GeneratorPassability )
-								&& ( f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity() ) )
-						{
-							boolean isWall = false;
-							for ( Direction d : Direction.values() )
-							{
-								int nx = x + d.getX();
-								int ny = y + d.getY();
-
-								if ( nx >= 0 && nx < width && ny >= 0 && ny < height )
-								{
-									if ( roomContents[nx][ny] != null && !roomContents[nx][ny].isPassable( GeneratorPassability ) )
-									{
-										isWall = true;
-										break;
-									}
-								}
-							}
-
-							if ( !isWall )
-							{
-								centreList.add( tile );
-							}
-						}
-					}
-
-					if ( centreList.size == 0 )
-					{
-						break;
-					}
-
-					int numTilesToPlace = f.getNumTilesToPlace( influence, centreList.size );
-
-					for ( int i = 0; i < numTilesToPlace; i++ )
-					{
-						int[] pos = centreList.removeIndex( ran.nextInt( centreList.size ) );
-
-						roomContents[pos[0]][pos[1]] = f.getAsSymbol( roomContents[pos[0]][pos[1]] );
-
-						if ( centreList.size == 0 )
-						{
-							break;
-						}
-					}
-				}
-			}
-
-			// Do any
-			{
-				Array<Feature> features = faction.features.get( FeaturePlacementType.ANY );
-
-				for ( Feature f : features )
-				{
-					if ( influence < f.minRange || influence > f.maxRange )
-					{
-						continue;
-					}
-
-					Array<int[]> anyList = new Array<int[]>();
-					for ( int[] tile : validList )
-					{
-						int x = tile[0];
-						int y = tile[1];
-
-						if ( roomContents[x][y].getTileData().canFeature
-								&& roomContents[x][y].isPassable( GeneratorPassability )
-								&& ( f.environmentData == null || !roomContents[x][y].hasEnvironmentEntity() ) )
-						{
-							anyList.add( tile );
-						}
-					}
-
-					if ( anyList.size == 0 )
-					{
-						break;
-					}
-
-					int numTilesToPlace = f.getNumTilesToPlace( influence, anyList.size );
-
-					for ( int i = 0; i < numTilesToPlace; i++ )
-					{
-						int[] pos = anyList.removeIndex( ran.nextInt( anyList.size ) );
-
-						roomContents[pos[0]][pos[1]] = f.getAsSymbol( roomContents[pos[0]][pos[1]] );
-
-						if ( anyList.size == 0 )
-						{
-							break;
-						}
-					}
-				}
-			}
-
-			// Ensure connectivity
-			for ( int i = 0; i < doors.size; i++ )
-			{
-				RoomDoor door = doors.get( i );
-				for ( int ii = 0; ii < doors.size; ii++ )
-				{
-					RoomDoor otherDoor = doors.get( ii );
-					if ( door == otherDoor )
-					{
-						continue;
-					}
-
-					AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false, 1, GeneratorPassability, null );
-					Array<Point> path = pathfind.getPath();
-
-					for ( Point point : path )
-					{
-						Symbol s = roomContents[point.x][point.y];
-
-						if ( !s.isPassable( GeneratorPassability ) )
-						{
-							roomContents[point.x][point.y].tileData = roomCopy[point.x][point.y].tileData;
-						}
-
-						if ( s.hasEnvironmentEntity()
-								&& !s.environmentData.get( "Type", "" ).equals( "Door" )
-								&& !s.getEnvironmentEntityPassable( GeneratorPassability ) )
-						{
-							roomContents[point.x][point.y].environmentData = roomCopy[point.x][point.y].environmentData;
-							roomContents[point.x][point.y].environmentEntityData = null;
-						}
-					}
-
-					Pools.freeAll( path );
-				}
-			}
-
-			// Do spawn
-			{
-				// get valid spawn tiles
-				Array<int[]> spawnList = new Array<int[]>();
-				for ( int[] tile : validList )
-				{
-					int x = tile[0];
-					int y = tile[1];
-
-					if ( roomContents[x][y].getTileData().canSpawn
-							&& roomContents[x][y].isPassable( GeneratorPassability )
-							&& !roomContents[x][y].hasGameEntity() )
-					{
-						spawnList.add( tile );
-					}
-				}
-
-				// place mobs
-				Encounter enc = faction.getEncounter( ran, influence );
-
-				if ( enc != null )
-				{
-					for ( String mob : enc.getMobsToPlace( influence, spawnList.size ) )
-					{
-						if ( spawnList.size == 0 )
-						{
-							break;
-						}
-
-						int[] pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
-
-						roomContents[pos[0]][pos[1]] = roomContents[pos[0]][pos[1]].copy();
-						roomContents[pos[0]][pos[1]].entityData = mob;
-					}
-				}
-			}
-		}
-
-		// ----------------------------------------------------------------------
-		private void addDoor( int pos, int space, Direction dir, Random ran, DungeonFileParser dfp )
-		{
-			if ( space >= dfp.corridorStyle.width )
-			{
-				int offset = space > dfp.corridorStyle.width ? ran.nextInt( space - dfp.corridorStyle.width ) : 0;
-
-				if ( dir == Direction.WEST )
-				{
-					doors.add( new RoomDoor( Direction.WEST, new int[] { 0, pos + offset } ) );
-				}
-				else if ( dir == Direction.EAST )
-				{
-					doors.add( new RoomDoor( Direction.EAST, new int[] { width - 1, pos + offset } ) );
-				}
-				else if ( dir == Direction.NORTH )
-				{
-					doors.add( new RoomDoor( Direction.NORTH, new int[] { pos + offset, 0 } ) );
-				}
-				else if ( dir == Direction.SOUTH )
-				{
-					doors.add( new RoomDoor( Direction.SOUTH, new int[] { pos + offset, height - 1 } ) );
-				}
-			}
-		}
-
-		// ----------------------------------------------------------------------
-		private void processSide( Direction dir, Random ran, DungeonFileParser dfp )
-		{
-			int range = ( dir == Direction.WEST || dir == Direction.EAST ) ? height : width;
-
-			int blockStart = -1;
-			for ( int pos = 0; pos < range; pos++ )
-			{
-				int x = 0;
-				int y = 0;
-
-				if ( dir == Direction.WEST )
-				{
-					x = 0;
-					y = pos;
-				}
-				else if ( dir == Direction.EAST )
-				{
-					x = width - 1;
-					y = pos;
-				}
-				else if ( dir == Direction.NORTH )
-				{
-					x = pos;
-					y = 0;
-				}
-				else
-				{
-					x = pos;
-					y = height - 1;
-				}
-
-				if ( blockStart >= 0 )
-				{
-					if ( !roomContents[x][y].isPassable( GeneratorPassability ) )
-					{
-						addDoor( blockStart, pos - blockStart, dir, ran, dfp );
-						blockStart = -1;
-					}
-				}
-				else
-				{
-					if ( roomContents[x][y].isPassable( GeneratorPassability ) )
-					{
-						blockStart = pos;
-					}
-				}
-			}
-
-			if ( blockStart >= 0 )
-			{
-				int pos = range - 1;
-				addDoor( blockStart, pos - blockStart, dir, ran, dfp );
-			}
-		}
-
-		// ----------------------------------------------------------------------
-		public void findDoors( Random ran, DungeonFileParser dfp )
-		{
-			// Sides
-			// 1
-			// 0 2
-			// 3
-
-			// Side 0
-			processSide( Direction.WEST, ran, dfp );
-
-			// Side 2
-			processSide( Direction.EAST, ran, dfp );
-
-			// Side 1
-			processSide( Direction.NORTH, ran, dfp );
-
-			// Side 3
-			processSide( Direction.SOUTH, ran, dfp );
-		}
-
-		// ----------------------------------------------------------------------
-		private class FeatureTile implements Comparable<FeatureTile>
-		{
-			public int[] pos;
-			public int dist;
-
-			public FeatureTile( int[] pos, Array<RoomDoor> doors )
-			{
-				this.pos = pos;
-
-				int d = 0;
-				for ( RoomDoor door : doors )
-				{
-					d += Math.abs( pos[0] - door.pos[0] ) + Math.abs( pos[1] - door.pos[1] );
-				}
-
-				d /= doors.size;
-
-				dist = d;
-			}
-
-			@Override
-			public int compareTo( FeatureTile o )
-			{
-				return ( (Integer) dist ).compareTo( o.dist );
-			}
-
-		}
-	}
-
-	// ----------------------------------------------------------------------
-	public static final class RoomDoor
-	{
-		public Direction side;
-		public int[] pos;
-
-		public RoomDoor()
-		{
-
-		}
-
-		public RoomDoor( Direction side, int[] pos )
-		{
-			this.side = side;
-			this.pos = pos;
-		}
-	}
 
 	// ----------------------------------------------------------------------
 	public static class GenerationTile implements PathfindingTile

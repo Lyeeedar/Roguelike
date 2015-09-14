@@ -41,8 +41,8 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 		cfg.backgroundFPS = 2;
 		cfg.samples = pref.getInteger( "msaa" );
 
-		Global.Resolution[0] = cfg.width;
-		Global.Resolution[1] = cfg.height;
+		Global.TargetResolution[0] = cfg.width;
+		Global.TargetResolution[1] = cfg.height;
 		Global.ScreenSize[0] = cfg.width;
 		Global.ScreenSize[1] = cfg.height;
 
@@ -61,8 +61,8 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 		int height = pref.getInteger( "resolutionY" );
 		boolean fullscreen = pref.getBoolean( "fullscreen" );
 
-		Global.Resolution[0] = width;
-		Global.Resolution[1] = height;
+		Global.TargetResolution[0] = width;
+		Global.TargetResolution[1] = height;
 		Global.FPS = pref.getInteger( "fps" );
 		Global.AnimationSpeed = 1.0f / pref.getFloat( "animspeed" );
 

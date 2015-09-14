@@ -2,15 +2,12 @@ package Roguelike.DungeonGeneration;
 
 import java.util.Random;
 
-import Roguelike.AssetManager;
-import Roguelike.Global.Passability;
 import Roguelike.DungeonGeneration.RoomGenerators.MidpointDisplacement;
-import Roguelike.Levels.Level;
 import Roguelike.Save.SaveLevel;
-import Roguelike.Tiles.GameTile;
-import Roguelike.Tiles.TileData;
+import Roguelike.Tiles.Point;
 
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 
 public class WorldMapGenerator extends AbstractDungeonGenerator
 {
@@ -18,40 +15,68 @@ public class WorldMapGenerator extends AbstractDungeonGenerator
 	// region Constructor
 
 	// ----------------------------------------------------------------------
-	public WorldMapGenerator( SaveLevel level )
+	public WorldMapGenerator()
 	{
-		this.saveLevel = level;
 
-		ran = new Random( level.seed );
 	}
 
 	// endregion Constructor
 	// ####################################################################//
 	// region Public Methods
 
+	// ----------------------------------------------------------------------
 	@Override
 	public boolean generate()
 	{
 		if ( generationIndex == 0 )
 		{
+			selectRooms();
+
+			toBePlaced.clear();
+			placedRooms.clear();
+
+			toBePlaced.addAll( requiredRooms );
+
+			generationIndex++;
+			generationText = "Generating Grid";
+		}
+		else if ( generationIndex == 1 )
+		{
 			// Fill with values
 			generateGrid();
 
 			generationIndex++;
-			generationText = "Creating Level";
+			generationText = "Filling with symbols";
 		}
-		else if ( generationIndex == 1 )
+		else if ( generationIndex == 2 )
+		{
+			// Convert to symbols
+			generateSymbolGrid();
+
+			generationIndex++;
+			generationText = "Place rooms";
+		}
+		else if ( generationIndex == 3 )
+		{
+			// Place the rooms
+			placeRooms();
+
+			generationIndex++;
+			generationText = "Creating level";
+		}
+		else if ( generationIndex == 4 )
 		{
 			// Create Level
-			createLevel();
+			level = createLevel( symbolGrid, dfp.getSymbol( '0' ) );
+			level.isVisionRestricted = false;
 
 			generationIndex++;
 			generationText = "Completed";
 		}
 
-		percent = (int) ( ( 100.0f / 2.0f ) * generationIndex );
+		percent = (int) ( ( 100.0f / 5.0f ) * generationIndex );
 
-		if ( generationIndex < 2 )
+		if ( generationIndex < 5 )
 		{
 			return false;
 		}
@@ -63,9 +88,12 @@ public class WorldMapGenerator extends AbstractDungeonGenerator
 
 	// ----------------------------------------------------------------------
 	@Override
-	public Level getLevel()
+	public void setup( SaveLevel level, DungeonFileParser dfp )
 	{
-		return level;
+		this.saveLevel = level;
+		this.dfp = dfp;
+
+		ran = new Random( level.seed );
 	}
 
 	// endregion Public Methods
@@ -73,193 +101,78 @@ public class WorldMapGenerator extends AbstractDungeonGenerator
 	// region Private Methods
 
 	// ----------------------------------------------------------------------
-	private static int[][] minimiseGrid( int[][] grid )
-	{
-		int width = grid.length;
-		int height = grid[0].length;
-
-		int minx = -1;
-		int miny = -1;
-		int maxx = -1;
-		int maxy = -1;
-
-		boolean complete = false;
-
-		// find min x
-		for ( int x = 0; x < width; x++ )
-		{
-			for ( int y = 0; y < height; y++ )
-			{
-				int s = grid[x][y];
-				if ( s != 0 )
-				{
-					minx = x - 1;
-
-					complete = true;
-					break;
-				}
-			}
-			if ( complete )
-			{
-				break;
-			}
-		}
-		if ( minx == -1 ) { return grid; }
-
-		// find min y
-		complete = false;
-		for ( int y = 0; y < height; y++ )
-		{
-			for ( int x = minx; x < width; x++ )
-			{
-				int s = grid[x][y];
-				if ( s != 0 )
-				{
-					miny = y - 1;
-
-					complete = true;
-					break;
-				}
-			}
-			if ( complete )
-			{
-				break;
-			}
-		}
-		if ( miny == -1 ) { return grid; }
-
-		// find max x
-		complete = false;
-		for ( int x = width - 1; x >= minx; x-- )
-		{
-			for ( int y = miny; y < height; y++ )
-			{
-				int s = grid[x][y];
-				if ( s != 0 )
-				{
-					maxx = x + 2;
-
-					complete = true;
-					break;
-				}
-			}
-			if ( complete )
-			{
-				break;
-			}
-		}
-		if ( maxx == -1 ) { return grid; }
-
-		// find max y
-		complete = false;
-		for ( int y = height - 1; y >= miny; y-- )
-		{
-			for ( int x = minx; x < maxx; x++ )
-			{
-				int s = grid[x][y];
-				if ( s != 0 )
-				{
-					maxy = y + 2;
-
-					complete = true;
-					break;
-				}
-			}
-			if ( complete )
-			{
-				break;
-			}
-		}
-		if ( maxy == -1 ) { return grid; }
-
-		// minimise room
-		int newwidth = maxx - minx;
-		int newheight = maxy - miny;
-
-		int[][] newgrid = new int[newwidth][newheight];
-
-		for ( int x = 0; x < newwidth; x++ )
-		{
-			for ( int y = 0; y < newheight; y++ )
-			{
-				newgrid[x][y] = grid[minx + x][miny + y];
-			}
-		}
-
-		return newgrid;
-	}
-
-	// ----------------------------------------------------------------------
 	private void generateGrid()
 	{
 		MidpointDisplacement md = new MidpointDisplacement( ran );
 		grid = md.getMap();
-		grid = minimiseGrid( grid );
+
+		width = grid.length;
+		height = grid[0].length;
 	}
 
 	// ----------------------------------------------------------------------
-	private void createLevel()
+	private void generateSymbolGrid()
 	{
-		// minimise
-		int width = grid.length;
-		int height = grid[0].length;
-
-		GameTile[][] actualTiles = new GameTile[width][height];
-		level = new Level( actualTiles );
-		level.Ambient = new Color( 1, 1, 1, 1 );
-		level.affectedByDayNight = false;
-		level.bgmName = "Heroic Age";
-
-		level.depth = saveLevel.depth;
-		level.fileName = saveLevel.fileName;
-		level.seed = saveLevel.seed;
-
-		level.isVisionRestricted = false;
-
-		TileData[] tiles = {
-				new TileData( Passability.parse( "light" ), AssetManager.loadSprite( "Level/WorldMap/DeepSea" ) ),
-				new TileData( Passability.parse( "light" ), AssetManager.loadSprite( "Level/WorldMap/ShallowSea" ) ),
-				new TileData( Passability.parse( "true" ), AssetManager.loadSprite( "Level/WorldMap/Desert" ) ),
-				new TileData( Passability.parse( "true" ), AssetManager.loadSprite( "Level/WorldMap/Plains" ) ),
-				new TileData( Passability.parse( "true" ), AssetManager.loadSprite( "Level/WorldMap/Grassland" ) ),
-				new TileData( Passability.parse( "true" ), AssetManager.loadSprite( "Level/WorldMap/Forest" ) ),
-				new TileData( Passability.parse( "true" ), AssetManager.loadSprite( "Level/WorldMap/Hills" ) ),
-				new TileData( Passability.parse( "light" ), AssetManager.loadSprite( "Level/WorldMap/mountains" ) ),
-				new TileData( Passability.parse( "light" ), AssetManager.loadSprite( "Level/WorldMap/mountains" ) ) };
-
+		symbolGrid = new Symbol[width][height];
 		for ( int x = 0; x < width; x++ )
 		{
 			for ( int y = 0; y < height; y++ )
 			{
-				int val = grid[x][y];
+				symbolGrid[x][y] = dfp.getSymbol( Integer.toString( grid[x][y] ).charAt( 0 ) );
 
-				GameTile newTile = new GameTile( x, y, level, tiles[val] );
-
-				if ( val == 3 )
+				if ( grid[x][y] == 4 )
 				{
-					newTile.metaValue = "PlayerSpawn";
+					symbolGrid[x][y].metaValue = "PlayerSpawn";
 				}
-
-				actualTiles[x][y] = newTile;
 			}
 		}
+	}
 
-		saveLevel.addSavedLevelContents( level );
+	// ----------------------------------------------------------------------
+	private void placeRooms()
+	{
+		for ( Room room : toBePlaced )
+		{
+			int tile = room.roomData.placementHint != null ? Integer.parseInt( room.roomData.placementHint ) : 4;
 
-		level.depth = saveLevel.depth;
-		level.UID = saveLevel.UID;
+			Array<Point> validTiles = new Array<Point>();
 
-		level.calculateAmbient();
+			for ( int x = 0; x < width; x++ )
+			{
+				for ( int y = 0; y < height; y++ )
+				{
+					if ( grid[x][y] == tile )
+					{
+						validTiles.add( Pools.obtain( Point.class ).set( x, y ) );
+					}
+				}
+			}
+
+			Point chosen = validTiles.get( ran.nextInt( validTiles.size ) );
+
+			for ( int x = 0; x < room.width; x++ )
+			{
+				for ( int y = 0; y < room.height; y++ )
+				{
+					symbolGrid[x + chosen.x][y + chosen.y] = room.roomContents[x][y];
+					symbolGrid[x + chosen.x][y + chosen.y].containingRoom = room;
+				}
+			}
+
+			Pools.freeAll( validTiles );
+
+			placedRooms.add( room );
+		}
+
+		toBePlaced.clear();
 	}
 
 	// endregion Private Methods
 	// ####################################################################//
 	// region Data
 
-	private Level level;
-	private SaveLevel saveLevel;
-	private Random ran;
 	private int[][] grid;
+	private Symbol[][] symbolGrid;
 
 	// endregion Data
 	// ####################################################################//

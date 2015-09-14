@@ -185,6 +185,7 @@ public class Level
 				if ( affectedByDayNight )
 				{
 					tile.light.mul( Global.DayNightFactor );
+					tile.light.a = 1;
 				}
 				getLightsForTile( tile, lightList, playerViewRange );
 

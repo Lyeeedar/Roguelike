@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Level>
+    <Generator>RecursiveDock</Generator>
+    
 	<Ambient>
 		<Red>0.85</Red>
 		<Green>1</Green>
@@ -126,16 +128,21 @@
 					<Char>v</Char>
 					<EnvironmentData>
 						<Type>Transition</Type>
-						<Destination>Forest</Destination>
+						<Destination>WorldMap</Destination>
 						<UnloadLevel>false</UnloadLevel>
 
 						<ExitRoom>
 							<Faction>none</Faction>
+							<PlacementHint>4</PlacementHint>
 
 							<Symbols>
-								<Symbol Extends=".">
-									<Char>^</Char>
+								<Symbol Extends="4">
+									<Char>T</Char>
 									<EnvironmentData>
+									    <Size>3</Size>
+									    <Sprite>
+									        <Name>Level/WorldMap/Village</Name>
+									    </Sprite>
 										<Type>Transition</Type>
 										<Destination>this</Destination>
 										<UnloadLevel>false</UnloadLevel>
@@ -144,11 +151,7 @@
 							</Symbols>
 
 							<Rows>
-								<Row>#####</Row>
-								<Row>##^##</Row>
-								<Row>#.,.#</Row>
-								<Row>#,,.#</Row>
-								<Row>#,###</Row>
+								<Row>T</Row>
 							</Rows>
 						</ExitRoom>
 					</EnvironmentData>

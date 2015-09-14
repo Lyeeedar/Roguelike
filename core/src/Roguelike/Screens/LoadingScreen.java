@@ -7,7 +7,6 @@ import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.DungeonGeneration.AbstractDungeonGenerator;
-import Roguelike.DungeonGeneration.WorldMapGenerator;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Levels.Level;
 import Roguelike.Save.SaveLevel;
@@ -261,7 +260,7 @@ public class LoadingScreen implements Screen
 
 		this.level = level;
 
-		generator = new WorldMapGenerator( level );
+		generator = AbstractDungeonGenerator.load( level );
 
 		this.percent = generator.percent;
 		this.generationString = generator.generationText;

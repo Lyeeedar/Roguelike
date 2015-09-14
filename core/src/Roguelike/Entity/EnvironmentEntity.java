@@ -181,16 +181,26 @@ public class EnvironmentEntity extends Entity
 		// Make stairs down and return
 		{
 			Sprite stairs = null;
-			if ( destination.equals( "this" ) )
+
+			Element spriteElement = data.getChildByName( "Sprite" );
+			if ( spriteElement != null )
 			{
-				stairs = AssetManager.loadSprite( "dc-dngn/gateways/stone_stairs_up" );
+				stairs = AssetManager.loadSprite( spriteElement );
 			}
 			else
 			{
-				stairs = AssetManager.loadSprite( "dc-dngn/gateways/stone_stairs_down" );
+				if ( destination.equals( "this" ) )
+				{
+					stairs = AssetManager.loadSprite( "dc-dngn/gateways/stone_stairs_up" );
+				}
+				else
+				{
+					stairs = AssetManager.loadSprite( "dc-dngn/gateways/stone_stairs_down" );
+				}
 			}
 
 			final EnvironmentEntity entity = new EnvironmentEntity();
+			entity.size = data.getInt( "Size", 1 );
 			entity.passableBy = Passability.parse( "true" );
 			entity.passableBy.setBit( Passability.LIGHT );
 			entity.sprite = stairs;
@@ -200,6 +210,9 @@ public class EnvironmentEntity extends Entity
 			entity.data.put( "Stair: " + destinationLevel.UID, new Object() );
 			entity.data.put( "UnloadLevel", data.getBoolean( "UnloadLevel", true ) );
 			entity.UID = "EnvironmentEntity DownStair: ID " + entity.hashCode();
+
+			entity.tile = new GameTile[entity.size][entity.size];
+			stairs.size = entity.size;
 
 			return entity;
 		}

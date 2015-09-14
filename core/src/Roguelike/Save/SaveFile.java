@@ -13,8 +13,8 @@ import Roguelike.Global.Statistic;
 import Roguelike.Global.Tier1Element;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom.Orientation;
-import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
-import Roguelike.DungeonGeneration.RecursiveDockGenerator.RoomDoor;
+import Roguelike.DungeonGeneration.Room;
+import Roguelike.DungeonGeneration.Room.RoomDoor;
 import Roguelike.DungeonGeneration.Symbol;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.GameEvent.Damage.DamageEvent;
@@ -138,7 +138,7 @@ public final class SaveFile
 		kryo.register( FastEnumMap.class, new FastEnumMapSerializer() );
 
 		kryo.register( Array.class, new Serializer<Array>()
-		{
+				{
 			{
 				setAcceptsNull( true );
 			}
@@ -209,10 +209,10 @@ public final class SaveFile
 				}
 				return array;
 			}
-				} );
+		} );
 
 		kryo.register( Color.class, new Serializer<Color>()
-		{
+				{
 			@Override
 			public Color read( Kryo kryo, Input input, Class<Color> type )
 			{
@@ -226,10 +226,10 @@ public final class SaveFile
 			{
 				output.writeInt( Color.rgba8888( color ) );
 			}
-				} );
+		} );
 
 		kryo.register( Sprite.class, new Serializer<Sprite>()
-		{
+				{
 			@Override
 			public Sprite read( Kryo kryo, Input input, Class<Sprite> type )
 			{
@@ -254,10 +254,10 @@ public final class SaveFile
 				output.writeInt( sprite.animationState.mode.ordinal() );
 				output.writeFloats( sprite.baseScale );
 			}
-				} );
+		} );
 
 		kryo.register( Element.class, new Serializer<Element>()
-		{
+				{
 			@Override
 			public Element read( Kryo kryo, Input input, Class<Element> type )
 			{
@@ -273,7 +273,7 @@ public final class SaveFile
 			{
 				output.writeString( element.toString() );
 			}
-				} );
+		} );
 	}
 
 	private void registerClasses( Kryo kryo )

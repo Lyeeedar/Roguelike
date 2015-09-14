@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
-import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Pathfinding.PathfindingTile;

@@ -200,17 +200,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		Gdx.input.setInputProcessor( inputMultiplexer );
 
-		camera = new OrthographicCamera( Global.Resolution[0], Global.Resolution[1] );
-		camera.translate( Global.Resolution[0] / 2, Global.Resolution[1] / 2 );
-		camera.setToOrtho( false, Global.Resolution[0], Global.Resolution[1] );
-		camera.update();
-
-		batch.setProjectionMatrix( camera.combined );
-		stage.getViewport().setCamera( camera );
-		stage.getViewport().setWorldWidth( Global.Resolution[0] );
-		stage.getViewport().setWorldHeight( Global.Resolution[1] );
-		stage.getViewport().setScreenWidth( Global.ScreenSize[0] );
-		stage.getViewport().setScreenHeight( Global.ScreenSize[1] );
+		resize( Global.ScreenSize[0], Global.ScreenSize[1] );
 	}
 
 	// ----------------------------------------------------------------------
@@ -265,13 +255,16 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		toBeDrawn.clear();
 		hpBars.clear();
-		overHead.clear();
+		environmentEntities.clear();
+		overHeadEntities.clear();
 		underFields.clear();
 		overFields.clear();
 		entitiesWithSpeech.clear();
 
+		renderBackground( offsetx, offsety );
 		renderVisibleTiles( offsetx, offsety, tileSize3 );
 		renderSeenTiles( offsetx, offsety, tileSize3 );
+		renderEnvironmentEntities( offsetx, offsety, tileSize3 );
 		renderItems( offsetx, offsety );
 		renderFields( underFields, offsetx, offsety );
 		if ( Global.CurrentDialogue == null )
@@ -359,6 +352,24 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		if ( Global.CurrentLevel.background != null )
 		{
 			Sprite sprite = Global.CurrentLevel.background;
+
+			batch.setColor( Global.CurrentLevel.Ambient );
+
+			int px = Global.CurrentLevel.player.tile[0][0].x * Global.TileSize + offsetx;
+			int py = Global.CurrentLevel.player.tile[0][0].y * Global.TileSize + offsety;
+
+			int sx = px - ( (int) roundTo( px, Global.TileSize ) ) - Global.TileSize;
+			int sy = py - ( (int) roundTo( py, Global.TileSize ) ) - Global.TileSize;
+
+			for ( int cx = sx; cx < Global.Resolution[0]; cx += Global.TileSize )
+			{
+				for ( int cy = sy; cy < Global.Resolution[1]; cy += Global.TileSize )
+				{
+					sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
+				}
+			}
+
+			batch.setColor( Color.WHITE );
 		}
 	}
 
@@ -420,27 +431,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 						if ( entity.overHead )
 						{
-							overHead.add( entity );
+							overHeadEntities.add( entity );
 						}
 						else
 						{
-							int cx = x * Global.TileSize + offsetx;
-							int cy = y * Global.TileSize + offsety;
-
-							if ( entity.location == Direction.CENTER )
-							{
-								entity.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
-							}
-							else
-							{
-								Direction dir = entity.location;
-								entity.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
-							}
-
-							if ( entity.HP < entity.statistics.get( Statistic.MAXHP ) || entity.stacks.size > 0 )
-							{
-								hpBars.add( entity );
-							}
+							environmentEntities.add( entity );
 						}
 
 						if ( entity.tile[0][0].visible && entity.popup != null )
@@ -468,6 +463,39 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
+	private void renderEnvironmentEntities( int offsetx, int offsety, int tileSize3 )
+	{
+		if ( environmentEntities.size > 0 )
+		{
+			for ( EnvironmentEntity entity : environmentEntities )
+			{
+				int x = entity.tile[0][0].x;
+				int y = entity.tile[0][0].y;
+
+				int cx = x * Global.TileSize + offsetx;
+				int cy = y * Global.TileSize + offsety;
+
+				batch.setColor( entity.tile[0][0].light );
+
+				if ( entity.location == Direction.CENTER )
+				{
+					entity.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
+				}
+				else
+				{
+					Direction dir = entity.location;
+					entity.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+				}
+
+				if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.MAXHP ) || entity.stacks.size > 0 )
+				{
+					hpBars.add( entity );
+				}
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
 	private void renderSeenTiles( int offsetx, int offsety, int tileSize3 )
 	{
 		Color col = batch.getColor();
@@ -488,6 +516,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					{
 						temp.mul( Global.DayNightFactor );
 					}
+
+					temp.a = 1;
 
 					if ( !temp.equals( col ) )
 					{
@@ -700,8 +730,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 			entity.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
 
-			batch.setColor( Color.WHITE );
-
 			if ( entity.sprite.spriteAnimation != null )
 			{
 				int[] offset = entity.sprite.spriteAnimation.getRenderOffset();
@@ -716,26 +744,28 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private void renderOverheadEntities( int offsetx, int offsety, int tileSize3 )
 	{
-		if ( overHead.size > 0 )
+		if ( overHeadEntities.size > 0 )
 		{
-			for ( EnvironmentEntity ee : overHead )
+			for ( EnvironmentEntity entity : overHeadEntities )
 			{
-				int cx = ee.tile[0][0].x * Global.TileSize + offsetx;
-				int cy = ee.tile[0][0].y * Global.TileSize + offsety;
+				int cx = entity.tile[0][0].x * Global.TileSize + offsetx;
+				int cy = entity.tile[0][0].y * Global.TileSize + offsety;
 
-				if ( ee.location == Direction.CENTER )
+				batch.setColor( entity.tile[0][0].light );
+
+				if ( entity.location == Direction.CENTER )
 				{
-					ee.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
+					entity.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
 				}
 				else
 				{
-					Direction dir = ee.location;
-					ee.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+					Direction dir = entity.location;
+					entity.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
 				}
 
-				if ( ee.HP < ee.statistics.get( Statistic.MAXHP ) || ee.stacks.size > 0 )
+				if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.MAXHP ) || entity.stacks.size > 0 )
 				{
-					hpBars.add( ee );
+					hpBars.add( entity );
 				}
 			}
 		}
@@ -1901,7 +1931,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	// ----------------------------------------------------------------------
 	private Array<GameEntity> toBeDrawn = new Array<GameEntity>();
-	private Array<EnvironmentEntity> overHead = new Array<EnvironmentEntity>();
+	private Array<EnvironmentEntity> environmentEntities = new Array<EnvironmentEntity>();
+	private Array<EnvironmentEntity> overHeadEntities = new Array<EnvironmentEntity>();
 	private Array<Entity> hpBars = new Array<Entity>();
 	private Array<Field> underFields = new Array<Field>();
 	private Array<Field> overFields = new Array<Field>();

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
 
-import Roguelike.DungeonGeneration.RecursiveDockGenerator.Room;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import Roguelike.DungeonGeneration.RoomGenerators.AbstractRoomGenerator;
 import Roguelike.DungeonGeneration.RoomGenerators.OverlappingRects;
 import Roguelike.Sound.RepeatingSoundEffect;
@@ -15,6 +17,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
+
+import exp4j.Helpers.EquationHelper;
 
 public class DungeonFileParser
 {
@@ -131,8 +135,7 @@ public class DungeonFileParser
 
 		public boolean isTransition;
 
-		public int minDepth = 0;
-		public int maxDepth = Integer.MAX_VALUE;
+		public String spawnEquation;
 
 		public int width;
 		public int height;
@@ -141,14 +144,16 @@ public class DungeonFileParser
 		public char[][] roomDef;
 		public String faction;
 		public AbstractRoomGenerator generator;
+		public String placementHint;
 
 		public static DFPRoom parse( Element xml, HashMap<Character, Symbol> sharedSymbolMap )
 		{
 			DFPRoom room = new DFPRoom();
 			room.sharedSymbolMap = sharedSymbolMap;
 
-			room.minDepth = xml.getIntAttribute( "Min", room.minDepth );
-			room.maxDepth = xml.getIntAttribute( "Max", room.maxDepth );
+			room.spawnEquation = xml.getAttribute( "Condition", "1" ).toLowerCase();
+
+			room.placementHint = xml.get( "PlacementHint", null );
 
 			room.faction = xml.get( "Faction", null );
 
@@ -241,18 +246,36 @@ public class DungeonFileParser
 			{
 				s = sharedSymbolMap.get( c );
 			}
+
 			if ( s == null )
 			{
 				System.out.println( "Failed to find symbol for character '" + c + "'! Falling back to using '.'" );
 				s = sharedSymbolMap.get( '.' );
 			}
 
-			if ( s == null )
-			{
-				s = sharedSymbolMap.get( '.' );
-			}
-
 			return s;
+		}
+
+		public int processCondition( int depth, Random ran )
+		{
+			if ( Global.isNumber( spawnEquation ) )
+			{
+				return Integer.parseInt( spawnEquation );
+			}
+			else
+			{
+				ExpressionBuilder expB = EquationHelper.createEquationBuilder( spawnEquation, ran );
+				expB.variable( "depth" );
+
+				Expression exp = EquationHelper.tryBuild( expB );
+				if ( exp == null ) { return 0; }
+
+				exp.setVariable( "depth", depth );
+
+				int val = (int) exp.evaluate();
+
+				return val;
+			}
 		}
 
 		public void fillRoom( Room room, Random ran, DungeonFileParser dfp )
@@ -282,6 +305,9 @@ public class DungeonFileParser
 			}
 		}
 	}
+
+	// ----------------------------------------------------------------------
+	public String generator;
 
 	// ----------------------------------------------------------------------
 	public HashMap<Character, Symbol> sharedSymbolMap = new HashMap<Character, Symbol>();
@@ -320,13 +346,45 @@ public class DungeonFileParser
 	public RoomGenerator preprocessor;
 
 	// ----------------------------------------------------------------------
-	public Array<DFPRoom> getRequiredRooms( int depth )
+	public Symbol getSymbol( char c )
+	{
+		Symbol s = sharedSymbolMap.get( c );
+
+		if ( s == null )
+		{
+			System.out.println( "Failed to find symbol for character '" + c + "'! Falling back to using '.'" );
+			s = sharedSymbolMap.get( '.' );
+		}
+
+		return s;
+	}
+
+	// ----------------------------------------------------------------------
+	public Array<DFPRoom> getRequiredRooms( int depth, Random ran )
 	{
 		Array<DFPRoom> rooms = new Array<DFPRoom>();
 
 		for ( DFPRoom room : requiredRooms )
 		{
-			if ( room.minDepth <= depth && room.maxDepth >= depth )
+			int count = room.processCondition( depth, ran );
+			for ( int i = 0; i < count; i++ )
+			{
+				rooms.add( room );
+			}
+		}
+
+		return rooms;
+	}
+
+	// ----------------------------------------------------------------------
+	public Array<DFPRoom> getOptionalRooms( int depth, Random ran )
+	{
+		Array<DFPRoom> rooms = new Array<DFPRoom>();
+
+		for ( DFPRoom room : optionalRooms )
+		{
+			int count = room.processCondition( depth, ran );
+			for ( int i = 0; i < count; i++ )
 			{
 				rooms.add( room );
 			}
@@ -416,6 +474,8 @@ public class DungeonFileParser
 			e.printStackTrace();
 		}
 
+		generator = xmlElement.get( "Generator", "RecursiveDock" );
+
 		Element roomGenElement = xmlElement.getChildByName( "RoomGenerators" );
 		if ( roomGenElement != null )
 		{
@@ -453,27 +513,29 @@ public class DungeonFileParser
 		}
 
 		Element factionsElement = xmlElement.getChildByName( "Factions" );
-
-		Element majorFacElement = factionsElement.getChildByName( "Major" );
-		for ( int i = 0; i < majorFacElement.getChildCount(); i++ )
+		if ( factionsElement != null )
 		{
-			Element facElement = majorFacElement.getChild( i );
+			Element majorFacElement = factionsElement.getChildByName( "Major" );
+			for ( int i = 0; i < majorFacElement.getChildCount(); i++ )
+			{
+				Element facElement = majorFacElement.getChild( i );
 
-			String facname = facElement.getName();
-			int weight = Integer.parseInt( facElement.getText() );
+				String facname = facElement.getName();
+				int weight = Integer.parseInt( facElement.getText() );
 
-			majorFactions.add( new Faction( facname, weight ) );
-		}
+				majorFactions.add( new Faction( facname, weight ) );
+			}
 
-		Element minorFacElement = factionsElement.getChildByName( "Minor" );
-		for ( int i = 0; i < minorFacElement.getChildCount(); i++ )
-		{
-			Element facElement = minorFacElement.getChild( i );
+			Element minorFacElement = factionsElement.getChildByName( "Minor" );
+			for ( int i = 0; i < minorFacElement.getChildCount(); i++ )
+			{
+				Element facElement = minorFacElement.getChild( i );
 
-			String facname = facElement.getName();
-			int weight = Integer.parseInt( facElement.getText() );
+				String facname = facElement.getName();
+				int weight = Integer.parseInt( facElement.getText() );
 
-			minorFactions.add( new Faction( facname, weight ) );
+				minorFactions.add( new Faction( facname, weight ) );
+			}
 		}
 
 		Element symbolsElement = xmlElement.getChildByName( "Symbols" );

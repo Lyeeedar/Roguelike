@@ -6,8 +6,7 @@ import Roguelike.Global.Direction;
 
 public class MidpointDisplacement
 {
-	public float deepWaterThreshold, shallowWaterThreshold, desertThreshold, plainsThreshold, grasslandThreshold, forestThreshold, hillsThreshold,
-			mountainsThreshold;
+	public float deepWaterThreshold, shallowWaterThreshold, desertThreshold, plainsThreshold, grasslandThreshold, forestThreshold, hillsThreshold;
 
 	public int n;
 	public int wmult, hmult;
@@ -28,7 +27,6 @@ public class MidpointDisplacement
 		grasslandThreshold = 0.7f;
 		forestThreshold = 0.8f;
 		hillsThreshold = 0.88f;
-		mountainsThreshold = 0.95f;
 
 		// n partly controls the size of the map, but mostly controls the level
 		// of detail available
@@ -36,8 +34,8 @@ public class MidpointDisplacement
 
 		// wmult and hmult are the width and height multipliers. They set how
 		// separate regions there are
-		wmult = 3;
-		hmult = 3;
+		wmult = 4;
+		hmult = 4;
 
 		// Smoothness controls how smooth the resultant terain is. Higher = more
 		// smooth
@@ -181,8 +179,7 @@ public class MidpointDisplacement
 				else if ( map[row][col] < grasslandThreshold ) returnMap[row][col] = 4;
 				else if ( map[row][col] < forestThreshold ) returnMap[row][col] = 5;
 				else if ( map[row][col] < hillsThreshold ) returnMap[row][col] = 6;
-				else if ( map[row][col] < mountainsThreshold ) returnMap[row][col] = 7;
-				else returnMap[row][col] = 8;
+				else returnMap[row][col] = 7;
 			}
 		}
 
