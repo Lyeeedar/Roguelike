@@ -10,6 +10,10 @@
 		
 		<AffectedByDayNight>true</AffectedByDayNight>
 	</Ambient>
+	
+    <Background>
+        <Name>Level/WorldMap/DeepSea</Name>
+    </Background>
 
 	<Sound>
 		<BGM>Heroic Age</BGM>
@@ -101,7 +105,7 @@
 			<Char>7</Char>
 			<TileData>
 				<Opaque>false</Opaque>
-				<Passable>true</Passable>
+				<Passable>false</Passable>
 				<Sprite>
 					<Name>Level/WorldMap/Mountains</Name>
 				</Sprite>
@@ -112,7 +116,7 @@
 	
 	<Optional>
 	    
-	    <Transition Condition="5">
+	    <Transition Condition="10">
 		    
 		    <Faction>none</Faction>
 		    <PlacementHint>5</PlacementHint>

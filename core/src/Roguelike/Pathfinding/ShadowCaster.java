@@ -32,6 +32,8 @@ public class ShadowCaster
 	private final EnumBitflag<Passability> travelType;
 	private final Object self;
 
+	public boolean allowOutOfBounds = false;
+
 	private int startX;
 	private int startY;
 
@@ -159,7 +161,7 @@ public class ShadowCaster
 			{
 				// The current cell is in the field of view.
 
-				if ( translated.x < 0 || translated.y < 0 || translated.x >= grid.length || translated.y >= grid[0].length )
+				if ( !allowOutOfBounds && ( translated.x < 0 || translated.y < 0 || translated.x >= grid.length || translated.y >= grid[0].length ) )
 				{
 					Pools.free( translated );
 					continue;
@@ -304,7 +306,16 @@ public class ShadowCaster
 			return false;
 		}
 
-		boolean opaque = !grid[pos.x][pos.y].getPassable( travelType, self );
+		boolean opaque = false;
+
+		if ( allowOutOfBounds && ( pos.x < 0 || pos.y < 0 || pos.x >= grid.length || pos.y >= grid[0].length ) )
+		{
+			opaque = false;
+		}
+		else
+		{
+			opaque = !grid[pos.x][pos.y].getPassable( travelType, self );
+		}
 
 		Pools.free( pos );
 

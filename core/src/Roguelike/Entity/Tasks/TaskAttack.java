@@ -170,16 +170,12 @@ public class TaskAttack extends AbstractTask
 			{
 				SpriteEffect e = new SpriteEffect( hitEffect.copy(), Direction.CENTER, null );
 				e.Sprite.rotation = dir.getAngle();
-
-				tile.entity.spriteEffects.add( e );
 			}
 
 			if ( tile.environmentEntity != null )
 			{
 				SpriteEffect e = new SpriteEffect( hitEffect.copy(), Direction.CENTER, null );
 				e.Sprite.rotation = dir.getAngle();
-
-				tile.environmentEntity.spriteEffects.add( e );
 			}
 
 			SpriteEffect e = new SpriteEffect( hitEffect.copy(), Direction.CENTER, null );

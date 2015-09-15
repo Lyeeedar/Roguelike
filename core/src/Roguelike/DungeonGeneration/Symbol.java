@@ -41,7 +41,8 @@ public final class Symbol implements PathfindingTile
 		s.character = character;
 		s.tileData = tileData;
 		s.environmentData = environmentData;
-		s.environmentEntityData = environmentEntityData;
+		s.environmentEntityData = environmentEntityData != null ? (HashMap<String, Object>) environmentEntityData.clone() : null;
+		s.attachLocation = attachLocation;
 		s.entityData = entityData;
 		s.metaValue = metaValue;
 

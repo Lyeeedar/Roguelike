@@ -49,7 +49,17 @@ public final class ShadowCastCache
 	private Array<Point> clearTiles = new Array<Point>();
 	private Array<Point> shadowCastOutput = new Array<Point>();
 
+	public Array<Point> getCurrentShadowCast()
+	{
+		return shadowCastOutput;
+	}
+
 	public Array<Point> getShadowCast( GameTile[][] grid, int x, int y, int range, Object caster )
+	{
+		return getShadowCast( grid, x, y, range, caster, false );
+	}
+
+	public Array<Point> getShadowCast( GameTile[][] grid, int x, int y, int range, Object caster, boolean allowOutOfBounds )
 	{
 		boolean recalculate = false;
 
@@ -93,6 +103,7 @@ public final class ShadowCastCache
 			shadowCastOutput.clear();
 
 			ShadowCaster shadow = new ShadowCaster( grid, range );
+			shadow.allowOutOfBounds = allowOutOfBounds;
 			shadow.ComputeFOV( x, y, shadowCastOutput );
 
 			// build list of clear/opaque
@@ -101,6 +112,11 @@ public final class ShadowCastCache
 
 			for ( Point pos : shadowCastOutput )
 			{
+				if ( pos.x < 0 || pos.y < 0 || pos.x >= grid.length || pos.y >= grid[0].length )
+				{
+					continue;
+				}
+
 				GameTile tile = grid[pos.x][pos.y];
 				if ( !tile.getPassable( LightPassability, caster ) )
 				{

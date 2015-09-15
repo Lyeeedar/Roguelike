@@ -94,13 +94,13 @@ public abstract class AbstractDungeonGenerator
 		}
 
 		requiredRooms.sort( new Comparator<Room>()
-		{
+				{
 			@Override
 			public int compare( Room arg0, Room arg1 )
 			{
 				return arg0.comparisonString().compareTo( arg1.comparisonString() );
 			}
-		} );
+				} );
 	}
 
 	// ----------------------------------------------------------------------
@@ -265,6 +265,8 @@ public abstract class AbstractDungeonGenerator
 		level.fileName = saveLevel.fileName;
 		level.seed = saveLevel.seed;
 		level.requiredRooms = additionalRooms;
+
+		level.background = dfp.background;
 
 		for ( int x = 0; x < width; x++ )
 		{

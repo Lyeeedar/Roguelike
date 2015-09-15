@@ -353,23 +353,43 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			Sprite sprite = Global.CurrentLevel.background;
 
-			batch.setColor( Global.CurrentLevel.Ambient );
+			temp.set( Global.CurrentLevel.Ambient ).mul( Global.DayNightFactor );
+			temp.a = 1;
 
-			int px = Global.CurrentLevel.player.tile[0][0].x * Global.TileSize + offsetx;
-			int py = Global.CurrentLevel.player.tile[0][0].y * Global.TileSize + offsety;
+			batch.setColor( temp );
 
-			int sx = px - ( (int) roundTo( px, Global.TileSize ) ) - Global.TileSize;
-			int sy = py - ( (int) roundTo( py, Global.TileSize ) ) - Global.TileSize;
-
-			for ( int cx = sx; cx < Global.Resolution[0]; cx += Global.TileSize )
+			if ( Global.CurrentLevel.isVisionRestricted )
 			{
-				for ( int cy = sy; cy < Global.Resolution[1]; cy += Global.TileSize )
+				for ( Point pos : Global.CurrentLevel.visibilityData.getCurrentShadowCast() )
 				{
-					sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
+					if ( pos.x < 0 || pos.y < 0 || pos.x >= Global.CurrentLevel.width || pos.y >= Global.CurrentLevel.height )
+					{
+						int x = pos.x;
+						int y = pos.y;
+
+						int cx = x * Global.TileSize + offsetx;
+						int cy = y * Global.TileSize + offsety;
+
+						sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
+					}
 				}
 			}
+			else
+			{
+				int px = Global.CurrentLevel.player.tile[0][0].x * Global.TileSize + offsetx;
+				int py = Global.CurrentLevel.player.tile[0][0].y * Global.TileSize + offsety;
 
-			batch.setColor( Color.WHITE );
+				int sx = px - ( (int) roundTo( px, Global.TileSize ) ) - Global.TileSize;
+				int sy = py - ( (int) roundTo( py, Global.TileSize ) ) - Global.TileSize;
+
+				for ( int cx = sx; cx < Global.Resolution[0]; cx += Global.TileSize )
+				{
+					for ( int cy = sy; cy < Global.Resolution[1]; cy += Global.TileSize )
+					{
+						sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
+					}
+				}
+			}
 		}
 	}
 
@@ -499,7 +519,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private void renderSeenTiles( int offsetx, int offsety, int tileSize3 )
 	{
 		Color col = batch.getColor();
-		Color temp = new Color();
 
 		batch.setShader( GrayscaleShader.Instance );
 		for ( int x = 0; x < Global.CurrentLevel.width; x++ )
@@ -564,42 +583,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 					}
 
-					if ( stile.environmentHistory != null )
-					{
-						SeenHistoryItem hist = stile.environmentHistory;
-
-						int cx = x * Global.TileSize + offsetx;
-						int cy = y * Global.TileSize + offsety;
-
-						if ( hist.location != Direction.CENTER )
-						{
-							Direction dir = hist.location;
-							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
-						}
-						else
-						{
-							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
-						}
-					}
-
-					if ( stile.entityHistory != null )
-					{
-						SeenHistoryItem hist = stile.entityHistory;
-
-						int cx = x * Global.TileSize + offsetx;
-						int cy = y * Global.TileSize + offsety;
-
-						if ( hist.location != Direction.CENTER )
-						{
-							Direction dir = hist.location;
-							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
-						}
-						else
-						{
-							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
-						}
-					}
-
 					if ( stile.itemHistory != null )
 					{
 						SeenHistoryItem hist = stile.itemHistory;
@@ -638,6 +621,69 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 			}
 		}
+
+		for ( int x = 0; x < Global.CurrentLevel.width; x++ )
+		{
+			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
+			{
+				GameTile gtile = Global.CurrentLevel.Grid[x][y];
+				SeenTile stile = Global.CurrentLevel.SeenGrid[x][y];
+
+				if ( !gtile.visible && stile.seen )
+				{
+					temp.set( stile.light );
+					if ( Global.CurrentLevel.affectedByDayNight )
+					{
+						temp.mul( Global.DayNightFactor );
+					}
+
+					temp.a = 1;
+
+					if ( !temp.equals( col ) )
+					{
+						batch.setColor( temp );
+						col.set( temp );
+					}
+
+					if ( stile.environmentHistory != null )
+					{
+						SeenHistoryItem hist = stile.environmentHistory;
+
+						int cx = x * Global.TileSize + offsetx;
+						int cy = y * Global.TileSize + offsety;
+
+						if ( hist.location != Direction.CENTER )
+						{
+							Direction dir = hist.location;
+							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+						}
+						else
+						{
+							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
+						}
+					}
+
+					if ( stile.entityHistory != null )
+					{
+						SeenHistoryItem hist = stile.entityHistory;
+
+						int cx = x * Global.TileSize + offsetx;
+						int cy = y * Global.TileSize + offsety;
+
+						if ( hist.location != Direction.CENTER )
+						{
+							Direction dir = hist.location;
+							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+						}
+						else
+						{
+							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
+						}
+					}
+				}
+			}
+		}
+
 		batch.setColor( Color.WHITE );
 		batch.setShader( null );
 	}
@@ -1891,6 +1937,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private float frametime;
 	private BitmapFont font;
 	private final GlyphLayout layout = new GlyphLayout();
+	private final Color temp = new Color();
 
 	// ----------------------------------------------------------------------
 	private BitmapFont contextMenuNormalFont;

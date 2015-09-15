@@ -123,6 +123,11 @@
 			<Faction>none</Faction>
 
 			<Symbols>
+			    
+			    <Symbol Extends=",">
+		            <Char>S</Char>
+		            <MetaValue>PlayerSpawn</MetaValue>
+		        </Symbol>
 
 				<Symbol Extends=".">
 					<Char>v</Char>
@@ -163,7 +168,7 @@
 			<Rows>
 				<Row>#####</Row>
 				<Row>##v##</Row>
-				<Row>#,,##</Row>
+				<Row>#S,##</Row>
 				<Row>#,###</Row>
 			</Rows>
 
@@ -364,42 +369,6 @@
 
 			<Rows>Levels/Town/HomeGround</Rows>
 		</Home>
-		
-		<Test>
-		    
-		    <Faction>none</Faction>
-		    
-		    <Symbols>
-		        <Symbol Extends=".">
-		            <Char>k</Char>
-		            <EntityData>Enemies/Kitsune</EntityData>
-		        </Symbol>
-		        <Symbol Extends=".">
-		            <Char>S</Char>
-		            <MetaValue>PlayerSpawn</MetaValue>
-		        </Symbol>
-		        
-		        
-		    </Symbols>
-		    
-		    <Rows>
-		        <Row>...............</Row>
-		        <Row>...............</Row>
-		        <Row>...............</Row>
-		        <Row>...............</Row>
-		        <Row>....S..........</Row>
-		        <Row>...............</Row>
-		        <Row>...............</Row>
-		        <Row>.......k.......</Row>
-		        <Row>...............</Row>
-		        <Row>...............</Row>
-		        <Row>...............</Row>
-		        <Row>...............</Row>
-		        <Row>...............</Row>
-		        <Row>...............</Row>
-		        <Row>...............</Row>
-		    </Rows>
-		</Test>
 
 	</Required>
 

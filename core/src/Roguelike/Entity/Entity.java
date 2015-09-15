@@ -11,7 +11,6 @@ import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
-import Roguelike.Sprite.SpriteEffect;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Util.EnumBitflag;
@@ -329,7 +328,6 @@ public abstract class Entity
 	// ----------------------------------------------------------------------
 	public Sprite sprite;
 	public Light light;
-	public Array<SpriteEffect> spriteEffects = new Array<SpriteEffect>( false, 16 );
 
 	// ----------------------------------------------------------------------
 	public GameTile[][] tile = new GameTile[1][1];

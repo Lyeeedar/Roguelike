@@ -181,14 +181,6 @@ public class Level
 			{
 				GameTile tile = Grid[x][y];
 
-				tile.light.set( tile.ambientColour );
-				if ( affectedByDayNight )
-				{
-					tile.light.mul( Global.DayNightFactor );
-					tile.light.a = 1;
-				}
-				getLightsForTile( tile, lightList, playerViewRange );
-
 				if ( tile.visible )
 				{
 					updateSpritesForTile( tile, delta );
@@ -201,6 +193,14 @@ public class Level
 				}
 
 				cleanUpDeadForTile( tile );
+
+				tile.light.set( tile.ambientColour );
+				if ( affectedByDayNight )
+				{
+					tile.light.mul( Global.DayNightFactor );
+					tile.light.a = 1;
+				}
+				getLightsForTile( tile, lightList, playerViewRange );
 			}
 		}
 
@@ -264,11 +264,14 @@ public class Level
 				}
 			}
 
-			Array<Point> output = visibilityData.getShadowCast( Grid, player.tile[0][0].x, player.tile[0][0].y, player.getVariable( Statistic.RANGE ), player );
+			Array<Point> output = visibilityData.getShadowCast( Grid, player.tile[0][0].x, player.tile[0][0].y, player.getVariable( Statistic.RANGE ), player, true );
 
 			for ( Point tilePos : output )
 			{
-				getGameTile( tilePos ).visible = true;
+				if ( tilePos.x >= 0 && tilePos.y >= 0 && tilePos.x < width && tilePos.y < height )
+				{
+					getGameTile( tilePos ).visible = true;
+				}
 			}
 
 			updateSeenGrid();
@@ -341,7 +344,7 @@ public class Level
 
 	private void calculateSingleLight( Light l )
 	{
-		Array<Point> output = l.shadowCastCache.getShadowCast( Grid, l.lx, l.ly, (int) l.baseIntensity, null );
+		Array<Point> output = l.shadowCastCache.getShadowCast( Grid, (int) l.lx, (int) l.ly, (int) l.baseIntensity + 1, null );
 
 		for ( Point tilePos : output )
 		{
@@ -420,27 +423,19 @@ public class Level
 			tile.entity.getLight( tempLightList );
 			for ( Light l : tempLightList )
 			{
-				if ( checkLightCloseEnough( lx, ly, (int) l.baseIntensity, px, py, viewRange ) )
+				if ( checkLightCloseEnough( lx, ly, (int) l.baseIntensity + 1, px, py, viewRange ) )
 				{
 					l.lx = lx;
 					l.ly = ly;
-					output.add( l );
-				}
-			}
 
-			if ( tile.entity.spriteEffects.size > 0 )
-			{
-				for ( SpriteEffect se : tile.entity.spriteEffects )
-				{
-					if ( se.light != null )
+					if ( tile.entity.sprite.spriteAnimation != null )
 					{
-						if ( checkLightCloseEnough( lx, ly, (int) se.light.baseIntensity, px, py, viewRange ) )
-						{
-							se.light.lx = lx;
-							se.light.ly = ly;
-							output.add( se.light );
-						}
+						int[] offset = tile.entity.sprite.spriteAnimation.getRenderOffset();
+						l.lx += (float) offset[0] / (float) Global.TileSize;
+						l.ly += (float) offset[1] / (float) Global.TileSize;
 					}
+
+					output.add( l );
 				}
 			}
 		}
@@ -1261,7 +1256,7 @@ public class Level
 
 	public boolean affectedByDayNight = false;
 
-	private final ShadowCastCache visibilityData = new ShadowCastCache();
+	public final ShadowCastCache visibilityData = new ShadowCastCache();
 
 	private final Color tempColour = new Color();
 

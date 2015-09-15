@@ -17,8 +17,8 @@ public final class Light
 	public float flickerPeriod;
 
 	public float actualIntensity;
-	public int lx;
-	public int ly;
+	public float lx;
+	public float ly;
 
 	private float timeAccumulator;
 

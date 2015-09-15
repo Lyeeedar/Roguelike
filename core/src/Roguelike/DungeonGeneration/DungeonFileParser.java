@@ -6,10 +6,12 @@ import java.util.Random;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.DungeonGeneration.RoomGenerators.AbstractRoomGenerator;
 import Roguelike.DungeonGeneration.RoomGenerators.OverlappingRects;
 import Roguelike.Sound.RepeatingSoundEffect;
+import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -239,6 +241,29 @@ public class DungeonFileParser
 			return room;
 		}
 
+		public DFPRoom copy()
+		{
+			DFPRoom room = new DFPRoom();
+
+			room.orientation = orientation;
+			room.isTransition = isTransition;
+			room.spawnEquation = spawnEquation;
+			room.width = width;
+			room.height = height;
+			room.sharedSymbolMap = sharedSymbolMap;
+			room.roomDef = roomDef;
+			room.faction = faction;
+			room.generator = generator;
+			room.placementHint = placementHint;
+
+			for ( Character key : localSymbolMap.keySet() )
+			{
+				room.localSymbolMap.put( key, localSymbolMap.get( key ).copy() );
+			}
+
+			return room;
+		}
+
 		public Symbol getSymbol( char c )
 		{
 			Symbol s = localSymbolMap.get( c );
@@ -328,6 +353,9 @@ public class DungeonFileParser
 	public Color ambient;
 
 	// ----------------------------------------------------------------------
+	public Sprite background;
+
+	// ----------------------------------------------------------------------
 	public boolean affectedByDayNight = false;
 
 	// ----------------------------------------------------------------------
@@ -369,7 +397,7 @@ public class DungeonFileParser
 			int count = room.processCondition( depth, ran );
 			for ( int i = 0; i < count; i++ )
 			{
-				rooms.add( room );
+				rooms.add( room.copy() );
 			}
 		}
 
@@ -386,7 +414,7 @@ public class DungeonFileParser
 			int count = room.processCondition( depth, ran );
 			for ( int i = 0; i < count; i++ )
 			{
-				rooms.add( room );
+				rooms.add( room.copy() );
 			}
 		}
 
@@ -497,6 +525,12 @@ public class DungeonFileParser
 			gen.weight = 1;
 
 			roomGenerators.add( gen );
+		}
+
+		Element backgroundElement = xmlElement.getChildByName( "Background" );
+		if ( backgroundElement != null )
+		{
+			background = AssetManager.loadSprite( backgroundElement );
 		}
 
 		Element corridorElement = xmlElement.getChildByName( "CorridorStyle" );
