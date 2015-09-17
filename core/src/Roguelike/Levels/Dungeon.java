@@ -67,7 +67,7 @@ public class Dungeon
 		level.getAllEnvironmentEntities( entities );
 		for ( EnvironmentEntity entity : entities )
 		{
-			if ( entity.data.containsKey( "Destination" ) && !dungeonHasEntityLevel( entity ) ) { return false; }
+			if ( entity.data.containsKey( "Destination" ) && ( (SaveLevel) entity.data.get( "Destination" ) ).depth > level.depth ) { return false; }
 		}
 
 		return true;
@@ -95,11 +95,6 @@ public class Dungeon
 		return isCleared;
 	}
 
-	private boolean dungeonHasEntityLevel( EnvironmentEntity entity )
-	{
-		String UID = ( (SaveLevel) entity.data.get( "Destination" ) ).UID;
-		return saveLevels.containsKey( UID );
-	}
 }
 
 // in level:

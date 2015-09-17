@@ -134,7 +134,7 @@ public class EnvironmentEntity extends Entity
 	}
 
 	// ----------------------------------------------------------------------
-	private static EnvironmentEntity CreateTransition( final Element data, String levelUID )
+	private static EnvironmentEntity CreateTransition( final Element data, String levelUID, int depth )
 	{
 		ActivationAction action = new ActivationAction( "Change Level" )
 		{
@@ -154,7 +154,7 @@ public class EnvironmentEntity extends Entity
 		};
 
 		String destination = data.get( "Destination" );
-		final SaveLevel destinationLevel = new SaveLevel( destination, 0, null, MathUtils.random( Long.MAX_VALUE ) );
+		final SaveLevel destinationLevel = new SaveLevel( destination, depth + 1, null, MathUtils.random( Long.MAX_VALUE ) );
 
 		if ( !destination.equals( "this" ) )
 		{
@@ -378,8 +378,8 @@ public class EnvironmentEntity extends Entity
 	// ----------------------------------------------------------------------
 	private static EnvironmentEntity CreateDoor()
 	{
-		final Sprite doorClosed = AssetManager.loadSprite( "Objects/DoorClosed", 1, Color.WHITE, AnimationMode.NONE, null );
-		final Sprite doorOpen = AssetManager.loadSprite( "Objects/DoorOpen", 1, Color.WHITE, AnimationMode.NONE, null );
+		final Sprite doorClosed = AssetManager.loadSprite( "Objects/DoorClosed", 1, Color.WHITE, AnimationMode.NONE, null, false );
+		final Sprite doorOpen = AssetManager.loadSprite( "Objects/DoorOpen", 1, Color.WHITE, AnimationMode.NONE, null, false );
 
 		ActivationAction action = new ActivationAction( "Open" )
 		{
@@ -591,7 +591,7 @@ public class EnvironmentEntity extends Entity
 	}
 
 	// ----------------------------------------------------------------------
-	public static EnvironmentEntity load( Element xml, String dungeonUID, String levelUID )
+	public static EnvironmentEntity load( Element xml, String dungeonUID, String levelUID, int depth )
 	{
 		EnvironmentEntity entity = null;
 
@@ -603,7 +603,7 @@ public class EnvironmentEntity extends Entity
 		}
 		else if ( type.equalsIgnoreCase( "Transition" ) )
 		{
-			entity = CreateTransition( xml, levelUID );
+			entity = CreateTransition( xml, levelUID, depth );
 		}
 		else if ( type.equalsIgnoreCase( "Dungeon" ) )
 		{

@@ -96,13 +96,13 @@ public abstract class AbstractDungeonGenerator
 		}
 
 		requiredRooms.sort( new Comparator<Room>()
-				{
+		{
 			@Override
 			public int compare( Room arg0, Room arg1 )
 			{
 				return arg0.comparisonString().compareTo( arg1.comparisonString() );
 			}
-				} );
+		} );
 	}
 
 	// ----------------------------------------------------------------------
@@ -297,7 +297,7 @@ public abstract class AbstractDungeonGenerator
 
 				if ( symbol.hasEnvironmentEntity() )
 				{
-					EnvironmentEntity entity = symbol.getEnvironmentEntity( dungeon.UID, saveLevel.UID );
+					EnvironmentEntity entity = symbol.getEnvironmentEntity( dungeon.UID, saveLevel.UID, saveLevel.depth );
 
 					if ( !saveLevel.created || !entity.canTakeDamage )
 					{

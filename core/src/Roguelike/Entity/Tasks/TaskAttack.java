@@ -208,8 +208,8 @@ public class TaskAttack extends AbstractTask
 				if ( tmpdst < dst )
 				{
 					dst = tmpdst;
-					cx = entity.tile[0][0].x + x;
-					cy = entity.tile[0][0].y + y;
+					cx = x;
+					cy = y;
 				}
 			}
 		}

@@ -2,12 +2,10 @@
 	<Name>Toad</Name>
 
 	<Sprite>
-		<Name>dc-mon/animals/giant_toad</Name>
-		<AnimationMode>Shrink</AnimationMode>
+		<Name>Oryx/uf_split/uf_heroes/toad_green</Name>
+		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-	
-	<IsBoss>true</IsBoss>
-	
+		
 	<AI>basicMonster</AI>
 	
 	<Factions>

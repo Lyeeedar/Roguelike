@@ -48,18 +48,21 @@
 		<Encounter>
 			<Mobs>
 				<SpinyToad>3</SpinyToad>
+				<SpittingToad>1</SpittingToad>
 			</Mobs>
 		</Encounter>
 		<Encounter>
 			<Mobs>
 				<GiantToad>1</GiantToad>
 				<SpinyToad>2</SpinyToad>
+				<SpittingToad>1</SpittingToad>
 			</Mobs>
 		</Encounter>
 		<Encounter>
 			<Mobs>
 				<GiantToad>2</GiantToad>
 				<SpinyToad>1</SpinyToad>
+				<SpittingToad>1</SpittingToad>
 			</Mobs>
 		</Encounter>
 	</Encounters>

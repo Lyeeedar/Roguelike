@@ -143,18 +143,19 @@ public class AssetManager
 
 	public static Sprite loadSprite( String name )
 	{
-		return loadSprite( name, 0.5f, Color.WHITE, AnimationMode.TEXTURE, null );
+		return loadSprite( name, 0.5f, Color.WHITE, AnimationMode.TEXTURE, null, false );
 	}
 
 	public static Sprite loadSprite( String name, float updateTime )
 	{
-		return loadSprite( name, updateTime, Color.WHITE, AnimationMode.TEXTURE, null );
+		return loadSprite( name, updateTime, Color.WHITE, AnimationMode.TEXTURE, null, false );
 	}
 
-	public static Sprite loadSprite( String name, float updateTime, Color colour, AnimationMode mode, SoundInstance sound )
+	public static Sprite loadSprite( String name, float updateTime, Color colour, AnimationMode mode, SoundInstance sound, boolean drawActualSize )
 	{
 		Array<TextureRegion> textures = new Array<TextureRegion>( false, 1, TextureRegion.class );
 
+		// Try 0 indexed sprite
 		int i = 0;
 		while ( true )
 		{
@@ -172,6 +173,28 @@ public class AssetManager
 			i++;
 		}
 
+		// Try 1 indexed sprite
+		if ( textures.size == 0 )
+		{
+			i = 1;
+			while ( true )
+			{
+				TextureRegion tex = loadTextureRegion( "Sprites/" + name + "_" + i + ".png" );
+
+				if ( tex == null )
+				{
+					break;
+				}
+				else
+				{
+					textures.add( tex );
+				}
+
+				i++;
+			}
+		}
+
+		// Try sprite without indexes
 		if ( textures.size == 0 )
 		{
 			TextureRegion tex = loadTextureRegion( "Sprites/" + name + ".png" );
@@ -196,7 +219,7 @@ public class AssetManager
 			}
 		}
 
-		Sprite sprite = new Sprite( name, updateTime, textures, colour, mode, sound );
+		Sprite sprite = new Sprite( name, updateTime, textures, colour, mode, sound, drawActualSize );
 
 		return sprite;
 	}
@@ -232,7 +255,7 @@ public class AssetManager
 			sound = SoundInstance.load( soundElement );
 		}
 
-		Sprite sprite = loadSprite( xml.get( "Name" ), xml.getFloat( "UpdateRate", 0 ), colour, AnimationMode.valueOf( xml.get( "AnimationMode", "Texture" ).toUpperCase() ), sound );
+		Sprite sprite = loadSprite( xml.get( "Name" ), xml.getFloat( "UpdateRate", 0 ), colour, AnimationMode.valueOf( xml.get( "AnimationMode", "Texture" ).toUpperCase() ), sound, xml.getBoolean( "DrawActualSize", false ) );
 
 		Element animationElement = xml.getChildByName( "Animation" );
 		if ( animationElement != null )

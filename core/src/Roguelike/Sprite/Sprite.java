@@ -39,14 +39,17 @@ public final class Sprite
 
 	public SoundInstance sound;
 
+	public boolean drawActualSize;
+
 	public float[] baseScale = { 1, 1 };
 
-	public Sprite( String fileName, float animationDelay, Array<TextureRegion> textures, Color colour, AnimationMode mode, SoundInstance sound )
+	public Sprite( String fileName, float animationDelay, Array<TextureRegion> textures, Color colour, AnimationMode mode, SoundInstance sound, boolean drawActualSize )
 	{
 		this.fileName = fileName;
 		this.textures = textures;
 		this.animationDelay = animationDelay;
 		this.sound = sound;
+		this.drawActualSize = drawActualSize;
 
 		animationState = new AnimationState();
 		animationState.mode = mode;
@@ -159,6 +162,23 @@ public final class Sprite
 	{
 		if ( renderDelay > 0 ) { return; }
 
+		if ( drawActualSize )
+		{
+			float widthRatio = width / 32.0f;
+			float heightRatio = height / 32.0f;
+
+			int trueWidth = (int) ( texture.getRegionWidth() * widthRatio );
+			int trueHeight = (int) ( texture.getRegionHeight() * heightRatio );
+
+			int widthOffset = ( trueWidth - width ) / 2;
+			int heightOffset = ( trueHeight - height ) / 2;
+
+			x -= widthOffset;
+			y -= heightOffset;
+			width = trueWidth;
+			height = trueHeight;
+		}
+
 		width = width * size;
 		height = height * size;
 
@@ -186,7 +206,7 @@ public final class Sprite
 
 	public Sprite copy()
 	{
-		Sprite sprite = new Sprite( fileName, animationDelay, textures, colour, animationState.mode, sound );
+		Sprite sprite = new Sprite( fileName, animationDelay, textures, colour, animationState.mode, sound, drawActualSize );
 		if ( spriteAnimation != null )
 		{
 			sprite.spriteAnimation = spriteAnimation.copy();

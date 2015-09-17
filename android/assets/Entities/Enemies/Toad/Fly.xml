@@ -2,8 +2,8 @@
 	<Name>Fly</Name>
 
 	<Sprite>
-		<Name>dc-mon/animals/giant_mosquito</Name>
-		<AnimationMode>Sine</AnimationMode>
+		<Name>Oryx/uf_split/uf_heroes/flies</Name>
+		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
 	
 	<AI>basicMonster</AI>

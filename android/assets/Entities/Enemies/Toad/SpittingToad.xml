@@ -2,40 +2,31 @@
 	<Name>Toad</Name>
 
 	<Sprite>
-		<Name>Oryx/uf_split/uf_heroes/toad_horned</Name>
+		<Name>Oryx/uf_split/uf_heroes/toad_blue</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-	
+		
 	<AI>basicMonster</AI>
 	
 	<Factions>
 		<Faction>Toad</Faction>
 	</Factions>
 	
-	<ActiveAbilities>
-		<Leap>
-			<Cooldown>20</Cooldown>
-			<Range>3</Range>
-			<Targeting><Entity Type="Enemy"/></Targeting>
-			<Movement><Smite/></Movement>
-			<Effect>
-				<Damage>
-					<Atk>Atk*0.8</Atk>
-				</Damage>
-				<Teleport>
-					<Style>Leap</Style>
-				</Teleport>
-			</Effect>
-		</Leap>
-	</ActiveAbilities>
-	
 	<Inventory>
+	    
+	    <Equipment>
+			<Spit Drop="false">
+				<Slot>MainWeapon</Slot>
+				<Category>Weapon</Category>
+				<Type>Wand</Type>
+			</Spit>
+		</Equipment>
 	    
 	    <Hide DropChance="rnd(10)<1">
 	        
 	        <Category>Material</Category>
 		    <Name>Toad Skin</Name>
-		    <Type>Leather</<Type>>
+		    <Type>Leather</Type>
 		    <Elements>
 		        <Metal>20</Metal>
 		        <Wood>20+rnd(30)</Wood>
@@ -44,22 +35,10 @@
 	        
 	    </Hide>
 	    
-	    <Spine DropChance="rnd(10)<1">
-	        
-	        <Category>Material</Category>
-		    <Name>Toad Spine</Name>
-		    <<Type>>Spine</<Type>>
-		    <Elements>
-		        <Wood>20+rnd(10)</Wood>
-		        <Water>70+rnd(50)</Water>
-		    </Elements>
-	        
-	    </Spine>
-	    
 	</Inventory>
 	
 	<Statistics>
-		<MaxHP>350</MaxHP>
+		<MaxHP>300</MaxHP>
 		<Range>5</<Range>
 		
 		<Wood_Atk>33</Wood_Atk>
