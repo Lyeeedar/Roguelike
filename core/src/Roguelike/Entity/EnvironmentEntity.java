@@ -14,13 +14,16 @@ import Roguelike.DungeonGeneration.DungeonFileParser;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.Symbol;
 import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.Levels.Dungeon;
 import Roguelike.Levels.Level;
 import Roguelike.Save.SaveLevel;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Screens.LoadingScreen;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationMode;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.graphics.Color;
@@ -139,9 +142,9 @@ public class EnvironmentEntity extends Entity
 			public void activate( EnvironmentEntity entity )
 			{
 				Level current = entity.tile[0][0].level;
-				SaveLevel save = Global.getLevel( (SaveLevel) entity.data.get( "Destination" ) );
+				SaveLevel save = current.dungeon.getSaveLevel( (SaveLevel) entity.data.get( "Destination" ) );
 
-				boolean needsLoad = LoadingScreen.Instance.set( save, current.player, "Stair: " + current.UID, null, (Boolean) entity.data.get( "UnloadLevel" ) );
+				boolean needsLoad = LoadingScreen.Instance.set( current.dungeon, save, current.player, "Stair: " + current.UID, null );
 
 				if ( needsLoad )
 				{
@@ -169,7 +172,6 @@ public class EnvironmentEntity extends Entity
 						HashMap<String, Object> eedata = new HashMap<String, Object>();
 						eedata.put( "Destination", new SaveLevel( levelUID ) );
 						eedata.put( "Stair: " + levelUID, new Object() );
-						eedata.put( "UnloadLevel", symbol.environmentData.getBoolean( "UnloadLevel", true ) );
 						symbol.environmentEntityData = eedata;
 
 						break;
@@ -208,14 +210,169 @@ public class EnvironmentEntity extends Entity
 			entity.actions.add( action );
 			entity.data.put( "Destination", destinationLevel );
 			entity.data.put( "Stair: " + destinationLevel.UID, new Object() );
-			entity.data.put( "UnloadLevel", data.getBoolean( "UnloadLevel", true ) );
-			entity.UID = "EnvironmentEntity DownStair: ID " + entity.hashCode();
+			entity.UID = "EnvironmentEntity Stair: ID " + entity.hashCode();
 
 			entity.tile = new GameTile[entity.size][entity.size];
 			stairs.size = entity.size;
 
 			return entity;
 		}
+	}
+
+	// ----------------------------------------------------------------------
+	private static EnvironmentEntity CreateDungeonTransition( final Element data, String dungeonUID, String levelUID )
+	{
+		ActivationAction action = new ActivationAction( "Leave Dungeon" )
+		{
+			@Override
+			public void activate( EnvironmentEntity entity )
+			{
+				Level current = entity.tile[0][0].level;
+
+				String dungeonUID = (String) entity.data.get( "DestinationDungeon" );
+				Dungeon dungeon = Global.Dungeons.get( dungeonUID );
+
+				if ( dungeonUID == null )
+				{
+					dungeon = new Dungeon( current.dungeon.getSaveLevel( current.UID ), new Point().set( entity ) );
+					entity.data.put( "DestinationDungeon", dungeon.UID );
+
+					Global.Dungeons.put( dungeon.UID, dungeon );
+				}
+
+				SaveLevel save = dungeon.getSaveLevel( (SaveLevel) entity.data.get( "DestinationLevel" ) );
+
+				boolean needsLoad = LoadingScreen.Instance.set( dungeon, save, current.player, "Dungeon: " + current.UID, null );
+
+				GameScreen.Instance.addFullScreenMessage( save.fileName );
+
+				if ( needsLoad )
+				{
+					RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
+				}
+			}
+		};
+
+		String destination = data.get( "Destination" );
+		final SaveLevel destinationLevel = new SaveLevel( destination, 0, null, MathUtils.random( Long.MAX_VALUE ) );
+
+		if ( !destination.equals( "this" ) )
+		{
+			action.name = "Enter Dungeon";
+
+			DungeonFileParser dfp = DungeonFileParser.load( destination + "/" + destination );
+			DFPRoom exitRoom = DFPRoom.parse( data.getChildByName( "ExitRoom" ), dfp.sharedSymbolMap );
+			destinationLevel.requiredRooms.add( exitRoom );
+
+			// Place in symbol
+			for ( Symbol symbol : exitRoom.localSymbolMap.values() )
+			{
+				if ( symbol.environmentData != null )
+				{
+					if ( symbol.environmentData.get( "Type" ).equals( "Dungeon" ) && symbol.environmentData.get( "Destination" ).equals( "this" ) )
+					{
+						HashMap<String, Object> eedata = new HashMap<String, Object>();
+						eedata.put( "DestinationLevel", new SaveLevel( levelUID ) );
+						eedata.put( "DestinationDungeon", dungeonUID );
+						eedata.put( "Dungeon: " + levelUID, new Object() );
+						symbol.environmentEntityData = eedata;
+
+						break;
+					}
+				}
+			}
+		}
+
+		// Make stairs down and return
+		{
+			Sprite stairs = null;
+
+			Element spriteElement = data.getChildByName( "Sprite" );
+			if ( spriteElement != null )
+			{
+				stairs = AssetManager.loadSprite( spriteElement );
+			}
+			else
+			{
+				if ( destination.equals( "this" ) )
+				{
+					stairs = AssetManager.loadSprite( "dc-dngn/gateways/stone_stairs_up" );
+				}
+				else
+				{
+					stairs = AssetManager.loadSprite( "dc-dngn/gateways/stone_stairs_down" );
+				}
+			}
+
+			final EnvironmentEntity entity = new EnvironmentEntity();
+			entity.size = data.getInt( "Size", 1 );
+			entity.passableBy = Passability.parse( "true" );
+			entity.passableBy.setBit( Passability.LIGHT );
+			entity.sprite = stairs;
+			entity.canTakeDamage = false;
+			entity.actions.add( action );
+			entity.data.put( "DestinationLevel", destinationLevel );
+			entity.data.put( "Dungeon: " + destinationLevel.UID, new Object() );
+			entity.UID = "EnvironmentEntity Dungeon: ID " + entity.hashCode();
+
+			entity.onTurnAction = new OnTurnAction()
+			{
+
+				@Override
+				public void update( EnvironmentEntity entity, float delta )
+				{
+					String dungeonUID = (String) entity.data.get( "DestinationDungeon" );
+					Dungeon dungeon = Global.Dungeons.get( dungeonUID );
+
+					if ( dungeon != null && dungeon.isCleared )
+					{
+						entity.removeFromTile();
+						Global.Dungeons.remove( dungeon.UID );
+					}
+				}
+
+			};
+
+			entity.tile = new GameTile[entity.size][entity.size];
+			stairs.size = entity.size;
+
+			return entity;
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	public static EnvironmentEntity CreateDungeonExitPortal( Dungeon dungeon )
+	{
+		ActivationAction action = new ActivationAction( "Leave Dungeon" )
+		{
+			@Override
+			public void activate( EnvironmentEntity entity )
+			{
+				Level current = entity.tile[0][0].level;
+
+				String dungeonUID = (String) entity.data.get( "DestinationDungeon" );
+				Dungeon dungeon = Global.Dungeons.get( dungeonUID );
+
+				SaveLevel save = dungeon.outsideLevel;
+
+				boolean needsLoad = LoadingScreen.Instance.set( dungeon, save, current.player, dungeon.outsidePoint, null );
+
+				if ( needsLoad )
+				{
+					RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
+				}
+			}
+		};
+
+		final EnvironmentEntity entity = new EnvironmentEntity();
+		entity.passableBy = Passability.parse( "true" );
+		entity.sprite = AssetManager.loadSprite( "dc-dngn/zot_pillar" );
+		entity.canTakeDamage = false;
+		entity.actions.add( action );
+		entity.data.put( "DestinationDungeon", dungeon.UID );
+		entity.UID = "EnvironmentEntity DungeonPortal: ID " + entity.hashCode();
+
+		return entity;
 	}
 
 	// ----------------------------------------------------------------------
@@ -434,7 +591,7 @@ public class EnvironmentEntity extends Entity
 	}
 
 	// ----------------------------------------------------------------------
-	public static EnvironmentEntity load( Element xml, String levelUID )
+	public static EnvironmentEntity load( Element xml, String dungeonUID, String levelUID )
 	{
 		EnvironmentEntity entity = null;
 
@@ -448,6 +605,10 @@ public class EnvironmentEntity extends Entity
 		{
 			entity = CreateTransition( xml, levelUID );
 		}
+		else if ( type.equalsIgnoreCase( "Dungeon" ) )
+		{
+			entity = CreateDungeonTransition( xml, dungeonUID, levelUID );
+		}
 		else if ( type.equalsIgnoreCase( "Spawner" ) )
 		{
 			entity = CreateSpawner( xml );
@@ -457,6 +618,7 @@ public class EnvironmentEntity extends Entity
 			entity = CreateBasic( xml );
 		}
 
+		entity.tile = new GameTile[entity.size][entity.size];
 		entity.creationData = xml;
 		return entity;
 	}

@@ -47,6 +47,11 @@ public class TaskMove extends AbstractTask
 								newTile.entity.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff1, MoveEquation.SMOOTHSTEP );
 								obj.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff2, MoveEquation.SMOOTHSTEP );
 							}
+							else
+							{
+								canMove = false;
+								break;
+							}
 						}
 						else
 						{

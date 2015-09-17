@@ -8,6 +8,7 @@ import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.DungeonGeneration.AbstractDungeonGenerator;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Levels.Dungeon;
 import Roguelike.Levels.Level;
 import Roguelike.Save.SaveLevel;
 
@@ -118,7 +119,7 @@ public class LoadingScreen implements Screen
 	{
 		if ( event == null )
 		{
-			Global.ChangeLevel( level, player, travelType );
+			Global.ChangeLevel( level, player, travelData );
 
 			Global.CurrentLevel.player.slottedActiveAbilities.clear();
 			Global.CurrentLevel.player.slottedPassiveAbilities.clear();
@@ -230,24 +231,16 @@ public class LoadingScreen implements Screen
 	{
 	}
 
-	public boolean set( SaveLevel level, GameEntity player, String travelType, PostGenerateEvent event, boolean unloadLevel )
+	public boolean set( Dungeon dungeon, SaveLevel level, GameEntity player, Object travelData, PostGenerateEvent event )
 	{
+		this.dungeon = dungeon;
 		this.player = player;
-		this.travelType = travelType;
+		this.travelData = travelData;
 		this.event = event;
 
-		if ( Global.CurrentLevel != null && !unloadLevel )
+		if ( dungeon.loadedLevels.containsKey( level.UID ) )
 		{
-			Global.LoadedLevels.put( Global.CurrentLevel.UID, Global.CurrentLevel );
-		}
-		else if ( Global.CurrentLevel != null && Global.LoadedLevels.containsKey( Global.CurrentLevel.UID ) )
-		{
-			Global.LoadedLevels.remove( Global.CurrentLevel.UID );
-		}
-
-		if ( Global.LoadedLevels.containsKey( level.UID ) )
-		{
-			Level loadedLevel = Global.LoadedLevels.get( level.UID );
+			Level loadedLevel = dungeon.loadedLevels.get( level.UID );
 
 			if ( event != null )
 			{
@@ -260,7 +253,7 @@ public class LoadingScreen implements Screen
 
 		this.level = level;
 
-		generator = AbstractDungeonGenerator.load( level );
+		generator = AbstractDungeonGenerator.load( dungeon, level );
 
 		this.percent = generator.percent;
 		this.generationString = generator.generationText;
@@ -288,9 +281,10 @@ public class LoadingScreen implements Screen
 	boolean complete;
 	String generationString;
 	int percent = 0;
+	Dungeon dungeon;
 	SaveLevel level;
 	GameEntity player;
-	String travelType;
+	Object travelData;
 	AbstractDungeonGenerator generator;
 	PostGenerateEvent event;
 

@@ -950,6 +950,18 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 			}
 
+			float alpha = 1;
+			if ( entity.popupDuration <= 0 && entity.displayedPopup.length() == entity.popup.length() )
+			{
+				alpha *= entity.popupFade;
+
+				if ( alpha < 0 )
+				{
+					alpha = 0;
+				}
+			}
+			tempColour.set( 1, 1, 1, alpha );
+
 			int x = entity.tile[0][0].x;
 			int y = entity.tile[0][0].y;
 
@@ -981,23 +993,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				left -= right - stage.getWidth();
 			}
 
-			float alpha = 1;
-			if ( entity.popupDuration <= 0 && entity.displayedPopup.length() == entity.popup.length() )
-			{
-				alpha *= entity.popupFade;
-
-				if ( alpha < 0 )
-				{
-					alpha = 0;
-				}
-			}
-
 			float width = layout.width;
 			float height = layout.height;
 
 			layout.setText( font, entity.displayedPopup, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
 
-			tempColour.set( 1, 1, 1, alpha );
 			batch.setColor( tempColour );
 
 			speechBubbleBackground.draw( batch, left, cy, width + 20, height + 20 );
@@ -1739,6 +1739,23 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		label.setVisible( true );
 
 		entity.healingAccumulator = 0;
+	}
+
+	// ----------------------------------------------------------------------
+	public void addFullScreenMessage( String message )
+	{
+		Label label = new Label( message, skin );
+		label.setColor( Color.WHITE );
+
+		label.setFontScale( 5 );
+
+		int cx = 50;
+		int cy = Global.Resolution[1] - 50;
+
+		label.addAction( new SequenceAction( Actions.moveTo( cx + 25, cy, 2.5f ), Actions.removeActor() ) );
+		label.setPosition( cx, cy );
+		stage.addActor( label );
+		label.setVisible( true );
 	}
 
 	// ----------------------------------------------------------------------

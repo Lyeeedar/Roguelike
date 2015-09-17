@@ -7,7 +7,7 @@
 			<Name>Tree</Name>
 			<Placement>Any</Placement>
 			<RangeMin>30</RangeMin>
-			<Coverage>75</Coverage>
+			<Coverage>40</Coverage>
 			
 			<EnvironmentData>
 				<Opaque>true</Opaque>
@@ -35,7 +35,61 @@
 				</Sprite>
 			</EnvironmentData>
 			
-			<Coverage>40</Coverage>
+			<Coverage>30</Coverage>
+		</Feature>
+		
+		<Feature>
+			<Name>Flower Cluster</Name>
+			<Placement>Any</Placement>
+			
+			<EnvironmentData>
+			    <Passable>true</Passable>
+			    <Opaque>false</Opaque>
+				<Sprite>
+					<Name>spriggan/flowers</Name>
+					<Colour>
+					    <RGB>255,100,150</RGB>
+					</Colour>
+				</Sprite>
+			</EnvironmentData>
+			
+			<Coverage>30</Coverage>
+		</Feature>
+		
+		<Feature>
+			<Name>Flower Cluster</Name>
+			<Placement>Any</Placement>
+			
+			<EnvironmentData>
+			    <Passable>true</Passable>
+			    <Opaque>false</Opaque>
+				<Sprite>
+					<Name>spriggan/flowers</Name>
+					<Colour>
+					    <RGB>170,52,88</RGB>
+					</Colour>
+				</Sprite>
+			</EnvironmentData>
+			
+			<Coverage>30</Coverage>
+		</Feature>
+		
+		<Feature>
+			<Name>Flower Cluster</Name>
+			<Placement>Any</Placement>
+			
+			<EnvironmentData>
+			    <Passable>true</Passable>
+			    <Opaque>false</Opaque>
+				<Sprite>
+					<Name>spriggan/flowers</Name>
+					<Colour>
+					    <RGB>200,56,200</RGB>
+					</Colour>
+				</Sprite>
+			</EnvironmentData>
+			
+			<Coverage>30</Coverage>
 		</Feature>
 	    
 	</Features>

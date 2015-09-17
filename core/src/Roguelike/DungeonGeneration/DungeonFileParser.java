@@ -231,7 +231,8 @@ public class DungeonFileParser
 					Symbol symbol = Symbol.parse( symbolsElement.getChild( i ), sharedSymbolMap, room.localSymbolMap );
 					room.localSymbolMap.put( symbol.character, symbol );
 
-					if ( symbol.environmentData != null && symbol.environmentData.get( "Type", "" ).equals( "Transition" ) )
+					if ( symbol.environmentData != null
+							&& ( symbol.environmentData.get( "Type", "" ).equals( "Transition" ) || symbol.environmentData.get( "Type", "" ).equals( "Dungeon" ) ) )
 					{
 						room.isTransition = true;
 					}

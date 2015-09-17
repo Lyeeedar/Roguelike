@@ -32,28 +32,6 @@
 			</TileData>
 		</CentralConstant>
 		
-		<SideRecurring>
-	        <PlacementMode>Alternate</PlacementMode>
-	        <Interval>10</Interval>
-	        <Name>Torch</Name>
-	        <EnvironmentData>
-				<Sprite>
-					<Name>Steampunk/StreetLamp</Name>
-				</Sprite>
-				<Passable>false</Passable>
-				<Opaque>false</Opaque>
-				<Light>
-					<Colour>
-						<Green>0.8</Green>
-						<Red>1</Red>
-					</Colour>
-					<Intensity>5</Intensity>
-					<Flicker>2</Flicker>
-					<FlickerPeriod>0.5</FlickerPeriod>
-				</Light>
-			</EnvironmentData>
-	    </SideRecurring>
-		
 	</CorridorStyle>
 
 	<Preprocessor>
@@ -123,18 +101,16 @@
 			<Faction>none</Faction>
 
 			<Symbols>
-			    
-			    <Symbol Extends=",">
-		            <Char>S</Char>
-		            <MetaValue>PlayerSpawn</MetaValue>
-		        </Symbol>
-
 				<Symbol Extends=".">
 					<Char>v</Char>
 					<EnvironmentData>
 						<Type>Transition</Type>
 						<Destination>WorldMap</Destination>
 						<UnloadLevel>false</UnloadLevel>
+						
+						<Sprite>
+						    <Name>Level/WorldMap/RoadToWorldMap</Name>
+						</Sprite>
 
 						<ExitRoom>
 							<Faction>none</Faction>
@@ -168,7 +144,7 @@
 			<Rows>
 				<Row>#####</Row>
 				<Row>##v##</Row>
-				<Row>#S,##</Row>
+				<Row>#,,##</Row>
 				<Row>#,###</Row>
 			</Rows>
 
@@ -306,7 +282,7 @@
 				
 				<Symbol Extends="m">
 					<Char>S</Char>
-					
+					<MetaValue>PlayerSpawn</MetaValue>
 				</Symbol>
 
 				<Symbol Extends=",">

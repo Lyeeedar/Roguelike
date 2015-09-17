@@ -9,6 +9,7 @@ import Roguelike.Global.Direction;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Levels.Dungeon;
 import Roguelike.Levels.Level;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Tiles.GameTile;
@@ -31,6 +32,7 @@ public abstract class AbstractDungeonGenerator
 
 	protected Array<Room> placedRooms = new Array<Room>();
 
+	protected Dungeon dungeon;
 	protected Level level;
 	protected Random ran;
 	protected int width;
@@ -295,7 +297,7 @@ public abstract class AbstractDungeonGenerator
 
 				if ( symbol.hasEnvironmentEntity() )
 				{
-					EnvironmentEntity entity = symbol.getEnvironmentEntity( saveLevel.UID );
+					EnvironmentEntity entity = symbol.getEnvironmentEntity( dungeon.UID, saveLevel.UID );
 
 					if ( !saveLevel.created || !entity.canTakeDamage )
 					{
@@ -393,13 +395,17 @@ public abstract class AbstractDungeonGenerator
 		level.depth = saveLevel.depth;
 		level.UID = saveLevel.UID;
 
+		level.dungeon = dungeon;
+		dungeon.addLevel( saveLevel );
+		dungeon.addLevel( level );
+
 		level.calculateAmbient();
 
 		return level;
 	}
 
 	// ----------------------------------------------------------------------
-	public static AbstractDungeonGenerator load( SaveLevel level )
+	public static AbstractDungeonGenerator load( Dungeon dungeon, SaveLevel level )
 	{
 		DungeonFileParser dfp = DungeonFileParser.load( level.fileName + "/" + level.fileName );
 
@@ -415,6 +421,7 @@ public abstract class AbstractDungeonGenerator
 			e.printStackTrace();
 		}
 
+		type.dungeon = dungeon;
 		type.setup( level, dfp );
 
 		return type;

@@ -11,8 +11,10 @@ import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
+import Roguelike.Levels.Dungeon;
 import Roguelike.Levels.Level;
 import Roguelike.Save.SaveAbilityPool;
+import Roguelike.Save.SaveDungeon;
 import Roguelike.Save.SaveFile;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.GameScreen;
@@ -85,10 +87,7 @@ public class Global
 	public static String PlayerTitle = "Adventurer";
 
 	// ----------------------------------------------------------------------
-	public static HashMap<String, SaveLevel> AllLevels = new HashMap<String, SaveLevel>();
-
-	// ----------------------------------------------------------------------
-	public static HashMap<String, Level> LoadedLevels = new HashMap<String, Level>();
+	public static HashMap<String, Dungeon> Dungeons = new HashMap<String, Dungeon>();
 
 	// ----------------------------------------------------------------------
 	public static HashMap<String, Integer> GlobalVariables = new HashMap<String, Integer>();
@@ -674,8 +673,16 @@ public class Global
 	{
 		SaveFile save = new SaveFile();
 
-		Global.AllLevels.get( Global.CurrentLevel.UID ).store( Global.CurrentLevel );
-		save.allLevels = (HashMap<String, SaveLevel>) Global.AllLevels.clone();
+		CurrentLevel.dungeon.getSaveLevel( CurrentLevel.UID ).store( CurrentLevel );
+
+		for ( Dungeon dungeon : Dungeons.values() )
+		{
+			SaveDungeon saveDungeon = new SaveDungeon();
+			saveDungeon.store( dungeon );
+			save.dungeons.add( saveDungeon );
+		}
+
+		save.currentDungeon = Global.CurrentLevel.dungeon.UID;
 		save.currentLevel = Global.CurrentLevel.UID;
 		save.globalVariables = (HashMap<String, Integer>) GlobalVariables.clone();
 		save.globalNames = (HashMap<String, String>) GlobalNames.clone();
@@ -694,13 +701,20 @@ public class Global
 		SaveFile save = new SaveFile();
 		save.load();
 
-		Global.AllLevels = (HashMap<String, SaveLevel>) save.allLevels.clone();
+		for ( SaveDungeon saveDungeon : save.dungeons )
+		{
+			Dungeon dungeon = saveDungeon.create();
+			Dungeons.put( dungeon.UID, dungeon );
+		}
+
 		Global.abilityPool = save.abilityPool.create();
 		Global.GlobalVariables = (HashMap<String, Integer>) save.globalVariables.clone();
 		Global.GlobalNames = (HashMap<String, String>) save.globalNames.clone();
 
-		SaveLevel level = Global.AllLevels.get( save.currentLevel );
-		LoadingScreen.Instance.set( level, null, null, null, true );
+		Dungeon dungeon = Dungeons.get( save.currentDungeon );
+		SaveLevel level = dungeon.getSaveLevel( save.currentLevel );
+
+		LoadingScreen.Instance.set( dungeon, level, null, null, null );
 		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
 
 		AUT = save.AUT;
@@ -713,7 +727,7 @@ public class Global
 		AUT = 0;
 		DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
 
-		AllLevels.clear();
+		Dungeons.clear();
 		GlobalVariables.clear();
 		GlobalNames.clear();
 
@@ -724,23 +738,25 @@ public class Global
 		// player.tile = new GameTile[2][2];
 
 		player.setPopupText( "Urgh... Where am I... Who am I...", 2 );
-		SaveLevel firstLevel = new SaveLevel( "Town", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
-		AllLevels.put( firstLevel.UID, firstLevel );
 
-		LoadingScreen.Instance.set( firstLevel, player, "PlayerSpawn", new PostGenerateEvent()
+		Dungeon dungeon = new Dungeon();
+		SaveLevel firstLevel = new SaveLevel( "Town", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
+		Dungeons.put( dungeon.UID, dungeon );
+
+		LoadingScreen.Instance.set( dungeon, firstLevel, player, "PlayerSpawn", new PostGenerateEvent()
 		{
 			@Override
 			public void execute( Level level )
 			{
 				abilityPool = AbilityPool.createAbilityPool( lines );
 			}
-		}, true );
+		} );
 
 		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
 	}
 
 	// ----------------------------------------------------------------------
-	public static void ChangeLevel( Level level, GameEntity player, String travelKey )
+	public static void ChangeLevel( Level level, GameEntity player, Object travelData )
 	{
 		if ( CurrentLevel != null )
 		{
@@ -753,9 +769,8 @@ public class Global
 			// CurrentLevel.player = null;
 
 			// Save
-			SaveLevel save = new SaveLevel();
+			SaveLevel save = CurrentLevel.dungeon.getSaveLevel( CurrentLevel.UID );
 			save.store( CurrentLevel );
-			AllLevels.put( save.UID, save );
 
 			CurrentLevel.player.tile[0][0].entity = CurrentLevel.player;
 		}
@@ -775,47 +790,46 @@ public class Global
 		{
 			level.player = player;
 
-			outer:
-			for ( int x = 0; x < level.width; x++ )
+			if ( travelData instanceof String )
 			{
-				for ( int y = 0; y < level.height; y++ )
-				{
-					GameTile tile = level.getGameTile( x, y );
-					if ( tile.metaValue != null )
-					{
-						if ( tile.metaValue.equals( travelKey ) )
-						{
-							tile.addGameEntity( player );
-							break outer;
-						}
-					}
+				String travelKey = (String) travelData;
 
-					if ( tile.environmentEntity != null )
+				outer:
+				for ( int x = 0; x < level.width; x++ )
+				{
+					for ( int y = 0; y < level.height; y++ )
 					{
-						if ( tile.environmentEntity.data.containsKey( travelKey ) )
+						GameTile tile = level.getGameTile( x, y );
+						if ( tile.metaValue != null )
 						{
-							tile.addGameEntity( player );
-							break outer;
+							if ( tile.metaValue.equals( travelKey ) )
+							{
+								tile.addGameEntity( player );
+								break outer;
+							}
+						}
+
+						if ( tile.environmentEntity != null && tile.environmentEntity.data.size() > 0 )
+						{
+							if ( tile.environmentEntity.data.containsKey( travelKey ) )
+							{
+								tile.addGameEntity( player );
+								break outer;
+							}
 						}
 					}
 				}
+			}
+			else if ( travelData instanceof Point )
+			{
+				GameTile tile = level.getGameTile( (Point) travelData );
+				tile.addGameEntity( player );
 			}
 		}
 
 		CurrentLevel.updateVisibleTiles();
 
 		save();
-	}
-
-	// ----------------------------------------------------------------------
-	public static SaveLevel getLevel( SaveLevel level )
-	{
-		if ( !AllLevels.containsKey( level.UID ) )
-		{
-			AllLevels.put( level.UID, level );
-		}
-
-		return AllLevels.get( level.UID );
 	}
 
 	// ----------------------------------------------------------------------

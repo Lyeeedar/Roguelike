@@ -479,6 +479,18 @@ public class Level
 
 				if ( e.canTakeDamage && e != player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
+					if ( e.isBoss )
+					{
+						// if ( dungeon.isCleared( this ) )
+						{
+							dungeon.isCleared = true;
+							EnvironmentEntity portal = EnvironmentEntity.CreateDungeonExitPortal( dungeon );
+							tile.addEnvironmentEntity( portal );
+
+							GameScreen.Instance.addFullScreenMessage( "Dungeon Cleared" );
+						}
+					}
+
 					dropItems( e.getInventory(), e.tile[0][0], e.essence, e );
 					e.removeFromTile();
 				}
@@ -1259,6 +1271,8 @@ public class Level
 	public final ShadowCastCache visibilityData = new ShadowCastCache();
 
 	private final Color tempColour = new Color();
+
+	public Dungeon dungeon;
 
 	// endregion Data
 	// ####################################################################//

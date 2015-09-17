@@ -6,6 +6,8 @@
 		<AnimationMode>Shrink</AnimationMode>
 	</Sprite>
 	
+	<IsBoss>true</IsBoss>
+	
 	<AI>basicMonster</AI>
 	
 	<Factions>

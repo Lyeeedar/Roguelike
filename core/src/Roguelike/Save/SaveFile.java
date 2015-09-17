@@ -63,8 +63,9 @@ public final class SaveFile
 {
 	private static Kryo kryo;
 
+	public String currentDungeon;
 	public String currentLevel;
-	public HashMap<String, SaveLevel> allLevels;
+	public Array<SaveDungeon> dungeons = new Array<SaveDungeon>();
 	public SaveAbilityPool abilityPool;
 	public float AUT;
 	public HashMap<String, Integer> globalVariables;
@@ -84,8 +85,9 @@ public final class SaveFile
 			e.printStackTrace();
 		}
 
+		output.writeString( currentDungeon );
 		output.writeString( currentLevel );
-		kryo.writeObject( output, allLevels );
+		kryo.writeObject( output, dungeons );
 		kryo.writeObject( output, abilityPool );
 		output.writeFloat( AUT );
 		kryo.writeObject( output, globalVariables );
@@ -110,8 +112,9 @@ public final class SaveFile
 			e.printStackTrace();
 		}
 
+		currentDungeon = input.readString();
 		currentLevel = input.readString();
-		allLevels = kryo.readObject( input, HashMap.class );
+		dungeons = kryo.readObject( input, Array.class );
 		abilityPool = kryo.readObject( input, SaveAbilityPool.class );
 		AUT = input.readFloat();
 		globalVariables = kryo.readObject( input, HashMap.class );
@@ -283,6 +286,7 @@ public final class SaveFile
 		kryo.register( SaveField.class );
 		kryo.register( SaveFile.class );
 		kryo.register( SaveGameEntity.class );
+		kryo.register( SaveDungeon.class );
 		kryo.register( SaveLevel.class );
 		kryo.register( SaveSeenTile.class );
 		kryo.register( SaveSeenTile[].class );

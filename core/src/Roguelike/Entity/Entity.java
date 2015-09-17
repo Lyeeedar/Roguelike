@@ -39,7 +39,14 @@ public abstract class Entity
 		name = xml.get( "Name", name );
 
 		size = xml.getInt( "Size", size );
+		if ( size < 1 )
+		{
+			size = 1;
+		}
+
 		tile = new GameTile[size][size];
+
+		isBoss = xml.getBoolean( "IsBoss", isBoss );
 
 		sprite = xml.getChildByName( "Sprite" ) != null ? AssetManager.loadSprite( xml.getChildByName( "Sprite" ) ) : sprite;
 		if ( sprite != null )
@@ -340,6 +347,10 @@ public abstract class Entity
 	// ----------------------------------------------------------------------
 	public boolean canTakeDamage = true;
 
+	// ----------------------------------------------------------------------
+	public boolean isBoss = false;
+
+	// ----------------------------------------------------------------------
 	public String UID;
 
 	// ----------------------------------------------------------------------

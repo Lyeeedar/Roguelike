@@ -54,13 +54,13 @@ public final class Symbol implements PathfindingTile
 		return environmentData != null;
 	}
 
-	public EnvironmentEntity getEnvironmentEntity( String levelUID )
+	public EnvironmentEntity getEnvironmentEntity( String dungeonUID, String levelUID )
 	{
 		if ( environmentData != null )
 		{
-			EnvironmentEntity ee = EnvironmentEntity.load( environmentData, levelUID );
+			EnvironmentEntity ee = EnvironmentEntity.load( environmentData, dungeonUID, levelUID );
 
-			if ( ee.creationData.get( "Type", "" ).equals( "Transition" ) )
+			if ( ee.creationData.get( "Type", "" ).equals( "Transition" ) || ee.creationData.get( "Type", "" ).equals( "Dungeon" ) )
 			{
 				if ( environmentEntityData != null )
 				{

@@ -123,11 +123,17 @@
 		    
 			<Symbols>
 			
-				<Symbol Extends="5">
+				<Symbol Extends="4">
 					<Char>v</Char>
 					<EnvironmentData>
-						<Type>Transition</Type>
+						<Type>Dungeon</Type>
 						<Destination>Forest</Destination>
+						
+						<Size>2</Size>
+						
+						<Sprite>
+						    <Name>Level/WorldMap/GiantTree</Name>
+						</Sprite>
 						
 						<ExitRoom>
 						    <Faction>none</Faction>
@@ -136,8 +142,13 @@
 								<Symbol Extends=".">
 									<Char>^</Char>
 									<EnvironmentData>
-										<Type>Transition</Type>
+										<Type>Dungeon</Type>
 										<Destination>this</Destination>
+										
+										<Sprite>
+										    <Name>Level/WorldMap/RoadToWorldMap</Name>
+										</Sprite>
+										
 									</EnvironmentData>
 								</Symbol>
 							</Symbols>
@@ -155,7 +166,8 @@
 			</Symbols>
 				
 			<Rows>
-				<Row>v</Row>
+				<Row>v4</Row>
+				<Row>44</Row>
 			</Rows>
 
 		</Transition>

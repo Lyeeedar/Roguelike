@@ -189,16 +189,8 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 		this.saveLevel = level;
 		this.dfp = dfp;
 
-		if ( Global.ANDROID )
-		{
-			width = 50;
-			height = 50;
-		}
-		else
-		{
-			width = 75;
-			height = 75;
-		}
+		width = 10;
+		height = 10;
 
 		minPadding = ( dfp.corridorStyle.width / 2 ) + 1;
 		maxPadding += minPadding;

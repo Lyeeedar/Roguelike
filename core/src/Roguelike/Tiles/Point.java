@@ -1,5 +1,7 @@
 package Roguelike.Tiles;
 
+import Roguelike.Entity.Entity;
+
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
 
@@ -29,6 +31,16 @@ public final class Point implements Poolable
 		this.y = y;
 
 		return this;
+	}
+
+	public Point set( GameTile tile )
+	{
+		return set( tile.x, tile.y );
+	}
+
+	public Point set( Entity entity )
+	{
+		return set( entity.tile[0][0].x, entity.tile[0][0].y );
 	}
 
 	public Point copy()

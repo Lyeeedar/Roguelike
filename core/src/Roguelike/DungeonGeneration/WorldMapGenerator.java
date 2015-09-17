@@ -68,7 +68,7 @@ public class WorldMapGenerator extends AbstractDungeonGenerator
 		{
 			// Create Level
 			level = createLevel( symbolGrid, dfp.getSymbol( '0' ) );
-			// level.isVisionRestricted = false;
+			level.isVisionRestricted = false;
 
 			generationIndex++;
 			generationText = "Completed";

@@ -20,6 +20,7 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 	public Element creationData;
 	public HashMap<String, Object> data;
 	public String levelUID;
+	public String dungeonUID;
 
 	@Override
 	public void store( EnvironmentEntity obj )
@@ -38,12 +39,13 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 		data = (HashMap<String, Object>) obj.data.clone();
 
 		levelUID = obj.tile[0][0].level.UID;
+		dungeonUID = obj.tile[0][0].level.dungeon.UID;
 	}
 
 	@Override
 	public EnvironmentEntity create()
 	{
-		EnvironmentEntity entity = EnvironmentEntity.load( creationData, levelUID );
+		EnvironmentEntity entity = EnvironmentEntity.load( creationData, dungeonUID, levelUID );
 		entity.data = (HashMap<String, Object>) data.clone();
 
 		entity.HP = hp;

@@ -16,6 +16,7 @@ import Roguelike.Global.Passability;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 
@@ -57,12 +58,14 @@ public class AStarPathfind
 		this.travelType = travelType;
 		this.self = self;
 
-		this.startx = startx;
-		this.starty = starty;
-		this.currentx = startx;
-		this.currenty = starty;
-		this.endx = endx;
-		this.endy = endy;
+		this.startx = MathUtils.clamp( startx, 0, width - 1 );
+		this.starty = MathUtils.clamp( starty, 0, height - 1 );
+
+		this.endx = MathUtils.clamp( endx, 0, width - 1 );
+		this.endy = MathUtils.clamp( endy, 0, height - 1 );
+
+		this.currentx = this.startx;
+		this.currenty = this.starty;
 	}
 
 	private void path()
