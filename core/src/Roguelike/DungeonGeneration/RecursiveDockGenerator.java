@@ -23,6 +23,7 @@ import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.ImageUtils;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 
@@ -1227,7 +1228,8 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			}
 		}
 
-		String majorFactionName = dfp.getMajorFaction( ran );
+		String majorFactionName = dungeon.mainFaction;// dfp.getMajorFaction(
+		// ran );
 
 		FactionParser majorFaction = FactionParser.load( majorFactionName );
 		if ( majorFaction == null ) { return; }
@@ -1262,7 +1264,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			}
 			else if ( !room.faction.equalsIgnoreCase( "none" ) )
 			{
-				int influence = ran.nextInt( 80 ) + 10;
+				int influence = ran.nextInt( 50 ) + 30;
 
 				FactionParser fp = FactionParser.load( room.faction );
 
@@ -1281,7 +1283,9 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 		}
 		sortedRooms.sort();
 
-		int numMinor = sortedRooms.size / 4;
+		float depthScale = (float) saveLevel.depth / (float) dungeon.maxDepth;
+
+		int numMinor = (int) MathUtils.lerp( sortedRooms.size / 2.0f, sortedRooms.size / 4.0f, depthScale );
 
 		// Add features
 		for ( int i = 0; i < sortedRooms.size; i++ )
@@ -1294,6 +1298,10 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 				if ( influence > 0 )
 				{
 					float fract = influence / (float) ( width + height );
+
+					fract /= dungeon.maxDepth;
+					fract = ( depthScale ) + fract;
+
 					influence = (int) ( fract * 100 );
 				}
 

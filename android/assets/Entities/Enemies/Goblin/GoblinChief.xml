@@ -1,0 +1,28 @@
+<Entity>
+	<Name>Goblin</Name>
+
+	<Sprite>
+		<Name>Oryx/Custom/heroes/goblin_chief</Name>
+		<DrawActualSize>true</DrawActualSize>
+	</Sprite>
+	
+	<IsBoss>true</IsBoss>
+		
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Goblin</Faction>
+	</Factions>
+	
+	<Statistics>
+		<MaxHP>300</MaxHP>
+		<Range>5</<Range>
+		
+		<Wood_Atk>33</Wood_Atk>
+		
+		<Wood_Def>20</Wood_Def>
+		<Wood_Hardiness>50</Wood_Hardiness>
+		
+	</Statistics>
+	
+</Entity>

@@ -42,6 +42,8 @@ public class EnvironmentEntity extends Entity
 	public Array<ActivationAction> actions = new Array<ActivationAction>();
 
 	public OnTurnAction onTurnAction;
+	public OnHearAction onHearAction;
+	public OnDeathAction onDeathAction;
 
 	public Element creationData;
 	public HashMap<String, Object> data = new HashMap<String, Object>();
@@ -234,7 +236,7 @@ public class EnvironmentEntity extends Entity
 
 				if ( dungeonUID == null )
 				{
-					dungeon = new Dungeon( current.dungeon.getSaveLevel( current.UID ), new Point().set( entity ) );
+					dungeon = new Dungeon( current.dungeon.getSaveLevel( current.UID ), new Point().set( entity ), (String) entity.data.get( "Faction" ), (Integer) entity.data.get( "MaxDepth" ) );
 					entity.data.put( "DestinationDungeon", dungeon.UID );
 
 					Global.Dungeons.put( dungeon.UID, dungeon );
@@ -254,7 +256,7 @@ public class EnvironmentEntity extends Entity
 		};
 
 		String destination = data.get( "Destination" );
-		final SaveLevel destinationLevel = new SaveLevel( destination, 0, null, MathUtils.random( Long.MAX_VALUE ) );
+		final SaveLevel destinationLevel = new SaveLevel( destination, 1, null, MathUtils.random( Long.MAX_VALUE ) );
 
 		if ( !destination.equals( "this" ) )
 		{
@@ -313,6 +315,8 @@ public class EnvironmentEntity extends Entity
 			entity.actions.add( action );
 			entity.data.put( "DestinationLevel", destinationLevel );
 			entity.data.put( "Dungeon: " + destinationLevel.UID, new Object() );
+			entity.data.put( "Faction", data.get( "Faction", "" ) );
+			entity.data.put( "MaxDepth", data.getInt( "MaxDepth", 1 ) );
 			entity.UID = "EnvironmentEntity Dungeon: ID " + entity.hashCode();
 
 			entity.onTurnAction = new OnTurnAction()
@@ -442,29 +446,37 @@ public class EnvironmentEntity extends Entity
 
 		entity.baseInternalLoad( xml );
 
-		final int count = xml.getInt( "Count", 1 );
-		final String name = xml.get( "Entity" );
-		final int respawn = xml.getInt( "Respawn", 50 );
+		final boolean spawnOnHear = xml.get( "Spawn", "OnTurn" ).toLowerCase().contains( "onhear" );
+		final boolean spawnOnDeath = xml.get( "Spawn", "OnTurn" ).toLowerCase().contains( "ondeath" );
+
+		entity.data.put( "MaxAlive", xml.getInt( "MaxAlive", 1 ) );
+		entity.data.put( "NumToSpawn", xml.getInt( "NumToSpawn", Integer.MAX_VALUE ) );
+		entity.data.put( "EntityName", xml.get( "Entity" ) );
+		entity.data.put( "Delay", xml.getFloat( "Delay", 10.0f ) );
+		entity.data.put( "SpawnOnTurn", xml.get( "Spawn", "OnTurn" ).toLowerCase().contains( "onturn" ) );
 
 		entity.data.put( "Accumulator", 0.0f );
+		entity.data.put( "NumSpawned", 0 );
+		entity.data.put( "IsSpawning", false );
+		entity.data.put( "RequestSpawn", false );
 
 		entity.onTurnAction = new OnTurnAction()
 		{
-			String entityName = name;
-			float cooldown = respawn;
-
 			GameEntity[] entities;
-			float accumulator;
 
 			@Override
 			public void update( EnvironmentEntity entity, float delta )
 			{
+				float accumulator = (Float) entity.data.get( "Accumulator" );
+
 				// reload data
 				if ( entities == null )
 				{
-					entities = new GameEntity[count];
+					int maxAlive = (Integer) entity.data.get( "MaxAlive" );
 
-					for ( int i = 0; i < count; i++ )
+					entities = new GameEntity[maxAlive];
+
+					for ( int i = 0; i < maxAlive; i++ )
 					{
 						String key = "Entity" + i;
 						if ( entity.data.containsKey( key ) )
@@ -481,17 +493,20 @@ public class EnvironmentEntity extends Entity
 							entities[i] = ge;
 						}
 					}
-
-					accumulator = (Float) entity.data.get( "Accumulator" );
 				}
 
-				if ( accumulator > 0 )
+				boolean isSpawning = (Boolean) entity.data.get( "IsSpawning" );
+
+				if ( isSpawning )
 				{
-					accumulator -= delta;
+					if ( accumulator > 0 )
+					{
+						accumulator -= delta;
+					}
 
 					if ( accumulator <= 0 )
 					{
-						GameEntity ge = GameEntity.load( entityName );
+						GameEntity ge = GameEntity.load( (String) entity.data.get( "EntityName" ) );
 
 						GameTile tile = entity.tile[0][0];
 						int x = tile.x;
@@ -527,35 +542,97 @@ public class EnvironmentEntity extends Entity
 							}
 
 							spawnTile.addGameEntity( ge );
+
+							entity.data.put( "IsSpawning", false );
+							entity.data.put( "NumSpawned", ( (Integer) entity.data.get( "NumSpawned" ) ) + 1 );
 						}
 					}
 				}
-				else
+
+				boolean requestSpawn = (Boolean) entity.data.get( "RequestSpawn" );
+				boolean spawnOnTurn = (Boolean) entity.data.get( "SpawnOnTurn" );
+				int numToSpawn = (Integer) entity.data.get( "NumToSpawn" );
+
+				if ( !isSpawning && ( requestSpawn || spawnOnTurn ) )
 				{
 					boolean needsSpawn = false;
-					for ( int i = 0; i < entities.length; i++ )
+
+					if ( (Integer) entity.data.get( "NumSpawned" ) < numToSpawn )
 					{
-						GameEntity ge = entities[i];
-
-						if ( ge == null || ge.HP <= 0 )
+						for ( int i = 0; i < entities.length; i++ )
 						{
-							entities[i] = null;
-							entity.data.remove( "Entity" + i );
+							GameEntity ge = entities[i];
 
-							needsSpawn = true;
+							if ( ge == null || ge.HP <= 0 )
+							{
+								entities[i] = null;
+								entity.data.remove( "Entity" + i );
+
+								needsSpawn = true;
+							}
 						}
 					}
 
 					if ( needsSpawn )
 					{
-						accumulator = cooldown;
+						accumulator = (Float) entity.data.get( "Delay" );
+						entity.data.put( "IsSpawning", true );
+						entity.data.put( "RequestSpawn", false );
 					}
 				}
 
 				entity.data.put( "Accumulator", accumulator );
 			}
-
 		};
+
+		if ( spawnOnHear )
+		{
+			entity.onHearAction = new OnHearAction()
+			{
+				@Override
+				public void process( EnvironmentEntity entity, Point source, String key, Object value )
+				{
+					entity.data.put( "RequestSpawn", true );
+				}
+			};
+		}
+
+		if ( spawnOnDeath )
+		{
+			entity.onDeathAction = new OnDeathAction()
+			{
+				@Override
+				public void process( EnvironmentEntity entity )
+				{
+					GameEntity ge = GameEntity.load( (String) entity.data.get( "EntityName" ) );
+
+					GameTile tile = entity.tile[0][0];
+					int x = tile.x;
+					int y = tile.y;
+
+					GameTile spawnTile = null;
+
+					for ( Direction d : Direction.values() )
+					{
+						int nx = x + d.getX();
+						int ny = y + d.getY();
+
+						GameTile ntile = tile.level.getGameTile( nx, ny );
+
+						if ( ntile != null && ntile.getPassable( ge.getTravelType(), null ) && ntile.entity == null )
+						{
+							spawnTile = ntile;
+							break;
+						}
+					}
+
+					if ( spawnTile != null )
+					{
+						spawnTile.addGameEntity( ge );
+					}
+				}
+			};
+		}
 
 		return entity;
 	}
@@ -643,4 +720,15 @@ public class EnvironmentEntity extends Entity
 		public abstract void update( EnvironmentEntity entity, float delta );
 	}
 
+	// ----------------------------------------------------------------------
+	public static abstract class OnHearAction
+	{
+		public abstract void process( EnvironmentEntity entity, Point source, String key, Object value );
+	}
+
+	// ----------------------------------------------------------------------
+	public static abstract class OnDeathAction
+	{
+		public abstract void process( EnvironmentEntity entity );
+	}
 }

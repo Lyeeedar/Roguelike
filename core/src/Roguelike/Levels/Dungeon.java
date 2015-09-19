@@ -2,7 +2,6 @@ package Roguelike.Levels;
 
 import java.util.HashMap;
 
-import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Tiles.Point;
@@ -21,17 +20,17 @@ public class Dungeon
 	public SaveLevel outsideLevel;
 	public Point outsidePoint;
 
+	public String mainFaction;
+	public int maxDepth;
+
 	public boolean isCleared = false;
 
-	public Dungeon()
+	public Dungeon( SaveLevel outside, Point point, String mainFaction, int maxDepth )
 	{
-		UID = "Dungeon :" + this.hashCode();
-	}
-
-	public Dungeon( SaveLevel outside, Point point )
-	{
-		outsideLevel = outside;
-		outsidePoint = point;
+		this.outsideLevel = outside;
+		this.outsidePoint = point;
+		this.mainFaction = mainFaction;
+		this.maxDepth = maxDepth;
 
 		UID = "Dungeon :" + this.hashCode();
 	}
@@ -63,14 +62,7 @@ public class Dungeon
 
 	private boolean isLevelDeepest( Level level )
 	{
-		Array<EnvironmentEntity> entities = new Array<EnvironmentEntity>();
-		level.getAllEnvironmentEntities( entities );
-		for ( EnvironmentEntity entity : entities )
-		{
-			if ( entity.data.containsKey( "Destination" ) && ( (SaveLevel) entity.data.get( "Destination" ) ).depth > level.depth ) { return false; }
-		}
-
-		return true;
+		return level.depth == maxDepth;
 	}
 
 	private boolean hasLivingBosses( Level level )

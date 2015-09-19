@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.Entity.EnvironmentEntity;
@@ -52,11 +53,11 @@ public abstract class AbstractDungeonGenerator
 	// ----------------------------------------------------------------------
 	protected void selectRooms()
 	{
-		for ( DFPRoom r : dfp.getRequiredRooms( saveLevel.depth, ran ) )
+		for ( DFPRoom r : dfp.getRequiredRooms( saveLevel.depth, ran, saveLevel.depth == dungeon.maxDepth ) )
 		{
 			if ( r.isTransition )
 			{
-				if ( !saveLevel.created )
+				if ( !saveLevel.created && saveLevel.depth != dungeon.maxDepth )
 				{
 					additionalRooms.add( r );
 				}
@@ -69,11 +70,11 @@ public abstract class AbstractDungeonGenerator
 			}
 		}
 
-		for ( DFPRoom r : dfp.getOptionalRooms( saveLevel.depth, ran ) )
+		for ( DFPRoom r : dfp.getOptionalRooms( saveLevel.depth, ran, saveLevel.depth == dungeon.maxDepth ) )
 		{
 			if ( r.isTransition )
 			{
-				if ( !saveLevel.created )
+				if ( !saveLevel.created && saveLevel.depth != dungeon.maxDepth )
 				{
 					additionalRooms.add( r );
 				}
@@ -96,13 +97,13 @@ public abstract class AbstractDungeonGenerator
 		}
 
 		requiredRooms.sort( new Comparator<Room>()
-		{
+				{
 			@Override
 			public int compare( Room arg0, Room arg1 )
 			{
 				return arg0.comparisonString().compareTo( arg1.comparisonString() );
 			}
-		} );
+				} );
 	}
 
 	// ----------------------------------------------------------------------
@@ -225,6 +226,8 @@ public abstract class AbstractDungeonGenerator
 	// ----------------------------------------------------------------------
 	protected Level createLevel( Symbol[][] symbolGrid, Symbol outerWall )
 	{
+		FactionParser fp = FactionParser.load( dungeon.mainFaction );
+
 		if ( DEBUG_OUTPUT )
 		{
 			for ( int x = 0; x < width; x++ )
@@ -384,8 +387,29 @@ public abstract class AbstractDungeonGenerator
 
 				if ( !saveLevel.created && symbol.hasGameEntity() )
 				{
-					GameEntity e = symbol.getGameEntity();
-					newTile.addGameEntity( e );
+					GameEntity e = null;
+
+					if ( symbol.entityData.equals( "Boss" ) )
+					{
+						e = GameEntity.load( fp.bosses.get( ran.nextInt( fp.bosses.size ) ) );
+					}
+					else if ( Global.isNumber( symbol.entityData ) )
+					{
+						int index = Integer.parseInt( symbol.entityData );
+
+						index = (int) ( ( index / 9.0f ) * fp.creatures.size );
+
+						e = GameEntity.load( fp.creatures.get( index ).entityName );
+					}
+					else
+					{
+						e = GameEntity.load( symbol.entityData );
+					}
+
+					if ( e != null )
+					{
+						newTile.addGameEntity( e );
+					}
 				}
 			}
 		}

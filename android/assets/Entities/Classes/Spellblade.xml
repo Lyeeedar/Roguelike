@@ -11,9 +11,8 @@
 	<CanSwap>true</CanSwap>
 	
 	<Sprite>
-		<Name>Classes/Spellblade</Name>
-		<UpdateRate>0.5</UpdateRate>
-		<AnimationMode>Shrink</AnimationMode>
+		<Name>Oryx/uf_split/uf_heroes/cultist</Name>
+		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
 	
 	<Statistics>

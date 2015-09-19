@@ -507,7 +507,7 @@ public class Level
 		}
 
 		{
-			Entity e = tile.environmentEntity;
+			EnvironmentEntity e = tile.environmentEntity;
 			if ( e != null )
 			{
 				if ( e.canTakeDamage && e.damageAccumulator > 0 && tile.visible )
@@ -515,9 +515,15 @@ public class Level
 					GameScreen.Instance.addActorDamageAction( e );
 				}
 
-				if ( e.canTakeDamage && e != player && e.HP <= 0 && !hasActiveEffects( e ) )
+				if ( e.canTakeDamage && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
 					dropItems( e.getInventory(), e.tile[0][0], e.essence, e );
+
+					if ( e.onDeathAction != null )
+					{
+						e.onDeathAction.process( e );
+					}
+
 					e.removeFromTile();
 				}
 

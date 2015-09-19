@@ -18,44 +18,13 @@
 		</Feature>
 		
     </Features>
-
-    <Encounters>
-        
-        <Encounter>
-            <Mobs>
-                <CentaurWarrior>1</CentaurWarrior>
-                <CentaurArcher>3</CentaurArcher>
-            </Mobs>
-        </Encounter>
-        
-        <Encounter>
-            <Mobs>
-                <CentaurWarrior>2</CentaurWarrior>
-                <CentaurWarriorArcher>2</CentaurWarriorArcher>
-            </Mobs>
-        </Encounter>
-        
-        <Encounter>
-            <Mobs>
-                <Yaktaur>1</Yaktaur>
-                <CentaurWarriorArcher>3</CentaurWarriorArcher>
-            </Mobs>
-        </Encounter>
-        
-        <Encounter>
-            <Mobs>
-                <Yaktaur>3</Yaktaur>
-            </Mobs>
-        </Encounter>
-        
-        <Encounter>
-            <Mobs>
-                <YaktaurCaptain>1</YaktaurCaptain>
-                <Yaktaur>2</Yaktaur>
-                <CentaurWarriorArcher>2</CentaurWarriorArcher>
-            </Mobs>
-        </Encounter>
-        
-    </Encounters>
+    
+    <Creatures>
+        <CentaurWarrior></CentaurWarrior>
+        <CentaurArcher></CentaurArcher>
+        <CentaurWarriorArcher></CentaurWarriorArcher>
+        <Yaktaur></Yaktaur>
+        <YaktaurCaptain></YaktaurCaptain>
+    </Creatures>
     
 </Faction>

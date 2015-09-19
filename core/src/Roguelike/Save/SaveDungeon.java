@@ -11,6 +11,9 @@ public class SaveDungeon extends SaveableObject<Dungeon>
 	public SaveLevel outsideLevel;
 	public Point outsidePoint;
 
+	public String faction;
+	public int maxDepth;
+
 	public String UID;
 
 	@Override
@@ -22,6 +25,8 @@ public class SaveDungeon extends SaveableObject<Dungeon>
 		}
 		outsideLevel = obj.outsideLevel;
 		outsidePoint = obj.outsidePoint;
+		faction = obj.mainFaction;
+		maxDepth = obj.maxDepth;
 
 		UID = obj.UID;
 	}
@@ -29,7 +34,7 @@ public class SaveDungeon extends SaveableObject<Dungeon>
 	@Override
 	public Dungeon create()
 	{
-		Dungeon dungeon = new Dungeon( outsideLevel, outsidePoint );
+		Dungeon dungeon = new Dungeon( outsideLevel, outsidePoint, faction, maxDepth );
 		for ( SaveLevel level : levels )
 		{
 			dungeon.addLevel( level );

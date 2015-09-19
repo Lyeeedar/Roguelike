@@ -254,7 +254,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		batch.begin();
 
 		toBeDrawn.clear();
-		hpBars.clear();
+		hasStatus.clear();
 		environmentEntities.clear();
 		overHeadEntities.clear();
 		underFields.clear();
@@ -273,7 +273,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 		renderGameEntities( offsetx, offsety, tileSize3 );
 		renderOverheadEntities( offsetx, offsety, tileSize3 );
-		renderHpBars( offsetx, offsety );
+		renderStatus( offsetx, offsety );
 		renderActiveAbilities( offsetx, offsety );
 		renderSpriteEffects( offsetx, offsety, tileSize3 );
 		renderFields( overFields, offsetx, offsety );
@@ -509,7 +509,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.MAXHP ) || entity.stacks.size > 0 )
 				{
-					hpBars.add( entity );
+					hasStatus.add( entity );
 				}
 			}
 		}
@@ -783,7 +783,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				cy += offset[1];
 			}
 
-			hpBars.add( entity );
+			hasStatus.add( entity );
 		}
 	}
 
@@ -811,16 +811,18 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.MAXHP ) || entity.stacks.size > 0 )
 				{
-					hpBars.add( entity );
+					hasStatus.add( entity );
 				}
 			}
 		}
 	}
 
 	// ----------------------------------------------------------------------
-	private void renderHpBars( int offsetx, int offsety )
+	private void renderStatus( int offsetx, int offsety )
 	{
-		for ( Entity e : hpBars )
+		batch.setColor( Color.WHITE );
+
+		for ( Entity e : hasStatus )
 		{
 			int x = e.tile[0][0].x;
 			int y = e.tile[0][0].y;
@@ -1997,7 +1999,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private Array<GameEntity> toBeDrawn = new Array<GameEntity>();
 	private Array<EnvironmentEntity> environmentEntities = new Array<EnvironmentEntity>();
 	private Array<EnvironmentEntity> overHeadEntities = new Array<EnvironmentEntity>();
-	private Array<Entity> hpBars = new Array<Entity>();
+	private Array<Entity> hasStatus = new Array<Entity>();
 	private Array<Field> underFields = new Array<Field>();
 	private Array<Field> overFields = new Array<Field>();
 	private Array<Entity> entitiesWithSpeech = new Array<Entity>();

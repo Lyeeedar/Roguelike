@@ -5,30 +5,54 @@ import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.Entity.StatusEffectStack;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
 public class EntityStatusRenderer
 {
+	private static Sprite heartFull = AssetManager.loadSprite( "Oryx/uf_split/uf_items/heart_red_full", true );
+	private static Sprite heartHalf = AssetManager.loadSprite( "Oryx/uf_split/uf_items/heart_red_half", true );
+	private static Sprite heartEmpty = AssetManager.loadSprite( "Oryx/uf_split/uf_items/heart_empty", true );
+
 	public static void draw( Entity entity, Batch batch, int x, int y, int width, int height, float heightScale )
 	{
 		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 8 );
 
 		float val = (float) entity.HP / (float) entity.getVariable( Statistic.MAXHP );
-		float barheight = height * heightScale;
-		drawHpBar( val, batch, x, y, width, height, heightScale );
+
+		Sprite heart = null;
+
+		if ( val < 0.1f )
+		{
+			heart = heartEmpty;
+		}
+		else if ( val < 0.6f )
+		{
+			heart = heartHalf;
+		}
+		else
+		{
+			heart = heartFull;
+		}
+
+		if ( val < 1 )
+		{
+			heart.render( batch, x, y, width / 2, height / 2 );
+		}
 
 		Array<StatusEffectStack> stacks = entity.stackStatusEffects();
 
 		int statusTileSize = Math.min( width / 3, 32 );
 		int sx = x;
-		int sy = (int) ( y + height - barheight - statusTileSize );
+		int sy = y + height - statusTileSize;
 
 		for ( StatusEffectStack stack : stacks )
 		{
@@ -64,12 +88,24 @@ public class EntityStatusRenderer
 
 	public static Table getMouseOverTable( GameEntity entity, int x, int y, int width, int height, float heightScale, int mousex, int mousey, Skin skin )
 	{
+		if ( mousex >= x && mousex <= x + width / 2 && mousey >= y && mousey <= y + height / 2 )
+		{
+			int hp = entity.HP;
+			int maxhp = entity.getVariable( Statistic.MAXHP );
+
+			if ( hp < maxhp )
+			{
+				Table table = new Table();
+				table.add( new Label( "HP: " + hp + " / " + maxhp, skin ) );
+				return table;
+			}
+		}
+
 		Array<StatusEffectStack> stacks = entity.stackStatusEffects();
 
-		float barheight = height * heightScale;
 		int statusTileSize = Math.min( width / 3, 32 );
 		int sx = x;
-		int sy = (int) ( y + height - barheight - statusTileSize );
+		int sy = y + height - statusTileSize;
 
 		for ( StatusEffectStack stack : stacks )
 		{

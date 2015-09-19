@@ -6,7 +6,7 @@ import java.util.Random;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
-import Roguelike.DungeonGeneration.FactionParser.Encounter;
+import Roguelike.DungeonGeneration.FactionParser.Creature;
 import Roguelike.DungeonGeneration.FactionParser.Feature;
 import Roguelike.DungeonGeneration.FactionParser.FeaturePlacementType;
 import Roguelike.DungeonGeneration.RoomGenerators.AbstractRoomGenerator;
@@ -606,22 +606,19 @@ public final class Room
 			}
 
 			// place mobs
-			Encounter enc = faction.getEncounter( ran, influence );
+			Array<Creature> creatures = faction.getCreatures( ran, ( spawnList.size / 10.0f ) * ( influence / 100.0f ), influence );
 
-			if ( enc != null )
+			for ( Creature creature : creatures )
 			{
-				for ( String mob : enc.getMobsToPlace( influence, spawnList.size ) )
+				if ( spawnList.size == 0 )
 				{
-					if ( spawnList.size == 0 )
-					{
-						break;
-					}
-
-					int[] pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
-
-					roomContents[pos[0]][pos[1]] = roomContents[pos[0]][pos[1]].copy();
-					roomContents[pos[0]][pos[1]].entityData = mob;
+					break;
 				}
+
+				int[] pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
+
+				roomContents[pos[0]][pos[1]] = roomContents[pos[0]][pos[1]].copy();
+				roomContents[pos[0]][pos[1]].entityData = creature.entityName;
 			}
 		}
 	}

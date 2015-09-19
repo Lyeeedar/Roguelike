@@ -103,6 +103,22 @@ public class SoundInstance
 								Pools.freeAll( path );
 							}
 						}
+
+						if ( t.environmentEntity != null && t.environmentEntity.onHearAction != null )
+						{
+							AStarPathfind astar = new AStarPathfind( tile.level.getGrid(), tile.x, tile.y, x, y, true, false, 1, SoundPassability, null );
+							Array<Point> path = astar.getPath();
+
+							if ( path != null && path.size < maxAudibleDist )
+							{
+								t.environmentEntity.onHearAction.process( t.environmentEntity, shoutSource, key, value );
+							}
+
+							if ( path != null )
+							{
+								Pools.freeAll( path );
+							}
+						}
 					}
 				}
 			}

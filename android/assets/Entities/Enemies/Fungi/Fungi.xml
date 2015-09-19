@@ -71,71 +71,15 @@
 		
 	</Features>
 	
-	<Encounters>
-		<Encounter>
-			<Mobs>
-				<Walker>1</Walker>
-			</Mobs>
-			<RangeMax>40</RangeMax>
-		</Encounter>
-		
-		<Encounter>
-			<Mobs>
-				<Walker>1</Walker>
-				<Spore>2</Spore>
-			</Mobs>
-			<RangeMax>50</RangeMax>
-		</Encounter>
-		
-		<Encounter>
-			<Mobs>
-				<Walker>2</Walker>
-			</Mobs>
-			<RangeMax>60</RangeMax>
-		</Encounter>
-		
-		<Encounter>			
-			<Mobs>
-				<Walker>2</Walker>
-				<Shooter>1</Shooter>
-			</Mobs>
-			<RangeMin>50</RangeMin>
-			<RangeMax>70</RangeMax>
-		</Encounter>
-		
-		<Encounter>
-			<Mobs>
-				<Shooter>2</Shooter>
-			</Mobs>
-			<RangeMin>60</RangeMin>
-			<RangeMax>80</RangeMax>
-		</Encounter>
-		
-		<Encounter>
-			<Mobs>
-				<Spore>3</Spore>
-				<Shooter>1</Shooter>
-			</Mobs>
-			<RangeMin>70</RangeMin>
-			<RangeMax>90</RangeMax>
-		</Encounter>
-		
-		<Encounter>
-			<Mobs>
-				<Walker>3</Walker>
-				<Spore>1</Spore>
-				<Shooter>1</Shooter>
-			</Mobs>
-			<RangeMin>80</RangeMin>
-		</Encounter>
-		
-		<Encounter>
-			<Mobs>
-				<Mother>1</Mother>
-				<Spore>6</Spore>
-			</Mobs>
-			<RangeMin>100</RangeMin>
-		</Encounter>
-	</Encounters>
+	<Creatures>
+	    <Spore></Spore>
+	    <Walker></Walker>
+	    <Shooter></Shooter>
+	    <Cloud></Cloud>
+	</Creatures>
+	
+	<Bosses>
+	    <Mother></Mother>
+	</Bosses>
 
 </Faction>

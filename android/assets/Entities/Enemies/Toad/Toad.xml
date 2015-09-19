@@ -27,9 +27,10 @@
 				</Sprite>
 				<Passable>false</Passable>
 				<Type>Spawner</Type>
-				<Count>3</Count>
+				<MaxAlive>3</MaxAlive>
 				<Entity>Enemies/Toad/Fly</Entity>
-				<Respawn>25</Respawn>
+				<Delay>25</Delay>
+				<Spawn>OnTurn</Spawn>
 				
 				<Statistics>
 					<MaxHP>200</MaxHP>
@@ -39,32 +40,10 @@
 		
 	</Features>
 	
-	<Encounters>
-		<Encounter>
-			<Mobs>
-				<GiantToad>3</GiantToad>
-			</Mobs>
-		</Encounter>
-		<Encounter>
-			<Mobs>
-				<SpinyToad>3</SpinyToad>
-				<SpittingToad>1</SpittingToad>
-			</Mobs>
-		</Encounter>
-		<Encounter>
-			<Mobs>
-				<GiantToad>1</GiantToad>
-				<SpinyToad>2</SpinyToad>
-				<SpittingToad>1</SpittingToad>
-			</Mobs>
-		</Encounter>
-		<Encounter>
-			<Mobs>
-				<GiantToad>2</GiantToad>
-				<SpinyToad>1</SpinyToad>
-				<SpittingToad>1</SpittingToad>
-			</Mobs>
-		</Encounter>
-	</Encounters>
+	<Creatures>
+	    <GiantToad></GiantToad>
+	    <SpittingToad></SpittingToad>
+	    <SpinyToad></SpinyToad>
+	</Creatures>
 
 </Faction>

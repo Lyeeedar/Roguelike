@@ -46,68 +46,13 @@
 		</Feature>
 		
 	</Features>
-
-	<Encounters>
 	
-		<Encounter>
-			<Mobs>
-				<SprigganGrunt>2</SprigganGrunt>
-			</Mobs>
-			<RangeMax>40</RangeMax>
-		</Encounter>
-		
-		<Encounter>
-			<Mobs>
-				<SprigganGrunt>2</SprigganGrunt>
-				<SprigganWarrior>1</SprigganWarrior>
-			</Mobs>
-			<RangeMax>50</RangeMax>
-		</Encounter>
-		
-		<Encounter>
-			<Mobs>
-				<SprigganWarrior>2</SprigganWarrior>
-				<SprigganDruid>1</SprigganDruid>
-			</Mobs>
-			<RangeMin>40</RangeMin>
-			<RangeMax>70</RangeMax>
-		</Encounter>
-		
-		<Encounter>
-			<Mobs>
-				<SprigganWarrior>1</SprigganWarrior>
-				<SprigganDruid>1</SprigganDruid>
-				<SprigganGrunt>2</SprigganGrunt>
-			</Mobs>
-			<RangeMin>40</RangeMin>
-			<RangeMax>70</RangeMax>
-		</Encounter>
-		
-		<Encounter>
-			<Mobs>
-				<SprigganRider>2</SprigganRider>
-				<SprigganDruid>1</SprigganDruid>
-			</Mobs>
-			<RangeMin>60</RangeMin>
-		</Encounter>
-		
-		<Encounter>
-			<Mobs>
-				<SprigganRider>2</SprigganRider>
-				<SprigganDruid>1</SprigganDruid>
-				<Treant>1</Treant>
-			</Mobs>
-			<RangeMin>70</RangeMin>
-		</Encounter>
-		
-		<Encounter>
-			<Mobs>
-				<SprigganDruid>1</SprigganDruid>
-				<Treant>3</Treant>
-			</Mobs>
-			<RangeMin>90</RangeMin>
-		</Encounter>
-		
-	</Encounters>
+	<Creatures>
+	    <SprigganGrunt></SprigganGrunt>
+	    <SprigganWarrior></SprigganWarrior>
+	    <SprigganDruid></SprigganDruid>
+	    <SprigganRider></SprigganRider>
+	    <Treant></Treant>
+	</Creatures>
 	
 </Faction>

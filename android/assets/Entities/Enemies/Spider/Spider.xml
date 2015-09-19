@@ -10,7 +10,8 @@
 				<Passable>false</Passable>
 				<Opaque>false</Opaque>
 				<Sprite>
-					<Name>spider/spiderweb</Name>
+					<Name>Oryx/uf_split/uf_terrain/web_5</Name>
+					<DrawActualSize>true</DrawActualSize>
 				</Sprite>
 				
 				<Statistics>
@@ -72,27 +73,9 @@
 		
 	</Features>
 	
-	<Encounters>
-		<Encounter>
-			<Mobs>
-				<TrapdoorSpider>2</TrapdoorSpider>
-			</Mobs>
-		</Encounter>
-		<Encounter>
-			<Mobs>
-				<Tarantulla>3</Tarantulla>
-			</Mobs>
-		</Encounter>
-		<Encounter>
-			<Mobs>
-				<JumpingSpider>2</JumpingSpider>
-			</Mobs>
-		</Encounter>
-		<Encounter>
-			<Mobs>
-				<RedbackSpider>3</RedbackSpider>
-			</Mobs>
-		</Encounter>
-	</Encounters>
+	<Creatures>
+	    <SmallSpider></SmallSpider>
+	    <GiantSpider></GiantSpider>
+	</Creatures>
 
 </Faction>

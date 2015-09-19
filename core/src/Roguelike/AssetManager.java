@@ -146,6 +146,11 @@ public class AssetManager
 		return loadSprite( name, 0.5f, Color.WHITE, AnimationMode.TEXTURE, null, false );
 	}
 
+	public static Sprite loadSprite( String name, boolean drawActualSize )
+	{
+		return loadSprite( name, 0.5f, Color.WHITE, AnimationMode.TEXTURE, null, drawActualSize );
+	}
+
 	public static Sprite loadSprite( String name, float updateTime )
 	{
 		return loadSprite( name, updateTime, Color.WHITE, AnimationMode.TEXTURE, null, false );

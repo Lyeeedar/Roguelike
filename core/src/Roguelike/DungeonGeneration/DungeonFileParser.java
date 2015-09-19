@@ -282,7 +282,7 @@ public class DungeonFileParser
 			return s;
 		}
 
-		public int processCondition( int depth, Random ran )
+		public int processCondition( int depth, Random ran, boolean isBoss )
 		{
 			if ( Global.isNumber( spawnEquation ) )
 			{
@@ -292,11 +292,13 @@ public class DungeonFileParser
 			{
 				ExpressionBuilder expB = EquationHelper.createEquationBuilder( spawnEquation, ran );
 				expB.variable( "depth" );
+				expB.variable( "boss" );
 
 				Expression exp = EquationHelper.tryBuild( expB );
 				if ( exp == null ) { return 0; }
 
 				exp.setVariable( "depth", depth );
+				exp.setVariable( "boss", isBoss ? 1 : 0 );
 
 				int val = (int) exp.evaluate();
 
@@ -389,13 +391,13 @@ public class DungeonFileParser
 	}
 
 	// ----------------------------------------------------------------------
-	public Array<DFPRoom> getRequiredRooms( int depth, Random ran )
+	public Array<DFPRoom> getRequiredRooms( int depth, Random ran, boolean isBoss )
 	{
 		Array<DFPRoom> rooms = new Array<DFPRoom>();
 
 		for ( DFPRoom room : requiredRooms )
 		{
-			int count = room.processCondition( depth, ran );
+			int count = room.processCondition( depth, ran, isBoss );
 			for ( int i = 0; i < count; i++ )
 			{
 				rooms.add( room.copy() );
@@ -406,13 +408,13 @@ public class DungeonFileParser
 	}
 
 	// ----------------------------------------------------------------------
-	public Array<DFPRoom> getOptionalRooms( int depth, Random ran )
+	public Array<DFPRoom> getOptionalRooms( int depth, Random ran, boolean isBoss )
 	{
 		Array<DFPRoom> rooms = new Array<DFPRoom>();
 
 		for ( DFPRoom room : optionalRooms )
 		{
-			int count = room.processCondition( depth, ran );
+			int count = room.processCondition( depth, ran, isBoss );
 			for ( int i = 0; i < count; i++ )
 			{
 				rooms.add( room.copy() );

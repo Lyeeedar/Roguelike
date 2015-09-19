@@ -739,7 +739,7 @@ public class Global
 
 		player.setPopupText( "Urgh... Where am I... Who am I...", 2 );
 
-		Dungeon dungeon = new Dungeon();
+		Dungeon dungeon = new Dungeon( null, null, "Village", -1 );
 		SaveLevel firstLevel = new SaveLevel( "Town", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
 		Dungeons.put( dungeon.UID, dungeon );
 

@@ -18,7 +18,8 @@ public class FactionParser
 		FURTHEST, WALL, CENTRE, ANY
 	}
 
-	public Array<Encounter> encounters = new Array<Encounter>();
+	public Array<Creature> creatures = new Array<Creature>();
+	public Array<String> bosses = new Array<String>();
 
 	public FastEnumMap<FeaturePlacementType, Array<Feature>> features = new FastEnumMap<FeaturePlacementType, Array<Feature>>( FeaturePlacementType.class );
 
@@ -30,34 +31,40 @@ public class FactionParser
 		}
 	}
 
-	public Encounter getEncounter( Random ran, int influence )
+	public Array<Creature> getCreatures( Random ran, float difficulty, int influence )
 	{
-		if ( encounters.size == 0 ) { return null; }
+		Array<Creature> validCreatures = new Array<Creature>();
 
-		if ( influence == 100 ) { return encounters.get( encounters.size - 1 ); }
-
-		Array<Encounter> validEncounters = new Array<Encounter>();
-		int totalWeight = 0;
-
-		for ( Encounter enc : encounters )
+		for ( Creature creature : creatures )
 		{
-			if ( enc.minRange <= influence && enc.maxRange >= influence )
+			if ( creature.cost <= difficulty / 2 && creature.minInfluence <= influence && creature.maxInfluence >= influence )
 			{
-				validEncounters.add( enc );
-				totalWeight += enc.weight;
+				validCreatures.add( creature );
 			}
 		}
 
-		int ranVal = ran.nextInt( totalWeight );
+		Array<Creature> chosen = new Array<Creature>();
+		float maxCost = difficulty;
 
-		int currentVal = 0;
-		for ( Encounter enc : validEncounters )
+		while ( maxCost >= 0 && validCreatures.size > 0 )
 		{
-			currentVal += enc.weight;
-			if ( currentVal >= ranVal ) { return enc; }
+			int index = ran.nextInt( validCreatures.size );
+			Creature creature = validCreatures.get( index );
+
+			if ( maxCost < creature.cost )
+			{
+				validCreatures.removeIndex( index );
+			}
+			else
+			{
+				maxCost -= creature.cost;
+				chosen.add( creature );
+			}
 		}
 
-		return null;
+		System.out.println( "Difficulty: " + difficulty + " Num Spawned: " + chosen.size );
+
+		return chosen;
 	}
 
 	private void internalLoad( String faction, String path )
@@ -84,14 +91,25 @@ public class FactionParser
 			}
 		}
 
-		Element encounterElement = xmlElement.getChildByName( "Encounters" );
-
-		if ( encounterElement != null )
+		Element creaturesElement = xmlElement.getChildByName( "Creatures" );
+		if ( creaturesElement != null )
 		{
-			for ( Element encounter : encounterElement.getChildrenByName( "Encounter" ) )
+			for ( int i = 0; i < creaturesElement.getChildCount(); i++ )
 			{
-				Encounter enc = Encounter.load( encounter, path );
-				encounters.add( enc );
+				Element creatureElement = creaturesElement.getChild( i );
+
+				creatures.add( Creature.load( creatureElement, path ) );
+			}
+		}
+
+		Element bossesElement = xmlElement.getChildByName( "Bosses" );
+		if ( bossesElement != null )
+		{
+			for ( int i = 0; i < bossesElement.getChildCount(); i++ )
+			{
+				Element bossElement = bossesElement.getChild( i );
+
+				bosses.add( path + "/" + bossElement.getName() );
 			}
 		}
 	}
@@ -113,94 +131,25 @@ public class FactionParser
 		return fp;
 	}
 
-	public static class Encounter
+	public static class Creature
 	{
-		public Mob[] mobs;
-		public int totalMobWeight;
+		public String entityName;
+		public float cost;
 
-		public int minRange;
-		public int maxRange;
+		public int minInfluence;
+		public int maxInfluence;
 
-		public int coverage;
-
-		public int minCoverage;
-		public int maxCoverage;
-
-		public int weight;
-
-		public Array<String> getMobsToPlace( int influence, int numValidTiles )
+		public static Creature load( Element xml, String path )
 		{
-			float currentInfluence = (float) ( influence - minRange ) / (float) ( maxRange - minRange );
-			float currentCoverage = ( coverage * currentInfluence ) / 100;
-			int numMobsToPlace = (int) Math.ceil( numValidTiles * currentCoverage );
+			Creature creature = new Creature();
 
-			numMobsToPlace = MathUtils.clamp( numMobsToPlace, minCoverage, maxCoverage );
+			creature.entityName = path + "/" + xml.getName();
+			creature.cost = xml.getFloat( "Cost", 1 );
 
-			float factor = (float) numMobsToPlace / (float) totalMobWeight;
+			creature.minInfluence = xml.getInt( "MinInfluence", 0 );
+			creature.maxInfluence = xml.getInt( "MaxInfluence", 100 );
 
-			Array<String> mobArr = new Array<String>();
-
-			for ( Mob mob : mobs )
-			{
-				float scaledNum = mob.weight * factor;
-				int num = (int) Math.ceil( scaledNum );
-
-				for ( int i = 0; i < num; i++ )
-				{
-					mobArr.add( mob.enemy );
-				}
-			}
-
-			return mobArr;
-		}
-
-		public static Encounter load( Element xml, String path )
-		{
-			Encounter enc = new Encounter();
-			enc.minRange = xml.getInt( "RangeMin", 0 );
-			enc.maxRange = xml.getInt( "RangeMax", 100 );
-			enc.coverage = xml.getInt( "Coverage", 5 );
-			enc.weight = xml.getInt( "Weight", 1 );
-			enc.minCoverage = xml.getInt( "MinCoverage", 0 );
-			enc.maxCoverage = xml.getInt( "MaxCoverage", Integer.MAX_VALUE );
-
-			Array<Mob> mobs = new Array<Mob>();
-
-			Element mobsElement = xml.getChildByName( "Mobs" );
-
-			for ( int i = 0; i < mobsElement.getChildCount(); i++ )
-			{
-				Element encEl = mobsElement.getChild( i );
-
-				int weight = 0;
-
-				try
-				{
-					weight = Integer.parseInt( encEl.getText() );
-				}
-				catch ( Exception e )
-				{
-				}
-
-				mobs.add( new Mob( path + "/" + encEl.getName(), weight ) );
-				enc.totalMobWeight += weight;
-			}
-
-			enc.mobs = mobs.toArray( Mob.class );
-
-			return enc;
-		}
-	}
-
-	public static class Mob
-	{
-		public final String enemy;
-		public final int weight;
-
-		public Mob( String enemy, int weight )
-		{
-			this.enemy = enemy;
-			this.weight = weight;
+			return creature;
 		}
 	}
 

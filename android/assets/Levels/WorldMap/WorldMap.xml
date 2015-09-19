@@ -128,6 +128,8 @@
 					<EnvironmentData>
 						<Type>Dungeon</Type>
 						<Destination>Forest</Destination>
+						<Faction>Goblin</Faction>
+						<MaxDepth>1</MaxDepth>
 						
 						<Size>2</Size>
 						

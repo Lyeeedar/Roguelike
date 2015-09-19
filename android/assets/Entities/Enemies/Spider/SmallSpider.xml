@@ -1,11 +1,11 @@
 <Entity>
-	<Name>Trapdoor Spider</Name>
+	<Name>Spider</Name>
 
 	<Sprite>
-		<Name>dc-mon/animals/trapdoor_spider</Name>
-		<AnimationMode>Shrink</AnimationMode>
+		<Name>Oryx/uf_split/uf_heroes/spider_brown</Name>
+		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-	
+		
 	<AI>basicMonster</AI>
 	
 	<Factions>
@@ -17,6 +17,10 @@
 		<Range>5</<Range>
 		
 		<Wood_Atk>33</Wood_Atk>
+		
+		<Wood_Def>20</Wood_Def>
+		<Wood_Hardiness>50</Wood_Hardiness>
+		
 	</Statistics>
 	
 </Entity>

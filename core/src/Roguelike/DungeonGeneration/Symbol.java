@@ -5,7 +5,6 @@ import java.util.HashMap;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Entity.EnvironmentEntity;
-import Roguelike.Entity.GameEntity;
 import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Tiles.TileData;
 import Roguelike.Util.EnumBitflag;
@@ -89,11 +88,6 @@ public final class Symbol implements PathfindingTile
 	public boolean hasGameEntity()
 	{
 		return entityData != null;
-	}
-
-	public GameEntity getGameEntity()
-	{
-		return entityData != null ? GameEntity.load( entityData ) : null;
 	}
 
 	public TileData getTileData()
