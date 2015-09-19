@@ -1,0 +1,9 @@
+<Data>
+    <Exclamations> 
+        <SeeEnemy Cooldown="10">
+	        <Exclamation>
+	            <Text>Gorash!</Text>
+	        </Exclamation>
+	    </SeeEnemy>
+    </Exclamations>
+</Data>

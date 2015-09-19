@@ -605,8 +605,12 @@ public final class Room
 				}
 			}
 
+			double difficulty = spawnList.size > 0 ? Math.log( spawnList.size ) : 0;
+			difficulty /= 2;
+			difficulty = Math.pow( difficulty, 2 );
+
 			// place mobs
-			Array<Creature> creatures = faction.getCreatures( ran, ( spawnList.size / 10.0f ) * ( influence / 100.0f ), influence );
+			Array<Creature> creatures = faction.getCreatures( ran, (float) difficulty, influence );
 
 			for ( Creature creature : creatures )
 			{

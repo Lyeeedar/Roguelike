@@ -32,7 +32,7 @@ public class SoundInstance
 	public String key;
 	public Object value;
 
-	private SoundInstance()
+	public SoundInstance()
 	{
 
 	}
@@ -65,7 +65,7 @@ public class SoundInstance
 		float playerDist = Integer.MAX_VALUE;
 		Point shoutSource = Pools.obtain( Point.class ).set( tile.x, tile.y );
 
-		int maxAudibleDist = ( range / 4 ) * 3;
+		int maxAudibleDist = range;// ( range / 4 ) * 3;
 
 		if ( key != null )
 		{
@@ -136,7 +136,7 @@ public class SoundInstance
 		}
 
 		// calculate sound play volume
-		if ( playerDist < range )
+		if ( playerDist < range && sound != null )
 		{
 			float vol = volume;
 

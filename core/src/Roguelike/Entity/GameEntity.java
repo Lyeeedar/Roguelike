@@ -183,6 +183,7 @@ public class GameEntity extends Entity
 
 		e.statistics.put( Statistic.WALK, 1 );
 
+		e.isVariableMapDirty = true;
 		e.recalculateMaps();
 
 		return e;

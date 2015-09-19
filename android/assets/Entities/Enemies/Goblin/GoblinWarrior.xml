@@ -1,5 +1,7 @@
 <Entity>
 	<Name>Goblin</Name>
+	
+	<Dialogue>Dialogue/Goblin</Dialogue>
 
 	<Sprite>
 		<Name>Oryx/uf_split/uf_heroes/goblin_warrior</Name>

@@ -45,6 +45,10 @@ public class FactionParser
 
 		Array<Creature> chosen = new Array<Creature>();
 		float maxCost = difficulty;
+		if ( maxCost < 1 )
+		{
+			maxCost = 1;
+		}
 
 		while ( maxCost >= 0 && validCreatures.size > 0 )
 		{

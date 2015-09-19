@@ -427,7 +427,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					}
 				}
 				else
-				// if ( testRoom.roomData.orientation == Orientation.FIXED )
+					// if ( testRoom.roomData.orientation == Orientation.FIXED )
 				{
 					fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
 				}
@@ -678,14 +678,14 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			tris.add( tri );
 		}
 		tris.sort( new Comparator<Triangle>()
-				{
+		{
 
 			@Override
 			public int compare( Triangle arg0, Triangle arg1 )
 			{
 				return arg0.compareTo( arg1 );
 			}
-				} );
+		} );
 
 		for ( Triangle tri : tris )
 		{
@@ -701,27 +701,27 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			int closestDist = Integer.MAX_VALUE;
 			boolean found = false;
 			outer:
-				for ( Pnt[] path : paths )
+			for ( Pnt[] path : paths )
+			{
+				for ( Pnt p : path )
 				{
-					for ( Pnt p : path )
+					int px = (int) p.coord( 0 );
+					int py = (int) p.coord( 1 );
+
+					if ( rx == px && ry == py )
 					{
-						int px = (int) p.coord( 0 );
-						int py = (int) p.coord( 1 );
+						found = true;
+						break outer;
+					}
 
-						if ( rx == px && ry == py )
-						{
-							found = true;
-							break outer;
-						}
-
-						int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
-						if ( tempDist < closestDist )
-						{
-							closestDist = tempDist;
-							closest = p;
-						}
+					int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
+					if ( tempDist < closestDist )
+					{
+						closestDist = tempDist;
+						closest = p;
 					}
 				}
+			}
 
 			if ( !found )
 			{
@@ -1283,7 +1283,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 		}
 		sortedRooms.sort();
 
-		float depthScale = (float) saveLevel.depth / (float) dungeon.maxDepth;
+		float depthScale = (float) ( saveLevel.depth - 1 ) / (float) dungeon.maxDepth;
 
 		int numMinor = (int) MathUtils.lerp( sortedRooms.size / 2.0f, sortedRooms.size / 4.0f, depthScale );
 

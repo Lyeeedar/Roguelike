@@ -1,6 +1,8 @@
 <Entity>
 	<Name>Goblin</Name>
 
+	<Dialogue>Dialogue/Goblin</Dialogue>
+	
 	<Sprite>
 		<Name>Oryx/Custom/heroes/goblin_chief</Name>
 		<DrawActualSize>true</DrawActualSize>

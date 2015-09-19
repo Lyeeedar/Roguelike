@@ -2,6 +2,7 @@ package Roguelike.DungeonGeneration;
 
 import java.util.Random;
 
+import Roguelike.Global.Direction;
 import Roguelike.DungeonGeneration.RoomGenerators.MidpointDisplacement;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Tiles.Point;
@@ -45,8 +46,11 @@ public class WorldMapGenerator extends AbstractDungeonGenerator
 			// Fill with values
 			generateGrid();
 
-			generationIndex++;
-			generationText = "Filling with symbols";
+			if ( isConnected() )
+			{
+				generationIndex++;
+				generationText = "Filling with symbols";
+			}
 		}
 		else if ( generationIndex == 2 )
 		{
@@ -108,6 +112,65 @@ public class WorldMapGenerator extends AbstractDungeonGenerator
 
 		width = grid.length;
 		height = grid[0].length;
+	}
+
+	// ----------------------------------------------------------------------
+	private boolean isConnected()
+	{
+		boolean[][] reached = new boolean[width][height];
+
+		int x = 0;
+		int y = 0;
+
+		outer:
+		for ( x = 0; x < width; x++ )
+		{
+			for ( y = 0; y < height; y++ )
+			{
+				if ( grid[x][y] >= 1 )
+				{
+					break outer;
+				}
+			}
+		}
+
+		Array<int[]> toBeProcessed = new Array<int[]>();
+		toBeProcessed.add( new int[] { x, y } );
+
+		while ( toBeProcessed.size > 0 )
+		{
+			int[] point = toBeProcessed.pop();
+			x = point[0];
+			y = point[1];
+
+			if ( reached[x][y] )
+			{
+				continue;
+			}
+
+			reached[x][y] = true;
+
+			for ( Direction dir : Direction.values() )
+			{
+				int nx = x + dir.getX();
+				int ny = y + dir.getY();
+
+				if ( grid[nx][ny] >= 1 )
+				{
+					toBeProcessed.add( new int[] { nx, ny } );
+				}
+			}
+		}
+
+		for ( x = 0; x < width; x++ )
+		{
+			for ( y = 0; y < height; y++ )
+			{
+				if ( grid[x][y] >= 1 && !reached[x][y] ) { return false; }
+			}
+		}
+
+		return true;
 	}
 
 	// ----------------------------------------------------------------------

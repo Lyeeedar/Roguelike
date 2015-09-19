@@ -6,6 +6,7 @@ import Roguelike.Global;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -72,7 +73,7 @@ public class ExclamationManager
 		{
 			if ( seePlayer.cooldownAccumulator <= 0 )
 			{
-				seePlayer.process( entity );
+				seePlayer.process( entity, null, null );
 			}
 
 			seePlayer.cooldownAccumulator = seePlayer.cooldown;
@@ -95,7 +96,7 @@ public class ExclamationManager
 		{
 			if ( seeAlly.cooldownAccumulator <= 0 )
 			{
-				seeAlly.process( entity );
+				seeAlly.process( entity, null, null );
 			}
 
 			seeAlly.cooldownAccumulator = seeAlly.cooldown;
@@ -104,11 +105,14 @@ public class ExclamationManager
 
 	private void processSeeEnemy( Array<GameTile> tiles, GameEntity entity )
 	{
+		Point pos = null;
+
 		boolean canSeeEnemy = false;
 		for ( GameTile tile : tiles )
 		{
 			if ( tile.entity != null && !tile.entity.isAllies( entity ) )
 			{
+				pos = new Point().set( tile );
 				canSeeEnemy = true;
 				break;
 			}
@@ -118,7 +122,7 @@ public class ExclamationManager
 		{
 			if ( seeEnemy.cooldownAccumulator <= 0 )
 			{
-				seeEnemy.process( entity );
+				seeEnemy.process( entity, "EnemyPos", pos );
 			}
 
 			seeEnemy.cooldownAccumulator = seeEnemy.cooldown;
@@ -159,7 +163,7 @@ public class ExclamationManager
 		public float cooldown;
 		public float cooldownAccumulator;
 
-		public void process( GameEntity entity )
+		public void process( GameEntity entity, String key, Object value )
 		{
 			for ( ExclamationWrapper wrapper : groups )
 			{
@@ -169,6 +173,9 @@ public class ExclamationManager
 
 					if ( wrapper.sound != null )
 					{
+						wrapper.sound.shoutFaction = entity.factions;
+						wrapper.sound.key = key;
+						wrapper.sound.value = value;
 						wrapper.sound.play( entity.tile[0][0] );
 					}
 
@@ -224,6 +231,10 @@ public class ExclamationManager
 			if ( soundEl != null )
 			{
 				sound = SoundInstance.load( soundEl );
+			}
+			else
+			{
+				sound = new SoundInstance();
 			}
 
 			text = xml.get( "Text" );
