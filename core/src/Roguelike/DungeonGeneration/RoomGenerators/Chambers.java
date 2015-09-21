@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 /**
  * Seperates the room via Binary Space partitioning, then places doors to
  * connect the branches of the tree.
- * 
+ *
  * @author Philip Collin
  *
  */
@@ -117,7 +117,7 @@ public class Chambers extends AbstractRoomGenerator
 
 			if ( splitVertically )
 			{
-				for ( int ix = 1; ix < width - 2; ix++ )
+				for ( int ix = 0; ix < width; ix++ )
 				{
 					int tx = x + ix;
 					int ty = child2.y;
@@ -151,7 +151,7 @@ public class Chambers extends AbstractRoomGenerator
 			}
 			else
 			{
-				for ( int iy = 1; iy < height - 2; iy++ )
+				for ( int iy = 0; iy < height; iy++ )
 				{
 					int tx = child2.x;
 					int ty = y + iy;
@@ -190,6 +190,7 @@ public class Chambers extends AbstractRoomGenerator
 			{
 				grid[doorPos[0]][doorPos[1]] = door;
 			}
+
 		}
 
 		public void dig( Symbol[][] grid, Symbol floor, Symbol wall, Symbol door, Random ran )

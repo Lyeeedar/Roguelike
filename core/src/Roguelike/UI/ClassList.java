@@ -86,8 +86,8 @@ public class ClassList extends TilePanel
 	@Override
 	public Sprite getSpriteForData( Object data )
 	{
-		ClassDesc desc = (ClassDesc) data;
-		return desc.entity.sprite;
+		// ClassDesc desc = (ClassDesc) data;
+		return null;// desc.entity.sprite;
 	}
 
 	@Override
@@ -133,5 +133,9 @@ public class ClassList extends TilePanel
 	@Override
 	public void onDrawItemForeground( Object data, Batch batch, int x, int y, int width, int height )
 	{
+		batch.setColor( Color.WHITE );
+
+		ClassDesc desc = (ClassDesc) data;
+		desc.entity.sprite.render( batch, x, y, width, height );
 	}
 }

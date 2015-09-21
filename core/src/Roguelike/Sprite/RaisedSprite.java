@@ -9,6 +9,7 @@ public class RaisedSprite
 	public String name;
 	public Sprite frontSprite;
 	public Sprite topSprite;
+	public Sprite overhangSprite;
 
 	public void parse( Element xml )
 	{
@@ -16,6 +17,12 @@ public class RaisedSprite
 
 		frontSprite = AssetManager.loadSprite( xml.getChildByName( "Front" ) );
 		topSprite = AssetManager.loadSprite( xml.getChildByName( "Top" ) );
+
+		Element overhangElement = xml.getChildByName( "Overhang" );
+		if ( overhangElement != null )
+		{
+			overhangSprite = AssetManager.loadSprite( overhangElement );
+		}
 	}
 
 	public static RaisedSprite load( Element xml )

@@ -18,6 +18,7 @@ public class SeenTile
 	public boolean seen = false;
 
 	public Array<SeenHistoryItem> tileHistory = new Array<SeenHistoryItem>( false, 1, SeenHistoryItem.class );
+	public SeenHistoryItem overhangHistory;
 	public Array<SeenHistoryItem> fieldHistory = new Array<SeenHistoryItem>( false, 1, SeenHistoryItem.class );
 	public SeenHistoryItem environmentHistory;
 	public SeenHistoryItem entityHistory;
@@ -27,27 +28,40 @@ public class SeenTile
 	public GameTile gameTile;
 	public Color light = new Color( 1 );
 
-	public void set( GameTile tile, GameEntity player )
+	public void set( GameTile tile, GameEntity player, GameTile prevTile, GameTile nextTile, SeenTile prevSeenTile )
 	{
 		light.set( tile.light );
 		gameTile = tile;
 
 		// Update tile history list size
-		if ( tileHistory.size != tile.tileData.sprites.length )
-		{
-			Pools.freeAll( tileHistory );
-			tileHistory.clear();
 
-			for ( int i = 0; i < tile.tileData.sprites.length; i++ )
-			{
-				tileHistory.add( Pools.obtain( SeenHistoryItem.class ) );
-			}
-		}
+		Pools.freeAll( tileHistory );
+		tileHistory.clear();
 
 		// Store tile history
 		for ( int i = 0; i < tile.tileData.sprites.length; i++ )
 		{
-			tileHistory.get( i ).set( tile.tileData.sprites[i] );
+			tileHistory.add( Pools.obtain( SeenHistoryItem.class ).set( tile.tileData.sprites[i] ) );
+		}
+
+		if ( tile.tileData.raisedSprite != null )
+		{
+			if ( nextTile != null && nextTile.tileData.raisedSprite != null && nextTile.tileData.raisedSprite.name.equals( tile.tileData.raisedSprite.name ) )
+			{
+				overhangHistory = Pools.obtain( SeenHistoryItem.class ).set( tile.tileData.raisedSprite.topSprite );
+			}
+			else
+			{
+				tileHistory.add( Pools.obtain( SeenHistoryItem.class ).set( tile.tileData.raisedSprite.frontSprite ) );
+			}
+
+			if ( tile.tileData.raisedSprite.overhangSprite != null
+					&& prevTile != null
+					&& prevTile.visible
+					&& ( prevTile.tileData.raisedSprite == null || !prevTile.tileData.raisedSprite.name.equals( tile.tileData.raisedSprite.name ) ) )
+			{
+				prevSeenTile.overhangHistory = Pools.obtain( SeenHistoryItem.class ).set( tile.tileData.raisedSprite.overhangSprite );
+			}
 		}
 
 		if ( tile.hasFields )
@@ -83,14 +97,32 @@ public class SeenTile
 		}
 
 		// Store environment history
-		if ( tile.environmentEntity != null && tile.environmentEntity.tile[0][0] == tile )
+		if ( tile.environmentEntity != null
+				&& tile.environmentEntity.tile[0][0] == tile
+				&& ( tile.environmentEntity.sprite != null || tile.environmentEntity.raisedSprite != null ) )
 		{
 			if ( environmentHistory == null )
 			{
 				environmentHistory = Pools.obtain( SeenHistoryItem.class );
 			}
 
-			environmentHistory.set( tile.environmentEntity.sprite );
+			Sprite sprite = tile.environmentEntity.sprite;
+
+			if ( tile.environmentEntity.raisedSprite != null )
+			{
+				if ( nextTile != null
+						&& nextTile.tileData.raisedSprite != null
+						&& nextTile.tileData.raisedSprite.name.equals( tile.environmentEntity.raisedSprite.name ) )
+				{
+					sprite = tile.environmentEntity.raisedSprite.topSprite;
+				}
+				else
+				{
+					sprite = tile.environmentEntity.raisedSprite.frontSprite;
+				}
+			}
+
+			environmentHistory.set( sprite );
 			environmentHistory.location = tile.environmentEntity.location;
 		}
 		else if ( environmentHistory != null )
@@ -100,7 +132,7 @@ public class SeenTile
 		}
 
 		// Store entity history
-		if ( tile.entity != null && tile.entity != player && tile.entity.tile[0][0] == tile )
+		if ( tile.entity != null && tile.entity != player && tile.entity.tile[0][0] == tile && tile.entity.sprite != null )
 		{
 			if ( entityHistory == null )
 			{

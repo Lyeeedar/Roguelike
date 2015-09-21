@@ -1,0 +1,66 @@
+<map version="1.0.1">
+<!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
+<node CREATED="1442820108275" ID="ID_1740472863" MODIFIED="1442820127105" TEXT="Chronicles Of Aether">
+<node CREATED="1442820147859" ID="ID_506841249" MODIFIED="1442820153893" POSITION="right" TEXT="Reach">
+<node CREATED="1442820177813" ID="ID_905673383" MODIFIED="1442820185641" TEXT="Start in Machine"/>
+<node CREATED="1442820188002" ID="ID_568491223" MODIFIED="1442821554363" TEXT="Talk to Daniel">
+<node CREATED="1442820763508" ID="ID_1321692390" MODIFIED="1442820787253" TEXT="Hey! Welcome to the land of the living!"/>
+<node CREATED="1442821461152" FOLDED="true" ID="ID_1303685230" MODIFIED="1442821557904" TEXT="If first time">
+<node CREATED="1442820790014" ID="ID_1602334819" MODIFIED="1442821148227" TEXT="Player Input:">
+<node CREATED="1442821114761" ID="ID_1292993951" MODIFIED="1442821124098" TEXT="Hello.">
+<node CREATED="1442821246196" ID="ID_365501948" MODIFIED="1442821253038" TEXT="How do you feel?"/>
+<node CREATED="1442821253781" ID="ID_174915446" MODIFIED="1442821272298" TEXT="Confused, disorientated. Whats going on?"/>
+</node>
+<node CREATED="1442821155061" ID="ID_202961448" MODIFIED="1442821171876" TEXT="Who are you?">
+<node CREATED="1442820812318" ID="ID_1219191345" MODIFIED="1442820907537" TEXT="My name is Daniel, nice to meet you."/>
+<node CREATED="1442820909966" ID="ID_213270775" MODIFIED="1442820938026" TEXT="Hi Daniel, my name is... $player$, I think."/>
+<node CREATED="1442821277885" ID="ID_1429909956" MODIFIED="1442821291156" TEXT="Nice to meet you $player$."/>
+<node CREATED="1442821291667" ID="ID_1101253641" MODIFIED="1442821310694" TEXT="What&apos;s going on? Why can&apos;t I remember anything?"/>
+</node>
+<node CREATED="1442821192045" ID="ID_1894598033" MODIFIED="1442821224569" TEXT="What the hell is going on!?"/>
+</node>
+<node CREATED="1442820972191" ID="ID_1596363166" MODIFIED="1442821042168" TEXT="Relax, it&apos;s going to be fine. Some memories should return once the shock wears off."/>
+<node CREATED="1442821045125" ID="ID_1772427384" MODIFIED="1442821079758" TEXT="Shock? From what? You aren&apos;t making a whole lot of sense."/>
+</node>
+<node CREATED="1442821482525" ID="ID_1073182727" MODIFIED="1442821489245" TEXT="What do you want to know?"/>
+<node CREATED="1442821506653" ID="ID_744635362" MODIFIED="1442821512029" TEXT="Player Input:">
+<node CREATED="1442821513476" ID="ID_1452983154" MODIFIED="1442821516596" TEXT="Who am I?"/>
+<node CREATED="1442821517170" ID="ID_611066383" MODIFIED="1442821522086" TEXT="Where am I?"/>
+<node CREATED="1442821522649" ID="ID_1134827199" MODIFIED="1442821527906" TEXT="Who are you?"/>
+<node CREATED="1442821533040" ID="ID_516063015" MODIFIED="1442821536018" TEXT="What&apos;s going on?"/>
+</node>
+</node>
+<node CREATED="1442820198376" ID="ID_1021915704" MODIFIED="1442823318090" TEXT="Go to tavern">
+<node CREATED="1442823330588" ID="ID_1555775646" MODIFIED="1442823340543" TEXT="Tavern owner"/>
+<node CREATED="1442820282095" ID="ID_1437253353" MODIFIED="1442823345229" TEXT="Rat quest, open area to get to cellar">
+<node CREATED="1442820364966" ID="ID_1792720203" MODIFIED="1442820375181" TEXT="Complex level generator">
+<node CREATED="1442820378996" ID="ID_1839729277" MODIFIED="1442820395055" TEXT="Takes room def and places in either center or edge or random"/>
+</node>
+</node>
+<node CREATED="1442820295157" ID="ID_779603824" MODIFIED="1442820327539" TEXT="3 levels + rat boss"/>
+</node>
+<node CREATED="1442820206212" FOLDED="true" ID="ID_819930802" MODIFIED="1442821553117" TEXT="Leave to world map">
+<node CREATED="1442820214416" ID="ID_648340400" MODIFIED="1442820220789" TEXT="Fight monster group">
+<node CREATED="1442820427562" ID="ID_826879557" MODIFIED="1442820443953" TEXT="Goblin pack, roaming, chases player, spawn close to town"/>
+</node>
+<node CREATED="1442820231204" ID="ID_1393036473" MODIFIED="1442820546240" TEXT="Quest step to talk to someone"/>
+<node CREATED="1442820238884" ID="ID_1113886755" MODIFIED="1442820245812" TEXT="Inform of invasion"/>
+<node CREATED="1442820247507" ID="ID_1682354429" MODIFIED="1442820261563" TEXT="Go to world map, close the 3 portals">
+<node CREATED="1442820263849" ID="ID_1751217580" MODIFIED="1442820275287" TEXT="Roaming enemy packs too"/>
+</node>
+</node>
+</node>
+<node CREATED="1442820157981" ID="ID_588364922" MODIFIED="1442820168756" POSITION="right" TEXT="Endurance System">
+<node CREATED="1442824725671" ID="ID_432285696" MODIFIED="1442824737761" TEXT="endurnce effects max hp, reduces slowly as damage is taken"/>
+<node CREATED="1442824714830" ID="ID_627899304" MODIFIED="1442824721944" TEXT="On hp reach 0 endurance becomes hp"/>
+</node>
+<node CREATED="1442822987719" ID="ID_1165583037" MODIFIED="1442822996781" POSITION="right" TEXT="World map encounter system">
+<node CREATED="1442822997655" ID="ID_686331444" MODIFIED="1442823007491" TEXT="On Touch send to dungeon ability"/>
+</node>
+<node CREATED="1442824613658" ID="ID_862472561" MODIFIED="1442824628866" POSITION="right" TEXT="Entities have elements, take double from wek and half from strong">
+<node CREATED="1442824629730" ID="ID_1301083323" MODIFIED="1442824651028" TEXT="Aether strong vs aether, weak to void"/>
+<node CREATED="1442824651702" ID="ID_1593777941" MODIFIED="1442824661548" TEXT="Void weak to all, strong vs aether"/>
+</node>
+<node CREATED="1442824662592" ID="ID_1556376081" MODIFIED="1442824681227" POSITION="right" TEXT="Find major souls that allows player to make a elementally attuned char"/>
+</node>
+</map>

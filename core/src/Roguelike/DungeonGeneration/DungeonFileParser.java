@@ -34,7 +34,7 @@ public class DungeonFileParser
 
 		public PathStyle pathStyle = PathStyle.STRAIGHT;
 
-		public int width;
+		public int width = 1;
 
 		public CorridorFeature centralConstant;
 		public CorridorFeature centralRecurring;

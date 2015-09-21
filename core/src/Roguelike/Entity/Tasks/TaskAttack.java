@@ -319,9 +319,16 @@ public class TaskAttack extends AbstractTask
 
 				GameTile tile = oldTile.level.getGameTile( nx, ny );
 
-				hitTiles.add( tile );
+				if ( tile != null )
+				{
+					hitTiles.add( tile );
 
-				if ( !tile.getPassable( WeaponPassability, entity ) )
+					if ( !tile.getPassable( WeaponPassability, entity ) )
+					{
+						break;
+					}
+				}
+				else
 				{
 					break;
 				}

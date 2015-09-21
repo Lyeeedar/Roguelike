@@ -1,0 +1,113 @@
+<Level>
+	<Ambient>
+		<Red>0.3</Red>
+		<Green>0.3</Green>
+		<Blue>0.3</Blue>
+		<Alpha>0.3</Alpha>
+	</Ambient>
+	
+	<Sound>
+	    <BGM>Heroic Age</BGM>
+	    <Ambient>
+
+	    </Ambient>
+	</Sound>
+	
+	<Preprocessor>
+	    <Chambers></Chambers>
+	</Preprocessor>
+	
+	<Factions>
+		<Major>
+		    <Rat>1</Rat>
+		</Major>
+		<Minor>
+			<Rat>3</Rat>
+			<Spider>1</Spider>
+		</Minor>
+	</Factions>
+	
+	<Symbols>
+	    
+	    <Symbol>
+			<Char>.</Char>
+			<TileData>
+				<Opaque>false</Opaque>
+				<Passable>true</Passable>
+				<Sprite>
+					<Name>Oryx/uf_split/uf_terrain/floor_extra_8</Name>
+				</Sprite>
+			</TileData>
+		</Symbol>
+		
+	    <Symbol Extends=".">
+			<Char>+</Char>
+			<EnvironmentData>
+				<Type>Door</Type>
+			</EnvironmentData>
+		</Symbol>
+		
+		<Symbol>
+			<Char>#</Char>
+			<TileData>
+				<Opaque>true</Opaque>
+				<Passable>false</Passable>
+				<RaisedSprite>
+				    <Name>Wall</Name>
+				    
+				    <Front>
+				        <Name>Oryx/uf_split/uf_terrain/wall_dungeon_14</Name>
+				    </Front>
+				    
+				    <Top>
+				        <Name>Oryx/uf_split/uf_terrain/wall_dungeon_7</Name>
+				    </Top>
+				    
+				    <Overhang>
+				        <Name>Oryx/uf_split/uf_terrain/wall_dungeon_1</Name>
+				    </Overhang>
+				    
+				</RaisedSprite>
+			</TileData>
+		</Symbol>
+	    
+	</Symbols>
+	
+	<Required>
+	    
+	    <Transition>		    		    
+			<Symbols>			
+				<Symbol Extends=".">
+					<Char>v</Char>
+					<EnvironmentData>
+						<Type>Transition</Type>
+						<Destination>RatCellar</Destination>
+						
+						<ExitRoom>						    
+							<Symbols>
+								<Symbol Extends=".">
+									<Char>^</Char>
+									<EnvironmentData>
+										<Type>Transition</Type>
+										<Destination>this</Destination>
+									</EnvironmentData>
+								</Symbol>
+							</Symbols>
+						
+							<Rows>
+								<Row>^</Row>
+							</Rows>
+						</ExitRoom>
+					</EnvironmentData>
+				</Symbol>
+			</Symbols>
+				
+			<Rows>
+				<Row>v</Row>
+			</Rows>
+
+		</Transition>
+	    
+	</Required>
+	
+</Level>

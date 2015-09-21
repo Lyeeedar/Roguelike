@@ -117,13 +117,6 @@ public final class Sprite
 
 		if ( spriteAnimation != null )
 		{
-			int[] offset = spriteAnimation.getRenderOffset();
-			if ( offset != null )
-			{
-				x += offset[0];
-				y += offset[1];
-			}
-
 			float[] scale = spriteAnimation.getRenderScale();
 			if ( scale != null )
 			{
@@ -171,10 +164,8 @@ public final class Sprite
 			int trueHeight = (int) ( texture.getRegionHeight() * heightRatio );
 
 			int widthOffset = ( trueWidth - width ) / 2;
-			int heightOffset = ( trueHeight - height ) / 2;
 
 			x -= widthOffset;
-			y -= heightOffset;
 			width = trueWidth;
 			height = trueHeight;
 		}

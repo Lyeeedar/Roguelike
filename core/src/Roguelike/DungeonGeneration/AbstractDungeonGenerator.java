@@ -296,10 +296,10 @@ public abstract class AbstractDungeonGenerator
 			for ( int y = 0; y < height; y++ )
 			{
 				Symbol symbol = symbolGrid[x][y];
-				GameTile newTile = actualTiles[x][y];
 
 				if ( symbol.hasEnvironmentEntity() )
 				{
+					GameTile newTile = actualTiles[x][y];
 					EnvironmentEntity entity = symbol.getEnvironmentEntity( dungeon.UID, saveLevel.UID, saveLevel.depth );
 
 					if ( !saveLevel.created || !entity.canTakeDamage )
@@ -327,6 +327,21 @@ public abstract class AbstractDungeonGenerator
 
 								if ( validDirections.size() > 0 )
 								{
+									if ( location == Direction.CENTER )
+									{
+										for ( Direction dir : Direction.values() )
+										{
+											if ( dir.isCardinal() )
+											{
+												if ( validDirections.contains( dir ) )
+												{
+													location = dir;
+													break;
+												}
+											}
+										}
+									}
+
 									// look for direction with full surround
 									for ( Direction dir : Direction.values() )
 									{
@@ -343,20 +358,6 @@ public abstract class AbstractDungeonGenerator
 
 									// If that failed then just try the cardinal
 									// directions
-									if ( location == Direction.CENTER )
-									{
-										for ( Direction dir : Direction.values() )
-										{
-											if ( dir.isCardinal() )
-											{
-												if ( validDirections.contains( dir ) )
-												{
-													location = dir;
-													break;
-												}
-											}
-										}
-									}
 
 									// else pick random
 									if ( location == Direction.CENTER )
@@ -369,7 +370,7 @@ public abstract class AbstractDungeonGenerator
 							}
 
 							entity.location = location;
-							entity.sprite.rotation = location.getAngle();
+							// entity.sprite.rotation = location.getAngle();
 						}
 						else
 						{
@@ -387,6 +388,7 @@ public abstract class AbstractDungeonGenerator
 
 				if ( !saveLevel.created && symbol.hasGameEntity() )
 				{
+					GameTile newTile = actualTiles[x][y];
 					GameEntity e = null;
 
 					if ( symbol.entityData.equals( "Boss" ) )

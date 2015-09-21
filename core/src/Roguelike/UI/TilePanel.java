@@ -224,7 +224,7 @@ public abstract class TilePanel extends Widget
 			yIndex += scrollY;
 
 			int index = yIndex * viewWidth + xIndex;
-			if ( index >= tileData.size ) { return null; }
+			if ( index >= tileData.size || index < 0 ) { return null; }
 			return tileData.get( index );
 		}
 

@@ -19,21 +19,19 @@ import Roguelike.Levels.Level;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Screens.LoadingScreen;
+import Roguelike.Sprite.RaisedSprite;
 import Roguelike.Sprite.Sprite;
-import Roguelike.Sprite.Sprite.AnimationMode;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class EnvironmentEntity extends Entity
 {
-	public Direction location = Direction.CENTER;
 	public boolean attachToWall = false;
 	public boolean overHead = false;
 
@@ -195,11 +193,11 @@ public class EnvironmentEntity extends Entity
 			{
 				if ( destination.equals( "this" ) )
 				{
-					stairs = AssetManager.loadSprite( "dc-dngn/gateways/stone_stairs_up" );
+					stairs = AssetManager.loadSprite( "Oryx/uf_split/uf_terrain/floor_set_grey_8" );
 				}
 				else
 				{
-					stairs = AssetManager.loadSprite( "dc-dngn/gateways/stone_stairs_down" );
+					stairs = AssetManager.loadSprite( "Oryx/uf_split/uf_terrain/floor_set_grey_9" );
 				}
 			}
 
@@ -298,11 +296,11 @@ public class EnvironmentEntity extends Entity
 			{
 				if ( destination.equals( "this" ) )
 				{
-					stairs = AssetManager.loadSprite( "dc-dngn/gateways/stone_stairs_up" );
+					stairs = AssetManager.loadSprite( "Oryx/uf_split/uf_terrain/floor_set_grey_8" );
 				}
 				else
 				{
-					stairs = AssetManager.loadSprite( "dc-dngn/gateways/stone_stairs_down" );
+					stairs = AssetManager.loadSprite( "Oryx/uf_split/uf_terrain/floor_set_grey_9" );
 				}
 			}
 
@@ -382,8 +380,21 @@ public class EnvironmentEntity extends Entity
 	// ----------------------------------------------------------------------
 	private static EnvironmentEntity CreateDoor()
 	{
-		final Sprite doorClosed = AssetManager.loadSprite( "Objects/DoorClosed", 1, Color.WHITE, AnimationMode.NONE, null, false );
-		final Sprite doorOpen = AssetManager.loadSprite( "Objects/DoorOpen", 1, Color.WHITE, AnimationMode.NONE, null, false );
+		Sprite doorHClosed = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_h_closed", true );
+		Sprite doorHOpen = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_h_open", true );
+
+		Sprite doorVClosed = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_v_closed", true );
+		Sprite doorVOpen = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_v_open", true );
+
+		final RaisedSprite closedSprite = new RaisedSprite();
+		closedSprite.frontSprite = doorHClosed;
+		closedSprite.topSprite = doorVClosed;
+		closedSprite.name = "Wall";
+
+		final RaisedSprite openSprite = new RaisedSprite();
+		openSprite.frontSprite = doorHOpen;
+		openSprite.topSprite = doorVOpen;
+		openSprite.name = "Wall";
 
 		ActivationAction action = new ActivationAction( "Open" )
 		{
@@ -395,7 +406,7 @@ public class EnvironmentEntity extends Entity
 				{
 					entity.passableBy = Passability.parse( "true" );
 					entity.passableBy.setBit( Passability.LIGHT );
-					entity.sprite = doorOpen;
+					entity.raisedSprite = openSprite;
 					name = "Close";
 
 					entity.data.put( "State", "Open" );
@@ -404,7 +415,7 @@ public class EnvironmentEntity extends Entity
 				{
 					entity.passableBy = Passability.parse( "false" );
 					entity.passableBy.clearBit( Passability.LIGHT );
-					entity.sprite = doorClosed;
+					entity.raisedSprite = closedSprite;
 					name = "Open";
 
 					entity.data.put( "State", "Closed" );
@@ -416,7 +427,7 @@ public class EnvironmentEntity extends Entity
 		entity.data.put( "State", "Closed" );
 		entity.passableBy = Passability.parse( "false" );
 		entity.passableBy.clearBit( Passability.LIGHT );
-		entity.sprite = doorClosed;
+		entity.raisedSprite = closedSprite;
 		entity.actions.add( action );
 		entity.UID = "EnvironmentEntity Door: ID " + entity.hashCode();
 		entity.canTakeDamage = false;

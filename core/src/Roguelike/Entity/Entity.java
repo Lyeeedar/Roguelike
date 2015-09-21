@@ -3,6 +3,7 @@ package Roguelike.Entity;
 import java.util.HashMap;
 
 import Roguelike.AssetManager;
+import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.GameEvent.GameEventHandler;
@@ -10,6 +11,7 @@ import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
+import Roguelike.Sprite.RaisedSprite;
 import Roguelike.Sprite.Sprite;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
@@ -48,10 +50,27 @@ public abstract class Entity
 
 		isBoss = xml.getBoolean( "IsBoss", isBoss );
 
-		sprite = xml.getChildByName( "Sprite" ) != null ? AssetManager.loadSprite( xml.getChildByName( "Sprite" ) ) : sprite;
+		Element spriteElement = xml.getChildByName( "Sprite" );
+		if ( spriteElement != null )
+		{
+			sprite = AssetManager.loadSprite( xml.getChildByName( "Sprite" ) );
+		}
+
 		if ( sprite != null )
 		{
 			sprite.size = size;
+		}
+
+		Element raisedSpriteElement = xml.getChildByName( "RaisedSprite" );
+		if ( raisedSpriteElement != null )
+		{
+			raisedSprite = RaisedSprite.load( raisedSpriteElement );
+		}
+
+		if ( raisedSprite != null )
+		{
+			raisedSprite.frontSprite.size = size;
+			raisedSprite.topSprite.size = size;
 		}
 
 		Element lightElement = xml.getChildByName( "Light" );
@@ -334,11 +353,13 @@ public abstract class Entity
 
 	// ----------------------------------------------------------------------
 	public Sprite sprite;
+	public RaisedSprite raisedSprite;
 	public Light light;
 
 	// ----------------------------------------------------------------------
 	public GameTile[][] tile = new GameTile[1][1];
 	public int size = 1;
+	public Direction location = Direction.CENTER;
 
 	// ----------------------------------------------------------------------
 	public int HP = 1;

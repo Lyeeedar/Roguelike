@@ -1,0 +1,52 @@
+<Faction>
+    
+    <Features>
+        
+        <Feature>
+			<Name>Barrel</Name>
+			<Placement>Wall</Placement>
+			<EnvironmentData>
+				<Passable>false</Passable>
+				<Opaque>false</Opaque>
+				<Sprite>
+					<Name>Oryx/uf_split/uf_terrain/barrel</Name>
+					<DrawActualSize>true</DrawActualSize>
+				</Sprite>
+				
+				<Statistics>
+					<MaxHP>200</MaxHP>
+				</Statistics>
+			</EnvironmentData>
+			<Coverage>30</Coverage>
+
+		</Feature>
+		
+        <Feature>
+			<Name>Crate</Name>
+			<Placement>Wall</Placement>
+			<EnvironmentData>
+				<Passable>false</Passable>
+				<Opaque>false</Opaque>
+				<Sprite>
+					<Name>Oryx/uf_split/uf_terrain/crate</Name>
+					<DrawActualSize>true</DrawActualSize>
+				</Sprite>
+				
+				<Statistics>
+					<MaxHP>200</MaxHP>
+				</Statistics>
+			</EnvironmentData>
+			<Coverage>30</Coverage>
+
+		</Feature>
+        
+    </Features>
+    
+    <Creatures>
+        
+        <SmallRat></SmallRat>
+        <GiantRat></GiantRat>
+        
+    </Creatures>
+    
+</Faction>

@@ -45,6 +45,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -69,6 +70,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -94,8 +96,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		blank = AssetManager.loadTextureRegion( "Sprites/blank.png" );
 		white = AssetManager.loadTextureRegion( "Sprites/white.png" );
-		bag = AssetManager.loadTextureRegion( "Sprites/bag.png" );
-		orb = AssetManager.loadTextureRegion( "Sprites/orb.png" );
+		bag = AssetManager.loadSprite( "bag" );
+		orb = AssetManager.loadSprite( "orb" );
 		border = AssetManager.loadSprite( "GUI/frame" );
 		speechBubbleArrow = AssetManager.loadTextureRegion( "Sprites/GUI/SpeechBubbleArrow.png" );
 		speechBubbleBackground = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/SpeechBubble.png" ), 10, 10, 10, 10 );
@@ -253,31 +255,22 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 		batch.begin();
 
-		toBeDrawn.clear();
 		hasStatus.clear();
-		environmentEntities.clear();
-		overHeadEntities.clear();
-		underFields.clear();
-		overFields.clear();
 		entitiesWithSpeech.clear();
 
 		renderBackground( offsetx, offsety );
 		renderVisibleTiles( offsetx, offsety, tileSize3 );
-		renderSeenTiles( offsetx, offsety, tileSize3 );
-		renderEnvironmentEntities( offsetx, offsety, tileSize3 );
-		renderItems( offsetx, offsety );
-		renderFields( underFields, offsetx, offsety );
 		if ( Global.CurrentDialogue == null )
 		{
 			renderCursor( offsetx, offsety, mousex, mousey, delta );
 		}
-		renderGameEntities( offsetx, offsety, tileSize3 );
-		renderOverheadEntities( offsetx, offsety, tileSize3 );
-		renderStatus( offsetx, offsety );
 		renderActiveAbilities( offsetx, offsety );
 		renderSpriteEffects( offsetx, offsety, tileSize3 );
-		renderFields( overFields, offsetx, offsety );
-		renderEssence( offsetx, offsety );
+
+		flush( batch );
+
+		renderSeenTiles( offsetx, offsety, tileSize3 );
+		renderStatus( offsetx, offsety );
 
 		if ( Global.CurrentDialogue == null )
 		{
@@ -404,25 +397,39 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				if ( gtile.visible )
 				{
-					batch.setColor( gtile.light );
-
-					for ( Sprite s : gtile.tileData.sprites )
+					for ( int i = 0; i < gtile.tileData.sprites.length; i++ )
 					{
-						s.render( batch, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
+						queueSprite( gtile.tileData.sprites[i], gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.GROUNDTILE, i );
+					}
+
+					GameTile nextTile = Global.CurrentLevel.getGameTile( x, y - 1 );
+					if ( nextTile != null && nextTile.tileData.raisedSprite != null )
+					{
+						GameTile ogtile = nextTile;
+						GameTile oprevTile = gtile;
+
+						if ( ogtile.tileData.raisedSprite.overhangSprite != null
+								&& oprevTile != null
+								&& oprevTile.visible
+								&& ( oprevTile.tileData.raisedSprite == null || !oprevTile.tileData.raisedSprite.name.equals( gtile.tileData.raisedSprite.name ) ) )
+						{
+							queueSprite( ogtile.tileData.raisedSprite.overhangSprite, oprevTile.light, x * Global.TileSize + offsetx, y
+									* Global.TileSize
+									+ offsety, Global.TileSize, Global.TileSize, RenderLayer.OVERHANG );
+						}
 					}
 
 					if ( gtile.tileData.raisedSprite != null )
 					{
-						GameTile nextTile = Global.CurrentLevel.getGameTile( x, y - 1 );
 						if ( nextTile != null
 								&& nextTile.tileData.raisedSprite != null
 								&& nextTile.tileData.raisedSprite.name.equals( gtile.tileData.raisedSprite.name ) )
 						{
-							gtile.tileData.raisedSprite.topSprite.render( batch, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
+							queueSprite( gtile.tileData.raisedSprite.topSprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.OVERHANG );
 						}
 						else
 						{
-							gtile.tileData.raisedSprite.frontSprite.render( batch, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
+							queueSprite( gtile.tileData.raisedSprite.frontSprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.GROUNDTILE );
 						}
 					}
 
@@ -435,11 +442,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							{
 								if ( field.layer == FieldLayer.GROUND )
 								{
-									field.sprite.render( batch, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
+									queueSprite( field.sprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.GROUNDFIELD );
 								}
 								else
 								{
-									overFields.add( field );
+									queueSprite( field.sprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.OVERHEADFIELD );
 								}
 							}
 						}
@@ -449,13 +456,56 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					{
 						EnvironmentEntity entity = gtile.environmentEntity;
 
+						int cx = x * Global.TileSize + offsetx;
+						int cy = y * Global.TileSize + offsety;
+
+						int width = Global.TileSize;
+						int height = Global.TileSize;
+
+						Sprite sprite = entity.sprite;
+
+						if ( entity.raisedSprite != null )
+						{
+							if ( nextTile != null
+									&& nextTile.tileData.raisedSprite != null
+									&& nextTile.tileData.raisedSprite.name.equals( entity.raisedSprite.name ) )
+							{
+								sprite = entity.raisedSprite.topSprite;
+							}
+							else
+							{
+								sprite = entity.raisedSprite.frontSprite;
+							}
+						}
+
+						if ( entity.location != Direction.CENTER )
+						{
+							if ( entity.location == Direction.EAST || entity.location == Direction.WEST )
+							{
+								cx += -entity.location.getX() * ( Global.TileSize / 2 );
+							}
+							else if ( entity.location == Direction.SOUTH )
+							{
+								cy += Global.TileSize;
+							}
+						}
+
+						if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.MAXHP ) || entity.stacks.size > 0 )
+						{
+							hasStatus.add( entity );
+						}
+
 						if ( entity.overHead )
 						{
-							overHeadEntities.add( entity );
+							queueSprite( sprite, gtile.light, cx, cy, width, height, RenderLayer.OVERHEADENTITY );
+						}
+						else if ( sprite.drawActualSize )
+						{
+							queueSprite( sprite, gtile.light, cx, cy, width, height, RenderLayer.RAISEDENTITY );
 						}
 						else
 						{
-							environmentEntities.add( entity );
+							queueSprite( sprite, gtile.light, cx, cy, width, height, RenderLayer.GROUNDENTITY );
 						}
 
 						if ( entity.tile[0][0].visible && entity.popup != null )
@@ -468,7 +518,50 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 					if ( entity != null && entity.tile[0][0] == gtile )
 					{
-						toBeDrawn.add( entity );
+						int cx = x * Global.TileSize + offsetx;
+						int cy = y * Global.TileSize + offsety;
+
+						int width = Global.TileSize;
+						int height = Global.TileSize;
+
+						Sprite sprite = entity.sprite;
+
+						if ( entity.raisedSprite != null )
+						{
+							if ( nextTile != null
+									&& nextTile.tileData.raisedSprite != null
+									&& nextTile.tileData.raisedSprite.name.equals( entity.raisedSprite.name ) )
+							{
+								sprite = entity.raisedSprite.topSprite;
+							}
+							else
+							{
+								sprite = entity.raisedSprite.frontSprite;
+							}
+						}
+
+						if ( entity.location != Direction.CENTER )
+						{
+							Direction dir = entity.location;
+							cx = cx + tileSize3 * ( dir.getX() * -1 + 1 );
+							cy = cy + tileSize3 * ( dir.getY() * -1 + 1 );
+							width = tileSize3;
+							height = tileSize3;
+						}
+
+						if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.MAXHP ) || entity.stacks.size > 0 )
+						{
+							hasStatus.add( entity );
+						}
+
+						if ( sprite.drawActualSize )
+						{
+							queueSprite( sprite, gtile.light, cx, cy, width, height, RenderLayer.RAISEDENTITY );
+						}
+						else
+						{
+							queueSprite( sprite, gtile.light, cx, cy, width, height, RenderLayer.RAISEDENTITY );
+						}
 
 						if ( entity.tile[0][0].visible && entity.popup != null )
 						{
@@ -476,40 +569,40 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 					}
 
-					batch.setColor( Color.WHITE );
-				}
-			}
-		}
-	}
+					if ( gtile.items.size > 0 )
+					{
+						int cx = x * Global.TileSize + offsetx;
+						int cy = y * Global.TileSize + offsety;
 
-	// ----------------------------------------------------------------------
-	private void renderEnvironmentEntities( int offsetx, int offsety, int tileSize3 )
-	{
-		if ( environmentEntities.size > 0 )
-		{
-			for ( EnvironmentEntity entity : environmentEntities )
-			{
-				int x = entity.tile[0][0].x;
-				int y = entity.tile[0][0].y;
+						if ( gtile.items.size == 1 )
+						{
+							queueSprite( gtile.items.get( 0 ).getIcon(), gtile.light, cx, cy, Global.TileSize, Global.TileSize, RenderLayer.ITEM );
+						}
+						else
+						{
+							queueSprite( bag, gtile.light, cx, cy, Global.TileSize, Global.TileSize, RenderLayer.ITEM );
 
-				int cx = x * Global.TileSize + offsetx;
-				int cy = y * Global.TileSize + offsety;
+							for ( Item item : gtile.items )
+							{
+								if ( item.getIcon().spriteAnimation != null )
+								{
+									queueSprite( item.getIcon(), gtile.light, cx, cy, Global.TileSize, Global.TileSize, RenderLayer.ITEM );
+								}
+							}
+						}
+					}
 
-				batch.setColor( entity.tile[0][0].light );
+					if ( gtile.essence > 0 && gtile.spriteEffects.size == 0 )
+					{
+						int cx = x * Global.TileSize + offsetx;
+						int cy = y * Global.TileSize + offsety;
 
-				if ( entity.location == Direction.CENTER )
-				{
-					entity.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
-				}
-				else
-				{
-					Direction dir = entity.location;
-					entity.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
-				}
+						float scale = 0.5f + 0.5f * ( MathUtils.clamp( gtile.essence, 10.0f, 1000.0f ) / 1000.0f );
 
-				if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.MAXHP ) || entity.stacks.size > 0 )
-				{
-					hasStatus.add( entity );
+						float size = Global.TileSize * scale;
+
+						queueSprite( orb, gtile.light, ( cx + Global.TileSize / 2 ) - size / 2, ( cy + Global.TileSize / 2 ) - size / 2, size, size, RenderLayer.ESSENCE );
+					}
 				}
 			}
 		}
@@ -530,7 +623,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				if ( !gtile.visible && stile.seen )
 				{
-					temp.set( stile.light );
+					temp.set( Global.CurrentLevel.Ambient );
+					temp.mul( temp.a );
 					if ( Global.CurrentLevel.affectedByDayNight )
 					{
 						temp.mul( Global.DayNightFactor );
@@ -631,7 +725,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				if ( !gtile.visible && stile.seen )
 				{
-					temp.set( stile.light );
+					temp.set( Global.CurrentLevel.Ambient );
+					temp.mul( temp.a );
 					if ( Global.CurrentLevel.affectedByDayNight )
 					{
 						temp.mul( Global.DayNightFactor );
@@ -654,13 +749,17 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 						if ( hist.location != Direction.CENTER )
 						{
-							Direction dir = hist.location;
-							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+							if ( hist.location == Direction.EAST || hist.location == Direction.WEST )
+							{
+								cx += -hist.location.getX() * ( Global.TileSize / 2 );
+							}
+							else if ( hist.location == Direction.SOUTH )
+							{
+								cy += Global.TileSize;
+							}
 						}
-						else
-						{
-							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
-						}
+
+						hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
 					}
 
 					if ( stile.entityHistory != null )
@@ -684,49 +783,53 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			}
 		}
 
-		batch.setColor( Color.WHITE );
-		batch.setShader( null );
-	}
-
-	// ----------------------------------------------------------------------
-	private void renderItems( int offsetx, int offsety )
-	{
 		for ( int x = 0; x < Global.CurrentLevel.width; x++ )
 		{
 			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
 			{
 				GameTile gtile = Global.CurrentLevel.Grid[x][y];
+				SeenTile stile = Global.CurrentLevel.SeenGrid[x][y];
 
-				if ( gtile.visible && gtile.items.size > 0 )
+				if ( !gtile.visible && stile.seen )
 				{
-					batch.setColor( gtile.light );
-
-					int cx = x * Global.TileSize + offsetx;
-					int cy = y * Global.TileSize + offsety;
-
-					if ( gtile.items.size == 0 )
+					temp.set( Global.CurrentLevel.Ambient );
+					temp.mul( temp.a );
+					if ( Global.CurrentLevel.affectedByDayNight )
 					{
-
+						temp.mul( Global.DayNightFactor );
 					}
-					else if ( gtile.items.size == 1 )
-					{
-						gtile.items.get( 0 ).getIcon().render( batch, cx, cy, Global.TileSize, Global.TileSize );
-					}
-					else
-					{
-						batch.draw( bag, cx, cy, Global.TileSize, Global.TileSize );
 
-						for ( Item item : gtile.items )
+					temp.a = 1;
+
+					if ( !temp.equals( col ) )
+					{
+						batch.setColor( temp );
+						col.set( temp );
+					}
+
+					SeenHistoryItem hist = stile.overhangHistory;
+
+					if ( hist != null )
+					{
+						int cx = x * Global.TileSize + offsetx;
+						int cy = y * Global.TileSize + offsety;
+
+						if ( hist.location != Direction.CENTER )
 						{
-							if ( item.getIcon().spriteAnimation != null )
-							{
-								item.getIcon().render( batch, cx, cy, Global.TileSize, Global.TileSize );
-							}
+							Direction dir = hist.location;
+							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
+						}
+						else
+						{
+							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[0], hist.sprite.baseScale[1], hist.animationState );
 						}
 					}
 				}
 			}
 		}
+
+		batch.setColor( Color.WHITE );
+		batch.setShader( null );
 	}
 
 	// ----------------------------------------------------------------------
@@ -734,86 +837,32 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		if ( !mouseOverUI && !Global.ANDROID )
 		{
+			Color colour = Color.GREEN;
+
 			if ( mousex < 0
 					|| mousex >= Global.CurrentLevel.width
 					|| mousey < 0
 					|| mousey >= Global.CurrentLevel.height
 					|| !Global.CurrentLevel.getSeenTile( mousex, mousey ).seen )
 			{
-				batch.setColor( Color.RED );
+				colour = Color.RED;
 			}
 			else
 			{
 				GameTile mouseTile = Global.CurrentLevel.getGameTile( mousex, mousey );
 				if ( mouseTile.tileData.passableBy.intersect( Global.CurrentLevel.player.getTravelType() ) )
 				{
-					batch.setColor( Color.GREEN );
+					colour = Color.GREEN;
 				}
 				else
 				{
-					batch.setColor( Color.RED );
+					colour = Color.RED;
 				}
 			}
 
 			border.update( delta );
-			border.render( batch, mousex * Global.TileSize + offsetx, mousey * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
-			batch.setColor( Color.WHITE );
-		}
-	}
 
-	// ----------------------------------------------------------------------
-	private void renderGameEntities( int offsetx, int offsety, int tileSize3 )
-	{
-		for ( GameEntity entity : toBeDrawn )
-		{
-			int x = entity.tile[0][0].x;
-			int y = entity.tile[0][0].y;
-
-			int cx = x * Global.TileSize + offsetx;
-			int cy = y * Global.TileSize + offsety;
-
-			batch.setColor( entity.tile[0][0].light );
-
-			entity.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
-
-			if ( entity.sprite.spriteAnimation != null )
-			{
-				int[] offset = entity.sprite.spriteAnimation.getRenderOffset();
-				cx += offset[0];
-				cy += offset[1];
-			}
-
-			hasStatus.add( entity );
-		}
-	}
-
-	// ----------------------------------------------------------------------
-	private void renderOverheadEntities( int offsetx, int offsety, int tileSize3 )
-	{
-		if ( overHeadEntities.size > 0 )
-		{
-			for ( EnvironmentEntity entity : overHeadEntities )
-			{
-				int cx = entity.tile[0][0].x * Global.TileSize + offsetx;
-				int cy = entity.tile[0][0].y * Global.TileSize + offsety;
-
-				batch.setColor( entity.tile[0][0].light );
-
-				if ( entity.location == Direction.CENTER )
-				{
-					entity.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
-				}
-				else
-				{
-					Direction dir = entity.location;
-					entity.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
-				}
-
-				if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.MAXHP ) || entity.stacks.size > 0 )
-				{
-					hasStatus.add( entity );
-				}
-			}
+			queueSprite( border, colour, mousex * Global.TileSize + offsetx, mousey * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.CURSOR );
 		}
 	}
 
@@ -852,7 +901,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{
 					if ( tile.visible )
 					{
-						aa.getSprite().render( batch, tile.x * Global.TileSize + offsetx, tile.y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
+						queueSprite( aa.getSprite(), Color.WHITE, tile.x * Global.TileSize + offsetx, tile.y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.ABILITY );
 					}
 				}
 			}
@@ -874,63 +923,17 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					{
 						if ( e.Corner == Direction.CENTER )
 						{
-							e.Sprite.render( batch, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
+							queueSprite( e.Sprite, Color.WHITE, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.EFFECT );
 						}
 						else
 						{
-							e.Sprite.render( batch, x * Global.TileSize + offsetx + tileSize3 * ( e.Corner.getX() * -1 + 1 ), y
+							queueSprite( e.Sprite, Color.WHITE, x * Global.TileSize + offsetx + tileSize3 * ( e.Corner.getX() * -1 + 1 ), y
 									* Global.TileSize
 									+ offsety
 									+ tileSize3
-									* ( e.Corner.getY() * -1 + 1 ), tileSize3, tileSize3 );
+									* ( e.Corner.getY() * -1 + 1 ), tileSize3, tileSize3, RenderLayer.EFFECT );
 						}
 					}
-				}
-			}
-		}
-	}
-
-	// ----------------------------------------------------------------------
-	private void renderFields( Array<Field> fields, int offsetx, int offsety )
-	{
-		if ( fields.size > 0 )
-		{
-			for ( Field field : fields )
-			{
-				int x = field.tile.x;
-				int y = field.tile.y;
-
-				int cx = x * Global.TileSize + offsetx;
-				int cy = y * Global.TileSize + offsety;
-
-				batch.setColor( field.tile.light );
-
-				field.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize );
-			}
-		}
-	}
-
-	// ----------------------------------------------------------------------
-	private void renderEssence( int offsetx, int offsety )
-	{
-		for ( int x = 0; x < Global.CurrentLevel.width; x++ )
-		{
-			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
-			{
-				GameTile gtile = Global.CurrentLevel.Grid[x][y];
-
-				if ( gtile.visible && gtile.essence > 0 && gtile.spriteEffects.size == 0 )
-				{
-					batch.setColor( gtile.light );
-
-					int cx = x * Global.TileSize + offsetx;
-					int cy = y * Global.TileSize + offsety;
-
-					float scale = 0.5f + 0.5f * ( MathUtils.clamp( gtile.essence, 10.0f, 1000.0f ) / 1000.0f );
-
-					float size = Global.TileSize * scale;
-
-					batch.draw( orb, ( cx + Global.TileSize / 2 ) - size / 2, ( cy + Global.TileSize / 2 ) - size / 2, size, size );
 				}
 			}
 		}
@@ -1067,6 +1070,47 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				voffset += layout.height + padding;
 			}
 		}
+	}
+
+	// ----------------------------------------------------------------------
+	private void queueSprite( Sprite sprite, Color colour, float x, float y, float width, float height, RenderLayer layer )
+	{
+		queueSprite( sprite, colour, x, y, width, height, layer, 0 );
+	}
+
+	// ----------------------------------------------------------------------
+	private void queueSprite( Sprite sprite, Color colour, float x, float y, float width, float height, RenderLayer layer, int index )
+	{
+		if ( sprite != null && sprite.spriteAnimation != null )
+		{
+			int[] offset = sprite.spriteAnimation.getRenderOffset();
+			x += offset[0];
+			y += offset[1];
+		}
+
+		queuedSprites.add( renderSpritePool.obtain().set( sprite, colour, x, y, width, height, layer, index ) );
+	}
+
+	// ----------------------------------------------------------------------
+	private void flush( Batch batch )
+	{
+		queuedSprites.sort();
+
+		Color col = batch.getColor();
+		for ( RenderSprite rs : queuedSprites )
+		{
+			temp.set( rs.colour );
+			if ( !temp.equals( col ) )
+			{
+				batch.setColor( temp );
+				col.set( temp );
+			}
+
+			rs.sprite.render( batch, (int) rs.x, (int) rs.y, (int) rs.width, (int) rs.height );
+		}
+
+		renderSpritePool.freeAll( queuedSprites );
+		queuedSprites.clear();
 	}
 
 	// ----------------------------------------------------------------------
@@ -1985,8 +2029,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private TextureRegion blank;
 	private TextureRegion white;
 	public InputMultiplexer inputMultiplexer;
-	private TextureRegion bag;
-	private TextureRegion orb;
+	private Sprite bag;
+	private Sprite orb;
 	private TextureRegion speechBubbleArrow;
 	private NinePatch speechBubbleBackground;
 	private Color tempColour = new Color();
@@ -1996,13 +2040,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public boolean mouseOverUI;
 
 	// ----------------------------------------------------------------------
-	private Array<GameEntity> toBeDrawn = new Array<GameEntity>();
-	private Array<EnvironmentEntity> environmentEntities = new Array<EnvironmentEntity>();
-	private Array<EnvironmentEntity> overHeadEntities = new Array<EnvironmentEntity>();
+	private Array<RenderSprite> queuedSprites = new Array<RenderSprite>();
 	private Array<Entity> hasStatus = new Array<Entity>();
-	private Array<Field> underFields = new Array<Field>();
-	private Array<Field> overFields = new Array<Field>();
 	private Array<Entity> entitiesWithSpeech = new Array<Entity>();
+
+	// ----------------------------------------------------------------------
+	private Pool<RenderSprite> renderSpritePool = Pools.get( RenderSprite.class );
 
 	// ----------------------------------------------------------------------
 	private Sprite border;
@@ -2016,8 +2059,71 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public ActiveAbility preparedAbility;
 	private Array<Point> abilityTiles;
 
+	// ----------------------------------------------------------------------
+	public enum RenderLayer
+	{
+		GROUNDTILE, GROUNDFIELD, GROUNDENTITY,
+
+		ITEM, ESSENCE, CURSOR,
+
+		RAISEDTILE, RAISEDENTITY,
+
+		EFFECT, ABILITY,
+
+		OVERHEADENTITY, OVERHEADFIELD, OVERHANG
+	}
+
 	// endregion Data
 	// ####################################################################//
+
+	public static class RenderSprite implements Comparable<RenderSprite>
+	{
+		public Sprite sprite;
+		public final Color colour = new Color();
+		public RenderLayer layer;
+		public float x;
+		public float y;
+		public float width;
+		public float height;
+		public int index;
+
+		public RenderSprite set( Sprite sprite, Color colour, float x, float y, float width, float height, RenderLayer layer, int index )
+		{
+			this.sprite = sprite;
+			this.colour.set( colour );
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.height = height;
+			this.layer = layer;
+			this.index = index;
+
+			return this;
+		}
+
+		@Override
+		public int compareTo( RenderSprite o )
+		{
+			int comp = Integer.compare( layer.ordinal(), o.layer.ordinal() );
+
+			if ( comp == 0 )
+			{
+				comp = Integer.compare( index, o.index );
+			}
+
+			if ( comp == 0 )
+			{
+				comp = Float.compare( o.y, y );
+			}
+
+			if ( comp == 0 )
+			{
+				comp = Float.compare( o.x, x );
+			}
+
+			return comp;
+		}
+	}
 
 	public static class GrayscaleShader
 	{

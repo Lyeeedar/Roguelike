@@ -372,47 +372,47 @@ public final class Item extends GameEventHandler
 		{
 			if ( type.equals( "sword" ) )
 			{
-				icon = AssetManager.loadSprite( "GUI/Sword" );
+				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/weapon_sword" );
 			}
 			else if ( type.equals( "spear" ) )
 			{
-				icon = AssetManager.loadSprite( "GUI/Spear" );
+				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/weapon_spear" );
 			}
 			else if ( type.equals( "axe" ) )
 			{
-				icon = AssetManager.loadSprite( "GUI/Axe" );
+				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/weapon_handaxe" );
 			}
 			else if ( type.equals( "bow" ) )
 			{
-				icon = AssetManager.loadSprite( "GUI/Bow" );
+				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/weapon_longbow" );
 			}
 			else if ( type.equals( "wand" ) )
 			{
-				icon = AssetManager.loadSprite( "GUI/Wand" );
+				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/weapon_staff_jeweled" );
 			}
 		}
 		else if ( slot == EquipmentSlot.OFFWEAPON )
 		{
 			if ( type.equals( "shield" ) )
 			{
-				icon = AssetManager.loadSprite( "GUI/Shield" );
+				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/shield_iron_buckler" );
 			}
 			else if ( type.equals( "torch" ) )
 			{
-				icon = AssetManager.loadSprite( "GUI/Torch" );
+				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/torch_lit" );
 			}
 		}
 		else if ( slot == EquipmentSlot.HEAD )
 		{
-			icon = AssetManager.loadSprite( "GUI/Head" );
+			icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/armor_chain_helm" );
 		}
 		else if ( slot == EquipmentSlot.BODY )
 		{
-			icon = AssetManager.loadSprite( "GUI/Body" );
+			icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/armor_chain_chest" );
 		}
 		else if ( slot == EquipmentSlot.LEGS )
 		{
-			icon = AssetManager.loadSprite( "GUI/Legs" );
+			icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/armor_chain_leg" );
 		}
 		else if ( category == ItemCategory.MATERIAL )
 		{

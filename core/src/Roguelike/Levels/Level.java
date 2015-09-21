@@ -282,7 +282,7 @@ public class Level
 	{
 		for ( int x = 0; x < width; x++ )
 		{
-			for ( int y = 0; y < height; y++ )
+			for ( int y = height - 1; y >= 0; y-- )
 			{
 				GameTile tile = Grid[x][y];
 				if ( tile.visible )
@@ -290,7 +290,11 @@ public class Level
 					SeenTile s = SeenGrid[x][y];
 					s.seen = true;
 
-					s.set( tile, player );
+					GameTile prevTile = getGameTile( x, y + 1 );
+					GameTile nextTile = getGameTile( x, y - 1 );
+					SeenTile prevSeenTile = getSeenTile( x, y + 1 );
+
+					s.set( tile, player, prevTile, nextTile, prevSeenTile );
 				}
 			}
 		}
@@ -645,12 +649,12 @@ public class Level
 			tile.spriteEffects.clear();
 		}
 
-		if ( tile.environmentEntity != null )
+		if ( tile.environmentEntity != null && tile.environmentEntity.sprite != null )
 		{
 			tile.environmentEntity.sprite.spriteAnimation = null;
 		}
 
-		if ( tile.entity != null )
+		if ( tile.entity != null && tile.entity.sprite != null )
 		{
 			tile.entity.sprite.spriteAnimation = null;
 		}
@@ -732,12 +736,12 @@ public class Level
 			}
 		}
 
-		if ( tile.environmentEntity != null && tile.environmentEntity.tile[0][0] == tile )
+		if ( tile.environmentEntity != null && tile.environmentEntity.tile[0][0] == tile && tile.environmentEntity.sprite != null )
 		{
 			tile.environmentEntity.sprite.update( delta );
 		}
 
-		if ( tile.entity != null && tile.entity.tile[0][0] == tile )
+		if ( tile.entity != null && tile.entity.tile[0][0] == tile && tile.entity.sprite != null )
 		{
 			tile.entity.sprite.update( delta );
 		}
@@ -1220,7 +1224,7 @@ public class Level
 
 		boolean activeEffects = false;
 
-		if ( e.sprite.spriteAnimation != null )
+		if ( e.sprite != null && e.sprite.spriteAnimation != null )
 		{
 			activeEffects = true;
 		}

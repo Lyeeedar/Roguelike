@@ -279,13 +279,39 @@ public final class Room
 	// ----------------------------------------------------------------------
 	private boolean isPosEnclosed( int x, int y )
 	{
-		boolean top = x + 1 >= width || !roomContents[x + 1][y].isPassable( GeneratorPassability );
-		boolean bottom = x - 1 < 0 || !roomContents[x - 1][y].isPassable( GeneratorPassability );
-		boolean left = y - 1 < 0 || !roomContents[x][y - 1].isPassable( GeneratorPassability );
-		boolean right = y + 1 >= height || !roomContents[x][y + 1].isPassable( GeneratorPassability );
+		EnumBitflag<Direction> solid = new EnumBitflag<Direction>();
+		for ( Direction dir : Direction.values() )
+		{
+			int x1 = x + dir.getX();
+			int y1 = y + dir.getY();
 
-		if ( top && bottom ) { return true; }
-		if ( left && right ) { return true; }
+			boolean collide = x1 < 0 || y1 < 0 || x1 == width || y1 == height || !roomContents[x1][y1].isPassable( GeneratorPassability );
+
+			if ( collide )
+			{
+				solid.setBit( dir );
+			}
+		}
+
+		// Identify open paths through this pos
+
+		// Vertical path
+		if ( !solid.contains( Direction.NORTH ) && !solid.contains( Direction.SOUTH ) )
+		{
+			boolean side1 = solid.contains( Direction.EAST ) || solid.contains( Direction.NORTHEAST ) || solid.contains( Direction.SOUTHEAST );
+			boolean side2 = solid.contains( Direction.WEST ) || solid.contains( Direction.NORTHWEST ) || solid.contains( Direction.SOUTHWEST );
+
+			if ( side1 && side2 ) { return true; }
+		}
+
+		// Horizontal path
+		if ( !solid.contains( Direction.EAST ) && !solid.contains( Direction.WEST ) )
+		{
+			boolean side1 = solid.contains( Direction.NORTH ) || solid.contains( Direction.NORTHEAST ) || solid.contains( Direction.NORTHWEST );
+			boolean side2 = solid.contains( Direction.SOUTH ) || solid.contains( Direction.SOUTHEAST ) || solid.contains( Direction.SOUTHWEST );
+
+			if ( side1 && side2 ) { return true; }
+		}
 
 		return false;
 	}
@@ -608,6 +634,7 @@ public final class Room
 			double difficulty = spawnList.size > 0 ? Math.log( spawnList.size ) : 0;
 			difficulty /= 2;
 			difficulty = Math.pow( difficulty, 2 );
+			difficulty = Math.max( 1, difficulty );
 
 			// place mobs
 			Array<Creature> creatures = faction.getCreatures( ran, (float) difficulty, influence );
