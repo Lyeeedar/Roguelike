@@ -81,6 +81,8 @@ public class ClassList extends TilePanel
 	{
 		this.tileData.clear();
 		tileData.addAll( classes );
+
+		dataHeight = tileData.size;
 	}
 
 	@Override
@@ -103,7 +105,7 @@ public class ClassList extends TilePanel
 
 		Table table = new Table();
 
-		table.add( new Label( desc.name, skin ) ).expandX().left();
+		table.add( new Label( desc.name, skin, "title" ) ).expandX().left();
 		table.row();
 
 		Label descLabel = new Label( desc.description, skin );
@@ -117,7 +119,7 @@ public class ClassList extends TilePanel
 	@Override
 	public Color getColourForData( Object data )
 	{
-		return data == chosen ? Color.GREEN : null;
+		return data == chosen ? Color.GREEN : Color.WHITE;
 	}
 
 	@Override

@@ -26,13 +26,25 @@ import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.UI.MessageStack.Line;
 import Roguelike.UI.MessageStack.Message;
+import Roguelike.UI.Tooltip.TooltipStyle;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -994,5 +1006,64 @@ public class Global
 	public static String capitalizeString( String s )
 	{
 		return s.substring( 0, 1 ).toUpperCase() + s.substring( 1 ).toLowerCase();
+	}
+
+	// ----------------------------------------------------------------------
+	public static Skin loadSkin()
+	{
+		Skin skin = new Skin();
+
+		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12, new Color( 0.97f, 0.87f, 0.7f, 1 ), 1, Color.BLACK, false );
+		skin.add( "default", font );
+
+		BitmapFont titlefont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 20, new Color( 1f, 0.9f, 0.8f, 1 ), 1, Color.BLACK, true );
+		skin.add( "title", titlefont );
+
+		Pixmap pixmap = new Pixmap( 1, 1, Format.RGBA8888 );
+		pixmap.setColor( Color.WHITE );
+		pixmap.fill();
+		skin.add( "white", new Texture( pixmap ) );
+
+		TextFieldStyle textField = new TextFieldStyle();
+		textField.fontColor = Color.WHITE;
+		textField.font = skin.getFont( "default" );
+		textField.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TextField.png" ), 6, 6, 6, 6 ) );
+		textField.cursor = skin.newDrawable( "white", Color.WHITE );
+		textField.selection = skin.newDrawable( "white", Color.LIGHT_GRAY );
+		skin.add( "default", textField );
+
+		LabelStyle label = new LabelStyle();
+		label.font = skin.getFont( "default" );
+		skin.add( "default", label );
+
+		LabelStyle titleLabel = new LabelStyle();
+		titleLabel.font = skin.getFont( "title" );
+		skin.add( "title", titleLabel );
+
+		CheckBoxStyle checkButton = new CheckBoxStyle();
+		checkButton.checkboxOff = new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/Unchecked.png" ) );
+		checkButton.checkboxOn = new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/Checked.png" ) );
+		checkButton.font = skin.getFont( "default" );
+		skin.add( "default", checkButton );
+
+		TextButtonStyle textButton = new TextButtonStyle();
+		textButton.up = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) );
+		textButton.font = skin.getFont( "default" );
+		textButton.fontColor = Color.LIGHT_GRAY;
+		textButton.overFontColor = Color.WHITE;
+		skin.add( "default", textButton );
+
+		TextButtonStyle bigTextButton = new TextButtonStyle();
+		bigTextButton.up = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) );
+		bigTextButton.font = skin.getFont( "title" );
+		bigTextButton.fontColor = Color.LIGHT_GRAY;
+		bigTextButton.overFontColor = Color.WHITE;
+		skin.add( "big", bigTextButton );
+
+		TooltipStyle toolTip = new TooltipStyle();
+		toolTip.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Tooltip.png" ), 21, 21, 21, 21 ) );
+		skin.add( "default", toolTip );
+
+		return skin;
 	}
 }

@@ -38,19 +38,12 @@ public class AbilityPoolPanel extends Table
 
 	private int selectedAbilityLine = 0;
 
-	// ----------------------------------------------------------------------
-	private BitmapFont contextMenuNormalFont;
-	private BitmapFont contextMenuHilightFont;
-
 	private AbilityLineList abilityLine;
 	private AbilityList abilityList;
 
 	public AbilityPoolPanel( Skin skin, Stage stage )
 	{
 		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 8 );
-
-		contextMenuNormalFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
-		contextMenuHilightFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 14 );
 
 		this.white = AssetManager.loadTextureRegion( "Sprites/white.png" );
 		this.locked = AssetManager.loadSprite( "GUI/locked" );
@@ -181,7 +174,7 @@ public class AbilityPoolPanel extends Table
 							+ a.cost
 							+ " essence?\nYou have "
 							+ Global.CurrentLevel.player.essence
-							+ " essence.", contextMenuNormalFont, contextMenuHilightFont );
+							+ " essence.", 12, 200 );
 					button.changePadding( 5, 5 );
 					table.add( button ).width( Value.percentWidth( 1, table ) ).pad( 2 );
 
@@ -240,7 +233,7 @@ public class AbilityPoolPanel extends Table
 							text += "  " + equipped.getName();
 						}
 
-						HoverTextButton button = new HoverTextButton( text, contextMenuNormalFont, contextMenuHilightFont );
+						HoverTextButton button = new HoverTextButton( text, 12, 200 );
 						button.changePadding( 5, 5 );
 						row.add( button ).expand().fill();
 
@@ -279,7 +272,7 @@ public class AbilityPoolPanel extends Table
 							text += "  " + equipped.getName();
 						}
 
-						HoverTextButton button = new HoverTextButton( text, contextMenuNormalFont, contextMenuHilightFont );
+						HoverTextButton button = new HoverTextButton( text, 12, 200 );
 						button.changePadding( 5, 5 );
 						row.add( button ).expand().fill();
 

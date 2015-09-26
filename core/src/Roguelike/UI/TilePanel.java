@@ -1,10 +1,12 @@
 package Roguelike.UI;
 
+import Roguelike.AssetManager;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
@@ -24,6 +26,9 @@ public abstract class TilePanel extends Widget
 
 	protected int tileSize;
 
+	protected int targetWidth;
+	protected int targetHeight;
+
 	protected int viewWidth;
 	protected int viewHeight;
 
@@ -36,6 +41,8 @@ public abstract class TilePanel extends Widget
 	protected final Skin skin;
 	protected final Stage stage;
 	protected Tooltip tooltip;
+
+	protected NinePatch tilePanelBackground;
 
 	protected Sprite tileBackground;
 	protected Sprite tileBorder;
@@ -51,10 +58,14 @@ public abstract class TilePanel extends Widget
 		this.stage = stage;
 		this.tileBackground = tileBackground;
 		this.tileBorder = tileBorder;
+		this.targetWidth = viewWidth;
+		this.targetHeight = viewHeight;
 		this.viewWidth = viewWidth;
 		this.viewHeight = viewHeight;
 		this.tileSize = tileSize;
 		this.expandVertically = expandVertically;
+
+		this.tilePanelBackground = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TilePanel.png" ), 12, 12, 12, 12 );
 
 		TilePanelListener listener = new TilePanelListener();
 
@@ -95,15 +106,15 @@ public abstract class TilePanel extends Widget
 	}
 
 	@Override
-	public float getPrefWidth()
+	public float getMinWidth()
 	{
-		return tileSize * viewWidth;
+		return tileSize * targetWidth + 20;
 	}
 
 	@Override
-	public float getPrefHeight()
+	public float getMinHeight()
 	{
-		return tileSize * viewHeight;
+		return tileSize * targetHeight + 20;
 	}
 
 	private void validateScroll()
@@ -121,8 +132,10 @@ public abstract class TilePanel extends Widget
 		populateTileData();
 		validateScroll();
 
-		int xOffset = (int) getX();
-		int top = (int) ( getY() + getHeight() ) - tileSize;
+		tilePanelBackground.draw( batch, getX(), getY(), getWidth(), getHeight() );
+
+		int xOffset = (int) getX() + 10;
+		int top = (int) ( getY() - 10 + getHeight() ) - tileSize;
 
 		int x = 0;
 		int y = 0;
@@ -181,7 +194,8 @@ public abstract class TilePanel extends Widget
 			batch.setColor( itemColour );
 			if ( tileBorder != null )
 			{
-				tileBorder.render( batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
+				// tileBorder.render( batch, x * tileSize + xOffset, top - y *
+				// tileSize, tileSize, tileSize );
 			}
 			onDrawItemForeground( item, batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
 
@@ -211,7 +225,7 @@ public abstract class TilePanel extends Widget
 
 		private Object pointToItem( float x, float y )
 		{
-			if ( x < 0 || y < 0 || x > getPrefWidth() || y > getHeight() ) { return null; }
+			if ( x < 0 || y < 0 || x > getWidth() || y > getHeight() ) { return null; }
 
 			y = getHeight() - y;
 

@@ -2,77 +2,98 @@ package Roguelike.Screens;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
-import Roguelike.Ability.AbilityPool.AbilityLine;
 import Roguelike.Items.Item;
 import Roguelike.Sprite.Sprite;
 import Roguelike.UI.ClassList;
 import Roguelike.UI.ClassList.ClassDesc;
-import Roguelike.UI.HoverTextButton;
-import Roguelike.UI.HoverTextButton.HorizontalAlignment;
-import Roguelike.UI.SpriteWidget;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class CharacterCreationScreen implements Screen
 {
 	private void create()
 	{
-		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 14 );
-
-		normalFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 30 );
-		highlightFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 35 );
-
-		skin = new Skin();
-		skin.addRegions( new TextureAtlas( Gdx.files.internal( "GUI/uiskin.atlas" ) ) );
-		skin.add( "default-font", font, BitmapFont.class );
-		skin.load( Gdx.files.internal( "GUI/uiskin.json" ) );
+		skin = Global.loadSkin();
 
 		stage = new Stage( new ScreenViewport() );
 		batch = new SpriteBatch();
 
 		this.tileBackground = AssetManager.loadSprite( "GUI/TileBackground" );
-		this.tileBorder = AssetManager.loadSprite( "GUI/TileBorder" );
+		// tileBackground.colour = Color.GREEN;
+		// this.tileBorder = AssetManager.loadSprite( "GUI/TileBorder" );
+
+		background = AssetManager.loadTexture( "Sprites/GUI/Background.png" );
 
 		createUI();
 	}
 
 	private void createUI()
 	{
+		NinePatch background = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TilePanel.png" ), 12, 12, 12, 12 );
+
 		classList = new ClassList( skin, stage, tileBackground, tileBorder );
-		textArea = new TextArea( "Jeff", skin );
+		name = new TextField( "Jeff", skin );
 
 		Table table = new Table();
 		// table.debug();
 
-		table.add( classList ).left().expandY().fillY().pad( 20 );
-
-		Table rightTable = new Table();
-		table.add( rightTable ).expand().fill();
+		Table optionsTable = new Table();
+		optionsTable.background( new NinePatchDrawable( background ) );
 
 		Table nameTable = new Table();
 
-		nameTable.add( new Label( "Name:", skin ) );
-		nameTable.add( textArea );
+		nameTable.add( new Label( "Name", skin ) );
+		nameTable.row();
+		nameTable.add( name );
 
-		rightTable.add( nameTable ).padTop( 50 ).padBottom( 20 ).expandX().left();
-		rightTable.row();
+		male = new CheckBox( "Male", skin );
+		female = new CheckBox( "Female", skin );
 
-		HoverTextButton ngbutton = new HoverTextButton( "New Game", normalFont, highlightFont );
-		ngbutton.halign = HorizontalAlignment.RIGHT;
+		ButtonGroup<Button> group = new ButtonGroup<Button>();
+		group.add( male, female );
+		male.setChecked( true );
+
+		Table genderTable = new Table();
+		genderTable.add( new Label( "Gender", skin ) );
+		genderTable.row();
+
+		genderTable.add( male );
+		genderTable.add( female );
+
+		optionsTable.add( nameTable );
+		optionsTable.add( genderTable );
+
+		Table classTable = new Table();
+		classTable.defaults().uniformY();
+
+		classTable.debug();
+		selectedClass = new Table();
+		selectedClass.background( new NinePatchDrawable( background ) );
+
+		classTable.add( classList ).left().fillY().expandY();
+		classTable.add( selectedClass );
+
+		TextButton ngbutton = new TextButton( "New Game", skin, "big" );
 		ngbutton.addListener( new InputListener()
 		{
 			@Override
@@ -84,18 +105,20 @@ public class CharacterCreationScreen implements Screen
 			@Override
 			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 			{
-				Global.PlayerName = textArea.getText();
+				Global.PlayerName = name.getText();
 				Global.PlayerTitle = classList.chosen.name;
 				Global.newGame( classList.chosen.entity, classList.chosen.lines );
 			}
 		} );
 
-		selectedClass = new Table();
-		rightTable.add( selectedClass ).expand().fill();
-		rightTable.row();
+		table.add( optionsTable ).pad( 20 ).expandX().fillX();
+		table.row();
 
-		rightTable.add( ngbutton ).expandX().fillX().padTop( 20 ).padBottom( 50 ).center();
-		rightTable.row();
+		table.add( classTable ).left().expandX().fillX().height( Value.percentHeight( 0.6f, table ) );
+		table.row();
+
+		table.add( ngbutton ).expandX().width( 200 ).padTop( 20 ).right();
+		table.row();
 
 		table.setFillParent( true );
 		stage.addActor( table );
@@ -140,7 +163,7 @@ public class CharacterCreationScreen implements Screen
 		selectedClass.clearChildren();
 
 		if ( lastSelected == null ) { return; }
-		selectedClass.add( new Label( lastSelected.name, skin ) ).expandX().left().top();
+		selectedClass.add( new Label( lastSelected.name, skin, "title" ) ).expandX().left().top();
 		selectedClass.row();
 
 		Label descLabel = new Label( lastSelected.description, skin );
@@ -148,18 +171,15 @@ public class CharacterCreationScreen implements Screen
 		selectedClass.add( descLabel ).expandX().left().top();
 		selectedClass.row();
 
-		Table lineTable = new Table();
-		lineTable.add( new Label( "Ability Lines: ", skin ) );
+		selectedClass.add( new Label( "Ability Lines: ", skin ) ).expandX().left().top();
+		selectedClass.row();
 
 		String[] lines = lastSelected.lines.split( "," );
 		for ( String line : lines )
 		{
-			SpriteWidget sprite = new SpriteWidget( AbilityLine.getSprite( line + "/" + line ), 32, 32 );
-			lineTable.add( sprite ).pad( 10 );
+			selectedClass.add( new Label( line, skin ) ).expandX().left().padLeft( 30 ).top();
+			selectedClass.row();
 		}
-
-		selectedClass.add( lineTable ).expandX().left().top();
-		selectedClass.row();
 
 		selectedClass.add( new Label( "Starting Inventory:", skin ) ).expandX().left().top();
 		selectedClass.row();
@@ -182,13 +202,13 @@ public class CharacterCreationScreen implements Screen
 
 		stage.act();
 
-		Gdx.gl.glClearColor( 0, 0, 0, 1 );
+		Gdx.gl.glClearColor( 0.3f, 0.3f, 0.3f, 1 );
 		Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 
 		batch.begin();
 
-		// batch.draw(background, 0, 0, Global.Resolution[0],
-		// Global.Resolution[1]);
+		// batch.draw( background, 0, 0, Global.Resolution[0],
+		// Global.Resolution[1] );
 
 		batch.end();
 
@@ -294,9 +314,11 @@ public class CharacterCreationScreen implements Screen
 
 	SpriteBatch batch;
 
-	TextArea textArea;
-	BitmapFont normalFont;
-	BitmapFont highlightFont;
+	TextField name;
+	CheckBox male;
+	CheckBox female;
+
+	Texture background;
 
 	private Sprite tileBackground;
 	private Sprite tileBorder;

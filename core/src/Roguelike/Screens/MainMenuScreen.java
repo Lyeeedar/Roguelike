@@ -4,23 +4,19 @@ import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
-import Roguelike.UI.HoverTextButton;
-import Roguelike.UI.HoverTextButton.HorizontalAlignment;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -32,15 +28,7 @@ public class MainMenuScreen implements Screen
 
 	private void create()
 	{
-		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 50 );
-		titleFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 45 );
-		normalFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 25 );
-		highlightFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 30 );
-
-		skin = new Skin();
-		skin.addRegions( new TextureAtlas( Gdx.files.internal( "GUI/uiskin.atlas" ) ) );
-		skin.add( "default-font", font, BitmapFont.class );
-		skin.load( Gdx.files.internal( "GUI/uiskin.json" ) );
+		skin = Global.loadSkin();
 
 		stage = new Stage( new ScreenViewport() );
 		batch = new SpriteBatch();
@@ -55,15 +43,14 @@ public class MainMenuScreen implements Screen
 		Table table = new Table();
 		// table.debug();
 
-		Label title = new Label( "Chronicles of Aether", skin );
-		title.getStyle().font = titleFont;
-		table.add( title ).expandY().top().padTop( 100 );
-		table.row();
+		// Label title = new Label( "Chronicles of Aether", skin );
+		// table.add( title ).expandY().top().padTop( 100 );
+		// table.row();
 
 		Table buttonTable = new Table();
+		buttonTable.defaults().width( 200 ).pad( 5 );
 
-		HoverTextButton cbutton = new HoverTextButton( "Continue", normalFont, highlightFont );
-		cbutton.halign = HorizontalAlignment.RIGHT;
+		TextButton cbutton = new TextButton( "Continue", skin, "big" );
 		cbutton.addListener( new InputListener()
 		{
 			@Override
@@ -81,8 +68,7 @@ public class MainMenuScreen implements Screen
 		buttonTable.add( cbutton ).expandX().fillX();
 		buttonTable.row();
 
-		HoverTextButton ngbutton = new HoverTextButton( "New Game", normalFont, highlightFont );
-		ngbutton.halign = HorizontalAlignment.RIGHT;
+		TextButton ngbutton = new TextButton( "New Game", skin, "big" );
 		ngbutton.addListener( new InputListener()
 		{
 			@Override
@@ -100,8 +86,7 @@ public class MainMenuScreen implements Screen
 		buttonTable.add( ngbutton ).expandX().fillX();
 		buttonTable.row();
 
-		HoverTextButton obutton = new HoverTextButton( "Options", normalFont, highlightFont );
-		obutton.halign = HorizontalAlignment.RIGHT;
+		TextButton obutton = new TextButton( "Options", skin, "big" );
 		obutton.addListener( new InputListener()
 		{
 			@Override
@@ -120,8 +105,7 @@ public class MainMenuScreen implements Screen
 		buttonTable.add( obutton ).expandX().fillX();
 		buttonTable.row();
 
-		HoverTextButton qbutton = new HoverTextButton( "Quit", normalFont, highlightFont );
-		qbutton.halign = HorizontalAlignment.RIGHT;
+		TextButton qbutton = new TextButton( "Quit", skin, "big" );
 		qbutton.addListener( new InputListener()
 		{
 			@Override
@@ -139,7 +123,7 @@ public class MainMenuScreen implements Screen
 		buttonTable.add( qbutton ).expandX().fillX();
 		buttonTable.row();
 
-		table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expandX().right().padRight( 50 ).expandY().top();
+		table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expand().padRight( 50 ).padBottom( 50 ).bottom().right();
 
 		table.setFillParent( true );
 		stage.addActor( table );
@@ -174,12 +158,13 @@ public class MainMenuScreen implements Screen
 	{
 		stage.act();
 
-		Gdx.gl.glClearColor( 0, 0, 0, 1 );
+		Gdx.gl.glClearColor( 0.3f, 0.3f, 0.3f, 1 );
 		Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 
 		batch.begin();
 
-		batch.draw( background, 0, 0, Global.Resolution[0], Global.Resolution[1] );
+		// batch.draw( background, 0, 0, Global.Resolution[0],
+		// Global.Resolution[1] );
 
 		batch.end();
 
@@ -275,10 +260,6 @@ public class MainMenuScreen implements Screen
 	Skin skin;
 
 	SpriteBatch batch;
-
-	BitmapFont titleFont;
-	BitmapFont normalFont;
-	BitmapFont highlightFont;
 
 	Texture background;
 }

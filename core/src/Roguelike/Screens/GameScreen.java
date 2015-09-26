@@ -91,8 +91,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		batch = new SpriteBatch();
 
 		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
-		contextMenuNormalFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
-		contextMenuHilightFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 14 );
 
 		blank = AssetManager.loadTextureRegion( "Sprites/blank.png" );
 		white = AssetManager.loadTextureRegion( "Sprites/white.png" );
@@ -259,6 +257,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		entitiesWithSpeech.clear();
 
 		renderBackground( offsetx, offsety );
+		renderSeenTiles( offsetx, offsety, tileSize3 );
+
 		renderVisibleTiles( offsetx, offsety, tileSize3 );
 		if ( Global.CurrentDialogue == null )
 		{
@@ -269,7 +269,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		flush( batch );
 
-		renderSeenTiles( offsetx, offsety, tileSize3 );
 		renderStatus( offsetx, offsety );
 
 		if ( Global.CurrentDialogue == null )
@@ -283,16 +282,24 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 			}
 
-			if ( Global.ANDROID )
-			{
-				EntityStatusRenderer.draw( Global.CurrentLevel.player, batch, Global.Resolution[0] - ( Global.Resolution[0] / 4 ) - 120, Global.Resolution[1] - 120, Global.Resolution[0] / 4, 100, 1.0f / 4.0f );
-			}
-			else
-			{
-				font.draw( batch, Global.PlayerName + " the " + Global.PlayerTitle, 20, Global.Resolution[1] - 20 );
-				font.draw( batch, "Essence: " + Global.CurrentLevel.player.essence, 20, Global.Resolution[1] - 40 );
-				EntityStatusRenderer.draw( Global.CurrentLevel.player, batch, 20, Global.Resolution[1] - 160, Global.Resolution[0] / 4, 100, 1.0f / 4.0f );
-			}
+			// if ( Global.ANDROID )
+			// {
+			// EntityStatusRenderer.draw( Global.CurrentLevel.player, batch,
+			// Global.Resolution[0] - ( Global.Resolution[0] / 4 ) - 120,
+			// Global.Resolution[1] - 120, Global.Resolution[0] / 4, 100, 1.0f /
+			// 4.0f );
+			// }
+			// else
+			// {
+			// font.draw( batch, Global.PlayerName + " the " +
+			// Global.PlayerTitle, 20, Global.Resolution[1] - 20 );
+			// font.draw( batch, "Essence: " +
+			// Global.CurrentLevel.player.essence, 20, Global.Resolution[1] - 40
+			// );
+			// EntityStatusRenderer.draw( Global.CurrentLevel.player, batch, 20,
+			// Global.Resolution[1] - 160, Global.Resolution[0] / 4, 100, 1.0f /
+			// 4.0f );
+			// }
 
 			batch.end();
 
@@ -1857,7 +1864,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 					Table row = new Table();
 
-					HoverTextButton button = new HoverTextButton( aa.name, contextMenuNormalFont, contextMenuHilightFont );
+					HoverTextButton button = new HoverTextButton( aa.name, 12, 200 );
 					button.changePadding( 5, 5 );
 					row.add( button ).expand().fill();
 
@@ -1899,7 +1906,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				row.add( new SpriteWidget( aa.Icon, 32, 32 ) );
 
-				HoverTextButton button = new HoverTextButton( aa.getName(), contextMenuNormalFont, contextMenuHilightFont );
+				HoverTextButton button = new HoverTextButton( aa.getName(), 12, 200 );
 				button.changePadding( 5, 5 );
 				row.add( button ).expand().fill();
 
@@ -1935,7 +1942,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			Table row = new Table();
 
-			HoverTextButton button = new HoverTextButton( "Rest a while", contextMenuNormalFont, contextMenuHilightFont );
+			HoverTextButton button = new HoverTextButton( "Rest a while", 12, 200 );
 			button.changePadding( 5, 5 );
 			row.add( button ).expand().fill();
 
@@ -2001,10 +2008,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private BitmapFont font;
 	private final GlyphLayout layout = new GlyphLayout();
 	private final Color temp = new Color();
-
-	// ----------------------------------------------------------------------
-	private BitmapFont contextMenuNormalFont;
-	private BitmapFont contextMenuHilightFont;
 
 	// ----------------------------------------------------------------------
 	public DragDropPayload dragDropPayload;

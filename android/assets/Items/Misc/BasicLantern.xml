@@ -3,7 +3,7 @@
 	<Name>Basic Lantern</Name>
 	<Description>A normal lantern</Description>
 	<Icon>
-		<Name>GUI/Lantern</Name>
+		<Name>Oryx/Custom/items/lantern</Name>
 	</Icon>
 	<Slot>Lantern</Slot>
 	<Category>Misc</Category>

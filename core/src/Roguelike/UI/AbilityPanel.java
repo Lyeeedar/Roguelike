@@ -26,9 +26,6 @@ public class AbilityPanel extends TilePanel
 	private BitmapFont font;
 	private TextureRegion white;
 
-	private BitmapFont contextMenuNormalFont;
-	private BitmapFont contextMenuHilightFont;
-
 	private final GlyphLayout layout = new GlyphLayout();
 
 	public AbilityPanel( Skin skin, Stage stage )
@@ -36,8 +33,6 @@ public class AbilityPanel extends TilePanel
 		super( skin, stage, AssetManager.loadSprite( "GUI/TileBackground" ), AssetManager.loadSprite( "GUI/TileBorder" ), Global.NUM_ABILITY_SLOTS, 2, 32, false );
 
 		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
-		contextMenuNormalFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
-		contextMenuHilightFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 14 );
 
 		this.white = AssetManager.loadTextureRegion( "Sprites/white.png" );
 	}
@@ -75,7 +70,7 @@ public class AbilityPanel extends TilePanel
 			{
 				Table table = new Table();
 
-				HoverTextButton button = new HoverTextButton( "Clear ability slot?", contextMenuNormalFont, contextMenuHilightFont );
+				HoverTextButton button = new HoverTextButton( "Clear ability slot?", 12, 200 );
 				button.changePadding( 5, 5 );
 				table.add( button ).width( Value.percentWidth( 1, table ) ).pad( 2 );
 

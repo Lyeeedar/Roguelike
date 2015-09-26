@@ -38,7 +38,11 @@ public class AdjacentSpreadStyle extends AbstractSpreadStyle
 				GameTile tile = field.tile.level.getGameTile( field.tile.x + dir.getX(), field.tile.y + dir.getY() );
 
 				boolean check = false;
-				if ( tile.entity != null )
+				if ( tile == null )
+				{
+
+				}
+				else if ( tile.entity != null )
 				{
 					check = true;
 				}
@@ -49,25 +53,25 @@ public class AdjacentSpreadStyle extends AbstractSpreadStyle
 				else if ( tile.fields.size > 0 && spreadTags.length > 0 )
 				{
 					outer:
-					for ( FieldLayer layer : FieldLayer.values() )
-					{
-						Field otherfield = tile.fields.get( layer );
-
-						if ( otherfield != null )
+						for ( FieldLayer layer : FieldLayer.values() )
 						{
-							for ( String spreadTag : spreadTags )
+							Field otherfield = tile.fields.get( layer );
+
+							if ( otherfield != null )
 							{
-								for ( String tag : otherfield.tags )
+								for ( String spreadTag : spreadTags )
 								{
-									if ( spreadTag.equals( tag ) )
+									for ( String tag : otherfield.tags )
 									{
-										check = true;
-										break outer;
+										if ( spreadTag.equals( tag ) )
+										{
+											check = true;
+											break outer;
+										}
 									}
 								}
 							}
 						}
-					}
 				}
 
 				if ( check && tile.tileData.passableBy.intersect( travelType ) )

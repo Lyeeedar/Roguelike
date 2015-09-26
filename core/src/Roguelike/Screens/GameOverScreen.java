@@ -19,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
@@ -34,9 +33,6 @@ public class GameOverScreen implements Screen
 	private void create()
 	{
 		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 20 );
-		titleFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 30 );
-		normalFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 20 );
-		highlightFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 25 );
 
 		skin = new Skin();
 		skin.addRegions( new TextureAtlas( Gdx.files.internal( "GUI/uiskin.atlas" ) ) );
@@ -58,9 +54,6 @@ public class GameOverScreen implements Screen
 
 		Label title = new Label( "Game Over", skin );
 
-		LabelStyle style = new LabelStyle();
-		style.font = titleFont;
-		title.setStyle( style );
 		table.add( title ).expandY().top().padTop( 100 );
 		table.row();
 
@@ -70,7 +63,7 @@ public class GameOverScreen implements Screen
 
 		Table buttonTable = new Table();
 
-		HoverTextButton mmbutton = new HoverTextButton( "Main Menu", normalFont, highlightFont );
+		HoverTextButton mmbutton = new HoverTextButton( "Main Menu", 20, 100 );
 		mmbutton.halign = HorizontalAlignment.RIGHT;
 		mmbutton.addListener( new InputListener()
 		{
@@ -228,10 +221,6 @@ public class GameOverScreen implements Screen
 	Skin skin;
 
 	SpriteBatch batch;
-
-	BitmapFont titleFont;
-	BitmapFont normalFont;
-	BitmapFont highlightFont;
 
 	Texture background;
 

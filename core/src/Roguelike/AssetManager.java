@@ -33,16 +33,36 @@ public class AssetManager
 
 	public static BitmapFont loadFont( String name, int size )
 	{
-		String key = name + size;
+		return loadFont( name, size, Color.WHITE, 1, Color.BLACK, false );
+	}
+
+	public static BitmapFont loadFont( String name, int size, Color colour, int borderWidth, Color borderColour, boolean shadow )
+	{
+		String key = name + size + colour.toString() + borderWidth + borderColour.toString();
 
 		if ( loadedFonts.containsKey( key ) ) { return loadedFonts.get( key ); }
+
+		if ( packer == null )
+		{
+			setupPacker();
+		}
 
 		FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator( Gdx.files.internal( name ) );
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = size;
-		parameter.borderWidth = 1;
+		parameter.borderWidth = borderWidth;
 		parameter.kerning = true;
-		parameter.borderColor = Color.BLACK;
+		parameter.borderColor = borderColour;
+		parameter.borderStraight = true;
+		parameter.packer = packer;
+		parameter.color = colour;
+
+		if ( shadow )
+		{
+			parameter.shadowOffsetX = -1;
+			parameter.shadowOffsetY = 1;
+		}
+
 		BitmapFont font = fgenerator.generateFont( parameter );
 		font.getData().markupEnabled = true;
 		fgenerator.dispose(); // don't forget to dispose to avoid memory leaks!
