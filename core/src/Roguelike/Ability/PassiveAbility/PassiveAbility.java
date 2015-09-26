@@ -34,7 +34,7 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 	{
 		Table table = new Table();
 
-		table.add( new Label( Name, skin ) ).expandX().left();
+		table.add( new Label( Name, skin, "title" ) ).expandX().left();
 		table.row();
 
 		Label descLabel = new Label( Description, skin );

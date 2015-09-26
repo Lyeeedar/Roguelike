@@ -1,6 +1,5 @@
 package Roguelike.Screens;
 
-import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
@@ -16,12 +15,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class LoadingScreen implements Screen
@@ -36,21 +35,22 @@ public class LoadingScreen implements Screen
 
 	private void create()
 	{
-		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 60 );
-		titleFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 55 );
-		normalFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 30 );
-		highlightFont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 35 );
-
-		skin = new Skin();
-		skin.addRegions( new TextureAtlas( Gdx.files.internal( "GUI/uiskin.atlas" ) ) );
-		skin.add( "default-font", font, BitmapFont.class );
-		skin.load( Gdx.files.internal( "GUI/uiskin.json" ) );
+		skin = Global.loadSkin();
 
 		stage = new Stage( new ScreenViewport() );
 		batch = new SpriteBatch();
 
-		background = AssetManager.loadTexture( "Sprites/GUI/Title.png" );
-		white = AssetManager.loadTexture( "Sprites/white.png" );
+		Table table = new Table();
+
+		label = new Label( "Loading", skin, "title" );
+		progressBar = new ProgressBar( 0, 100, 1, false, skin );
+
+		table.add( progressBar ).expand().fillX().bottom().pad( 20 );
+		table.row();
+		table.add( label ).expand().top().pad( 20 );
+
+		table.setFillParent( true );
+		stage.addActor( table );
 	}
 
 	@Override
@@ -87,18 +87,13 @@ public class LoadingScreen implements Screen
 			generationString = "Executing Events";
 		}
 
+		label.setText( generationString );
+		progressBar.setValue( percent );
+
 		stage.act();
 
-		Gdx.gl.glClearColor( 0, 0, 0, 1 );
+		Gdx.gl.glClearColor( 0.3f, 0.3f, 0.3f, 1 );
 		Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
-
-		batch.begin();
-
-		batch.draw( background, 0, 0, Global.Resolution[0], Global.Resolution[1] );
-		batch.draw( white, 0, Global.Resolution[1] / 2 - 20, Global.Resolution[0] * ( percent / 100.0f ), 40 );
-		normalFont.draw( batch, generationString, Global.Resolution[0] / 2, Global.Resolution[1] / 2 );
-
-		batch.end();
 
 		stage.draw();
 
@@ -270,12 +265,8 @@ public class LoadingScreen implements Screen
 
 	SpriteBatch batch;
 
-	BitmapFont titleFont;
-	BitmapFont normalFont;
-	BitmapFont highlightFont;
-
-	Texture background;
-	Texture white;
+	Label label;
+	ProgressBar progressBar;
 
 	boolean doCreate = false;
 	boolean complete;

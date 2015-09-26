@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -46,6 +47,9 @@ public class MainMenuScreen implements Screen
 		// Label title = new Label( "Chronicles of Aether", skin );
 		// table.add( title ).expandY().top().padTop( 100 );
 		// table.row();
+		Image image = new Image( AssetManager.loadTextureRegion( "Sprites/GUI/Title.png" ) );
+		table.add( image ).expandX().center().top().pad( 20 ).width( 500 );
+		table.row();
 
 		Table buttonTable = new Table();
 		buttonTable.defaults().width( 200 ).pad( 5 );
@@ -123,7 +127,7 @@ public class MainMenuScreen implements Screen
 		buttonTable.add( qbutton ).expandX().fillX();
 		buttonTable.row();
 
-		table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expand().padRight( 50 ).padBottom( 50 ).bottom().right();
+		table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expand().pad( 20 ).bottom().right();
 
 		table.setFillParent( true );
 		stage.addActor( table );

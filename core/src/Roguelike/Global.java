@@ -40,6 +40,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
@@ -1063,6 +1064,11 @@ public class Global
 		TooltipStyle toolTip = new TooltipStyle();
 		toolTip.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Tooltip.png" ), 21, 21, 21, 21 ) );
 		skin.add( "default", toolTip );
+
+		ProgressBarStyle progressBar = new ProgressBarStyle();
+		progressBar.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TextField.png" ), 6, 6, 6, 6 ) );
+		progressBar.knobBefore = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ProgressIndicator.png" ), 8, 8, 8, 8 ) );
+		skin.add( "default-horizontal", progressBar );
 
 		return skin;
 	}

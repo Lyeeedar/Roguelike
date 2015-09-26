@@ -28,7 +28,7 @@ public class InventoryPanel extends Table
 	private final Stage stage;
 
 	private final Sprite tileBackground;
-	private final Sprite tileBorder;
+	private Sprite tileBorder;
 
 	private final Sprite buttonUp;
 	private final Sprite buttonDown;
@@ -46,10 +46,10 @@ public class InventoryPanel extends Table
 		this.stage = stage;
 
 		this.tileBackground = AssetManager.loadSprite( "GUI/TileBackground" );
-		this.tileBorder = AssetManager.loadSprite( "GUI/TileBorder" );
+		// this.tileBorder = AssetManager.loadSprite( "GUI/TileBorder" );
 
-		this.buttonUp = AssetManager.loadSprite( "GUI/ButtonUp" );
-		this.buttonDown = AssetManager.loadSprite( "GUI/ButtonDown" );
+		this.buttonUp = AssetManager.loadSprite( "GUI/Button" );
+		this.buttonDown = AssetManager.loadSprite( "GUI/Button" );
 
 		header = new HeaderLine( skin, stage, buttonUp, tileBorder, TileSize );
 		body = new InventoryBody( skin, stage, tileBackground, tileBorder, 32 );

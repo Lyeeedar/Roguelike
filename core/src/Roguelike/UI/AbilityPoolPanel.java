@@ -29,7 +29,7 @@ public class AbilityPoolPanel extends Table
 	private final Sprite locked;
 
 	private final Sprite tileBackground;
-	private final Sprite tileBorder;
+	private Sprite tileBorder;
 
 	private final Sprite buttonUp;
 
@@ -49,9 +49,9 @@ public class AbilityPoolPanel extends Table
 		this.locked = AssetManager.loadSprite( "GUI/locked" );
 
 		this.tileBackground = AssetManager.loadSprite( "GUI/TileBackground" );
-		this.tileBorder = AssetManager.loadSprite( "GUI/TileBorder" );
+		// this.tileBorder = AssetManager.loadSprite( "GUI/TileBorder" );
 
-		this.buttonUp = AssetManager.loadSprite( "GUI/ButtonUp" );
+		this.buttonUp = AssetManager.loadSprite( "GUI/Button" );
 
 		abilityLine = new AbilityLineList( skin, stage, buttonUp, tileBorder, 32 );
 		abilityList = new AbilityList( skin, stage, tileBackground, tileBorder, 32 );

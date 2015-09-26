@@ -192,7 +192,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	{
 		Table table = new Table();
 
-		table.add( new Label( name, skin ) ).expandX().left();
+		table.add( new Label( name, skin, "title" ) ).expandX().left();
 		table.row();
 
 		Label descLabel = new Label( description, skin );

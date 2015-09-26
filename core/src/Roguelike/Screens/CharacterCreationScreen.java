@@ -25,7 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -58,6 +57,7 @@ public class CharacterCreationScreen implements Screen
 		// table.debug();
 
 		Table optionsTable = new Table();
+		optionsTable.defaults().space( 20 );
 		optionsTable.background( new NinePatchDrawable( background ) );
 
 		Table nameTable = new Table();
@@ -74,7 +74,7 @@ public class CharacterCreationScreen implements Screen
 		male.setChecked( true );
 
 		Table genderTable = new Table();
-		genderTable.add( new Label( "Gender", skin ) );
+		genderTable.add( new Label( "Gender", skin ) ).colspan( 2 );
 		genderTable.row();
 
 		genderTable.add( male );
@@ -84,14 +84,14 @@ public class CharacterCreationScreen implements Screen
 		optionsTable.add( genderTable );
 
 		Table classTable = new Table();
-		classTable.defaults().uniformY();
+		classTable.defaults().uniformY().space( 10 );
 
-		classTable.debug();
+		// classTable.debug();
 		selectedClass = new Table();
 		selectedClass.background( new NinePatchDrawable( background ) );
 
 		classTable.add( classList ).left().fillY().expandY();
-		classTable.add( selectedClass );
+		classTable.add( selectedClass ).fill().expand();
 
 		TextButton ngbutton = new TextButton( "New Game", skin, "big" );
 		ngbutton.addListener( new InputListener()
@@ -111,13 +111,13 @@ public class CharacterCreationScreen implements Screen
 			}
 		} );
 
-		table.add( optionsTable ).pad( 20 ).expandX().fillX();
+		table.add( optionsTable ).pad( 10 ).expandX().fillX();
 		table.row();
 
-		table.add( classTable ).left().expandX().fillX().height( Value.percentHeight( 0.6f, table ) );
+		table.add( classTable ).pad( 10 ).expand().fill();
 		table.row();
 
-		table.add( ngbutton ).expandX().width( 200 ).padTop( 20 ).right();
+		table.add( ngbutton ).expandX().width( 200 ).pad( 10 ).right();
 		table.row();
 
 		table.setFillParent( true );

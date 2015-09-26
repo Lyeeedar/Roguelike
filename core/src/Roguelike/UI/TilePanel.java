@@ -132,6 +132,7 @@ public abstract class TilePanel extends Widget
 		populateTileData();
 		validateScroll();
 
+		batch.setColor( Color.WHITE );
 		tilePanelBackground.draw( batch, getX(), getY(), getWidth(), getHeight() );
 
 		int xOffset = (int) getX() + 10;

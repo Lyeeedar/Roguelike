@@ -27,7 +27,6 @@ import Roguelike.UI.AbilityPoolPanel;
 import Roguelike.UI.DragDropPayload;
 import Roguelike.UI.EntityStatusRenderer;
 import Roguelike.UI.HPWidget;
-import Roguelike.UI.HoverTextButton;
 import Roguelike.UI.InventoryPanel;
 import Roguelike.UI.MessageStack;
 import Roguelike.UI.MessageStack.Line;
@@ -50,7 +49,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.input.GestureDetector;
@@ -66,6 +64,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Align;
@@ -118,10 +117,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private void LoadUI()
 	{
-		skin = new Skin();
-		skin.addRegions( new TextureAtlas( Gdx.files.internal( "GUI/uiskin.atlas" ) ) );
-		skin.add( "default-font", font, BitmapFont.class );
-		skin.load( Gdx.files.internal( "GUI/uiskin.json" ) );
+		skin = Global.loadSkin();
 
 		Global.skin = skin;
 
@@ -139,7 +135,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		tabPane = new TabPanel();
 
 		TabPanel.Tab tab = tabPane.addTab( AssetManager.loadSprite( "blank" ), blankTab );
-		tabPane.addTab( AssetManager.loadSprite( "GUI/Inventory" ), inventoryPanel );
+		tabPane.addTab( AssetManager.loadSprite( "GUI/All" ), inventoryPanel );
 		tabPane.addTab( AssetManager.loadSprite( "GUI/Abilities" ), abilityPoolPanel );
 
 		tabPane.selectTab( tab );
@@ -271,6 +267,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		renderStatus( offsetx, offsety );
 
+		renderSpeechBubbles( offsetx, offsety, delta );
+
 		if ( Global.CurrentDialogue == null )
 		{
 			if ( preparedAbility != null )
@@ -308,8 +306,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 			batch.begin();
 		}
-
-		renderSpeechBubbles( offsetx, offsety, delta );
 
 		if ( dragDropPayload != null && dragDropPayload.shouldDraw() )
 		{
@@ -1864,8 +1860,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 					Table row = new Table();
 
-					HoverTextButton button = new HoverTextButton( aa.name, 12, 200 );
-					button.changePadding( 5, 5 );
+					TextButton button = new TextButton( aa.name, skin );
 					row.add( button ).expand().fill();
 
 					row.addListener( new InputListener()
@@ -1906,8 +1901,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				row.add( new SpriteWidget( aa.Icon, 32, 32 ) );
 
-				HoverTextButton button = new HoverTextButton( aa.getName(), 12, 200 );
-				button.changePadding( 5, 5 );
+				TextButton button = new TextButton( aa.getName(), skin );
 				row.add( button ).expand().fill();
 
 				row.addListener( new InputListener()
@@ -1942,8 +1936,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			Table row = new Table();
 
-			HoverTextButton button = new HoverTextButton( "Rest a while", 12, 200 );
-			button.changePadding( 5, 5 );
+			TextButton button = new TextButton( "Rest a while", skin );
 			row.add( button ).expand().fill();
 
 			row.addListener( new InputListener()
