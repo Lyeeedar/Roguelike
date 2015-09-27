@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 
 public class AbilityPanel extends TilePanel
@@ -30,7 +31,7 @@ public class AbilityPanel extends TilePanel
 
 	public AbilityPanel( Skin skin, Stage stage )
 	{
-		super( skin, stage, AssetManager.loadSprite( "GUI/TileBackground" ), null, Global.NUM_ABILITY_SLOTS, 2, 32, false );
+		super( skin, stage, AssetManager.loadSprite( "GUI/TileBackground" ), AssetManager.loadSprite( "GUI/TileBorder" ), Global.NUM_ABILITY_SLOTS, 2, 32, false );
 
 		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
 
@@ -70,8 +71,7 @@ public class AbilityPanel extends TilePanel
 			{
 				Table table = new Table();
 
-				HoverTextButton button = new HoverTextButton( "Clear ability slot?", 12, 200 );
-				button.changePadding( 5, 5 );
+				TextButton button = new TextButton( "Clear ability slot?", skin );
 				table.add( button ).width( Value.percentWidth( 1, table ) ).pad( 2 );
 
 				table.addListener( new InputListener()

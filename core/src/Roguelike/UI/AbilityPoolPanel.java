@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 
 public class AbilityPoolPanel extends Table
@@ -29,7 +30,9 @@ public class AbilityPoolPanel extends Table
 	private final Sprite locked;
 
 	private final Sprite tileBackground;
-	private Sprite tileBorder;
+	private final Sprite tileBorder;
+
+	private final Sprite buttonBorder;
 
 	private final Sprite buttonUp;
 
@@ -49,9 +52,10 @@ public class AbilityPoolPanel extends Table
 		this.locked = AssetManager.loadSprite( "GUI/locked" );
 
 		this.tileBackground = AssetManager.loadSprite( "GUI/TileBackground" );
-		// this.tileBorder = AssetManager.loadSprite( "GUI/TileBorder" );
+		this.tileBorder = AssetManager.loadSprite( "GUI/TileBorder" );
 
 		this.buttonUp = AssetManager.loadSprite( "GUI/Button" );
+		this.buttonBorder = AssetManager.loadSprite( "GUI/ButtonBorder" );
 
 		abilityLine = new AbilityLineList( skin, stage, buttonUp, tileBorder, 32 );
 		abilityList = new AbilityList( skin, stage, tileBackground, tileBorder, 32 );
@@ -97,7 +101,7 @@ public class AbilityPoolPanel extends Table
 		public Table getToolTipForData( Object data )
 		{
 			Table table = new Table();
-			table.add( new Label( ( (AbilityLine) data ).name, skin ) ).width( Value.percentWidth( 1, table ) );
+			table.add( new Label( ( (AbilityLine) data ).name, skin, "title" ) ).width( Value.percentWidth( 1, table ) );
 
 			return table;
 		}
@@ -124,6 +128,7 @@ public class AbilityPoolPanel extends Table
 		@Override
 		public void onDrawItemForeground( Object data, Batch batch, int x, int y, int width, int height )
 		{
+			buttonBorder.render( batch, x, y, width, height );
 		}
 
 	}
@@ -170,12 +175,7 @@ public class AbilityPoolPanel extends Table
 			{
 				if ( Global.CurrentLevel.player.essence >= a.cost )
 				{
-					HoverTextButton button = new HoverTextButton( "Unlock for "
-							+ a.cost
-							+ " essence?\nYou have "
-							+ Global.CurrentLevel.player.essence
-							+ " essence.", 12, 200 );
-					button.changePadding( 5, 5 );
+					TextButton button = new TextButton( "Unlock for " + a.cost + " essence?\nYou have " + Global.CurrentLevel.player.essence + " essence.", skin );
 					table.add( button ).width( Value.percentWidth( 1, table ) ).pad( 2 );
 
 					table.addListener( new InputListener()
@@ -233,8 +233,7 @@ public class AbilityPoolPanel extends Table
 							text += "  " + equipped.getName();
 						}
 
-						HoverTextButton button = new HoverTextButton( text, 12, 200 );
-						button.changePadding( 5, 5 );
+						TextButton button = new TextButton( text, skin );
 						row.add( button ).expand().fill();
 
 						row.addListener( new InputListener()
@@ -272,8 +271,7 @@ public class AbilityPoolPanel extends Table
 							text += "  " + equipped.getName();
 						}
 
-						HoverTextButton button = new HoverTextButton( text, 12, 200 );
-						button.changePadding( 5, 5 );
+						TextButton button = new TextButton( text, skin );
 						row.add( button ).expand().fill();
 
 						row.addListener( new InputListener()

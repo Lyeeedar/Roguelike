@@ -4,8 +4,6 @@ import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
-import Roguelike.UI.HoverTextButton;
-import Roguelike.UI.HoverTextButton.HorizontalAlignment;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -14,13 +12,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -34,10 +32,7 @@ public class GameOverScreen implements Screen
 	{
 		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 20 );
 
-		skin = new Skin();
-		skin.addRegions( new TextureAtlas( Gdx.files.internal( "GUI/uiskin.atlas" ) ) );
-		skin.add( "default-font", font, BitmapFont.class );
-		skin.load( Gdx.files.internal( "GUI/uiskin.json" ) );
+		skin = Global.loadSkin();
 
 		stage = new Stage( new ScreenViewport() );
 		batch = new SpriteBatch();
@@ -63,8 +58,7 @@ public class GameOverScreen implements Screen
 
 		Table buttonTable = new Table();
 
-		HoverTextButton mmbutton = new HoverTextButton( "Main Menu", 20, 100 );
-		mmbutton.halign = HorizontalAlignment.RIGHT;
+		TextButton mmbutton = new TextButton( "Main Menu", skin );
 		mmbutton.addListener( new InputListener()
 		{
 			@Override

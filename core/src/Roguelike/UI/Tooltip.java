@@ -59,24 +59,24 @@ public class Tooltip extends Table
 
 		// Fit within stage
 
-		if ( tmp.x < 0 )
+		if ( tmp.x < 5 )
 		{
-			tmp.x = 0;
+			tmp.x = 5;
 		}
 
-		if ( tmp.x + getWidth() > getStage().getWidth() )
+		if ( tmp.x + getWidth() > getStage().getWidth() - 5 )
 		{
-			tmp.x = getStage().getWidth() - getWidth();
+			tmp.x = getStage().getWidth() - getWidth() - 5;
 		}
 
-		if ( tmp.y < 0 )
+		if ( tmp.y < 5 )
 		{
-			tmp.y = 0;
+			tmp.y = 5;
 		}
 
-		if ( tmp.y + getHeight() > getStage().getHeight() )
+		if ( tmp.y + getHeight() > getStage().getHeight() - 5 )
 		{
-			tmp.y = getStage().getHeight() - getHeight();
+			tmp.y = getStage().getHeight() - getHeight() - 5;
 		}
 
 		setPosition( tmp.x, tmp.y );

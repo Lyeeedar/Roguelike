@@ -101,7 +101,7 @@ public abstract class TilePanel extends Widget
 
 		if ( expandVertically )
 		{
-			viewHeight = (int) ( getHeight() / tileSize );
+			viewHeight = (int) ( ( getHeight() - 20 ) / tileSize );
 		}
 	}
 
@@ -132,8 +132,10 @@ public abstract class TilePanel extends Widget
 		populateTileData();
 		validateScroll();
 
+		int height = viewHeight * tileSize + 20;
+
 		batch.setColor( Color.WHITE );
-		tilePanelBackground.draw( batch, getX(), getY(), getWidth(), getHeight() );
+		tilePanelBackground.draw( batch, getX(), getY() + getHeight() - height, viewWidth * tileSize + 20, height );
 
 		int xOffset = (int) getX() + 10;
 		int top = (int) ( getY() - 10 + getHeight() ) - tileSize;
@@ -150,10 +152,11 @@ public abstract class TilePanel extends Widget
 				{
 					tileBackground.render( batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
 				}
-				if ( tileBorder != null )
-				{
-					tileBorder.render( batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
-				}
+				// if ( tileBorder != null )
+				// {
+				// tileBorder.render( batch, x * tileSize + xOffset, top - y *
+				// tileSize, tileSize, tileSize );
+				// }
 			}
 		}
 
@@ -193,10 +196,9 @@ public abstract class TilePanel extends Widget
 			onDrawItem( item, batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
 
 			batch.setColor( itemColour );
-			if ( tileBorder != null )
+			if ( tileBorder != null && item != null )
 			{
-				// tileBorder.render( batch, x * tileSize + xOffset, top - y *
-				// tileSize, tileSize, tileSize );
+				tileBorder.render( batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
 			}
 			onDrawItemForeground( item, batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
 
@@ -226,12 +228,12 @@ public abstract class TilePanel extends Widget
 
 		private Object pointToItem( float x, float y )
 		{
-			if ( x < 0 || y < 0 || x > getWidth() || y > getHeight() ) { return null; }
+			if ( x < 10 || y < 10 || x > getWidth() - 10 || y > getHeight() - 10 ) { return null; }
 
 			y = getHeight() - y;
 
-			int xIndex = (int) ( x / tileSize );
-			int yIndex = (int) ( y / tileSize );
+			int xIndex = (int) ( ( x - 10 ) / tileSize );
+			int yIndex = (int) ( ( y - 10 ) / tileSize );
 
 			if ( xIndex >= viewWidth || yIndex >= viewHeight ) { return null; }
 
@@ -245,7 +247,7 @@ public abstract class TilePanel extends Widget
 
 		private boolean getMouseOverUI( float x, float y )
 		{
-			if ( x < 0 || y < 0 || x > getWidth() || y > getHeight() )
+			if ( x < 10 || y < 10 || x > getWidth() - 10 || y > getHeight() - 10 )
 			{
 				return false;
 			}
@@ -253,8 +255,8 @@ public abstract class TilePanel extends Widget
 			{
 				y = getHeight() - y;
 
-				int xIndex = (int) ( x / tileSize );
-				int yIndex = (int) ( y / tileSize );
+				int xIndex = (int) ( ( x - 10 ) / tileSize );
+				int yIndex = (int) ( ( y - 10 ) / tileSize );
 
 				if ( xIndex < viewWidth && yIndex < viewHeight )
 				{

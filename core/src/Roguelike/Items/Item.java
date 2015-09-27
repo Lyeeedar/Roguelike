@@ -29,7 +29,7 @@ public final class Item extends GameEventHandler
 {
 	/*
 	 * IDEAS:
-	 *
+	 * 
 	 * Unlock extra power after condition (absorb x essence, kill x enemy)
 	 */
 
@@ -160,7 +160,7 @@ public final class Item extends GameEventHandler
 	{
 		Table table = new Table();
 
-		table.add( new Label( name, skin ) ).expandX().left();
+		table.add( new Label( name, skin, "title" ) ).expandX().left();
 
 		table.row();
 
@@ -184,7 +184,7 @@ public final class Item extends GameEventHandler
 	{
 		Table table = new Table();
 
-		table.add( new Label( name, skin ) ).expandX().left();
+		table.add( new Label( name, skin, "title" ) ).expandX().left();
 
 		{
 			Label label = new Label( type, skin );

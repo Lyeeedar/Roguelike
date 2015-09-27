@@ -32,6 +32,7 @@ public class InventoryPanel extends Table
 
 	private final Sprite buttonUp;
 	private final Sprite buttonDown;
+	private final Sprite buttonBorder;
 
 	private ItemCategory selectedFilter = ItemCategory.ALL;
 
@@ -46,14 +47,15 @@ public class InventoryPanel extends Table
 		this.stage = stage;
 
 		this.tileBackground = AssetManager.loadSprite( "GUI/TileBackground" );
-		// this.tileBorder = AssetManager.loadSprite( "GUI/TileBorder" );
+		this.tileBorder = AssetManager.loadSprite( "GUI/TileBorder" );
 
 		this.buttonUp = AssetManager.loadSprite( "GUI/Button" );
-		this.buttonDown = AssetManager.loadSprite( "GUI/Button" );
+		this.buttonDown = AssetManager.loadSprite( "GUI/ButtonDown" );
+		this.buttonBorder = AssetManager.loadSprite( "GUI/ButtonBorder" );
 
 		header = new HeaderLine( skin, stage, buttonUp, tileBorder, TileSize );
 		body = new InventoryBody( skin, stage, tileBackground, tileBorder, 32 );
-		floor = new FloorLine( skin, stage, tileBackground, null, 32 );
+		floor = new FloorLine( skin, stage, tileBackground, tileBorder, 32 );
 
 		add( header ).width( Value.percentWidth( 1, this ) );
 		row();
@@ -108,7 +110,7 @@ public class InventoryPanel extends Table
 		public Table getToolTipForData( Object data )
 		{
 			Table table = new Table();
-			table.add( new Label( data.toString(), skin ) ).width( Value.percentWidth( 1, table ) );
+			table.add( new Label( data.toString(), skin, "title" ) ).width( Value.percentWidth( 1, table ) );
 
 			return table;
 		}
@@ -134,6 +136,7 @@ public class InventoryPanel extends Table
 		@Override
 		public void onDrawItemForeground( Object data, Batch batch, int x, int y, int width, int height )
 		{
+			buttonBorder.render( batch, x, y, width, height );
 		}
 
 	}

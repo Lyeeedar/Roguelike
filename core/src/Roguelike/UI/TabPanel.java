@@ -21,11 +21,13 @@ public class TabPanel extends Widget
 
 	private final Sprite buttonUp;
 	private final Sprite buttonDown;
+	private final Sprite buttonBorder;
 
 	public TabPanel()
 	{
 		this.buttonUp = AssetManager.loadSprite( "GUI/Button" );
-		this.buttonDown = AssetManager.loadSprite( "GUI/Button" );
+		this.buttonDown = AssetManager.loadSprite( "GUI/ButtonDown" );
+		this.buttonBorder = AssetManager.loadSprite( "GUI/ButtonBorder" );
 		addListener( new TabPanelListener() );
 	}
 
@@ -64,6 +66,9 @@ public class TabPanel extends Widget
 			}
 
 			tab.header.render( batch, (int) xoffset, (int) ( y + yoffset ), tabHeaderSize, tabHeaderSize );
+
+			buttonBorder.render( batch, (int) xoffset, (int) ( y + yoffset ), tabHeaderSize, tabHeaderSize );
+
 			y -= tabHeaderSize;
 		}
 	}

@@ -153,10 +153,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void relayoutUI()
 	{
-		abilityPanel.setX( stage.getWidth() - abilityPanel.getPrefWidth() - 20 );
+		abilityPanel.setX( stage.getWidth() - abilityPanel.getMinWidth() - 20 );
 		abilityPanel.setY( 20 );
-		abilityPanel.setWidth( abilityPanel.getPrefWidth() );
-		abilityPanel.setHeight( abilityPanel.getPrefHeight() );
+		abilityPanel.setWidth( abilityPanel.getMinWidth() );
+		abilityPanel.setHeight( abilityPanel.getMinHeight() );
 
 		if ( Global.ANDROID )
 		{
