@@ -42,7 +42,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -402,15 +401,15 @@ public class ActiveAbility implements IAbility, IGameObject
 					AffectedTiles.add( tile );
 				}
 
-				Pools.freeAll( output );
+				Global.PointPool.freeAll( output );
 			}
 			else if ( cone > 0 )
 			{
 				Direction dir = Direction.getDirection( source, epicenter );
 
-				Point epicenterPoint = Pools.obtain( Point.class ).set( epicenter.x, epicenter.y );
+				Point epicenterPoint = Global.PointPool.obtain().set( epicenter.x, epicenter.y );
 				Array<Point> cone = Direction.buildCone( dir, epicenterPoint, this.cone );
-				Pools.free( epicenterPoint );
+				Global.PointPool.free( epicenterPoint );
 
 				Array<Point> output = new Array<Point>();
 
@@ -439,7 +438,7 @@ public class ActiveAbility implements IAbility, IGameObject
 					}
 				}
 
-				Pools.freeAll( output );
+				Global.PointPool.freeAll( output );
 			}
 
 			// minimise list

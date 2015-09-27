@@ -3,6 +3,7 @@ package Roguelike.Sound;
 import java.util.HashSet;
 
 import Roguelike.AssetManager;
+import Roguelike.Global;
 import Roguelike.Global.Passability;
 import Roguelike.Pathfinding.AStarPathfind;
 import Roguelike.Tiles.GameTile;
@@ -12,7 +13,6 @@ import Roguelike.Util.EnumBitflag;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class SoundInstance
@@ -63,7 +63,7 @@ public class SoundInstance
 	{
 		// calculate data propogation
 		float playerDist = Integer.MAX_VALUE;
-		Point shoutSource = Pools.obtain( Point.class ).set( tile.x, tile.y );
+		Point shoutSource = Global.PointPool.obtain().set( tile.x, tile.y );
 
 		int maxAudibleDist = range;// ( range / 4 ) * 3;
 
@@ -100,7 +100,7 @@ public class SoundInstance
 
 							if ( path != null )
 							{
-								Pools.freeAll( path );
+								Global.PointPool.freeAll( path );
 							}
 						}
 
@@ -116,7 +116,7 @@ public class SoundInstance
 
 							if ( path != null )
 							{
-								Pools.freeAll( path );
+								Global.PointPool.freeAll( path );
 							}
 						}
 					}
@@ -131,7 +131,7 @@ public class SoundInstance
 			if ( path != null )
 			{
 				playerDist = path.size;
-				Pools.freeAll( path );
+				Global.PointPool.freeAll( path );
 			}
 		}
 

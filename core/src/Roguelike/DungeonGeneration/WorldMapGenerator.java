@@ -2,13 +2,13 @@ package Roguelike.DungeonGeneration;
 
 import java.util.Random;
 
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.DungeonGeneration.RoomGenerators.MidpointDisplacement;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 
 public class WorldMapGenerator extends AbstractDungeonGenerator
 {
@@ -123,16 +123,16 @@ public class WorldMapGenerator extends AbstractDungeonGenerator
 		int y = 0;
 
 		outer:
-		for ( x = 0; x < width; x++ )
-		{
-			for ( y = 0; y < height; y++ )
+			for ( x = 0; x < width; x++ )
 			{
-				if ( grid[x][y] >= 1 )
+				for ( y = 0; y < height; y++ )
 				{
-					break outer;
+					if ( grid[x][y] >= 1 )
+					{
+						break outer;
+					}
 				}
 			}
-		}
 
 		Array<int[]> toBeProcessed = new Array<int[]>();
 		toBeProcessed.add( new int[] { x, y } );
@@ -206,7 +206,7 @@ public class WorldMapGenerator extends AbstractDungeonGenerator
 				{
 					if ( grid[x][y] == tile )
 					{
-						validTiles.add( Pools.obtain( Point.class ).set( x, y ) );
+						validTiles.add( Global.PointPool.obtain().set( x, y ) );
 					}
 				}
 			}
@@ -222,7 +222,7 @@ public class WorldMapGenerator extends AbstractDungeonGenerator
 				}
 			}
 
-			Pools.freeAll( validTiles );
+			Global.PointPool.freeAll( validTiles );
 
 			placedRooms.add( room );
 		}

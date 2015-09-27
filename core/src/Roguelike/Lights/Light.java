@@ -1,10 +1,10 @@
 package Roguelike.Lights;
 
+import Roguelike.Global;
 import Roguelike.Pathfinding.ShadowCastCache;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public final class Light
@@ -59,7 +59,7 @@ public final class Light
 
 	public Light copy()
 	{
-		Light l = Pools.obtain( Light.class );
+		Light l = Global.LightPool.obtain();
 		l.colour = new Color( colour );
 		l.baseIntensity = baseIntensity;
 		l.copied = true;

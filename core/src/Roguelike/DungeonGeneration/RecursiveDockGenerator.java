@@ -25,7 +25,6 @@ import Roguelike.Util.ImageUtils;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 
 public class RecursiveDockGenerator extends AbstractDungeonGenerator
 {
@@ -427,7 +426,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					}
 				}
 				else
-					// if ( testRoom.roomData.orientation == Orientation.FIXED )
+				// if ( testRoom.roomData.orientation == Orientation.FIXED )
 				{
 					fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
 				}
@@ -678,14 +677,14 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			tris.add( tri );
 		}
 		tris.sort( new Comparator<Triangle>()
-		{
+				{
 
 			@Override
 			public int compare( Triangle arg0, Triangle arg1 )
 			{
 				return arg0.compareTo( arg1 );
 			}
-		} );
+				} );
 
 		for ( Triangle tri : tris )
 		{
@@ -701,32 +700,32 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			int closestDist = Integer.MAX_VALUE;
 			boolean found = false;
 			outer:
-			for ( Pnt[] path : paths )
-			{
-				for ( Pnt p : path )
+				for ( Pnt[] path : paths )
 				{
-					if ( p == null )
+					for ( Pnt p : path )
 					{
-						break;
-					}
+						if ( p == null )
+						{
+							break;
+						}
 
-					int px = (int) p.coord( 0 );
-					int py = (int) p.coord( 1 );
+						int px = (int) p.coord( 0 );
+						int py = (int) p.coord( 1 );
 
-					if ( rx == px && ry == py )
-					{
-						found = true;
-						break outer;
-					}
+						if ( rx == px && ry == py )
+						{
+							found = true;
+							break outer;
+						}
 
-					int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
-					if ( tempDist < closestDist )
-					{
-						closestDist = tempDist;
-						closest = p;
+						int tempDist = Math.max( Math.abs( px - rx ), Math.abs( py - ry ) );
+						if ( tempDist < closestDist )
+						{
+							closestDist = tempDist;
+							closest = p;
+						}
 					}
 				}
-			}
 
 			if ( !found )
 			{
@@ -751,7 +750,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 			carveCorridor( path );
 
-			Pools.freeAll( path );
+			Global.PointPool.freeAll( path );
 		}
 	}
 

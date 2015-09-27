@@ -13,13 +13,13 @@ package Roguelike.Pathfinding;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 
+import Roguelike.Global;
 import Roguelike.Global.Passability;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 
 public class ShadowCaster
 {
@@ -152,9 +152,9 @@ public class ShadowCaster
 		Boolean wasLastCellOpaque = null;
 		for ( int y = topY; y >= bottomY; y-- )
 		{
-			Point temp = Pools.obtain( Point.class );
+			Point temp = Global.PointPool.obtain();
 			Point translated = TranslateOctant( temp.set( x, y ), octant );
-			Pools.free( temp );
+			Global.PointPool.free( temp );
 
 			boolean inRadius = IsInRadius( translated.x, translated.y );
 			if ( inRadius )
@@ -163,7 +163,7 @@ public class ShadowCaster
 
 				if ( !allowOutOfBounds && ( translated.x < 0 || translated.y < 0 || translated.x >= grid.length || translated.y >= grid[0].length ) )
 				{
-					Pools.free( translated );
+					Global.PointPool.free( translated );
 					continue;
 				}
 
@@ -175,12 +175,12 @@ public class ShadowCaster
 				}
 				else
 				{
-					Pools.free( translated );
+					Global.PointPool.free( translated );
 				}
 			}
 			else
 			{
-				Pools.free( translated );
+				Global.PointPool.free( translated );
 			}
 
 			// A cell that was too far away to be seen is effectively
@@ -295,14 +295,14 @@ public class ShadowCaster
 
 	private boolean isOpaque( int x, int y, int octant )
 	{
-		Point temp = Pools.obtain( Point.class );
+		Point temp = Global.PointPool.obtain();
 		Point pos = TranslateOctant( temp.set( x, y ), octant );
-		Pools.free( temp );
+		Global.PointPool.free( temp );
 
 		// hack to prevent start tile from blocking sight
 		if ( pos.x == startX && pos.y == startY )
 		{
-			Pools.free( pos );
+			Global.PointPool.free( pos );
 			return false;
 		}
 
@@ -317,7 +317,7 @@ public class ShadowCaster
 			opaque = !grid[pos.x][pos.y].getPassable( travelType, self );
 		}
 
-		Pools.free( pos );
+		Global.PointPool.free( pos );
 
 		return opaque;
 	}

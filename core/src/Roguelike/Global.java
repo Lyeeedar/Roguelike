@@ -13,6 +13,7 @@ import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.Levels.Dungeon;
 import Roguelike.Levels.Level;
+import Roguelike.Lights.Light;
 import Roguelike.Save.SaveAbilityPool;
 import Roguelike.Save.SaveDungeon;
 import Roguelike.Save.SaveFile;
@@ -23,7 +24,9 @@ import Roguelike.Screens.LoadingScreen.PostGenerateEvent;
 import Roguelike.Sound.Mixer;
 import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.GameTile.LightData;
 import Roguelike.Tiles.Point;
+import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 import Roguelike.UI.MessageStack.Line;
 import Roguelike.UI.MessageStack.Message;
 import Roguelike.UI.Tooltip.TooltipStyle;
@@ -47,6 +50,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -119,6 +123,12 @@ public class Global
 
 	// ----------------------------------------------------------------------
 	public static AbilityPool abilityPool;
+
+	// ----------------------------------------------------------------------
+	public static Pool<Point> PointPool = Pools.get( Point.class );
+	public static Pool<Light> LightPool = Pools.get( Light.class );
+	public static Pool<LightData> LightDataPool = Pools.get( LightData.class );
+	public static Pool<SeenHistoryItem> SeenHistoryItemPool = Pools.get( SeenHistoryItem.class );
 
 	// ----------------------------------------------------------------------
 	public enum Direction
@@ -255,14 +265,14 @@ public class Global
 			Direction anticlockwise = dir.getAnticlockwise();
 			Direction clockwise = dir.getClockwise();
 
-			Point acwOffset = Pools.obtain( Point.class ).set( dir.getX() - anticlockwise.getX(), dir.getY() - anticlockwise.getY() );
-			Point cwOffset = Pools.obtain( Point.class ).set( dir.getX() - clockwise.getX(), dir.getY() - clockwise.getY() );
+			Point acwOffset = PointPool.obtain().set( dir.getX() - anticlockwise.getX(), dir.getY() - anticlockwise.getY() );
+			Point cwOffset = PointPool.obtain().set( dir.getX() - clockwise.getX(), dir.getY() - clockwise.getY() );
 
-			hitTiles.add( Pools.obtain( Point.class ).set( start.x + anticlockwise.getX(), start.y + anticlockwise.getY() ) );
+			hitTiles.add( PointPool.obtain().set( start.x + anticlockwise.getX(), start.y + anticlockwise.getY() ) );
 
-			hitTiles.add( Pools.obtain( Point.class ).set( start.x + dir.getX(), start.y + dir.getY() ) );
+			hitTiles.add( PointPool.obtain().set( start.x + dir.getX(), start.y + dir.getY() ) );
 
-			hitTiles.add( Pools.obtain( Point.class ).set( start.x + clockwise.getX(), start.y + clockwise.getY() ) );
+			hitTiles.add( PointPool.obtain().set( start.x + clockwise.getX(), start.y + clockwise.getY() ) );
 
 			for ( int i = 2; i <= range; i++ )
 			{
@@ -276,9 +286,9 @@ public class Global
 				int cy = start.y + clockwise.getY() * i;
 
 				// add base tiles
-				hitTiles.add( Pools.obtain( Point.class ).set( acx, acy ) );
-				hitTiles.add( Pools.obtain( Point.class ).set( nx, ny ) );
-				hitTiles.add( Pools.obtain( Point.class ).set( cx, cy ) );
+				hitTiles.add( PointPool.obtain().set( acx, acy ) );
+				hitTiles.add( PointPool.obtain().set( nx, ny ) );
+				hitTiles.add( PointPool.obtain().set( cx, cy ) );
 
 				// add anticlockwise - mid
 				for ( int ii = 1; ii <= range; ii++ )
@@ -286,7 +296,7 @@ public class Global
 					int px = acx + acwOffset.x * ii;
 					int py = acy + acwOffset.y * ii;
 
-					hitTiles.add( Pools.obtain( Point.class ).set( px, py ) );
+					hitTiles.add( PointPool.obtain().set( px, py ) );
 				}
 
 				// add mid - clockwise
@@ -295,12 +305,12 @@ public class Global
 					int px = cx + cwOffset.x * ii;
 					int py = cy + cwOffset.y * ii;
 
-					hitTiles.add( Pools.obtain( Point.class ).set( px, py ) );
+					hitTiles.add( PointPool.obtain().set( px, py ) );
 				}
 			}
 
-			Pools.free( acwOffset );
-			Pools.free( cwOffset );
+			PointPool.free( acwOffset );
+			PointPool.free( cwOffset );
 
 			return hitTiles;
 		}

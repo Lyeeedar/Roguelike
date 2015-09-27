@@ -1,5 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
@@ -9,7 +10,6 @@ import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionMoveTo extends AbstractAction
@@ -43,7 +43,7 @@ public class ActionMoveTo extends AbstractAction
 		// if couldnt find a valid path, fail
 		if ( path.size < 2 )
 		{
-			Pools.freeAll( path );
+			Global.PointPool.freeAll( path );
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
@@ -52,7 +52,7 @@ public class ActionMoveTo extends AbstractAction
 		// if next step is impassable then fail
 		if ( !nextTile.getPassable( entity.getTravelType(), entity ) )
 		{
-			Pools.freeAll( path );
+			Global.PointPool.freeAll( path );
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
@@ -64,7 +64,7 @@ public class ActionMoveTo extends AbstractAction
 		{
 			if ( path.size - 1 <= dst )
 			{
-				Pools.freeAll( path );
+				Global.PointPool.freeAll( path );
 				State = BehaviourTreeState.SUCCEEDED;
 				return State;
 			}
@@ -76,7 +76,7 @@ public class ActionMoveTo extends AbstractAction
 		{
 			if ( path.size - 1 >= dst )
 			{
-				Pools.freeAll( path );
+				Global.PointPool.freeAll( path );
 				State = BehaviourTreeState.SUCCEEDED;
 				return State;
 			}
@@ -84,7 +84,7 @@ public class ActionMoveTo extends AbstractAction
 			entity.tasks.add( new TaskMove( Direction.getDirection( offset[0] * -1, offset[1] * -1 ) ) );
 		}
 
-		Pools.freeAll( path );
+		Global.PointPool.freeAll( path );
 		State = BehaviourTreeState.RUNNING;
 		return State;
 	}

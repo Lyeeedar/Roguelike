@@ -3,6 +3,7 @@ package Roguelike.DungeonGeneration;
 import java.util.PriorityQueue;
 import java.util.Random;
 
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
@@ -16,7 +17,6 @@ import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 
 // ----------------------------------------------------------------------
 public final class Room
@@ -261,7 +261,7 @@ public final class Room
 				}
 			}
 
-			Pools.freeAll( path );
+			Global.PointPool.freeAll( path );
 		}
 	}
 
@@ -612,7 +612,7 @@ public final class Room
 					}
 				}
 
-				Pools.freeAll( path );
+				Global.PointPool.freeAll( path );
 			}
 		}
 

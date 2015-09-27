@@ -1,5 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
@@ -14,7 +15,6 @@ import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionMoveToAttack extends AbstractAction
@@ -72,7 +72,7 @@ public class ActionMoveToAttack extends AbstractAction
 
 			for ( int i = 0; i < range; i++ )
 			{
-				Point newPos = Pools.obtain( Point.class ).set( target.x + dir.getX() * ( i + 1 ), target.y + dir.getY() * ( i + 1 ) );
+				Point newPos = Global.PointPool.obtain().set( target.x + dir.getX() * ( i + 1 ), target.y + dir.getY() * ( i + 1 ) );
 				GameTile tile = entity.tile[0][0].level.getGameTile( newPos );
 
 				if ( !tile.getPassable( WeaponPassability, entity ) )
@@ -93,7 +93,7 @@ public class ActionMoveToAttack extends AbstractAction
 		{
 			if ( pos.x == entity.tile[0][0].x && pos.y == entity.tile[0][0].y )
 			{
-				Pools.freeAll( possibleTiles );
+				Global.PointPool.freeAll( possibleTiles );
 				State = BehaviourTreeState.SUCCEEDED;
 				return State;
 			}
@@ -109,14 +109,14 @@ public class ActionMoveToAttack extends AbstractAction
 
 					if ( bestPath != null )
 					{
-						Pools.freeAll( bestPath );
+						Global.PointPool.freeAll( bestPath );
 					}
 					bestPath = path;
 				}
 			}
 		}
 
-		Pools.freeAll( possibleTiles );
+		Global.PointPool.freeAll( possibleTiles );
 
 		if ( bestPath == null )
 		{
@@ -126,7 +126,7 @@ public class ActionMoveToAttack extends AbstractAction
 
 		int[] offset = new int[] { bestPath.get( 1 ).x - bestPath.get( 0 ).x, bestPath.get( 1 ).y - bestPath.get( 0 ).y };
 
-		Pools.freeAll( bestPath );
+		Global.PointPool.freeAll( bestPath );
 
 		entity.tasks.add( new TaskMove( Direction.getDirection( offset ) ) );
 

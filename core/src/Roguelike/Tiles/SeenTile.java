@@ -1,6 +1,7 @@
 package Roguelike.Tiles;
 
 import Roguelike.AssetManager;
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Fields.Field;
@@ -11,7 +12,6 @@ import Roguelike.Sprite.Sprite.AnimationState;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 
 public class SeenTile
 {
@@ -35,24 +35,24 @@ public class SeenTile
 
 		// Update tile history list size
 
-		Pools.freeAll( tileHistory );
+		Global.SeenHistoryItemPool.freeAll( tileHistory );
 		tileHistory.clear();
 
 		// Store tile history
 		for ( int i = 0; i < tile.tileData.sprites.length; i++ )
 		{
-			tileHistory.add( Pools.obtain( SeenHistoryItem.class ).set( tile.tileData.sprites[i] ) );
+			tileHistory.add( Global.SeenHistoryItemPool.obtain().set( tile.tileData.sprites[i] ) );
 		}
 
 		if ( tile.tileData.raisedSprite != null )
 		{
 			if ( nextTile != null && nextTile.tileData.raisedSprite != null && nextTile.tileData.raisedSprite.name.equals( tile.tileData.raisedSprite.name ) )
 			{
-				overhangHistory = Pools.obtain( SeenHistoryItem.class ).set( tile.tileData.raisedSprite.topSprite );
+				overhangHistory = Global.SeenHistoryItemPool.obtain().set( tile.tileData.raisedSprite.topSprite );
 			}
 			else
 			{
-				tileHistory.add( Pools.obtain( SeenHistoryItem.class ).set( tile.tileData.raisedSprite.frontSprite ) );
+				tileHistory.add( Global.SeenHistoryItemPool.obtain().set( tile.tileData.raisedSprite.frontSprite ) );
 			}
 
 			if ( tile.tileData.raisedSprite.overhangSprite != null
@@ -60,7 +60,7 @@ public class SeenTile
 					&& prevTile.visible
 					&& ( prevTile.tileData.raisedSprite == null || !prevTile.tileData.raisedSprite.name.equals( tile.tileData.raisedSprite.name ) ) )
 			{
-				prevSeenTile.overhangHistory = Pools.obtain( SeenHistoryItem.class ).set( tile.tileData.raisedSprite.overhangSprite );
+				prevSeenTile.overhangHistory = Global.SeenHistoryItemPool.obtain().set( tile.tileData.raisedSprite.overhangSprite );
 			}
 		}
 
@@ -69,12 +69,12 @@ public class SeenTile
 			// Update field history list size
 			if ( fieldHistory.size != tile.fields.size )
 			{
-				Pools.freeAll( fieldHistory );
+				Global.SeenHistoryItemPool.freeAll( fieldHistory );
 				fieldHistory.clear();
 
 				for ( int i = 0; i < tile.fields.size; i++ )
 				{
-					fieldHistory.add( Pools.obtain( SeenHistoryItem.class ) );
+					fieldHistory.add( Global.SeenHistoryItemPool.obtain() );
 				}
 			}
 
@@ -92,7 +92,7 @@ public class SeenTile
 		else if ( fieldHistory.size > 0 )
 		{
 			// Clear field history if it should be empty
-			Pools.freeAll( fieldHistory );
+			Global.SeenHistoryItemPool.freeAll( fieldHistory );
 			fieldHistory.clear();
 		}
 
@@ -103,7 +103,7 @@ public class SeenTile
 		{
 			if ( environmentHistory == null )
 			{
-				environmentHistory = Pools.obtain( SeenHistoryItem.class );
+				environmentHistory = Global.SeenHistoryItemPool.obtain();
 			}
 
 			Sprite sprite = tile.environmentEntity.sprite;
@@ -127,7 +127,7 @@ public class SeenTile
 		}
 		else if ( environmentHistory != null )
 		{
-			Pools.free( environmentHistory );
+			Global.SeenHistoryItemPool.free( environmentHistory );
 			environmentHistory = null;
 		}
 
@@ -136,14 +136,14 @@ public class SeenTile
 		{
 			if ( entityHistory == null )
 			{
-				entityHistory = Pools.obtain( SeenHistoryItem.class );
+				entityHistory = Global.SeenHistoryItemPool.obtain();
 			}
 
 			entityHistory.set( tile.entity.sprite );
 		}
 		else if ( entityHistory != null )
 		{
-			Pools.free( entityHistory );
+			Global.SeenHistoryItemPool.free( entityHistory );
 			entityHistory = null;
 		}
 
@@ -152,7 +152,7 @@ public class SeenTile
 		{
 			if ( itemHistory != null )
 			{
-				Pools.free( itemHistory );
+				Global.SeenHistoryItemPool.free( itemHistory );
 				itemHistory = null;
 			}
 		}
@@ -160,7 +160,7 @@ public class SeenTile
 		{
 			if ( itemHistory == null )
 			{
-				itemHistory = Pools.obtain( SeenHistoryItem.class );
+				itemHistory = Global.SeenHistoryItemPool.obtain();
 			}
 
 			itemHistory.set( tile.items.get( 0 ).getIcon() );
@@ -169,7 +169,7 @@ public class SeenTile
 		{
 			if ( itemHistory == null )
 			{
-				itemHistory = Pools.obtain( SeenHistoryItem.class );
+				itemHistory = Global.SeenHistoryItemPool.obtain();
 			}
 
 			itemHistory.set( AssetManager.loadSprite( "bag" ) );
@@ -185,14 +185,14 @@ public class SeenTile
 
 			if ( essenceHistory == null )
 			{
-				essenceHistory = Pools.obtain( SeenHistoryItem.class );
+				essenceHistory = Global.SeenHistoryItemPool.obtain();
 			}
 
 			essenceHistory.set( sprite );
 		}
 		else if ( essenceHistory != null )
 		{
-			Pools.free( essenceHistory );
+			Global.SeenHistoryItemPool.free( essenceHistory );
 			essenceHistory = null;
 		}
 	}
@@ -224,7 +224,7 @@ public class SeenTile
 
 		public SeenHistoryItem copy()
 		{
-			SeenHistoryItem item = Pools.obtain( SeenHistoryItem.class );
+			SeenHistoryItem item = Global.SeenHistoryItemPool.obtain();
 
 			item.sprite = sprite;
 			item.animationState = animationState;

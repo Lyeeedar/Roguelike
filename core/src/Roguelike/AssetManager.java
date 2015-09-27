@@ -107,7 +107,7 @@ public class AssetManager
 
 		int size = intBuffer.get();
 
-		size = Math.min( 4096, size );
+		size = Math.min( Global.ANDROID ? 1024 : 4096, size );
 
 		packer = new PixmapPacker( size, size, Format.RGBA8888, 2, true );
 	}

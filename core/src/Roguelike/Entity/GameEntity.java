@@ -21,13 +21,11 @@ import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.StatusEffect.StatusEffect;
-import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -57,7 +55,7 @@ public class GameEntity extends Entity
 	{
 		super.applyDamage( dam, damager );
 
-		AI.setData( "EnemyPos", Pools.obtain( Point.class ).set( damager.tile[0][0].x, damager.tile[0][0].y ) );
+		AI.setData( "EnemyPos", Global.PointPool.obtain().set( damager.tile[0][0].x, damager.tile[0][0].y ) );
 	}
 
 	// ----------------------------------------------------------------------

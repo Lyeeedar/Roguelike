@@ -10,7 +10,6 @@ import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionProcessInput extends AbstractAction
@@ -56,7 +55,7 @@ public class ActionProcessInput extends AbstractAction
 
 			if ( x != 0 || y != 0 || space )
 			{
-				targetPos = Pools.obtain( Point.class ).set( entity.tile[0][0].x + x, entity.tile[0][0].y + y );
+				targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x + x, entity.tile[0][0].y + y );
 			}
 		}
 
@@ -65,7 +64,7 @@ public class ActionProcessInput extends AbstractAction
 			Point oldPos = (Point) getData( "Pos", null );
 			if ( oldPos != null )
 			{
-				Pools.free( oldPos );
+				Global.PointPool.free( oldPos );
 			}
 
 			GameTile tile = entity.tile[0][0].level.getGameTile( targetPos );

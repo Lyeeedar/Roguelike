@@ -1,12 +1,12 @@
 package Roguelike.Pathfinding;
 
+import Roguelike.Global;
 import Roguelike.Global.Passability;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 
 public class BresenhamLine
 {
@@ -20,7 +20,7 @@ public class BresenhamLine
 
 		Array<Point> path = new Array<Point>();
 
-		path.add( Pools.obtain( Point.class ).set( x0, y0 ) );
+		path.add( Global.PointPool.obtain().set( x0, y0 ) );
 
 		while ( x0 != x1 || y0 != y1 )
 		{
@@ -37,7 +37,7 @@ public class BresenhamLine
 				y0 += yStep;
 			}
 
-			path.add( Pools.obtain( Point.class ).set( x0, y0 ) );
+			path.add( Global.PointPool.obtain().set( x0, y0 ) );
 		}
 
 		return path;
@@ -85,7 +85,7 @@ public class BresenhamLine
 
 		for ( int i = 0; i <= dist; i++ )
 		{
-			path.add( Pools.obtain( Point.class ).set( x, y ) );
+			path.add( Global.PointPool.obtain().set( x, y ) );
 
 			numerator += shortest;
 			if ( !( numerator < longest ) )

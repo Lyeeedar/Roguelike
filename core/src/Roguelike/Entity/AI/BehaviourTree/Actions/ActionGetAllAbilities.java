@@ -1,12 +1,12 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
+import Roguelike.Global;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionGetAllAbilities extends AbstractAction
@@ -30,7 +30,7 @@ public class ActionGetAllAbilities extends AbstractAction
 				{
 					abilities.add( ab );
 				}
-				Pools.freeAll( validTargets );
+				Global.PointPool.freeAll( validTargets );
 			}
 		}
 

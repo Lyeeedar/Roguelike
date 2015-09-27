@@ -153,21 +153,21 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void relayoutUI()
 	{
-		abilityPanel.setX( stage.getWidth() - abilityPanel.getMinWidth() - 20 );
-		abilityPanel.setY( 20 );
+		abilityPanel.setX( stage.getWidth() - abilityPanel.getMinWidth() - 5 );
+		abilityPanel.setY( 5 );
 		abilityPanel.setWidth( abilityPanel.getMinWidth() );
 		abilityPanel.setHeight( abilityPanel.getMinHeight() );
 
 		if ( Global.ANDROID )
 		{
-			tabPane.setX( 20 );
+			tabPane.setX( 5 );
 			tabPane.setY( 20 );
 			tabPane.setHeight( roundTo( stage.getHeight() - 40, 32 ) );
 			tabPane.setWidth( stage.getWidth() );
 		}
 		else
 		{
-			tabPane.setX( 20 );
+			tabPane.setX( 5 );
 			tabPane.setY( 20 );
 			tabPane.setHeight( roundTo( stage.getHeight() / 2, 32 ) );
 			tabPane.setWidth( stage.getWidth() );
@@ -1091,6 +1091,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			y += offset[1];
 		}
 
+		if ( x + width < 0 || y + height < 0 || x > Global.Resolution[0] || y > Global.Resolution[1] ) { return; }
+
 		queuedSprites.add( renderSpritePool.obtain().set( sprite, colour, x, y, width, height, layer, index ) );
 	}
 
@@ -1374,7 +1376,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						GameTile tile = Global.CurrentLevel.getGameTile( x, y );
 						if ( preparedAbility.isTargetValid( tile, abilityTiles ) )
 						{
-							Global.CurrentLevel.player.tasks.add( new TaskUseAbility( Pools.obtain( Point.class ).set( x, y ), preparedAbility ) );
+							Global.CurrentLevel.player.tasks.add( new TaskUseAbility( Global.PointPool.obtain().set( x, y ), preparedAbility ) );
 						}
 					}
 				}
@@ -1390,7 +1392,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{
 					if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height && Global.CurrentLevel.getSeenTile( x, y ).seen )
 					{
-						Global.CurrentLevel.player.AI.setData( "ClickPos", Pools.obtain( Point.class ).set( x, y ) );
+						Global.CurrentLevel.player.AI.setData( "ClickPos", Global.PointPool.obtain().set( x, y ) );
 					}
 					else
 					{
@@ -1400,7 +1402,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						x += Global.CurrentLevel.player.tile[0][0].x;
 						y += Global.CurrentLevel.player.tile[0][0].y;
 
-						Global.CurrentLevel.player.AI.setData( "ClickPos", Pools.obtain( Point.class ).set( x, y ) );
+						Global.CurrentLevel.player.AI.setData( "ClickPos", Global.PointPool.obtain().set( x, y ) );
 					}
 				}
 			}
@@ -1697,7 +1699,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		if ( abilityTiles != null )
 		{
-			Pools.freeAll( abilityTiles );
+			Global.PointPool.freeAll( abilityTiles );
 		}
 		abilityTiles = preparedAbility.getValidTargets();
 	}

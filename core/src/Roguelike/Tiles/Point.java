@@ -1,9 +1,9 @@
 package Roguelike.Tiles;
 
+import Roguelike.Global;
 import Roguelike.Entity.Entity;
 
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.badlogic.gdx.utils.Pools;
 
 public final class Point implements Poolable
 {
@@ -45,7 +45,7 @@ public final class Point implements Poolable
 
 	public Point copy()
 	{
-		return Pools.obtain( Point.class ).set( x, y );
+		return Global.PointPool.obtain().set( x, y );
 	}
 
 	private boolean obtained = false;

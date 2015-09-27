@@ -1,11 +1,11 @@
 package Roguelike.Save;
 
+import Roguelike.Global;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 
 public final class SaveSeenTile extends SaveableObject<SeenTile>
 {
@@ -28,7 +28,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		light.set( obj.light );
 
 		// tile history
-		Pools.freeAll( tileHistory );
+		Global.SeenHistoryItemPool.freeAll( tileHistory );
 		tileHistory.clear();
 		for ( SeenHistoryItem item : obj.tileHistory )
 		{
@@ -36,7 +36,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		}
 
 		// field history
-		Pools.freeAll( fieldHistory );
+		Global.SeenHistoryItemPool.freeAll( fieldHistory );
 		fieldHistory.clear();
 		for ( SeenHistoryItem item : obj.fieldHistory )
 		{
@@ -46,7 +46,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		// environment history
 		if ( environmentHistory != null )
 		{
-			Pools.free( environmentHistory );
+			Global.SeenHistoryItemPool.free( environmentHistory );
 			environmentHistory = null;
 		}
 		if ( obj.environmentHistory != null )
@@ -57,7 +57,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		// entity history
 		if ( entityHistory != null )
 		{
-			Pools.free( entityHistory );
+			Global.SeenHistoryItemPool.free( entityHistory );
 			entityHistory = null;
 		}
 		if ( obj.entityHistory != null )
@@ -68,7 +68,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		// item history
 		if ( itemHistory != null )
 		{
-			Pools.free( itemHistory );
+			Global.SeenHistoryItemPool.free( itemHistory );
 			itemHistory = null;
 		}
 		if ( obj.itemHistory != null )
@@ -79,7 +79,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		// essence history
 		if ( essenceHistory != null )
 		{
-			Pools.free( essenceHistory );
+			Global.SeenHistoryItemPool.free( essenceHistory );
 			essenceHistory = null;
 		}
 		if ( obj.essenceHistory != null )
@@ -96,7 +96,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		tile.light.set( light );
 
 		// tile history
-		Pools.freeAll( tile.tileHistory );
+		Global.SeenHistoryItemPool.freeAll( tile.tileHistory );
 		tile.tileHistory.clear();
 		for ( SeenHistoryItem item : tileHistory )
 		{
@@ -104,7 +104,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		}
 
 		// field history
-		Pools.freeAll( tile.fieldHistory );
+		Global.SeenHistoryItemPool.freeAll( tile.fieldHistory );
 		tile.fieldHistory.clear();
 		for ( SeenHistoryItem item : fieldHistory )
 		{
@@ -114,7 +114,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		// environment history
 		if ( tile.environmentHistory != null )
 		{
-			Pools.free( tile.environmentHistory );
+			Global.SeenHistoryItemPool.free( tile.environmentHistory );
 			tile.environmentHistory = null;
 		}
 		if ( environmentHistory != null )
@@ -125,7 +125,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		// entity history
 		if ( tile.entityHistory != null )
 		{
-			Pools.free( tile.entityHistory );
+			Global.SeenHistoryItemPool.free( tile.entityHistory );
 			tile.entityHistory = null;
 		}
 		if ( entityHistory != null )
@@ -136,7 +136,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		// item history
 		if ( tile.itemHistory != null )
 		{
-			Pools.free( tile.itemHistory );
+			Global.SeenHistoryItemPool.free( tile.itemHistory );
 			tile.itemHistory = null;
 		}
 		if ( itemHistory != null )
@@ -147,7 +147,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		// essence history
 		if ( tile.essenceHistory != null )
 		{
-			Pools.free( tile.essenceHistory );
+			Global.SeenHistoryItemPool.free( tile.essenceHistory );
 			tile.essenceHistory = null;
 		}
 		if ( essenceHistory != null )

@@ -1,5 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
+import Roguelike.Global;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
@@ -7,7 +8,6 @@ import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionUseAbility extends AbstractAction
@@ -39,7 +39,7 @@ public class ActionUseAbility extends AbstractAction
 
 		entity.tasks.add( new TaskUseAbility( validTargets.get( 0 ).copy(), ability ) );
 
-		Pools.freeAll( validTargets );
+		Global.PointPool.freeAll( validTargets );
 
 		State = BehaviourTreeState.SUCCEEDED;
 		return State;

@@ -43,7 +43,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 
 public class Level
 {
@@ -341,7 +340,7 @@ public class Level
 			calculateSingleLight( l );
 			if ( l.copied )
 			{
-				Pools.free( l );
+				Global.LightPool.free( l );
 			}
 		}
 	}
@@ -556,7 +555,7 @@ public class Level
 			if ( !tile.getPassable( ItemDropPassability, obj ) )
 			{
 				itr.remove();
-				Pools.free( pos );
+				Global.PointPool.free( pos );
 			}
 		}
 
@@ -639,7 +638,7 @@ public class Level
 			}
 		}
 
-		Pools.freeAll( possibleTiles );
+		Global.PointPool.freeAll( possibleTiles );
 	}
 
 	private void clearEffectsForTile( GameTile tile )

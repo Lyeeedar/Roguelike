@@ -1,5 +1,6 @@
 package Roguelike.Ability.ActiveAbility.MovementType;
 
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
@@ -9,7 +10,6 @@ import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class MovementTypeBolt extends AbstractMovementType
@@ -40,7 +40,7 @@ public class MovementTypeBolt extends AbstractMovementType
 		}
 		path = actualpath;
 
-		Pools.freeAll( fullpath );
+		Global.PointPool.freeAll( fullpath );
 
 		ab.AffectedTiles.clear();
 		ab.AffectedTiles.add( ab.source.level.getGameTile( path.get( 0 ) ) );

@@ -21,7 +21,6 @@ import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 
 public class GameTile implements PathfindingTile
 {
@@ -191,13 +190,13 @@ public class GameTile implements PathfindingTile
 
 	public void setLight( Light light, float intensity, Color colour )
 	{
-		lightMap.put( light, Pools.obtain( LightData.class ).set( intensity, colour ) );
+		lightMap.put( light, Global.LightDataPool.obtain().set( intensity, colour ) );
 	}
 
 	public void clearLight( Light light )
 	{
 		LightData data = lightMap.get( light );
-		Pools.free( data );
+		Global.LightDataPool.free( data );
 		lightMap.remove( light );
 	}
 

@@ -1,12 +1,12 @@
 package Roguelike.Pathfinding;
 
+import Roguelike.Global;
 import Roguelike.Global.Passability;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 
 public final class ShadowCastCache
 {
@@ -99,7 +99,7 @@ public final class ShadowCastCache
 
 		if ( recalculate )
 		{
-			Pools.freeAll( shadowCastOutput );
+			Global.PointPool.freeAll( shadowCastOutput );
 			shadowCastOutput.clear();
 
 			ShadowCaster shadow = new ShadowCaster( grid, range );

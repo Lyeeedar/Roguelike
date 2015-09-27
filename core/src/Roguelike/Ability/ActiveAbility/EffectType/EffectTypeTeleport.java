@@ -11,7 +11,6 @@ import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class EffectTypeTeleport extends AbstractEffectType
@@ -104,12 +103,12 @@ public class EffectTypeTeleport extends AbstractEffectType
 		}
 		else
 		{
-			Array<Point> possibleTiles = Direction.buildCone( dir, Pools.obtain( Point.class ).set( src.x, src.y ), distance );
+			Array<Point> possibleTiles = Direction.buildCone( dir, Global.PointPool.obtain().set( src.x, src.y ), distance );
 			Point pos = possibleTiles.random();
 
 			destination = src.level.getGameTile( pos );
 
-			Pools.freeAll( possibleTiles );
+			Global.PointPool.freeAll( possibleTiles );
 		}
 
 		if ( destination != null && style != Style.CHARGE )
@@ -137,12 +136,12 @@ public class EffectTypeTeleport extends AbstractEffectType
 
 			if ( tile.getPassable( entity.getTravelType(), entity ) && tile.entity == null )
 			{
-				Pools.freeAll( possibleTiles );
+				Global.PointPool.freeAll( possibleTiles );
 				return tile;
 			}
 		}
 
-		Pools.freeAll( possibleTiles );
+		Global.PointPool.freeAll( possibleTiles );
 
 		return src;
 	}
