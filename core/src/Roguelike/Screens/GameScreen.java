@@ -89,7 +89,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		batch = new SpriteBatch();
 
-		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
+		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12, new Color( 1f, 0.9f, 0.8f, 1 ), 1, Color.BLACK, false );
+		hightlightfont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12, new Color( 1f, 1f, 0.9f, 1 ), 1, Color.BLACK, false );
 
 		blank = AssetManager.loadTextureRegion( "Sprites/blank.png" );
 		white = AssetManager.loadTextureRegion( "Sprites/white.png" );
@@ -1061,9 +1062,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				String message = ( i + 1 ) + ": " + Global.expandNames( Global.CurrentDialogue.currentInput.choices.get( i ) );
 
+				BitmapFont font = this.font;
 				if ( Global.CurrentDialogue.mouseOverInput == i )
 				{
-					message = "[GREEN]" + message;
+					font = hightlightfont;
 				}
 
 				layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
@@ -2001,6 +2003,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private float fpsAccumulator;
 	private float frametime;
 	private BitmapFont font;
+	private BitmapFont hightlightfont;
 	private final GlyphLayout layout = new GlyphLayout();
 	private final Color temp = new Color();
 

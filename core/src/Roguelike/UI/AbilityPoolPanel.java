@@ -70,6 +70,7 @@ public class AbilityPoolPanel extends Table
 		public AbilityLineList( Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize )
 		{
 			super( skin, stage, tileBackground, tileBorder, 1, 1, tileSize, true );
+			padding = 5;
 		}
 
 		@Override
@@ -139,6 +140,7 @@ public class AbilityPoolPanel extends Table
 		public AbilityList( Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize )
 		{
 			super( skin, stage, tileBackground, tileBorder, 5, 1, tileSize, true );
+			padding = 5;
 		}
 
 		@Override

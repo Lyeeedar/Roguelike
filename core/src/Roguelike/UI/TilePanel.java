@@ -42,6 +42,8 @@ public abstract class TilePanel extends Widget
 	protected final Stage stage;
 	protected Tooltip tooltip;
 
+	public int padding = 10;
+
 	protected NinePatch tilePanelBackground;
 
 	protected Sprite tileBackground;
@@ -101,20 +103,20 @@ public abstract class TilePanel extends Widget
 
 		if ( expandVertically )
 		{
-			viewHeight = (int) ( ( getHeight() - 20 ) / tileSize );
+			viewHeight = (int) ( ( getHeight() - padding * 2 ) / tileSize );
 		}
 	}
 
 	@Override
 	public float getMinWidth()
 	{
-		return tileSize * targetWidth + 20;
+		return tileSize * targetWidth + padding * 2;
 	}
 
 	@Override
 	public float getMinHeight()
 	{
-		return tileSize * targetHeight + 20;
+		return tileSize * targetHeight + padding * 2;
 	}
 
 	private void validateScroll()
@@ -132,13 +134,13 @@ public abstract class TilePanel extends Widget
 		populateTileData();
 		validateScroll();
 
-		int height = viewHeight * tileSize + 20;
+		int height = viewHeight * tileSize + padding * 2;
 
 		batch.setColor( Color.WHITE );
-		tilePanelBackground.draw( batch, getX(), getY() + getHeight() - height, viewWidth * tileSize + 20, height );
+		tilePanelBackground.draw( batch, getX(), getY() + getHeight() - height, viewWidth * tileSize + padding * 2, height );
 
-		int xOffset = (int) getX() + 10;
-		int top = (int) ( getY() - 10 + getHeight() ) - tileSize;
+		int xOffset = (int) getX() + padding;
+		int top = (int) ( getY() - padding + getHeight() ) - tileSize;
 
 		int x = 0;
 		int y = 0;
@@ -228,12 +230,12 @@ public abstract class TilePanel extends Widget
 
 		private Object pointToItem( float x, float y )
 		{
-			if ( x < 10 || y < 10 || x > getWidth() - 10 || y > getHeight() - 10 ) { return null; }
+			if ( x < padding || y < padding || x > getWidth() - padding || y > getHeight() - padding ) { return null; }
 
 			y = getHeight() - y;
 
-			int xIndex = (int) ( ( x - 10 ) / tileSize );
-			int yIndex = (int) ( ( y - 10 ) / tileSize );
+			int xIndex = (int) ( ( x - padding ) / tileSize );
+			int yIndex = (int) ( ( y - padding ) / tileSize );
 
 			if ( xIndex >= viewWidth || yIndex >= viewHeight ) { return null; }
 
@@ -247,7 +249,7 @@ public abstract class TilePanel extends Widget
 
 		private boolean getMouseOverUI( float x, float y )
 		{
-			if ( x < 10 || y < 10 || x > getWidth() - 10 || y > getHeight() - 10 )
+			if ( x < padding || y < padding || x > getWidth() - padding || y > getHeight() - padding )
 			{
 				return false;
 			}
@@ -255,8 +257,8 @@ public abstract class TilePanel extends Widget
 			{
 				y = getHeight() - y;
 
-				int xIndex = (int) ( ( x - 10 ) / tileSize );
-				int yIndex = (int) ( ( y - 10 ) / tileSize );
+				int xIndex = (int) ( ( x - padding ) / tileSize );
+				int yIndex = (int) ( ( y - padding ) / tileSize );
 
 				if ( xIndex < viewWidth && yIndex < viewHeight )
 				{

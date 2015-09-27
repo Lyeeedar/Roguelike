@@ -74,6 +74,8 @@ public class InventoryPanel extends Table
 		{
 			super( skin, stage, tileBackground, tileBorder, ItemCategory.values().length, 1, tileSize, false );
 
+			padding = 5;
+
 			headers.put( ItemCategory.WEAPON, AssetManager.loadSprite( "GUI/Weapon" ) );
 			headers.put( ItemCategory.ARMOUR, AssetManager.loadSprite( "GUI/Armour" ) );
 			headers.put( ItemCategory.JEWELRY, AssetManager.loadSprite( "GUI/Jewelry" ) );
@@ -147,6 +149,7 @@ public class InventoryPanel extends Table
 		public InventoryBody( Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize )
 		{
 			super( skin, stage, tileBackground, tileBorder, ItemCategory.values().length, 1, tileSize, true );
+			padding = 5;
 		}
 
 		@Override
@@ -236,6 +239,7 @@ public class InventoryPanel extends Table
 		public FloorLine( Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize )
 		{
 			super( skin, stage, tileBackground, tileBorder, ItemCategory.values().length, 1, tileSize, false );
+			padding = 5;
 		}
 
 		@Override
