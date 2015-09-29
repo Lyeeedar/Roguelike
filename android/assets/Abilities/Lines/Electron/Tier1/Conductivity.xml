@@ -3,9 +3,9 @@
 	<Name>Conductivity</Name>
 	<Description>Charge your targets with electricity, increasing the damage they take from air magic and making them release bolts of lightning on death.</Description>
 	
-	<Cooldown>10</Cooldown>
+	<Cooldown>30</Cooldown>
 	<AOE>2</AOE>
-	<Range>5</Range>
+	<Range>4</Range>
 	
 	<Icon>
 		<Name>Abilities/Electron/Conductivity</Name>

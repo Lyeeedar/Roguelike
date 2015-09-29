@@ -4,7 +4,7 @@
 	<Description>Split your targets skin, letting its lifeforce drain out.</Description>
 	
 	<Cooldown>20</Cooldown>
-	<Range>3</Range>
+	<Range>4</Range>
 	
 	<Icon>
 		<Name>Abilities/BloodMagic/OpenVein</Name>
@@ -29,7 +29,7 @@
 	<Effect>
 		<Status ReliesOn="Bleeding">
 			<Defender>Bleeding</Defender>
-			<Stacks>5+rnd(5)</Stacks>
+			<Stacks>rnd(3)</Stacks>
 		</Status>
 	</Effect>
 	

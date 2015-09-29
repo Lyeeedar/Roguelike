@@ -3,7 +3,7 @@
 	<Name>Vampiric Coating</Name>
 	<Description>Enchant your weaponry with the ability to steal LIFE.</Description>
 	
-	<Cooldown>20</Cooldown>
+	<Cooldown>40</Cooldown>
 	<Range>1</Range>
 	
 	<Icon>

@@ -3,7 +3,7 @@
 	<Name>Charge</Name>
 	<Description>Charge at your foe.</Description>
 	
-	<Cooldown>15</Cooldown>
+	<Cooldown>25</Cooldown>
 	<Range>4</Range>
 	
 	<Icon>
@@ -28,7 +28,7 @@
 		    <Style>Charge</Style>
 		</Teleport>
 		<Damage>
-		    <Atk>Atk*1.3</Atk>
+		    <Base_Atk>5</Base_Atk>
 		</Damage>
 	</Effect>
 	

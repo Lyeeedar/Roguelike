@@ -8,8 +8,7 @@
 	
 	<Events>
 		<Constant ReliesOn="shield">
-		    <Def>shield*Def*0.2</Def>
-		    <Hardiness>shield*75</Hardiness>
+		    <Base_Def>shield*10</Base_Def>
 		</Constant>
 	</Events>
 	

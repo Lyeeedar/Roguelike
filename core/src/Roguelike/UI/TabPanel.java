@@ -58,10 +58,12 @@ public class TabPanel extends Widget
 		{
 			if ( tab == selectedTab )
 			{
+				batch.setColor( Color.WHITE );
 				buttonDown.render( batch, (int) xoffset, (int) ( y + yoffset ), tabHeaderSize, tabHeaderSize );
 			}
 			else
 			{
+				batch.setColor( Color.LIGHT_GRAY );
 				buttonUp.render( batch, (int) xoffset, (int) ( y + yoffset ), tabHeaderSize, tabHeaderSize );
 			}
 

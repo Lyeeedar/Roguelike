@@ -10,7 +10,7 @@ import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
-import Roguelike.Global.Tier1Element;
+import Roguelike.Global.ElementType;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom.Orientation;
 import Roguelike.DungeonGeneration.Room;
@@ -333,7 +333,7 @@ public final class SaveFile
 		kryo.register( ItemCategory.class );
 		kryo.register( Statistic.class );
 		kryo.register( Direction.class );
-		kryo.register( Tier1Element.class );
+		kryo.register( ElementType.class );
 
 		kryo.register( ConstantEvent.class );
 		kryo.register( DamageEvent.class );

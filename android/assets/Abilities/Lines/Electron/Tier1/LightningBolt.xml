@@ -3,8 +3,8 @@
 	<Name>Lightning Bolt</Name>
 	<Description>A bolt of lightning pierces through your enemies in a line.</Description>
 	
-	<Cooldown>22</Cooldown>
-	<Range>5</Range>
+	<Cooldown>30</Cooldown>
+	<Range>4</Range>
 	
 	<Icon>
 		<Name>Abilities/Electron/LightningBolt</Name>
@@ -39,8 +39,8 @@
 	
 	<Effect>
 		<Damage>
-		    <Air_Atk>75+Air_Atk*0.5</Air_Atk>
-			<Fire_ATK>75+FIRE_ATK*0.5</Fire_ATK>
+		    <Air_Atk>5</Air_Atk>
+			<Fire_ATK>5</Fire_ATK>
 		</Damage>
 	</Effect>
 	

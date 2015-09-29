@@ -3,7 +3,7 @@
 	<Name>Crushing Blow</Name>
 	<Description>Channel all your bloodlust into a single attack.</Description>
 	
-	<Cooldown>10</Cooldown>
+	<Cooldown>15</Cooldown>
 	<Range>1</Range>
 	
 	<Icon>
@@ -37,7 +37,7 @@
 	
 	<Effect>
 		<Damage ReliesOn="Bloodlust">
-			<Atk>ATK*(1+0.25*BLOODLUST)</Atk>
+			<Base_Atk>10+BLOODLUST</Base_Atk>
 		</Damage>
 	</Effect>
 	

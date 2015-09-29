@@ -150,6 +150,20 @@ public abstract class Entity
 	{
 		variableMap.clear();
 
+		for ( Statistic s : Statistic.values() )
+		{
+			variableMap.put( s.toString().toLowerCase(), statistics.get( s ) );
+		}
+
+		for ( GameEventHandler handler : getAllHandlers() )
+		{
+			for ( Statistic s : Statistic.values() )
+			{
+				String key = s.toString().toLowerCase();
+				variableMap.put( key, variableMap.get( key ) + handler.getStatistic( baseVariableMap, s ) );
+			}
+		}
+
 		variableMap.put( "hp", HP );
 
 		for ( EquipmentSlot slot : EquipmentSlot.values() )

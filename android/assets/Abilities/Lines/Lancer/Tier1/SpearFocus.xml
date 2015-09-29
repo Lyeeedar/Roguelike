@@ -8,7 +8,7 @@
 	
 	<Events>
 		<Constant ReliesOn="spear">
-		    <Atk>spear*Atk*0.2</Atk>
+		    <Base_Atk>spear*10</Base_Atk>
 		</Constant>
 	</Events>
 	

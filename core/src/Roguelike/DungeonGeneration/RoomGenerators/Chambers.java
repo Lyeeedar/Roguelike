@@ -2,6 +2,7 @@ package Roguelike.DungeonGeneration.RoomGenerators;
 
 import java.util.Random;
 
+import Roguelike.Global.Direction;
 import Roguelike.DungeonGeneration.DungeonFileParser;
 import Roguelike.DungeonGeneration.Symbol;
 
@@ -109,7 +110,7 @@ public class Chambers extends AbstractRoomGenerator
 			}
 		}
 
-		private void placeDoor( Symbol[][] grid, Symbol floor, Symbol wall, Symbol door, Random ran )
+		private void placeDoor( int[][] grid, Random ran )
 		{
 			int gridWidth = grid.length;
 			int gridHeight = grid[0].length;
@@ -127,7 +128,7 @@ public class Chambers extends AbstractRoomGenerator
 					{
 						int ttx = tx;
 						int tty = ty - 1;
-						if ( tty >= 0 && grid[ttx][tty] != floor )
+						if ( tty >= 0 && grid[ttx][tty] != 1 )
 						{
 							valid = false;
 						}
@@ -137,7 +138,7 @@ public class Chambers extends AbstractRoomGenerator
 					{
 						int ttx = tx;
 						int tty = ty + 1;
-						if ( tty < gridHeight && grid[ttx][tty] != floor )
+						if ( tty < gridHeight && grid[ttx][tty] != 1 )
 						{
 							valid = false;
 						}
@@ -161,7 +162,7 @@ public class Chambers extends AbstractRoomGenerator
 					{
 						int ttx = tx - 1;
 						int tty = ty;
-						if ( ttx >= 0 && grid[ttx][tty] != floor )
+						if ( ttx >= 0 && grid[ttx][tty] != 1 )
 						{
 							valid = false;
 						}
@@ -171,7 +172,7 @@ public class Chambers extends AbstractRoomGenerator
 					{
 						int ttx = tx + 1;
 						int tty = ty;
-						if ( ttx < gridWidth && grid[ttx][tty] != floor )
+						if ( ttx < gridWidth && grid[ttx][tty] != 1 )
 						{
 							valid = false;
 						}
@@ -188,18 +189,18 @@ public class Chambers extends AbstractRoomGenerator
 
 			if ( doorPos != null )
 			{
-				grid[doorPos[0]][doorPos[1]] = door;
+				grid[doorPos[0]][doorPos[1]] = 2;
 			}
 
 		}
 
-		public void dig( Symbol[][] grid, Symbol floor, Symbol wall, Symbol door, Random ran )
+		public void dig( int[][] grid, Random ran )
 		{
 			if ( child1 != null )
 			{
-				child1.dig( grid, floor, wall, door, ran );
-				child2.dig( grid, floor, wall, door, ran );
-				placeDoor( grid, floor, wall, door, ran );
+				child1.dig( grid, ran );
+				child2.dig( grid, ran );
+				placeDoor( grid, ran );
 			}
 			else
 			{
@@ -207,7 +208,7 @@ public class Chambers extends AbstractRoomGenerator
 				{
 					for ( int iy = 1; iy < height; iy++ )
 					{
-						grid[x + ix][y + iy] = floor;
+						grid[x + ix][y + iy] = 1;
 					}
 				}
 			}
@@ -218,9 +219,107 @@ public class Chambers extends AbstractRoomGenerator
 	@Override
 	public void process( Symbol[][] grid, Symbol floor, Symbol wall, Random ran, DungeonFileParser dfp )
 	{
-		BSPTree tree = new BSPTree( 0, 0, grid.length, grid[0].length );
-		tree.partition( ran );
-		tree.dig( grid, floor, wall, floor, ran );
+		Symbol door = dfp.getSymbol( '+' );
+		int[][] outGrid = null;
+
+		while ( true )
+		{
+			BSPTree tree = new BSPTree( 0, 0, grid.length, grid[0].length );
+			tree.partition( ran );
+			outGrid = new int[grid.length][grid[0].length];
+			tree.dig( outGrid, ran );
+
+			if ( isConnected( outGrid ) )
+			{
+				break;
+			}
+
+			System.out.println( "Failed to connect all chambers. Retrying" );
+		}
+
+		for ( int x = 0; x < grid.length; x++ )
+		{
+			for ( int y = 0; y < grid[0].length; y++ )
+			{
+				if ( outGrid[x][y] == 0 )
+				{
+					grid[x][y] = wall;
+				}
+				else if ( outGrid[x][y] == 1 )
+				{
+					grid[x][y] = floor;
+				}
+				else if ( outGrid[x][y] == 2 )
+				{
+					grid[x][y] = door;
+				}
+
+				System.out.print( "" + grid[x][y] );
+			}
+			System.out.print( "\n" );
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	private boolean isConnected( int[][] grid )
+	{
+		int width = grid.length;
+		int height = grid[0].length;
+
+		boolean[][] reached = new boolean[width][height];
+
+		int x = 0;
+		int y = 0;
+
+		outer:
+		for ( x = 0; x < width; x++ )
+		{
+			for ( y = 0; y < height; y++ )
+			{
+				if ( grid[x][y] >= 1 )
+				{
+					break outer;
+				}
+			}
+		}
+
+		Array<int[]> toBeProcessed = new Array<int[]>();
+		toBeProcessed.add( new int[] { x, y } );
+
+		while ( toBeProcessed.size > 0 )
+		{
+			int[] point = toBeProcessed.pop();
+			x = point[0];
+			y = point[1];
+
+			if ( reached[x][y] )
+			{
+				continue;
+			}
+
+			reached[x][y] = true;
+
+			for ( Direction dir : Direction.values() )
+			{
+				int nx = x + dir.getX();
+				int ny = y + dir.getY();
+
+				if ( nx >= 0 && ny >= 0 && nx < width && ny < height && grid[nx][ny] >= 1 )
+				{
+					toBeProcessed.add( new int[] { nx, ny } );
+				}
+			}
+		}
+
+		for ( x = 0; x < width; x++ )
+		{
+			for ( y = 0; y < height; y++ )
+			{
+				if ( grid[x][y] >= 1 && !reached[x][y] ) { return false; }
+			}
+		}
+
+		return true;
 	}
 
 	@Override

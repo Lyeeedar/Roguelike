@@ -3,8 +3,8 @@
 	<Name>Flame Strike</Name>
 	<Description>A blast of flame.</Description>
 	
-	<Cooldown>7</Cooldown>
-	<Range>5</Range>
+	<Cooldown>15</Cooldown>
+	<Range>2</Range>
 	
 	<Icon>
 		<Name>Abilities/Pyromaniac/Flamestrike</Name>
@@ -30,7 +30,7 @@
 	
 	<Effect>
 		<Damage>
-			<Fire_ATK>150+FIRE_ATK*0.5</Fire_ATK>
+			<Fire_ATK>10</Fire_ATK>
 		</Damage>
 	</Effect>
 	

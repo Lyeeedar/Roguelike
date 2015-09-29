@@ -37,7 +37,7 @@ public class FactionParser
 
 		for ( Creature creature : creatures )
 		{
-			if ( creature.cost <= difficulty / 2 && creature.minInfluence <= influence && creature.maxInfluence >= influence )
+			if ( creature.minInfluence <= influence && creature.maxInfluence >= influence )
 			{
 				validCreatures.add( creature );
 			}

@@ -28,7 +28,7 @@
 	</Movement>
 	
 	<Effect>
-		<Heal>100</Heal>
+		<Heal>10</Heal>
 	</Effect>
 	
 </ActiveAbility>

@@ -3,7 +3,7 @@
 	<Name>Ice Sheath</Name>
 	<Description>Enchant your weaponry with ice, gaining damage and a chance to chill your foes.</Description>
 	
-	<Cooldown>20</Cooldown>
+	<Cooldown>45</Cooldown>
 	<Range>1</Range>
 	
 	<Icon>
@@ -26,7 +26,7 @@
 				<Duration>10</Duration>
 				<Events>
 					<Constant>
-						<Water_Atk>30</Water_Atk>
+						<Water_Atk>5</Water_Atk>
 					</Constant>
 					<OnDealDamage>
 					    <Status Condition="rnd(1)<0.5">

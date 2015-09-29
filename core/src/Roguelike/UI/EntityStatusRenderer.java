@@ -5,9 +5,9 @@ import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.Entity.StatusEffectStack;
 import Roguelike.Entity.GameEntity;
-import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,9 +18,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class EntityStatusRenderer
 {
-	private static Sprite heartFull = AssetManager.loadSprite( "Oryx/uf_split/uf_items/heart_red_full", true );
-	private static Sprite heartHalf = AssetManager.loadSprite( "Oryx/uf_split/uf_items/heart_red_half", true );
-	private static Sprite heartEmpty = AssetManager.loadSprite( "Oryx/uf_split/uf_items/heart_empty", true );
+	private static Texture heartFull = AssetManager.loadTexture( "Sprites/Oryx/uf_split/uf_items/heart_red_full.png" );
+	private static Texture heartEmpty = AssetManager.loadTexture( "Sprites/Oryx/uf_split/uf_items/heart_empty.png" );
 
 	public static void draw( Entity entity, Batch batch, int x, int y, int width, int height, float heightScale )
 	{
@@ -28,24 +27,13 @@ public class EntityStatusRenderer
 
 		float val = (float) entity.HP / (float) entity.getVariable( Statistic.MAXHP );
 
-		Sprite heart = null;
-
-		if ( val < 0.1f )
-		{
-			heart = heartEmpty;
-		}
-		else if ( val < 0.6f )
-		{
-			heart = heartHalf;
-		}
-		else
-		{
-			heart = heartFull;
-		}
-
 		if ( val < 1 )
 		{
-			heart.render( batch, x, y, width / 2, height / 2 );
+			int dstHeightPortion = (int) ( heartFull.getHeight() * val );
+			int srcHeightPortion = (int) ( height * val );
+
+			batch.draw( heartFull, x, y, width, srcHeightPortion, 0, heartFull.getHeight() - dstHeightPortion, heartFull.getWidth(), dstHeightPortion, false, false );
+			batch.draw( heartEmpty, x, y, width, height );
 		}
 
 		Array<StatusEffectStack> stacks = entity.stackStatusEffects();

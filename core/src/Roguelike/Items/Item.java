@@ -6,7 +6,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.AssetManager;
 import Roguelike.Global.Statistic;
-import Roguelike.Global.Tier1Element;
+import Roguelike.Global.ElementType;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
@@ -81,7 +81,7 @@ public final class Item extends GameEventHandler
 	public Light light;
 	public boolean canDrop = true;
 	public String dropChanceEqn;
-	public FastEnumMap<Tier1Element, Integer> elementalStats = Tier1Element.getElementBlock();
+	public FastEnumMap<ElementType, Integer> elementalStats = ElementType.getElementBlock();
 
 	private int range = -1000;
 
@@ -201,7 +201,7 @@ public final class Item extends GameEventHandler
 
 		int oldDam = 0;
 		int newDam = 0;
-		for ( Tier1Element el : Tier1Element.values() )
+		for ( ElementType el : ElementType.values() )
 		{
 			int oldval = other == null ? 0 : other.getStatistic( entity.getBaseVariableMap(), el.Attack );
 			int newval = getStatistic( entity.getBaseVariableMap(), el.Attack );
@@ -309,7 +309,7 @@ public final class Item extends GameEventHandler
 		Element elementElement = xmlElement.getChildByName( "Elements" );
 		if ( elementElement != null )
 		{
-			Tier1Element.load( elementElement, elementalStats );
+			ElementType.load( elementElement, elementalStats );
 		}
 
 		Element lightElement = xmlElement.getChildByName( "Light" );

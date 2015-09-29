@@ -8,7 +8,7 @@
 	
 	<Events>
 		<Constant ReliesOn="wand">
-		    <Atk>wand*Atk*0.2</Atk>
+		    <Base_Atk>wand*10</Base_Atk>
 		</Constant>
 	</Events>
 	

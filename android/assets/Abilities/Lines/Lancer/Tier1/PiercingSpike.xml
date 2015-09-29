@@ -3,8 +3,8 @@
 	<Name>Piercing Spike</Name>
 	<Description>Blast a spike of energy from your weapon, piercing through the foes foolish enough to stand in your way.</Description>
 	
-	<Cooldown>15</Cooldown>
-	<Range>3</Range>
+	<Cooldown>25</Cooldown>
+	<Range>4</Range>
 	
 	<Icon>
 		<Name>Abilities/Lancer/PiercingStrike</Name>
@@ -26,7 +26,6 @@
 	
 	<Effect>
 		<Damage>
-			<Atk>ATK*1.5</Atk>
 		</Damage>
 	</Effect>
 	

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
+import Roguelike.Global.ElementType;
 import Roguelike.Global.Statistic;
-import Roguelike.Global.Tier1Element;
 import Roguelike.Entity.Entity;
 import Roguelike.Util.FastEnumMap;
 
@@ -18,7 +18,6 @@ import exp4j.Helpers.EquationHelper;
 public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 {
 	private String condition;
-	private FastEnumMap<Statistic, Integer> scaleLevel = new FastEnumMap<Statistic, Integer>( Statistic.class );
 	private FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
 	private String[] reliesOn;
 
@@ -92,7 +91,7 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 					raw = (int) exp.evaluate();
 				}
 
-				raw += Global.calculateScaleBonusDam( raw, scaleLevel.get( stat ), stats.get( stat ) );
+				raw += stats.get( stat );
 
 				stats.put( stat, raw );
 			}
@@ -122,36 +121,22 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 		for ( int i = 0; i < xml.getChildCount(); i++ )
 		{
 			Element sEl = xml.getChild( i );
-			int scale = sEl.getIntAttribute( "Scale", 1 );
 
 			if ( sEl.getName().toUpperCase().equals( "ATK" ) )
 			{
 
-				for ( Tier1Element el : Tier1Element.values() )
+				for ( ElementType el : ElementType.values() )
 				{
 					String expanded = sEl.getText().toLowerCase();
 					expanded = expanded.replaceAll( "(?<!_)atk", el.Attack.toString().toLowerCase() );
 
 					equations.put( el.Attack, expanded );
-					scaleLevel.put( el.Attack, scale );
-				}
-			}
-			else if ( sEl.getName().toUpperCase().equals( "PIERCE" ) )
-			{
-				for ( Tier1Element el : Tier1Element.values() )
-				{
-					String expanded = sEl.getText().toLowerCase();
-					expanded = expanded.replaceAll( "(?<!_)pierce", el.Pierce.toString().toLowerCase() );
-
-					equations.put( el.Pierce, expanded );
-					scaleLevel.put( el.Pierce, scale );
 				}
 			}
 			else
 			{
 				Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
 				equations.put( stat, sEl.getText().toLowerCase() );
-				scaleLevel.put( stat, scale );
 			}
 		}
 	}
@@ -161,7 +146,7 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 	{
 		Array<String> lines = new Array<String>();
 
-		for ( Tier1Element el : Tier1Element.values() )
+		for ( ElementType el : ElementType.values() )
 		{
 			if ( equations.containsKey( el.Attack ) )
 			{
@@ -172,11 +157,6 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 					String line = "Deals ";
 					line += "[" + el.toString() + "] ";
 					line += atkVal;
-
-					if ( equations.containsKey( el.Pierce ) )
-					{
-						line += " (" + variableMap.get( el.Pierce.toString().toLowerCase() ) + ")";
-					}
 
 					line += " " + Global.capitalizeString( el.toString() ) + "[] DPS";
 

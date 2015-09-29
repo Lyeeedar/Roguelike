@@ -27,8 +27,7 @@
 	
 	<Effect>
 		<Damage>
-		    <Atk>Atk</Atk>
-			<Pierce>50</Pierce>
+		    <Base_Atk>5</Base_Atk>
 		</Damage>
 	</Effect>
 	

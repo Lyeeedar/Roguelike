@@ -34,7 +34,7 @@
 				<Events>
 					<OnTurn>
 					    <HOT>
-					        <Heal>33</Heal>
+					        <Heal>3</Heal>
 					    </HOT>
 					</OnTurn>
 				</Events>

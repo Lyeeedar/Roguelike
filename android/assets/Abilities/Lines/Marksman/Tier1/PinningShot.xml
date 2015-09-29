@@ -3,7 +3,7 @@
 	<Name>Pinning Shot</Name>
 	<Description>Pin an enemy to the ground.</Description>
 	
-	<Cooldown>20</Cooldown>
+	<Cooldown>30</Cooldown>
 	<Range>-1</Range>
 	
 	<Icon>
@@ -25,7 +25,6 @@
 	
 	<Effect>
 	    <Damage>
-		    <Atk>Atk</Atk>
 		</Damage>
 		<Status>	    
 		    <Defender>	        

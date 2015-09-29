@@ -5,7 +5,7 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
-import Roguelike.Global.Tier1Element;
+import Roguelike.Global.ElementType;
 import Roguelike.GameEvent.IGameObject;
 import Roguelike.Util.FastEnumMap;
 
@@ -17,7 +17,7 @@ import exp4j.Helpers.EquationHelper;
 public final class DamageEvent extends AbstractOnDamageEvent
 {
 	private String condition;
-	private FastEnumMap<Tier1Element, String> equations = new FastEnumMap<Tier1Element, String>( Tier1Element.class );
+	private FastEnumMap<ElementType, String> equations = new FastEnumMap<ElementType, String>( ElementType.class );
 	private String[] reliesOn;
 
 	@Override
@@ -38,9 +38,9 @@ public final class DamageEvent extends AbstractOnDamageEvent
 			if ( conditionVal == 0 ) { return false; }
 		}
 
-		FastEnumMap<Tier1Element, Integer> els = Tier1Element.getElementBlock();
+		FastEnumMap<ElementType, Integer> els = ElementType.getElementBlock();
 
-		for ( Tier1Element el : Tier1Element.values() )
+		for ( ElementType el : ElementType.values() )
 		{
 			if ( equations.containsKey( el ) )
 			{
@@ -92,7 +92,7 @@ public final class DamageEvent extends AbstractOnDamageEvent
 
 			if ( sEl.getName().toLowerCase().equals( "damage" ) )
 			{
-				for ( Tier1Element el : Tier1Element.values() )
+				for ( ElementType el : ElementType.values() )
 				{
 					String expanded = sEl.getText().toLowerCase();
 					expanded = expanded.replaceAll( "damage(?!_)", "damage_" + el.toString().toLowerCase() );
@@ -102,7 +102,7 @@ public final class DamageEvent extends AbstractOnDamageEvent
 			}
 			else
 			{
-				Tier1Element el = Tier1Element.valueOf( sEl.getName().toUpperCase() );
+				ElementType el = ElementType.valueOf( sEl.getName().toUpperCase() );
 				equations.put( el, sEl.getText().toLowerCase() );
 			}
 		}
@@ -113,7 +113,7 @@ public final class DamageEvent extends AbstractOnDamageEvent
 	{
 		Array<String> lines = new Array<String>();
 
-		for ( Tier1Element el : Tier1Element.values() )
+		for ( ElementType el : ElementType.values() )
 		{
 			if ( equations.containsKey( el ) )
 			{

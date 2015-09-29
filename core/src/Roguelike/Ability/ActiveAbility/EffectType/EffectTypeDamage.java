@@ -5,12 +5,10 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
+import Roguelike.Global.ElementType;
 import Roguelike.Global.Statistic;
-import Roguelike.Global.Tier1Element;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
-import Roguelike.GameEvent.GameEventHandler;
-import Roguelike.Items.Item;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Util.FastEnumMap;
 
@@ -21,7 +19,6 @@ import exp4j.Helpers.EquationHelper;
 
 public class EffectTypeDamage extends AbstractEffectType
 {
-	private FastEnumMap<Statistic, Integer> scaleLevel = new FastEnumMap<Statistic, Integer>( Statistic.class );
 	private FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
 	private String[] reliesOn;
 
@@ -33,36 +30,21 @@ public class EffectTypeDamage extends AbstractEffectType
 		for ( int i = 0; i < xml.getChildCount(); i++ )
 		{
 			Element sEl = xml.getChild( i );
-			int scale = sEl.getIntAttribute( "Scale", 1 );
 
 			if ( sEl.getName().toUpperCase().equals( "ATK" ) )
 			{
-
-				for ( Tier1Element el : Tier1Element.values() )
+				for ( ElementType el : ElementType.values() )
 				{
 					String expanded = sEl.getText().toLowerCase();
 					expanded = expanded.replaceAll( "(?<!_)atk", el.Attack.toString().toLowerCase() );
 
 					equations.put( el.Attack, expanded );
-					scaleLevel.put( el.Attack, scale );
-				}
-			}
-			else if ( sEl.getName().toUpperCase().equals( "PIERCE" ) )
-			{
-				for ( Tier1Element el : Tier1Element.values() )
-				{
-					String expanded = sEl.getText().toLowerCase();
-					expanded = expanded.replaceAll( "(?<!_)pierce", el.Pierce.toString().toLowerCase() );
-
-					equations.put( el.Pierce, expanded );
-					scaleLevel.put( el.Pierce, scale );
 				}
 			}
 			else
 			{
 				Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
 				equations.put( stat, sEl.getText().toLowerCase() );
-				scaleLevel.put( stat, scale );
 			}
 		}
 	}
@@ -93,7 +75,7 @@ public class EffectTypeDamage extends AbstractEffectType
 
 	private HashMap<String, Integer> calculateVariableMap( ActiveAbility aa )
 	{
-		HashMap<String, Integer> variableMap = aa.caster.getBaseVariableMap();
+		HashMap<String, Integer> variableMap = aa.caster.getVariableMap();
 
 		for ( String name : reliesOn )
 		{
@@ -132,28 +114,17 @@ public class EffectTypeDamage extends AbstractEffectType
 					raw = (int) exp.evaluate();
 				}
 
-				raw += Global.calculateScaleBonusDam( raw, scaleLevel.get( stat ), stats.get( stat ) );
+				raw += variableMap.get( stat.toString().toLowerCase() );
 
 				stats.put( stat, raw );
+			}
+			else
+			{
+				stats.put( stat, variableMap.get( stat.toString().toLowerCase() ) );
 			}
 		}
 
 		variableMap = Statistic.statsBlockToVariableBlock( stats );
-
-		for ( GameEventHandler handler : aa.caster.getAllHandlers() )
-		{
-			if ( handler instanceof Item )
-			{
-				continue;
-			}
-
-			for ( Statistic s : Statistic.values() )
-			{
-				int val = handler.getStatistic( variableMap, s );
-
-				variableMap.put( s.toString().toLowerCase(), variableMap.get( s.toString().toLowerCase() ) + val );
-			}
-		}
 
 		return variableMap;
 	}
@@ -164,7 +135,6 @@ public class EffectTypeDamage extends AbstractEffectType
 		EffectTypeDamage e = new EffectTypeDamage();
 		e.equations = equations;
 		e.reliesOn = reliesOn;
-		e.scaleLevel = scaleLevel;
 		return e;
 	}
 
@@ -175,7 +145,7 @@ public class EffectTypeDamage extends AbstractEffectType
 
 		Array<String> lines = new Array<String>();
 
-		for ( Tier1Element el : Tier1Element.values() )
+		for ( ElementType el : ElementType.values() )
 		{
 			if ( equations.containsKey( el.Attack ) )
 			{
@@ -186,11 +156,6 @@ public class EffectTypeDamage extends AbstractEffectType
 					String line = "Deals ";
 					line += "[" + el.toString() + "] ";
 					line += atkVal;
-
-					if ( equations.containsKey( el.Pierce ) )
-					{
-						line += " (" + variableMap.get( el.Pierce.toString().toLowerCase() ) + ")";
-					}
 
 					line += " " + Global.capitalizeString( el.toString() ) + "[] Damage";
 

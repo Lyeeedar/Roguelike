@@ -10,7 +10,7 @@
 	<Events>
 		<OnTurn>
 			<DOT>
-				<Aether_Atk>10</Aether_Atk>
+				<Aether_Atk>1</Aether_Atk>
 			</DOT>
 		</OnTurn>
 	</Events>

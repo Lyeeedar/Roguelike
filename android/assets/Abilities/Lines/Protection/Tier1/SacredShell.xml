@@ -8,8 +8,7 @@
 	
 	<Events>
 		<Constant>
-		    <Def>10</Def>
-		    <Hardiness>10</Hardiness>
+		    <Def>5</Def>
 		</Constant>
 	</Events>
 	

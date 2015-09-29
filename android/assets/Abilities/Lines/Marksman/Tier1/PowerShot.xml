@@ -3,7 +3,7 @@
 	<Name>Power Shot</Name>
 	<Description>Fire a powerful arrow.</Description>
 	
-	<Cooldown>4</Cooldown>
+	<Cooldown>20</Cooldown>
 	<Range>-1</Range>
 	
 	<Icon>
@@ -26,7 +26,7 @@
 	
 	<Effect>
 		<Damage>
-			<Atk>ATK*1.5</Atk>
+			<Base_Atk>10</Base_Atk>
 		</Damage>
 	</Effect>
 	

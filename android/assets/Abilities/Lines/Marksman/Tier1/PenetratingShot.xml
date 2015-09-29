@@ -3,7 +3,7 @@
 	<Name>Penetrating Shot</Name>
 	<Description>Fire an arrow that penetrates through enemies in a line.</Description>
 	
-	<Cooldown>15</Cooldown>
+	<Cooldown>25</Cooldown>
 	<Range>-1</Range>
 	
 	<Icon>
@@ -26,7 +26,6 @@
 	
 	<Effect>
 		<Damage>
-			<Atk>ATK*1.5</Atk>
 		</Damage>
 	</Effect>
 	

@@ -8,7 +8,7 @@
 	
 	<Events>
 		<Constant ReliesOn="axe">
-		    <Atk>axe*Atk*0.2</Atk>
+		    <Base_Atk>axe*10</Base_Atk>
 		</Constant>
 	</Events>
 	

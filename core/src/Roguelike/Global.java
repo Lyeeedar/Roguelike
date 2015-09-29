@@ -18,7 +18,6 @@ import Roguelike.Save.SaveAbilityPool;
 import Roguelike.Save.SaveDungeon;
 import Roguelike.Save.SaveFile;
 import Roguelike.Save.SaveLevel;
-import Roguelike.Screens.GameScreen;
 import Roguelike.Screens.LoadingScreen;
 import Roguelike.Screens.LoadingScreen.PostGenerateEvent;
 import Roguelike.Sound.Mixer;
@@ -27,8 +26,6 @@ import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.GameTile.LightData;
 import Roguelike.Tiles.Point;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
-import Roguelike.UI.MessageStack.Line;
-import Roguelike.UI.MessageStack.Message;
 import Roguelike.UI.Tooltip.TooltipStyle;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
@@ -427,40 +424,29 @@ public class Global
 		ENTITY,
 
 		// Elemental stats
+		BASE_ATK,
+		BASE_DEF,
+
 		AETHER_ATK,
-		AETHER_PIERCE,
 		AETHER_DEF,
-		AETHER_HARDINESS,
 
 		VOID_ATK,
-		VOID_PIERCE,
 		VOID_DEF,
-		VOID_HARDINESS,
 
 		METAL_ATK,
-		METAL_PIERCE,
 		METAL_DEF,
-		METAL_HARDINESS,
 
 		WOOD_ATK,
-		WOOD_PIERCE,
 		WOOD_DEF,
-		WOOD_HARDINESS,
 
 		AIR_ATK,
-		AIR_PIERCE,
 		AIR_DEF,
-		AIR_HARDINESS,
 
 		WATER_ATK,
-		WATER_PIERCE,
 		WATER_DEF,
-		WATER_HARDINESS,
 
 		FIRE_ATK,
-		FIRE_PIERCE,
-		FIRE_DEF,
-		FIRE_HARDINESS;
+		FIRE_DEF;
 
 		public static HashMap<String, Integer> emptyMap = new HashMap<String, Integer>();
 		static
@@ -553,56 +539,58 @@ public class Global
 	}
 
 	// ----------------------------------------------------------------------
-	public enum Tier1Element
+	public enum ElementType
 	{
-		AETHER( Color.RED ), VOID( Color.DARK_GRAY ), METAL( Color.LIGHT_GRAY ), WOOD( Color.GREEN ), AIR( Color.CYAN ), WATER( Color.BLUE ), FIRE(
-				Color.ORANGE );
+		BASE( Color.GRAY ),
+		AETHER( Color.RED ),
+		VOID( Color.WHITE ),
+		METAL( Color.LIGHT_GRAY ),
+		WOOD( Color.GREEN ),
+		AIR( Color.CYAN ),
+		WATER( Color.BLUE ),
+		FIRE( Color.ORANGE );
 
-		public Tier1Element Weakness;
-		public Tier1Element Strength;
+		public ElementType Weakness;
+		public ElementType Strength;
 
 		public Statistic Attack;
-		public Statistic Pierce;
 		public Statistic Defense;
-		public Statistic Hardiness;
 
 		public Color Colour;
 
 		static
 		{
-			Tier1Element.METAL.Weakness = Tier1Element.FIRE;
-			Tier1Element.METAL.Strength = Tier1Element.WOOD;
+			ElementType.METAL.Weakness = ElementType.FIRE;
+			ElementType.METAL.Strength = ElementType.WOOD;
 
-			Tier1Element.WOOD.Weakness = Tier1Element.METAL;
-			Tier1Element.WOOD.Strength = Tier1Element.AIR;
+			ElementType.WOOD.Weakness = ElementType.METAL;
+			ElementType.WOOD.Strength = ElementType.AIR;
 
-			Tier1Element.AIR.Weakness = Tier1Element.WOOD;
-			Tier1Element.AIR.Strength = Tier1Element.WATER;
+			ElementType.AIR.Weakness = ElementType.WOOD;
+			ElementType.AIR.Strength = ElementType.WATER;
 
-			Tier1Element.WATER.Weakness = Tier1Element.AIR;
-			Tier1Element.WATER.Strength = Tier1Element.FIRE;
+			ElementType.WATER.Weakness = ElementType.AIR;
+			ElementType.WATER.Strength = ElementType.FIRE;
 
-			Tier1Element.FIRE.Weakness = Tier1Element.WATER;
-			Tier1Element.FIRE.Strength = Tier1Element.METAL;
+			ElementType.FIRE.Weakness = ElementType.WATER;
+			ElementType.FIRE.Strength = ElementType.METAL;
 		}
 
-		Tier1Element( Color colour )
+		ElementType( Color colour )
 		{
 			this.Colour = colour;
 
 			Attack = Statistic.valueOf( toString() + "_ATK" );
-			Pierce = Statistic.valueOf( toString() + "_PIERCE" );
 			Defense = Statistic.valueOf( toString() + "_DEF" );
-			Hardiness = Statistic.valueOf( toString() + "_HARDINESS" );
 
 			Colors.put( this.toString(), this.Colour );
 		}
 
-		public static FastEnumMap<Tier1Element, Integer> getElementBlock()
+		public static FastEnumMap<ElementType, Integer> getElementBlock()
 		{
-			FastEnumMap<Tier1Element, Integer> map = new FastEnumMap<Tier1Element, Integer>( Tier1Element.class );
+			FastEnumMap<ElementType, Integer> map = new FastEnumMap<ElementType, Integer>( ElementType.class );
 
-			for ( Tier1Element el : Tier1Element.values() )
+			for ( ElementType el : ElementType.values() )
 			{
 				map.put( el, 0 );
 			}
@@ -610,13 +598,13 @@ public class Global
 			return map;
 		}
 
-		public static FastEnumMap<Tier1Element, Integer> load( Element xml, FastEnumMap<Tier1Element, Integer> values )
+		public static FastEnumMap<ElementType, Integer> load( Element xml, FastEnumMap<ElementType, Integer> values )
 		{
 			for ( int i = 0; i < xml.getChildCount(); i++ )
 			{
 				Element el = xml.getChild( i );
 
-				Tier1Element elem = Tier1Element.valueOf( el.getName().toUpperCase() );
+				ElementType elem = ElementType.valueOf( el.getName().toUpperCase() );
 				String eqn = el.getText();
 				int newVal = values.get( elem );
 
@@ -636,58 +624,14 @@ public class Global
 			return values;
 		}
 
-		public static FastEnumMap<Tier1Element, Integer> copy( FastEnumMap<Tier1Element, Integer> map )
+		public static FastEnumMap<ElementType, Integer> copy( FastEnumMap<ElementType, Integer> map )
 		{
-			FastEnumMap<Tier1Element, Integer> newMap = new FastEnumMap<Tier1Element, Integer>( Tier1Element.class );
-			for ( Tier1Element e : Tier1Element.values() )
+			FastEnumMap<ElementType, Integer> newMap = new FastEnumMap<ElementType, Integer>( ElementType.class );
+			for ( ElementType e : ElementType.values() )
 			{
 				newMap.put( e, map.get( e ) );
 			}
 			return newMap;
-		}
-	}
-
-	// ----------------------------------------------------------------------
-	public enum Tier1ComboHarmful
-	{
-		POISON( Tier1Element.METAL, Tier1Element.WOOD ),
-		PARALYZE( Tier1Element.METAL, Tier1Element.AIR ),
-		TORPOR( Tier1Element.METAL, Tier1Element.WATER ),
-		IMMOLATE( Tier1Element.METAL, Tier1Element.FIRE ),
-		MINDSHOCK( Tier1Element.WOOD, Tier1Element.AIR ),
-		CORROSION( Tier1Element.WOOD, Tier1Element.WATER ),
-		ACID( Tier1Element.WOOD, Tier1Element.FIRE ),
-		ICE( Tier1Element.WATER, Tier1Element.AIR ),
-		PLASMA( Tier1Element.WATER, Tier1Element.FIRE ),
-		LIGHTNING( Tier1Element.AIR, Tier1Element.FIRE );
-
-		public final Tier1Element[] Tier1Elements;
-
-		Tier1ComboHarmful( Tier1Element e1, Tier1Element e2 )
-		{
-			Tier1Elements = new Tier1Element[] { e1, e2 };
-		}
-	}
-
-	// ----------------------------------------------------------------------
-	public enum Tier2ElementHelpful
-	{
-		REGENERATION( Tier1Element.METAL, Tier1Element.WOOD ),
-		DODGE( Tier1Element.METAL, Tier1Element.AIR ),
-		HASTE( Tier1Element.METAL, Tier1Element.WATER ),
-		POWER( Tier1Element.METAL, Tier1Element.FIRE ),
-		STABILITY( Tier1Element.WOOD, Tier1Element.AIR ),
-		PROTECTION( Tier1Element.WOOD, Tier1Element.WATER ),
-		RETALIATION( Tier1Element.WOOD, Tier1Element.FIRE ),
-		ICECHARGE( Tier1Element.WATER, Tier1Element.AIR ),
-		PLASMACHARGE( Tier1Element.WATER, Tier1Element.FIRE ),
-		LIGHTNINGCHARGE( Tier1Element.AIR, Tier1Element.FIRE );
-
-		public final Tier1Element[] Tier1Elements;
-
-		Tier2ElementHelpful( Tier1Element e1, Tier1Element e2 )
-		{
-			Tier1Elements = new Tier1Element[] { e1, e2 };
 		}
 	}
 
@@ -818,30 +762,30 @@ public class Global
 				String travelKey = (String) travelData;
 
 				outer:
-				for ( int x = 0; x < level.width; x++ )
-				{
-					for ( int y = 0; y < level.height; y++ )
+					for ( int x = 0; x < level.width; x++ )
 					{
-						GameTile tile = level.getGameTile( x, y );
-						if ( tile.metaValue != null )
+						for ( int y = 0; y < level.height; y++ )
 						{
-							if ( tile.metaValue.equals( travelKey ) )
+							GameTile tile = level.getGameTile( x, y );
+							if ( tile.metaValue != null )
 							{
-								tile.addGameEntity( player );
-								break outer;
+								if ( tile.metaValue.equals( travelKey ) )
+								{
+									tile.addGameEntity( player );
+									break outer;
+								}
 							}
-						}
 
-						if ( tile.environmentEntity != null && tile.environmentEntity.data.size() > 0 )
-						{
-							if ( tile.environmentEntity.data.containsKey( travelKey ) )
+							if ( tile.environmentEntity != null && tile.environmentEntity.data.size() > 0 )
 							{
-								tile.addGameEntity( player );
-								break outer;
+								if ( tile.environmentEntity.data.containsKey( travelKey ) )
+								{
+									tile.addGameEntity( player );
+									break outer;
+								}
 							}
 						}
 					}
-				}
 			}
 			else if ( travelData instanceof Point )
 			{
@@ -859,7 +803,41 @@ public class Global
 	public static void calculateDamage( Entity attacker, Entity defender, HashMap<String, Integer> attackerVariableMap, boolean doEvents )
 	{
 		DamageObject damObj = new DamageObject( attacker, defender, attackerVariableMap );
-		runEquations( damObj );
+
+		for ( ElementType el : ElementType.values() )
+		{
+			int atk = damObj.attackerVariableMap.get( Statistic.BASE_ATK.toString().toLowerCase() );
+			int def = damObj.defenderVariableMap.get( Statistic.BASE_DEF.toString().toLowerCase() );
+
+			if ( el != ElementType.BASE )
+			{
+				atk = damObj.attackerVariableMap.get( el.Attack.toString().toLowerCase() );
+				def = (int) Math.floor( def / 3.0f ) + damObj.defenderVariableMap.get( el.Defense.toString().toLowerCase() );
+			}
+
+			int dam = 0;
+
+			if ( atk == 0 )
+			{
+
+			}
+			else if ( atk == def )
+			{
+				dam = 10;
+			}
+			else if ( atk < def )
+			{
+				dam = (int) ( 10.0f / ( ( def - atk ) * 0.5f ) );
+			}
+			else if ( atk > def )
+			{
+				dam = 10 + (int) ( 5.0f * ( ( atk - def ) / 10.0f ) );
+			}
+
+			damObj.damageMap.put( el, dam );
+		}
+
+		damObj.setDamageVariables();
 
 		if ( doEvents )
 		{
@@ -874,81 +852,7 @@ public class Global
 			}
 		}
 
-		printMessages( damObj );
-
 		defender.applyDamage( damObj.getTotalDamage(), attacker );
-	}
-
-	// ----------------------------------------------------------------------
-	private static void runEquations( DamageObject damObj )
-	{
-		for ( Tier1Element el : Tier1Element.values() )
-		{
-			float attack = damObj.attackerVariableMap.get( el.Attack.toString().toLowerCase() );
-			float pierce = damObj.attackerVariableMap.get( el.Pierce.toString().toLowerCase() );
-
-			float accumulatedReduction = 0;
-			{
-				float defense = damObj.defender.statistics.get( el.Defense );
-				float hardiness = 1.0f - (float) damObj.defender.statistics.get( el.Hardiness ) / 100.0f;
-
-				float maxReduction = attack * hardiness;
-
-				accumulatedReduction += Math.max( 0, Math.min( defense, maxReduction ) - pierce );
-			}
-
-			HashMap<String, Integer> defenderVariableMap = damObj.defender.getBaseVariableMap();
-			for ( GameEventHandler handler : damObj.defender.getAllHandlers() )
-			{
-				float defense = handler.getStatistic( defenderVariableMap, el.Defense );
-				float hardiness = 1.0f - handler.getStatistic( defenderVariableMap, el.Hardiness ) / 100.0f;
-
-				float maxReduction = attack * hardiness;
-
-				accumulatedReduction += Math.max( 0, Math.min( defense, maxReduction ) - pierce );
-			}
-
-			attack -= accumulatedReduction;
-			attack = Math.max( attack, 0 );
-
-			damObj.damageMap.put( el, MathUtils.ceil( attack ) );
-		}
-
-		damObj.setDamageVariables();
-	}
-
-	// ----------------------------------------------------------------------
-	private static void printMessages( DamageObject damObj )
-	{
-		Line line = new Line( new Message( " (" ) );
-
-		boolean first = true;
-		for ( Tier1Element el : Tier1Element.values() )
-		{
-			int dam = damObj.damageMap.get( el );
-
-			if ( dam != 0 )
-			{
-				if ( first )
-				{
-					first = false;
-					line.messages.add( new Message( "" + dam, el.Colour ) );
-				}
-				else
-				{
-					line.messages.add( new Message( ", " + dam, el.Colour ) );
-				}
-			}
-		}
-
-		line.messages.add( new Message( ")" ) );
-
-		line.messages.insert( 0, new Message( damObj.attacker.name + " hits " + damObj.defender.name + " for " + damObj.getTotalDamage() + " damage!" ) );
-
-		if ( damObj.getTotalDamage() > 0 )
-		{
-			GameScreen.Instance.addConsoleMessage( line );
-		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -972,19 +876,6 @@ public class Global
 			if ( !Character.isDigit( string.charAt( i ) ) ) { return false; }
 		}
 		return true;
-	}
-
-	// ----------------------------------------------------------------------
-	public static int calculateScaleBonusDam( int baseDam, int scaleLevel, int stat )
-	{
-		if ( stat < 100 ) { return 0; }
-
-		float scaleRange = baseDam * scaleLevel;
-		float alpha = MathUtils.log2( stat / 100 );
-
-		float val = scaleRange * alpha;
-
-		return (int) Math.floor( val );
 	}
 
 	// ----------------------------------------------------------------------

@@ -3,7 +3,7 @@
 	<Name>Cone of Cold</Name>
 	<Description>A cone of freezing magic blasts from your hands.</Description>
 	
-	<Cooldown>10</Cooldown>
+	<Cooldown>25</Cooldown>
 	<Cone>2</Cone>
 	<Range>1</Range>
 	
@@ -27,7 +27,7 @@
 	
 	<Effect>
 		<Damage>
-			<Water_ATK>75</Fire_ATK>
+			<Water_ATK>10</Fire_ATK>
 		</Damage>
 		<Status>	    
 		    <Defender>Chilled</Defender>

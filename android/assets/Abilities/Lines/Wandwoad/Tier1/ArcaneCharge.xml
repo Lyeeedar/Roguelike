@@ -15,7 +15,7 @@
 				    <Duration>10</Duration>
 				    <Events>
 				        <Constant>
-				            <Atk>Atk*0.06</Atk>
+				            <Base_Atk>5</Base_Atk>
 				        </Constant>
 				    </Events>
 				</Status>

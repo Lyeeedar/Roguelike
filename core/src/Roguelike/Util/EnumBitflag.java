@@ -32,6 +32,20 @@ public final class EnumBitflag<T extends Enum<T>>
 		bitflag |= ( 1 << ( val.ordinal() + 1 ) );
 	}
 
+	public void clear()
+	{
+		bitflag = 0;
+	}
+
+	public void setAll( Class<T> type )
+	{
+		int numVals = type.getEnumConstants().length;
+		for ( int i = 0; i < numVals; i++ )
+		{
+			bitflag |= ( 1 << ( i + 1 ) );
+		}
+	}
+
 	public void clearBit( T val )
 	{
 		bitflag &= ~( 1 << ( val.ordinal() + 1 ) );

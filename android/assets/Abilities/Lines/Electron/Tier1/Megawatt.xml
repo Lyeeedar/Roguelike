@@ -3,8 +3,8 @@
 	<Name>Megawatt</Name>
 	<Description>A bolt of lightning blasts your target.</Description>
 	
-	<Cooldown>7</Cooldown>
-	<Range>5</Range>
+	<Cooldown>20</Cooldown>
+	<Range>4</Range>
 	<ScreenShake>10</ScreenShake>
 	
 	<Icon>
@@ -37,8 +37,8 @@
 	
 	<Effect>
 		<Damage>
-			<Air_ATK>120</Air_ATK>
-			<Fire_ATK>30</Fire_ATK>
+			<Air_ATK>10</Air_ATK>
+			<Fire_ATK>10</Fire_ATK>
 		</Damage>
 	</Effect>
 	

@@ -3,8 +3,8 @@
 	<Name>Blood Bullet</Name>
 	<Description>Sacrifice some health to fire a bullet of blood at your target.</Description>
 	
-	<Cooldown>5</Cooldown>
-	<Range>5</Range>
+	<Cooldown>15</Cooldown>
+	<Range>4</Range>
 	
 	<Icon>
 		<Name>Abilities/BloodMagic/BloodBullet</Name>
@@ -29,7 +29,7 @@
 	</MovementSprite>
 	
 	<Cost>
-	    <HEALTH>MaxHP/50</HEALTH>
+	    <HEALTH>5</HEALTH>
 	</Cost>
 	
 	<Targeting>
@@ -42,7 +42,7 @@
 	
 	<Effect>
 		<Damage>
-			<Aether_Atk>MaxHP/10</Aether_Atk>
+			<Aether_Atk>10</Aether_Atk>
 		</Damage>
 	</Effect>
 	

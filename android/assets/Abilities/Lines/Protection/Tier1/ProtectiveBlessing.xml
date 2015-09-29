@@ -2,7 +2,7 @@
 	<Name>Protective Blessing</Name>
 	<Description>Each time you receive damage, reduce further incoming damage by a small amount.</Description>
 	
-	<Cooldown>30</Cooldown>
+	<Cooldown>40</Cooldown>
 	<Range>1</Range>
 	
 	<Icon>
@@ -28,7 +28,7 @@
 	<Effect>
 	    <Status>
 	        <Attacker>
-	            <Duration>5</Duration>
+	            <Duration>8</Duration>
 	            <Events>
 	                <OnReceiveDamage>
 	                    <Status>
@@ -36,8 +36,7 @@
 	                            <Duration>5</Duration>
 	                            <Events>
 	                                <Constant>
-	                                    <Def>5</Def>
-	                                    <Hardiness>50</Hardiness>
+	                                    <Def>2</Def>
 	                                </Constant>
 	                            </Events>
 	                        </Defender>

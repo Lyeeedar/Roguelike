@@ -3,7 +3,7 @@
 	<Name>Power Strike</Name>
 	<Description>Strike your opponent with a powerful blow.</Description>
 	
-	<Cooldown>4</Cooldown>
+	<Cooldown>15</Cooldown>
 	<Range>1</Range>
 	<Cone>1</Cone>
 	
@@ -28,7 +28,7 @@
 	
 	<Effect>
 		<Damage>
-			<Atk>ATK*1.5</Atk>
+			<Base_Atk>5</Base_Atk>
 		</Damage>
 	</Effect>
 	

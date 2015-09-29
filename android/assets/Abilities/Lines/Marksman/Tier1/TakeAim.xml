@@ -3,7 +3,7 @@
 	<Name>Take Aim</Name>
 	<Description>Take careful aim, tagetting your opponents weakpoints.</Description>
 	
-	<Cooldown>20</Cooldown>
+	<Cooldown>40</Cooldown>
 	<Range>1</Range>
 	
 	<Icon>
@@ -30,7 +30,7 @@
 				<Duration>10</Duration>
 				<Events>
 					<Constant>
-						<Pierce>50</Pierce>
+						<Base_Atk>10</Base_Atk>
 					</Constant>
 				</Events>
 			</Attacker>

@@ -3,7 +3,7 @@
 	<Name>Clearing Blow</Name>
 	<Description>Swing your shield in an arc, sending the enemies before you flying away.</Description>
 	
-	<Cooldown>20</Cooldown>
+	<Cooldown>30</Cooldown>
 	<Range>4</Range>
 	<Cone>1</Cone>
 	
@@ -33,7 +33,6 @@
 		    <Distance>3</Distance>
 		</Teleport>
 		<Damage>
-		    <Atk>Atk</Atk>
 		</Damage>
 	</Effect>
 	

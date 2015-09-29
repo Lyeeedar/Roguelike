@@ -1,10 +1,10 @@
 <ActiveAbility>
 
 	<Name>Arctic Surge</Name>
-	<Description>Immense cold blasts from your, freezing everything in its tracks.</Description>
+	<Description>Immense cold blasts from your body, freezing everything in its tracks.</Description>
 	
-	<Cooldown>7</Cooldown>
-	<Range>5</Range>
+	<Cooldown>30</Cooldown>
+	<Range>1</Range>
 	
 	<AOE ExcludeSelf="true">3</AOE>
 	
@@ -28,8 +28,7 @@
 	
 	<Effect>
 		<Damage>
-			<Air_ATK>20</Air_ATK>
-			<Water_ATK>80</Water_ATK>
+			<Water_ATK>10</Water_ATK>
 		</Damage>
 		<Status>
 		    <Defender>

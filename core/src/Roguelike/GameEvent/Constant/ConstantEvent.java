@@ -5,8 +5,8 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
+import Roguelike.Global.ElementType;
 import Roguelike.Global.Statistic;
-import Roguelike.Global.Tier1Element;
 import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.utils.Array;
@@ -29,7 +29,7 @@ public final class ConstantEvent
 
 			if ( sEl.getName().toUpperCase().equals( "ATK" ) )
 			{
-				for ( Tier1Element el : Tier1Element.values() )
+				for ( ElementType el : ElementType.values() )
 				{
 					String expanded = sEl.getText().trim().toLowerCase();
 					expanded = expanded.replaceAll( "(?<!_)atk", el.Attack.toString().toLowerCase() );
@@ -39,32 +39,12 @@ public final class ConstantEvent
 			}
 			else if ( sEl.getName().toUpperCase().equals( "DEF" ) )
 			{
-				for ( Tier1Element el : Tier1Element.values() )
+				for ( ElementType el : ElementType.values() )
 				{
 					String expanded = sEl.getText().trim().toLowerCase();
 					expanded = expanded.replaceAll( "(?<!_)def", el.Defense.toString().toLowerCase() );
 
 					equations.put( el.Defense, expanded );
-				}
-			}
-			else if ( sEl.getName().toUpperCase().equals( "PIERCE" ) )
-			{
-				for ( Tier1Element el : Tier1Element.values() )
-				{
-					String expanded = sEl.getText().trim().toLowerCase();
-					expanded = expanded.replaceAll( "(?<!_)pierce", el.Pierce.toString().toLowerCase() );
-
-					equations.put( el.Pierce, expanded );
-				}
-			}
-			else if ( sEl.getName().toUpperCase().equals( "HARDINESS" ) )
-			{
-				for ( Tier1Element el : Tier1Element.values() )
-				{
-					String expanded = sEl.getText().trim().toLowerCase();
-					expanded = expanded.replaceAll( "(?<!_)hardiness", el.Hardiness.toString().toLowerCase() );
-
-					equations.put( el.Hardiness, expanded );
 				}
 			}
 			else
@@ -139,7 +119,7 @@ public final class ConstantEvent
 			}
 		}
 
-		for ( Tier1Element el : Tier1Element.values() )
+		for ( ElementType el : ElementType.values() )
 		{
 			if ( equations.containsKey( el.Attack ) )
 			{
@@ -151,11 +131,6 @@ public final class ConstantEvent
 					line += "[" + el.toString() + "] ";
 					line += atkVal;
 
-					if ( equations.containsKey( el.Pierce ) )
-					{
-						line += " (" + variableMap.get( el.Pierce.toString().toLowerCase() ) + ")";
-					}
-
 					line += "[]";
 
 					lines.add( line );
@@ -163,7 +138,7 @@ public final class ConstantEvent
 			}
 		}
 
-		for ( Tier1Element el : Tier1Element.values() )
+		for ( ElementType el : ElementType.values() )
 		{
 			if ( equations.containsKey( el.Defense ) )
 			{
@@ -174,11 +149,6 @@ public final class ConstantEvent
 					String line = Global.capitalizeString( el.toString() ) + " defense ";
 					line += "[" + el.toString() + "] ";
 					line += defVal;
-
-					if ( equations.containsKey( el.Hardiness ) )
-					{
-						line += " (" + variableMap.get( el.Hardiness.toString().toLowerCase() ) + ")";
-					}
 
 					line += "[]";
 

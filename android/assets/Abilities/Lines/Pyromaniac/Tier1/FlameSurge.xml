@@ -3,7 +3,7 @@
 	<Name>Flame Surge</Name>
 	<Description>A surge of fire washes over your foes.</Description>
 	
-	<Cooldown>10</Cooldown>
+	<Cooldown>30</Cooldown>
 	<Cone>2</Cone>
 	<Range>1</Range>
 	
@@ -30,7 +30,7 @@
 	
 	<Effect>
 		<Damage>
-			<Fire_Atk>100</Fire_Atk>
+			<Fire_Atk>10</Fire_Atk>
 		</Damage>
 		<Status>	    
 		    <Defender>Burning</Defender>

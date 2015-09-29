@@ -9,7 +9,6 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.DungeonGeneration.RoomGenerators.AbstractRoomGenerator;
-import Roguelike.DungeonGeneration.RoomGenerators.OverlappingRects;
 import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Sprite.Sprite;
 
@@ -520,14 +519,6 @@ public class DungeonFileParser
 
 				roomGenerators.add( gen );
 			}
-		}
-		else
-		{
-			RoomGenerator gen = new RoomGenerator();
-			gen.generator = new OverlappingRects();
-			gen.weight = 1;
-
-			roomGenerators.add( gen );
 		}
 
 		Element backgroundElement = xmlElement.getChildByName( "Background" );

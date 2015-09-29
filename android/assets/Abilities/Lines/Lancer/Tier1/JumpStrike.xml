@@ -3,7 +3,7 @@
 	<Name>Jump Strike</Name>
 	<Description>Leap through the air to strike at your target.</Description>
 	
-	<Cooldown>15</Cooldown>
+	<Cooldown>25</Cooldown>
 	<Range>4</Range>
 	
 	<Icon>
@@ -28,7 +28,7 @@
 		    <Style>Leap</Style>
 		</Teleport>
 		<Damage>
-		    <Atk>Atk*1.3</Atk>
+		    <Base_Atk>1</Base_Atk>
 		</Damage>
 	</Effect>
 	

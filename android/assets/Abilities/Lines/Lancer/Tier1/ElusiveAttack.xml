@@ -4,7 +4,7 @@
 	<Description>Strike and hop backwards.</Description>
 	
 	<Cooldown>20</Cooldown>
-	<Range>1</Range>
+	<Range>-1</Range>
 	
 	<Icon>
 		<Name>Abilities/Lancer/ElusiveAttack</Name>
@@ -25,7 +25,6 @@
 	
 	<Effect>
 	    <Damage>
-		    <Atk>Atk*1.1</Atk>
 		</Damage>
 		<Teleport>
 		    <Move>Caster</Move>

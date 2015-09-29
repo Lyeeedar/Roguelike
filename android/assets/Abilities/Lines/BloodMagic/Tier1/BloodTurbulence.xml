@@ -3,8 +3,8 @@
 	<Name>Blood Turbulence</Name>
 	<Description>Excite the blood of the creatures in the target area, dealing damage.</Description>
 	
-	<Cooldown>15</Cooldown>
-	<Range>6</Range>
+	<Cooldown>25</Cooldown>
+	<Range>4</Range>
 	<AOE>2</AOE>
 	
 	<Icon>
@@ -27,9 +27,13 @@
 		</Smite>
 	</Movement>
 	
+	<Cost>
+	    <HEALTH>5</HEALTH>
+	</Cost>
+	
 	<Effect>
 		<Damage>
-			<Aether_Atk>100+Aether_Atk/6</Aether_Atk>
+			<Aether_Atk>10</Aether_Atk>
 		</Damage>
 	</Effect>
 	

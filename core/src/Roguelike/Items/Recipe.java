@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
-import Roguelike.Global.Tier1Element;
+import Roguelike.Global.ElementType;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.Items.Item.ItemCategory;
 import Roguelike.Util.FastEnumMap;
@@ -49,12 +49,12 @@ public class Recipe
 
 		Item mainMat = null;
 		int max = 0;
-		FastEnumMap<Tier1Element, Integer> totalElements = Tier1Element.getElementBlock();
+		FastEnumMap<ElementType, Integer> totalElements = ElementType.getElementBlock();
 
 		for ( Item mat : materials )
 		{
 			int total = 0;
-			for ( Tier1Element el : Tier1Element.values() )
+			for ( ElementType el : ElementType.values() )
 			{
 				total += mat.elementalStats.get( el );
 				totalElements.put( el, totalElements.get( el ) + mat.elementalStats.get( el ) );
@@ -67,7 +67,7 @@ public class Recipe
 			}
 		}
 
-		for ( Tier1Element el : Tier1Element.values() )
+		for ( ElementType el : ElementType.values() )
 		{
 			int val = totalElements.get( el );
 
@@ -111,10 +111,6 @@ public class Recipe
 			{
 				slot = new DamageDefenseSlot();
 			}
-			else if ( el.getName().toLowerCase().equals( "piercehardiness" ) )
-			{
-				slot = new PierceHardinessSlot();
-			}
 
 			slot.parse( el );
 
@@ -135,13 +131,13 @@ public class Recipe
 
 	public static abstract class RecipeSlot
 	{
-		public FastEnumMap<Tier1Element, String> equations;
+		public FastEnumMap<ElementType, String> equations;
 
 		public RecipeSlot()
 		{
-			equations = new FastEnumMap<Tier1Element, String>( Tier1Element.class );
+			equations = new FastEnumMap<ElementType, String>( ElementType.class );
 
-			for ( Tier1Element el : Tier1Element.values() )
+			for ( ElementType el : ElementType.values() )
 			{
 				equations.put( el, "Value" );
 			}
@@ -159,24 +155,24 @@ public class Recipe
 
 				if ( name.equals( "SCALE" ) )
 				{
-					for ( Tier1Element el : Tier1Element.values() )
+					for ( ElementType el : ElementType.values() )
 					{
 						equations.put( el, "Value*" + xmlElement.getText() );
 					}
 				}
 				else
 				{
-					Tier1Element el = Tier1Element.valueOf( name );
+					ElementType el = ElementType.valueOf( name );
 					equations.put( el, xmlElement.getText() );
 				}
 			}
 		}
 
-		protected FastEnumMap<Tier1Element, Integer> process( FastEnumMap<Tier1Element, Integer> params )
+		protected FastEnumMap<ElementType, Integer> process( FastEnumMap<ElementType, Integer> params )
 		{
-			FastEnumMap<Tier1Element, Integer> values = Tier1Element.getElementBlock();
+			FastEnumMap<ElementType, Integer> values = ElementType.getElementBlock();
 
-			for ( Tier1Element el : Tier1Element.values() )
+			for ( ElementType el : ElementType.values() )
 			{
 				String eqn = equations.get( el );
 				int val = params.get( el );
@@ -205,10 +201,10 @@ public class Recipe
 		@Override
 		public void process( Item material, Item targetItem )
 		{
-			FastEnumMap<Tier1Element, Integer> values = material.elementalStats;
+			FastEnumMap<ElementType, Integer> values = material.elementalStats;
 			values = super.process( values );
 
-			for ( Tier1Element el : Tier1Element.values() )
+			for ( ElementType el : ElementType.values() )
 			{
 				if ( targetItem.category == ItemCategory.WEAPON )
 				{
@@ -217,28 +213,6 @@ public class Recipe
 				else
 				{
 					targetItem.getStatisticsObject().put( el.Defense, values.get( el ).toString() );
-				}
-			}
-		}
-	}
-
-	public static class PierceHardinessSlot extends RecipeSlot
-	{
-		@Override
-		public void process( Item material, Item targetItem )
-		{
-			FastEnumMap<Tier1Element, Integer> values = material.elementalStats;
-			values = super.process( values );
-
-			for ( Tier1Element el : Tier1Element.values() )
-			{
-				if ( targetItem.category == ItemCategory.WEAPON )
-				{
-					targetItem.getStatisticsObject().put( el.Pierce, values.get( el ).toString() );
-				}
-				else
-				{
-					targetItem.getStatisticsObject().put( el.Hardiness, "50" );
 				}
 			}
 		}
@@ -260,7 +234,12 @@ public class Recipe
 		return recipe.generate( materials );
 	}
 
-	private static final Recipe[] WeaponRecipes = { Recipe.load( "Sword" ), Recipe.load( "Axe" ), Recipe.load( "Spear" ), Recipe.load( "Bow" ), Recipe.load( "Wand" ), };
+	private static final Recipe[] WeaponRecipes = {
+			Recipe.load( "Sword" ),
+			Recipe.load( "Axe" ),
+			Recipe.load( "Spear" ),
+			Recipe.load( "Bow" ),
+			Recipe.load( "Wand" ), };
 	private static final Recipe[] ArmourRecipes = { Recipe.load( "Helm" ), Recipe.load( "Cuirass" ), Recipe.load( "Greaves" ) };
 
 	public static Recipe getRandomRecipe( boolean weapon, boolean armour )

@@ -8,8 +8,7 @@
 	
 	<Events>
 		<Constant ReliesOn="shield">
-		    <Def>shield*Def*0.3</Def>
-		    <Hardiness>75</Hardiness>
+		    <Base_Def>shield*10</Base_Def>
 		</Constant>
 		<OnDealDamage>
 		    <Damage Condition="attacker_shield" ReliesOn="shield">-Damage*0.1</Damage>

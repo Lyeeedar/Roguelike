@@ -3,7 +3,7 @@
 	<Name>Aegis</Name>
 	<Description>Surround yourself in a protective shield that has a chance to block attacks.</Description>
 	
-	<Cooldown>20</Cooldown>
+	<Cooldown>25</Cooldown>
 	<Range>1</Range>
 	
 	<Icon>

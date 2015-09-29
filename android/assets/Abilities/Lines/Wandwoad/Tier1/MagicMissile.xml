@@ -3,8 +3,8 @@
 	<Name>Magic Missile</Name>
 	<Description>A bolt of pure elemental energy shoots at a nearby foe.</Description>
 	
-	<Cooldown>7</Cooldown>
-	<Range>5</Range>
+	<Cooldown>20</Cooldown>
+	<Range>4</Range>
 	
 	<Icon>
 		<Name>Abilities/Wandwoad/MagicMissile</Name>
@@ -38,7 +38,7 @@
 	
 	<Effect>
 		<Damage>
-			<Atk>20</Atk>
+			<Base_Atk>10</Base_Atk>
 		</Damage>
 	</Effect>
 	

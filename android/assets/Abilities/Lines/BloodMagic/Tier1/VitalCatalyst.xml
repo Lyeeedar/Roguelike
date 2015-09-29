@@ -8,13 +8,14 @@
 	
 	<Events>
 		<OnAttack>
-			<Damage><Aether_Atk>MaxHP/50</Aether_Atk></Damage>
+			<Damage><Aether_Atk>7</Aether_Atk></Damage>
 		</OnAttack>
 		<OnUseAbility>
-			<Damage><Aether_Atk>MaxHP/50</Aether_Atk></Damage>
+			<Damage><Aether_Atk>10</Aether_Atk></Damage>
 		</OnUseAbility>
 		<Constant>
-		    <Atk>Atk*0.3</Atk>
+		    <Base_Atk>5</Base_Atk>
+		    <Aether_Atk>5</Aether_Atk>
 		</Constant>
 	</Events>
 	

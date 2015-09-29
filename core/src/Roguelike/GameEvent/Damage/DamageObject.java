@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
-import Roguelike.Global.Tier1Element;
+import Roguelike.Global.ElementType;
 import Roguelike.Entity.Entity;
 import Roguelike.Util.FastEnumMap;
 import exp4j.Helpers.EquationHelper;
@@ -17,7 +17,7 @@ public class DamageObject
 	public final Entity attacker;
 	public final Entity defender;
 
-	public final FastEnumMap<Tier1Element, Integer> damageMap = Tier1Element.getElementBlock();
+	public final FastEnumMap<ElementType, Integer> damageMap = ElementType.getElementBlock();
 	public final HashMap<String, Integer> damageVariableMap = new HashMap<String, Integer>();
 
 	public DamageObject( Entity attacker, Entity defender, HashMap<String, Integer> attackerVariableMap )
@@ -32,7 +32,7 @@ public class DamageObject
 	public void setDamageVariables()
 	{
 		int total = 0;
-		for ( Tier1Element key : Tier1Element.values() )
+		for ( ElementType key : ElementType.values() )
 		{
 			if ( damageMap.containsKey( key ) )
 			{
@@ -46,9 +46,9 @@ public class DamageObject
 		damageVariableMap.put( "damage", total );
 	}
 
-	public void modifyDamage( FastEnumMap<Tier1Element, Integer> dam )
+	public void modifyDamage( FastEnumMap<ElementType, Integer> dam )
 	{
-		for ( Tier1Element el : Tier1Element.values() )
+		for ( ElementType el : ElementType.values() )
 		{
 			int oldVal = damageMap.get( el );
 			int newVal = dam.get( el );
@@ -107,7 +107,7 @@ public class DamageObject
 	{
 		int totalDam = 0;
 
-		for ( Tier1Element el : Tier1Element.values() )
+		for ( ElementType el : ElementType.values() )
 		{
 			totalDam += damageMap.get( el );
 		}

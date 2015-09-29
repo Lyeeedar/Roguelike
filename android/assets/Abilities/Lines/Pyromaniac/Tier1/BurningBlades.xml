@@ -3,7 +3,7 @@
 	<Name>Burning Blades</Name>
 	<Description>Enchant your weaponry with fire.</Description>
 	
-	<Cooldown>20</Cooldown>
+	<Cooldown>40</Cooldown>
 	<Range>1</Range>
 	
 	<Icon>
@@ -26,7 +26,7 @@
 				<Duration>10</Duration>
 				<Events>
 					<Constant>
-						<Fire_Atk>50</Fire_Atk>
+						<Fire_Atk>5</Fire_Atk>
 					</Constant>
 				</Events>
 			</Attacker>

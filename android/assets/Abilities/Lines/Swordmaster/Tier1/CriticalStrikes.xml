@@ -9,7 +9,7 @@
 	<Events>
 		<OnDealDamage>
 		    <Damage Condition="attacker_sword && rnd(1) < 0.2" ReliesOn="sword">
-		        <Damage>Damage*2</Damage>
+		        <Damage>Damage*1.5</Damage>
 		    </Damage>
 		</OnDealDamage>
 	</Events>

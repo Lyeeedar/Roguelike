@@ -16,9 +16,10 @@
 	</Sprite>
 	
 	<Statistics>
-		<MaxHP>1000</MaxHP>
+		<MaxHP>100</MaxHP>
 		<Range>10</<Range>	
-		<Wood_Atk>20</Wood_Atk>		
+		<Base_Atk>5</Base_Atk>
+		<Base_Def>2</Base_Def>
 	</Statistics>
 	
 	<Inventory>
@@ -34,7 +35,7 @@
 			
 				<Events>
 					<Constant>
-						<Metal_Atk>50</Metal_Atk>
+						<Metal_Atk>5</Metal_Atk>
 					</Constant>
 				</Events>
 		    </Dagger>
@@ -48,8 +49,7 @@
 		        
 		        <Events>
 					<Constant>
-						<Def>5</Def>
-						<Hardiness>25</Hardiness>
+						<Base_Def>5</Base_Def>
 					</Constant>
 				</Events>
 		        
@@ -64,8 +64,7 @@
 		        
 		        <Events>
 					<Constant>
-						<Def>5</Def>
-						<Hardiness>25</Hardiness>
+						<Base_Def>3</Base_Def>
 					</Constant>
 				</Events>
 		        

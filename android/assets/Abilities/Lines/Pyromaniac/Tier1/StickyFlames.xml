@@ -10,7 +10,7 @@
 		<OnDealDamage>
 			<Status Condition="damage_fire > 0 && rnd(1) < 0.4" ReliesOn="Burning">
 				<Defender>Burning</Defender>
-				<Stacks>CEIL(DAMAGE_FIRE/100)</Stacks>
+				<Stacks>CEIL(DAMAGE_FIRE/10)</Stacks>
 			</Status>
 			<Field Condition="damage_fire > 0 && rnd(1) < 0.1">
 			    <Defender>Fire</Defender>

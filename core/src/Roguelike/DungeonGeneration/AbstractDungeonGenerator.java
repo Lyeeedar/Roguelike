@@ -43,7 +43,7 @@ public abstract class AbstractDungeonGenerator
 
 	public abstract boolean generate();
 
-	protected boolean DEBUG_OUTPUT = false;
+	protected boolean DEBUG_OUTPUT = true;
 
 	public Level getLevel()
 	{
@@ -97,13 +97,13 @@ public abstract class AbstractDungeonGenerator
 		}
 
 		requiredRooms.sort( new Comparator<Room>()
-				{
+		{
 			@Override
 			public int compare( Room arg0, Room arg1 )
 			{
 				return arg0.comparisonString().compareTo( arg1.comparisonString() );
 			}
-				} );
+		} );
 	}
 
 	// ----------------------------------------------------------------------

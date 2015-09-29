@@ -141,6 +141,8 @@ public class EnvironmentEntity extends Entity
 			@Override
 			public void activate( EnvironmentEntity entity )
 			{
+				Global.save();
+
 				Level current = entity.tile[0][0].level;
 				SaveLevel save = current.dungeon.getSaveLevel( (SaveLevel) entity.data.get( "Destination" ) );
 
@@ -227,6 +229,8 @@ public class EnvironmentEntity extends Entity
 			@Override
 			public void activate( EnvironmentEntity entity )
 			{
+				Global.save();
+
 				Level current = entity.tile[0][0].level;
 
 				String dungeonUID = (String) entity.data.get( "DestinationDungeon" );
@@ -350,6 +354,8 @@ public class EnvironmentEntity extends Entity
 			@Override
 			public void activate( EnvironmentEntity entity )
 			{
+				Global.save();
+
 				Level current = entity.tile[0][0].level;
 
 				String dungeonUID = (String) entity.data.get( "DestinationDungeon" );
@@ -401,26 +407,41 @@ public class EnvironmentEntity extends Entity
 			@Override
 			public void activate( EnvironmentEntity entity )
 			{
+				Global.save();
+
 				boolean closed = entity.data.get( "State" ).equals( "Closed" );
 				if ( closed )
 				{
-					entity.passableBy = Passability.parse( "true" );
-					entity.passableBy.setBit( Passability.LIGHT );
-					entity.raisedSprite = openSprite;
-					name = "Close";
-
 					entity.data.put( "State", "Open" );
 				}
 				else
 				{
-					entity.passableBy = Passability.parse( "false" );
-					entity.passableBy.clearBit( Passability.LIGHT );
-					entity.raisedSprite = closedSprite;
-					name = "Open";
-
 					entity.data.put( "State", "Closed" );
 				}
 			}
+		};
+
+		OnTurnAction onTurn = new OnTurnAction()
+		{
+
+			@Override
+			public void update( EnvironmentEntity entity, float delta )
+			{
+				boolean closed = entity.data.get( "State" ).equals( "Closed" );
+				if ( closed )
+				{
+					entity.passableBy.clear();
+					entity.raisedSprite = closedSprite;
+					entity.actions.get( 0 ).name = "Open";
+				}
+				else
+				{
+					entity.passableBy.setAll( Passability.class );
+					entity.raisedSprite = openSprite;
+					entity.actions.get( 0 ).name = "Close";
+				}
+			}
+
 		};
 
 		EnvironmentEntity entity = new EnvironmentEntity();
@@ -429,6 +450,7 @@ public class EnvironmentEntity extends Entity
 		entity.passableBy.clearBit( Passability.LIGHT );
 		entity.raisedSprite = closedSprite;
 		entity.actions.add( action );
+		entity.onTurnAction = onTurn;
 		entity.UID = "EnvironmentEntity Door: ID " + entity.hashCode();
 		entity.canTakeDamage = false;
 

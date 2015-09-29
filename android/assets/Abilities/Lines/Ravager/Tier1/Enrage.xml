@@ -3,7 +3,7 @@
 	<Name>Enrage</Name>
 	<Description>Incite yourself into a murderous fury, gaining bloodlust.</Description>
 	
-	<Cooldown>20</Cooldown>
+	<Cooldown>15</Cooldown>
 	<Range>1</Range>
 	
 	<Icon>

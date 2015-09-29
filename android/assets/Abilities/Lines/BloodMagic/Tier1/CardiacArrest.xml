@@ -3,8 +3,8 @@
 	<Name>Cardiac Arrest</Name>
 	<Description>Temporarily stop your targets heart, causing them to stop in their tracks and take damage.</Description>
 	
-	<Cooldown>15</Cooldown>
-	<Range>3</Range>
+	<Cooldown>20</Cooldown>
+	<Range>4</Range>
 	
 	<Icon>
 		<Name>Abilities/BloodMagic/CardiacArrest</Name>
@@ -25,6 +25,10 @@
 		<Smite />
 	</Movement>
 	
+	<Cost>
+	    <HEALTH>5</HEALTH>
+	</Cost>
+	
 	<Effect>
 		<Status>	    
 		    <Defender>	        
@@ -32,7 +36,7 @@
 		        <Events>	            
 		            <OnMove><Cancel/></OnMove>
 		            <OnTurn>
-		                <DOT><Aether_Atk>20+Aether_Atk/20</Aether_Atk></DOT>
+		                <DOT><Aether_Atk>10</Aether_Atk></DOT>
 		            </OnTurn>        
 		       	</Events> 
 		    </Defender>
