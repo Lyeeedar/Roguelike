@@ -147,20 +147,17 @@ public class EffectTypeDamage extends AbstractEffectType
 
 		for ( ElementType el : ElementType.values() )
 		{
-			if ( equations.containsKey( el.Attack ) )
+			int atkVal = variableMap.get( el.Attack.toString().toLowerCase() );
+
+			if ( atkVal > 0 )
 			{
-				int atkVal = variableMap.get( el.Attack.toString().toLowerCase() );
+				String line = "Deals ";
+				line += "[" + el.toString() + "] ";
+				line += atkVal;
 
-				if ( atkVal > 0 )
-				{
-					String line = "Deals ";
-					line += "[" + el.toString() + "] ";
-					line += atkVal;
+				line += " " + Global.capitalizeString( el.toString() ) + "[] Damage";
 
-					line += " " + Global.capitalizeString( el.toString() ) + "[] Damage";
-
-					lines.add( line );
-				}
+				lines.add( line );
 			}
 		}
 

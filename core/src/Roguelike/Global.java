@@ -804,40 +804,37 @@ public class Global
 	{
 		DamageObject damObj = new DamageObject( attacker, defender, attackerVariableMap );
 
+		int totalAtk = 0;
+		int baseDef = damObj.defenderVariableMap.get( Statistic.BASE_DEF.toString().toLowerCase() );
+
 		for ( ElementType el : ElementType.values() )
 		{
-			int atk = damObj.attackerVariableMap.get( Statistic.BASE_ATK.toString().toLowerCase() );
-			int def = damObj.defenderVariableMap.get( Statistic.BASE_DEF.toString().toLowerCase() );
+			int atk = damObj.attackerVariableMap.get( el.Attack.toString().toLowerCase() );
+			int def = el != ElementType.BASE ? damObj.defenderVariableMap.get( el.Defense.toString().toLowerCase() ) : 0;
 
-			if ( el != ElementType.BASE )
-			{
-				atk = damObj.attackerVariableMap.get( el.Attack.toString().toLowerCase() );
-				def = (int) Math.floor( def / 3.0f ) + damObj.defenderVariableMap.get( el.Defense.toString().toLowerCase() );
-			}
-
-			int dam = 0;
-
-			if ( atk == 0 )
-			{
-
-			}
-			else if ( atk == def )
-			{
-				dam = 10;
-			}
-			else if ( atk < def )
-			{
-				dam = (int) ( 10.0f / ( ( def - atk ) * 0.5f ) );
-			}
-			else if ( atk > def )
-			{
-				dam = 10 + (int) ( 5.0f * ( ( atk - def ) / 10.0f ) );
-			}
-
-			damObj.damageMap.put( el, dam );
+			totalAtk += Math.max( 0, atk - def );
 		}
 
-		damObj.setDamageVariables();
+		int dam = 0;
+
+		if ( totalAtk == 0 )
+		{
+
+		}
+		else if ( totalAtk == baseDef )
+		{
+			dam = 10;
+		}
+		else if ( totalAtk < baseDef )
+		{
+			dam = (int) ( 10.0f / ( ( baseDef - totalAtk ) * 0.5f ) );
+		}
+		else if ( totalAtk > baseDef )
+		{
+			dam = 10 + (int) ( 5.0f * ( ( totalAtk - baseDef ) / 10.0f ) );
+		}
+
+		damObj.damage = dam;
 
 		if ( doEvents )
 		{
@@ -852,7 +849,7 @@ public class Global
 			}
 		}
 
-		defender.applyDamage( damObj.getTotalDamage(), attacker );
+		defender.applyDamage( damObj.damage, attacker );
 	}
 
 	// ----------------------------------------------------------------------

@@ -13,7 +13,7 @@
 	</Factions>
 	
 	<Statistics>
-		<MaxHP>60</MaxHP>
+		<MaxHP>30</MaxHP>
 		<Range>5</<Range>
 		
 		<Base_Atk>10</Base_Atk>

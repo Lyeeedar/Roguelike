@@ -18,8 +18,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class EntityStatusRenderer
 {
-	private static Texture heartFull = AssetManager.loadTexture( "Sprites/Oryx/uf_split/uf_items/heart_red_full.png" );
-	private static Texture heartEmpty = AssetManager.loadTexture( "Sprites/Oryx/uf_split/uf_items/heart_empty.png" );
+	private static Texture heartFull = AssetManager.loadTexture( "Sprites/Oryx/Custom/ui/heart_red_full.png" );
+	private static Texture heartEmpty = AssetManager.loadTexture( "Sprites/Oryx/Custom/ui/heart_empty.png" );
 
 	public static void draw( Entity entity, Batch batch, int x, int y, int width, int height, float heightScale )
 	{
@@ -30,10 +30,10 @@ public class EntityStatusRenderer
 		if ( val < 1 )
 		{
 			int dstHeightPortion = (int) ( heartFull.getHeight() * val );
-			int srcHeightPortion = (int) ( height * val );
+			int srcHeightPortion = (int) ( ( height / 3 ) * val );
 
-			batch.draw( heartFull, x, y, width, srcHeightPortion, 0, heartFull.getHeight() - dstHeightPortion, heartFull.getWidth(), dstHeightPortion, false, false );
-			batch.draw( heartEmpty, x, y, width, height );
+			batch.draw( heartFull, x, y, width / 3, srcHeightPortion, 0, heartFull.getHeight() - dstHeightPortion, heartFull.getWidth(), dstHeightPortion, false, false );
+			batch.draw( heartEmpty, x, y, width / 3, height / 3 );
 		}
 
 		Array<StatusEffectStack> stacks = entity.stackStatusEffects();
@@ -76,7 +76,7 @@ public class EntityStatusRenderer
 
 	public static Table getMouseOverTable( GameEntity entity, int x, int y, int width, int height, float heightScale, int mousex, int mousey, Skin skin )
 	{
-		if ( mousex >= x && mousex <= x + width / 2 && mousey >= y && mousey <= y + height / 2 )
+		if ( mousex >= x && mousex <= x + width / 3 && mousey >= y && mousey <= y + height / 3 )
 		{
 			int hp = entity.HP;
 			int maxhp = entity.getVariable( Statistic.MAXHP );
