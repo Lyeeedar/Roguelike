@@ -365,7 +365,17 @@
 					</EnvironmentData>
 				</Symbol>
 				
-				<Symbol Extends="c">
+				<Symbol Extends=",">
+				    <Char>i</Char>
+				    <EntityData>NPC/Village/Innkeep</EntityData>
+				</Symbol>
+				
+				<Symbol Extends=",">
+				    <Char>b</Char>
+				    <EntityData>NPC/Village/Barmaid</EntityData>
+				</Symbol>
+				
+				<Symbol Extends=",">
 				    <Char>d</Char>
 				    <EntityData>NPC/Village/Drunkard</EntityData>
 				</Symbol>
