@@ -96,12 +96,6 @@
 		
 		<Symbol Extends=",">
 			<Char>c</Char>
-			<EnvironmentData>
-				<Sprite>
-					<Name>Objects/Chair</Name>
-				</Sprite>
-				<Passable>true</Passable>
-			</EnvironmentData>
 		</Symbol>
 		
 		<Symbol Extends=",">

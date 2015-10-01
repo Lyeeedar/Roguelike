@@ -15,9 +15,8 @@
 	<CanTakeDamage>false</CanTakeDamage>
 	
 	<Sprite>
-		<Name>Characters/Drunkard</Name>
-		<UpdateRate>0.5</UpdateRate>
-		<AnimationMode>Shrink</AnimationMode>
+		<Name>Oryx/Custom/heroes/bar_patron</Name>
+		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
 	
 	<Statistics>

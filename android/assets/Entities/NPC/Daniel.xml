@@ -15,9 +15,8 @@
 	<CanTakeDamage>false</CanTakeDamage>
 	
 	<Sprite>
-		<Name>Characters/WiseMan</Name>
-		<UpdateRate>0.5</UpdateRate>
-		<AnimationMode>Shrink</AnimationMode>
+		<Name>Oryx/Custom/heroes/articifer</Name>
+		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
 	
 	<Statistics>
