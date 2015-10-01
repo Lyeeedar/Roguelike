@@ -36,6 +36,11 @@ public class AbilityPool
 				{
 					GameScreen.Instance.addAbilityAvailabilityAction( a.Icon );
 				}
+
+				if ( a.cooldownAccumulator < 0 )
+				{
+					a.cooldownAccumulator = 0;
+				}
 			}
 		}
 	}

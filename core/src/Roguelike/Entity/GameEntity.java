@@ -76,12 +76,15 @@ public class GameEntity extends Entity
 
 		actionDelayAccumulator += cost;
 
-		for ( ActiveAbility a : slottedActiveAbilities )
+		if ( tile[0][0].level.player != this )
 		{
-			a.cooldownAccumulator -= cost;
-			if ( a.cooldownAccumulator < 0 )
+			for ( ActiveAbility a : slottedActiveAbilities )
 			{
-				a.cooldownAccumulator = 0;
+				a.cooldownAccumulator -= cost;
+				if ( a.cooldownAccumulator < 0 )
+				{
+					a.cooldownAccumulator = 0;
+				}
 			}
 		}
 
