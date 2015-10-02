@@ -70,7 +70,7 @@ public final class DamageEvent extends AbstractOnDamageEvent
 		{
 			condition = condition.toLowerCase();
 		}
-		equation = xml.getText();
+		equation = xml.getText().toLowerCase();
 	}
 
 	@Override

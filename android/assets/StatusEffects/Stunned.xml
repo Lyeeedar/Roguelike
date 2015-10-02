@@ -11,11 +11,7 @@
 		<OnTask>
 		    <Cancel />
 		</OnTask>
-		<OnReceiveDamage>
-		    <Damage>
-		        <Damage>Damage*1.5</Damage>
-		    </Damage>
-		</OnReceiveDamage>
+		<OnReceiveDamage>Damage*1.5</OnReceiveDamage>
 	</Events>
 	
 </StatusEffect>

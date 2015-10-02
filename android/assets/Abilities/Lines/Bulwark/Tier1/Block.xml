@@ -37,7 +37,7 @@
 	            <Events>
 	                <OnReceiveDamage>
 	                    <Damage>
-							<Damage>-Damage</Damage>
+							-Damage
 						</Damage>
 	                </OnReceiveDamage>
 	            </Events>

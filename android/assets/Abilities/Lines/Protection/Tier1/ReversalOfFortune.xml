@@ -34,7 +34,7 @@
 	                <OnReceiveDamage>
 	                    <Heal><Defender>Damage</Defender></Heal>
 	                    <Damage>
-							<Damage>-Damage</Damage>
+							-Damage
 						</Damage>
 	                </OnReceiveDamage>
 	            </Events>

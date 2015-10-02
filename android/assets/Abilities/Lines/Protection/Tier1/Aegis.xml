@@ -33,7 +33,7 @@
 	            <Events>
 	                <OnReceiveDamage>
 	                    <Damage Condition="rnd(1) < 0.33">
-							<Damage>-Damage</Damage>
+							-Damage
 						</Damage>
 	                </OnReceiveDamage>
 	            </Events>

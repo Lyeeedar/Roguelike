@@ -32,7 +32,7 @@
 	            <Events>
 	                <OnReceiveDamage>
 	                    <Damage>
-							<Damage>-Damage*0.2</Damage>
+							-Damage*0.2
 						</Damage>
 	                </OnReceiveDamage>
 	            </Events>
