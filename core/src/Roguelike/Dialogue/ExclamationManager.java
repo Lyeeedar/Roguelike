@@ -1,8 +1,11 @@
 package Roguelike.Dialogue;
 
+import java.util.HashMap;
+
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
+import Roguelike.Global.Statistic;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Tiles.GameTile;
@@ -19,7 +22,6 @@ public class ExclamationManager
 	public ExclamationEventWrapper seeAlly;
 	public ExclamationEventWrapper seeEnemy;
 	public ExclamationEventWrapper lowHealth;
-	public ExclamationEventWrapper victory;
 
 	public void update( float delta )
 	{
@@ -54,6 +56,11 @@ public class ExclamationManager
 		if ( seeEnemy != null )
 		{
 			processSeeEnemy( tiles, entity );
+		}
+
+		if ( lowHealth != null )
+		{
+			processLowHealth( tiles, entity );
 		}
 	}
 
@@ -129,6 +136,21 @@ public class ExclamationManager
 		}
 	}
 
+	private void processLowHealth( Array<GameTile> tiles, GameEntity entity )
+	{
+		boolean isLowHealth = entity.HP < entity.getVariable( Statistic.MAXHP ) / 2;
+
+		if ( isLowHealth )
+		{
+			if ( lowHealth.cooldownAccumulator <= 0 )
+			{
+				lowHealth.process( entity, "LowHealth", new Point().set( entity ) );
+			}
+
+			lowHealth.cooldownAccumulator = lowHealth.cooldown;
+		}
+	}
+
 	public void parse( Element xml )
 	{
 		Element seePlayerElement = xml.getChildByName( "SeePlayer" );
@@ -147,6 +169,12 @@ public class ExclamationManager
 		if ( seeEnemyElement != null )
 		{
 			seeEnemy = ExclamationEventWrapper.load( seeEnemyElement );
+		}
+
+		Element lowHealthElement = xml.getChildByName( "LowHealth" );
+		if ( lowHealthElement != null )
+		{
+			lowHealth = ExclamationEventWrapper.load( lowHealthElement );
 		}
 	}
 
@@ -167,7 +195,7 @@ public class ExclamationManager
 		{
 			for ( ExclamationWrapper wrapper : groups )
 			{
-				if ( processCondition( wrapper.condition, null ) )
+				if ( processCondition( entity.dialogue.data, wrapper.condition, wrapper.reliesOn ) )
 				{
 					entity.setPopupText( Global.expandNames( wrapper.text ), 2 );
 
@@ -185,15 +213,33 @@ public class ExclamationManager
 		}
 
 		// ----------------------------------------------------------------------
-		public boolean processCondition( String condition, String[] reliesOn )
+		public boolean processCondition( HashMap<String, Integer> data, String condition, String[] reliesOn )
 		{
 			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
+			EquationHelper.setVariableNames( expB, data, "" );
 			EquationHelper.setVariableNames( expB, Global.GlobalVariables, "" );
+
+			for ( String name : reliesOn )
+			{
+				if ( !data.containsKey( name ) && !Global.GlobalVariables.containsKey( name ) )
+				{
+					expB.variable( name );
+				}
+			}
 
 			Expression exp = EquationHelper.tryBuild( expB );
 			if ( exp == null ) { return false; }
 
+			EquationHelper.setVariableValues( exp, data, "" );
 			EquationHelper.setVariableValues( exp, Global.GlobalVariables, "" );
+
+			for ( String name : reliesOn )
+			{
+				if ( !data.containsKey( name ) && !Global.GlobalVariables.containsKey( name ) )
+				{
+					exp.setVariable( name, 0 );
+				}
+			}
 
 			int raw = (int) exp.evaluate();
 
@@ -221,12 +267,15 @@ public class ExclamationManager
 	private static class ExclamationWrapper
 	{
 		public String condition;
+		public String[] reliesOn;
 		public SoundInstance sound;
 		public String text;
 
 		public void parse( Element xml )
 		{
 			condition = xml.getAttribute( "Condition", "1" ).toLowerCase();
+			reliesOn = xml.getAttribute( "ReliesOn", "" ).toLowerCase().split( "," );
+
 			Element soundEl = xml.getChildByName( "Sound" );
 			if ( soundEl != null )
 			{

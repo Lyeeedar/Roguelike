@@ -33,9 +33,12 @@ public class DialogueActionBranch extends AbstractDialogueAction
 			if ( returnType != ReturnType.RUNNING && branches.get( currentBranch ).dialogue.index == branches.get( currentBranch ).dialogue.actions.size )
 			{
 				currentBranch = -1;
+				return returnType;
 			}
-
-			return returnType;
+			else
+			{
+				return ReturnType.RUNNING;
+			}
 		}
 		else
 		{

@@ -1,0 +1,103 @@
+<Dialogue>
+    
+    <Exclamations>
+	    <SeePlayer Cooldown="50">
+	        <Exclamation Condition="FirstChat == 0" ReliesOn="FirstChat">
+	            <Text>So you're finally awake! Come over here and chat to me.</Text>
+	            <Sound>
+	                <Name>Male/Greeting</Name>
+	            </Sound>
+	        </Exclamation>
+	    </SeePlayer>
+	</Exclamations>
+    
+    <Dialogue>
+	    <Chunk Condition="FirstChat == 0" ReliesOn="FirstChat">
+	        
+	        <Text>
+	            <Text>Hey, you've been out like a light for a long time. Glad to finally see you up and about.</Text>
+	        </Text>
+	        
+	        <Input>
+	            <Choice>What's going on? Where am I?</Choice>
+	        </Input>
+	        
+	        <Text>
+	            <Text>I think a better question is who are you? Do you remember your name?</Text>
+	        </Text>
+	        
+	        <Input>
+	            <Choice>... No, I don't think so.</Choice>
+	        </Input>
+	        
+	        <Text>
+	            <Text>I guess I should introduce myself first. My name is the [Name]Articifer[], granted to me by the [Place]Central Authority[] itself. So your turn, what's your name?</Text>
+	        </Text>
+	        
+	        <Input Key="Response">
+	            <Choice>My name is the [Name]Adventurer[].</Choice>
+	            <Choice>My name is the [Name]Explorer[].</Choice>
+	            <Choice>My name is the [Name]$class$[].</Choice>
+	            <Choice>My name is the [Name]Hero[].</Choice>
+	            <Choice>My name is the [Name]Badass[].</Choice>
+	        </Input>
+	        
+	        <Branch>
+	            <Branch Condition="Response == 1">
+	                <SetVariable>
+	                    <Type>GlobalString</Type>
+	                    <Key>player</Key>
+	                    <Value>Adventurer</Value>
+	                </SetVariable>
+	            </Branch>
+	            <Branch Condition="Response == 2">
+	                <SetVariable>
+	                    <Type>GlobalString</Type>
+	                    <Key>player</Key>
+	                    <Value>Explorer</Value>
+	                </SetVariable>
+	            </Branch>
+	            <Branch Condition="Response == 3">
+	                <SetVariable>
+	                    <Type>GlobalString</Type>
+	                    <Key>player</Key>
+	                    <Value>$class$</Value>
+	                </SetVariable>
+	            </Branch>
+	            <Branch Condition="Response == 4">
+	                <SetVariable>
+	                    <Type>GlobalString</Type>
+	                    <Key>player</Key>
+	                    <Value>Hero</Value>
+	                </SetVariable>
+	            </Branch>
+	            <Branch Condition="Response == 5">
+	                <SetVariable>
+	                    <Type>GlobalString</Type>
+	                    <Key>player</Key>
+	                    <Value>Badass</Value>
+	                </SetVariable>
+	            </Branch>
+	        </Branch>
+	        
+	        <Text>
+	            <Text>The [Name]$player$[]... I think it suits you. I assume you don't have [Place]Central Authorities[] approval though. You can travel to the mainland at some point and petition them for it.</Text>
+	        </Text>
+	        
+	        <Text>
+	            <Text>If you are looking for something to do, go talk to the [Name]Innkeep[] over in the Tavern. I hear she has a task she wants to push on a tough adventurer type.</Text>
+	        </Text>
+	        
+	        <Text>
+	            <Text>If you have any other questions, feel free to chat to me. I'll try to answer them. Good luck.</Text>
+	        </Text>
+	        
+	        <SetVariable>
+	            <Key>FirstChat</Key>
+	            <Value>1</Value>
+	        </SetVariable>
+
+	    </Chunk>
+    </Dialogue>
+    
+</Dialogue>

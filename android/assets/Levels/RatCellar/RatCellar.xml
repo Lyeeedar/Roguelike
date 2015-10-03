@@ -107,6 +107,46 @@
 			</Rows>
 
 		</Transition>
+		
+	    <BossRoom Condition="Boss">
+		    
+		    <Symbols>
+		        <Symbol Extends=".">
+		            <Char>B</Char>
+		            <EntityData>Boss</EntityData>
+		        </Symbol>
+		        
+		        <Symbol Extends=".">
+		            <Char>r</Char>
+		            <EnvironmentData>
+					    <Sprite>
+					        <Name>Oryx/uf_split/uf_terrain/floor_set_grey_7</Name>
+					    </Sprite>
+					    
+					    <Passable>false</Passable>
+					    <Opaque>false</Opaque>
+					    
+					    <Type>Spawner</Type>
+					    <Entity>Enemies/Rat/SmallRat</Entity>
+					    <Spawn>OnHear</Spawn>
+					    <NumToSpawn>2</NumToSpawn>
+					    <Delay>3</Delay>
+					</EnvironmentData>
+		        </Symbol>
+		        
+		    </Symbols>
+		    
+		    <Rows>
+		        <Row>###+####</Row>
+		        <Row>#......#</Row>
+		        <Row>#r.....#</Row>
+		        <Row>#......#</Row>
+		        <Row>#......#</Row>
+		        <Row>#..B.r.#</Row>
+		        <Row>#.r....#</Row>
+		        <Row>########</Row>
+		    </Rows>
+		</BossRoom>
 	    
 	</Required>
 	

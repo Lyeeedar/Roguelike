@@ -56,6 +56,13 @@ import exp4j.Helpers.EquationHelper;
 public class Global
 {
 	// ----------------------------------------------------------------------
+	static
+	{
+		Colors.put( "Name", Color.GREEN );
+		Colors.put( "Place", Color.CYAN );
+	}
+
+	// ----------------------------------------------------------------------
 	public static RoguelikeGame Game;
 
 	// ----------------------------------------------------------------------
@@ -93,12 +100,6 @@ public class Global
 
 	// ----------------------------------------------------------------------
 	public static Level CurrentLevel;
-
-	// ----------------------------------------------------------------------
-	public static String PlayerName = "Jeff";
-
-	// ----------------------------------------------------------------------
-	public static String PlayerTitle = "Adventurer";
 
 	// ----------------------------------------------------------------------
 	public static HashMap<String, Dungeon> Dungeons = new HashMap<String, Dungeon>();
@@ -698,7 +699,7 @@ public class Global
 		GlobalVariables.clear();
 		GlobalNames.clear();
 
-		GlobalNames.put( "player", PlayerName );
+		GlobalNames.put( "player", "You" );
 
 		// player.size = 2;
 		// player.sprite.size = 2;
@@ -762,30 +763,30 @@ public class Global
 				String travelKey = (String) travelData;
 
 				outer:
-					for ( int x = 0; x < level.width; x++ )
+				for ( int x = 0; x < level.width; x++ )
+				{
+					for ( int y = 0; y < level.height; y++ )
 					{
-						for ( int y = 0; y < level.height; y++ )
+						GameTile tile = level.getGameTile( x, y );
+						if ( tile.metaValue != null )
 						{
-							GameTile tile = level.getGameTile( x, y );
-							if ( tile.metaValue != null )
+							if ( tile.metaValue.equals( travelKey ) )
 							{
-								if ( tile.metaValue.equals( travelKey ) )
-								{
-									tile.addGameEntity( player );
-									break outer;
-								}
+								tile.addGameEntity( player );
+								break outer;
 							}
+						}
 
-							if ( tile.environmentEntity != null && tile.environmentEntity.data.size() > 0 )
+						if ( tile.environmentEntity != null && tile.environmentEntity.data.size() > 0 )
+						{
+							if ( tile.environmentEntity.data.containsKey( travelKey ) )
 							{
-								if ( tile.environmentEntity.data.containsKey( travelKey ) )
-								{
-									tile.addGameEntity( player );
-									break outer;
-								}
+								tile.addGameEntity( player );
+								break outer;
 							}
 						}
 					}
+				}
 			}
 			else if ( travelData instanceof Point )
 			{

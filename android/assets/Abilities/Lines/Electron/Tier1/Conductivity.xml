@@ -32,9 +32,7 @@
 		        <Duration>10</Duration>
 		        <Events>
 		            <OnReceiveDamage>
-		                <Damage>
-		                    <Air>Damage_Air*1.2</Air>
-		                </Damage>
+		                <Damage>Damage*1.2</Damage>
 		            </OnReceiveDamage>
 		            
 		            <OnDeath>

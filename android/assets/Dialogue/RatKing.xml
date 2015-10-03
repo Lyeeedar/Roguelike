@@ -1,0 +1,9 @@
+<Data>
+    <Exclamations> 
+        <LowHealth Cooldown="10">
+	        <Exclamation>
+	            <Text>Squeak!</Text>
+	        </Exclamation>
+	    </LowHealth>
+    </Exclamations>
+</Data>

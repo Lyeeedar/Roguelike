@@ -1,0 +1,12 @@
+<Data>
+    <Exclamations> 
+        <SeePlayer Cooldown="50">
+            <Exclamation Condition="RatQuest == 0" ReliesOn="RatQuest">
+                <Text>You should talk to my mother, I think she has a task for you.</Text>
+            </Exclamation>
+            <Exclamation>
+                <Text>Can I get you a drink?</Text>
+            </Exclamation>
+        </SeePlayer>
+    </Exclamations>
+</Data>

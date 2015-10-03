@@ -2,7 +2,7 @@
 	<Name>Giant Rat</Name>
 
 	<Sprite>
-		<Name>Oryx/uf_split/uf_heroes/rat_giant</Name>
+		<Name>Oryx/Custom/heroes/rat_king</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
 		
@@ -13,11 +13,11 @@
 	</Factions>
 	
 	<Statistics>
-		<MaxHP>50</MaxHP>
+		<MaxHP>100</MaxHP>
 		<Range>5</<Range>
 		
-		<Base_Atk>12</Base_Atk>
-		<Base_Def>10</Base_Def>
+		<Base_Atk>16</Base_Atk>
+		<Base_Def>15</Base_Def>
 		
 	</Statistics>
 	

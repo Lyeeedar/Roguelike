@@ -1,0 +1,64 @@
+<Data>
+    <Exclamations> 
+        <SeePlayer Cooldown="50">
+            <Exclamation Condition="RatQuest == 0" ReliesOn="RatQuest">
+                <Text>Hey you! You look tough. Interested in some work?</Text>
+            </Exclamation>
+            <Exclamation>
+                <Text>Can I do for you?</Text>
+            </Exclamation>
+        </SeePlayer>
+    </Exclamations>
+    
+     <Dialogue>
+	    <Chunk Condition="RatQuest == 0" ReliesOn="RatQuest">
+	        <Text>
+	            <Text>You seem like the adventurous type, and I have just the kind of work you types like. Interested?</Text>
+	        </Text>
+	        
+	        <Input Key="Response">
+	            <Choice>Sure. What is it?</Choice>
+	            <Choice>Nope not interested.</Choice>
+	        </Input>
+	        
+	        <Branch>
+	            <Branch Condition="Response == 1">
+	            
+	                <Text>
+	                    <Text>Excellent! So, you see the stairs leading down behind me? That leads to my cellar, where I keep the booze. However it has recently been overun with giant killer rats.</Text>
+	                </Text>
+	                
+	                <Text>
+	                    <Text>I need you to exterminate them, and to find out where they came from and stop it.</Text>
+	                </Text>
+	                
+	                <Text>
+	                    <Text>You think you can manage that?</Text>
+	                </Text>
+	                
+	                <Input>
+	                    <Choice>Leave it to me.</Choice>
+	                </Input>
+	                
+	                <Text>
+	                    <Text>Great! Thank you so much. Good luck and be careful.</Text>
+	                </Text>
+	                
+	                <SetVariable>
+	                    <Type>Global</Type>
+	                    <Key>RatQuest</Key>
+	                    <Value>1</Value>
+	                </SetVariable>
+	                
+	            </Branch>
+	            
+	            <Branch Condition="Response == 2">
+	                <Text>
+	                    <Text>Oh, okay then. Come chat to me again if you change your mind.</Text>
+	                </Text>
+	            </Branch>
+	        </Branch>
+	        
+	    </Chunk>
+	 </Dialogue>
+</Data>

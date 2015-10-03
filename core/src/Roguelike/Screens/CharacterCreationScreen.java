@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -51,7 +50,6 @@ public class CharacterCreationScreen implements Screen
 		NinePatch background = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TilePanel.png" ), 12, 12, 12, 12 );
 
 		classList = new ClassList( skin, stage, tileBackground, tileBorder );
-		name = new TextField( "Jeff", skin );
 
 		Table table = new Table();
 		// table.debug();
@@ -59,12 +57,6 @@ public class CharacterCreationScreen implements Screen
 		Table optionsTable = new Table();
 		optionsTable.defaults().space( 20 );
 		optionsTable.background( new NinePatchDrawable( background ) );
-
-		Table nameTable = new Table();
-
-		nameTable.add( new Label( "Name", skin ) );
-		nameTable.row();
-		nameTable.add( name );
 
 		male = new CheckBox( "Male", skin );
 		female = new CheckBox( "Female", skin );
@@ -80,7 +72,6 @@ public class CharacterCreationScreen implements Screen
 		genderTable.add( male );
 		genderTable.add( female );
 
-		optionsTable.add( nameTable );
 		optionsTable.add( genderTable );
 
 		Table classTable = new Table();
@@ -105,9 +96,8 @@ public class CharacterCreationScreen implements Screen
 			@Override
 			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 			{
-				Global.PlayerName = name.getText();
-				Global.PlayerTitle = classList.chosen.name;
 				Global.newGame( classList.chosen.entity, classList.chosen.lines );
+				Global.GlobalNames.put( "class", classList.chosen.name );
 			}
 		} );
 
@@ -314,7 +304,6 @@ public class CharacterCreationScreen implements Screen
 
 	SpriteBatch batch;
 
-	TextField name;
 	CheckBox male;
 	CheckBox female;
 

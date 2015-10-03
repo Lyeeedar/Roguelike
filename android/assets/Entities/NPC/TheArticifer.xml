@@ -1,22 +1,20 @@
-<Entity>
-	<Name>Man</Name>
-	
+<Entity>	
 	<Factions>
 		<Faction>Player</Faction>
 	</Factions>
 	
-	<Dialogue>Dialogue/VillagerMan</Dialogue>
+	<Dialogue>Dialogue/TheArticifer</Dialogue>
 	
 	<AI>basicMonster</AI>
 	<Essence>0</Essence>
 	
 	<CanSwap>true</CanSwap>
-	<CanMove>true</CanMove>
+	<CanMove>false</CanMove>
+	<CanTakeDamage>false</CanTakeDamage>
 	
 	<Sprite>
-		<Name>Characters/Man</Name>
-		<UpdateRate>0.5</UpdateRate>
-		<AnimationMode>Shrink</AnimationMode>
+		<Name>Oryx/Custom/heroes/articifer</Name>
+		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
 	
 	<Statistics>

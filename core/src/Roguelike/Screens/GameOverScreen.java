@@ -1,6 +1,5 @@
 package Roguelike.Screens;
 
-import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
@@ -9,8 +8,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -30,14 +27,10 @@ public class GameOverScreen implements Screen
 
 	private void create()
 	{
-		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 20 );
-
 		skin = Global.loadSkin();
 
 		stage = new Stage( new ScreenViewport() );
 		batch = new SpriteBatch();
-
-		background = AssetManager.loadTexture( "Sprites/GUI/Title.png" );
 
 		createUI();
 	}
@@ -113,15 +106,8 @@ public class GameOverScreen implements Screen
 	{
 		stage.act();
 
-		Gdx.gl.glClearColor( 0, 0, 0, 1 );
+		Gdx.gl.glClearColor( 0.3f, 0.3f, 0.3f, 1 );
 		Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
-
-		batch.begin();
-
-		// batch.draw(background, 0, 0, Global.Resolution[0],
-		// Global.Resolution[1]);
-
-		batch.end();
 
 		stage.draw();
 
@@ -215,8 +201,6 @@ public class GameOverScreen implements Screen
 	Skin skin;
 
 	SpriteBatch batch;
-
-	Texture background;
 
 	Label detailLabel;
 }

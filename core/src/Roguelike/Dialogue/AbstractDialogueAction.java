@@ -21,23 +21,31 @@ public abstract class AbstractDialogueAction
 	// ----------------------------------------------------------------------
 	public boolean processCondition( String condition, String[] reliesOn )
 	{
+		ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
+		EquationHelper.setVariableNames( expB, manager.data, "" );
+		EquationHelper.setVariableNames( expB, Global.GlobalVariables, "" );
+
 		for ( String name : reliesOn )
 		{
 			if ( !manager.data.containsKey( name ) && !Global.GlobalVariables.containsKey( name ) )
 			{
-				manager.data.put( name, 0 );
+				expB.variable( name );
 			}
 		}
-
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-		EquationHelper.setVariableNames( expB, manager.data, "" );
-		EquationHelper.setVariableNames( expB, Global.GlobalVariables, "" );
 
 		Expression exp = EquationHelper.tryBuild( expB );
 		if ( exp == null ) { return false; }
 
 		EquationHelper.setVariableValues( exp, manager.data, "" );
 		EquationHelper.setVariableValues( exp, Global.GlobalVariables, "" );
+
+		for ( String name : reliesOn )
+		{
+			if ( !manager.data.containsKey( name ) && !Global.GlobalVariables.containsKey( name ) )
+			{
+				exp.setVariable( name, 0 );
+			}
+		}
 
 		int raw = (int) exp.evaluate();
 

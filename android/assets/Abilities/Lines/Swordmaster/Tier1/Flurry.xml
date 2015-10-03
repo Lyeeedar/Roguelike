@@ -37,9 +37,7 @@
 			    <Duration>10</Duration>
 			    <Events>
 			        <OnReceiveDamage>
-			            <Damage>
-			                <Damage>Damage*1.2</Damage>
-			            </Damage>
+			            <Damage>Damage*1.2</Damage>
 			        </OnReceiveDamage>
 			        <OnAttack>
 			            <Cost>cost*0.5</Cost>

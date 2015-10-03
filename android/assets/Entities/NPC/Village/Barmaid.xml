@@ -5,7 +5,7 @@
 		<Faction>Player</Faction>
 	</Factions>
 	
-	<Dialogue>Dialogue/Drunkard</Dialogue>
+	<Dialogue>Dialogue/TheBarmaid</Dialogue>
 	
 	<AI>basicMonster</AI>
 	<Essence>0</Essence>

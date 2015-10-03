@@ -35,7 +35,7 @@ public class DialogueActionInput extends AbstractDialogueAction
 	@Override
 	public void parse( Element xml )
 	{
-		key = xml.getAttribute( "Key" ).toLowerCase();
+		key = xml.getAttribute( "Key", "Response" ).toLowerCase();
 
 		for ( int i = 0; i < xml.getChildCount(); i++ )
 		{
