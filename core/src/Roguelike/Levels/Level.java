@@ -484,13 +484,18 @@ public class Level
 				{
 					if ( e.isBoss )
 					{
-						// if ( dungeon.isCleared( this ) )
+						if ( dungeon.isCleared( this ) )
 						{
 							dungeon.isCleared = true;
 							EnvironmentEntity portal = EnvironmentEntity.CreateDungeonExitPortal( dungeon );
 							tile.addEnvironmentEntity( portal );
 
 							GameScreen.Instance.addFullScreenMessage( "Dungeon Cleared" );
+
+							for ( String key : dungeon.clearData.keySet() )
+							{
+								Global.GlobalVariables.put( key, dungeon.clearData.get( key ) );
+							}
 						}
 					}
 

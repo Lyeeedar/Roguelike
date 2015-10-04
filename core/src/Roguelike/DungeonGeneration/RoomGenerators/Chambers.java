@@ -224,7 +224,7 @@ public class Chambers extends AbstractRoomGenerator
 
 		while ( true )
 		{
-			BSPTree tree = new BSPTree( 0, 0, grid.length, grid[0].length );
+			BSPTree tree = new BSPTree( 0, 0, grid.length - 1, grid[0].length - 1 );
 			tree.partition( ran );
 			outGrid = new int[grid.length][grid[0].length];
 			tree.dig( outGrid, ran );
@@ -272,16 +272,16 @@ public class Chambers extends AbstractRoomGenerator
 		int y = 0;
 
 		outer:
-		for ( x = 0; x < width; x++ )
-		{
-			for ( y = 0; y < height; y++ )
+			for ( x = 0; x < width; x++ )
 			{
-				if ( grid[x][y] >= 1 )
+				for ( y = 0; y < height; y++ )
 				{
-					break outer;
+					if ( grid[x][y] >= 1 )
+					{
+						break outer;
+					}
 				}
 			}
-		}
 
 		Array<int[]> toBeProcessed = new Array<int[]>();
 		toBeProcessed.add( new int[] { x, y } );

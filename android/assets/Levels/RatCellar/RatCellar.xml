@@ -137,14 +137,14 @@
 		    </Symbols>
 		    
 		    <Rows>
-		        <Row>###+####</Row>
-		        <Row>#......#</Row>
-		        <Row>#r.....#</Row>
-		        <Row>#......#</Row>
-		        <Row>#......#</Row>
-		        <Row>#..B.r.#</Row>
-		        <Row>#.r....#</Row>
-		        <Row>########</Row>
+		        <Row>........</Row>
+		        <Row>........</Row>
+		        <Row>.r......</Row>
+		        <Row>........</Row>
+		        <Row>........</Row>
+		        <Row>...B.r..</Row>
+		        <Row>..r.....</Row>
+		        <Row>........</Row>
 		    </Rows>
 		</BossRoom>
 	    

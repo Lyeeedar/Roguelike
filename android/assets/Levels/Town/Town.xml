@@ -344,6 +344,11 @@
 						<Destination>RatCellar</Destination>
 						<Faction>Rat</Faction>
 						<MaxDepth>3</MaxDepth>
+						<RemoveOnClear>false</RemoveOnClear>
+						
+						<ClearData>
+						    <RatQuest>2</RatQuest>
+						</ClearData>
 						
 						<ExitRoom>
 						    <Faction>none</Faction>

@@ -1797,10 +1797,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void addFullScreenMessage( String message )
 	{
-		Label label = new Label( message, skin );
+		Label label = new Label( message, skin, "title" );
 		label.setColor( Color.WHITE );
-
-		label.setFontScale( 5 );
 
 		int cx = 50;
 		int cy = Global.Resolution[1] - 50;

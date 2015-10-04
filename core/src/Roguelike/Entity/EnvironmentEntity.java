@@ -241,6 +241,11 @@ public class EnvironmentEntity extends Entity
 					dungeon = new Dungeon( current.dungeon.getSaveLevel( current.UID ), new Point().set( entity ), (String) entity.data.get( "Faction" ), (Integer) entity.data.get( "MaxDepth" ) );
 					entity.data.put( "DestinationDungeon", dungeon.UID );
 
+					if ( entity.data.containsKey( "ClearData" ) )
+					{
+						dungeon.clearData = (HashMap<String, Integer>) entity.data.get( "ClearData" );
+					}
+
 					Global.Dungeons.put( dungeon.UID, dungeon );
 				}
 
@@ -321,23 +326,40 @@ public class EnvironmentEntity extends Entity
 			entity.data.put( "MaxDepth", data.getInt( "MaxDepth", 1 ) );
 			entity.UID = "EnvironmentEntity Dungeon: ID " + entity.hashCode();
 
-			entity.onTurnAction = new OnTurnAction()
+			Element clearDataElement = data.getChildByName( "ClearData" );
+			if ( clearDataElement != null )
 			{
+				HashMap<String, Integer> clearData = new HashMap<String, Integer>();
 
-				@Override
-				public void update( EnvironmentEntity entity, float delta )
+				for ( int i = 0; i < clearDataElement.getChildCount(); i++ )
 				{
-					String dungeonUID = (String) entity.data.get( "DestinationDungeon" );
-					Dungeon dungeon = Global.Dungeons.get( dungeonUID );
-
-					if ( dungeon != null && dungeon.isCleared )
-					{
-						entity.removeFromTile();
-						Global.Dungeons.remove( dungeon.UID );
-					}
+					Element dataEl = clearDataElement.getChild( i );
+					clearData.put( dataEl.getName().toLowerCase(), Integer.parseInt( dataEl.getText() ) );
 				}
 
-			};
+				entity.data.put( "ClearData", clearData );
+			}
+
+			if ( data.getBoolean( "RemoveOnClear", true ) )
+			{
+				entity.onTurnAction = new OnTurnAction()
+				{
+
+					@Override
+					public void update( EnvironmentEntity entity, float delta )
+					{
+						String dungeonUID = (String) entity.data.get( "DestinationDungeon" );
+						Dungeon dungeon = Global.Dungeons.get( dungeonUID );
+
+						if ( dungeon != null && dungeon.isCleared )
+						{
+							entity.removeFromTile();
+							Global.Dungeons.remove( dungeon.UID );
+						}
+					}
+
+				};
+			}
 
 			entity.tile = new GameTile[entity.size][entity.size];
 			stairs.size = entity.size;

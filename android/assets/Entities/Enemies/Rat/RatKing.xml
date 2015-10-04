@@ -5,15 +5,19 @@
 		<Name>Oryx/Custom/heroes/rat_king</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
+	
+	<Dialogue>Dialogue/RatKing</Dialogue>
 		
 	<AI>basicMonster</AI>
+	
+	<IsBoss>true</IsBoss>
 	
 	<Factions>
 		<Faction>Rat</Faction>
 	</Factions>
 	
 	<Statistics>
-		<MaxHP>100</MaxHP>
+		<MaxHP>130</MaxHP>
 		<Range>5</<Range>
 		
 		<Base_Atk>16</Base_Atk>

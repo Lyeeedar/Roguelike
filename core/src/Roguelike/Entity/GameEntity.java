@@ -218,7 +218,6 @@ public class GameEntity extends Entity
 		AI = xmlElement.getChildByName( "AI" ) != null ? BehaviourTree.load( Gdx.files.internal( "AI/" + xmlElement.get( "AI" ) + ".xml" ) ) : AI;
 		canSwap = xmlElement.getBoolean( "CanSwap", false );
 		canMove = xmlElement.getBoolean( "CanMove", true );
-		essence = xmlElement.getInt( "Essence", MathUtils.random( 100 ) );
 
 		Element factionElement = xmlElement.getChildByName( "Factions" );
 		if ( factionElement != null )
@@ -279,6 +278,8 @@ public class GameEntity extends Entity
 		{
 			dialogue = DialogueManager.load( dialoguePath, this );
 		}
+
+		essence = xmlElement.getInt( "Essence", MathUtils.random( HP ) );
 	}
 
 	// ----------------------------------------------------------------------

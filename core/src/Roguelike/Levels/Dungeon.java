@@ -23,6 +23,7 @@ public class Dungeon
 	public String mainFaction;
 	public int maxDepth;
 
+	public HashMap<String, Integer> clearData = new HashMap<String, Integer>();
 	public boolean isCleared = false;
 
 	public Dungeon( SaveLevel outside, Point point, String mainFaction, int maxDepth )
@@ -71,7 +72,7 @@ public class Dungeon
 		level.getAllEntities( entities );
 		for ( GameEntity entity : entities )
 		{
-			if ( entity.isBoss ) { return true; }
+			if ( entity.HP > 0 && entity.isBoss ) { return true; }
 		}
 
 		return false;

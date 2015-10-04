@@ -60,5 +60,26 @@
 	        </Branch>
 	        
 	    </Chunk>
+	    	
+	    <Chunk Condition="RatQuest == 2" ReliesOn="RatQuest">
+	        <Text>
+	    	    <Text>You killed the source of the rats?</Text>
+	    	</Text>
+	    	
+	    	<Input>
+	    	    <Choice>There was some giant rat in a crown that seemed to be calling them.</Choice>
+	    	</Input>
+	    	
+	    	<Text>
+	    	    <Text>How odd. Well I'm glad they are gone now. Thank you so much!</Text>
+	    	</Text>
+	    	
+	    	<SetVariable>
+	    	    <Type>Global</Type>
+	    	    <Key>RatQuest</Key>
+	    	    <Value>3</Value>
+	    	</SetVariable>
+	    </Chunk>
+	    
 	 </Dialogue>
 </Data>

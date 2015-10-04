@@ -1,5 +1,7 @@
 package Roguelike.Save;
 
+import java.util.HashMap;
+
 import Roguelike.Levels.Dungeon;
 import Roguelike.Tiles.Point;
 
@@ -14,6 +16,8 @@ public class SaveDungeon extends SaveableObject<Dungeon>
 	public String faction;
 	public int maxDepth;
 
+	public HashMap<String, Integer> clearData = new HashMap<String, Integer>();
+
 	public String UID;
 
 	@Override
@@ -27,6 +31,7 @@ public class SaveDungeon extends SaveableObject<Dungeon>
 		outsidePoint = obj.outsidePoint;
 		faction = obj.mainFaction;
 		maxDepth = obj.maxDepth;
+		clearData = (HashMap<String, Integer>) obj.clearData.clone();
 
 		UID = obj.UID;
 	}
@@ -41,6 +46,7 @@ public class SaveDungeon extends SaveableObject<Dungeon>
 		}
 
 		dungeon.UID = UID;
+		dungeon.clearData = (HashMap<String, Integer>) clearData.clone();
 
 		return dungeon;
 	}
