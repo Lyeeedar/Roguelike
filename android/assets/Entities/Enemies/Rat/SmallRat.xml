@@ -1,17 +1,9 @@
-<Entity>
-	<Name>Rat</Name>
-
+<Entity Extends="Enemies/Rat/RatBase">
 	<Sprite>
 		<Name>Oryx/uf_split/uf_heroes/rat</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-		
-	<AI>basicMonster</AI>
-	
-	<Factions>
-		<Faction>Rat</Faction>
-	</Factions>
-	
+
 	<Statistics>
 		<MaxHP>30</MaxHP>
 		<Range>5</<Range>

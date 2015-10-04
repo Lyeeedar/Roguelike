@@ -12,6 +12,8 @@ import Roguelike.Sprite.Sprite;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -38,7 +40,6 @@ public class InventoryPanel extends Table
 
 	private HeaderLine header;
 	private InventoryBody body;
-	private FloorLine floor;
 
 	public InventoryPanel( Skin skin, Stage stage )
 	{
@@ -55,13 +56,10 @@ public class InventoryPanel extends Table
 
 		header = new HeaderLine( skin, stage, buttonUp, tileBorder, TileSize );
 		body = new InventoryBody( skin, stage, tileBackground, tileBorder, 32 );
-		floor = new FloorLine( skin, stage, tileBackground, tileBorder, 32 );
 
 		add( header ).width( Value.percentWidth( 1, this ) );
 		row();
 		add( body ).expand().fill().width( Value.percentWidth( 1, this ) );
-		row();
-		add( floor ).width( Value.percentWidth( 1, this ) );
 
 		setTouchable( Touchable.childrenOnly );
 	}
@@ -145,10 +143,15 @@ public class InventoryPanel extends Table
 
 	public class InventoryBody extends TilePanel
 	{
+		private BitmapFont font;
+		private final GlyphLayout layout = new GlyphLayout();
 
 		public InventoryBody( Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize )
 		{
 			super( skin, stage, tileBackground, tileBorder, ItemCategory.values().length, 1, tileSize, true );
+
+			font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
+
 			padding = 5;
 		}
 
@@ -179,15 +182,8 @@ public class InventoryPanel extends Table
 
 			if ( event.getButton() == Buttons.RIGHT )
 			{
-				if ( item.getMainSlot() != null && Global.CurrentLevel.player.getInventory().isEquipped( item ) )
-				{
-					Global.CurrentLevel.player.getInventory().toggleEquip( item );
-				}
-				else
-				{
-					Global.CurrentLevel.player.getInventory().removeItem( item );
-					Global.CurrentLevel.player.tile[0][0].items.add( item );
-				}
+				// show context menu:
+				// Unequip, use?, destory
 			}
 			else
 			{
@@ -225,69 +221,13 @@ public class InventoryPanel extends Table
 		@Override
 		public void onDrawItem( Object data, Batch batch, int x, int y, int width, int height )
 		{
-		}
-
-		@Override
-		public void onDrawItemForeground( Object data, Batch batch, int x, int y, int width, int height )
-		{
-		}
-
-	}
-
-	public class FloorLine extends TilePanel
-	{
-		public FloorLine( Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize )
-		{
-			super( skin, stage, tileBackground, tileBorder, ItemCategory.values().length, 1, tileSize, false );
-			padding = 5;
-		}
-
-		@Override
-		public void populateTileData()
-		{
-			tileData.clear();
-			for ( Item item : Global.CurrentLevel.player.tile[0][0].items )
-			{
-				tileData.add( item );
-			}
-
-			dataWidth = tileData.size;
-		}
-
-		@Override
-		public Sprite getSpriteForData( Object data )
-		{
-			return ( (Item) data ).getIcon();
-		}
-
-		@Override
-		public void handleDataClicked( Object data, InputEvent event, float x, float y )
-		{
 			Item item = (Item) data;
-			Global.CurrentLevel.player.tile[0][0].items.removeValue( item, true );
-			Global.CurrentLevel.player.getInventory().addItem( item );
-		}
-
-		@Override
-		public Table getToolTipForData( Object data )
-		{
-			return ( (Item) data ).createTable( skin, Global.CurrentLevel.player );
-		}
-
-		@Override
-		public Color getColourForData( Object data )
-		{
-			return Color.LIGHT_GRAY;
-		}
-
-		@Override
-		public void onDrawItemBackground( Object data, Batch batch, int x, int y, int width, int height )
-		{
-		}
-
-		@Override
-		public void onDrawItem( Object data, Batch batch, int x, int y, int width, int height )
-		{
+			if ( item.count > 1 )
+			{
+				String text = "" + item.count;
+				layout.setText( font, text );
+				font.draw( batch, text, x + width / 2 - layout.width / 2, y + height / 2 + layout.height / 2 );
+			}
 		}
 
 		@Override

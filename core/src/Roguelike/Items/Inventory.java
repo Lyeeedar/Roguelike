@@ -68,19 +68,65 @@ public final class Inventory
 
 	public void addItem( Item item )
 	{
-		if ( m_items.contains( item, true ) )
+		if ( !m_items.contains( item, true ) )
 		{
-			item.count++;
-		}
-		else
-		{
-			m_items.add( item );
+			if ( item.canStack )
+			{
+				Item found = null;
+
+				for ( Item i : m_items )
+				{
+					if ( i.name.equals( item.name ) )
+					{
+						found = i;
+					}
+				}
+
+				if ( found == null )
+				{
+					m_items.add( item );
+				}
+				else
+				{
+					found.count += item.count;
+				}
+			}
+			else
+			{
+				m_items.add( item );
+			}
 		}
 	}
 
 	public void removeItem( Item item )
 	{
-		m_items.removeValue( item, true );
+		removeItem( item.name, 1 );
+	}
+
+	public void removeItem( String itemName, int count )
+	{
+		Item found = null;
+
+		for ( Item i : m_items )
+		{
+			if ( i.name.equals( itemName ) )
+			{
+				found = i;
+			}
+		}
+
+		if ( found != null )
+		{
+			found.count -= count;
+			if ( found.count == 0 )
+			{
+				m_items.removeValue( found, true );
+			}
+		}
+		else
+		{
+			throw new RuntimeException( "Tried to remove an item that isnt in the inventory! Name: " + itemName );
+		}
 	}
 
 	public int getStatistic( HashMap<String, Integer> variableMap, Statistic stat )

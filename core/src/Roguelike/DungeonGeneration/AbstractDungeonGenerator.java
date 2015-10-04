@@ -97,13 +97,13 @@ public abstract class AbstractDungeonGenerator
 		}
 
 		requiredRooms.sort( new Comparator<Room>()
-		{
+				{
 			@Override
 			public int compare( Room arg0, Room arg1 )
 			{
 				return arg0.comparisonString().compareTo( arg1.comparisonString() );
 			}
-		} );
+				} );
 	}
 
 	// ----------------------------------------------------------------------
@@ -262,7 +262,7 @@ public abstract class AbstractDungeonGenerator
 		GameTile[][] actualTiles = new GameTile[width][height];
 		Level level = new Level( actualTiles );
 		level.Ambient = dfp.ambient;
-		level.affectedByDayNight = dfp.affectedByDayNight;
+		// level.affectedByDayNight = dfp.affectedByDayNight;
 		level.bgmName = dfp.BGM;
 		level.ambientSounds.addAll( dfp.ambientSounds );
 

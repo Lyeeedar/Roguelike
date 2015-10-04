@@ -123,7 +123,7 @@ public final class ConstantEvent
 		{
 			if ( equations.containsKey( el.Attack ) )
 			{
-				int atkVal = variableMap.get( el.Attack.toString().toLowerCase() );
+				int atkVal = getStatistic( variableMap, el.Attack );
 
 				if ( atkVal > 0 )
 				{
@@ -142,7 +142,7 @@ public final class ConstantEvent
 		{
 			if ( equations.containsKey( el.Defense ) )
 			{
-				int defVal = variableMap.get( el.Defense.toString().toLowerCase() );
+				int defVal = getStatistic( variableMap, el.Defense );
 
 				if ( defVal > 0 )
 				{

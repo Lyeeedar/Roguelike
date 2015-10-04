@@ -74,6 +74,10 @@
 						<Base_Def>5</Base_Def>
 					</Constant>
 				</Events>
+				
+		        <Icon>
+		            <Name>Oryx/uf_split/uf_items/armor_leather_chest</Name>
+		        </Icon>
 		        
 		    </Top>
 		    
@@ -89,6 +93,10 @@
 						<Base_Def>3</Base_Def>
 					</Constant>
 				</Events>
+				
+		        <Icon>
+		            <Name>Oryx/uf_split/uf_items/armor_leather_leg</Name>
+		        </Icon>
 		        
 		    </Leg>
 		    

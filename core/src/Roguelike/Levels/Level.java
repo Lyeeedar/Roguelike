@@ -22,8 +22,6 @@ import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
-import Roguelike.Items.Item.ItemCategory;
-import Roguelike.Items.Recipe;
 import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.ShadowCastCache;
 import Roguelike.Pathfinding.ShadowCaster;
@@ -623,11 +621,6 @@ public class Level
 		{
 			if ( i.canDrop && i.shouldDrop() )
 			{
-				if ( i.category == ItemCategory.MATERIAL )
-				{
-					i = Recipe.generateItemForMaterial( i );
-				}
-
 				Point target = possibleTiles.random();
 				GameTile tile = getGameTile( target );
 
@@ -824,6 +817,18 @@ public class Level
 
 				player.essence += player.tile[0][0].essence;
 				player.tile[0][0].essence = 0;
+			}
+
+			if ( player.tile[0][0].items.size > 0 )
+			{
+				for ( Item item : player.tile[0][0].items )
+				{
+					GameScreen.Instance.addActorItemPickupAction( player, item );
+
+					player.inventory.addItem( item );
+				}
+
+				player.tile[0][0].items.clear();
 			}
 
 			player.tile[0][0].processFieldEffectsForEntity( player, actionCost );

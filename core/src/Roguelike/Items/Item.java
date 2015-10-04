@@ -5,8 +5,8 @@ import java.io.IOException;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.AssetManager;
-import Roguelike.Global.Statistic;
 import Roguelike.Global.ElementType;
+import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
@@ -29,7 +29,7 @@ public final class Item extends GameEventHandler
 {
 	/*
 	 * IDEAS:
-	 * 
+	 *
 	 * Unlock extra power after condition (absorb x essence, kill x enemy)
 	 */
 
@@ -77,7 +77,8 @@ public final class Item extends GameEventHandler
 	public ItemCategory category;
 	public String type;
 
-	public int count;
+	public boolean canStack;
+	public int count = 1;
 	public Light light;
 	public boolean canDrop = true;
 	public String dropChanceEqn;
@@ -144,7 +145,12 @@ public final class Item extends GameEventHandler
 
 		Table table = new Table();
 
-		table.add( new Label( getName(), skin, "title" ) ).expandX().left();
+		table.add( new Label( getName(), skin, "title" ) ).left();
+		if ( count > 1 )
+		{
+			table.add( new Label( "x" + count, skin ) ).left().padLeft( 20 );
+		}
+
 		table.row();
 
 		Label descLabel = new Label( description, skin );
@@ -161,6 +167,13 @@ public final class Item extends GameEventHandler
 		Table table = new Table();
 
 		table.add( new Label( name, skin, "title" ) ).expandX().left();
+
+		if ( type != null && type.length() > 0 )
+		{
+			Label label = new Label( type, skin );
+			label.setFontScale( 0.7f );
+			table.add( label ).expandX().right();
+		}
 
 		table.row();
 
@@ -287,6 +300,10 @@ public final class Item extends GameEventHandler
 
 		name = xmlElement.get( "Name", name );
 		description = xmlElement.get( "Description", description );
+		canStack = xmlElement.getBoolean( "CanStack", canStack );
+
+		String countEqn = xmlElement.get( "Count", "" + count );
+		count = EquationHelper.evaluate( countEqn );
 
 		Element iconElement = xmlElement.getChildByName( "Icon" );
 		if ( iconElement != null )
@@ -342,8 +359,6 @@ public final class Item extends GameEventHandler
 	@Override
 	public String getName()
 	{
-		if ( category == ItemCategory.MATERIAL ) { return name + " " + type; }
-
 		return name;
 	}
 

@@ -1772,6 +1772,27 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
+	public void addActorItemPickupAction( Entity entity, Item item )
+	{
+		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile[0][0].x * Global.TileSize;
+		int offsety = Global.Resolution[1] / 2 - Global.CurrentLevel.player.tile[0][0].y * Global.TileSize;
+
+		int x = entity.tile[0][0].x;
+		int y = entity.tile[0][0].y;
+
+		int cx = x * Global.TileSize + offsetx;
+		int cy = y * Global.TileSize + offsety;
+
+		Label label = new Label( "Picked up " + item.name + " (x" + item.count + ")", skin );
+		label.setColor( Color.ORANGE );
+
+		label.addAction( new SequenceAction( Actions.moveTo( cx, cy + Global.TileSize / 2 + Global.TileSize / 2, 0.5f ), Actions.removeActor() ) );
+		label.setPosition( cx, cy + Global.TileSize / 2 );
+		stage.addActor( label );
+		label.setVisible( true );
+	}
+
+	// ----------------------------------------------------------------------
 	public void addActorHealingAction( Entity entity )
 	{
 		int offsetx = Global.Resolution[0] / 2 - Global.CurrentLevel.player.tile[0][0].x * Global.TileSize;

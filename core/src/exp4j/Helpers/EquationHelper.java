@@ -59,4 +59,19 @@ public class EquationHelper
 
 		return expB;
 	}
+
+	public static int evaluate( String eqn )
+	{
+		ExpressionBuilder expB = createEquationBuilder( eqn );
+		Expression exp = tryBuild( expB );
+
+		if ( exp == null )
+		{
+			return 0;
+		}
+		else
+		{
+			return (int) exp.evaluate();
+		}
+	}
 }

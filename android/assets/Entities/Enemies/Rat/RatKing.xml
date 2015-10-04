@@ -1,21 +1,13 @@
-<Entity>
-	<Name>Giant Rat</Name>
-
+<Entity Extends="Enemies/Rat/RatBase">
 	<Sprite>
 		<Name>Oryx/Custom/heroes/rat_king</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
 	
 	<Dialogue>Dialogue/RatKing</Dialogue>
-		
-	<AI>basicMonster</AI>
-	
+			
 	<IsBoss>true</IsBoss>
-	
-	<Factions>
-		<Faction>Rat</Faction>
-	</Factions>
-	
+
 	<Statistics>
 		<MaxHP>130</MaxHP>
 		<Range>5</<Range>
@@ -24,5 +16,25 @@
 		<Base_Def>15</Base_Def>
 		
 	</Statistics>
+	
+		<Inventory>
+		    
+		    <Item>
+		        
+		        <Name>Rat Kings Crown</Name>
+		        <Description>The golden crown of the king of the giant rats. On close inspection it turns out to be a thinly gilded iron helm.</Description>
+		        <Slot>Head</Slot>
+				<Category>Armour</Category>
+				<Icon>
+				    <Name>Oryx/uf_split/uf_items/armor_gold_helm</Name>
+				</Icon>
+				<Events>
+					<Constant>
+						<Base_Def>5</Base_Def>
+					</Constant>
+				</Events>
+		    </Item>
+		    
+		</Inventory>
 	
 </Entity>
