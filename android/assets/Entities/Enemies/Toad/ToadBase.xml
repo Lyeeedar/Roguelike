@@ -1,0 +1,24 @@
+<Entity>
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Toad</Faction>
+	</Factions>
+	
+	<Inventory>
+	    
+	    <Hide DropChance="rnd(10)<1">
+	        
+	        <Category>Material</Category>
+		    <Name>Toad Skin</Name>
+		    <Type>Leather</Type>
+		    <Elements>
+		        <Base>20</Base>
+		        <Water>30</Water>
+		    </Elements>
+	        
+	    </Hide>
+	    
+	</Inventory>
+	
+</Entity>

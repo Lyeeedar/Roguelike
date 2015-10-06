@@ -42,10 +42,8 @@
 		    <Goblin>1</Goblin>
 		</Major>
 		<Minor>
-			<Toad>3</Toad>
-			<Spriggan>1</Spriggan>
-			<Centaur>1</Centaur>
-			<Fungi>1</Fungi>
+			<Toad>2</Toad>
+			<Spider>1</Spider>
 		</Minor>
 	</Factions>
 

@@ -130,7 +130,7 @@
 					    <Entity>Enemies/Rat/SmallRat</Entity>
 					    <Spawn>OnHear</Spawn>
 					    <NumToSpawn>2</NumToSpawn>
-					    <Delay>3</Delay>
+					    <Delay>2</Delay>
 					</EnvironmentData>
 		        </Symbol>
 		        

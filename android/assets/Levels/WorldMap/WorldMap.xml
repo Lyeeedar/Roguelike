@@ -129,7 +129,7 @@
 						<Type>Dungeon</Type>
 						<Destination>Forest</Destination>
 						<Faction>Goblin</Faction>
-						<MaxDepth>1</MaxDepth>
+						<MaxDepth>3</MaxDepth>
 						
 						<Size>2</Size>
 						

@@ -19,6 +19,12 @@
 			<Range>3</Range>
 			<Targeting><Entity Type="Ally"/></Targeting>
 			<Movement><Smite /></Movement>
+			<HitSprite>
+			    <Name>AbilitySprites/Heal/Heal</Name>
+			    <UpdateRate>0.1</UpdateRate>
+			    <Colour><RGB>175,255,47</RGB></Colour>
+			    <Sound><Name>whoosh</Name></Sound>
+			</HitSprite>
 			<Effect>
 				<Heal>100</Heal>
 			</Effect>

@@ -5,6 +5,7 @@ import java.util.Random;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Global;
 import exp4j.Functions.MathUtilFunctions;
 import exp4j.Functions.RandomFunction;
 import exp4j.Operators.BooleanOperators;
@@ -62,16 +63,23 @@ public class EquationHelper
 
 	public static int evaluate( String eqn )
 	{
-		ExpressionBuilder expB = createEquationBuilder( eqn );
-		Expression exp = tryBuild( expB );
-
-		if ( exp == null )
+		if ( Global.isNumber( eqn ) )
 		{
-			return 0;
+			return Integer.parseInt( eqn );
 		}
 		else
 		{
-			return (int) exp.evaluate();
+			ExpressionBuilder expB = createEquationBuilder( eqn );
+			Expression exp = tryBuild( expB );
+
+			if ( exp == null )
+			{
+				return 0;
+			}
+			else
+			{
+				return (int) exp.evaluate();
+			}
 		}
 	}
 }

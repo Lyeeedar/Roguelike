@@ -1,16 +1,9 @@
-<Entity>
-	<Name>Toad</Name>
+<Entity Extends="Enemies/Toad/ToadBase">
 
 	<Sprite>
 		<Name>Oryx/uf_split/uf_heroes/toad_blue</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-		
-	<AI>basicMonster</AI>
-	
-	<Factions>
-		<Faction>Toad</Faction>
-	</Factions>
 	
 	<Inventory>
 	    
@@ -22,33 +15,14 @@
 			</Spit>
 		</Equipment>
 	    
-	    <Hide DropChance="rnd(10)<1">
-	        
-	        <Category>Material</Category>
-		    <Name>Toad Skin</Name>
-		    <Type>Leather</Type>
-		    <Elements>
-		        <Metal>20</Metal>
-		        <Wood>20+rnd(30)</Wood>
-		        <Water>20+rnd(30)</Water>
-		    </Elements>
-	        
-	    </Hide>
-	    
 	</Inventory>
 	
 	<Statistics>
-		<MaxHP>300</MaxHP>
+		<MaxHP>60</MaxHP>
 		<Range>5</<Range>
 		
-		<Wood_Atk>33</Wood_Atk>
-		<Water_Atk>33</Water_Atk>
-		
-		<Wood_Def>20</Wood_Def>
-		<Wood_Hardiness>50</Wood_Hardiness>
-		
-		<Water_Def>66</Water_Def>
-		<Water_Hardiness>80</Water_Hardiness>
+		<Base_Atk>20</Base_Atk>
+		<Base_Def>20</Base_Def>
 	</Statistics>
 	
 </Entity>

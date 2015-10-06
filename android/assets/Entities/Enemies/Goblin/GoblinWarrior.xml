@@ -1,27 +1,16 @@
-<Entity>
-	<Name>Goblin</Name>
-	
-	<Dialogue>Dialogue/Goblin</Dialogue>
+<Entity Extends="Enemies/Goblin/GoblinBase">	
 
 	<Sprite>
 		<Name>Oryx/uf_split/uf_heroes/goblin_warrior</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-		
-	<AI>basicMonster</AI>
-	
-	<Factions>
-		<Faction>Goblin</Faction>
-	</Factions>
 	
 	<Statistics>
-		<MaxHP>300</MaxHP>
+		<MaxHP>50</MaxHP>
 		<Range>5</<Range>
 		
-		<Wood_Atk>33</Wood_Atk>
-		
-		<Wood_Def>20</Wood_Def>
-		<Wood_Hardiness>50</Wood_Hardiness>
+		<Base_Atk>15</Base_Atk>
+		<Base_Def>20</Base_Def>
 		
 	</Statistics>
 	

@@ -1,27 +1,48 @@
-<Entity>
-	<Name>Goblin</Name>
+<Entity Extends="Enemies/Goblin/GoblinBase">
 	
-	<Dialogue>Dialogue/Goblin</Dialogue>
-
 	<Sprite>
 		<Name>Oryx/uf_split/uf_heroes/goblin_shaman</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-		
-	<AI>basicMonster</AI>
 	
-	<Factions>
-		<Faction>Goblin</Faction>
-	</Factions>
+	<ActiveAbilities>
+		
+		<Heal>
+			<Cooldown>35</Cooldown>
+			<Range>3</Range>
+			<Targeting><Entity Type="Ally"/></Targeting>
+			<Movement><Smite /></Movement>
+			<Effect>
+				<Heal>20</Heal>
+			</Effect>
+		</Heal>
+		
+	</ActiveAbilities>
+	
+	<Inventory>
+		<Equipment>
+			<Wand DropChance="rnd(5)<=1">
+			    <Name>Goblin Staff</Name>
+			    <Description>A wooden staff, adorned with spiritual symbols. Mounted on the end is a magic channeling stone.</Description>
+				<Slot>MainWeapon</Slot>
+				<Category>Weapon</Category>
+				<Type>Wand</Type>
+				<Events>
+					<Constant>
+					    <Air_Atk>5</Air_Atk>
+					    <Wood_Atk>5</Wood_Atk>
+					</Constant>
+				</Events>
+			</Wand>
+		</Equipment>
+	</Inventory>
 	
 	<Statistics>
-		<MaxHP>300</MaxHP>
+		<MaxHP>60</MaxHP>
 		<Range>5</<Range>
 		
-		<Wood_Atk>33</Wood_Atk>
-		
-		<Wood_Def>20</Wood_Def>
-		<Wood_Hardiness>50</Wood_Hardiness>
+		<Base_Atk>5</Base_Atk>
+		<Base_Def>15</Base_Def>
 		
 	</Statistics>
 	

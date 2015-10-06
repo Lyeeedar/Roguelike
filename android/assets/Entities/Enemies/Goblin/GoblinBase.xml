@@ -1,0 +1,39 @@
+<Entity>	
+	<Dialogue>Dialogue/Goblin</Dialogue>
+
+	<AI>basicMonster</AI>
+	
+	<Factions>
+		<Faction>Goblin</Faction>
+	</Factions>
+	
+	<Inventory>
+	    
+	    <Hide DropChance="rnd(10)<1">
+	        
+	        <Category>Material</Category>
+		    <Name>Goblin Skin</Name>
+		    <Description>Leathery green skin stripped from a goblins back.</Description>
+		    <Type>Leather</Type>
+		    <Elements>
+		        <Base>20</Base>
+		    </Elements>
+	        
+	    </Hide>
+	    
+	    <Tooth DropChance="rnd(6)<1">
+	        
+	        <Category>Material</Category>
+		    <Name>Goblin Tooth</Name>
+		    <Description>This small gemlike tooth is pulled from the mouth of a goblin. Their gemlike sheen make them desirable for some jewelers.</Description>
+		    <Type>Tooth</Type>
+		    <Count>rnd(3)+1</Count>
+		    <Elements>
+		        <Base>10</Base>
+		    </Elements>
+	        
+	    </Tooth>
+	    
+	</Inventory>
+	
+</Entity>

@@ -1,7 +1,4 @@
-<Entity>
-	<Name>Goblin</Name>
-
-	<Dialogue>Dialogue/Goblin</Dialogue>
+<Entity Extends="Enemies/Goblin/GoblinBase">
 	
 	<Sprite>
 		<Name>Oryx/Custom/heroes/goblin_chief</Name>
@@ -9,21 +6,39 @@
 	</Sprite>
 	
 	<IsBoss>true</IsBoss>
-		
-	<AI>basicMonster</AI>
 	
-	<Factions>
-		<Faction>Goblin</Faction>
-	</Factions>
+	<ActiveAbilities>
+	    
+	    <Enrage>
+	        <Cooldown>15</Cooldown>
+			<Range>1</Range>
+			<HitSprite>
+			    <Name>AbilitySprites/Shout/Shout</Name>
+			    <UpdateRate>0.1</UpdateRate>
+			    <Colour><RGB>178,34,34</RGB></Colour>
+			    <Sound><Name>roar</Name></Sound>
+			</HitSprite>
+			
+			<Targeting><Self></Self></Targeting>	
+			<Movement><Smite></Smite></Movement>
+			
+			<Effect>
+				<Status ReliesOn="Bloodlust">
+					<Attacker>Bloodlust</Attacker>
+					<Stacks>5</Stacks>
+				</Status>
+			</Effect>
+			
+	    </Enrage>
+	    
+	</ActiveAbilities>
 	
 	<Statistics>
-		<MaxHP>300</MaxHP>
+		<MaxHP>150</MaxHP>
 		<Range>5</<Range>
 		
-		<Wood_Atk>33</Wood_Atk>
-		
-		<Wood_Def>20</Wood_Def>
-		<Wood_Hardiness>50</Wood_Hardiness>
+		<Base_Atk>25</Base_Atk>
+		<Base_Def>25</Base_Def>
 		
 	</Statistics>
 	
