@@ -37,6 +37,7 @@ import Roguelike.Tiles.Point;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Util.EnumBitflag;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -681,9 +682,21 @@ public class Level
 
 					while ( tile.entity.popupAccumulator >= 0 && tile.entity.displayedPopup.length() < tile.entity.popup.length() )
 					{
-						tile.entity.popupAccumulator -= 0.01f;
+						tile.entity.popupAccumulator -= 0.02f;
 
 						tile.entity.displayedPopup = tile.entity.popup.substring( 0, tile.entity.displayedPopup.length() + 1 );
+
+						char letter = tile.entity.displayedPopup.charAt( tile.entity.displayedPopup.length() - 1 );
+
+						if ( letter != ' ' )
+						{
+							Sound sound = AssetManager.loadSound( "Male/" + ( "" + letter ).toUpperCase() );
+
+							if ( sound != null )
+							{
+								sound.play( 1, 1.2f, 0 );
+							}
+						}
 					}
 				}
 			}
