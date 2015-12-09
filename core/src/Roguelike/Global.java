@@ -5,21 +5,16 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.RoguelikeGame.ScreenEnum;
-import Roguelike.Ability.AbilityPool;
 import Roguelike.Dialogue.DialogueManager;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.Damage.DamageObject;
-import Roguelike.Levels.Dungeon;
 import Roguelike.Levels.Level;
 import Roguelike.Lights.Light;
-import Roguelike.Save.SaveAbilityPool;
-import Roguelike.Save.SaveDungeon;
 import Roguelike.Save.SaveFile;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.LoadingScreen;
-import Roguelike.Screens.LoadingScreen.PostGenerateEvent;
 import Roguelike.Sound.Mixer;
 import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Tiles.GameTile;
@@ -102,9 +97,6 @@ public class Global
 	public static Level CurrentLevel;
 
 	// ----------------------------------------------------------------------
-	public static HashMap<String, Dungeon> Dungeons = new HashMap<String, Dungeon>();
-
-	// ----------------------------------------------------------------------
 	public static HashMap<String, Integer> GlobalVariables = new HashMap<String, Integer>();
 
 	// ----------------------------------------------------------------------
@@ -118,9 +110,6 @@ public class Global
 
 	// ----------------------------------------------------------------------
 	public static float DayNightFactor = 1;
-
-	// ----------------------------------------------------------------------
-	public static AbilityPool abilityPool;
 
 	// ----------------------------------------------------------------------
 	public static Pool<Point> PointPool = Pools.get( Point.class );
@@ -414,40 +403,35 @@ public class Global
 	// ----------------------------------------------------------------------
 	public enum Statistic
 	{
-		// Basic stats
-		MAXHP,
-		RANGE,
-
 		// Passability
 		WALK,
 		LEVITATE,
 		LIGHT,
 		ENTITY,
 
-		// Elemental stats
-		BASE_ATK,
-		BASE_DEF,
+		// Base stats
+		ATTACK, // Base Damage
+		DEFENSE, // Defense
 
-		AETHER_ATK,
-		AETHER_DEF,
+		// Modifier stats
+		STRENGTH, // Melee dam
+		PERCEPTION, // Sight range + rangee dam
+		INTELLIGENCE, // Elemental Dam
+		WILLPOWER, // Meta dam
+		CONSTITUTION, // Health + Blood dam
+		SPEED; // Speed
 
-		VOID_ATK,
-		VOID_DEF,
+		public static Statistic[] PassabilityValues = { Statistic.WALK, Statistic.LEVITATE, Statistic.LIGHT, Statistic.ENTITY };
 
-		METAL_ATK,
-		METAL_DEF,
+		public static Statistic[] BaseValues = { Statistic.ATTACK, Statistic.DEFENSE };
 
-		WOOD_ATK,
-		WOOD_DEF,
-
-		AIR_ATK,
-		AIR_DEF,
-
-		WATER_ATK,
-		WATER_DEF,
-
-		FIRE_ATK,
-		FIRE_DEF;
+		public static Statistic[] ModifierValues = {
+				Statistic.STRENGTH,
+				Statistic.PERCEPTION,
+				Statistic.INTELLIGENCE,
+				Statistic.WILLPOWER,
+				Statistic.CONSTITUTION,
+				Statistic.SPEED };
 
 		public static HashMap<String, Integer> emptyMap = new HashMap<String, Integer>();
 		static
@@ -540,125 +524,15 @@ public class Global
 	}
 
 	// ----------------------------------------------------------------------
-	public enum ElementType
-	{
-		BASE( Color.GRAY ),
-		AETHER( Color.RED ),
-		VOID( Color.WHITE ),
-		METAL( Color.LIGHT_GRAY ),
-		WOOD( Color.GREEN ),
-		AIR( Color.CYAN ),
-		WATER( Color.BLUE ),
-		FIRE( Color.ORANGE );
-
-		public ElementType Weakness;
-		public ElementType Strength;
-
-		public Statistic Attack;
-		public Statistic Defense;
-
-		public Color Colour;
-
-		static
-		{
-			ElementType.METAL.Weakness = ElementType.FIRE;
-			ElementType.METAL.Strength = ElementType.WOOD;
-
-			ElementType.WOOD.Weakness = ElementType.METAL;
-			ElementType.WOOD.Strength = ElementType.AIR;
-
-			ElementType.AIR.Weakness = ElementType.WOOD;
-			ElementType.AIR.Strength = ElementType.WATER;
-
-			ElementType.WATER.Weakness = ElementType.AIR;
-			ElementType.WATER.Strength = ElementType.FIRE;
-
-			ElementType.FIRE.Weakness = ElementType.WATER;
-			ElementType.FIRE.Strength = ElementType.METAL;
-		}
-
-		ElementType( Color colour )
-		{
-			this.Colour = colour;
-
-			Attack = Statistic.valueOf( toString() + "_ATK" );
-			Defense = Statistic.valueOf( toString() + "_DEF" );
-
-			Colors.put( this.toString(), this.Colour );
-		}
-
-		public static FastEnumMap<ElementType, Integer> getElementBlock()
-		{
-			FastEnumMap<ElementType, Integer> map = new FastEnumMap<ElementType, Integer>( ElementType.class );
-
-			for ( ElementType el : ElementType.values() )
-			{
-				map.put( el, 0 );
-			}
-
-			return map;
-		}
-
-		public static FastEnumMap<ElementType, Integer> load( Element xml, FastEnumMap<ElementType, Integer> values )
-		{
-			for ( int i = 0; i < xml.getChildCount(); i++ )
-			{
-				Element el = xml.getChild( i );
-
-				ElementType elem = ElementType.valueOf( el.getName().toUpperCase() );
-				String eqn = el.getText();
-				int newVal = values.get( elem );
-
-				ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-				expB.variable( "Value" );
-
-				Expression exp = EquationHelper.tryBuild( expB );
-				if ( exp != null )
-				{
-					exp.setVariable( "Value", newVal );
-					newVal = (int) exp.evaluate();
-				}
-
-				values.put( elem, newVal );
-			}
-
-			return values;
-		}
-
-		public static FastEnumMap<ElementType, Integer> copy( FastEnumMap<ElementType, Integer> map )
-		{
-			FastEnumMap<ElementType, Integer> newMap = new FastEnumMap<ElementType, Integer>( ElementType.class );
-			for ( ElementType e : ElementType.values() )
-			{
-				newMap.put( e, map.get( e ) );
-			}
-			return newMap;
-		}
-	}
-
-	// ----------------------------------------------------------------------
 	public static void save()
 	{
 		SaveFile save = new SaveFile();
 
-		CurrentLevel.dungeon.getSaveLevel( CurrentLevel.UID ).store( CurrentLevel );
+		save.currentLevel = new SaveLevel();
+		save.currentLevel.store( Global.CurrentLevel );
 
-		for ( Dungeon dungeon : Dungeons.values() )
-		{
-			SaveDungeon saveDungeon = new SaveDungeon();
-			saveDungeon.store( dungeon );
-			save.dungeons.add( saveDungeon );
-		}
-
-		save.currentDungeon = Global.CurrentLevel.dungeon.UID;
-		save.currentLevel = Global.CurrentLevel.UID;
 		save.globalVariables = (HashMap<String, Integer>) GlobalVariables.clone();
 		save.globalNames = (HashMap<String, String>) GlobalNames.clone();
-
-		save.abilityPool = new SaveAbilityPool();
-		save.abilityPool.store( Global.abilityPool );
-
-		save.AUT = AUT;
 
 		save.save();
 	}
@@ -669,56 +543,40 @@ public class Global
 		SaveFile save = new SaveFile();
 		save.load();
 
-		for ( SaveDungeon saveDungeon : save.dungeons )
-		{
-			Dungeon dungeon = saveDungeon.create();
-			Dungeons.put( dungeon.UID, dungeon );
-		}
+		// for ( SaveDungeon saveDungeon : save.dungeons )
+		// {
+		// Dungeon dungeon = saveDungeon.create();
+		// Dungeons.put( dungeon.UID, dungeon );
+		// }
 
-		Global.abilityPool = save.abilityPool.create();
+		// Global.abilityPool = save.abilityPool.create();
 		Global.GlobalVariables = (HashMap<String, Integer>) save.globalVariables.clone();
 		Global.GlobalNames = (HashMap<String, String>) save.globalNames.clone();
 
-		Dungeon dungeon = Dungeons.get( save.currentDungeon );
-		SaveLevel level = dungeon.getSaveLevel( save.currentLevel );
+		// Dungeon dungeon = Dungeons.get( save.currentDungeon );
+		SaveLevel level = save.currentLevel;
 
-		LoadingScreen.Instance.set( dungeon, level, null, null, null );
+		LoadingScreen.Instance.set( level, null, null, null );
 		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
 
-		AUT = save.AUT;
+		// AUT = save.AUT;
 		DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
 	}
 
 	// ----------------------------------------------------------------------
-	public static void newGame( GameEntity player, final String lines )
+	public static void newGame( GameEntity player )
 	{
 		AUT = 0;
 		DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
 
-		Dungeons.clear();
 		GlobalVariables.clear();
 		GlobalNames.clear();
 
 		GlobalNames.put( "player", "You" );
 
-		// player.size = 2;
-		// player.sprite.size = 2;
-		// player.tile = new GameTile[2][2];
+		SaveLevel firstLevel = new SaveLevel( "Forest", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
 
-		player.setPopupText( "Urgh... Where am I... Who am I...", 2 );
-
-		Dungeon dungeon = new Dungeon( null, null, "Village", -1 );
-		SaveLevel firstLevel = new SaveLevel( "Town", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
-		Dungeons.put( dungeon.UID, dungeon );
-
-		LoadingScreen.Instance.set( dungeon, firstLevel, player, "PlayerSpawn", new PostGenerateEvent()
-		{
-			@Override
-			public void execute( Level level )
-			{
-				abilityPool = AbilityPool.createAbilityPool( lines );
-			}
-		} );
+		LoadingScreen.Instance.set( firstLevel, player, "PlayerSpawn", null );
 
 		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
 	}
@@ -732,13 +590,6 @@ public class Global
 			{
 				sound.stop();
 			}
-
-			CurrentLevel.player.tile[0][0].entity = null;
-			// CurrentLevel.player = null;
-
-			// Save
-			SaveLevel save = CurrentLevel.dungeon.getSaveLevel( CurrentLevel.UID );
-			save.store( CurrentLevel );
 
 			CurrentLevel.player.tile[0][0].entity = CurrentLevel.player;
 		}
@@ -801,38 +652,19 @@ public class Global
 	}
 
 	// ----------------------------------------------------------------------
-	public static void calculateDamage( Entity attacker, Entity defender, HashMap<String, Integer> attackerVariableMap, boolean doEvents )
+	public static void calculateDamage( Entity attacker, Entity defender, HashMap<String, Integer> attackVariableMap, HashMap<String, Integer> attackerVariableMap, boolean doEvents )
 	{
 		DamageObject damObj = new DamageObject( attacker, defender, attackerVariableMap );
 
-		int totalAtk = 0;
-		int baseDef = damObj.defenderVariableMap.get( Statistic.BASE_DEF.toString().toLowerCase() );
+		int baseDef = damObj.defenderVariableMap.get( Statistic.DEFENSE.toString().toLowerCase() );
 
-		for ( ElementType el : ElementType.values() )
-		{
-			int atk = damObj.attackerVariableMap.get( el.Attack.toString().toLowerCase() );
-			int def = el != ElementType.BASE ? damObj.defenderVariableMap.get( el.Defense.toString().toLowerCase() ) : 0;
+		int totalAtk = calculateDamage( attackVariableMap, attackerVariableMap );
 
-			totalAtk += Math.max( 0, atk - def );
-		}
+		int dam = totalAtk - baseDef;
 
-		int dam = 0;
-
-		if ( totalAtk == 0 )
+		if ( dam <= 0 && totalAtk > 0 )
 		{
-
-		}
-		else if ( totalAtk == baseDef )
-		{
-			dam = 10;
-		}
-		else if ( totalAtk < baseDef )
-		{
-			dam = (int) ( 10.0f / ( ( baseDef - totalAtk ) * 0.5f ) );
-		}
-		else if ( totalAtk > baseDef )
-		{
-			dam = 10 + (int) ( 5.0f * ( ( totalAtk - baseDef ) / 10.0f ) );
+			dam = 1;
 		}
 
 		damObj.damage = dam;
@@ -851,6 +683,27 @@ public class Global
 		}
 
 		defender.applyDamage( damObj.damage, attacker );
+	}
+
+	// ----------------------------------------------------------------------
+	public static int calculateDamage( HashMap<String, Integer> attackVariableMap, HashMap<String, Integer> attackerVariableMap )
+	{
+		int baseAtk = attackVariableMap.get( Statistic.ATTACK.toString().toLowerCase() );
+		int totalAtk = baseAtk;
+
+		for ( Statistic stat : Statistic.ModifierValues )
+		{
+			int atkStat = attackVariableMap.get( stat.toString().toLowerCase() );
+			int atkerStat = attackerVariableMap.get( stat.toString().toLowerCase() );
+
+			float modifier = ( atkerStat * atkStat ) / 10.0f;
+
+			int dam = (int) ( baseAtk * modifier );
+
+			totalAtk += dam;
+		}
+
+		return totalAtk;
 	}
 
 	// ----------------------------------------------------------------------

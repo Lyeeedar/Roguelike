@@ -122,4 +122,20 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 		return Description;
 	}
 
+	@Override
+	public void onTurn()
+	{
+	}
+
+	@Override
+	public void setCooldown( int val )
+	{
+	}
+
+	@Override
+	public int getCooldown()
+	{
+		return 0;
+	}
+
 }

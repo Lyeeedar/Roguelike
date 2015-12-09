@@ -5,7 +5,6 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
-import Roguelike.Global.ElementType;
 import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 import Roguelike.Util.FastEnumMap;
@@ -101,7 +100,7 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 		{
 			accumulator -= 1;
 
-			Global.calculateDamage( entity, entity, Statistic.statsBlockToVariableBlock( stats ), false );
+			Global.calculateDamage( entity, entity, Statistic.statsBlockToVariableBlock( stats ), entity.getVariableMap(), false );
 		}
 
 		return true;
@@ -122,22 +121,8 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 		{
 			Element sEl = xml.getChild( i );
 
-			if ( sEl.getName().toUpperCase().equals( "ATK" ) )
-			{
-
-				for ( ElementType el : ElementType.values() )
-				{
-					String expanded = sEl.getText().toLowerCase();
-					expanded = expanded.replaceAll( "(?<!_)atk", el.Attack.toString().toLowerCase() );
-
-					equations.put( el.Attack, expanded );
-				}
-			}
-			else
-			{
-				Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
-				equations.put( stat, sEl.getText().toLowerCase() );
-			}
+			Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
+			equations.put( stat, sEl.getText().toLowerCase() );
 		}
 	}
 
@@ -146,24 +131,9 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 	{
 		Array<String> lines = new Array<String>();
 
-		for ( ElementType el : ElementType.values() )
-		{
-			if ( equations.containsKey( el.Attack ) )
-			{
-				int atkVal = variableMap.get( el.Attack.toString().toLowerCase() );
+		int damage = Global.calculateDamage( variableMap, Statistic.emptyMap );
 
-				if ( atkVal > 0 )
-				{
-					String line = "Deals ";
-					line += "[" + el.toString() + "] ";
-					line += atkVal;
-
-					line += " " + Global.capitalizeString( el.toString() ) + "[] DPS";
-
-					lines.add( line );
-				}
-			}
-		}
+		lines.add( "Total Damage: " + damage );
 
 		return lines;
 	}

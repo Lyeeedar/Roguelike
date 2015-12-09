@@ -96,7 +96,7 @@ public class CharacterCreationScreen implements Screen
 			@Override
 			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 			{
-				Global.newGame( classList.chosen.entity, classList.chosen.lines );
+				Global.newGame( classList.chosen.entity );
 				Global.GlobalNames.put( "class", classList.chosen.name );
 			}
 		} );
@@ -160,16 +160,6 @@ public class CharacterCreationScreen implements Screen
 		descLabel.setWrap( true );
 		selectedClass.add( descLabel ).expandX().left().top();
 		selectedClass.row();
-
-		selectedClass.add( new Label( "Ability Lines: ", skin ) ).expandX().left().top();
-		selectedClass.row();
-
-		String[] lines = lastSelected.lines.split( "," );
-		for ( String line : lines )
-		{
-			selectedClass.add( new Label( line, skin ) ).expandX().left().padLeft( 30 ).top();
-			selectedClass.row();
-		}
 
 		selectedClass.add( new Label( "Starting Inventory:", skin ) ).expandX().left().top();
 		selectedClass.row();

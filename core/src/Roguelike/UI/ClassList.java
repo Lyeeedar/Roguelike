@@ -64,14 +64,12 @@ public class ClassList extends TilePanel
 	{
 		public String name;
 		public String description;
-		public String lines;
 		public GameEntity entity;
 
 		public void parse( Element xml )
 		{
 			name = xml.get( "Name" );
 			description = xml.get( "Description" );
-			lines = xml.get( "Lines" );
 			entity = GameEntity.load( xml.get( "EntityPath" ) );
 		}
 	}

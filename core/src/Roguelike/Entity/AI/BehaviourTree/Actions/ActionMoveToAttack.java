@@ -43,7 +43,7 @@ public class ActionMoveToAttack extends AbstractAction
 		{
 			String type = wep.type;
 
-			range = wep.getStatistic( entity.getBaseVariableMap(), Statistic.RANGE );
+			range = wep.getStatistic( entity.getBaseVariableMap(), Statistic.PERCEPTION );
 			if ( range == 0 )
 			{
 				if ( type.equals( "spear" ) )

@@ -19,7 +19,7 @@
 		<MaxHP>90</MaxHP>
 		<Range>10</<Range>	
 		<Base_Atk>5</Base_Atk>
-		<Base_Def>2</Base_Def>
+		<Defense>2</Defense>
 	</Statistics>
 	
 	<Inventory>
@@ -49,7 +49,7 @@
 		        
 		        <Events>
 					<Constant>
-						<Base_Def>5</Base_Def>
+						<Defense>5</Defense>
 					</Constant>
 				</Events>
 				
@@ -68,7 +68,7 @@
 		        
 		        <Events>
 					<Constant>
-						<Base_Def>3</Base_Def>
+						<Defense>3</Defense>
 					</Constant>
 				</Events>
 				

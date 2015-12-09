@@ -7,10 +7,8 @@ import java.util.zip.GZIPOutputStream;
 
 import kryo.FastEnumMapSerializer;
 import Roguelike.AssetManager;
-import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
-import Roguelike.Global.ElementType;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom.Orientation;
 import Roguelike.DungeonGeneration.Room;
@@ -35,8 +33,6 @@ import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Items.Item.ItemCategory;
 import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.ShadowCastCache;
-import Roguelike.Save.SaveAbilityPool.SaveAbilityLine;
-import Roguelike.Save.SaveAbilityPool.SaveAbilityPoolItem;
 import Roguelike.Save.SaveGameEntity.CooldownWrapper;
 import Roguelike.Save.SaveLevel.SaveEssence;
 import Roguelike.Save.SaveLevel.SaveLevelItem;
@@ -63,11 +59,7 @@ public final class SaveFile
 {
 	private static Kryo kryo;
 
-	public String currentDungeon;
-	public String currentLevel;
-	public Array<SaveDungeon> dungeons = new Array<SaveDungeon>();
-	public SaveAbilityPool abilityPool;
-	public float AUT;
+	public SaveLevel currentLevel;
 	public HashMap<String, Integer> globalVariables;
 	public HashMap<String, String> globalNames;
 
@@ -85,11 +77,7 @@ public final class SaveFile
 			e.printStackTrace();
 		}
 
-		output.writeString( currentDungeon );
-		output.writeString( currentLevel );
-		kryo.writeObject( output, dungeons );
-		kryo.writeObject( output, abilityPool );
-		output.writeFloat( AUT );
+		kryo.writeObject( output, currentLevel );
 		kryo.writeObject( output, globalVariables );
 		kryo.writeObject( output, globalNames );
 
@@ -112,11 +100,7 @@ public final class SaveFile
 			e.printStackTrace();
 		}
 
-		currentDungeon = input.readString();
-		currentLevel = input.readString();
-		dungeons = kryo.readObject( input, Array.class );
-		abilityPool = kryo.readObject( input, SaveAbilityPool.class );
-		AUT = input.readFloat();
+		currentLevel = kryo.readObject( input, SaveLevel.class );
 		globalVariables = kryo.readObject( input, HashMap.class );
 		globalNames = kryo.readObject( input, HashMap.class );
 
@@ -129,7 +113,7 @@ public final class SaveFile
 		{
 			kryo = new Kryo();
 			kryo.setRegistrationRequired( true );
-			kryo.setAsmEnabled( Global.ANDROID );
+			kryo.setAsmEnabled( true );
 
 			registerSerializers( kryo );
 			registerClasses( kryo );
@@ -283,20 +267,15 @@ public final class SaveFile
 
 	private void registerClasses( Kryo kryo )
 	{
-		kryo.register( SaveAbilityPool.class );
 		kryo.register( SaveEnvironmentEntity.class );
 		kryo.register( SaveField.class );
 		kryo.register( SaveFile.class );
 		kryo.register( SaveGameEntity.class );
-		kryo.register( SaveDungeon.class );
 		kryo.register( SaveLevel.class );
 		kryo.register( SaveSeenTile.class );
 		kryo.register( SaveSeenTile[].class );
 		kryo.register( SaveSeenTile[][].class );
 
-		kryo.register( SaveAbilityLine.class );
-		kryo.register( SaveAbilityPoolItem.class );
-		kryo.register( SaveAbilityPoolItem[].class );
 		kryo.register( CooldownWrapper.class );
 		kryo.register( SaveEssence.class );
 		kryo.register( SaveLevelItem.class );
@@ -333,7 +312,6 @@ public final class SaveFile
 		kryo.register( ItemCategory.class );
 		kryo.register( Statistic.class );
 		kryo.register( Direction.class );
-		kryo.register( ElementType.class );
 
 		kryo.register( ConstantEvent.class );
 		kryo.register( DamageEvent.class );

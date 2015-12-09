@@ -138,7 +138,7 @@ public class ExclamationManager
 
 	private void processLowHealth( Array<GameTile> tiles, GameEntity entity )
 	{
-		boolean isLowHealth = entity.HP < entity.getVariable( Statistic.MAXHP ) / 2;
+		boolean isLowHealth = entity.HP < ( entity.getVariable( Statistic.CONSTITUTION ) * 10 ) / 2;
 
 		if ( isLowHealth )
 		{

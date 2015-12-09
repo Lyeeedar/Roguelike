@@ -2,7 +2,7 @@ package Roguelike.Save;
 
 import java.util.HashMap;
 
-import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.IAbility;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Items.Inventory;
 import Roguelike.StatusEffect.StatusEffect;
@@ -38,9 +38,9 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		}
 		inventory = obj.inventory;
 
-		for ( ActiveAbility aa : obj.slottedActiveAbilities )
+		for ( IAbility a : obj.slottedAbilities )
 		{
-			abilityCooldown.add( new CooldownWrapper( aa.cooldownAccumulator ) );
+			abilityCooldown.add( new CooldownWrapper( a.getCooldown() ) );
 		}
 
 		UID = obj.UID;
@@ -68,7 +68,7 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		{
 			for ( int i = 0; i < abilityCooldown.size; i++ )
 			{
-				entity.slottedActiveAbilities.get( i ).cooldownAccumulator = abilityCooldown.get( i ).val;
+				entity.slottedAbilities.get( i ).setCooldown( abilityCooldown.get( i ).val );
 			}
 		}
 
@@ -85,14 +85,14 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 	// Neccessary due to Kryo issue with boxed primitives.
 	public static final class CooldownWrapper
 	{
-		public float val;
+		public int val;
 
 		public CooldownWrapper()
 		{
 
 		}
 
-		public CooldownWrapper( float val )
+		public CooldownWrapper( int val )
 		{
 			this.val = val;
 		}

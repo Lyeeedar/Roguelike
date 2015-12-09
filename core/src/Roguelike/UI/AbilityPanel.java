@@ -31,7 +31,7 @@ public class AbilityPanel extends TilePanel
 
 	public AbilityPanel( Skin skin, Stage stage )
 	{
-		super( skin, stage, AssetManager.loadSprite( "GUI/TileBackground" ), AssetManager.loadSprite( "GUI/TileBorder" ), Global.NUM_ABILITY_SLOTS, 2, 32, false );
+		super( skin, stage, AssetManager.loadSprite( "GUI/TileBackground" ), AssetManager.loadSprite( "GUI/TileBorder" ), Global.NUM_ABILITY_SLOTS, 1, 32, false );
 
 		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
 		padding = 3;
@@ -44,14 +44,9 @@ public class AbilityPanel extends TilePanel
 	{
 		tileData.clear();
 
-		for ( ActiveAbility aa : Global.abilityPool.slottedActiveAbilities )
+		for ( IAbility a : Global.CurrentLevel.player.slottedAbilities )
 		{
-			tileData.add( aa );
-		}
-
-		for ( PassiveAbility pa : Global.abilityPool.slottedPassiveAbilities )
-		{
-			tileData.add( pa );
+			tileData.add( a );
 		}
 	}
 
@@ -89,12 +84,14 @@ public class AbilityPanel extends TilePanel
 						if ( data instanceof ActiveAbility )
 						{
 							ActiveAbility aa = (ActiveAbility) data;
-							Global.abilityPool.clearActiveAbility( aa );
+							// Global.CurrentLevel.player.clearActiveAbility( aa
+							// );
 						}
 						else
 						{
 							PassiveAbility pa = (PassiveAbility) data;
-							Global.abilityPool.clearPassiveAbility( pa );
+							// Global.CurrentLevel.player.clearPassiveAbility(
+							// pa );
 						}
 
 						GameScreen.Instance.clearContextMenu();

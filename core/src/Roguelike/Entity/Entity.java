@@ -83,7 +83,7 @@ public abstract class Entity
 		if ( statElement != null )
 		{
 			Statistic.load( statElement, statistics );
-			HP = getStatistic( Statistic.MAXHP );
+			HP = getStatistic( Statistic.CONSTITUTION ) * 10;
 
 			statistics.put( Statistic.WALK, 1 );
 			statistics.put( Statistic.ENTITY, 1 );
@@ -184,6 +184,8 @@ public abstract class Entity
 		{
 			variableMap.put( s.toString().toLowerCase(), getStatistic( s ) );
 		}
+
+		variableMap.put( "maxhp", variableMap.get( Statistic.CONSTITUTION.toString().toLowerCase() ) * 10 );
 	}
 
 	// ----------------------------------------------------------------------
@@ -196,6 +198,7 @@ public abstract class Entity
 			baseVariableMap.put( s.toString().toLowerCase(), statistics.get( s ) + inventory.getStatistic( Statistic.emptyMap, s ) );
 		}
 
+		baseVariableMap.put( "maxhp", baseVariableMap.get( Statistic.CONSTITUTION.toString().toLowerCase() ) * 10 );
 		baseVariableMap.put( "hp", HP );
 
 		for ( EquipmentSlot slot : EquipmentSlot.values() )
@@ -248,7 +251,7 @@ public abstract class Entity
 	{
 		if ( !canTakeDamage ) { return; }
 
-		int appliedHeal = Math.min( heal, getStatistic( Statistic.MAXHP ) - HP );
+		int appliedHeal = Math.min( heal, ( getStatistic( Statistic.CONSTITUTION ) * 10 ) - HP );
 		HP += appliedHeal;
 
 		healingAccumulator += appliedHeal;

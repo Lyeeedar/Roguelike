@@ -25,7 +25,7 @@ public class EntityStatusRenderer
 	{
 		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 8 );
 
-		float val = (float) entity.HP / (float) entity.getVariable( Statistic.MAXHP );
+		float val = (float) entity.HP / (float) ( entity.getVariable( Statistic.CONSTITUTION ) * 10 );
 
 		if ( val < 1 )
 		{
@@ -79,7 +79,7 @@ public class EntityStatusRenderer
 		if ( mousex >= x && mousex <= x + width / 3 && mousey >= y && mousey <= y + height / 3 )
 		{
 			int hp = entity.HP;
-			int maxhp = entity.getVariable( Statistic.MAXHP );
+			int maxhp = entity.getVariable( Statistic.CONSTITUTION ) * 10;
 
 			if ( hp < maxhp )
 			{

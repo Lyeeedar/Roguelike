@@ -10,7 +10,6 @@ import Roguelike.Global.Direction;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
-import Roguelike.Levels.Dungeon;
 import Roguelike.Levels.Level;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Tiles.GameTile;
@@ -33,7 +32,6 @@ public abstract class AbstractDungeonGenerator
 
 	protected Array<Room> placedRooms = new Array<Room>();
 
-	protected Dungeon dungeon;
 	protected Level level;
 	protected Random ran;
 	protected int width;
@@ -53,11 +51,11 @@ public abstract class AbstractDungeonGenerator
 	// ----------------------------------------------------------------------
 	protected void selectRooms()
 	{
-		for ( DFPRoom r : dfp.getRequiredRooms( saveLevel.depth, ran, saveLevel.depth == dungeon.maxDepth ) )
+		for ( DFPRoom r : dfp.getRequiredRooms( saveLevel.depth, ran, saveLevel.depth == 5 ) )
 		{
 			if ( r.isTransition )
 			{
-				if ( !saveLevel.created && saveLevel.depth != dungeon.maxDepth )
+				if ( !saveLevel.created && saveLevel.depth != 5 )
 				{
 					additionalRooms.add( r );
 				}
@@ -70,11 +68,11 @@ public abstract class AbstractDungeonGenerator
 			}
 		}
 
-		for ( DFPRoom r : dfp.getOptionalRooms( saveLevel.depth, ran, saveLevel.depth == dungeon.maxDepth ) )
+		for ( DFPRoom r : dfp.getOptionalRooms( saveLevel.depth, ran, saveLevel.depth == 5 ) )
 		{
 			if ( r.isTransition )
 			{
-				if ( !saveLevel.created && saveLevel.depth != dungeon.maxDepth )
+				if ( !saveLevel.created && saveLevel.depth != 5 )
 				{
 					additionalRooms.add( r );
 				}
@@ -226,7 +224,7 @@ public abstract class AbstractDungeonGenerator
 	// ----------------------------------------------------------------------
 	protected Level createLevel( Symbol[][] symbolGrid, Symbol outerWall )
 	{
-		FactionParser fp = FactionParser.load( dungeon.mainFaction );
+		FactionParser fp = FactionParser.load( dfp.getMajorFaction( ran ) );
 
 		if ( DEBUG_OUTPUT )
 		{
@@ -300,7 +298,7 @@ public abstract class AbstractDungeonGenerator
 				if ( symbol.hasEnvironmentEntity() )
 				{
 					GameTile newTile = actualTiles[x][y];
-					EnvironmentEntity entity = symbol.getEnvironmentEntity( dungeon.UID, saveLevel.UID, saveLevel.depth );
+					EnvironmentEntity entity = symbol.getEnvironmentEntity( saveLevel.UID, saveLevel.depth );
 
 					if ( !saveLevel.created || !entity.canTakeDamage )
 					{
@@ -421,17 +419,13 @@ public abstract class AbstractDungeonGenerator
 		level.depth = saveLevel.depth;
 		level.UID = saveLevel.UID;
 
-		level.dungeon = dungeon;
-		dungeon.addLevel( saveLevel );
-		dungeon.addLevel( level );
-
 		level.calculateAmbient();
 
 		return level;
 	}
 
 	// ----------------------------------------------------------------------
-	public static AbstractDungeonGenerator load( Dungeon dungeon, SaveLevel level )
+	public static AbstractDungeonGenerator load( SaveLevel level )
 	{
 		DungeonFileParser dfp = DungeonFileParser.load( level.fileName + "/" + level.fileName );
 
@@ -447,7 +441,6 @@ public abstract class AbstractDungeonGenerator
 			e.printStackTrace();
 		}
 
-		type.dungeon = dungeon;
 		type.setup( level, dfp );
 
 		return type;

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
-import Roguelike.Global.ElementType;
 import Roguelike.Global.Statistic;
 import Roguelike.Util.FastEnumMap;
 
@@ -27,31 +26,8 @@ public final class ConstantEvent
 		{
 			Element sEl = xml.getChild( i );
 
-			if ( sEl.getName().toUpperCase().equals( "ATK" ) )
-			{
-				for ( ElementType el : ElementType.values() )
-				{
-					String expanded = sEl.getText().trim().toLowerCase();
-					expanded = expanded.replaceAll( "(?<!_)atk", el.Attack.toString().toLowerCase() );
-
-					equations.put( el.Attack, expanded );
-				}
-			}
-			else if ( sEl.getName().toUpperCase().equals( "DEF" ) )
-			{
-				for ( ElementType el : ElementType.values() )
-				{
-					String expanded = sEl.getText().trim().toLowerCase();
-					expanded = expanded.replaceAll( "(?<!_)def", el.Defense.toString().toLowerCase() );
-
-					equations.put( el.Defense, expanded );
-				}
-			}
-			else
-			{
-				Statistic el = Statistic.valueOf( sEl.getName().toUpperCase() );
-				equations.put( el, sEl.getText().trim().toLowerCase() );
-			}
+			Statistic el = Statistic.valueOf( sEl.getName().toUpperCase() );
+			equations.put( el, sEl.getText().trim().toLowerCase() );
 		}
 	}
 
@@ -110,50 +86,23 @@ public final class ConstantEvent
 	{
 		Array<String> lines = new Array<String>();
 
+		for ( Statistic stat : Statistic.BaseValues )
 		{
-			int val = getStatistic( variableMap, Statistic.MAXHP );
-			if ( val > 0 )
+			int val = getStatistic( variableMap, stat );
+
+			if ( val != 0 )
 			{
-				String line = "MaxHP " + val;
-				lines.add( line );
+				lines.add( Global.capitalizeString( stat.toString() ) + ": " + val );
 			}
 		}
 
-		for ( ElementType el : ElementType.values() )
+		for ( Statistic stat : Statistic.ModifierValues )
 		{
-			if ( equations.containsKey( el.Attack ) )
+			int val = getStatistic( variableMap, stat );
+
+			if ( val != 0 )
 			{
-				int atkVal = getStatistic( variableMap, el.Attack );
-
-				if ( atkVal > 0 )
-				{
-					String line = Global.capitalizeString( el.toString() ) + " attack ";
-					line += "[" + el.toString() + "] ";
-					line += atkVal;
-
-					line += "[]";
-
-					lines.add( line );
-				}
-			}
-		}
-
-		for ( ElementType el : ElementType.values() )
-		{
-			if ( equations.containsKey( el.Defense ) )
-			{
-				int defVal = getStatistic( variableMap, el.Defense );
-
-				if ( defVal > 0 )
-				{
-					String line = Global.capitalizeString( el.toString() ) + " defense ";
-					line += "[" + el.toString() + "] ";
-					line += defVal;
-
-					line += "[]";
-
-					lines.add( line );
-				}
+				lines.add( Global.capitalizeString( stat.toString() ) + ": " + val );
 			}
 		}
 

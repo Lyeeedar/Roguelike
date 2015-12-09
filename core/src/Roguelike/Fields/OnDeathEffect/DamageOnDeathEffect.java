@@ -89,7 +89,7 @@ public class DamageOnDeathEffect extends AbstractOnDeathEffect
 			}
 		}
 
-		Global.calculateDamage( entity, entity, Statistic.statsBlockToVariableBlock( stats ), false );
+		Global.calculateDamage( entity, entity, Statistic.statsBlockToVariableBlock( stats ), Statistic.emptyMap, false );
 	}
 
 	@Override

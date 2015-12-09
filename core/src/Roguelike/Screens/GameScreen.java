@@ -5,6 +5,7 @@ import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
 import Roguelike.RoguelikeGame.ScreenEnum;
+import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
@@ -23,10 +24,8 @@ import Roguelike.Tiles.Point;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 import Roguelike.UI.AbilityPanel;
-import Roguelike.UI.AbilityPoolPanel;
 import Roguelike.UI.DragDropPayload;
 import Roguelike.UI.EntityStatusRenderer;
-import Roguelike.UI.HPWidget;
 import Roguelike.UI.InventoryPanel;
 import Roguelike.UI.MessageStack;
 import Roguelike.UI.MessageStack.Line;
@@ -126,7 +125,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		abilityPanel = new AbilityPanel( skin, stage );
 
-		abilityPoolPanel = new AbilityPoolPanel( skin, stage );
+		// abilityPoolPanel = new AbilityPoolPanel( skin, stage );
 		inventoryPanel = new InventoryPanel( skin, stage );
 		messageStack = new MessageStack();
 		messageStack.addLine( new Line( new Message( "Welcome to the DUNGEON!" ) ) );
@@ -137,7 +136,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		TabPanel.Tab tab = tabPane.addTab( AssetManager.loadSprite( "blank" ), blankTab );
 		tabPane.addTab( AssetManager.loadSprite( "GUI/All" ), inventoryPanel );
-		tabPane.addTab( AssetManager.loadSprite( "GUI/Abilities" ), abilityPoolPanel );
+		// tabPane.addTab( AssetManager.loadSprite( "GUI/Abilities" ),
+		// abilityPoolPanel );
 
 		tabPane.selectTab( tab );
 
@@ -145,7 +145,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		stage.addActor( abilityPanel );
 
 		stage.addActor( inventoryPanel );
-		stage.addActor( abilityPoolPanel );
+		// stage.addActor( abilityPoolPanel );
 		stage.addActor( abilityPanel );
 
 		relayoutUI();
@@ -494,7 +494,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							}
 						}
 
-						if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.MAXHP ) || entity.stacks.size > 0 )
+						if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.CONSTITUTION ) * 10 || entity.stacks.size > 0 )
 						{
 							hasStatus.add( entity );
 						}
@@ -553,7 +553,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							height = tileSize3;
 						}
 
-						if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.MAXHP ) || entity.stacks.size > 0 )
+						if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.CONSTITUTION ) * 10 || entity.stacks.size > 0 )
 						{
 							hasStatus.add( entity );
 						}
@@ -1250,16 +1250,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			tabPane.toggleTab( inventoryPanel );
 		}
-		else if ( keycode == Keys.K )
-		{
-			tabPane.toggleTab( abilityPoolPanel );
-		}
 		else if ( keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
 		{
-			int abilityIndex = keycode - Keys.NUM_1;
-			if ( Global.abilityPool.slottedActiveAbilities[abilityIndex] != null && Global.abilityPool.slottedActiveAbilities[abilityIndex].isAvailable() )
+			int i = keycode - Keys.NUM_1;
+			IAbility a = Global.CurrentLevel.player.slottedAbilities.get( i );
+			if ( a != null && a instanceof ActiveAbility && ( (ActiveAbility) a ).isAvailable() )
 			{
-				prepareAbility( Global.abilityPool.slottedActiveAbilities[abilityIndex] );
+				prepareAbility( (ActiveAbility) a );
 			}
 		}
 		else if ( keycode == Keys.ENTER )
@@ -1849,12 +1846,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		Array<ActiveAbility> available = new Array<ActiveAbility>();
 
-		for ( int i = 0; i < Global.NUM_ABILITY_SLOTS; i++ )
+		for ( int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++ )
 		{
-			ActiveAbility aa = Global.abilityPool.slottedActiveAbilities[i];
-			if ( aa != null && aa.isAvailable() )
+			IAbility a = Global.CurrentLevel.player.slottedAbilities.get( i );
+			if ( a != null && a instanceof ActiveAbility && ( (ActiveAbility) a ).isAvailable() )
 			{
-				available.add( aa );
+				available.add( (ActiveAbility) a );
 			}
 		}
 
@@ -2038,8 +2035,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private InventoryPanel inventoryPanel;
 	private AbilityPanel abilityPanel;
-	private AbilityPoolPanel abilityPoolPanel;
-	private HPWidget hpWidget;
+	// private AbilityPoolPanel abilityPoolPanel;
 	private MessageStack messageStack;
 	private TabPanel tabPane;
 

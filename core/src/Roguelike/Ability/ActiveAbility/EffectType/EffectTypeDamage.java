@@ -5,7 +5,6 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
-import Roguelike.Global.ElementType;
 import Roguelike.Global.Statistic;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
@@ -31,21 +30,8 @@ public class EffectTypeDamage extends AbstractEffectType
 		{
 			Element sEl = xml.getChild( i );
 
-			if ( sEl.getName().toUpperCase().equals( "ATK" ) )
-			{
-				for ( ElementType el : ElementType.values() )
-				{
-					String expanded = sEl.getText().toLowerCase();
-					expanded = expanded.replaceAll( "(?<!_)atk", el.Attack.toString().toLowerCase() );
-
-					equations.put( el.Attack, expanded );
-				}
-			}
-			else
-			{
-				Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
-				equations.put( stat, sEl.getText().toLowerCase() );
-			}
+			Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
+			equations.put( stat, sEl.getText().toLowerCase() );
 		}
 	}
 
@@ -70,7 +56,7 @@ public class EffectTypeDamage extends AbstractEffectType
 
 	private void applyToEntity( Entity target, ActiveAbility aa, HashMap<String, Integer> variableMap )
 	{
-		Global.calculateDamage( aa.caster, target, variableMap, true );
+		Global.calculateDamage( aa.caster, target, variableMap, aa.caster.getVariableMap(), true );
 	}
 
 	private HashMap<String, Integer> calculateVariableMap( ActiveAbility aa )
@@ -145,19 +131,21 @@ public class EffectTypeDamage extends AbstractEffectType
 
 		Array<String> lines = new Array<String>();
 
-		for ( ElementType el : ElementType.values() )
+		int damage = Global.calculateDamage( variableMap, aa.caster.getVariableMap() );
+
+		lines.add( "Total Damage: " + damage );
+
+		lines.add( "Base Attack: " + variableMap.get( Statistic.ATTACK.toString().toLowerCase() ) );
+
+		lines.add( "Scales By:" );
+
+		for ( Statistic stat : Statistic.ModifierValues )
 		{
-			int atkVal = variableMap.get( el.Attack.toString().toLowerCase() );
+			int val = variableMap.get( stat.toString().toLowerCase() );
 
-			if ( atkVal > 0 )
+			if ( val > 0 )
 			{
-				String line = "Deals ";
-				line += "[" + el.toString() + "] ";
-				line += atkVal;
-
-				line += " " + Global.capitalizeString( el.toString() ) + "[] Damage";
-
-				lines.add( line );
+				lines.add( Global.capitalizeString( stat.toString() ) + " - " + val );
 			}
 		}
 

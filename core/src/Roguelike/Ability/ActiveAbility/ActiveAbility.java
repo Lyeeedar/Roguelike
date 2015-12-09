@@ -56,8 +56,8 @@ public class ActiveAbility implements IAbility, IGameObject
 	private int range = 1;
 	private float screenshake = 0;
 
-	public float cooldownAccumulator;
-	public float cooldown = 1;
+	public int cooldownAccumulator;
+	public int cooldown = 1;
 
 	public Array<AbstractCostType> costTypes = new Array<AbstractCostType>();
 	public AbstractTargetingType targetingType = new TargetingTypeTile();
@@ -302,6 +302,17 @@ public class ActiveAbility implements IAbility, IGameObject
 	public void updateAccumulators( float cost )
 	{
 		movementType.updateAccumulators( cost );
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public void onTurn()
+	{
+		cooldownAccumulator--;
+		if ( cooldownAccumulator < 0 )
+		{
+			cooldownAccumulator = 0;
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -592,7 +603,7 @@ public class ActiveAbility implements IAbility, IGameObject
 
 		cone = xmlElement.getInt( "Cone", cone );
 		range = xmlElement.getInt( "Range", range );
-		cooldown = xmlElement.getFloat( "Cooldown", cooldown );
+		cooldown = xmlElement.getInt( "Cooldown", cooldown );
 		screenshake = xmlElement.getFloat( "ScreenShake", screenshake );
 
 		Icon = xmlElement.getChildByName( "Icon" ) != null ? AssetManager.loadSprite( xmlElement.getChildByName( "Icon" ) ) : Icon;
@@ -683,5 +694,17 @@ public class ActiveAbility implements IAbility, IGameObject
 	public String getDescription()
 	{
 		return description;
+	}
+
+	@Override
+	public void setCooldown( int val )
+	{
+		cooldownAccumulator = val;
+	}
+
+	@Override
+	public int getCooldown()
+	{
+		return cooldownAccumulator;
 	}
 }

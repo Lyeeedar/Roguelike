@@ -10,7 +10,7 @@ import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
-import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.IAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Dialogue.DialogueManager;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree;
@@ -61,7 +61,14 @@ public class GameEntity extends Entity
 	// ----------------------------------------------------------------------
 	public void attack( Entity other, Direction dir )
 	{
-		Global.calculateDamage( this, other, getVariableMap(), true );
+		if ( inventory.getEquip( EquipmentSlot.MAINWEAPON ) == null )
+		{
+			Global.calculateDamage( this, other, variableMap, Statistic.emptyMap, true );
+		}
+		else
+		{
+			Global.calculateDamage( this, other, Statistic.statsBlockToVariableBlock( inventory.getEquip( EquipmentSlot.MAINWEAPON ).getStatistics( baseVariableMap ) ), getVariableMap(), true );
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -78,13 +85,9 @@ public class GameEntity extends Entity
 
 		if ( tile[0][0].level.player != this )
 		{
-			for ( ActiveAbility a : slottedActiveAbilities )
+			for ( IAbility a : slottedAbilities )
 			{
-				a.cooldownAccumulator -= cost;
-				if ( a.cooldownAccumulator < 0 )
-				{
-					a.cooldownAccumulator = 0;
-				}
+				a.onTurn();
 			}
 		}
 
@@ -123,11 +126,11 @@ public class GameEntity extends Entity
 	{
 		Array<GameEventHandler> handlers = new Array<GameEventHandler>();
 
-		for ( PassiveAbility pa : slottedPassiveAbilities )
+		for ( IAbility a : slottedAbilities )
 		{
-			if ( pa != null )
+			if ( a != null && a instanceof PassiveAbility )
 			{
-				handlers.add( pa );
+				handlers.add( (PassiveAbility) a );
 			}
 		}
 
@@ -180,7 +183,7 @@ public class GameEntity extends Entity
 
 		e.internalLoad( name );
 
-		e.HP = e.getStatistic( Statistic.MAXHP );
+		e.HP = e.getStatistic( Statistic.CONSTITUTION ) * 10;
 
 		e.statistics.put( Statistic.WALK, 1 );
 
@@ -228,50 +231,54 @@ public class GameEntity extends Entity
 			}
 		}
 
-		Element activeAbilityElement = xmlElement.getChildByName( "ActiveAbilities" );
-		if ( activeAbilityElement != null )
-		{
-			for ( int i = 0; i < activeAbilityElement.getChildCount() && i < Global.NUM_ABILITY_SLOTS; i++ )
-			{
-				Element abEl = activeAbilityElement.getChild( i );
-
-				ActiveAbility ab = null;
-
-				if ( abEl.getChildCount() > 0 )
-				{
-					ab = ActiveAbility.load( abEl );
-				}
-				else
-				{
-					ab = ActiveAbility.load( abEl.getText() );
-				}
-
-				ab.caster = this;
-				slottedActiveAbilities.add( ab );
-			}
-		}
-
-		Element passiveAbilityElement = xmlElement.getChildByName( "PassiveAbilities" );
-		if ( passiveAbilityElement != null )
-		{
-			for ( int i = 0; i < passiveAbilityElement.getChildCount() && i < Global.NUM_ABILITY_SLOTS; i++ )
-			{
-				Element abEl = passiveAbilityElement.getChild( i );
-
-				PassiveAbility ab = null;
-
-				if ( abEl.getChildCount() > 0 )
-				{
-					ab = PassiveAbility.load( abEl );
-				}
-				else
-				{
-					ab = PassiveAbility.load( abEl.getText() );
-				}
-
-				slottedPassiveAbilities.add( ab );
-			}
-		}
+		// Element activeAbilityElement = xmlElement.getChildByName(
+		// "ActiveAbilities" );
+		// if ( activeAbilityElement != null )
+		// {
+		// for ( int i = 0; i < activeAbilityElement.getChildCount() && i <
+		// Global.NUM_ABILITY_SLOTS; i++ )
+		// {
+		// Element abEl = activeAbilityElement.getChild( i );
+		//
+		// ActiveAbility ab = null;
+		//
+		// if ( abEl.getChildCount() > 0 )
+		// {
+		// ab = ActiveAbility.load( abEl );
+		// }
+		// else
+		// {
+		// ab = ActiveAbility.load( abEl.getText() );
+		// }
+		//
+		// ab.caster = this;
+		// slottedActiveAbilities.add( ab );
+		// }
+		// }
+		//
+		// Element passiveAbilityElement = xmlElement.getChildByName(
+		// "PassiveAbilities" );
+		// if ( passiveAbilityElement != null )
+		// {
+		// for ( int i = 0; i < passiveAbilityElement.getChildCount() && i <
+		// Global.NUM_ABILITY_SLOTS; i++ )
+		// {
+		// Element abEl = passiveAbilityElement.getChild( i );
+		//
+		// PassiveAbility ab = null;
+		//
+		// if ( abEl.getChildCount() > 0 )
+		// {
+		// ab = PassiveAbility.load( abEl );
+		// }
+		// else
+		// {
+		// ab = PassiveAbility.load( abEl.getText() );
+		// }
+		//
+		// slottedPassiveAbilities.add( ab );
+		// }
+		// }
 
 		String dialoguePath = xmlElement.get( "Dialogue", null );
 		if ( dialoguePath != null )
@@ -292,10 +299,11 @@ public class GameEntity extends Entity
 
 		variableMap.put( stat.toString().toLowerCase(), val );
 
-		for ( PassiveAbility passive : slottedPassiveAbilities )
+		for ( IAbility a : slottedAbilities )
 		{
-			if ( passive != null )
+			if ( a != null && a instanceof PassiveAbility )
 			{
+				PassiveAbility passive = (PassiveAbility) a;
 				val += passive.getStatistic( variableMap, stat );
 			}
 		}
@@ -360,8 +368,7 @@ public class GameEntity extends Entity
 	public String fileName;
 
 	// ----------------------------------------------------------------------
-	public Array<PassiveAbility> slottedPassiveAbilities = new Array<PassiveAbility>();
-	public Array<ActiveAbility> slottedActiveAbilities = new Array<ActiveAbility>();
+	public Array<IAbility> slottedAbilities = new Array<IAbility>();
 
 	// ----------------------------------------------------------------------
 	public Sprite defaultHitEffect = AssetManager.loadSprite( "strike/strike", 0.1f );

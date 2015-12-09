@@ -6,12 +6,13 @@
 	</Sprite>
 	
 	<Statistics>
-		<MaxHP>50</MaxHP>
-		<Range>5</<Range>
 		
-		<Base_Atk>15</Base_Atk>
-		<Base_Def>15</Base_Def>
+		<Attack>15</Attack>
+		<Defense>15</Defense>
 		
+		<Constitution>5</Constitution>
+		<Perception>1</Perception>
+
 	</Statistics>
 	
 </Entity>

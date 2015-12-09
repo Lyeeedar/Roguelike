@@ -2,61 +2,61 @@ package Roguelike.Entity.AI.BehaviourTree.Actions;
 
 import java.util.HashSet;
 
+import Roguelike.Global.Statistic;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskWait;
-import Roguelike.Global.Statistic;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionRest extends AbstractAction
 {
-	private HashSet<String> interestedValues = new HashSet<String>();	
+	private HashSet<String> interestedValues = new HashSet<String>();
 	private HashSet<String> tempValues = new HashSet<String>();
-	
+
 	int restedTurns = 0;
 
 	@Override
-	public BehaviourTreeState evaluate(GameEntity entity)
+	public BehaviourTreeState evaluate( GameEntity entity )
 	{
 		tempValues.clear();
-		
-		if (entity.HP < entity.getStatistic(Statistic.MAXHP))
+
+		if ( entity.HP < entity.getStatistic( Statistic.CONSTITUTION ) * 10 )
 		{
-			tempValues.add("HP");
+			tempValues.add( "HP" );
 		}
 		// add ability cooldown checks here
-		
+
 		boolean completed = false;
-		for (String item : interestedValues)
+		for ( String item : interestedValues )
 		{
-			if (!tempValues.contains(item))
+			if ( !tempValues.contains( item ) )
 			{
 				completed = true;
 				break;
 			}
 		}
-		
-		//swap
+
+		// swap
 		HashSet<String> temp = interestedValues;
 		interestedValues = tempValues;
 		tempValues = temp;
-		
+
 		boolean hasRestingToDo = completed || interestedValues.size() > 0;
-		
-		if (hasRestingToDo)
+
+		if ( hasRestingToDo )
 		{
-			entity.tasks.add(new TaskWait(2+restedTurns/5));
-			State =  BehaviourTreeState.RUNNING;
-			
+			entity.tasks.add( new TaskWait( 2 + restedTurns / 5 ) );
+			State = BehaviourTreeState.RUNNING;
+
 			restedTurns++;
 		}
 		else
 		{
-			State =  BehaviourTreeState.SUCCEEDED;
+			State = BehaviourTreeState.SUCCEEDED;
 			restedTurns = 0;
 		}
-		
+
 		return State;
 	}
 
@@ -64,12 +64,12 @@ public class ActionRest extends AbstractAction
 	public void cancel()
 	{
 		interestedValues.clear();
-		
+
 		restedTurns = 0;
 	}
 
 	@Override
-	public void parse(Element xmlElement)
+	public void parse( Element xmlElement )
 	{
 	}
 

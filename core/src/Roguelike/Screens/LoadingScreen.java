@@ -3,11 +3,8 @@ package Roguelike.Screens;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
-import Roguelike.Ability.ActiveAbility.ActiveAbility;
-import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.DungeonGeneration.AbstractDungeonGenerator;
 import Roguelike.Entity.GameEntity;
-import Roguelike.Levels.Dungeon;
 import Roguelike.Levels.Level;
 import Roguelike.Save.SaveLevel;
 
@@ -116,29 +113,30 @@ public class LoadingScreen implements Screen
 		{
 			Global.ChangeLevel( level, player, travelData );
 
-			Global.CurrentLevel.player.slottedActiveAbilities.clear();
-			Global.CurrentLevel.player.slottedPassiveAbilities.clear();
+			Global.CurrentLevel.player.slottedAbilities.clear();
 
-			for ( ActiveAbility aa : Global.abilityPool.slottedActiveAbilities )
-			{
-				if ( aa != null )
-				{
-					aa.caster = Global.CurrentLevel.player;
-					Global.CurrentLevel.player.slottedActiveAbilities.add( aa );
-				}
-
-			}
-
-			for ( PassiveAbility pa : Global.abilityPool.slottedPassiveAbilities )
-			{
-				if ( pa != null )
-				{
-					Global.CurrentLevel.player.slottedPassiveAbilities.add( pa );
-				}
-			}
+			// for ( ActiveAbility aa :
+			// Global.abilityPool.slottedActiveAbilities )
+			// {
+			// if ( aa != null )
+			// {
+			// aa.caster = Global.CurrentLevel.player;
+			// Global.CurrentLevel.player.slottedActiveAbilities.add( aa );
+			// }
+			//
+			// }
+			//
+			// for ( PassiveAbility pa :
+			// Global.abilityPool.slottedPassiveAbilities )
+			// {
+			// if ( pa != null )
+			// {
+			// Global.CurrentLevel.player.slottedPassiveAbilities.add( pa );
+			// }
+			// }
 
 			Global.CurrentLevel.player.isVariableMapDirty = true;
-			Global.abilityPool.isVariableMapDirty = false;
+			// Global.abilityPool.isVariableMapDirty = false;
 
 			RoguelikeGame.Instance.switchScreen( ScreenEnum.GAME );
 		}
@@ -226,29 +224,14 @@ public class LoadingScreen implements Screen
 	{
 	}
 
-	public boolean set( Dungeon dungeon, SaveLevel level, GameEntity player, Object travelData, PostGenerateEvent event )
+	public boolean set( SaveLevel level, GameEntity player, Object travelData, PostGenerateEvent event )
 	{
-		this.dungeon = dungeon;
 		this.player = player;
 		this.travelData = travelData;
 		this.event = event;
-
-		if ( dungeon.loadedLevels.containsKey( level.UID ) )
-		{
-			Level loadedLevel = dungeon.loadedLevels.get( level.UID );
-
-			if ( event != null )
-			{
-				onComplete( loadedLevel );
-			}
-			onComplete( loadedLevel );
-			doCreate = false;
-			return false;
-		}
-
 		this.level = level;
 
-		generator = AbstractDungeonGenerator.load( dungeon, level );
+		generator = AbstractDungeonGenerator.load( level );
 
 		this.percent = generator.percent;
 		this.generationString = generator.generationText;
@@ -272,7 +255,6 @@ public class LoadingScreen implements Screen
 	boolean complete;
 	String generationString;
 	int percent = 0;
-	Dungeon dungeon;
 	SaveLevel level;
 	GameEntity player;
 	Object travelData;

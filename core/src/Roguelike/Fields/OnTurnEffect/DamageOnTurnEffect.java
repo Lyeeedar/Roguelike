@@ -80,7 +80,7 @@ public class DamageOnTurnEffect extends AbstractOnTurnEffect
 			}
 		}
 
-		Global.calculateDamage( entity, entity, Statistic.statsBlockToVariableBlock( stats ), false );
+		Global.calculateDamage( entity, entity, Statistic.statsBlockToVariableBlock( stats ), Statistic.emptyMap, false );
 	}
 
 	@Override

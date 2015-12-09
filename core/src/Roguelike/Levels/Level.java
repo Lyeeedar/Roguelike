@@ -9,14 +9,13 @@ import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
+import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
-import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
-import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Fields.Field;
 import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.GameEvent.GameEventHandler;
@@ -37,7 +36,6 @@ import Roguelike.Tiles.Point;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Util.EnumBitflag;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -78,39 +76,6 @@ public class Level
 	{
 		updateAccumulator += delta;
 
-		// setup player abilities
-		if ( Global.abilityPool.isVariableMapDirty )
-		{
-			player.slottedActiveAbilities.clear();
-			player.slottedPassiveAbilities.clear();
-
-			for ( ActiveAbility aa : Global.abilityPool.slottedActiveAbilities )
-			{
-				if ( aa != null )
-				{
-					aa.caster = player;
-					player.slottedActiveAbilities.add( aa );
-				}
-
-			}
-
-			for ( PassiveAbility pa : Global.abilityPool.slottedPassiveAbilities )
-			{
-				if ( pa != null )
-				{
-					player.slottedPassiveAbilities.add( pa );
-				}
-			}
-
-			player.isVariableMapDirty = true;
-			Global.abilityPool.isVariableMapDirty = false;
-
-			for ( int i = 0; i < 3; i++ )
-			{
-				player.tasks.add( new TaskWait() );
-			}
-		}
-
 		if ( !hasActiveEffects() && Global.CurrentDialogue == null )
 		{
 			// Do player move and fill lists
@@ -135,10 +100,12 @@ public class Level
 			{
 				// Global.save();
 
-				for ( ActiveAbility aa : Global.abilityPool.slottedActiveAbilities )
+				for ( IAbility a : player.slottedAbilities )
 				{
-					if ( aa != null )
+					if ( a != null && a instanceof ActiveAbility )
 					{
+						ActiveAbility aa = (ActiveAbility) a;
+
 						aa.source = player.tile[0][0];
 						aa.hasValidTargets = aa.getValidTargets().size > 0;
 					}
@@ -172,7 +139,7 @@ public class Level
 		updateVisibleTiles();
 		lightList.clear();
 
-		int playerViewRange = player.getVariable( Statistic.RANGE );
+		int playerViewRange = player.getVariable( Statistic.PERCEPTION );
 		for ( int x = 0; x < width; x++ )
 		{
 			for ( int y = 0; y < height; y++ )
@@ -262,7 +229,7 @@ public class Level
 				}
 			}
 
-			Array<Point> output = visibilityData.getShadowCast( Grid, player.tile[0][0].x, player.tile[0][0].y, player.getVariable( Statistic.RANGE ), player, true );
+			Array<Point> output = visibilityData.getShadowCast( Grid, player.tile[0][0].x, player.tile[0][0].y, player.getVariable( Statistic.PERCEPTION ), player, true );
 
 			for ( Point tilePos : output )
 			{
@@ -483,19 +450,22 @@ public class Level
 				{
 					if ( e.isBoss )
 					{
-						if ( dungeon.isCleared( this ) )
-						{
-							dungeon.isCleared = true;
-							EnvironmentEntity portal = EnvironmentEntity.CreateDungeonExitPortal( dungeon );
-							tile.addEnvironmentEntity( portal );
-
-							GameScreen.Instance.addFullScreenMessage( "Dungeon Cleared" );
-
-							for ( String key : dungeon.clearData.keySet() )
-							{
-								Global.GlobalVariables.put( key, dungeon.clearData.get( key ) );
-							}
-						}
+						// if ( dungeon.isCleared( this ) )
+						// {
+						// dungeon.isCleared = true;
+						// EnvironmentEntity portal =
+						// EnvironmentEntity.CreateDungeonExitPortal( dungeon );
+						// tile.addEnvironmentEntity( portal );
+						//
+						// GameScreen.Instance.addFullScreenMessage(
+						// "Dungeon Cleared" );
+						//
+						// for ( String key : dungeon.clearData.keySet() )
+						// {
+						// Global.GlobalVariables.put( key,
+						// dungeon.clearData.get( key ) );
+						// }
+						// }
 					}
 
 					dropItems( e.getInventory(), e.tile[0][0], e.essence, e );
@@ -682,21 +652,11 @@ public class Level
 
 					while ( tile.entity.popupAccumulator >= 0 && tile.entity.displayedPopup.length() < tile.entity.popup.length() )
 					{
-						tile.entity.popupAccumulator -= 0.02f;
+						tile.entity.popupAccumulator -= 0.03f;
 
 						tile.entity.displayedPopup = tile.entity.popup.substring( 0, tile.entity.displayedPopup.length() + 1 );
 
 						char letter = tile.entity.displayedPopup.charAt( tile.entity.displayedPopup.length() - 1 );
-
-						if ( letter != ' ' )
-						{
-							Sound sound = AssetManager.loadSound( "Male/" + ( "" + letter ).toUpperCase() );
-
-							if ( sound != null )
-							{
-								sound.play( 1, 1.2f, 0 );
-							}
-						}
 					}
 				}
 			}
@@ -794,7 +754,7 @@ public class Level
 			Global.AUT += actionCost;
 			Global.DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( Global.AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
 
-			Global.abilityPool.update( actionCost );
+			// Global.abilityPool.update( actionCost );
 
 			player.update( actionCost );
 
@@ -1303,8 +1263,6 @@ public class Level
 	public final ShadowCastCache visibilityData = new ShadowCastCache();
 
 	private final Color tempColour = new Color();
-
-	public Dungeon dungeon;
 
 	// endregion Data
 	// ####################################################################//

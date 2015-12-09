@@ -5,7 +5,7 @@ import java.io.IOException;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.AssetManager;
-import Roguelike.Global.ElementType;
+import Roguelike.Global;
 import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
@@ -13,7 +13,6 @@ import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Lights.Light;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
-import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -29,7 +28,7 @@ public final class Item extends GameEventHandler
 {
 	/*
 	 * IDEAS:
-	 *
+	 * 
 	 * Unlock extra power after condition (absorb x essence, kill x enemy)
 	 */
 
@@ -82,7 +81,6 @@ public final class Item extends GameEventHandler
 	public Light light;
 	public boolean canDrop = true;
 	public String dropChanceEqn;
-	public FastEnumMap<ElementType, Integer> elementalStats = ElementType.getElementBlock();
 
 	private int range = -1000;
 
@@ -91,7 +89,7 @@ public final class Item extends GameEventHandler
 	{
 		if ( range == -1000 )
 		{
-			range = getStatistic( entity.getBaseVariableMap(), Statistic.RANGE );
+			range = getStatistic( entity.getBaseVariableMap(), Statistic.PERCEPTION );
 			if ( range == 0 )
 			{
 				if ( type.equals( "spear" ) )
@@ -212,16 +210,8 @@ public final class Item extends GameEventHandler
 		table.add( descLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 		table.row();
 
-		int oldDam = 0;
-		int newDam = 0;
-		for ( ElementType el : ElementType.values() )
-		{
-			int oldval = other == null ? 0 : other.getStatistic( entity.getBaseVariableMap(), el.Attack );
-			int newval = getStatistic( entity.getBaseVariableMap(), el.Attack );
-
-			oldDam += oldval;
-			newDam += newval;
-		}
+		int oldDam = Global.calculateDamage( Statistic.statsBlockToVariableBlock( other.getStatistics( entity.getBaseVariableMap() ) ), entity.getBaseVariableMap() );
+		int newDam = Global.calculateDamage( Statistic.statsBlockToVariableBlock( getStatistics( entity.getBaseVariableMap() ) ), entity.getBaseVariableMap() );
 
 		String damText = "Damage: " + newDam;
 		if ( newDam != oldDam )
@@ -241,10 +231,10 @@ public final class Item extends GameEventHandler
 		table.add( new Label( damText, skin ) ).expandX().left();
 		table.row();
 
-		table.add( new Label( "", skin ) );
+		table.add( new Label( "Scales with:", skin ) ).expandX().left();
 		table.row();
 
-		Label statLabel = new Label( String.join( "\n", toString( entity.getBaseVariableMap() ) ), skin );
+		Label statLabel = new Label( String.join( "\n\t", toString( entity.getBaseVariableMap() ) ), skin );
 		statLabel.setWrap( true );
 		table.add( statLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 
@@ -321,12 +311,6 @@ public final class Item extends GameEventHandler
 		if ( eventsElement != null )
 		{
 			super.parse( eventsElement );
-		}
-
-		Element elementElement = xmlElement.getChildByName( "Elements" );
-		if ( elementElement != null )
-		{
-			ElementType.load( elementElement, elementalStats );
 		}
 
 		Element lightElement = xmlElement.getChildByName( "Light" );

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
-import Roguelike.Global.ElementType;
 import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.Tasks.AbstractTask;
@@ -85,7 +84,7 @@ public final class DamageTaskEvent extends AbstractOnTaskEvent
 			}
 		}
 
-		Global.calculateDamage( entity, entity, Statistic.statsBlockToVariableBlock( stats ), false );
+		Global.calculateDamage( entity, entity, Statistic.statsBlockToVariableBlock( stats ), entity.getVariableMap(), false );
 
 		return true;
 	}
@@ -105,22 +104,8 @@ public final class DamageTaskEvent extends AbstractOnTaskEvent
 		{
 			Element sEl = xml.getChild( i );
 
-			if ( sEl.getName().toUpperCase().equals( "ATK" ) )
-			{
-
-				for ( ElementType el : ElementType.values() )
-				{
-					String expanded = sEl.getText().toLowerCase();
-					expanded = expanded.replaceAll( "(?<!_)atk", el.Attack.toString().toLowerCase() );
-
-					equations.put( el.Attack, expanded );
-				}
-			}
-			else
-			{
-				Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
-				equations.put( stat, sEl.getText().toLowerCase() );
-			}
+			Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
+			equations.put( stat, sEl.getText().toLowerCase() );
 		}
 	}
 

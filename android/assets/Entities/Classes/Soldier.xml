@@ -16,10 +16,9 @@
 	</Sprite>
 	
 	<Statistics>
-		<MaxHP>120</MaxHP>
-		<Range>10</<Range>	
-		<Base_Atk>5</Base_Atk>
-		<Base_Def>2</Base_Def>	
+		<Defense>1</Defense>
+		<Constitution>10</Constitution>
+		<Perception>10</Perception>	
 	</Statistics>
 	
 	<Inventory>
@@ -35,7 +34,8 @@
 			
 				<Events>
 					<Constant>
-						<Metal_Atk>8</Metal_Atk>
+						<Attack>10</Attack>
+						<Strength>1</Strength>
 					</Constant>
 				</Events>
 		    </Dagger>
@@ -56,7 +56,7 @@
 	                </OnReceiveDamage>
 	                
 					<Constant>
-					    <Base_Def>2</Base_Def>
+					    <Defense>2</Defense>
 					</Constant>
 				</Events>
 		        
@@ -71,7 +71,7 @@
 		        
 		        <Events>
 					<Constant>
-						<Base_Def>5</Base_Def>
+						<Defense>5</Defense>
 					</Constant>
 				</Events>
 				
@@ -90,7 +90,7 @@
 		        
 		        <Events>
 					<Constant>
-						<Base_Def>3</Base_Def>
+						<Defense>3</Defense>
 					</Constant>
 				</Events>
 				
