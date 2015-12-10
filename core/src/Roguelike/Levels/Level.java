@@ -45,69 +45,6 @@ public class Level
 	// ####################################################################//
 	// region Constructor
 
-	private static final EnumBitflag<Passability> ItemDropPassability = new EnumBitflag<Passability>( Passability.WALK, Passability.ENTITY );
-
-	// endregion Constructor
-	// ####################################################################//
-	// region Public Methods
-	public final ShadowCastCache visibilityData = new ShadowCastCache();
-	private final Color tempColour = new Color();
-
-	// endregion Public Methods
-	// ####################################################################//
-	// region Visibility
-	public Array<ActiveAbility> ActiveAbilities = new Array<ActiveAbility>( false, 16 );
-	public Array<RepeatingSoundEffect> ambientSounds = new Array<RepeatingSoundEffect>();
-
-	// endregion Visibility
-	// ####################################################################//
-	// region Lights
-	public String bgmName;
-	public String fileName;
-	public int depth;
-	public long seed;
-	public Array<DFPRoom> requiredRooms;
-
-	// endregion Lights
-	// ####################################################################//
-	// region Cleanup
-	public String UID;
-	public GameEntity player;
-	public boolean inTurn = false;
-
-	// endregion Cleanup
-	// ####################################################################//
-	// region Update
-	public boolean isVisionRestricted = true;
-	public Color Ambient = new Color( 0.1f, 0.1f, 0.3f, 1.0f );
-	public Sprite background;
-
-	// endregion Update
-	// ####################################################################//
-	// region Process
-	public SeenTile[][] SeenGrid;
-	public GameTile[][] Grid;
-	public int width;
-	public int height;
-
-	// endregion Process
-	// ####################################################################//
-	// region Getters
-	public boolean affectedByDayNight = false;
-	private Array<GameEntity> visibleList = new Array<GameEntity>( false, 16 );
-	private Array<GameEntity> invisibleList = new Array<GameEntity>( false, 16 );
-	private Array<Light> lightList = new Array<Light>( false, 16 );
-	private Array<EnvironmentEntity> tempEnvironmentEntityList = new Array<EnvironmentEntity>( false, 16 );
-	private Array<Field> tempFieldList = new Array<Field>( false, 16 );
-	private Array<Light> tempLightList = new Array<Light>( false, 16 );
-	private float updateDeltaStep = 0.05f;
-	private float updateAccumulator;
-
-	// endregion Getters
-	// ####################################################################//
-	// region Misc
-	private Array<ActiveAbility> NewActiveAbilities = new Array<ActiveAbility>( false, 16 );
-
 	public Level( GameTile[][] grid )
 	{
 		this.Grid = grid;
@@ -125,203 +62,9 @@ public class Level
 		}
 	}
 
-	public void addActiveAbility( ActiveAbility aa )
-	{
-		NewActiveAbilities.add( aa );
-	}
-
-	public void update( float delta )
-	{
-		updateAccumulator += delta;
-
-		if ( !hasActiveEffects() && Global.CurrentDialogue == null )
-		{
-			// Do player move and fill lists
-			if ( visibleList.size == 0 && invisibleList.size == 0 && updateAccumulator >= updateDeltaStep && !hasAbilitiesToUpdate() )
-			{
-				processPlayer();
-
-				updateAccumulator = 0;
-
-				inTurn = true;
-			}
-
-			if ( visibleList.size > 0 || invisibleList.size > 0 )
-			{
-				// process invisible until empty
-				processInvisibleList();
-
-				// process visible
-				processVisibleList();
-			}
-			else if ( inTurn )
-			{
-				// Global.save();
-
-				for ( IAbility a : player.slottedAbilities )
-				{
-					if ( a != null && a instanceof ActiveAbility )
-					{
-						ActiveAbility aa = (ActiveAbility) a;
-
-						aa.source = player.tile[0][0];
-						aa.hasValidTargets = aa.getValidTargets().size > 0;
-					}
-				}
-
-				inTurn = false;
-			}
-
-			if ( ActiveAbilities.size > 0 )
-			{
-				Iterator<ActiveAbility> itr = ActiveAbilities.iterator();
-				while ( itr.hasNext() )
-				{
-					ActiveAbility aa = itr.next();
-					boolean finished = aa.update();
-
-					if ( finished )
-					{
-						itr.remove();
-					}
-				}
-			}
-
-			if ( NewActiveAbilities.size > 0 )
-			{
-				ActiveAbilities.addAll( NewActiveAbilities, 0, NewActiveAbilities.size );
-				NewActiveAbilities.clear();
-			}
-		}
-
-		updateVisibleTiles();
-		lightList.clear();
-
-		int playerViewRange = player.getVariable( Statistic.PERCEPTION );
-		for ( int x = 0; x < width; x++ )
-		{
-			for ( int y = 0; y < height; y++ )
-			{
-				GameTile tile = Grid[x][y];
-
-				if ( tile.visible )
-				{
-					updateSpritesForTile( tile, delta );
-					updateSpriteEffectsForTile( tile, delta );
-					updatePopupsForTile( tile, delta );
-				}
-				else
-				{
-					clearEffectsForTile( tile );
-				}
-
-				cleanUpDeadForTile( tile );
-
-				tile.light.set( tile.ambientColour );
-				if ( affectedByDayNight )
-				{
-					tile.light.mul( Global.DayNightFactor );
-					tile.light.a = 1;
-				}
-				getLightsForTile( tile, lightList, playerViewRange );
-			}
-		}
-
-		if ( ActiveAbilities.size > 0 )
-		{
-			for ( ActiveAbility aa : ActiveAbilities )
-			{
-				aa.getSprite().update( delta );
-
-				if ( aa.light != null )
-				{
-					for ( GameTile t : aa.AffectedTiles )
-					{
-						int lx = t.x;
-						int ly = t.y;
-						if ( checkLightCloseEnough( lx, ly, (int) aa.light.baseIntensity, player.tile[0][0].x, player.tile[0][0].y, playerViewRange ) )
-						{
-							Light light = aa.light.copy();
-							light.lx = lx;
-							light.ly = ly;
-							light.copied = true;
-							lightList.add( light );
-						}
-					}
-				}
-			}
-		}
-
-		calculateLight( delta, lightList );
-
-		for ( RepeatingSoundEffect sound : ambientSounds )
-		{
-			sound.update( delta );
-		}
-	}
-
-	// endregion Misc
+	// endregion Constructor
 	// ####################################################################//
-	// region Data
-
-	public void updateVisibleTiles()
-	{
-		if ( !isVisionRestricted )
-		{
-			for ( int x = 0; x < width; x++ )
-			{
-				for ( int y = 0; y < height; y++ )
-				{
-					Grid[x][y].visible = true;
-					SeenGrid[x][y].seen = true;
-				}
-			}
-		}
-		else
-		{
-			for ( int x = 0; x < width; x++ )
-			{
-				for ( int y = 0; y < height; y++ )
-				{
-					Grid[x][y].visible = false;
-				}
-			}
-
-			Array<Point> output = visibilityData.getShadowCast( Grid, player.tile[0][0].x, player.tile[0][0].y, player.getVariable( Statistic.PERCEPTION ), player, true );
-
-			for ( Point tilePos : output )
-			{
-				if ( tilePos.x >= 0 && tilePos.y >= 0 && tilePos.x < width && tilePos.y < height )
-				{
-					getGameTile( tilePos ).visible = true;
-				}
-			}
-
-			updateSeenGrid();
-		}
-	}
-
-	private void updateSeenGrid()
-	{
-		for ( int x = 0; x < width; x++ )
-		{
-			for ( int y = height - 1; y >= 0; y-- )
-			{
-				GameTile tile = Grid[x][y];
-				if ( tile.visible )
-				{
-					SeenTile s = SeenGrid[x][y];
-					s.seen = true;
-
-					GameTile prevTile = getGameTile( x, y + 1 );
-					GameTile nextTile = getGameTile( x, y - 1 );
-					SeenTile prevSeenTile = getSeenTile( x, y + 1 );
-
-					s.set( tile, player, prevTile, nextTile, prevSeenTile );
-				}
-			}
-		}
-	}
+	// region Lights
 
 	public void calculateAmbient()
 	{
@@ -346,7 +89,7 @@ public class Level
 				GameTile tile = Grid[x][y];
 				if ( tile.tileData.shadow != null )
 				{
-					tile.tileData.shadow.apply( Grid, x, y );
+					//tile.tileData.shadow.apply( Grid, x, y );
 				}
 			}
 		}
@@ -470,6 +213,10 @@ public class Level
 
 	}
 
+	// endregion Lights
+	// ####################################################################//
+	// region Cleanup
+
 	private void cleanUpDeadForTile( GameTile tile )
 	{
 		{
@@ -584,60 +331,8 @@ public class Level
 
 		float delay = 0;
 
-		if ( essence > 0 )
-		{
-			if ( possibleTiles.size > 0 )
-			{
-				int blockSize = MathUtils.clamp( essence / 10, 10, 100 );
-
-				while ( essence > 0 )
-				{
-					int block = Math.min( blockSize, essence );
-					essence -= block;
-
-					Point target = possibleTiles.random();
-					GameTile tile = getGameTile( target );
-
-					int existingVal = tile.orbs.get( GameTile.OrbType.EXPERIENCE );
-					tile.orbs.put( GameTile.OrbType.EXPERIENCE, existingVal + block );
-
-					int[] diff = tile.getPosDiff( source );
-
-					Sprite sprite = AssetManager.loadSprite( "orb" );
-					MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
-					anim.leapHeight = 6;
-					sprite.spriteAnimation = anim;
-					sprite.renderDelay = delay;
-					delay += 0.02f;
-
-					float scale = 0.5f + 0.5f * ( MathUtils.clamp( block, 10.0f, 1000.0f ) / 1000.0f );
-					sprite.baseScale[0] = scale;
-					sprite.baseScale[1] = scale;
-
-					tile.spriteEffects.add( new SpriteEffect( sprite, Direction.CENTER, null ) );
-				}
-			}
-			else
-			{
-				int existingVal = source.orbs.get( GameTile.OrbType.EXPERIENCE );
-				source.orbs.put( GameTile.OrbType.EXPERIENCE, existingVal + essence );
-
-				int[] diff = new int[] { 0, 0 };
-
-				Sprite sprite = AssetManager.loadSprite( "orb" );
-				MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
-				anim.leapHeight = 6;
-				sprite.spriteAnimation = anim;
-				sprite.renderDelay = delay;
-				delay += 0.02f;
-
-				float scale = 0.5f + 0.5f * ( MathUtils.clamp( essence, 10.0f, 1000.0f ) / 1000.0f );
-				sprite.baseScale[0] = scale;
-				sprite.baseScale[1] = scale;
-
-				source.spriteEffects.add( new SpriteEffect( sprite, Direction.CENTER, null ) );
-			}
-		}
+		delay = dropOrbs( essence, delay, GameTile.OrbType.EXPERIENCE, source, possibleTiles );
+		delay = dropOrbs( 10, delay, GameTile.OrbType.HEALTH, source, possibleTiles );
 
 		for ( Item i : inventory.m_items )
 		{
@@ -659,6 +354,66 @@ public class Level
 		}
 
 		Global.PointPool.freeAll( possibleTiles );
+	}
+
+	private float dropOrbs( int val, float delay, GameTile.OrbType type, GameTile source, Array<Point> possibleTiles)
+	{
+		if ( val > 0 )
+		{
+			if ( possibleTiles.size > 0 )
+			{
+				int blockSize = MathUtils.clamp( val / 10, 10, 100 );
+
+				while ( val > 0 )
+				{
+					int block = Math.min( blockSize, val );
+					val -= block;
+
+					Point target = possibleTiles.random();
+					GameTile tile = getGameTile( target );
+
+					int existingVal = tile.orbs.containsKey( type ) ? tile.orbs.get( type ) : 0;
+					tile.orbs.put( type, existingVal + block );
+
+					int[] diff = tile.getPosDiff( source );
+
+					Sprite sprite = AssetManager.loadSprite( "orb" );
+					MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
+					anim.leapHeight = 6;
+					sprite.spriteAnimation = anim;
+					sprite.renderDelay = delay;
+					delay += 0.02f;
+
+					float scale = 0.5f + 0.5f * ( MathUtils.clamp( block, 10.0f, 1000.0f ) / 1000.0f );
+					sprite.baseScale[0] = scale;
+					sprite.baseScale[1] = scale;
+
+					tile.spriteEffects.add( new SpriteEffect( sprite, Direction.CENTER, null ) );
+				}
+			}
+			else
+			{
+				int existingVal = source.orbs.get( type );
+				source.orbs.put( type, existingVal + val );
+
+				int[] diff = new int[] { 0, 0 };
+
+				Sprite sprite = AssetManager.loadSprite( "orb" );
+				MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
+				anim.leapHeight = 6;
+				sprite.spriteAnimation = anim;
+				sprite.renderDelay = delay;
+				delay += 0.02f;
+
+				float scale = 0.5f + 0.5f * ( MathUtils.clamp( val, 10.0f, 1000.0f ) / 1000.0f );
+				sprite.baseScale[0] = scale;
+				sprite.baseScale[1] = scale;
+
+				source.spriteEffects.add( new SpriteEffect( sprite, Direction.CENTER, null ) );
+			}
+		}
+
+		return delay;
 	}
 
 	private void clearEffectsForTile( GameTile tile )
@@ -683,6 +438,69 @@ public class Level
 			for ( Item i : tile.items )
 			{
 				i.getIcon().spriteAnimation = null;
+			}
+		}
+	}
+
+	// endregion Cleanup
+	// ####################################################################//
+	// region Update
+
+	public void updateVisibleTiles()
+	{
+		if ( !isVisionRestricted )
+		{
+			for ( int x = 0; x < width; x++ )
+			{
+				for ( int y = 0; y < height; y++ )
+				{
+					Grid[x][y].visible = true;
+					SeenGrid[x][y].seen = true;
+				}
+			}
+		}
+		else
+		{
+			for ( int x = 0; x < width; x++ )
+			{
+				for ( int y = 0; y < height; y++ )
+				{
+					Grid[x][y].visible = false;
+				}
+			}
+
+			Array<Point> output = visibilityData.getShadowCast( Grid, player.tile[0][0].x, player.tile[0][0].y, player.getVariable( Statistic.PERCEPTION ), player, true );
+
+			for ( Point tilePos : output )
+			{
+				if ( tilePos.x >= 0 && tilePos.y >= 0 && tilePos.x < width && tilePos.y < height )
+				{
+					getGameTile( tilePos ).visible = true;
+				}
+			}
+
+			updateSeenGrid();
+		}
+	}
+
+	private void updateSeenGrid()
+	{
+		for ( int x = 0; x < width; x++ )
+		{
+			for ( int y = height - 1; y >= 0; y-- )
+			{
+				GameTile tile = Grid[x][y];
+				if ( tile.visible )
+				{
+					SeenTile s = SeenGrid[x][y];
+					s.seen = true;
+
+					GameTile prevTile = getGameTile( x, y + 1 );
+					GameTile nextTile = getGameTile( x, y - 1 );
+					SeenTile prevSeenTile = getSeenTile( x, y + 1 );
+
+					s.set( tile, player, prevTile, nextTile, prevSeenTile );
+				}
 			}
 		}
 	}
@@ -772,6 +590,10 @@ public class Level
 		}
 	}
 
+	// endregion Update
+	// ####################################################################//
+	// region Process
+
 	private void processPlayer()
 	{
 		if ( player.tasks.size == 0 )
@@ -837,7 +659,7 @@ public class Level
 
 						if ( type == GameTile.OrbType.EXPERIENCE )
 						{
-
+							GameScreen.Instance.addActorEssenceAction( player, val );
 						}
 						else if ( type == GameTile.OrbType.HEALTH )
 						{
@@ -1007,6 +829,10 @@ public class Level
 			}
 		}
 	}
+
+	// endregion Process
+	// ####################################################################//
+	// region Getters
 
 	private void getAllEntitiesToBeProcessed( float cost )
 	{
@@ -1264,6 +1090,188 @@ public class Level
 
 		return activeEffects;
 	}
+
+	// endregion Getters
+	// ####################################################################//
+	// region Misc
+
+	public void addActiveAbility( ActiveAbility aa )
+	{
+		NewActiveAbilities.add( aa );
+	}
+
+	public void update( float delta )
+	{
+		updateAccumulator += delta;
+
+		if ( !hasActiveEffects() && Global.CurrentDialogue == null )
+		{
+			// Do player move and fill lists
+			if ( visibleList.size == 0 && invisibleList.size == 0 && updateAccumulator >= updateDeltaStep && !hasAbilitiesToUpdate() )
+			{
+				processPlayer();
+
+				updateAccumulator = 0;
+
+				inTurn = true;
+			}
+
+			if ( visibleList.size > 0 || invisibleList.size > 0 )
+			{
+				// process invisible until empty
+				processInvisibleList();
+
+				// process visible
+				processVisibleList();
+			}
+			else if ( inTurn )
+			{
+				// Global.save();
+
+				for ( IAbility a : player.slottedAbilities )
+				{
+					if ( a != null && a instanceof ActiveAbility )
+					{
+						ActiveAbility aa = (ActiveAbility) a;
+
+						aa.source = player.tile[0][0];
+						aa.hasValidTargets = aa.getValidTargets().size > 0;
+					}
+				}
+
+				inTurn = false;
+			}
+
+			if ( ActiveAbilities.size > 0 )
+			{
+				Iterator<ActiveAbility> itr = ActiveAbilities.iterator();
+				while ( itr.hasNext() )
+				{
+					ActiveAbility aa = itr.next();
+					boolean finished = aa.update();
+
+					if ( finished )
+					{
+						itr.remove();
+					}
+				}
+			}
+
+			if ( NewActiveAbilities.size > 0 )
+			{
+				ActiveAbilities.addAll( NewActiveAbilities, 0, NewActiveAbilities.size );
+				NewActiveAbilities.clear();
+			}
+		}
+
+		updateVisibleTiles();
+		lightList.clear();
+
+		int playerViewRange = player.getVariable( Statistic.PERCEPTION );
+		for ( int x = 0; x < width; x++ )
+		{
+			for ( int y = 0; y < height; y++ )
+			{
+				GameTile tile = Grid[x][y];
+
+				if ( tile.visible )
+				{
+					updateSpritesForTile( tile, delta );
+					updateSpriteEffectsForTile( tile, delta );
+					updatePopupsForTile( tile, delta );
+				}
+				else
+				{
+					clearEffectsForTile( tile );
+				}
+
+				cleanUpDeadForTile( tile );
+
+				tile.light.set( tile.ambientColour );
+				if ( affectedByDayNight )
+				{
+					tile.light.mul( Global.DayNightFactor );
+					tile.light.a = 1;
+				}
+				getLightsForTile( tile, lightList, playerViewRange );
+			}
+		}
+
+		if ( ActiveAbilities.size > 0 )
+		{
+			for ( ActiveAbility aa : ActiveAbilities )
+			{
+				aa.getSprite().update( delta );
+
+				if ( aa.light != null )
+				{
+					for ( GameTile t : aa.AffectedTiles )
+					{
+						int lx = t.x;
+						int ly = t.y;
+						if ( checkLightCloseEnough( lx, ly, (int) aa.light.baseIntensity, player.tile[0][0].x, player.tile[0][0].y, playerViewRange ) )
+						{
+							Light light = aa.light.copy();
+							light.lx = lx;
+							light.ly = ly;
+							light.copied = true;
+							lightList.add( light );
+						}
+					}
+				}
+			}
+		}
+
+		calculateLight( delta, lightList );
+
+		for ( RepeatingSoundEffect sound : ambientSounds )
+		{
+			sound.update( delta );
+		}
+	}
+
+	// endregion Misc
+	// ####################################################################//
+	// region Data
+
+	private Array<ActiveAbility> NewActiveAbilities = new Array<ActiveAbility>( false, 16 );
+
+	public boolean affectedByDayNight = false;
+	private Array<GameEntity> visibleList = new Array<GameEntity>( false, 16 );
+	private Array<GameEntity> invisibleList = new Array<GameEntity>( false, 16 );
+	private Array<Light> lightList = new Array<Light>( false, 16 );
+	private Array<EnvironmentEntity> tempEnvironmentEntityList = new Array<EnvironmentEntity>( false, 16 );
+	private Array<Field> tempFieldList = new Array<Field>( false, 16 );
+	private Array<Light> tempLightList = new Array<Light>( false, 16 );
+	private float updateDeltaStep = 0.05f;
+	private float updateAccumulator;
+
+	private static final EnumBitflag<Passability> ItemDropPassability = new EnumBitflag<Passability>( Passability.WALK, Passability.ENTITY );
+
+	public final ShadowCastCache visibilityData = new ShadowCastCache();
+	private final Color tempColour = new Color();
+
+	public Array<ActiveAbility> ActiveAbilities = new Array<ActiveAbility>( false, 16 );
+	public Array<RepeatingSoundEffect> ambientSounds = new Array<RepeatingSoundEffect>();
+
+	public String bgmName;
+	public String fileName;
+	public int depth;
+	public long seed;
+	public Array<DFPRoom> requiredRooms;
+
+	public String UID;
+	public GameEntity player;
+	public boolean inTurn = false;
+
+	public boolean isVisionRestricted = true;
+	public Color Ambient = new Color( 0.1f, 0.1f, 0.3f, 1.0f );
+	public Sprite background;
+
+	public SeenTile[][] SeenGrid;
+	public GameTile[][] Grid;
+	public int width;
+	public int height;
 
 	// endregion Data
 	// ####################################################################//

@@ -59,85 +59,14 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// region Constructor
 
 	// ----------------------------------------------------------------------
-	private static final float ScreenShakeSpeed = 0.02f;
-
-	// endregion Constructor
-	// ####################################################################//
-	// region Create
-	// ----------------------------------------------------------------------
-	public static GameScreen Instance;
-	private final GlyphLayout layout = new GlyphLayout();
-	private final Color temp = new Color();
-
-	// endregion Create
-	// ####################################################################//
-	// region Data
-	// ----------------------------------------------------------------------
-	public GestureDetector gestureDetector;
-	// ----------------------------------------------------------------------
-	public OrthographicCamera camera;
-	// ----------------------------------------------------------------------
-	public Tooltip contextMenu;
-	public boolean lockContextMenu;
-	// ----------------------------------------------------------------------
-	public DragDropPayload dragDropPayload;
-	public float screenShakeRadius;
-	public float screenShakeAngle;
-	public InputMultiplexer inputMultiplexer;
-	public boolean mouseOverUI;
-	public Array<Item> pickupQueue = new Array<Item>( false, 16 );
-	// ----------------------------------------------------------------------
-	public ActiveAbility preparedAbility;
-	public IAbility abilityToEquip;
-	private Array<Point> abilityTiles;
-	private Color tempColour = new Color();
-	private Tooltip tooltip;
-	// ----------------------------------------------------------------------
-	private Array<RenderSprite> queuedSprites = new Array<RenderSprite>();
-	private Array<Entity> hasStatus = new Array<Entity>();
-	private Array<Entity> entitiesWithSpeech = new Array<Entity>();
-	// ----------------------------------------------------------------------
-	private Pool<RenderSprite> renderSpritePool = Pools.get( RenderSprite.class );
-	// ----------------------------------------------------------------------
-	private Sprite border;
-	private int mousePosX;
-	private int mousePosY;
-	private Stage stage;
-	private SpriteBatch batch;
-	private TextureRegion blank;
-	private TextureRegion white;
-	private Sprite bag;
-	private Sprite orb;
-	private TextureRegion speechBubbleArrow;
-	private NinePatch speechBubbleBackground;
-	private float frametime;
-	private BitmapFont font;
-	private BitmapFont hightlightfont;
-	private float screenShakeAccumulator;
-	// ----------------------------------------------------------------------
-	private AbilityPanel abilityPanel;
-	private EquipmentPanel equipmentPanel;
-	private Skin skin;
-	// ----------------------------------------------------------------------
-	private long diff, start = System.currentTimeMillis();
-	// ----------------------------------------------------------------------
-	private float lastZoom;
-	// ----------------------------------------------------------------------
-	private boolean created;
-	// ----------------------------------------------------------------------
-	private boolean longPressed;
-	private boolean dragged;
-	private float startX;
-	private float startY;
-	// ----------------------------------------------------------------------
-	private int fps;
-	private float storedFrametime;
-	private float fpsAccumulator;
-	// ----------------------------------------------------------------------
 	public GameScreen()
 	{
 		Instance = this;
 	}
+
+	// endregion Constructor
+	// ####################################################################//
+	// region Create
 
 	// ----------------------------------------------------------------------
 	@Override
@@ -217,6 +146,93 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		equipmentPanel.setWidth( equipmentPanel.getMinWidth() );
 		equipmentPanel.setHeight( equipmentPanel.getMinHeight() );
 	}
+
+	// endregion Create
+	// ####################################################################//
+	// region Data
+
+	// ----------------------------------------------------------------------
+	private static final float ScreenShakeSpeed = 0.02f;
+
+	// ----------------------------------------------------------------------
+	public static GameScreen Instance;
+	private final GlyphLayout layout = new GlyphLayout();
+	private final Color temp = new Color();
+
+	// ----------------------------------------------------------------------
+	public GestureDetector gestureDetector;
+
+	// ----------------------------------------------------------------------
+	public OrthographicCamera camera;
+
+	// ----------------------------------------------------------------------
+	public Tooltip contextMenu;
+	public boolean lockContextMenu;
+
+	// ----------------------------------------------------------------------
+	public DragDropPayload dragDropPayload;
+	public float screenShakeRadius;
+	public float screenShakeAngle;
+	public InputMultiplexer inputMultiplexer;
+	public boolean mouseOverUI;
+	public Array<Item> pickupQueue = new Array<Item>( false, 16 );
+
+	// ----------------------------------------------------------------------
+	public ActiveAbility preparedAbility;
+	public IAbility abilityToEquip;
+	private Array<Point> abilityTiles;
+	private Color tempColour = new Color();
+	private Tooltip tooltip;
+
+	// ----------------------------------------------------------------------
+	private Array<RenderSprite> queuedSprites = new Array<RenderSprite>();
+	private Array<Entity> hasStatus = new Array<Entity>();
+	private Array<Entity> entitiesWithSpeech = new Array<Entity>();
+
+	// ----------------------------------------------------------------------
+	private Pool<RenderSprite> renderSpritePool = Pools.get( RenderSprite.class );
+
+	// ----------------------------------------------------------------------
+	private Sprite border;
+	private int mousePosX;
+	private int mousePosY;
+	private Stage stage;
+	private SpriteBatch batch;
+	private TextureRegion blank;
+	private TextureRegion white;
+	private Sprite bag;
+	private Sprite orb;
+	private TextureRegion speechBubbleArrow;
+	private NinePatch speechBubbleBackground;
+	private float frametime;
+	private BitmapFont font;
+	private BitmapFont hightlightfont;
+	private float screenShakeAccumulator;
+
+	// ----------------------------------------------------------------------
+	private AbilityPanel abilityPanel;
+	private EquipmentPanel equipmentPanel;
+	private Skin skin;
+
+	// ----------------------------------------------------------------------
+	private long diff, start = System.currentTimeMillis();
+
+	// ----------------------------------------------------------------------
+	private float lastZoom;
+
+	// ----------------------------------------------------------------------
+	private boolean created;
+
+	// ----------------------------------------------------------------------
+	private boolean longPressed;
+	private boolean dragged;
+	private float startX;
+	private float startY;
+
+	// ----------------------------------------------------------------------
+	private int fps;
+	private float storedFrametime;
+	private float fpsAccumulator;
 
 	// endregion Data
 	// ####################################################################//
@@ -700,7 +716,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				if ( !gtile.visible && stile.seen )
 				{
-					temp.set( Global.CurrentLevel.Ambient );
+					temp.set( stile.light );
 					temp.mul( temp.a );
 					if ( Global.CurrentLevel.affectedByDayNight )
 					{
@@ -1319,6 +1335,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 	}
 
+	// endregion InputProcessor
+	// ####################################################################//
+	// region GestureListener
+
 	// ----------------------------------------------------------------------
 	@Override
 	public boolean keyDown( int keycode )
@@ -1421,10 +1441,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		return false;
 	}
-
-	// endregion InputProcessor
-	// ####################################################################//
-	// region GestureListener
 
 	// ----------------------------------------------------------------------
 	@Override
@@ -1963,10 +1979,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		return false;
 	}
 
-	// endregion GestureListener
-	// ####################################################################//
-	// region Private Methods
-
 	// ----------------------------------------------------------------------
 	@Override
 	public boolean pan( float x, float y, float deltaX, float deltaY )
@@ -2006,9 +2018,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		return false;
 	}
 
-	// endregion Private Methods
+	// endregion GestureListener
 	// ####################################################################//
-	// region Public Methods
+	// region Private Methods
 
 	// ----------------------------------------------------------------------
 	private float roundTo( float val, float multiple )
@@ -2036,6 +2048,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			start = System.currentTimeMillis();
 		}
 	}
+
+	// endregion Private Methods
+	// ####################################################################//
+	// region Public Methods
 
 	// ----------------------------------------------------------------------
 	public void addAbilityAvailabilityAction( Sprite sprite )

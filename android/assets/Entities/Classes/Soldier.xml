@@ -18,9 +18,9 @@
 	<Statistics>
 		<Defense>1</Defense>
 
-        <Constitution>10</Constitution>
+        <Constitution>15</Constitution>
         <Perception>10</Perception>
-        <Strength>10</Strength>
+        <Strength>15</Strength>
         <Intelligence>10</Intelligence>
         <Willpower>10</Willpower>
         <Speed>10</Speed>
@@ -39,7 +39,7 @@
 
 				<Events>
 					<Constant>
-                        <Attack>15</Attack>
+                        <Attack>25</Attack>
 						<Strength>1</Strength>
 					</Constant>
 				</Events>

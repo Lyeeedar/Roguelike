@@ -35,61 +35,13 @@ public class GameEntity extends Entity
 	// region Constructor
 
 	// ----------------------------------------------------------------------
-	public boolean seen = false;
-
-	// endregion Constructor
-	// ####################################################################//
-	// region Public Methods
-	public String fileName;
-	// ----------------------------------------------------------------------
-	public Array<IAbility> slottedAbilities = new Array<IAbility>();
-	// ----------------------------------------------------------------------
-	public Sprite defaultHitEffect = AssetManager.loadSprite( "strike/strike", 0.1f );
-	// ----------------------------------------------------------------------
-	public Array<AbstractTask> tasks = new Array<AbstractTask>();
-	public float actionDelayAccumulator;
-	public boolean canSwap;
-	public boolean canMove;
-	// ----------------------------------------------------------------------
-	public DialogueManager dialogue;
-	// ----------------------------------------------------------------------
-	public HashSet<String> factions = new HashSet<String>();
-	public BehaviourTree AI;
-
-	// ----------------------------------------------------------------------
 	private GameEntity()
 	{
 	}
 
-	// ----------------------------------------------------------------------
-	public static GameEntity load( String name )
-	{
-		GameEntity e = new GameEntity();
-		e.fileName = name;
-
-		e.internalLoad( name );
-
-		e.HP = e.getStatistic( Statistic.CONSTITUTION ) * 10;
-
-		e.statistics.put( Statistic.WALK, 1 );
-
-		e.isVariableMapDirty = true;
-		e.recalculateMaps();
-
-		return e;
-	}
-
-	// ----------------------------------------------------------------------
-	public EnumBitflag<Passability> getTravelType()
-	{
-		recalculateMaps();
-		return travelType;
-	}
-
-
-	// endregion Public Methods
+	// endregion Constructor
 	// ####################################################################//
-	// region Data
+	// region Public Methods
 
 	// ----------------------------------------------------------------------
 	public void attack( Entity other, Direction dir )
@@ -353,6 +305,58 @@ public class GameEntity extends Entity
 			}
 		}
 	}
+
+	// ----------------------------------------------------------------------
+	public static GameEntity load( String name )
+	{
+		GameEntity e = new GameEntity();
+		e.fileName = name;
+
+		e.internalLoad( name );
+
+		e.HP = e.getStatistic( Statistic.CONSTITUTION ) * 10;
+
+		e.statistics.put( Statistic.WALK, 1 );
+
+		e.isVariableMapDirty = true;
+		e.recalculateMaps();
+
+		return e;
+	}
+
+	// ----------------------------------------------------------------------
+	public EnumBitflag<Passability> getTravelType()
+	{
+		recalculateMaps();
+		return travelType;
+	}
+
+	// endregion Public Methods
+	// ####################################################################//
+	// region Data
+
+	// ----------------------------------------------------------------------
+	public boolean seen = false;
+	public String fileName;
+
+	// ----------------------------------------------------------------------
+	public Array<IAbility> slottedAbilities = new Array<IAbility>();
+
+	// ----------------------------------------------------------------------
+	public Sprite defaultHitEffect = AssetManager.loadSprite( "strike/strike", 0.1f );
+
+	// ----------------------------------------------------------------------
+	public Array<AbstractTask> tasks = new Array<AbstractTask>();
+	public float actionDelayAccumulator;
+	public boolean canSwap;
+	public boolean canMove;
+
+	// ----------------------------------------------------------------------
+	public DialogueManager dialogue;
+
+	// ----------------------------------------------------------------------
+	public HashSet<String> factions = new HashSet<String>();
+	public BehaviourTree AI;
 
 	// endregion Data
 	// ####################################################################//
