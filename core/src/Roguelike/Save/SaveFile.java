@@ -1,14 +1,6 @@
 package Roguelike.Save;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
-import kryo.FastEnumMapSerializer;
 import Roguelike.AssetManager;
-import Roguelike.Global.Direction;
-import Roguelike.Global.Statistic;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom.Orientation;
 import Roguelike.DungeonGeneration.Room;
@@ -27,6 +19,8 @@ import Roguelike.GameEvent.OnTask.DamageTaskEvent;
 import Roguelike.GameEvent.OnTask.StatusTaskEvent;
 import Roguelike.GameEvent.OnTurn.DamageOverTimeEvent;
 import Roguelike.GameEvent.OnTurn.HealOverTimeEvent;
+import Roguelike.Global.Direction;
+import Roguelike.Global.Statistic;
 import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
@@ -34,8 +28,8 @@ import Roguelike.Items.Item.ItemCategory;
 import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.ShadowCastCache;
 import Roguelike.Save.SaveGameEntity.CooldownWrapper;
-import Roguelike.Save.SaveLevel.SaveEssence;
 import Roguelike.Save.SaveLevel.SaveLevelItem;
+import Roguelike.Save.SaveLevel.SaveOrb;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationMode;
 import Roguelike.Sprite.Sprite.AnimationState;
@@ -44,7 +38,6 @@ import Roguelike.Tiles.Point;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
@@ -54,6 +47,12 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import kryo.FastEnumMapSerializer;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public final class SaveFile
 {
@@ -86,27 +85,6 @@ public final class SaveFile
 		System.out.println( "Saved" );
 	}
 
-	public void load()
-	{
-		setupKryo();
-
-		Input input = null;
-		try
-		{
-			input = new Input( new GZIPInputStream( Gdx.files.local( "save.dat" ).read() ) );
-		}
-		catch ( IOException e )
-		{
-			e.printStackTrace();
-		}
-
-		currentLevel = kryo.readObject( input, SaveLevel.class );
-		globalVariables = kryo.readObject( input, HashMap.class );
-		globalNames = kryo.readObject( input, HashMap.class );
-
-		input.close();
-	}
-
 	private void setupKryo()
 	{
 		if ( kryo == null )
@@ -126,19 +104,10 @@ public final class SaveFile
 
 		kryo.register( Array.class, new Serializer<Array>()
 		{
-			{
-				setAcceptsNull( true );
-			}
-
 			private Class genericType;
 
-			@Override
-			public void setGenerics( Kryo kryo, Class[] generics )
 			{
-				if ( kryo.isFinal( generics[0] ) )
-				{
-					genericType = generics[0];
-				}
+				setAcceptsNull( true );
 			}
 
 			@Override
@@ -166,6 +135,16 @@ public final class SaveFile
 					}
 				}
 			}
+
+			@Override
+			public void setGenerics( Kryo kryo, Class[] generics )
+			{
+				if ( kryo.isFinal( generics[ 0 ] ) )
+				{
+					genericType = generics[ 0 ];
+				}
+			}
+
 
 			@Override
 			public Array read( Kryo kryo, Input input, Class<Array> type )
@@ -196,7 +175,7 @@ public final class SaveFile
 				}
 				return array;
 			}
-				} );
+		} );
 
 		kryo.register( Color.class, new Serializer<Color>()
 		{
@@ -213,7 +192,7 @@ public final class SaveFile
 			{
 				output.writeInt( Color.rgba8888( color ) );
 			}
-				} );
+		} );
 
 		kryo.register( Sprite.class, new Serializer<Sprite>()
 		{
@@ -224,7 +203,7 @@ public final class SaveFile
 				float animDelay = input.readFloat();
 				Color color = kryo.readObject( input, Color.class );
 				int modeVal = input.readInt();
-				AnimationMode mode = AnimationMode.values()[modeVal];
+				AnimationMode mode = AnimationMode.values()[ modeVal ];
 				float[] scale = input.readFloats( 2 );
 				boolean drawActualSize = input.readBoolean();
 
@@ -243,7 +222,7 @@ public final class SaveFile
 				output.writeFloats( sprite.baseScale );
 				output.writeBoolean( sprite.drawActualSize );
 			}
-				} );
+		} );
 
 		kryo.register( Element.class, new Serializer<Element>()
 		{
@@ -262,7 +241,7 @@ public final class SaveFile
 			{
 				output.writeString( element.toString() );
 			}
-				} );
+		} );
 	}
 
 	private void registerClasses( Kryo kryo )
@@ -277,7 +256,7 @@ public final class SaveFile
 		kryo.register( SaveSeenTile[][].class );
 
 		kryo.register( CooldownWrapper.class );
-		kryo.register( SaveEssence.class );
+		kryo.register( SaveOrb.class );
 		kryo.register( SaveLevelItem.class );
 
 		kryo.register( Point.class );
@@ -326,5 +305,26 @@ public final class SaveFile
 		kryo.register( StatusTaskEvent.class );
 		kryo.register( DamageOverTimeEvent.class );
 		kryo.register( HealOverTimeEvent.class );
+	}
+
+	public void load()
+	{
+		setupKryo();
+
+		Input input = null;
+		try
+		{
+			input = new Input( new GZIPInputStream( Gdx.files.local( "save.dat" ).read() ) );
+		}
+		catch ( IOException e )
+		{
+			e.printStackTrace();
+		}
+
+		currentLevel = kryo.readObject( input, SaveLevel.class );
+		globalVariables = kryo.readObject( input, HashMap.class );
+		globalNames = kryo.readObject( input, HashMap.class );
+
+		input.close();
 	}
 }

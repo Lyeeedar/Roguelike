@@ -34,6 +34,7 @@ public class GameEntity extends Entity
 	// ####################################################################//
 	// region Constructor
 
+	// ----------------------------------------------------------------------
 	public boolean seen = false;
 
 	// endregion Constructor
@@ -55,6 +56,7 @@ public class GameEntity extends Entity
 	public HashSet<String> factions = new HashSet<String>();
 	public BehaviourTree AI;
 
+	// ----------------------------------------------------------------------
 	private GameEntity()
 	{
 	}
@@ -83,6 +85,7 @@ public class GameEntity extends Entity
 		recalculateMaps();
 		return travelType;
 	}
+
 
 	// endregion Public Methods
 	// ####################################################################//
@@ -233,55 +236,6 @@ public class GameEntity extends Entity
 			}
 		}
 
-		// Element activeAbilityElement = xmlElement.getChildByName(
-		// "ActiveAbilities" );
-		// if ( activeAbilityElement != null )
-		// {
-		// for ( int i = 0; i < activeAbilityElement.getChildCount() && i <
-		// Global.NUM_ABILITY_SLOTS; i++ )
-		// {
-		// Element abEl = activeAbilityElement.getChild( i );
-		//
-		// ActiveAbility ab = null;
-		//
-		// if ( abEl.getChildCount() > 0 )
-		// {
-		// ab = ActiveAbility.load( abEl );
-		// }
-		// else
-		// {
-		// ab = ActiveAbility.load( abEl.getText() );
-		// }
-		//
-		// ab.caster = this;
-		// slottedActiveAbilities.add( ab );
-		// }
-		// }
-		//
-		// Element passiveAbilityElement = xmlElement.getChildByName(
-		// "PassiveAbilities" );
-		// if ( passiveAbilityElement != null )
-		// {
-		// for ( int i = 0; i < passiveAbilityElement.getChildCount() && i <
-		// Global.NUM_ABILITY_SLOTS; i++ )
-		// {
-		// Element abEl = passiveAbilityElement.getChild( i );
-		//
-		// PassiveAbility ab = null;
-		//
-		// if ( abEl.getChildCount() > 0 )
-		// {
-		// ab = PassiveAbility.load( abEl );
-		// }
-		// else
-		// {
-		// ab = PassiveAbility.load( abEl.getText() );
-		// }
-		//
-		// slottedPassiveAbilities.add( ab );
-		// }
-		// }
-
 		String dialoguePath = xmlElement.get( "Dialogue", null );
 		if ( dialoguePath != null )
 		{
@@ -376,7 +330,9 @@ public class GameEntity extends Entity
 	// ----------------------------------------------------------------------
 	public float getActionDelay()
 	{
-		return 1;
+		float speed = getStatistic( Statistic.SPEED ) / 10.0f;
+
+		return 1.0f / speed;
 	}
 
 	// ----------------------------------------------------------------------

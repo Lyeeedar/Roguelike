@@ -24,8 +24,6 @@ import Roguelike.Tiles.Point;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 import Roguelike.UI.*;
-import Roguelike.UI.MessageStack.Line;
-import Roguelike.UI.MessageStack.Message;
 import Roguelike.UI.Tooltip;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -58,24 +56,29 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class GameScreen implements Screen, InputProcessor, GestureListener
 {
 	// ####################################################################//
-	// region Create
+	// region Constructor
 
 	// ----------------------------------------------------------------------
 	private static final float ScreenShakeSpeed = 0.02f;
+
+	// endregion Constructor
+	// ####################################################################//
+	// region Create
 	// ----------------------------------------------------------------------
 	public static GameScreen Instance;
 	private final GlyphLayout layout = new GlyphLayout();
 	private final Color temp = new Color();
-	// ----------------------------------------------------------------------
-	public GestureDetector gestureDetector;
 
 	// endregion Create
 	// ####################################################################//
-	// region Screen
+	// region Data
+	// ----------------------------------------------------------------------
+	public GestureDetector gestureDetector;
 	// ----------------------------------------------------------------------
 	public OrthographicCamera camera;
 	// ----------------------------------------------------------------------
 	public Tooltip contextMenu;
+	public boolean lockContextMenu;
 	// ----------------------------------------------------------------------
 	public DragDropPayload dragDropPayload;
 	public float screenShakeRadius;
@@ -86,6 +89,35 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public ActiveAbility preparedAbility;
 	public IAbility abilityToEquip;
+	private Array<Point> abilityTiles;
+	private Color tempColour = new Color();
+	private Tooltip tooltip;
+	// ----------------------------------------------------------------------
+	private Array<RenderSprite> queuedSprites = new Array<RenderSprite>();
+	private Array<Entity> hasStatus = new Array<Entity>();
+	private Array<Entity> entitiesWithSpeech = new Array<Entity>();
+	// ----------------------------------------------------------------------
+	private Pool<RenderSprite> renderSpritePool = Pools.get( RenderSprite.class );
+	// ----------------------------------------------------------------------
+	private Sprite border;
+	private int mousePosX;
+	private int mousePosY;
+	private Stage stage;
+	private SpriteBatch batch;
+	private TextureRegion blank;
+	private TextureRegion white;
+	private Sprite bag;
+	private Sprite orb;
+	private TextureRegion speechBubbleArrow;
+	private NinePatch speechBubbleBackground;
+	private float frametime;
+	private BitmapFont font;
+	private BitmapFont hightlightfont;
+	private float screenShakeAccumulator;
+	// ----------------------------------------------------------------------
+	private AbilityPanel abilityPanel;
+	private EquipmentPanel equipmentPanel;
+	private Skin skin;
 	// ----------------------------------------------------------------------
 	private long diff, start = System.currentTimeMillis();
 	// ----------------------------------------------------------------------
@@ -101,64 +133,25 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private int fps;
 	private float storedFrametime;
 	private float fpsAccumulator;
-
-	// endregion Screen
-	// ####################################################################//
-	// region InputProcessor
-	private float frametime;
-	private BitmapFont font;
-	private BitmapFont hightlightfont;
-	private float screenShakeAccumulator;
-	// ----------------------------------------------------------------------
-	private InventoryPanel inventoryPanel;
-	private AbilityPanel abilityPanel;
-	private EquipmentPanel equipmentPanel;
-	// private AbilityPoolPanel abilityPoolPanel;
-	private MessageStack messageStack;
-	private TabPanel tabPane;
-	private Skin skin;
-
-	// endregion InputProcessor
-	// ####################################################################//
-	// region GestureListener
-	private Stage stage;
-	private SpriteBatch batch;
-	private TextureRegion blank;
-	private TextureRegion white;
-	private Sprite bag;
-	private Sprite orb;
-	private TextureRegion speechBubbleArrow;
-	private NinePatch speechBubbleBackground;
-
-	// endregion GestureListener
-	// ####################################################################//
-	// region Public Methods
-	private Color tempColour = new Color();
-	private Tooltip tooltip;
-	// ----------------------------------------------------------------------
-	private Array<RenderSprite> queuedSprites = new Array<RenderSprite>();
-	private Array<Entity> hasStatus = new Array<Entity>();
-	private Array<Entity> entitiesWithSpeech = new Array<Entity>();
-	// ----------------------------------------------------------------------
-	private Pool<RenderSprite> renderSpritePool = Pools.get( RenderSprite.class );
-	// ----------------------------------------------------------------------
-	private Sprite border;
-	private int mousePosX;
-	private int mousePosY;
-
-	// endregion Public Methods
-	// ####################################################################//
-	// region Private Methods
-	private Array<Point> abilityTiles;
-
-	// endregion Private Methods
-	// ####################################################################//
-	// region Data
-
 	// ----------------------------------------------------------------------
 	public GameScreen()
 	{
 		Instance = this;
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public void show()
+	{
+		if ( !created )
+		{
+			create();
+			created = true;
+		}
+
+		Gdx.input.setInputProcessor( inputMultiplexer );
+
+		resize( Global.ScreenSize[ 0 ], Global.ScreenSize[ 1 ] );
 	}
 
 	// ----------------------------------------------------------------------
@@ -204,28 +197,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		abilityPanel = new AbilityPanel( skin, stage );
 		equipmentPanel = new EquipmentPanel( skin, stage );
 
-		// abilityPoolPanel = new AbilityPoolPanel( skin, stage );
-		inventoryPanel = new InventoryPanel( skin, stage );
-		messageStack = new MessageStack();
-		messageStack.addLine( new Line( new Message( "Welcome to the DUNGEON!" ) ) );
-
-		Widget blankTab = new Widget();
-
-		tabPane = new TabPanel();
-
-		TabPanel.Tab tab = tabPane.addTab( AssetManager.loadSprite( "blank" ), blankTab );
-		tabPane.addTab( AssetManager.loadSprite( "GUI/All" ), inventoryPanel );
-		// tabPane.addTab( AssetManager.loadSprite( "GUI/Abilities" ),
-		// abilityPoolPanel );
-
-		tabPane.selectTab( tab );
-
-		stage.addActor( tabPane );
 		stage.addActor( abilityPanel );
 		stage.addActor( equipmentPanel );
-
-		stage.addActor( inventoryPanel );
-		// stage.addActor( abilityPoolPanel );
 		stage.addActor( abilityPanel );
 
 		relayoutUI();
@@ -243,43 +216,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		equipmentPanel.setY( 10 + abilityPanel.getHeight() );
 		equipmentPanel.setWidth( equipmentPanel.getMinWidth() );
 		equipmentPanel.setHeight( equipmentPanel.getMinHeight() );
-
-		if ( Global.ANDROID )
-		{
-			tabPane.setX( 5 );
-			tabPane.setY( 20 );
-			tabPane.setHeight( roundTo( stage.getHeight() - 40, 32 ) );
-			tabPane.setWidth( stage.getWidth() );
-		}
-		else
-		{
-			tabPane.setX( 5 );
-			tabPane.setY( 20 );
-			tabPane.setHeight( roundTo( stage.getHeight() / 2, 32 ) );
-			tabPane.setWidth( stage.getWidth() );
-		}
 	}
 
-	// ----------------------------------------------------------------------
-	private float roundTo( float val, float multiple )
-	{
-		return (float) ( multiple * Math.floor( val / multiple ) );
-	}
-
-	// ----------------------------------------------------------------------
-	@Override
-	public void show()
-	{
-		if ( !created )
-		{
-			create();
-			created = true;
-		}
-
-		Gdx.input.setInputProcessor( inputMultiplexer );
-
-		resize( Global.ScreenSize[ 0 ], Global.ScreenSize[ 1 ] );
-	}
+	// endregion Data
+	// ####################################################################//
+	// region InputProcessor
 
 	// ----------------------------------------------------------------------
 	@Override
@@ -464,27 +405,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public void dispose()
 	{
-	}
-
-	// ----------------------------------------------------------------------
-	public void sleep( int fps )
-	{
-		if ( fps > 0 )
-		{
-			diff = System.currentTimeMillis() - start;
-			long targetDelay = 1000 / fps;
-			if ( diff < targetDelay )
-			{
-				try
-				{
-					Thread.sleep( targetDelay - diff );
-				}
-				catch ( InterruptedException e )
-				{
-				}
-			}
-			start = System.currentTimeMillis();
-		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -740,17 +660,26 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 					}
 
-					if ( gtile.essence > 0 && gtile.spriteEffects.size == 0 )
+					if ( gtile.orbs.size > 0 && gtile.spriteEffects.size == 0 )
 					{
-						int cx = x * Global.TileSize + offsetx;
-						int cy = y * Global.TileSize + offsety;
+						for ( GameTile.OrbType type : GameTile.OrbType.values() )
+						{
+							if ( gtile.orbs.containsKey( type ) )
+							{
+								int val = gtile.orbs.get( type );
 
-						float scale = 0.5f + 0.5f * ( MathUtils.clamp( gtile.essence, 10.0f, 1000.0f ) / 1000.0f );
+								int cx = x * Global.TileSize + offsetx;
+								int cy = y * Global.TileSize + offsety;
 
-						float size = Global.TileSize * scale;
+								float scale = 0.5f + 0.5f * ( MathUtils.clamp( val, 10.0f, 1000.0f ) / 1000.0f );
 
-						queueSprite( orb, gtile.light, ( cx + Global.TileSize / 2 ) - size / 2, ( cy + Global.TileSize / 2 ) - size / 2, size, size, RenderLayer.ESSENCE );
+								float size = Global.TileSize * scale;
+
+								queueSprite( orb, gtile.light, ( cx + Global.TileSize / 2 ) - size / 2, ( cy + Global.TileSize / 2 ) - size / 2, size, size, RenderLayer.ESSENCE );
+							}
+						}
 					}
+
 				}
 			}
 		}
@@ -1298,6 +1227,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					@Override
 					public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 					{
+						lockContextMenu = false;
 						clearContextMenu();
 						Global.CurrentLevel.player.getInventory().equip( item );
 					}
@@ -1316,6 +1246,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					@Override
 					public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 					{
+						lockContextMenu = false;
 						clearContextMenu();
 						Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
 					}
@@ -1332,6 +1263,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				contextMenu = new Tooltip( table, skin, stage );
 				contextMenu.show( Global.Resolution[ 0 ] / 2 - contextMenu.getWidth() / 2, Global.Resolution[ 1 ] / 2 - contextMenu.getHeight() );
+				lockContextMenu = true;
 			}
 			else if ( item.ability != null )
 			{
@@ -1362,6 +1294,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					@Override
 					public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 					{
+						lockContextMenu = false;
 						clearContextMenu();
 						Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
 						abilityToEquip = null;
@@ -1374,6 +1307,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				contextMenu = new Tooltip( table, skin, stage );
 				contextMenu.show( Global.Resolution[ 0 ] / 2 - contextMenu.getWidth() / 2, Global.Resolution[ 1 ] / 2 - contextMenu.getHeight() );
+				lockContextMenu = true;
 
 				abilityToEquip = item.ability;
 			}
@@ -1455,10 +1389,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			GameTile newTile = playerTile.level.getGameTile( playerTile.x + 1, playerTile.y + 1 );
 			field.trySpawnInTile( newTile, 10 );
 		}
-		else if ( keycode == Keys.I )
-		{
-			tabPane.toggleTab( inventoryPanel );
-		}
 		else if ( keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
 		{
 			int i = keycode - Keys.NUM_1;
@@ -1491,6 +1421,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		return false;
 	}
+
+	// endregion InputProcessor
+	// ####################################################################//
+	// region GestureListener
 
 	// ----------------------------------------------------------------------
 	@Override
@@ -1535,6 +1469,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 
 		clearContextMenu();
+
+		if ( contextMenu != null )
+		{
+			return true;
+		}
 
 		if ( Global.CurrentDialogue != null )
 		{
@@ -1963,6 +1902,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void clearContextMenu()
 	{
+		if ( lockContextMenu ) { return; }
+
 		if ( contextMenu != null )
 		{
 			contextMenu.remove();
@@ -2022,6 +1963,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		return false;
 	}
 
+	// endregion GestureListener
+	// ####################################################################//
+	// region Private Methods
+
 	// ----------------------------------------------------------------------
 	@Override
 	public boolean pan( float x, float y, float deltaX, float deltaY )
@@ -2061,10 +2006,35 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		return false;
 	}
 
+	// endregion Private Methods
+	// ####################################################################//
+	// region Public Methods
+
 	// ----------------------------------------------------------------------
-	public void addConsoleMessage( Line line )
+	private float roundTo( float val, float multiple )
 	{
-		messageStack.addLine( line );
+		return (float) ( multiple * Math.floor( val / multiple ) );
+	}
+
+	// ----------------------------------------------------------------------
+	public void sleep( int fps )
+	{
+		if ( fps > 0 )
+		{
+			diff = System.currentTimeMillis() - start;
+			long targetDelay = 1000 / fps;
+			if ( diff < targetDelay )
+			{
+				try
+				{
+					Thread.sleep( targetDelay - diff );
+				}
+				catch ( InterruptedException e )
+				{
+				}
+			}
+			start = System.currentTimeMillis();
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -2199,8 +2169,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		OVERHEADENTITY, OVERHEADFIELD, OVERHANG
 	}
 
-	// endregion Data
+	// endregion Public Methods
 	// ####################################################################//
+	// region Classes
 
 	public static class RenderSprite implements Comparable<RenderSprite>
 	{
@@ -2254,35 +2225,37 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public static class GrayscaleShader
 	{
 		static String vertexShader = "attribute vec4 a_position;\n"
-				+ "attribute vec4 a_color;\n"
-				+ "attribute vec2 a_texCoord0;\n"
-				+ "\n"
-				+ "uniform mat4 u_projTrans;\n"
-				+ "\n"
-				+ "varying vec4 v_color;\n"
-				+ "varying vec2 v_texCoords;\n"
-				+ "\n"
-				+ "void main() {\n"
-				+ "    v_color = a_color;\n"
-				+ "    v_texCoords = a_texCoord0;\n"
-				+ "    gl_Position = u_projTrans * a_position;\n"
-				+ "}";
+									 + "attribute vec4 a_color;\n"
+									 + "attribute vec2 a_texCoord0;\n"
+									 + "\n"
+									 + "uniform mat4 u_projTrans;\n"
+									 + "\n"
+									 + "varying vec4 v_color;\n"
+									 + "varying vec2 v_texCoords;\n"
+									 + "\n"
+									 + "void main() {\n"
+									 + "    v_color = a_color;\n"
+									 + "    v_texCoords = a_texCoord0;\n"
+									 + "    gl_Position = u_projTrans * a_position;\n"
+									 + "}";
 
 		static String fragmentShader = "#ifdef GL_ES\n"
-				+ "    precision mediump float;\n"
-				+ "#endif\n"
-				+ "\n"
-				+ "varying vec4 v_color;\n"
-				+ "varying vec2 v_texCoords;\n"
-				+ "uniform sampler2D u_texture;\n"
-				+ "\n"
-				+ "void main() {\n"
-				+ "  vec4 c = v_color * texture2D(u_texture, v_texCoords);\n"
-				+ "  float grey = (c.r + c.g + c.b) / 3.0;\n"
-				+ "  gl_FragColor = vec4(grey, grey, grey, c.a);\n"
-				+ "}";
+									   + "    precision mediump float;\n"
+									   + "#endif\n"
+									   + "\n"
+									   + "varying vec4 v_color;\n"
+									   + "varying vec2 v_texCoords;\n"
+									   + "uniform sampler2D u_texture;\n"
+									   + "\n"
+									   + "void main() {\n"
+									   + "  vec4 c = v_color * texture2D(u_texture, v_texCoords);\n"
+									   + "  float grey = (c.r + c.g + c.b) / 3.0;\n"
+									   + "  gl_FragColor = vec4(grey, grey, grey, c.a);\n"
+									   + "}";
 
 		public static ShaderProgram Instance = new ShaderProgram( vertexShader, fragmentShader );
 	}
 
+	// endregion Classes
+	// ####################################################################//
 }

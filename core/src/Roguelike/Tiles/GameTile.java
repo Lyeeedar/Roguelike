@@ -1,15 +1,12 @@
 package Roguelike.Tiles;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import Roguelike.Global;
-import Roguelike.Global.Passability;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Fields.Field;
 import Roguelike.Fields.Field.FieldLayer;
+import Roguelike.Global;
+import Roguelike.Global.Passability;
 import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Lights.Light;
@@ -17,38 +14,32 @@ import Roguelike.Pathfinding.PathfindingTile;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GameTile implements PathfindingTile
 {
+	private static final Color tempColour = new Color();
 	public int x;
 	public int y;
 
 	public TileData tileData;
-
-	private static final Color tempColour = new Color();
-
 	public HashMap<Light, LightData> lightMap = new HashMap<Light, LightData>();
 	public Color ambientColour = new Color();
 	public Color light = new Color();
-
 	public GameEntity entity;
 	public EnvironmentEntity environmentEntity;
 	public FastEnumMap<FieldLayer, Field> fields = new FastEnumMap<FieldLayer, Field>( FieldLayer.class );
 	public boolean hasFields;
-
 	public Level level;
-
 	public Array<SpriteEffect> spriteEffects = new Array<SpriteEffect>();
-
 	public Array<Item> items = new Array<Item>( false, 16 );
-	public int essence;
-
+	public FastEnumMap<OrbType, Integer> orbs = new FastEnumMap<OrbType, Integer>( OrbType.class );
 	public String metaValue;
-
 	public boolean visible;
 
 	public GameTile( int x, int y, Level level, TileData tileData )
@@ -70,9 +61,9 @@ public class GameTile implements PathfindingTile
 		{
 			for ( int y = 0; y < entity.size; y++ )
 			{
-				GameTile tile = level.Grid[this.x + x][this.y + y];
+				GameTile tile = level.Grid[ this.x + x ][ this.y + y ];
 				tile.environmentEntity = entity;
-				entity.tile[x][y] = tile;
+				entity.tile[ x ][ y ] = tile;
 			}
 		}
 	}
@@ -93,6 +84,15 @@ public class GameTile implements PathfindingTile
 		}
 	}
 
+	public final void addField( Field field )
+	{
+		clearField( field.layer );
+		fields.put( field.layer, field );
+		field.tile = this;
+
+		hasFields = fields.size > 0;
+	}
+
 	public final void clearField( FieldLayer layer )
 	{
 		if ( fields.containsKey( layer ) )
@@ -109,18 +109,9 @@ public class GameTile implements PathfindingTile
 		}
 	}
 
-	public final void addField( Field field )
-	{
-		clearField( field.layer );
-		fields.put( field.layer, field );
-		field.tile = this;
-
-		hasFields = fields.size > 0;
-	}
-
 	public final int[] addGameEntity( GameEntity obj )
 	{
-		GameTile oldTile = obj.tile[0][0];
+		GameTile oldTile = obj.tile[ 0 ][ 0 ];
 
 		obj.removeFromTile();
 
@@ -128,23 +119,23 @@ public class GameTile implements PathfindingTile
 		{
 			for ( int y = 0; y < obj.size; y++ )
 			{
-				GameTile tile = level.Grid[this.x + x][this.y + y];
+				GameTile tile = level.Grid[ this.x + x ][ this.y + y ];
 				tile.entity = obj;
-				obj.tile[x][y] = tile;
+				obj.tile[ x ][ y ] = tile;
 			}
 		}
 
 		if ( oldTile != null ) { return getPosDiff( oldTile ); }
 
-		return new int[] { 0, 0 };
+		return new int[]{ 0, 0 };
 	}
 
 	public final int[] getPosDiff( GameTile prevTile )
 	{
-		int[] oldPos = new int[] { prevTile.x * Global.TileSize, prevTile.y * Global.TileSize };
+		int[] oldPos = new int[]{ prevTile.x * Global.TileSize, prevTile.y * Global.TileSize };
 		int[] newPos = { x * Global.TileSize, y * Global.TileSize };
 
-		int[] diff = { oldPos[0] - newPos[0], oldPos[1] - newPos[1] };
+		int[] diff = { oldPos[ 0 ] - newPos[ 0 ], oldPos[ 1 ] - newPos[ 1 ] };
 
 		return diff;
 	}
@@ -173,7 +164,10 @@ public class GameTile implements PathfindingTile
 			}
 		}
 
-		if ( environmentEntity != null && environmentEntity != self && !environmentEntity.passableBy.intersect( travelType ) ) { return false; }
+		if ( environmentEntity != null && environmentEntity != self && !environmentEntity.passableBy.intersect( travelType ) )
+		{
+			return false;
+		}
 
 		boolean passable = tileData.passableBy.intersect( travelType );
 
@@ -214,6 +208,12 @@ public class GameTile implements PathfindingTile
 			tempColour.mul( pair.getValue().intensity );
 			light.add( tempColour );
 		}
+	}
+
+	public enum OrbType
+	{
+		EXPERIENCE,
+		HEALTH
 	}
 
 	public static class LightData

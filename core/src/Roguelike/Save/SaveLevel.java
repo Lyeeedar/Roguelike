@@ -8,7 +8,7 @@ import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
-
+import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.utils.Array;
 
 public final class SaveLevel extends SaveableObject<Level>
@@ -25,7 +25,7 @@ public final class SaveLevel extends SaveableObject<Level>
 	public Array<SaveLevelItem> items = new Array<SaveLevelItem>();
 	public Array<SaveEnvironmentEntity> environmentEntities = new Array<SaveEnvironmentEntity>();
 	public Array<SaveField> fields = new Array<SaveField>();
-	public Array<SaveEssence> essences = new Array<SaveEssence>();
+	public Array<SaveOrb> orbs = new Array<SaveOrb>();
 
 	public SaveSeenTile[][] seenTiles;
 
@@ -50,6 +50,11 @@ public final class SaveLevel extends SaveableObject<Level>
 		this.seed = seed;
 
 		createUID();
+	}
+
+	public void createUID()
+	{
+		UID = "Level " + fileName + ": Depth " + depth + ": ID " + this.hashCode();
 	}
 
 	@Override
@@ -82,7 +87,7 @@ public final class SaveLevel extends SaveableObject<Level>
 			}
 		}
 
-		essences.clear();
+		orbs.clear();
 		items.clear();
 		for ( int x = 0; x < obj.width; x++ )
 		{
@@ -94,9 +99,9 @@ public final class SaveLevel extends SaveableObject<Level>
 					items.add( new SaveLevelItem( tile, item ) );
 				}
 
-				if ( tile.essence > 0 )
+				if ( tile.orbs.size > 0 )
 				{
-					essences.add( new SaveEssence( tile ) );
+					orbs.add( new SaveOrb( tile ) );
 				}
 			}
 		}
@@ -176,10 +181,10 @@ public final class SaveLevel extends SaveableObject<Level>
 			tile.addEnvironmentEntity( entity.create() );
 		}
 
-		for ( SaveEssence essence : essences )
+		for ( SaveOrb orb : orbs )
 		{
-			GameTile tile = level.getGameTile( essence.pos );
-			tile.essence = essence.essence;
+			GameTile tile = level.getGameTile( orb.pos );
+			tile.orbs = orb.orbs.copy();
 		}
 
 		if ( seenTiles != null )
@@ -194,24 +199,19 @@ public final class SaveLevel extends SaveableObject<Level>
 		}
 	}
 
-	public void createUID()
+	public static final class SaveOrb
 	{
-		UID = "Level " + fileName + ": Depth " + depth + ": ID " + this.hashCode();
-	}
-
-	public static final class SaveEssence
-	{
-		public int essence;
+		public FastEnumMap<GameTile.OrbType, Integer> orbs;
 		public Point pos = new Point();
 
-		public SaveEssence()
+		public SaveOrb()
 		{
 
 		}
 
-		public SaveEssence( GameTile tile )
+		public SaveOrb( GameTile tile )
 		{
-			essence = tile.essence;
+			orbs = tile.orbs.copy();
 			pos.x = tile.x;
 			pos.y = tile.y;
 		}

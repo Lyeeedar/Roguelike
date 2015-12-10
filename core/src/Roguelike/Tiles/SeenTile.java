@@ -1,14 +1,13 @@
 package Roguelike.Tiles;
 
 import Roguelike.AssetManager;
-import Roguelike.Global;
-import Roguelike.Global.Direction;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Fields.Field;
 import Roguelike.Fields.Field.FieldLayer;
+import Roguelike.Global;
+import Roguelike.Global.Direction;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationState;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -23,6 +22,8 @@ public class SeenTile
 	public SeenHistoryItem environmentHistory;
 	public SeenHistoryItem entityHistory;
 	public SeenHistoryItem itemHistory;
+
+	public Array<SeenHistoryItem> orbHistory = new Array<SeenHistoryItem>( false, 1, SeenHistoryItem.class );
 	public SeenHistoryItem essenceHistory;
 
 	public GameTile gameTile;
@@ -175,25 +176,32 @@ public class SeenTile
 			itemHistory.set( AssetManager.loadSprite( "bag" ) );
 		}
 
-		// Store essence history
-		if ( tile.essence > 0 )
+		for ( SeenHistoryItem item : orbHistory )
 		{
-			Sprite sprite = AssetManager.loadSprite( "orb" );
-			float scale = 0.5f + 0.5f * ( MathUtils.clamp( tile.essence, 10.0f, 1000.0f ) / 1000.0f );
-			sprite.baseScale[0] = scale;
-			sprite.baseScale[1] = scale;
-
-			if ( essenceHistory == null )
-			{
-				essenceHistory = Global.SeenHistoryItemPool.obtain();
-			}
-
-			essenceHistory.set( sprite );
+			Global.SeenHistoryItemPool.free( item );
 		}
-		else if ( essenceHistory != null )
+		orbHistory.clear();
+
+		if ( tile.orbs.size > 0 )
 		{
-			Global.SeenHistoryItemPool.free( essenceHistory );
-			essenceHistory = null;
+			for ( GameTile.OrbType type : GameTile.OrbType.values() )
+			{
+				if ( tile.orbs.containsKey( type ) )
+				{
+					int val = tile.orbs.get( type );
+
+					Sprite sprite = AssetManager.loadSprite( "orb" );
+					float scale = 0.5f + 0.5f * ( MathUtils.clamp( val, 10.0f, 1000.0f ) / 1000.0f );
+					sprite.baseScale[ 0 ] = scale;
+					sprite.baseScale[ 1 ] = scale;
+
+					SeenHistoryItem history = Global.SeenHistoryItemPool.obtain();
+
+					history.set( sprite );
+
+					orbHistory.add( history );
+				}
+			}
 		}
 	}
 

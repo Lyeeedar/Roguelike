@@ -598,7 +598,8 @@ public class Level
 					Point target = possibleTiles.random();
 					GameTile tile = getGameTile( target );
 
-					tile.essence += block;
+					int existingVal = tile.orbs.get( GameTile.OrbType.EXPERIENCE );
+					tile.orbs.put( GameTile.OrbType.EXPERIENCE, existingVal + block );
 
 					int[] diff = tile.getPosDiff( source );
 
@@ -618,7 +619,8 @@ public class Level
 			}
 			else
 			{
-				source.essence += essence;
+				int existingVal = source.orbs.get( GameTile.OrbType.EXPERIENCE );
+				source.orbs.put( GameTile.OrbType.EXPERIENCE, existingVal + essence );
 
 				int[] diff = new int[] { 0, 0 };
 
@@ -825,12 +827,26 @@ public class Level
 				}
 			}
 
-			if ( player.tile[0][0].essence > 0 )
+			if ( player.tile[ 0 ][ 0 ].orbs.size > 0 )
 			{
-				GameScreen.Instance.addActorEssenceAction( player, player.tile[0][0].essence );
+				for ( GameTile.OrbType type : GameTile.OrbType.values() )
+				{
+					if ( player.tile[ 0 ][ 0 ].orbs.containsKey( type ) )
+					{
+						int val = player.tile[ 0 ][ 0 ].orbs.get( type );
 
-				player.essence += player.tile[0][0].essence;
-				player.tile[0][0].essence = 0;
+						if ( type == GameTile.OrbType.EXPERIENCE )
+						{
+
+						}
+						else if ( type == GameTile.OrbType.HEALTH )
+						{
+							player.applyHealing( val );
+						}
+
+						player.tile[ 0 ][ 0 ].orbs.remove( type );
+					}
+				}
 			}
 
 			if ( player.tile[0][0].items.size > 0 )

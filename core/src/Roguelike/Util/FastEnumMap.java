@@ -2,9 +2,9 @@ package Roguelike.Util;
 
 public final class FastEnumMap<T extends Enum<T>, V>
 {
+	public int size;
 	private Class<T> keyType;
 	private V[] items;
-	public int size;
 
 	@SuppressWarnings( "unchecked" )
 	public FastEnumMap( Class<T> keyType )
@@ -25,6 +25,13 @@ public final class FastEnumMap<T extends Enum<T>, V>
 		return items.length;
 	}
 
+	public void put( T key, V value )
+	{
+		items[ key.ordinal() ] = value;
+
+		calculateSize();
+	}
+
 	public void calculateSize()
 	{
 		int count = 0;
@@ -38,13 +45,6 @@ public final class FastEnumMap<T extends Enum<T>, V>
 		}
 
 		size = count;
-	}
-
-	public void put( T key, V value )
-	{
-		items[key.ordinal()] = value;
-
-		calculateSize();
 	}
 
 	public void remove( T key )
@@ -64,27 +64,39 @@ public final class FastEnumMap<T extends Enum<T>, V>
 		return items[key.ordinal()] != null;
 	}
 
-	public void put( int index, V value )
-	{
-		items[index] = value;
-
-		calculateSize();
-	}
-
 	public void remove( int index )
 	{
-		items[index] = null;
+		items[ index ] = null;
 
 		calculateSize();
 	}
 
 	public V get( int index )
 	{
-		return items[index];
+		return items[ index ];
 	}
 
 	public boolean containsKey( int index )
 	{
-		return items[index] != null;
+		return items[ index ] != null;
+	}
+
+	public FastEnumMap<T, V> copy()
+	{
+		FastEnumMap<T, V> cpy = new FastEnumMap<T, V>( this );
+
+		for ( int i = 0; i < items.length; i++ )
+		{
+			cpy.put( i, items[ i ] );
+		}
+
+		return cpy;
+	}
+
+	public void put( int index, V value )
+	{
+		items[ index ] = value;
+
+		calculateSize();
 	}
 }
