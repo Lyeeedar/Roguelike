@@ -202,6 +202,15 @@ public class ActiveAbility implements IAbility, IGameObject
 	}
 
 	// ----------------------------------------------------------------------
+	public int getRange()
+	{
+		if ( range > 0 ) { return range; }
+		Item item = caster.getInventory().getEquip( EquipmentSlot.WEAPON );
+		if ( item != null ) { return item.getRange( caster ); }
+		return 1;
+	}
+
+	// ----------------------------------------------------------------------
 	public void lockTarget( GameTile tile )
 	{
 		int cx = 0;
@@ -498,7 +507,7 @@ public class ActiveAbility implements IAbility, IGameObject
 
 		try
 		{
-			xmlElement = xml.parse( Gdx.files.internal( "Abilities/Lines/" + name + ".xml" ) );
+			xmlElement = xml.parse( Gdx.files.internal( "Abilities/" + name + ".xml" ) );
 		}
 		catch ( IOException e )
 		{
@@ -679,15 +688,6 @@ public class ActiveAbility implements IAbility, IGameObject
 		}
 
 		return table;
-	}
-
-	// ----------------------------------------------------------------------
-	public int getRange()
-	{
-		if ( range > 0 ) { return range; }
-		Item item = caster.getInventory().getEquip( EquipmentSlot.WEAPON );
-		if ( item != null ) { return item.getRange( caster ); }
-		return 1;
 	}
 
 	// ----------------------------------------------------------------------

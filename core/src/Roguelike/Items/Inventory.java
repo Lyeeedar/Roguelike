@@ -99,6 +99,11 @@ public final class Inventory
 
 	public void equip( Item item )
 	{
+		if ( !m_items.contains( item, true ) )
+		{
+			addItem( item );
+		}
+
 		for ( EquipmentSlot slot : item.slots )
 		{
 			if ( m_equipment.containsKey( slot ) )
@@ -142,6 +147,11 @@ public final class Inventory
 
 		if ( found != null )
 		{
+			if ( isEquipped( found ) )
+			{
+				unequip( found );
+			}
+
 			found.count -= count;
 			if ( found.count == 0 )
 			{
@@ -152,6 +162,11 @@ public final class Inventory
 		{
 			throw new RuntimeException( "Tried to remove an item that isnt in the inventory! Name: " + itemName );
 		}
+	}
+
+	public boolean isEquipped( Item item )
+	{
+		return m_equipment.get( item.getMainSlot() ) == item;
 	}
 
 	public int getStatistic( HashMap<String, Integer> variableMap, Statistic stat )
@@ -183,11 +198,6 @@ public final class Inventory
 		{
 			equip( item );
 		}
-	}
-
-	public boolean isEquipped( Item item )
-	{
-		return m_equipment.get( item.getMainSlot() ) == item;
 	}
 
 	public Item getEquip( EquipmentSlot slot )

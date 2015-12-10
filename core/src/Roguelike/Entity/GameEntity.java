@@ -113,12 +113,9 @@ public class GameEntity extends Entity
 
 		actionDelayAccumulator += cost;
 
-		if ( tile[ 0 ][ 0 ].level.player != this )
+		for ( IAbility a : slottedAbilities )
 		{
-			for ( IAbility a : slottedAbilities )
-			{
-				a.onTurn();
-			}
+			a.onTurn();
 		}
 
 		for ( GameEventHandler h : getAllHandlers() )

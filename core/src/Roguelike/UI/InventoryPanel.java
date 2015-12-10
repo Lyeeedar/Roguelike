@@ -1,14 +1,10 @@
 package Roguelike.UI;
 
-import java.util.HashMap;
-import java.util.Iterator;
-
 import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.ItemCategory;
 import Roguelike.Sprite.Sprite;
-
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -22,20 +18,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 public class InventoryPanel extends Table
 {
-	private int TileSize;
-
 	private final Skin skin;
 	private final Stage stage;
-
 	private final Sprite tileBackground;
-	private Sprite tileBorder;
-
 	private final Sprite buttonUp;
 	private final Sprite buttonDown;
 	private final Sprite buttonBorder;
-
+	private int TileSize;
+	private Sprite tileBorder;
 	private ItemCategory selectedFilter = ItemCategory.ALL;
 
 	private HeaderLine header;
@@ -143,8 +138,8 @@ public class InventoryPanel extends Table
 
 	public class InventoryBody extends TilePanel
 	{
-		private BitmapFont font;
 		private final GlyphLayout layout = new GlyphLayout();
+		private BitmapFont font;
 
 		public InventoryBody( Skin skin, Stage stage, Sprite tileBackground, Sprite tileBorder, int tileSize )
 		{
@@ -184,6 +179,8 @@ public class InventoryPanel extends Table
 			{
 				// show context menu:
 				// Unequip, use?, destory
+				Global.CurrentLevel.player.getInventory().removeItem( item );
+				Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
 			}
 			else
 			{

@@ -1,13 +1,13 @@
 package Roguelike.UI;
 
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.IAbility;
+import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.AssetManager;
 import Roguelike.Global;
-import Roguelike.Ability.IAbility;
-import Roguelike.Ability.ActiveAbility.ActiveAbility;
-import Roguelike.Ability.PassiveAbility.PassiveAbility;
+import Roguelike.Items.Item;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
-
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -24,10 +24,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 
 public class AbilityPanel extends TilePanel
 {
+	private final GlyphLayout layout = new GlyphLayout();
 	private BitmapFont font;
 	private TextureRegion white;
-
-	private final GlyphLayout layout = new GlyphLayout();
 
 	public AbilityPanel( Skin skin, Stage stage )
 	{
@@ -46,14 +45,26 @@ public class AbilityPanel extends TilePanel
 
 		for ( IAbility a : Global.CurrentLevel.player.slottedAbilities )
 		{
-			tileData.add( a );
+			if ( a != null )
+			{
+				tileData.add( a );
+			}
+			else
+			{
+				tileData.add( tileData.size );
+			}
+		}
+
+		while ( tileData.size < Global.NUM_ABILITY_SLOTS )
+		{
+			tileData.add( tileData.size );
 		}
 	}
 
 	@Override
 	public Sprite getSpriteForData( Object data )
 	{
-		if ( data == null ) { return null; }
+		if ( data == null || data instanceof Integer ) { return null; }
 
 		return ( (IAbility) data ).getIcon();
 	}
@@ -108,13 +119,45 @@ public class AbilityPanel extends TilePanel
 		}
 		else
 		{
-			if ( data instanceof ActiveAbility )
+			if ( GameScreen.Instance.abilityToEquip != null )
 			{
-				ActiveAbility aa = (ActiveAbility) data;
-
-				if ( aa.isAvailable() )
+				int index = 0;
+				if ( data instanceof Integer )
 				{
-					GameScreen.Instance.prepareAbility( aa );
+					index = (Integer) data;
+				}
+				else
+				{
+					index = Global.CurrentLevel.player.slottedAbilities.indexOf( (IAbility) data, true );
+				}
+
+				while ( Global.CurrentLevel.player.slottedAbilities.size <= index )
+				{
+					Global.CurrentLevel.player.slottedAbilities.add( null );
+				}
+
+				Global.CurrentLevel.player.slottedAbilities.removeIndex( index );
+				Global.CurrentLevel.player.slottedAbilities.insert( index, GameScreen.Instance.abilityToEquip );
+				GameScreen.Instance.abilityToEquip = null;
+
+				if ( data instanceof IAbility )
+				{
+					Item item = new Item();
+					item.ability = (IAbility) data;
+
+					Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
+				}
+			}
+			else
+			{
+				if ( data instanceof ActiveAbility )
+				{
+					ActiveAbility aa = (ActiveAbility) data;
+
+					if ( aa.isAvailable() )
+					{
+						GameScreen.Instance.prepareAbility( aa );
+					}
 				}
 			}
 		}
@@ -123,7 +166,7 @@ public class AbilityPanel extends TilePanel
 	@Override
 	public Table getToolTipForData( Object data )
 	{
-		if ( data == null ) { return null; }
+		if ( data == null || data instanceof Integer ) { return null; }
 
 		return ( (IAbility) data ).createTable( skin, Global.CurrentLevel.player );
 	}
@@ -131,7 +174,7 @@ public class AbilityPanel extends TilePanel
 	@Override
 	public Color getColourForData( Object data )
 	{
-		if ( data == null ) { return Color.DARK_GRAY; }
+		if ( data == null || data instanceof Integer ) { return Color.DARK_GRAY; }
 
 		if ( data == GameScreen.Instance.preparedAbility ) { return Color.CYAN; }
 
@@ -141,6 +184,11 @@ public class AbilityPanel extends TilePanel
 	@Override
 	public void onDrawItemBackground( Object data, Batch batch, int x, int y, int width, int height )
 	{
+		if ( GameScreen.Instance.abilityToEquip != null )
+		{
+			batch.setColor( Color.GOLD );
+			tileBackground.render( batch, x, y, width, height );
+		}
 	}
 
 	@Override
@@ -167,6 +215,7 @@ public class AbilityPanel extends TilePanel
 	@Override
 	public void onDrawItemForeground( Object data, Batch batch, int x, int y, int width, int height )
 	{
+
 	}
 
 }

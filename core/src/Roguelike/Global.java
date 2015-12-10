@@ -284,7 +284,7 @@ public class Global
 
 			int atkerStat = attackerVariableMap.get( stat.toString().toLowerCase() ) - 10;
 
-			float modifier = atkerStat > 0 ? ( atkerStat * atkStat ) / 10.0f : 1.0f / Math.abs( atkerStat );
+			float modifier = atkerStat >= 0 ? ( atkerStat * atkStat ) / 10.0f : 1.0f / Math.abs( atkerStat );
 
 			int dam = (int) ( baseAtk * modifier );
 
@@ -480,6 +480,35 @@ public class Global
 			return getDirection( dir[0], dir[1] );
 		}
 
+		public static Direction getDirection( int x, int y )
+		{
+			x = MathUtils.clamp( x, -1, 1 );
+			y = MathUtils.clamp( y, -1, 1 );
+
+			Direction d = Direction.CENTER;
+
+			for ( Direction dir : Direction.values() )
+			{
+				if ( dir.getX() == x && dir.getY() == y )
+				{
+					d = dir;
+					break;
+				}
+			}
+
+			return d;
+		}
+
+		public int getX()
+		{
+			return x;
+		}
+
+		public int getY()
+		{
+			return y;
+		}
+
 		public static Direction getDirection( GameTile t1, GameTile t2 )
 		{
 			return getDirection( t2.x - t1.x, t2.y - t1.y );
@@ -565,35 +594,6 @@ public class Global
 		public Direction getOpposite()
 		{
 			return getDirection( x * -1, y * -1 );
-		}
-
-		public static Direction getDirection( int x, int y )
-		{
-			x = MathUtils.clamp( x, -1, 1 );
-			y = MathUtils.clamp( y, -1, 1 );
-
-			Direction d = Direction.CENTER;
-
-			for ( Direction dir : Direction.values() )
-			{
-				if ( dir.getX() == x && dir.getY() == y )
-				{
-					d = dir;
-					break;
-				}
-			}
-
-			return d;
-		}
-
-		public int getX()
-		{
-			return x;
-		}
-
-		public int getY()
-		{
-			return y;
 		}
 	}
 

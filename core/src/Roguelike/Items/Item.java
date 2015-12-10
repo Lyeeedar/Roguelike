@@ -45,8 +45,8 @@ public final class Item extends GameEventHandler
 	public Light light;
 	public boolean canDrop = true;
 	public String dropChanceEqn;
+	public IAbility ability;
 	private int range = -1000;
-	private IAbility ability;
 
 	// ----------------------------------------------------------------------
 	public Item()
@@ -202,7 +202,7 @@ public final class Item extends GameEventHandler
 		table.add( descLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 		table.row();
 
-		int oldDam = Global.calculateDamage( Statistic.statsBlockToVariableBlock( other.getStatistics( entity.getBaseVariableMap() ) ), entity.getBaseVariableMap() );
+		int oldDam = other != null ? Global.calculateDamage( Statistic.statsBlockToVariableBlock( other.getStatistics( entity.getBaseVariableMap() ) ), entity.getBaseVariableMap() ) : 0;
 		int newDam = Global.calculateDamage( Statistic.statsBlockToVariableBlock( getStatistics( entity.getBaseVariableMap() ) ), entity.getBaseVariableMap() );
 
 		String damText = "Damage: " + newDam;

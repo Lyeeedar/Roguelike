@@ -1,16 +1,8 @@
 package Roguelike.Levels;
 
-import java.util.Iterator;
-
-import Roguelike.AssetManager;
-import Roguelike.Global;
-import Roguelike.Global.Direction;
-import Roguelike.Global.Passability;
-import Roguelike.Global.Statistic;
-import Roguelike.RoguelikeGame;
-import Roguelike.RoguelikeGame.ScreenEnum;
-import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.IAbility;
+import Roguelike.AssetManager;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
@@ -19,32 +11,102 @@ import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.Fields.Field;
 import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.Global;
+import Roguelike.Global.Direction;
+import Roguelike.Global.Passability;
+import Roguelike.Global.Statistic;
 import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
 import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.ShadowCastCache;
 import Roguelike.Pathfinding.ShadowCaster;
+import Roguelike.RoguelikeGame;
+import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Sprite.Sprite;
-import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Sprite.SpriteAnimation.BumpAnimation;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation.MoveEquation;
+import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Tiles.SeenTile;
 import Roguelike.Util.EnumBitflag;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.Iterator;
+
 public class Level
 {
 	// ####################################################################//
 	// region Constructor
+
+	private static final EnumBitflag<Passability> ItemDropPassability = new EnumBitflag<Passability>( Passability.WALK, Passability.ENTITY );
+
+	// endregion Constructor
+	// ####################################################################//
+	// region Public Methods
+	public final ShadowCastCache visibilityData = new ShadowCastCache();
+	private final Color tempColour = new Color();
+
+	// endregion Public Methods
+	// ####################################################################//
+	// region Visibility
+	public Array<ActiveAbility> ActiveAbilities = new Array<ActiveAbility>( false, 16 );
+	public Array<RepeatingSoundEffect> ambientSounds = new Array<RepeatingSoundEffect>();
+
+	// endregion Visibility
+	// ####################################################################//
+	// region Lights
+	public String bgmName;
+	public String fileName;
+	public int depth;
+	public long seed;
+	public Array<DFPRoom> requiredRooms;
+
+	// endregion Lights
+	// ####################################################################//
+	// region Cleanup
+	public String UID;
+	public GameEntity player;
+	public boolean inTurn = false;
+
+	// endregion Cleanup
+	// ####################################################################//
+	// region Update
+	public boolean isVisionRestricted = true;
+	public Color Ambient = new Color( 0.1f, 0.1f, 0.3f, 1.0f );
+	public Sprite background;
+
+	// endregion Update
+	// ####################################################################//
+	// region Process
+	public SeenTile[][] SeenGrid;
+	public GameTile[][] Grid;
+	public int width;
+	public int height;
+
+	// endregion Process
+	// ####################################################################//
+	// region Getters
+	public boolean affectedByDayNight = false;
+	private Array<GameEntity> visibleList = new Array<GameEntity>( false, 16 );
+	private Array<GameEntity> invisibleList = new Array<GameEntity>( false, 16 );
+	private Array<Light> lightList = new Array<Light>( false, 16 );
+	private Array<EnvironmentEntity> tempEnvironmentEntityList = new Array<EnvironmentEntity>( false, 16 );
+	private Array<Field> tempFieldList = new Array<Field>( false, 16 );
+	private Array<Light> tempLightList = new Array<Light>( false, 16 );
+	private float updateDeltaStep = 0.05f;
+	private float updateAccumulator;
+
+	// endregion Getters
+	// ####################################################################//
+	// region Misc
+	private Array<ActiveAbility> NewActiveAbilities = new Array<ActiveAbility>( false, 16 );
 
 	public Level( GameTile[][] grid )
 	{
@@ -62,10 +124,6 @@ public class Level
 			}
 		}
 	}
-
-	// endregion Constructor
-	// ####################################################################//
-	// region Public Methods
 
 	public void addActiveAbility( ActiveAbility aa )
 	{
@@ -202,9 +260,9 @@ public class Level
 		}
 	}
 
-	// endregion Public Methods
+	// endregion Misc
 	// ####################################################################//
-	// region Visibility
+	// region Data
 
 	public void updateVisibleTiles()
 	{
@@ -264,10 +322,6 @@ public class Level
 			}
 		}
 	}
-
-	// endregion Visibility
-	// ####################################################################//
-	// region Lights
 
 	public void calculateAmbient()
 	{
@@ -412,14 +466,9 @@ public class Level
 
 	private boolean checkLightCloseEnough( int lx, int ly, int intensity, int px, int py, int viewRange )
 	{
-		if ( Math.max( Math.abs( px - lx ), Math.abs( py - ly ) ) > viewRange + intensity ) { return false; }
+		return Math.max( Math.abs( px - lx ), Math.abs( py - ly ) ) <= viewRange + intensity;
 
-		return true;
 	}
-
-	// endregion Lights
-	// ####################################################################//
-	// region Cleanup
 
 	private void cleanUpDeadForTile( GameTile tile )
 	{
@@ -636,10 +685,6 @@ public class Level
 		}
 	}
 
-	// endregion Cleanup
-	// ####################################################################//
-	// region Update
-
 	private void updatePopupsForTile( GameTile tile, float delta )
 	{
 		if ( tile.entity != null && tile.entity.tile[0][0] == tile )
@@ -725,10 +770,6 @@ public class Level
 		}
 	}
 
-	// endregion Update
-	// ####################################################################//
-	// region Process
-
 	private void processPlayer()
 	{
 		if ( player.tasks.size == 0 )
@@ -796,9 +837,11 @@ public class Level
 			{
 				for ( Item item : player.tile[0][0].items )
 				{
-					GameScreen.Instance.addActorItemPickupAction( player, item );
+					GameScreen.Instance.pickupQueue.add( item );
 
-					player.inventory.addItem( item );
+					//GameScreen.Instance.addActorItemPickupAction( player, item );
+
+					//player.inventory.addItem( item );
 				}
 
 				player.tile[0][0].items.clear();
@@ -996,10 +1039,6 @@ public class Level
 		}
 	}
 
-	// endregion Process
-	// ####################################################################//
-	// region Getters
-
 	public final GameTile[][] getGrid()
 	{
 		return Grid;
@@ -1008,13 +1047,6 @@ public class Level
 	public final GameTile getGameTile( Point pos )
 	{
 		return getGameTile( pos.x, pos.y );
-	}
-
-	public final GameTile getGameTile( int x, int y )
-	{
-		if ( x < 0 || x >= width || y < 0 || y >= height ) { return null; }
-
-		return Grid[x][y];
 	}
 
 	public final SeenTile getSeenTile( Point pos )
@@ -1050,6 +1082,13 @@ public class Level
 		}
 
 		return null;
+	}
+
+	public final GameTile getGameTile( int x, int y )
+	{
+		if ( x < 0 || x >= width || y < 0 || y >= height ) { return null; }
+
+		return Grid[ x ][ y ];
 	}
 
 	public final void getAllFields( Array<Field> list )
@@ -1100,10 +1139,6 @@ public class Level
 			}
 		}
 	}
-
-	// endregion Getters
-	// ####################################################################//
-	// region Misc
 
 	private boolean hasAbilitiesToUpdate()
 	{
@@ -1213,56 +1248,6 @@ public class Level
 
 		return activeEffects;
 	}
-
-	// endregion Misc
-	// ####################################################################//
-	// region Data
-
-	private static final EnumBitflag<Passability> ItemDropPassability = new EnumBitflag<Passability>( Passability.WALK, Passability.ENTITY );
-
-	private Array<GameEntity> visibleList = new Array<GameEntity>( false, 16 );
-	private Array<GameEntity> invisibleList = new Array<GameEntity>( false, 16 );
-
-	private Array<Light> lightList = new Array<Light>( false, 16 );
-
-	private Array<EnvironmentEntity> tempEnvironmentEntityList = new Array<EnvironmentEntity>( false, 16 );
-	private Array<Field> tempFieldList = new Array<Field>( false, 16 );
-	private Array<Light> tempLightList = new Array<Light>( false, 16 );
-
-	private float updateDeltaStep = 0.05f;
-	private float updateAccumulator;
-
-	public Array<ActiveAbility> ActiveAbilities = new Array<ActiveAbility>( false, 16 );
-	private Array<ActiveAbility> NewActiveAbilities = new Array<ActiveAbility>( false, 16 );
-
-	public Array<RepeatingSoundEffect> ambientSounds = new Array<RepeatingSoundEffect>();
-	public String bgmName;
-
-	public String fileName;
-	public int depth;
-	public long seed;
-	public Array<DFPRoom> requiredRooms;
-	public String UID;
-
-	public GameEntity player;
-
-	public boolean inTurn = false;
-
-	public boolean isVisionRestricted = true;
-
-	public Color Ambient = new Color( 0.1f, 0.1f, 0.3f, 1.0f );
-	public Sprite background;
-
-	public SeenTile[][] SeenGrid;
-	public GameTile[][] Grid;
-	public int width;
-	public int height;
-
-	public boolean affectedByDayNight = false;
-
-	public final ShadowCastCache visibilityData = new ShadowCastCache();
-
-	private final Color tempColour = new Color();
 
 	// endregion Data
 	// ####################################################################//
