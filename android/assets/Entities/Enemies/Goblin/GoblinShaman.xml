@@ -1,13 +1,14 @@
 <Entity Extends="Enemies/Goblin/GoblinBase">
-	
+
 	<Sprite>
 		<Name>Oryx/uf_split/uf_heroes/goblin_shaman</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-	
-	<ActiveAbilities>
-		
-		<Heal>
+
+    <Abilities>
+
+        <Active>
+            <Name>Heal</Name>
 			<Cooldown>35</Cooldown>
 			<Range>3</Range>
 			<Targeting><Entity Type="Ally"/></Targeting>
@@ -15,16 +16,16 @@
 			<Effect>
 				<Heal>20</Heal>
 			</Effect>
-		</Heal>
-		
-	</ActiveAbilities>
-	
+        </Active>
+
+    </Abilities>
+
 	<Inventory>
 		<Equipment>
 			<Wand DropChance="rnd(5)<=1">
 			    <Name>Goblin Staff</Name>
 			    <Description>A wooden staff, adorned with spiritual symbols. Mounted on the end is a magic channeling stone.</Description>
-				<Slot>MainWeapon</Slot>
+                <Slot>Weapon</Slot>
 				<Category>Weapon</Category>
 				<Type>Wand</Type>
 				<Events>
@@ -35,15 +36,15 @@
 			</Wand>
 		</Equipment>
 	</Inventory>
-	
+
 	<Statistics>
 
 		<Attack>5</Attack>
 		<Defense>15</Defense>
-		
+
 		<Constitution>6</Constitution>
-		<Perception>1</Perception>
-		
+        <Perception>5</Perception>
+
 	</Statistics>
-	
+
 </Entity>

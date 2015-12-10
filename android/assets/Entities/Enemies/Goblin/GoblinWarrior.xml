@@ -1,18 +1,18 @@
-<Entity Extends="Enemies/Goblin/GoblinBase">	
+<Entity Extends="Enemies/Goblin/GoblinBase">
 
 	<Sprite>
 		<Name>Oryx/uf_split/uf_heroes/goblin_warrior</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-	
+
 	<Statistics>
 
 		<Attack>15</Attack>
 		<Defense>20</Defense>
-		
+
 		<Constitution>5</Constitution>
-		<Perception>1</Perception>
-		
+        <Perception>4</Perception>
+
 	</Statistics>
-	
+
 </Entity>

@@ -2,21 +2,22 @@ package Roguelike.Ability;
 
 import Roguelike.Entity.Entity;
 import Roguelike.Sprite.Sprite;
-
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public interface IAbility
 {
-	public String getName();
+	String getDescription();
 
-	public void onTurn();
+	String getName();
 
-	public void setCooldown( int val );
+	void onTurn();
 
-	public int getCooldown();
+	int getCooldown();
 
-	public Table createTable( Skin skin, Entity entity );
+	void setCooldown( int val );
 
-	public Sprite getIcon();
+	Table createTable( Skin skin, Entity entity );
+
+	Sprite getIcon();
 }

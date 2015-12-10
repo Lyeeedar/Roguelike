@@ -1,19 +1,17 @@
 package Roguelike.Items;
 
-import java.io.IOException;
-
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.IAbility;
+import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.AssetManager;
-import Roguelike.Global;
-import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.Global;
+import Roguelike.Global.Statistic;
 import Roguelike.Lights.Light;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -21,45 +19,34 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
-
 import exp4j.Helpers.EquationHelper;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+
+import java.io.IOException;
 
 public final class Item extends GameEventHandler
 {
 	/*
 	 * IDEAS:
-	 * 
+	 *
 	 * Unlock extra power after condition (absorb x essence, kill x enemy)
 	 */
 
-	// ----------------------------------------------------------------------
-	public enum EquipmentSlot
-	{
-		// Armour
-		HEAD,
-		BODY,
-		LEGS,
-
-		// Jewelry
-		EARRING,
-		NECKLACE,
-		RING,
-
-		// Other
-		LANTERN,
-
-		// Weapons
-		MAINWEAPON,
-		OFFWEAPON
-	}
-
-	// ----------------------------------------------------------------------
-	public enum ItemCategory
-	{
-		ARMOUR, WEAPON, JEWELRY, TREASURE, MATERIAL, MISC,
-
-		ALL
-	}
+	public String name = "";
+	public String description = "";
+	public Sprite icon;
+	public Sprite hitEffect;
+	public Array<EquipmentSlot> slots = new Array<EquipmentSlot>();
+	public ItemCategory category;
+	public String type;
+	public boolean canStack;
+	public int count = 1;
+	public Light light;
+	public boolean canDrop = true;
+	public String dropChanceEqn;
+	private int range = -1000;
+	private IAbility ability;
 
 	// ----------------------------------------------------------------------
 	public Item()
@@ -67,22 +54,25 @@ public final class Item extends GameEventHandler
 
 	}
 
-	public String name = "";
-	public String description = "";
-	public Sprite icon;
-	public Sprite hitEffect;
+	// ----------------------------------------------------------------------
+	public static Item load( String name )
+	{
+		Item item = new Item();
 
-	public Array<EquipmentSlot> slots = new Array<EquipmentSlot>();
-	public ItemCategory category;
-	public String type;
+		item.internalLoad( name );
 
-	public boolean canStack;
-	public int count = 1;
-	public Light light;
-	public boolean canDrop = true;
-	public String dropChanceEqn;
+		return item;
+	}
 
-	private int range = -1000;
+	// ----------------------------------------------------------------------
+	public static Item load( Element xml )
+	{
+		Item item = new Item();
+
+		item.internalLoad( xml );
+
+		return item;
+	}
 
 	// ----------------------------------------------------------------------
 	public int getRange( Entity entity )
@@ -128,11 +118,13 @@ public final class Item extends GameEventHandler
 	// ----------------------------------------------------------------------
 	public Table createTable( Skin skin, GameEntity entity )
 	{
+		if ( ability != null ) { return ability.createTable( skin, entity ); }
+
 		Inventory inventory = entity.getInventory();
 
-		if ( slots.contains( EquipmentSlot.MAINWEAPON, true ) )
+		if ( slots.contains( EquipmentSlot.WEAPON, true ) )
 		{
-			Item other = inventory.getEquip( EquipmentSlot.MAINWEAPON );
+			Item other = inventory.getEquip( EquipmentSlot.WEAPON );
 			return createWeaponTable( other, entity, skin );
 		}
 		else if ( slots.size > 0 )
@@ -242,107 +234,11 @@ public final class Item extends GameEventHandler
 	}
 
 	// ----------------------------------------------------------------------
-	public static Item load( String name )
-	{
-		Item item = new Item();
-
-		item.internalLoad( name );
-
-		return item;
-	}
-
-	// ----------------------------------------------------------------------
-	public static Item load( Element xml )
-	{
-		Item item = new Item();
-
-		item.internalLoad( xml );
-
-		return item;
-	}
-
-	// ----------------------------------------------------------------------
-	private void internalLoad( String name )
-	{
-		XmlReader xml = new XmlReader();
-		Element xmlElement = null;
-
-		try
-		{
-			xmlElement = xml.parse( Gdx.files.internal( "Items/" + name + ".xml" ) );
-		}
-		catch ( IOException e )
-		{
-			e.printStackTrace();
-		}
-
-		internalLoad( xmlElement );
-	}
-
-	// ----------------------------------------------------------------------
-	private void internalLoad( Element xmlElement )
-	{
-		String extendsElement = xmlElement.getAttribute( "Extends", null );
-		if ( extendsElement != null )
-		{
-			internalLoad( extendsElement );
-		}
-
-		name = xmlElement.get( "Name", name );
-		description = xmlElement.get( "Description", description );
-		canStack = xmlElement.getBoolean( "CanStack", canStack );
-
-		String countEqn = xmlElement.get( "Count", "" + count );
-		count = EquationHelper.evaluate( countEqn );
-
-		Element iconElement = xmlElement.getChildByName( "Icon" );
-		if ( iconElement != null )
-		{
-			icon = AssetManager.loadSprite( iconElement );
-		}
-
-		Element hitElement = xmlElement.getChildByName( "HitEffect" );
-		if ( hitElement != null )
-		{
-			hitEffect = AssetManager.loadSprite( hitElement );
-		}
-
-		Element eventsElement = xmlElement.getChildByName( "Events" );
-		if ( eventsElement != null )
-		{
-			super.parse( eventsElement );
-		}
-
-		Element lightElement = xmlElement.getChildByName( "Light" );
-		if ( lightElement != null )
-		{
-			light = Light.load( lightElement );
-		}
-
-		String slotsElement = xmlElement.get( "Slot", null );
-		if ( slotsElement != null )
-		{
-			String[] split = slotsElement.split( "," );
-			for ( String s : split )
-			{
-				slots.add( EquipmentSlot.valueOf( s.toUpperCase() ) );
-			}
-		}
-		category = xmlElement.get( "Category", null ) != null ? ItemCategory.valueOf( xmlElement.get( "Category" ).toUpperCase() ) : category;
-		type = xmlElement.get( "Type", null ) != null ? xmlElement.get( "Type" ).toLowerCase() : type;
-
-		// Preload sprites
-		if ( type != null )
-		{
-			getWeaponHitEffect();
-			getIcon();
-		}
-	}
-
-	// ----------------------------------------------------------------------
 	@Override
 	public String getName()
 	{
+		if ( ability != null ) { return ability.getName(); }
+
 		return name;
 	}
 
@@ -350,13 +246,9 @@ public final class Item extends GameEventHandler
 	@Override
 	public String getDescription()
 	{
-		return description;
-	}
+		if ( ability != null ) { return ability.getDescription(); }
 
-	// ----------------------------------------------------------------------
-	public EquipmentSlot getMainSlot()
-	{
-		return slots.size > 0 ? slots.get( 0 ) : null;
+		return description;
 	}
 
 	// ----------------------------------------------------------------------
@@ -367,7 +259,7 @@ public final class Item extends GameEventHandler
 
 		EquipmentSlot slot = getMainSlot();
 
-		if ( slot == EquipmentSlot.MAINWEAPON )
+		if ( slot == EquipmentSlot.WEAPON )
 		{
 			if ( type.equals( "sword" ) )
 			{
@@ -388,17 +280,6 @@ public final class Item extends GameEventHandler
 			else if ( type.equals( "wand" ) )
 			{
 				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/weapon_staff_jeweled" );
-			}
-		}
-		else if ( slot == EquipmentSlot.OFFWEAPON )
-		{
-			if ( type.equals( "shield" ) )
-			{
-				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/shield_iron_buckler" );
-			}
-			else if ( type.equals( "torch" ) )
-			{
-				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/torch_lit" );
 			}
 		}
 		else if ( slot == EquipmentSlot.HEAD )
@@ -492,12 +373,115 @@ public final class Item extends GameEventHandler
 				icon = AssetManager.loadSprite( "GUI/Gem" );
 			}
 		}
+		else if ( ability != null )
+		{
+			icon = ability.getIcon();
+		}
 
 		if ( icon == null )
 		{
 			icon = AssetManager.loadSprite( "white" );
 		}
 		return icon;
+	}
+
+	// ----------------------------------------------------------------------
+	private void internalLoad( String name )
+	{
+		XmlReader xml = new XmlReader();
+		Element xmlElement = null;
+
+		try
+		{
+			xmlElement = xml.parse( Gdx.files.internal( "Items/" + name + ".xml" ) );
+		}
+		catch ( IOException e )
+		{
+			e.printStackTrace();
+		}
+
+		internalLoad( xmlElement );
+	}
+
+	// ----------------------------------------------------------------------
+	private void internalLoad( Element xmlElement )
+	{
+		String extendsElement = xmlElement.getAttribute( "Extends", null );
+		if ( extendsElement != null )
+		{
+			internalLoad( extendsElement );
+		}
+
+		name = xmlElement.get( "Name", name );
+		description = xmlElement.get( "Description", description );
+		canStack = xmlElement.getBoolean( "CanStack", canStack );
+
+		String countEqn = xmlElement.get( "Count", "" + count );
+		count = EquationHelper.evaluate( countEqn );
+
+		Element iconElement = xmlElement.getChildByName( "Icon" );
+		if ( iconElement != null )
+		{
+			icon = AssetManager.loadSprite( iconElement );
+		}
+
+		Element hitElement = xmlElement.getChildByName( "HitEffect" );
+		if ( hitElement != null )
+		{
+			hitEffect = AssetManager.loadSprite( hitElement );
+		}
+
+		Element eventsElement = xmlElement.getChildByName( "Events" );
+		if ( eventsElement != null )
+		{
+			super.parse( eventsElement );
+		}
+
+		Element lightElement = xmlElement.getChildByName( "Light" );
+		if ( lightElement != null )
+		{
+			light = Light.load( lightElement );
+		}
+
+		String slotsElement = xmlElement.get( "Slot", null );
+		if ( slotsElement != null )
+		{
+			String[] split = slotsElement.split( "," );
+			for ( String s : split )
+			{
+				slots.add( EquipmentSlot.valueOf( s.toUpperCase() ) );
+			}
+		}
+		category = xmlElement.get( "Category", null ) != null ? ItemCategory.valueOf( xmlElement.get( "Category" ).toUpperCase() ) : category;
+		type = xmlElement.get( "Type", null ) != null ? xmlElement.get( "Type" ).toLowerCase() : type;
+
+		Element abilityElement = xmlElement.getChildByName( "Ability" );
+		if ( abilityElement != null )
+		{
+			abilityElement = abilityElement.getChild( 0 );
+
+			if ( abilityElement.getName() == "Active" )
+			{
+				ability = ActiveAbility.load( abilityElement );
+			}
+			else
+			{
+				ability = PassiveAbility.load( abilityElement );
+			}
+		}
+
+		// Preload sprites
+		if ( type != null )
+		{
+			getWeaponHitEffect();
+			getIcon();
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	public EquipmentSlot getMainSlot()
+	{
+		return slots.size > 0 ? slots.get( 0 ) : null;
 	}
 
 	// ----------------------------------------------------------------------
@@ -547,8 +531,42 @@ public final class Item extends GameEventHandler
 		{
 			return new SoundInstance( AssetManager.loadSound( "arrow_approaching_and_hitting_target" ) );
 		}
-		else if ( type.equals( "wand" ) ) { return new SoundInstance( AssetManager.loadSound( "arrow_approaching_and_hitting_target" ) ); }
+		else if ( type.equals( "wand" ) )
+		{
+			return new SoundInstance( AssetManager.loadSound( "arrow_approaching_and_hitting_target" ) );
+		}
 
 		return new SoundInstance( AssetManager.loadSound( "knife_stab" ) );
+	}
+
+	// ----------------------------------------------------------------------
+	public enum EquipmentSlot
+	{
+		// Armour
+		HEAD,
+		BODY,
+		LEGS,
+
+		// Jewelry
+		FETISH,
+		TOTEM,
+		RING,
+		RUNE,
+
+		// Weapons
+		WEAPON
+	}
+
+	// ----------------------------------------------------------------------
+	public enum ItemCategory
+	{
+		ARMOUR,
+		WEAPON,
+		JEWELRY,
+		TREASURE,
+		MATERIAL,
+		MISC,
+
+		ALL
 	}
 }

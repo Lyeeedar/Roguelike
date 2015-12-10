@@ -1,19 +1,18 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
+import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
+import Roguelike.Entity.GameEntity;
+import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
-import Roguelike.Entity.GameEntity;
-import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
-import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
-
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -36,7 +35,7 @@ public class ActionMoveToAttack extends AbstractAction
 			return State;
 		}
 
-		Item wep = entity.getInventory().getEquip( EquipmentSlot.MAINWEAPON );
+		Item wep = entity.getInventory().getEquip( EquipmentSlot.WEAPON );
 		int range = 1;
 
 		if ( wep != null )

@@ -1,14 +1,14 @@
 <Entity Extends="Enemies/Goblin/GoblinBase">
-	
+
 	<Sprite>
 		<Name>Oryx/Custom/heroes/goblin_chief</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-	
+
 	<IsBoss>true</IsBoss>
-	
+
 	<ActiveAbilities>
-	    
+
 	    <Enrage>
 	        <Cooldown>15</Cooldown>
 			<Range>1</Range>
@@ -18,29 +18,29 @@
 			    <Colour><RGB>178,34,34</RGB></Colour>
 			    <Sound><Name>roar</Name></Sound>
 			</HitSprite>
-			
-			<Targeting><Self></Self></Targeting>	
+
+			<Targeting><Self></Self></Targeting>
 			<Movement><Smite></Smite></Movement>
-			
+
 			<Effect>
 				<Status ReliesOn="Bloodlust">
 					<Attacker>Bloodlust</Attacker>
 					<Stacks>5</Stacks>
 				</Status>
 			</Effect>
-			
+
 	    </Enrage>
-	    
+
 	</ActiveAbilities>
-	
+
 	<Statistics>
 
 		<Attack>25</Attack>
 		<Defense>25</Defense>
-		
+
 		<Constitution>15</Constitution>
-		<Perception>1</Perception>
-		
+        <Perception>5</Perception>
+
 	</Statistics>
-	
+
 </Entity>

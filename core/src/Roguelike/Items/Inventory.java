@@ -1,15 +1,14 @@
 package Roguelike.Items;
 
-import java.util.HashMap;
-import java.util.Iterator;
-
 import Roguelike.Global.Statistic;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Items.Item.ItemCategory;
 import Roguelike.Util.FastEnumMap;
-
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 public final class Inventory
 {
@@ -98,6 +97,32 @@ public final class Inventory
 		}
 	}
 
+	public void equip( Item item )
+	{
+		for ( EquipmentSlot slot : item.slots )
+		{
+			if ( m_equipment.containsKey( slot ) )
+			{
+				unequip( m_equipment.get( slot ) );
+			}
+		}
+
+		for ( EquipmentSlot slot : item.slots )
+		{
+			m_equipment.put( slot, item );
+			isVariableMapDirty = true;
+		}
+	}
+
+	public void unequip( Item item )
+	{
+		for ( EquipmentSlot slot : item.slots )
+		{
+			m_equipment.remove( slot );
+			isVariableMapDirty = true;
+		}
+	}
+
 	public void removeItem( Item item )
 	{
 		removeItem( item.name, 1 );
@@ -135,7 +160,7 @@ public final class Inventory
 
 		for ( EquipmentSlot slot : EquipmentSlot.values() )
 		{
-			if ( slot != EquipmentSlot.MAINWEAPON && m_equipment.containsKey( slot ) )
+			if ( slot != EquipmentSlot.WEAPON && m_equipment.containsKey( slot ) )
 			{
 				Item item = m_equipment.get( slot );
 				if ( slot == item.getMainSlot() )
@@ -146,32 +171,6 @@ public final class Inventory
 		}
 
 		return val;
-	}
-
-	public void equip( Item item )
-	{
-		for ( EquipmentSlot slot : item.slots )
-		{
-			if ( m_equipment.containsKey( slot ) )
-			{
-				unequip( m_equipment.get( slot ) );
-			}
-		}
-
-		for ( EquipmentSlot slot : item.slots )
-		{
-			m_equipment.put( slot, item );
-			isVariableMapDirty = true;
-		}
-	}
-
-	public void unequip( Item item )
-	{
-		for ( EquipmentSlot slot : item.slots )
-		{
-			m_equipment.remove( slot );
-			isVariableMapDirty = true;
-		}
 	}
 
 	public void toggleEquip( Item item )
@@ -186,6 +185,11 @@ public final class Inventory
 		}
 	}
 
+	public boolean isEquipped( Item item )
+	{
+		return m_equipment.get( item.getMainSlot() ) == item;
+	}
+
 	public Item getEquip( EquipmentSlot slot )
 	{
 		Item item = m_equipment.get( slot );
@@ -195,11 +199,6 @@ public final class Inventory
 		}
 
 		return null;
-	}
-
-	public boolean isEquipped( Item item )
-	{
-		return m_equipment.get( item.getMainSlot() ) == item;
 	}
 
 	public Iterator<Item> iterator( ItemCategory type )

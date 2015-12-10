@@ -1,46 +1,81 @@
 package Roguelike.Entity;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-
-import Roguelike.AssetManager;
-import Roguelike.Global;
-import Roguelike.Global.Direction;
-import Roguelike.Global.Passability;
-import Roguelike.Global.Statistic;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.IAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
+import Roguelike.AssetManager;
 import Roguelike.Dialogue.DialogueManager;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree;
 import Roguelike.Entity.Tasks.AbstractTask;
 import Roguelike.GameEvent.GameEventHandler;
+import Roguelike.Global;
+import Roguelike.Global.Direction;
+import Roguelike.Global.Passability;
+import Roguelike.Global.Statistic;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Util.EnumBitflag;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+
 public class GameEntity extends Entity
 {
 	// ####################################################################//
 	// region Constructor
 
-	private GameEntity()
-	{
-	}
+	public boolean seen = false;
 
 	// endregion Constructor
 	// ####################################################################//
 	// region Public Methods
+	public String fileName;
+	// ----------------------------------------------------------------------
+	public Array<IAbility> slottedAbilities = new Array<IAbility>();
+	// ----------------------------------------------------------------------
+	public Sprite defaultHitEffect = AssetManager.loadSprite( "strike/strike", 0.1f );
+	// ----------------------------------------------------------------------
+	public Array<AbstractTask> tasks = new Array<AbstractTask>();
+	public float actionDelayAccumulator;
+	public boolean canSwap;
+	public boolean canMove;
+	// ----------------------------------------------------------------------
+	public DialogueManager dialogue;
+	// ----------------------------------------------------------------------
+	public HashSet<String> factions = new HashSet<String>();
+	public BehaviourTree AI;
+
+	private GameEntity()
+	{
+	}
+
+	// ----------------------------------------------------------------------
+	public static GameEntity load( String name )
+	{
+		GameEntity e = new GameEntity();
+		e.fileName = name;
+
+		e.internalLoad( name );
+
+		e.HP = e.getStatistic( Statistic.CONSTITUTION ) * 10;
+
+		e.statistics.put( Statistic.WALK, 1 );
+
+		e.isVariableMapDirty = true;
+		e.recalculateMaps();
+
+		return e;
+	}
 
 	// ----------------------------------------------------------------------
 	public EnumBitflag<Passability> getTravelType()
@@ -49,25 +84,20 @@ public class GameEntity extends Entity
 		return travelType;
 	}
 
-	// ----------------------------------------------------------------------
-	@Override
-	public void applyDamage( int dam, Entity damager )
-	{
-		super.applyDamage( dam, damager );
-
-		AI.setData( "EnemyPos", Global.PointPool.obtain().set( damager.tile[0][0].x, damager.tile[0][0].y ) );
-	}
+	// endregion Public Methods
+	// ####################################################################//
+	// region Data
 
 	// ----------------------------------------------------------------------
 	public void attack( Entity other, Direction dir )
 	{
-		if ( inventory.getEquip( EquipmentSlot.MAINWEAPON ) == null )
+		if ( inventory.getEquip( EquipmentSlot.WEAPON ) == null )
 		{
 			Global.calculateDamage( this, other, variableMap, Statistic.emptyMap, true );
 		}
 		else
 		{
-			Global.calculateDamage( this, other, Statistic.statsBlockToVariableBlock( inventory.getEquip( EquipmentSlot.MAINWEAPON ).getStatistics( baseVariableMap ) ), getVariableMap(), true );
+			Global.calculateDamage( this, other, Statistic.statsBlockToVariableBlock( inventory.getEquip( EquipmentSlot.WEAPON ).getStatistics( baseVariableMap ) ), getVariableMap(), true );
 		}
 	}
 
@@ -83,7 +113,7 @@ public class GameEntity extends Entity
 
 		actionDelayAccumulator += cost;
 
-		if ( tile[0][0].level.player != this )
+		if ( tile[ 0 ][ 0 ].level.player != this )
 		{
 			for ( IAbility a : slottedAbilities )
 			{
@@ -122,75 +152,29 @@ public class GameEntity extends Entity
 
 	// ----------------------------------------------------------------------
 	@Override
-	public Array<GameEventHandler> getAllHandlers()
+	public int getStatistic( Statistic stat )
 	{
-		Array<GameEventHandler> handlers = new Array<GameEventHandler>();
+		int val = statistics.get( stat ) + inventory.getStatistic( Statistic.emptyMap, stat );
+
+		HashMap<String, Integer> variableMap = getBaseVariableMap();
+
+		variableMap.put( stat.toString().toLowerCase(), val );
 
 		for ( IAbility a : slottedAbilities )
 		{
 			if ( a != null && a instanceof PassiveAbility )
 			{
-				handlers.add( (PassiveAbility) a );
+				PassiveAbility passive = (PassiveAbility) a;
+				val += passive.getStatistic( variableMap, stat );
 			}
 		}
 
 		for ( StatusEffect se : statusEffects )
 		{
-			handlers.add( se );
+			val += se.getStatistic( variableMap, stat );
 		}
 
-		for ( EquipmentSlot slot : EquipmentSlot.values() )
-		{
-			Item i = inventory.getEquip( slot );
-			if ( i != null )
-			{
-				handlers.add( i );
-			}
-		}
-
-		return handlers;
-	}
-
-	// ----------------------------------------------------------------------
-	public boolean isAllies( GameEntity other )
-	{
-		for ( String faction : factions )
-		{
-			if ( other.factions.contains( faction ) ) { return true; }
-		}
-
-		return false;
-	}
-
-	// ----------------------------------------------------------------------
-	public boolean isAllies( HashSet<String> other )
-	{
-		if ( other == null ) { return false; }
-
-		for ( String faction : factions )
-		{
-			if ( other.contains( faction ) ) { return true; }
-		}
-
-		return false;
-	}
-
-	// ----------------------------------------------------------------------
-	public static GameEntity load( String name )
-	{
-		GameEntity e = new GameEntity();
-		e.fileName = name;
-
-		e.internalLoad( name );
-
-		e.HP = e.getStatistic( Statistic.CONSTITUTION ) * 10;
-
-		e.statistics.put( Statistic.WALK, 1 );
-
-		e.isVariableMapDirty = true;
-		e.recalculateMaps();
-
-		return e;
+		return val;
 	}
 
 	// ----------------------------------------------------------------------
@@ -228,6 +212,27 @@ public class GameEntity extends Entity
 			for ( Element faction : factionElement.getChildrenByName( "Faction" ) )
 			{
 				factions.add( faction.getText() );
+			}
+		}
+
+		Element abilitiesElement = xmlElement.getChildByName( "Abilities" );
+		if ( abilitiesElement != null )
+		{
+			for ( int i = 0; i < abilitiesElement.getChildCount(); i++ )
+			{
+				Element abilityElement = abilitiesElement.getChild( i );
+
+				IAbility ability = null;
+				if ( abilityElement.getName() == "Active" )
+				{
+					ability = ActiveAbility.load( abilityElement );
+				}
+				else
+				{
+					ability = PassiveAbility.load( abilityElement );
+				}
+
+				slottedAbilities.add( ability );
 			}
 		}
 
@@ -291,29 +296,84 @@ public class GameEntity extends Entity
 
 	// ----------------------------------------------------------------------
 	@Override
-	public int getStatistic( Statistic stat )
+	public Array<GameEventHandler> getAllHandlers()
 	{
-		int val = statistics.get( stat ) + inventory.getStatistic( Statistic.emptyMap, stat );
-
-		HashMap<String, Integer> variableMap = getBaseVariableMap();
-
-		variableMap.put( stat.toString().toLowerCase(), val );
+		Array<GameEventHandler> handlers = new Array<GameEventHandler>();
 
 		for ( IAbility a : slottedAbilities )
 		{
 			if ( a != null && a instanceof PassiveAbility )
 			{
-				PassiveAbility passive = (PassiveAbility) a;
-				val += passive.getStatistic( variableMap, stat );
+				handlers.add( (PassiveAbility) a );
 			}
 		}
 
 		for ( StatusEffect se : statusEffects )
 		{
-			val += se.getStatistic( variableMap, stat );
+			handlers.add( se );
 		}
 
-		return val;
+		for ( EquipmentSlot slot : EquipmentSlot.values() )
+		{
+			Item i = inventory.getEquip( slot );
+			if ( i != null )
+			{
+				handlers.add( i );
+			}
+		}
+
+		return handlers;
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public void applyDamage( int dam, Entity damager )
+	{
+		super.applyDamage( dam, damager );
+
+		AI.setData( "EnemyPos", Global.PointPool.obtain().set( damager.tile[ 0 ][ 0 ].x, damager.tile[ 0 ][ 0 ].y ) );
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public void removeFromTile()
+	{
+		for ( int x = 0; x < size; x++ )
+		{
+			for ( int y = 0; y < size; y++ )
+			{
+				if ( tile[ x ][ y ] != null && tile[ x ][ y ].entity == this )
+				{
+					tile[ x ][ y ].entity = null;
+				}
+
+				tile[ x ][ y ] = null;
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	public boolean isAllies( GameEntity other )
+	{
+		for ( String faction : factions )
+		{
+			if ( other.factions.contains( faction ) ) { return true; }
+		}
+
+		return false;
+	}
+
+	// ----------------------------------------------------------------------
+	public boolean isAllies( HashSet<String> other )
+	{
+		if ( other == null ) { return false; }
+
+		for ( String faction : factions )
+		{
+			if ( other.contains( faction ) ) { return true; }
+		}
+
+		return false;
 	}
 
 	// ----------------------------------------------------------------------
@@ -340,51 +400,6 @@ public class GameEntity extends Entity
 			}
 		}
 	}
-
-	// ----------------------------------------------------------------------
-	@Override
-	public void removeFromTile()
-	{
-		for ( int x = 0; x < size; x++ )
-		{
-			for ( int y = 0; y < size; y++ )
-			{
-				if ( tile[x][y] != null && tile[x][y].entity == this )
-				{
-					tile[x][y].entity = null;
-				}
-
-				tile[x][y] = null;
-			}
-		}
-	}
-
-	// endregion Public Methods
-	// ####################################################################//
-	// region Data
-
-	public boolean seen = false;
-
-	public String fileName;
-
-	// ----------------------------------------------------------------------
-	public Array<IAbility> slottedAbilities = new Array<IAbility>();
-
-	// ----------------------------------------------------------------------
-	public Sprite defaultHitEffect = AssetManager.loadSprite( "strike/strike", 0.1f );
-
-	// ----------------------------------------------------------------------
-	public Array<AbstractTask> tasks = new Array<AbstractTask>();
-	public float actionDelayAccumulator;
-	public boolean canSwap;
-	public boolean canMove;
-
-	// ----------------------------------------------------------------------
-	public DialogueManager dialogue;
-
-	// ----------------------------------------------------------------------
-	public HashSet<String> factions = new HashSet<String>();
-	public BehaviourTree AI;
 
 	// endregion Data
 	// ####################################################################//

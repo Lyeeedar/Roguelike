@@ -1,107 +1,89 @@
 <Entity>
 	<Name>Player</Name>
-	
+
 	<Factions>
 		<Faction>Player</Faction>
 	</Factions>
-	
+
 	<AI>player</AI>
 	<Essence>400</Essence>
-	
+
 	<CanSwap>true</CanSwap>
-	
+
 	<Sprite>
 		<Name>Oryx/uf_split/uf_heroes/knight</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-	
+
 	<Statistics>
 		<Defense>1</Defense>
-		<Constitution>10</Constitution>
-		<Perception>10</Perception>	
+
+        <Constitution>10</Constitution>
+        <Perception>10</Perception>
+        <Strength>10</Strength>
+        <Intelligence>10</Intelligence>
+        <Willpower>10</Willpower>
+        <Speed>10</Speed>
 	</Statistics>
-	
+
 	<Inventory>
 		<Equipment>
-		    
+
 		    <Dagger>
 		        <Name>Iron Sword</Name>
 		        <Description>A plain metal blade.</Description>
-		        
-		        <Slot>MainWeapon</Slot>
+
+                <Slot>Weapon</Slot>
 				<Category>Weapon</Category>
 				<Type>Sword</Type>
-			
+
 				<Events>
 					<Constant>
-						<Attack>10</Attack>
+                        <Attack>15</Attack>
 						<Strength>1</Strength>
 					</Constant>
 				</Events>
 		    </Dagger>
-		    
-		    <Shield>
-		        
-		        <Name>Shield</Name>
-		        <Description>A shield.</Description>
-		        <Slot>OffWeapon</Slot>
-		        <Category>Weapon</Category>
-		        <Type>Shield</Type>
-		        
-		        <Events>
-					<OnReceiveDamage>
-	                    <Damage Condition="rnd(1) < 0.2">
-							-Damage
-						</Damage>
-	                </OnReceiveDamage>
-	                
-					<Constant>
-					    <Defense>2</Defense>
-					</Constant>
-				</Events>
-		        
-		    </Shield>
-		    
+
 		    <Top>
-		        
+
 		        <Name>Padded Shirt</Name>
 		        <Description>A thick padded shirt. Can keep you warm in the cold nights and protect you from small amounts of stabbing.</Description>
 		        <Slot>Body</Slot>
 		        <Category>Armour</Category>
-		        
+
 		        <Events>
 					<Constant>
 						<Defense>5</Defense>
 					</Constant>
 				</Events>
-				
+
 		        <Icon>
 		            <Name>Oryx/uf_split/uf_items/armor_leather_chest</Name>
 		        </Icon>
-		        
+
 		    </Top>
-		    
+
 		     <Leg>
-		        
+
 		        <Name>Padded Trousers</Name>
 		        <Description>Is that a large amount of protective insulation in your pocket, or are you just happy to see me?</Description>
 		        <Slot>Legs</Slot>
 		        <Category>Armour</Category>
-		        
+
 		        <Events>
 					<Constant>
 						<Defense>3</Defense>
 					</Constant>
 				</Events>
-				
+
 		        <Icon>
 		            <Name>Oryx/uf_split/uf_items/armor_leather_leg</Name>
 		        </Icon>
-		        
+
 		    </Leg>
-		    
-			<Item>Misc/BasicLantern</Item>
+
 		</Equipment>
 	</Inventory>
-	
+
 </Entity>

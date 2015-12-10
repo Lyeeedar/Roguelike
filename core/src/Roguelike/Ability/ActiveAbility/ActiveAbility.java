@@ -1,15 +1,5 @@
 package Roguelike.Ability.ActiveAbility;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-
-import Roguelike.AssetManager;
-import Roguelike.Global;
-import Roguelike.Global.Direction;
-import Roguelike.Global.Passability;
-import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.CostType.AbstractCostType;
 import Roguelike.Ability.ActiveAbility.EffectType.AbstractEffectType;
 import Roguelike.Ability.ActiveAbility.MovementType.AbstractMovementType;
@@ -18,9 +8,14 @@ import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeRay;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeSmite;
 import Roguelike.Ability.ActiveAbility.TargetingType.AbstractTargetingType;
 import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeTile;
+import Roguelike.Ability.IAbility;
+import Roguelike.AssetManager;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.IGameObject;
+import Roguelike.Global;
+import Roguelike.Global.Direction;
+import Roguelike.Global.Passability;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
@@ -29,12 +24,11 @@ import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
-import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
+import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -45,54 +39,61 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+
 public class ActiveAbility implements IAbility, IGameObject
 {
-	private String name;
-	private String description;
-
-	private int cone = 0;
-	private int aoe = 0;
-	private boolean excludeSelf = false;
-	private int range = 1;
-	private float screenshake = 0;
-
 	public int cooldownAccumulator;
 	public int cooldown = 1;
-
 	public Array<AbstractCostType> costTypes = new Array<AbstractCostType>();
 	public AbstractTargetingType targetingType = new TargetingTypeTile();
 	public AbstractMovementType movementType = new MovementTypeSmite();
 	public Array<AbstractEffectType> effectTypes = new Array<AbstractEffectType>();
 	public Array<GameTile> AffectedTiles = new Array<GameTile>();
-
 	public GameTile source;
 	public GameEntity caster;
 	public HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
-
 	public EnumBitflag<Passability> abilityPassability = new EnumBitflag<Passability>( Passability.LEVITATE );
-
-	private ShadowCastCache cache = new ShadowCastCache();
-
 	// ----------------------------------------------------------------------
 	// rendering
 	public Light light;
 	public Sprite Icon;
+	public boolean hasValidTargets = true;
+	private String name;
+	private String description;
+	private int cone = 0;
+	private int aoe = 0;
+	private boolean excludeSelf = false;
+	private int range = 1;
+	private float screenshake = 0;
+	private ShadowCastCache cache = new ShadowCastCache();
 	private Sprite movementSprite;
 	private Sprite hitSprite;
 	private boolean singleSprite = false;
 	private Sprite useSprite;
-
 	private boolean spentCost = false;
 
-	public boolean hasValidTargets = true;
+	// ----------------------------------------------------------------------
+	public static ActiveAbility load( String name )
+	{
+		ActiveAbility ab = new ActiveAbility();
+
+		ab.internalLoad( name );
+
+		return ab;
+	}
 
 	// ----------------------------------------------------------------------
-	public int getRange()
+	public static ActiveAbility load( Element xml )
 	{
-		if ( range > 0 ) { return range; }
-		Item item = caster.getInventory().getEquip( EquipmentSlot.MAINWEAPON );
-		if ( item != null ) { return item.getRange( caster ); }
-		return 1;
+		ActiveAbility ab = new ActiveAbility();
+
+		ab.internalLoad( xml );
+
+		return ab;
 	}
 
 	// ----------------------------------------------------------------------
@@ -164,80 +165,9 @@ public class ActiveAbility implements IAbility, IGameObject
 	}
 
 	// ----------------------------------------------------------------------
-	public Sprite getHitSprite()
-	{
-		if ( hitSprite != null ) { return hitSprite; }
-		Item wep = caster.getInventory().getEquip( EquipmentSlot.MAINWEAPON );
-		if ( wep != null ) { return wep.getWeaponHitEffect(); }
-		return caster.defaultHitEffect;
-	}
-
-	// ----------------------------------------------------------------------
 	public Sprite getUseSprite()
 	{
 		return useSprite;
-	}
-
-	// ----------------------------------------------------------------------
-	@Override
-	public Sprite getIcon()
-	{
-		return Icon;
-	}
-
-	// ----------------------------------------------------------------------
-	@Override
-	public Table createTable( Skin skin, Entity entity )
-	{
-		Table table = new Table();
-
-		table.add( new Label( name, skin, "title" ) ).expandX().left();
-		table.row();
-
-		Label descLabel = new Label( description, skin );
-		descLabel.setWrap( true );
-		table.add( descLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
-		table.row();
-
-		table.add( new Label( "Range: " + getRange(), skin ) ).expandX().left();
-		table.row();
-
-		for ( AbstractCostType cost : costTypes )
-		{
-			String string = cost.toString( this );
-			Label label = new Label( string, skin );
-			label.setWrap( true );
-
-			table.add( label ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
-			table.row();
-		}
-
-		table.add( new Label( "", skin ) );
-		table.row();
-
-		for ( AbstractEffectType effect : effectTypes )
-		{
-			String string = effect.toString( this );
-			Label label = new Label( string, skin );
-			label.setWrap( true );
-
-			table.add( label ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) ).padBottom( 5 );
-			table.row();
-		}
-
-		if ( !hasValidTargets )
-		{
-			table.add( new Label( "[RED]No valid targets", skin ) ).expandX().left();
-			table.row();
-		}
-
-		if ( cooldownAccumulator > 0 )
-		{
-			table.add( new Label( "[RED]On cooldown", skin ) ).expandX().left();
-			table.row();
-		}
-
-		return table;
 	}
 
 	// ----------------------------------------------------------------------
@@ -282,7 +212,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		{
 			for ( int y = 0; y < caster.size; y++ )
 			{
-				int tmpdst = Math.abs( tile.x - ( caster.tile[0][0].x + x ) ) + Math.abs( tile.y - ( caster.tile[0][0].y + y ) );
+				int tmpdst = Math.abs( tile.x - ( caster.tile[ 0 ][ 0 ].x + x ) ) + Math.abs( tile.y - ( caster.tile[ 0 ][ 0 ].y + y ) );
 
 				if ( tmpdst < dst )
 				{
@@ -293,7 +223,7 @@ public class ActiveAbility implements IAbility, IGameObject
 			}
 		}
 
-		source = caster.tile[cx][cy];
+		source = caster.tile[ cx ][ cy ];
 
 		movementType.init( this, tile.x, tile.y );
 	}
@@ -305,22 +235,10 @@ public class ActiveAbility implements IAbility, IGameObject
 	}
 
 	// ----------------------------------------------------------------------
-	@Override
-	public void onTurn()
-	{
-		cooldownAccumulator--;
-		if ( cooldownAccumulator < 0 )
-		{
-			cooldownAccumulator = 0;
-		}
-	}
-
-	// ----------------------------------------------------------------------
 	public boolean needsUpdate()
 	{
-		if ( movementType.needsUpdate() ) { return true; }
+		return movementType.needsUpdate();
 
-		return false;
 	}
 
 	// ----------------------------------------------------------------------
@@ -339,7 +257,7 @@ public class ActiveAbility implements IAbility, IGameObject
 				Sprite sprite = useSprite.copy();
 				sprite.size = caster.size;
 
-				caster.tile[0][0].spriteEffects.add( new SpriteEffect( sprite, Direction.CENTER, light != null ? light.copyNoFlag() : null ) );
+				caster.tile[ 0 ][ 0 ].spriteEffects.add( new SpriteEffect( sprite, Direction.CENTER, light != null ? light.copyNoFlag() : null ) );
 			}
 		}
 
@@ -368,11 +286,11 @@ public class ActiveAbility implements IAbility, IGameObject
 
 						if ( sprite.spriteAnimation != null )
 						{
-							int distMoved = ( Math.abs( diff[0] ) + Math.abs( diff[1] ) ) / Global.TileSize;
+							int distMoved = ( Math.abs( diff[ 0 ] ) + Math.abs( diff[ 1 ] ) ) / Global.TileSize;
 							sprite.spriteAnimation.set( 0.05f * distMoved, diff );
 						}
 
-						Vector2 vec = new Vector2( diff[0] * -1, diff[1] * -1 );
+						Vector2 vec = new Vector2( diff[ 0 ] * -1, diff[ 1 ] * -1 );
 						vec.nor();
 						float x = vec.x;
 						float y = vec.y;
@@ -488,11 +406,11 @@ public class ActiveAbility implements IAbility, IGameObject
 					Sprite sprite = getHitSprite().copy();
 					if ( sprite.spriteAnimation != null )
 					{
-						int distMoved = ( Math.abs( diff[0] ) + Math.abs( diff[1] ) ) / Global.TileSize;
+						int distMoved = ( Math.abs( diff[ 0 ] ) + Math.abs( diff[ 1 ] ) ) / Global.TileSize;
 						sprite.spriteAnimation.set( 0.05f * distMoved, diff );
 					}
 
-					Vector2 vec = new Vector2( diff[0] * -1, diff[1] * -1 );
+					Vector2 vec = new Vector2( diff[ 0 ] * -1, diff[ 1 ] * -1 );
 					vec.nor();
 					float x = vec.x;
 					float y = vec.y;
@@ -526,7 +444,7 @@ public class ActiveAbility implements IAbility, IGameObject
 				Sprite sprite = getHitSprite().copy();
 				if ( sprite.spriteAnimation != null )
 				{
-					int distMoved = ( Math.abs( diff[0] ) + Math.abs( diff[1] ) ) / Global.TileSize;
+					int distMoved = ( Math.abs( diff[ 0 ] ) + Math.abs( diff[ 1 ] ) ) / Global.TileSize;
 					sprite.spriteAnimation.set( 0.05f * distMoved, diff );
 				}
 				sprite.size = aoe * 2 + 1;
@@ -545,7 +463,7 @@ public class ActiveAbility implements IAbility, IGameObject
 			if ( screenshake > 0 )
 			{
 				// check distance for screenshake
-				float dist = Vector2.dst( epicenter.x, epicenter.y, epicenter.level.player.tile[0][0].x, epicenter.level.player.tile[0][0].y );
+				float dist = Vector2.dst( epicenter.x, epicenter.y, epicenter.level.player.tile[ 0 ][ 0 ].x, epicenter.level.player.tile[ 0 ][ 0 ].y );
 				float shakeRadius = screenshake;
 				if ( aoe != 0 && dist > aoe )
 				{
@@ -561,6 +479,15 @@ public class ActiveAbility implements IAbility, IGameObject
 		}
 
 		return finished;
+	}
+
+	// ----------------------------------------------------------------------
+	public Sprite getHitSprite()
+	{
+		if ( hitSprite != null ) { return hitSprite; }
+		Item wep = caster.getInventory().getEquip( EquipmentSlot.WEAPON );
+		if ( wep != null ) { return wep.getWeaponHitEffect(); }
+		return caster.defaultHitEffect;
 	}
 
 	// ----------------------------------------------------------------------
@@ -663,23 +590,10 @@ public class ActiveAbility implements IAbility, IGameObject
 	}
 
 	// ----------------------------------------------------------------------
-	public static ActiveAbility load( String name )
+	@Override
+	public String getDescription()
 	{
-		ActiveAbility ab = new ActiveAbility();
-
-		ab.internalLoad( name );
-
-		return ab;
-	}
-
-	// ----------------------------------------------------------------------
-	public static ActiveAbility load( Element xml )
-	{
-		ActiveAbility ab = new ActiveAbility();
-
-		ab.internalLoad( xml );
-
-		return ab;
+		return description;
 	}
 
 	// ----------------------------------------------------------------------
@@ -691,9 +605,19 @@ public class ActiveAbility implements IAbility, IGameObject
 
 	// ----------------------------------------------------------------------
 	@Override
-	public String getDescription()
+	public void onTurn()
 	{
-		return description;
+		cooldownAccumulator--;
+		if ( cooldownAccumulator < 0 )
+		{
+			cooldownAccumulator = 0;
+		}
+	}
+
+	@Override
+	public int getCooldown()
+	{
+		return cooldownAccumulator;
 	}
 
 	@Override
@@ -702,9 +626,74 @@ public class ActiveAbility implements IAbility, IGameObject
 		cooldownAccumulator = val;
 	}
 
+	// ----------------------------------------------------------------------
 	@Override
-	public int getCooldown()
+	public Table createTable( Skin skin, Entity entity )
 	{
-		return cooldownAccumulator;
+		Table table = new Table();
+
+		table.add( new Label( name, skin, "title" ) ).expandX().left();
+		table.row();
+
+		Label descLabel = new Label( description, skin );
+		descLabel.setWrap( true );
+		table.add( descLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
+		table.row();
+
+		table.add( new Label( "Range: " + getRange(), skin ) ).expandX().left();
+		table.row();
+
+		for ( AbstractCostType cost : costTypes )
+		{
+			String string = cost.toString( this );
+			Label label = new Label( string, skin );
+			label.setWrap( true );
+
+			table.add( label ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
+			table.row();
+		}
+
+		table.add( new Label( "", skin ) );
+		table.row();
+
+		for ( AbstractEffectType effect : effectTypes )
+		{
+			String string = effect.toString( this );
+			Label label = new Label( string, skin );
+			label.setWrap( true );
+
+			table.add( label ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) ).padBottom( 5 );
+			table.row();
+		}
+
+		if ( !hasValidTargets )
+		{
+			table.add( new Label( "[RED]No valid targets", skin ) ).expandX().left();
+			table.row();
+		}
+
+		if ( cooldownAccumulator > 0 )
+		{
+			table.add( new Label( "[RED]On cooldown", skin ) ).expandX().left();
+			table.row();
+		}
+
+		return table;
+	}
+
+	// ----------------------------------------------------------------------
+	public int getRange()
+	{
+		if ( range > 0 ) { return range; }
+		Item item = caster.getInventory().getEquip( EquipmentSlot.WEAPON );
+		if ( item != null ) { return item.getRange( caster ); }
+		return 1;
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public Sprite getIcon()
+	{
+		return Icon;
 	}
 }

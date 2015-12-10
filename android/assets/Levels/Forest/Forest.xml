@@ -5,38 +5,38 @@
 		<Blue>0.6</Blue>
 		<Alpha>1</Alpha>
 	</Ambient>
-	
+
 	<Sound>
 	    <BGM>Heroic Age</BGM>
 	    <Ambient>
 
 	    </Ambient>
 	</Sound>
-	
+
 	<RoomGenerators>
 	    <CellularAutomata><Weight>3</Weight></CellularAutomata>
 	    <Starburst><Weight>1</Weight></Starburst>
 	</RoomGenerators>
-	
+
 	<CorridorStyle>
 	    <PathStyle>Wandering</PathStyle>
 	    <Width>1</Width>
-	    
+
 	     <CentralConstant>
 			<TileData>
 				<Passable>true</Passable>
 				<Opaque>false</Opaque>
 				<Sprite>
-					<Name>dc-dngn/floor/dirt0</Name>
+                    <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_1</Name>
 				</Sprite>
 			</TileData>
 	    </CentralConstant>
 	</CorridorStyle>
-	
+
 	<Preprocessor>
 	    <Random></Random>
 	</Preprocessor>
-	
+
 	<Factions>
 		<Major>
 		    <Goblin>1</Goblin>
@@ -47,28 +47,28 @@
 	</Factions>
 
 	<Symbols>
-	
+
 		<Symbol>
 			<Char>.</Char>
 			<TileData>
 				<Opaque>false</Opaque>
 				<Passable>true</Passable>
 				<Sprite>
-					<Name>dc-dngn/floor/grass/grass0</Name>
+                    <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
 				</Sprite>
 			</TileData>
 		</Symbol>
-		
+
 		<Symbol>
 			<Char>#</Char>
 			<TileData>
 				<Opaque>true</Opaque>
 				<Passable>false</Passable>
 				<Sprite>
-					<Name>dc-dngn/floor/grass/grass0</Name>
+                    <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
 				</Sprite>
 				<Sprite>
-					<Name>dc-dngn/wall/tree1_yellow</Name>
+                    <Name>Oryx/uf_split/uf_map/uf_map_131</Name>
 					<Colour>
 						<Red>0.6</Red>
 						<Green>1</Green>
@@ -81,18 +81,18 @@
 				</AmbientShadow>
 			</TileData>
 		</Symbol>
-		
+
 		<Symbol>
 			<Char>w</Char>
 			<TileData>
 				<Opaque>true</Opaque>
 				<Passable>false</Passable>
 				<Sprite>
-					<Name>dc-dngn/wall/stone_brick1</Name>
+                    <Name>Oryx/uf_split/uf_terrain/wall_stone_7</Name>
 				</Sprite>
 			</TileData>
 		</Symbol>
-		
+
 		<Symbol>
 			<Char>,</Char>
 			<TileData>
@@ -100,31 +100,31 @@
 				<Passable>true</Passable>
 				<CanFeature>false</CanFeature>
 				<Sprite>
-					<Name>dc-dngn/floor/marble_floor1</Name>
+                    <Name>Oryx/uf_split/uf_terrain/floor_crusted_grey_1</Name>
 				</Sprite>
 			</TileData>
 		</Symbol>
-		
+
 		<Symbol Extends=",">
 			<Char>+</Char>
 			<EnvironmentData>
 				<Type>Door</Type>
 			</EnvironmentData>
 		</Symbol>
-		
+
 	</Symbols>
-	
+
 	<Required>
 		<PlayerSpawn>
 			<Faction>none</Faction>
-		
+
 			<Symbols>
 				<Symbol Extends=".">
 					<Char>S</Char>
 					<MetaValue>PlayerSpawn</MetaValue>
 				</Symbol>
 			</Symbols>
-			
+
 			<Rows>
 				<Row>#####</Row>
 				<Row>##.##</Row>
@@ -132,21 +132,21 @@
 				<Row>#..##</Row>
 				<Row>.....</Row>
 			</Rows>
-			
+
 		</PlayerSpawn>
-	
+
 		<Sewer Min="4" Max="4">
 			<Symbols>
-			
+
 				<Symbol Extends=",">
 					<Char>v</Char>
 					<EnvironmentData>
 						<Type>Transition</Type>
 						<Destination>Sewer</Destination>
-						
+
 						<ExitRoom>
 						    <Faction>none</Faction>
-						    
+
 							<Symbols>
 								<Symbol Extends=".">
 									<Char>^</Char>
@@ -156,7 +156,7 @@
 									</EnvironmentData>
 								</Symbol>
 							</Symbols>
-						
+
 							<Rows>
 								<Row>#####</Row>
 								<Row>#...#</Row>
@@ -168,26 +168,26 @@
 					</EnvironmentData>
 				</Symbol>
 			</Symbols>
-				
+
 			<Rows>Levels/Forest/village</Rows>
 
 		</Sewer>
-		
+
 		<Transition Min="0" Max="3">
-		    
+
 		    <Faction>none</Faction>
-		    
+
 			<Symbols>
-			
+
 				<Symbol Extends=",">
 					<Char>v</Char>
 					<EnvironmentData>
 						<Type>Transition</Type>
 						<Destination>Forest</Destination>
-						
+
 						<ExitRoom>
 						    <Faction>none</Faction>
-						    
+
 							<Symbols>
 								<Symbol Extends=".">
 									<Char>^</Char>
@@ -197,7 +197,7 @@
 									</EnvironmentData>
 								</Symbol>
 							</Symbols>
-						
+
 							<Rows>
 								<Row>#####</Row>
 								<Row>##.##</Row>
@@ -209,7 +209,7 @@
 					</EnvironmentData>
 				</Symbol>
 			</Symbols>
-				
+
 			<Rows>
 				<Row>#####</Row>
 				<Row>##v##</Row>
@@ -218,10 +218,10 @@
 			</Rows>
 
 		</Transition>
-		
+
 		<!-- BossRoom>
 			<Symbols>
-				
+
 				<Symbol>
 					<Char>A</Char>
 					<TileData>
@@ -235,7 +235,7 @@
 						</Sprite>
 					</TileData>
 				</Symbol>
-				
+
 				<Symbol>
 					<Char>P</Char>
 					<TileData>
@@ -249,31 +249,31 @@
 						</Sprite>
 					</TileData>
 				</Symbol>
-				
+
 				<Symbol Extends=",">
 					<Char>F</Char>
 					<EntityData>Enemies/Forest/female_wrath_moth</EntityData>
 				</Symbol>
-				
+
 				<Symbol Extends=",">
 					<Char>M</Char>
 					<EntityData>Enemies/Forest/male_wrath_moth</EntityData>
 				</Symbol>
-				
+
 			</Symbols>
-		
+
 			<Rows>Levels/Forest/boss</Rows>
 		</BossRoom -->
-		
+
 		<BossRoom Condition="Boss">
-		    
+
 		    <Symbols>
 		        <Symbol Extends=".">
 		            <Char>B</Char>
 		            <EntityData>Boss</EntityData>
 		        </Symbol>
 		    </Symbols>
-		    
+
 		    <Rows>
 		        <Row>................................</Row>
 		        <Row>................................</Row>
@@ -296,15 +296,15 @@
 		        <Row>................................</Row>
 		    </Rows>
 		</BossRoom>
-		
+
 	</Required>
-	
+
 	<Optional>
-	
+
 		<Hut>
 			<Rows>Levels/Forest/hut</Rows>
 		</Hut>
-		
+
 	</Optional>
-	
+
 </Level>
