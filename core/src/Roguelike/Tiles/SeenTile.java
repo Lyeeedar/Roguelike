@@ -24,7 +24,6 @@ public class SeenTile
 	public SeenHistoryItem itemHistory;
 
 	public Array<SeenHistoryItem> orbHistory = new Array<SeenHistoryItem>( false, 1, SeenHistoryItem.class );
-	public SeenHistoryItem essenceHistory;
 
 	public GameTile gameTile;
 	public Color light = new Color( 1 );
@@ -45,23 +44,23 @@ public class SeenTile
 			tileHistory.add( Global.SeenHistoryItemPool.obtain().set( tile.tileData.sprites[i] ) );
 		}
 
-		if ( tile.tileData.raisedSprite != null )
+		if ( tile.tileData.tilingSprite != null )
 		{
-			if ( nextTile != null && nextTile.tileData.raisedSprite != null && nextTile.tileData.raisedSprite.name.equals( tile.tileData.raisedSprite.name ) )
+			if ( nextTile != null && nextTile.tileData.tilingSprite != null && nextTile.tileData.tilingSprite.name.equals( tile.tileData.tilingSprite.name ) )
 			{
-				overhangHistory = Global.SeenHistoryItemPool.obtain().set( tile.tileData.raisedSprite.topSprite );
+				overhangHistory = Global.SeenHistoryItemPool.obtain().set( tile.tileData.tilingSprite.topSprite );
 			}
 			else
 			{
-				tileHistory.add( Global.SeenHistoryItemPool.obtain().set( tile.tileData.raisedSprite.frontSprite ) );
+				tileHistory.add( Global.SeenHistoryItemPool.obtain().set( tile.tileData.tilingSprite.frontSprite ) );
 			}
 
-			if ( tile.tileData.raisedSprite.overhangSprite != null
+			if ( tile.tileData.tilingSprite.overhangSprite != null
 					&& prevTile != null
 					&& prevTile.visible
-					&& ( prevTile.tileData.raisedSprite == null || !prevTile.tileData.raisedSprite.name.equals( tile.tileData.raisedSprite.name ) ) )
+					&& ( prevTile.tileData.tilingSprite == null || !prevTile.tileData.tilingSprite.name.equals( tile.tileData.tilingSprite.name ) ) )
 			{
-				prevSeenTile.overhangHistory = Global.SeenHistoryItemPool.obtain().set( tile.tileData.raisedSprite.overhangSprite );
+				prevSeenTile.overhangHistory = Global.SeenHistoryItemPool.obtain().set( tile.tileData.tilingSprite.overhangSprite );
 			}
 		}
 
@@ -100,7 +99,7 @@ public class SeenTile
 		// Store environment history
 		if ( tile.environmentEntity != null
 				&& tile.environmentEntity.tile[0][0] == tile
-				&& ( tile.environmentEntity.sprite != null || tile.environmentEntity.raisedSprite != null ) )
+				&& ( tile.environmentEntity.sprite != null || tile.environmentEntity.tilingSprite != null ) )
 		{
 			if ( environmentHistory == null )
 			{
@@ -109,17 +108,17 @@ public class SeenTile
 
 			Sprite sprite = tile.environmentEntity.sprite;
 
-			if ( tile.environmentEntity.raisedSprite != null )
+			if ( tile.environmentEntity.tilingSprite != null )
 			{
 				if ( nextTile != null
-						&& nextTile.tileData.raisedSprite != null
-						&& nextTile.tileData.raisedSprite.name.equals( tile.environmentEntity.raisedSprite.name ) )
+						&& nextTile.tileData.tilingSprite != null
+						&& nextTile.tileData.tilingSprite.name.equals( tile.environmentEntity.tilingSprite.name ) )
 				{
-					sprite = tile.environmentEntity.raisedSprite.topSprite;
+					sprite = tile.environmentEntity.tilingSprite.topSprite;
 				}
 				else
 				{
-					sprite = tile.environmentEntity.raisedSprite.frontSprite;
+					sprite = tile.environmentEntity.tilingSprite.frontSprite;
 				}
 			}
 
@@ -176,10 +175,7 @@ public class SeenTile
 			itemHistory.set( AssetManager.loadSprite( "bag" ) );
 		}
 
-		for ( SeenHistoryItem item : orbHistory )
-		{
-			Global.SeenHistoryItemPool.free( item );
-		}
+		Global.SeenHistoryItemPool.freeAll( orbHistory );
 		orbHistory.clear();
 
 		if ( tile.orbs.size > 0 )

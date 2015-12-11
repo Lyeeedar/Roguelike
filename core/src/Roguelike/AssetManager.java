@@ -125,21 +125,28 @@ public class AssetManager
 			return null;
 		}
 
+		Pixmap pixmap = new Pixmap( file );
+
+		return packPixmap(path, pixmap);
+	}
+
+	public static TextureRegion packPixmap( String key, Pixmap pixmap )
+	{
 		if ( packer == null )
 		{
 			setupPacker();
 		}
 
-		Pixmap pixmap = new Pixmap( file );
-		packer.pack( path, pixmap );
+		packer.pack( key, pixmap );
 		packer.updateTextureAtlas( atlas, TextureFilter.Nearest, TextureFilter.MipMapNearestNearest, true );
 		pixmap.dispose();
 
-		TextureRegion region = atlas.findRegion( path );
-		loadedTextureRegions.put( path, region );
+		TextureRegion region = atlas.findRegion( key );
+		loadedTextureRegions.put( key, region );
 
 		return region;
 	}
+
 
 	private static HashMap<String, Texture> loadedTextures = new HashMap<String, Texture>();
 
@@ -281,6 +288,57 @@ public class AssetManager
 		}
 
 		Sprite sprite = loadSprite( xml.get( "Name" ), xml.getFloat( "UpdateRate", 0 ), colour, AnimationMode.valueOf( xml.get( "AnimationMode", "Texture" ).toUpperCase() ), sound, xml.getBoolean( "DrawActualSize", false ) );
+
+		Element animationElement = xml.getChildByName( "Animation" );
+		if ( animationElement != null )
+		{
+			sprite.spriteAnimation = AbstractSpriteAnimation.load( animationElement.getChild( 0 ) );
+		}
+
+		return sprite;
+	}
+
+	public static Sprite loadSprite( Element xml, TextureRegion texture )
+	{
+		Element colourElement = xml.getChildByName( "Colour" );
+		Color colour = Color.WHITE;
+		if ( colourElement != null )
+		{
+			colour = new Color();
+			colour.a = 1;
+
+			String rgb = colourElement.get( "RGB", null );
+			if ( rgb != null )
+			{
+				String[] cols = rgb.split( "," );
+				colour.r = Float.parseFloat( cols[0] ) / 255.0f;
+				colour.g = Float.parseFloat( cols[1] ) / 255.0f;
+				colour.b = Float.parseFloat( cols[2] ) / 255.0f;
+			}
+
+			colour.r = colourElement.getFloat( "Red", colour.r );
+			colour.g = colourElement.getFloat( "Green", colour.g );
+			colour.b = colourElement.getFloat( "Blue", colour.b );
+			colour.a = colourElement.getFloat( "Alpha", colour.a );
+		}
+
+		Element soundElement = xml.getChildByName( "Sound" );
+		SoundInstance sound = null;
+		if ( soundElement != null )
+		{
+			sound = SoundInstance.load( soundElement );
+		}
+
+		Array<TextureRegion> textures = new Array<TextureRegion>( false, 1, TextureRegion.class );
+		textures.add( texture );
+
+		Sprite sprite = new Sprite( xml.get( "Name" ),
+									xml.getFloat( "UpdateRate", 0 ),
+									textures,
+									colour,
+									AnimationMode.valueOf( xml.get( "AnimationMode", "Texture" ).toUpperCase() ),
+									sound,
+									xml.getBoolean( "DrawActualSize", false ) );
 
 		Element animationElement = xml.getChildByName( "Animation" );
 		if ( animationElement != null )

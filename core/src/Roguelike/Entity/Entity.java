@@ -11,7 +11,7 @@ import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
-import Roguelike.Sprite.RaisedSprite;
+import Roguelike.Sprite.TilingSprite;
 import Roguelike.Sprite.Sprite;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
@@ -61,16 +61,18 @@ public abstract class Entity
 			sprite.size = size;
 		}
 
-		Element raisedSpriteElement = xml.getChildByName( "RaisedSprite" );
+		Element raisedSpriteElement = xml.getChildByName( "TilingSprite" );
 		if ( raisedSpriteElement != null )
 		{
-			raisedSprite = RaisedSprite.load( raisedSpriteElement );
+			tilingSprite = TilingSprite.load( raisedSpriteElement );
 		}
 
-		if ( raisedSprite != null )
+		if ( tilingSprite != null )
 		{
-			raisedSprite.frontSprite.size = size;
-			raisedSprite.topSprite.size = size;
+			for (Sprite sprite : tilingSprite.sprites)
+			{
+				sprite.size = size;
+			}
 		}
 
 		Element lightElement = xml.getChildByName( "Light" );
@@ -370,7 +372,7 @@ public abstract class Entity
 
 	// ----------------------------------------------------------------------
 	public Sprite sprite;
-	public RaisedSprite raisedSprite;
+	public TilingSprite tilingSprite;
 	public Light light;
 
 	// ----------------------------------------------------------------------

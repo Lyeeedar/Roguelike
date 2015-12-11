@@ -21,17 +21,17 @@ public class ImageUtils
 		// Get size of image
 		int height = grid[0].length * tileSize;
 		int width = grid.length * tileSize;
-		
+
 		// Create resources
 		Pixmap pixmap = new Pixmap(width, height, Format.RGBA4444);
-		
+
 		// do render
 		for (int x = 0; x < grid.length; x++)
 		{
 			for (int y = 0; y < grid[0].length; y++)
 			{
 				Symbol s = grid[x][y];
-				
+
 				if (s.character == '#')
 				{
 					pixmap.setColor(Color.MAROON);
@@ -45,44 +45,44 @@ public class ImageUtils
 					pixmap.setColor(Color.BLUE);
 				}
 				pixmap.fillRectangle(x*tileSize, y*tileSize, tileSize, tileSize);
-				
+
 //				if (s.hasEnvironmentEntity())
 //				{
 //					Pixmap src = TextureToPixmap(s.getEnvironmentEntity("").sprite.getCurrentTexture());
-//					pixmap.drawPixmap(src, 
+//					pixmap.drawPixmap(src,
 //							0, 0, src.getWidth(), src.getHeight(),
 //							x*tileSize, y*tileSize, tileSize, tileSize);
 //					src.dispose();
 //				}
-//				
+//
 //				if (s.hasGameEntity())
 //				{
 //					Pixmap src = TextureToPixmap(s.getGameEntity().sprite.getCurrentTexture());
-//					pixmap.drawPixmap(src, 
+//					pixmap.drawPixmap(src,
 //							0, 0, src.getWidth(), src.getHeight(),
 //							x*tileSize, y*tileSize, tileSize, tileSize);
 //					src.dispose();
 //				}
 			}
 		}
-		
+
 		// Save texture
 		try
 		{
 			BufferedImage bi = pixmapToImage(pixmap);
 			File outputfile = new File(filename);
 			ImageIO.write(bi, "png", outputfile);
-			
-		} 
-		catch (Exception e) 
-		{ 
-			e.printStackTrace(); 
+
 		}
-		
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
 		// dispose of resources
-		pixmap.dispose();	
+		pixmap.dispose();
 	}
-	
+
 	public static BufferedImage pixmapToImage(Pixmap pm)
 	{
 		BufferedImage image = new BufferedImage(pm.getWidth(), pm.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -92,14 +92,60 @@ public class ImageUtils
 			{
 				Color c = new Color();
 				Color.rgba8888ToColor(c, pm.getPixel(x, y));
-				
+
 				java.awt.Color cc = new java.awt.Color(c.r, c.g, c.b, c.a);
-				
+
 				image.setRGB(x, y, cc.getRGB());
 			}
 		}
-		
+
 		return image;
 	}
-	
+
+	public static Pixmap textureToPixmap(Texture texture)
+	{
+		if (!texture.getTextureData().isPrepared())
+		{
+			texture.getTextureData().prepare();
+		}
+
+		Pixmap pixmap = texture.getTextureData().consumePixmap();
+
+		return pixmap;
+	}
+
+	public static Pixmap maskPixmap( Texture image, Texture mask )
+	{
+		return maskPixmap( textureToPixmap( image ), textureToPixmap( mask ) );
+	}
+
+	public static Pixmap maskPixmap( Pixmap image, Pixmap mask )
+	{
+		Pixmap pixmap = new Pixmap( image.getWidth(), image.getHeight(), image.getFormat() );
+
+		pixmap.drawPixmap( mask, 0, 0, mask.getWidth(), mask.getHeight(), 0, 0, image.getWidth(), image.getHeight() );
+
+		Color cb = new Color();
+		Color ca = new Color();
+
+		for (int x = 0; x < image.getWidth(); x++)
+		{
+			for (int y = 0; y < image.getHeight(); y++)
+			{
+				Color.rgba8888ToColor(ca, image.getPixel(x, y));
+
+				if (ca.a < 1.0f)
+				{
+					Color.rgba8888ToColor(cb, pixmap.getPixel(x, y));
+					ca.mul(ca.a, ca.a, ca.a, 1.0f);
+					cb.mul(cb.a, cb.a, cb.a, 1.0f);
+					ca.add(cb);
+				}
+
+				image.drawPixel(x, y, Color.rgba8888(ca));
+			}
+		}
+
+		return pixmap;
+	}
 }

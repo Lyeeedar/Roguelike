@@ -16,7 +16,7 @@ import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Levels.Level;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.LoadingScreen;
-import Roguelike.Sprite.RaisedSprite;
+import Roguelike.Sprite.TilingSprite;
 import Roguelike.Sprite.Sprite;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
@@ -210,12 +210,12 @@ public class EnvironmentEntity extends Entity
 		Sprite doorVClosed = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_v_closed", true );
 		Sprite doorVOpen = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_v_open", true );
 
-		final RaisedSprite closedSprite = new RaisedSprite();
+		final TilingSprite closedSprite = new TilingSprite();
 		closedSprite.frontSprite = doorHClosed;
 		closedSprite.topSprite = doorVClosed;
 		closedSprite.name = "Wall";
 
-		final RaisedSprite openSprite = new RaisedSprite();
+		final TilingSprite openSprite = new TilingSprite();
 		openSprite.frontSprite = doorHOpen;
 		openSprite.topSprite = doorVOpen;
 		openSprite.name = "Wall";
@@ -249,13 +249,13 @@ public class EnvironmentEntity extends Entity
 				if ( closed )
 				{
 					entity.passableBy.clear();
-					entity.raisedSprite = closedSprite;
+					entity.tilingSprite = closedSprite;
 					entity.actions.get( 0 ).name = "Open";
 				}
 				else
 				{
 					entity.passableBy.setAll( Passability.class );
-					entity.raisedSprite = openSprite;
+					entity.tilingSprite = openSprite;
 					entity.actions.get( 0 ).name = "Close";
 				}
 			}
@@ -266,7 +266,7 @@ public class EnvironmentEntity extends Entity
 		entity.data.put( "State", "Closed" );
 		entity.passableBy = Passability.parse( "false" );
 		entity.passableBy.clearBit( Passability.LIGHT );
-		entity.raisedSprite = closedSprite;
+		entity.tilingSprite = closedSprite;
 		entity.actions.add( action );
 		entity.onTurnAction = onTurn;
 		entity.UID = "EnvironmentEntity Door: ID " + entity.hashCode();

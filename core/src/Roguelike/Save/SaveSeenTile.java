@@ -16,7 +16,7 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 	public SeenHistoryItem environmentHistory;
 	public SeenHistoryItem entityHistory;
 	public SeenHistoryItem itemHistory;
-	public SeenHistoryItem essenceHistory;
+	public Array<SeenHistoryItem> orbHistory = new Array<SeenHistoryItem>(  );
 
 	public Color light = new Color( 1 );
 
@@ -77,14 +77,12 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		}
 
 		// essence history
-		if ( essenceHistory != null )
+		Global.SeenHistoryItemPool.freeAll( orbHistory );
+		orbHistory.clear();
+
+		for (SeenHistoryItem hist : obj.orbHistory)
 		{
-			Global.SeenHistoryItemPool.free( essenceHistory );
-			essenceHistory = null;
-		}
-		if ( obj.essenceHistory != null )
-		{
-			essenceHistory = obj.essenceHistory.copy();
+			orbHistory.add( hist.copy() );
 		}
 	}
 
@@ -145,14 +143,12 @@ public final class SaveSeenTile extends SaveableObject<SeenTile>
 		}
 
 		// essence history
-		if ( tile.essenceHistory != null )
+		Global.SeenHistoryItemPool.freeAll( tile.orbHistory );
+		tile.orbHistory.clear();
+
+		for ( SeenHistoryItem hist : orbHistory )
 		{
-			Global.SeenHistoryItemPool.free( tile.essenceHistory );
-			tile.essenceHistory = null;
-		}
-		if ( essenceHistory != null )
-		{
-			tile.essenceHistory = essenceHistory.copy();
+			tile.orbHistory.add( hist.copy() );
 		}
 
 		return tile;

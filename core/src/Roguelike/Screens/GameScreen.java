@@ -25,6 +25,7 @@ import Roguelike.Tiles.SeenTile;
 import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 import Roguelike.UI.*;
 import Roguelike.UI.Tooltip;
+import Roguelike.Util.EnumBitflag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -233,6 +234,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private int fps;
 	private float storedFrametime;
 	private float fpsAccumulator;
+
+	private final EnumBitflag<Direction> directionBitflag = new EnumBitflag<Direction>( );
 
 	// endregion Data
 	// ####################################################################//
@@ -487,34 +490,27 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					}
 
 					GameTile nextTile = Global.CurrentLevel.getGameTile( x, y - 1 );
-					if ( nextTile != null && nextTile.tileData.raisedSprite != null )
+					if ( nextTile != null && nextTile.tileData.tilingSprite != null )
 					{
 						GameTile ogtile = nextTile;
 						GameTile oprevTile = gtile;
 
-						if ( ogtile.tileData.raisedSprite.overhangSprite != null
+						if ( ogtile.tileData.tilingSprite.overhangSprite != null
 							 && oprevTile != null
 							 && oprevTile.visible
-							 && ( oprevTile.tileData.raisedSprite == null || !oprevTile.tileData.raisedSprite.name.equals( gtile.tileData.raisedSprite.name ) ) )
+							 && ( oprevTile.tileData.tilingSprite == null || !oprevTile.tileData.tilingSprite.name.equals( gtile.tileData.tilingSprite.name ) ) )
 						{
-							queueSprite( ogtile.tileData.raisedSprite.overhangSprite, oprevTile.light, x * Global.TileSize + offsetx, y
+							queueSprite( ogtile.tileData.tilingSprite.overhangSprite, oprevTile.light, x * Global.TileSize + offsetx, y
 																																	  * Global.TileSize
 																																	  + offsety, Global.TileSize, Global.TileSize, RenderLayer.OVERHANG );
 						}
 					}
 
-					if ( gtile.tileData.raisedSprite != null )
+					if ( gtile.tileData.tilingSprite != null )
 					{
-						if ( nextTile != null
-							 && nextTile.tileData.raisedSprite != null
-							 && nextTile.tileData.raisedSprite.name.equals( gtile.tileData.raisedSprite.name ) )
-						{
-							queueSprite( gtile.tileData.raisedSprite.topSprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.OVERHANG );
-						}
-						else
-						{
-							queueSprite( gtile.tileData.raisedSprite.frontSprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.GROUNDTILE );
-						}
+						buildTilingBitflag(x, y, gtile.tileData.tilingSprite.name);
+						Sprite sprite = gtile.tileData.tilingSprite.getSprite( directionBitflag );
+						queueSprite( sprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.GROUNDTILE );
 					}
 
 					if ( gtile.hasFields )
@@ -548,18 +544,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 						Sprite sprite = entity.sprite;
 
-						if ( entity.raisedSprite != null )
+						if ( entity.tilingSprite != null )
 						{
-							if ( nextTile != null
-								 && nextTile.tileData.raisedSprite != null
-								 && nextTile.tileData.raisedSprite.name.equals( entity.raisedSprite.name ) )
-							{
-								sprite = entity.raisedSprite.topSprite;
-							}
-							else
-							{
-								sprite = entity.raisedSprite.frontSprite;
-							}
+							buildTilingBitflag(x, y, entity.tilingSprite.name);
+							sprite = entity.tilingSprite.getSprite( directionBitflag );
 						}
 
 						if ( entity.location != Direction.CENTER )
@@ -610,18 +598,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 						Sprite sprite = entity.sprite;
 
-						if ( entity.raisedSprite != null )
+						if ( entity.tilingSprite != null )
 						{
-							if ( nextTile != null
-								 && nextTile.tileData.raisedSprite != null
-								 && nextTile.tileData.raisedSprite.name.equals( entity.raisedSprite.name ) )
-							{
-								sprite = entity.raisedSprite.topSprite;
-							}
-							else
-							{
-								sprite = entity.raisedSprite.frontSprite;
-							}
+							buildTilingBitflag(x, y, gtile.tileData.tilingSprite.name);
+							sprite = gtile.tileData.tilingSprite.getSprite( directionBitflag );
 						}
 
 						if ( entity.location != Direction.CENTER )
@@ -718,6 +698,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{
 					temp.set( stile.light );
 					temp.mul( temp.a );
+					temp.mul( 0.7f );
 					if ( Global.CurrentLevel.affectedByDayNight )
 					{
 						temp.mul( Global.DayNightFactor );
@@ -788,10 +769,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 					}
 
-					if ( stile.essenceHistory != null )
+					for (SeenHistoryItem hist : stile.orbHistory)
 					{
-						SeenHistoryItem hist = stile.essenceHistory;
-
 						int cx = x * Global.TileSize + offsetx;
 						int cy = y * Global.TileSize + offsety;
 
@@ -923,6 +902,25 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		batch.setColor( Color.WHITE );
 		batch.setShader( null );
+	}
+
+	// ----------------------------------------------------------------------
+	private void buildTilingBitflag(int x, int y, String name)
+	{
+		// Build bitflag of surrounding tiles
+		directionBitflag.clear();
+		for (Direction dir : Direction.values())
+		{
+			if (dir.isCardinal())
+			{
+				GameTile otile = Global.CurrentLevel.getGameTile( x + dir.getX(), y + dir.getY() );
+
+				if (otile != null || otile.tileData.tilingSprite == null || !otile.tileData.tilingSprite.name.equals( name ))
+				{
+					directionBitflag.setBit( dir );
+				}
+			}
+		}
 	}
 
 	// ----------------------------------------------------------------------

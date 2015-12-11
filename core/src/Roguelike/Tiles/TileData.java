@@ -3,7 +3,7 @@ package Roguelike.Tiles;
 import Roguelike.AssetManager;
 import Roguelike.Global.Passability;
 import Roguelike.Lights.AmbientShadow;
-import Roguelike.Sprite.RaisedSprite;
+import Roguelike.Sprite.TilingSprite;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Util.EnumBitflag;
 
@@ -14,7 +14,7 @@ public class TileData
 {
 	public Sprite[] sprites;
 	public AmbientShadow shadow;
-	public RaisedSprite raisedSprite;
+	public TilingSprite tilingSprite;
 
 	public EnumBitflag<Passability> passableBy;
 
@@ -45,10 +45,10 @@ public class TileData
 		}
 		data.sprites = sprites.toArray( Sprite.class );
 
-		Element raisedSpriteElement = xml.getChildByName( "RaisedSprite" );
+		Element raisedSpriteElement = xml.getChildByName( "TilingSprite" );
 		if ( raisedSpriteElement != null )
 		{
-			data.raisedSprite = RaisedSprite.load( raisedSpriteElement );
+			data.tilingSprite = TilingSprite.load( raisedSpriteElement );
 		}
 
 		Element ambientShadowElement = xml.getChildByName( "AmbientShadow" );
