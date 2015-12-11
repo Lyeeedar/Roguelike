@@ -492,14 +492,16 @@ public class Level
 				GameTile tile = Grid[x][y];
 				if ( tile.visible )
 				{
-					SeenTile s = SeenGrid[x][y];
-					s.seen = true;
+					tile.seen = true;
 
-					GameTile prevTile = getGameTile( x, y + 1 );
-					GameTile nextTile = getGameTile( x, y - 1 );
-					SeenTile prevSeenTile = getSeenTile( x, y + 1 );
-
-					s.set( tile, player, prevTile, nextTile, prevSeenTile );
+//					SeenTile s = SeenGrid[x][y];
+//					s.seen = true;
+//
+//					GameTile prevTile = getGameTile( x, y + 1 );
+//					GameTile nextTile = getGameTile( x, y - 1 );
+//					SeenTile prevSeenTile = getSeenTile( x, y + 1 );
+//
+//					s.set( tile, player, prevTile, nextTile, prevSeenTile );
 				}
 			}
 		}

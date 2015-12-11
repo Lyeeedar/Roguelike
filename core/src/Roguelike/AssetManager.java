@@ -347,7 +347,7 @@ public class AssetManager
 			}
 		}
 
-		Sprite sprite = new Sprite( xml.get( "Name" ),
+		Sprite sprite = new Sprite( xml.get( "Name", null ),
 									updateTime,
 									textures,
 									colour,

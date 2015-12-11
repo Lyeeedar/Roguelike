@@ -43,6 +43,13 @@ public class TilingSprite
 		sprites[7] = frontSprite;
 	}
 
+	public TilingSprite ( String name, String texture, String mask )
+	{
+		Element spriteElement = new Element( "Sprite", null );
+
+		load( name, texture, mask, spriteElement, null );
+	}
+
 	public Sprite[] sprites = new Sprite[PossibleDirections.length];
 
 	public String name;
@@ -51,11 +58,18 @@ public class TilingSprite
 
 	public void parse( Element xml )
 	{
-		name = xml.get( "Name" );
-
+		String name = xml.get( "Name" );
 		Element spriteElement = xml.getChildByName( "Sprite" );
 		String texName = spriteElement.get( "Name" );
 		String maskName = xml.get( "Mask", null );
+		Element overhangElement = xml.getChildByName( "Overhang" );
+
+		load(name, texName, maskName, spriteElement, overhangElement);
+	}
+
+	public void load( String name, String texName, String maskName, Element spriteElement, Element overhangElement )
+	{
+		this.name = name;
 
 		for ( int i = 0; i < PossibleDirections.length; i++ )
 		{
@@ -67,7 +81,6 @@ public class TilingSprite
 			sprites[i] = sprite;
 		}
 
-		Element overhangElement = xml.getChildByName( "Overhang" );
 		if ( overhangElement != null )
 		{
 			overhangSprite = AssetManager.loadSprite( overhangElement );
@@ -84,7 +97,7 @@ public class TilingSprite
 	private static TextureRegion getMaskedSprite( String baseName, String maskBaseName, Global.Direction[] directions )
 	{
 		// If this is the center or all no mask, then just return the original texture
-		if ( directions[0] == Global.Direction.CENTER || maskBaseName == null)
+		if ( directions[0] == Global.Direction.CENTER)
 		{
 			return AssetManager.loadTextureRegion( "Sprites/" + baseName + ".png" );
 		}
@@ -105,13 +118,13 @@ public class TilingSprite
 			return tex;
 		}
 
+		if (maskBaseName == null)
+		{
+			return AssetManager.loadTextureRegion( "Sprites/" + baseName + ".png" );
+		}
+
 		// We dont have the texture, so generate it
 		Texture maskTex = AssetManager.loadTexture( "Sprites/" + maskBaseName + "_" + mask + ".png" );
-
-		//if (maskTex == null)
-		//{
-		//	return AssetManager.loadTextureRegion( "Sprites/" + baseName + ".png" );
-		//}
 
 		Texture baseTex = AssetManager.loadTexture( "Sprites/" + baseName + ".png" );
 

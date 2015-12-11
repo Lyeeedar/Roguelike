@@ -19,6 +19,7 @@ import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Sprite.SpriteEffect;
+import Roguelike.Sprite.TilingSprite;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Tiles.SeenTile;
@@ -99,6 +100,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		border = AssetManager.loadSprite( "GUI/frame" );
 		speechBubbleArrow = AssetManager.loadTextureRegion( "Sprites/GUI/SpeechBubbleArrow.png" );
 		speechBubbleBackground = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/SpeechBubble.png" ), 10, 10, 10, 10 );
+		fogSprite = new TilingSprite( "fog", "Masks/fog", null );
 
 		gestureDetector = new GestureDetector( this );
 		gestureDetector.setLongPressSeconds( 0.5f );
@@ -209,6 +211,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private BitmapFont font;
 	private BitmapFont hightlightfont;
 	private float screenShakeAccumulator;
+	private TilingSprite fogSprite;
+	private static final Color seenFogCol = new Color( 0, 0, 0, 0.5f );
+	private static final Color unseenFogCol = new Color( 0, 0, 0, 1 );
 
 	// ----------------------------------------------------------------------
 	private AbilityPanel abilityPanel;
@@ -296,7 +301,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		entitiesWithSpeech.clear();
 
 		renderBackground( offsetx, offsety );
-		renderSeenTiles( offsetx, offsety, tileSize3 );
+		//renderSeenTiles( offsetx, offsety, tileSize3 );
 
 		renderVisibleTiles( offsetx, offsety, tileSize3 );
 		if ( Global.CurrentDialogue == null )
@@ -482,110 +487,110 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				GameTile gtile = Global.CurrentLevel.Grid[ x ][ y ];
 
+				for ( int i = 0; i < gtile.tileData.sprites.length; i++ )
+				{
+					queueSprite( gtile.tileData.sprites[ i ], gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.GROUNDTILE, i );
+				}
+
+				GameTile nextTile = Global.CurrentLevel.getGameTile( x, y - 1 );
+				if ( nextTile != null && nextTile.tileData.tilingSprite != null )
+				{
+					GameTile ogtile = nextTile;
+					GameTile oprevTile = gtile;
+
+					if ( ogtile.tileData.tilingSprite.overhangSprite != null
+						 && oprevTile != null
+						 && oprevTile.visible
+						 && ( oprevTile.tileData.tilingSprite == null || !oprevTile.tileData.tilingSprite.name.equals( gtile.tileData.tilingSprite.name ) ) )
+					{
+						queueSprite( ogtile.tileData.tilingSprite.overhangSprite, oprevTile.light, x * Global.TileSize + offsetx, y
+																																  * Global.TileSize
+																																  + offsety, Global.TileSize, Global.TileSize, RenderLayer.OVERHANG );
+					}
+				}
+
+				if ( gtile.tileData.tilingSprite != null )
+				{
+					buildTilingBitflag(x, y, gtile.tileData.tilingSprite.name);
+					Sprite sprite = gtile.tileData.tilingSprite.getSprite( directionBitflag );
+					queueSprite( sprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.GROUNDTILE );
+				}
+
+				if ( gtile.hasFields )
+				{
+					for ( FieldLayer layer : FieldLayer.values() )
+					{
+						Field field = gtile.fields.get( layer );
+						if ( field != null )
+						{
+							if ( field.layer == FieldLayer.GROUND )
+							{
+								queueSprite( field.sprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.GROUNDFIELD );
+							}
+							else
+							{
+								queueSprite( field.sprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.OVERHEADFIELD );
+							}
+						}
+					}
+				}
+
+				if ( gtile.environmentEntity != null && gtile.environmentEntity.tile[ 0 ][ 0 ] == gtile )
+				{
+					EnvironmentEntity entity = gtile.environmentEntity;
+
+					int cx = x * Global.TileSize + offsetx;
+					int cy = y * Global.TileSize + offsety;
+
+					int width = Global.TileSize;
+					int height = Global.TileSize;
+
+					Sprite sprite = entity.sprite;
+
+					if ( entity.tilingSprite != null )
+					{
+						buildTilingBitflag(x, y, entity.tilingSprite.name);
+						sprite = entity.tilingSprite.getSprite( directionBitflag );
+					}
+
+					if ( entity.location != Direction.CENTER )
+					{
+						if ( entity.location == Direction.EAST || entity.location == Direction.WEST )
+						{
+							cx += -entity.location.getX() * ( Global.TileSize / 2 );
+						}
+						else if ( entity.location == Direction.SOUTH )
+						{
+							cy += Global.TileSize;
+						}
+					}
+
+					if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.CONSTITUTION ) * 10 || entity.stacks.size > 0 )
+					{
+						hasStatus.add( entity );
+					}
+
+					if ( entity.overHead )
+					{
+						queueSprite( sprite, gtile.light, cx, cy, width, height, RenderLayer.OVERHEADENTITY );
+					}
+					else if ( sprite.drawActualSize )
+					{
+						queueSprite( sprite, gtile.light, cx, cy, width, height, RenderLayer.RAISEDENTITY );
+					}
+					else
+					{
+						queueSprite( sprite, gtile.light, cx, cy, width, height, RenderLayer.GROUNDENTITY );
+					}
+
+					if ( entity.tile[ 0 ][ 0 ].visible && entity.popup != null )
+					{
+						entitiesWithSpeech.add( entity );
+					}
+				}
+
 				if ( gtile.visible )
 				{
-					for ( int i = 0; i < gtile.tileData.sprites.length; i++ )
-					{
-						queueSprite( gtile.tileData.sprites[ i ], gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.GROUNDTILE, i );
-					}
-
-					GameTile nextTile = Global.CurrentLevel.getGameTile( x, y - 1 );
-					if ( nextTile != null && nextTile.tileData.tilingSprite != null )
-					{
-						GameTile ogtile = nextTile;
-						GameTile oprevTile = gtile;
-
-						if ( ogtile.tileData.tilingSprite.overhangSprite != null
-							 && oprevTile != null
-							 && oprevTile.visible
-							 && ( oprevTile.tileData.tilingSprite == null || !oprevTile.tileData.tilingSprite.name.equals( gtile.tileData.tilingSprite.name ) ) )
-						{
-							queueSprite( ogtile.tileData.tilingSprite.overhangSprite, oprevTile.light, x * Global.TileSize + offsetx, y
-																																	  * Global.TileSize
-																																	  + offsety, Global.TileSize, Global.TileSize, RenderLayer.OVERHANG );
-						}
-					}
-
-					if ( gtile.tileData.tilingSprite != null )
-					{
-						buildTilingBitflag(x, y, gtile.tileData.tilingSprite.name);
-						Sprite sprite = gtile.tileData.tilingSprite.getSprite( directionBitflag );
-						queueSprite( sprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.GROUNDTILE );
-					}
-
-					if ( gtile.hasFields )
-					{
-						for ( FieldLayer layer : FieldLayer.values() )
-						{
-							Field field = gtile.fields.get( layer );
-							if ( field != null )
-							{
-								if ( field.layer == FieldLayer.GROUND )
-								{
-									queueSprite( field.sprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.GROUNDFIELD );
-								}
-								else
-								{
-									queueSprite( field.sprite, gtile.light, x * Global.TileSize + offsetx, y * Global.TileSize + offsety, Global.TileSize, Global.TileSize, RenderLayer.OVERHEADFIELD );
-								}
-							}
-						}
-					}
-
-					if ( gtile.environmentEntity != null && gtile.environmentEntity.tile[ 0 ][ 0 ] == gtile )
-					{
-						EnvironmentEntity entity = gtile.environmentEntity;
-
-						int cx = x * Global.TileSize + offsetx;
-						int cy = y * Global.TileSize + offsety;
-
-						int width = Global.TileSize;
-						int height = Global.TileSize;
-
-						Sprite sprite = entity.sprite;
-
-						if ( entity.tilingSprite != null )
-						{
-							buildTilingBitflag(x, y, entity.tilingSprite.name);
-							sprite = entity.tilingSprite.getSprite( directionBitflag );
-						}
-
-						if ( entity.location != Direction.CENTER )
-						{
-							if ( entity.location == Direction.EAST || entity.location == Direction.WEST )
-							{
-								cx += -entity.location.getX() * ( Global.TileSize / 2 );
-							}
-							else if ( entity.location == Direction.SOUTH )
-							{
-								cy += Global.TileSize;
-							}
-						}
-
-						if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.CONSTITUTION ) * 10 || entity.stacks.size > 0 )
-						{
-							hasStatus.add( entity );
-						}
-
-						if ( entity.overHead )
-						{
-							queueSprite( sprite, gtile.light, cx, cy, width, height, RenderLayer.OVERHEADENTITY );
-						}
-						else if ( sprite.drawActualSize )
-						{
-							queueSprite( sprite, gtile.light, cx, cy, width, height, RenderLayer.RAISEDENTITY );
-						}
-						else
-						{
-							queueSprite( sprite, gtile.light, cx, cy, width, height, RenderLayer.GROUNDENTITY );
-						}
-
-						if ( entity.tile[ 0 ][ 0 ].visible && entity.popup != null )
-						{
-							entitiesWithSpeech.add( entity );
-						}
-					}
-
 					GameEntity entity = gtile.entity;
 
 					if ( entity != null && entity.tile[ 0 ][ 0 ] == gtile )
@@ -675,7 +680,26 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							}
 						}
 					}
+				}
+				else
+				{
+					// not visible, so draw fog
 
+					int cx = x * Global.TileSize + offsetx;
+					int cy = y * Global.TileSize + offsety;
+
+					buildTilingBitflag(x, y, "seen");
+					Sprite sprite = fogSprite.getSprite( directionBitflag );
+
+					queueSprite( sprite, seenFogCol, cx, cy, Global.TileSize, Global.TileSize, RenderLayer.SEENFOG );
+
+					if (!gtile.seen)
+					{
+						buildTilingBitflag(x, y, "unseen");
+						sprite = fogSprite.getSprite( directionBitflag );
+
+						queueSprite( sprite, unseenFogCol, cx, cy, Global.TileSize, Global.TileSize, RenderLayer.UNSEENFOG );
+					}
 				}
 			}
 		}
@@ -915,9 +939,36 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				GameTile otile = Global.CurrentLevel.getGameTile( x + dir.getX(), y + dir.getY() );
 
-				if (otile == null || otile.tileData.tilingSprite == null || !otile.tileData.tilingSprite.name.equals( name ))
+				if (otile == null)
 				{
-					directionBitflag.setBit( dir );
+					//directionBitflag.setBit( dir );
+				}
+				else
+				{
+					// Attempt to find match
+					boolean matchFound = false;
+
+					if (otile.tileData.tilingSprite != null && otile.tileData.tilingSprite.name.equals( name ))
+					{
+						matchFound = true;
+					}
+					else if (otile.environmentEntity != null && otile.environmentEntity.tilingSprite != null && otile.environmentEntity.tilingSprite.name.equals( name ))
+					{
+						matchFound = true;
+					}
+					else if (!otile.seen && name.equals( "unseen" ))
+					{
+						matchFound = true;
+					}
+					else if (!otile.visible && name.equals( "seen" ))
+					{
+						matchFound = true;
+					}
+
+					if (!matchFound)
+					{
+						directionBitflag.setBit( dir );
+					}
 				}
 			}
 		}
@@ -2180,7 +2231,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		EFFECT, ABILITY,
 
-		OVERHEADENTITY, OVERHEADFIELD, OVERHANG
+		OVERHEADENTITY, OVERHEADFIELD, OVERHANG,
+
+		SEENFOG, UNSEENFOG
 	}
 
 	// endregion Public Methods

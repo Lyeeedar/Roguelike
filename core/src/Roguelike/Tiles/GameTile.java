@@ -41,6 +41,7 @@ public class GameTile implements PathfindingTile
 	public FastEnumMap<OrbType, Integer> orbs = new FastEnumMap<OrbType, Integer>( OrbType.class );
 	public String metaValue;
 	public boolean visible;
+	public boolean seen;
 
 	public GameTile( int x, int y, Level level, TileData tileData )
 	{
