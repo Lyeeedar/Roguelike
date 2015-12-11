@@ -28,6 +28,21 @@ public class TilingSprite
 		{ Global.Direction.CENTER }
 	};
 
+	public TilingSprite()
+	{
+
+	}
+
+	public TilingSprite( Sprite topSprite, Sprite frontSprite )
+	{
+		for (int i = 0; i < sprites.length; i++)
+		{
+			sprites[i] = topSprite;
+		}
+
+		sprites[7] = frontSprite;
+	}
+
 	public Sprite[] sprites = new Sprite[PossibleDirections.length];
 
 	public String name;
@@ -68,9 +83,10 @@ public class TilingSprite
 
 	private static TextureRegion getMaskedSprite( String baseName, String maskBaseName, Global.Direction[] directions )
 	{
-		if ( directions[0] == Global.Direction.CENTER)
+		// If this is the center or all no mask, then just return the original texture
+		if ( directions[0] == Global.Direction.CENTER || maskBaseName == null)
 		{
-			return AssetManager.loadTextureRegion( baseName );
+			return AssetManager.loadTextureRegion( "Sprites/" + baseName + ".png" );
 		}
 
 		String mask = "";
@@ -81,7 +97,7 @@ public class TilingSprite
 
 		String maskedName = baseName + "_" + mask;
 
-		TextureRegion tex = AssetManager.loadTextureRegion( maskedName );
+		TextureRegion tex = AssetManager.loadTextureRegion( "Sprites/" + maskedName + ".png" );
 
 		// We have the texture, so return it
 		if (tex != null)
@@ -90,15 +106,21 @@ public class TilingSprite
 		}
 
 		// We dont have the texture, so generate it
-		Texture maskTex = AssetManager.loadTexture( maskBaseName + "_" + mask );
-		Texture baseTex = AssetManager.loadTexture( baseName );
+		Texture maskTex = AssetManager.loadTexture( "Sprites/" + maskBaseName + "_" + mask + ".png" );
+
+		//if (maskTex == null)
+		//{
+		//	return AssetManager.loadTextureRegion( "Sprites/" + baseName + ".png" );
+		//}
+
+		Texture baseTex = AssetManager.loadTexture( "Sprites/" + baseName + ".png" );
 
 		Pixmap merged = ImageUtils.maskPixmap( baseTex, maskTex );
 
-		return AssetManager.packPixmap( maskedName, merged );
+		return AssetManager.packPixmap( "Sprites/" + maskedName + ".png", merged );
 	}
 
-	public Sprite getSprite( EnumBitflag<Global.Direction> filledDirections )
+	public Sprite getSprite( EnumBitflag<Global.Direction> emptyDirections )
 	{
 		for ( int i = 0; i < PossibleDirections.length; i++ )
 		{
@@ -106,7 +128,7 @@ public class TilingSprite
 			boolean valid = true;
 			for ( Global.Direction dir : dirs)
 			{
-				if (!filledDirections.contains( dir ))
+				if (!emptyDirections.contains( dir ))
 				{
 					valid = false;
 					break;

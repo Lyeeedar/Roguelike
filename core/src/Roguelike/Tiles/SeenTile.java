@@ -46,14 +46,14 @@ public class SeenTile
 
 		if ( tile.tileData.tilingSprite != null )
 		{
-			if ( nextTile != null && nextTile.tileData.tilingSprite != null && nextTile.tileData.tilingSprite.name.equals( tile.tileData.tilingSprite.name ) )
-			{
-				overhangHistory = Global.SeenHistoryItemPool.obtain().set( tile.tileData.tilingSprite.topSprite );
-			}
-			else
-			{
-				tileHistory.add( Global.SeenHistoryItemPool.obtain().set( tile.tileData.tilingSprite.frontSprite ) );
-			}
+//			if ( nextTile != null && nextTile.tileData.tilingSprite != null && nextTile.tileData.tilingSprite.name.equals( tile.tileData.tilingSprite.name ) )
+//			{
+//				overhangHistory = Global.SeenHistoryItemPool.obtain().set( tile.tileData.tilingSprite.topSprite );
+//			}
+//			else
+//			{
+//				tileHistory.add( Global.SeenHistoryItemPool.obtain().set( tile.tileData.tilingSprite.frontSprite ) );
+//			}
 
 			if ( tile.tileData.tilingSprite.overhangSprite != null
 					&& prevTile != null
@@ -110,16 +110,16 @@ public class SeenTile
 
 			if ( tile.environmentEntity.tilingSprite != null )
 			{
-				if ( nextTile != null
-						&& nextTile.tileData.tilingSprite != null
-						&& nextTile.tileData.tilingSprite.name.equals( tile.environmentEntity.tilingSprite.name ) )
-				{
-					sprite = tile.environmentEntity.tilingSprite.topSprite;
-				}
-				else
-				{
-					sprite = tile.environmentEntity.tilingSprite.frontSprite;
-				}
+//				if ( nextTile != null
+//						&& nextTile.tileData.tilingSprite != null
+//						&& nextTile.tileData.tilingSprite.name.equals( tile.environmentEntity.tilingSprite.name ) )
+//				{
+//					sprite = tile.environmentEntity.tilingSprite.topSprite;
+//				}
+//				else
+//				{
+//					sprite = tile.environmentEntity.tilingSprite.frontSprite;
+//				}
 			}
 
 			environmentHistory.set( sprite );

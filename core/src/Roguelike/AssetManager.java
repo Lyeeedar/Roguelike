@@ -332,11 +332,26 @@ public class AssetManager
 		Array<TextureRegion> textures = new Array<TextureRegion>( false, 1, TextureRegion.class );
 		textures.add( texture );
 
+		float updateTime = xml.getFloat( "UpdateRate", 0 );
+		AnimationMode mode = AnimationMode.valueOf( xml.get( "AnimationMode", "Texture" ).toUpperCase() ) ;
+
+		if ( updateTime <= 0 )
+		{
+			if ( mode == AnimationMode.SINE )
+			{
+				updateTime = 4;
+			}
+			else
+			{
+				updateTime = 0.5f;
+			}
+		}
+
 		Sprite sprite = new Sprite( xml.get( "Name" ),
-									xml.getFloat( "UpdateRate", 0 ),
+									updateTime,
 									textures,
 									colour,
-									AnimationMode.valueOf( xml.get( "AnimationMode", "Texture" ).toUpperCase() ),
+									mode,
 									sound,
 									xml.getBoolean( "DrawActualSize", false ) );
 
@@ -345,6 +360,8 @@ public class AssetManager
 		{
 			sprite.spriteAnimation = AbstractSpriteAnimation.load( animationElement.getChild( 0 ) );
 		}
+
+
 
 		return sprite;
 	}

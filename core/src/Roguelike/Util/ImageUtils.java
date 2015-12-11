@@ -121,28 +121,26 @@ public class ImageUtils
 
 	public static Pixmap maskPixmap( Pixmap image, Pixmap mask )
 	{
-		Pixmap pixmap = new Pixmap( image.getWidth(), image.getHeight(), image.getFormat() );
+		Pixmap pixmap = new Pixmap( image.getWidth(), image.getHeight(), Format.RGBA8888 );
 
-		pixmap.drawPixmap( mask, 0, 0, mask.getWidth(), mask.getHeight(), 0, 0, image.getWidth(), image.getHeight() );
+		pixmap.setColor( 0, 0, 0, 0 );
+		pixmap.fill();
+
+		pixmap.drawPixmap( mask, 0, 0, mask.getWidth(), mask.getHeight(), 0, 0, pixmap.getWidth(), pixmap.getHeight() );
 
 		Color cb = new Color();
 		Color ca = new Color();
 
-		for (int x = 0; x < image.getWidth(); x++)
+		for (int x = 0; x < pixmap.getWidth(); x++)
 		{
-			for (int y = 0; y < image.getHeight(); y++)
+			for (int y = 0; y < pixmap.getHeight(); y++)
 			{
 				Color.rgba8888ToColor(ca, image.getPixel(x, y));
+				Color.rgba8888ToColor(cb, pixmap.getPixel(x, y));
 
-				if (ca.a < 1.0f)
-				{
-					Color.rgba8888ToColor(cb, pixmap.getPixel(x, y));
-					ca.mul(ca.a, ca.a, ca.a, 1.0f);
-					cb.mul(cb.a, cb.a, cb.a, 1.0f);
-					ca.add(cb);
-				}
+				ca.mul( cb );
 
-				image.drawPixel(x, y, Color.rgba8888(ca));
+				pixmap.drawPixel(x, y, Color.rgba8888(ca));
 			}
 		}
 

@@ -210,14 +210,10 @@ public class EnvironmentEntity extends Entity
 		Sprite doorVClosed = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_v_closed", true );
 		Sprite doorVOpen = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_v_open", true );
 
-		final TilingSprite closedSprite = new TilingSprite();
-		closedSprite.frontSprite = doorHClosed;
-		closedSprite.topSprite = doorVClosed;
+		final TilingSprite closedSprite = new TilingSprite(doorVClosed, doorHClosed);
 		closedSprite.name = "Wall";
 
-		final TilingSprite openSprite = new TilingSprite();
-		openSprite.frontSprite = doorHOpen;
-		openSprite.topSprite = doorVOpen;
+		final TilingSprite openSprite = new TilingSprite(doorVOpen, doorHOpen);
 		openSprite.name = "Wall";
 
 		ActivationAction action = new ActivationAction( "Open" )

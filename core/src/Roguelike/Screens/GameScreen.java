@@ -915,7 +915,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				GameTile otile = Global.CurrentLevel.getGameTile( x + dir.getX(), y + dir.getY() );
 
-				if (otile != null || otile.tileData.tilingSprite == null || !otile.tileData.tilingSprite.name.equals( name ))
+				if (otile == null || otile.tileData.tilingSprite == null || !otile.tileData.tilingSprite.name.equals( name ))
 				{
 					directionBitflag.setBit( dir );
 				}

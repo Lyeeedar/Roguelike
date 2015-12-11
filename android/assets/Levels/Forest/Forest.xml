@@ -26,9 +26,16 @@
 			<TileData>
 				<Passable>true</Passable>
 				<Opaque>false</Opaque>
-				<Sprite>
-                    <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_1</Name>
-				</Sprite>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                </Sprite>
+                <TilingSprite>
+                    <Name>Path</Name>
+                    <Mask>Masks/path</Mask>
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_1</Name>
+                    </Sprite>
+                </TilingSprite>
 			</TileData>
 	    </CentralConstant>
 	</CorridorStyle>
