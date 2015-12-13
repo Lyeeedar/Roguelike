@@ -16,7 +16,6 @@ import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.GameTile.LightData;
 import Roguelike.Tiles.Point;
-import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 import Roguelike.UI.Tooltip.TooltipStyle;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
@@ -97,7 +96,6 @@ public class Global
 	public static Pool<Point> PointPool = Pools.get( Point.class );
 	public static Pool<Light> LightPool = Pools.get( Light.class );
 	public static Pool<LightData> LightDataPool = Pools.get( LightData.class );
-	public static Pool<SeenHistoryItem> SeenHistoryItemPool = Pools.get( SeenHistoryItem.class );
 
 	// ----------------------------------------------------------------------
 	static

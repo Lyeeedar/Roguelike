@@ -34,8 +34,8 @@ import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationMode;
 import Roguelike.Sprite.Sprite.AnimationState;
 import Roguelike.StatusEffect.StatusEffect;
+import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
-import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.Gdx;
@@ -251,9 +251,6 @@ public final class SaveFile
 		kryo.register( SaveFile.class );
 		kryo.register( SaveGameEntity.class );
 		kryo.register( SaveLevel.class );
-		kryo.register( SaveSeenTile.class );
-		kryo.register( SaveSeenTile[].class );
-		kryo.register( SaveSeenTile[][].class );
 
 		kryo.register( CooldownWrapper.class );
 		kryo.register( SaveOrb.class );
@@ -264,7 +261,6 @@ public final class SaveFile
 		kryo.register( Inventory.class );
 		kryo.register( Element.class );
 		kryo.register( DFPRoom.class );
-		kryo.register( SeenHistoryItem.class );
 		kryo.register( Item.class );
 		kryo.register( Light.class );
 		kryo.register( ShadowCastCache.class );
@@ -291,6 +287,7 @@ public final class SaveFile
 		kryo.register( ItemCategory.class );
 		kryo.register( Statistic.class );
 		kryo.register( Direction.class );
+		kryo.register( GameTile.OrbType.class );
 
 		kryo.register( ConstantEvent.class );
 		kryo.register( DamageEvent.class );

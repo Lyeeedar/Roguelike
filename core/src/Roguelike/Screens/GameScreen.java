@@ -22,8 +22,6 @@ import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Sprite.TilingSprite;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
-import Roguelike.Tiles.SeenTile;
-import Roguelike.Tiles.SeenTile.SeenHistoryItem;
 import Roguelike.UI.*;
 import Roguelike.UI.Tooltip;
 import Roguelike.Util.EnumBitflag;
@@ -589,7 +587,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					}
 				}
 
-				if ( gtile.visible )
+				if (!gtile.visible)
+				{
+					buildTilingBitflag(x, y, "seen");
+				}
+
+				if ( gtile.visible || directionBitflag.getBitFlag() != 0 )
 				{
 					GameEntity entity = gtile.entity;
 
@@ -681,7 +684,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 					}
 				}
-				else
+
+				if (!gtile.visible)
 				{
 					// not visible, so draw fog
 
@@ -703,229 +707,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 			}
 		}
-	}
-
-	// ----------------------------------------------------------------------
-	private void renderSeenTiles( int offsetx, int offsety, int tileSize3 )
-	{
-		Color col = batch.getColor();
-
-		batch.setShader( GrayscaleShader.Instance );
-		for ( int x = 0; x < Global.CurrentLevel.width; x++ )
-		{
-			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
-			{
-				GameTile gtile = Global.CurrentLevel.Grid[ x ][ y ];
-				SeenTile stile = Global.CurrentLevel.SeenGrid[ x ][ y ];
-
-				if ( !gtile.visible && stile.seen )
-				{
-					temp.set( stile.light );
-					temp.mul( temp.a );
-					temp.mul( 0.7f );
-					if ( Global.CurrentLevel.affectedByDayNight )
-					{
-						temp.mul( Global.DayNightFactor );
-					}
-
-					temp.a = 1;
-
-					if ( !temp.equals( col ) )
-					{
-						batch.setColor( temp );
-						col.set( temp );
-					}
-
-					for ( int i = 0; i < stile.tileHistory.size; i++ )
-					{
-						SeenHistoryItem hist = stile.tileHistory.items[ i ];
-
-						int cx = x * Global.TileSize + offsetx;
-						int cy = y * Global.TileSize + offsety;
-
-						if ( hist.location != Direction.CENTER )
-						{
-							Direction dir = hist.location;
-							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
-						}
-						else
-						{
-							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[ 0 ], hist.sprite.baseScale[ 1 ], hist.animationState );
-						}
-					}
-
-					if ( stile.fieldHistory.size > 0 )
-					{
-						for ( int i = 0; i < stile.fieldHistory.size; i++ )
-						{
-							SeenHistoryItem hist = stile.fieldHistory.items[ i ];
-
-							int cx = x * Global.TileSize + offsetx;
-							int cy = y * Global.TileSize + offsety;
-
-							if ( hist.location != Direction.CENTER )
-							{
-								Direction dir = hist.location;
-								hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
-							}
-							else
-							{
-								hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[ 0 ], hist.sprite.baseScale[ 1 ], hist.animationState );
-							}
-						}
-					}
-
-					if ( stile.itemHistory != null )
-					{
-						SeenHistoryItem hist = stile.itemHistory;
-
-						int cx = x * Global.TileSize + offsetx;
-						int cy = y * Global.TileSize + offsety;
-
-						if ( hist.location != Direction.CENTER )
-						{
-							Direction dir = hist.location;
-							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
-						}
-						else
-						{
-							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[ 0 ], hist.sprite.baseScale[ 1 ], hist.animationState );
-						}
-					}
-
-					for (SeenHistoryItem hist : stile.orbHistory)
-					{
-						int cx = x * Global.TileSize + offsetx;
-						int cy = y * Global.TileSize + offsety;
-
-						if ( hist.location != Direction.CENTER )
-						{
-							Direction dir = hist.location;
-							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
-						}
-						else
-						{
-							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[ 0 ], hist.sprite.baseScale[ 1 ], hist.animationState );
-						}
-					}
-				}
-			}
-		}
-
-		for ( int x = 0; x < Global.CurrentLevel.width; x++ )
-		{
-			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
-			{
-				GameTile gtile = Global.CurrentLevel.Grid[ x ][ y ];
-				SeenTile stile = Global.CurrentLevel.SeenGrid[ x ][ y ];
-
-				if ( !gtile.visible && stile.seen )
-				{
-					temp.set( Global.CurrentLevel.Ambient );
-					temp.mul( temp.a );
-					if ( Global.CurrentLevel.affectedByDayNight )
-					{
-						temp.mul( Global.DayNightFactor );
-					}
-
-					temp.a = 1;
-
-					if ( !temp.equals( col ) )
-					{
-						batch.setColor( temp );
-						col.set( temp );
-					}
-
-					if ( stile.environmentHistory != null )
-					{
-						SeenHistoryItem hist = stile.environmentHistory;
-
-						int cx = x * Global.TileSize + offsetx;
-						int cy = y * Global.TileSize + offsety;
-
-						if ( hist.location != Direction.CENTER )
-						{
-							if ( hist.location == Direction.EAST || hist.location == Direction.WEST )
-							{
-								cx += -hist.location.getX() * ( Global.TileSize / 2 );
-							}
-							else if ( hist.location == Direction.SOUTH )
-							{
-								cy += Global.TileSize;
-							}
-						}
-
-						hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[ 0 ], hist.sprite.baseScale[ 1 ], hist.animationState );
-					}
-
-					if ( stile.entityHistory != null )
-					{
-						SeenHistoryItem hist = stile.entityHistory;
-
-						int cx = x * Global.TileSize + offsetx;
-						int cy = y * Global.TileSize + offsety;
-
-						if ( hist.location != Direction.CENTER )
-						{
-							Direction dir = hist.location;
-							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
-						}
-						else
-						{
-							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[ 0 ], hist.sprite.baseScale[ 1 ], hist.animationState );
-						}
-					}
-				}
-			}
-		}
-
-		for ( int x = 0; x < Global.CurrentLevel.width; x++ )
-		{
-			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
-			{
-				GameTile gtile = Global.CurrentLevel.Grid[ x ][ y ];
-				SeenTile stile = Global.CurrentLevel.SeenGrid[ x ][ y ];
-
-				if ( !gtile.visible && stile.seen )
-				{
-					temp.set( Global.CurrentLevel.Ambient );
-					temp.mul( temp.a );
-					if ( Global.CurrentLevel.affectedByDayNight )
-					{
-						temp.mul( Global.DayNightFactor );
-					}
-
-					temp.a = 1;
-
-					if ( !temp.equals( col ) )
-					{
-						batch.setColor( temp );
-						col.set( temp );
-					}
-
-					SeenHistoryItem hist = stile.overhangHistory;
-
-					if ( hist != null )
-					{
-						int cx = x * Global.TileSize + offsetx;
-						int cy = y * Global.TileSize + offsety;
-
-						if ( hist.location != Direction.CENTER )
-						{
-							Direction dir = hist.location;
-							hist.sprite.render( batch, cx + tileSize3 * ( dir.getX() * -1 + 1 ), cy + tileSize3 * ( dir.getY() * -1 + 1 ), tileSize3, tileSize3 );
-						}
-						else
-						{
-							hist.sprite.render( batch, cx, cy, Global.TileSize, Global.TileSize, hist.sprite.baseScale[ 0 ], hist.sprite.baseScale[ 1 ], hist.animationState );
-						}
-					}
-				}
-			}
-		}
-
-		batch.setColor( Color.WHITE );
-		batch.setShader( null );
 	}
 
 	// ----------------------------------------------------------------------
@@ -978,7 +759,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				 || mousex >= Global.CurrentLevel.width
 				 || mousey < 0
 				 || mousey >= Global.CurrentLevel.height
-				 || !Global.CurrentLevel.getSeenTile( mousex, mousey ).seen )
+				 || !Global.CurrentLevel.getGameTile( mousex, mousey ).seen )
 			{
 				colour = Color.RED;
 			}
@@ -1595,7 +1376,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 				else
 				{
-					if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height && Global.CurrentLevel.getSeenTile( x, y ).seen )
+					if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height && Global.CurrentLevel.getGameTile( x, y ).seen )
 					{
 						Global.CurrentLevel.player.AI.setData( "ClickPos", Global.PointPool.obtain().set( x, y ) );
 					}

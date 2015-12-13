@@ -27,8 +27,6 @@ public final class SaveLevel extends SaveableObject<Level>
 	public Array<SaveField> fields = new Array<SaveField>();
 	public Array<SaveOrb> orbs = new Array<SaveOrb>();
 
-	public SaveSeenTile[][] seenTiles;
-
 	public SaveLevel()
 	{
 
@@ -128,18 +126,6 @@ public final class SaveLevel extends SaveableObject<Level>
 				environmentEntities.add( saveObj );
 			}
 		}
-
-		seenTiles = new SaveSeenTile[obj.width][obj.height];
-		for ( int x = 0; x < obj.width; x++ )
-		{
-			for ( int y = 0; y < obj.height; y++ )
-			{
-				SaveSeenTile save = new SaveSeenTile();
-				save.store( obj.getSeenTile( x, y ) );
-
-				seenTiles[x][y] = save;
-			}
-		}
 	}
 
 	@Override
@@ -185,17 +171,6 @@ public final class SaveLevel extends SaveableObject<Level>
 		{
 			GameTile tile = level.getGameTile( orb.pos );
 			tile.orbs = orb.orbs.copy();
-		}
-
-		if ( seenTiles != null )
-		{
-			for ( int x = 0; x < level.width; x++ )
-			{
-				for ( int y = 0; y < level.height; y++ )
-				{
-					level.SeenGrid[x][y] = seenTiles[x][y].create();
-				}
-			}
 		}
 	}
 

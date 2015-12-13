@@ -31,7 +31,6 @@ import Roguelike.Sprite.SpriteAnimation.MoveAnimation.MoveEquation;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
-import Roguelike.Tiles.SeenTile;
 import Roguelike.Util.EnumBitflag;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
@@ -50,16 +49,6 @@ public class Level
 		this.Grid = grid;
 		this.width = grid.length;
 		this.height = grid[0].length;
-
-		this.SeenGrid = new SeenTile[width][height];
-		for ( int x = 0; x < width; x++ )
-		{
-			for ( int y = 0; y < height; y++ )
-			{
-				SeenGrid[x][y] = new SeenTile();
-				SeenGrid[x][y].gameTile = Grid[x][y];
-			}
-		}
 	}
 
 	// endregion Constructor
@@ -455,7 +444,7 @@ public class Level
 				for ( int y = 0; y < height; y++ )
 				{
 					Grid[x][y].visible = true;
-					SeenGrid[x][y].seen = true;
+					Grid[x][y].seen = true;
 				}
 			}
 		}
@@ -476,32 +465,7 @@ public class Level
 				if ( tilePos.x >= 0 && tilePos.y >= 0 && tilePos.x < width && tilePos.y < height )
 				{
 					getGameTile( tilePos ).visible = true;
-				}
-			}
-
-			updateSeenGrid();
-		}
-	}
-
-	private void updateSeenGrid()
-	{
-		for ( int x = 0; x < width; x++ )
-		{
-			for ( int y = height - 1; y >= 0; y-- )
-			{
-				GameTile tile = Grid[x][y];
-				if ( tile.visible )
-				{
-					tile.seen = true;
-
-//					SeenTile s = SeenGrid[x][y];
-//					s.seen = true;
-//
-//					GameTile prevTile = getGameTile( x, y + 1 );
-//					GameTile nextTile = getGameTile( x, y - 1 );
-//					SeenTile prevSeenTile = getSeenTile( x, y + 1 );
-//
-//					s.set( tile, player, prevTile, nextTile, prevSeenTile );
+					getGameTile( tilePos ).seen = true;
 				}
 			}
 		}
@@ -895,18 +859,6 @@ public class Level
 		return getGameTile( pos.x, pos.y );
 	}
 
-	public final SeenTile getSeenTile( Point pos )
-	{
-		return getSeenTile( pos.x, pos.y );
-	}
-
-	public final SeenTile getSeenTile( int x, int y )
-	{
-		if ( x < 0 || x >= width || y < 0 || y >= height ) { return null; }
-
-		return SeenGrid[x][y];
-	}
-
 	public final Entity getEntityWithUID( String UID )
 	{
 		for ( int x = 0; x < width; x++ )
@@ -1272,7 +1224,6 @@ public class Level
 	public Color Ambient = new Color( 0.1f, 0.1f, 0.3f, 1.0f );
 	public Sprite background;
 
-	public SeenTile[][] SeenGrid;
 	public GameTile[][] Grid;
 	public int width;
 	public int height;
