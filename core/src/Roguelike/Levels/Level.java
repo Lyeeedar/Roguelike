@@ -557,10 +557,10 @@ public class Level
 
 		if ( tile.tileData.tilingSprite != null )
 		{
-			for (Sprite sprite : tile.tileData.tilingSprite.sprites)
-			{
-				sprite.update( delta );
-			}
+			//for (Sprite sprite : tile.tileData.tilingSprite.sprites)
+			//{
+			//	sprite.update( delta );
+			//}
 		}
 
 		if ( tile.hasFields )

@@ -8,26 +8,14 @@ import Roguelike.Util.ImageUtils;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
+
+import java.util.HashMap;
 
 // Naming priority: NSEW
 public class TilingSprite
 {
-	private static final Global.Direction[][] PossibleDirections =
-	{
-		{ Global.Direction.NORTH, Global.Direction.SOUTH },
-		{ Global.Direction.EAST, Global.Direction.WEST },
-		{ Global.Direction.NORTH, Global.Direction.EAST } ,
-		{ Global.Direction.NORTH, Global.Direction.WEST },
-		{ Global.Direction.SOUTH, Global.Direction.EAST },
-		{ Global.Direction.SOUTH, Global.Direction.WEST },
-		{ Global.Direction.NORTH },
-		{ Global.Direction.SOUTH },
-		{ Global.Direction.EAST },
-		{ Global.Direction.WEST },
-		{ Global.Direction.CENTER }
-	};
-
 	public TilingSprite()
 	{
 
@@ -35,12 +23,8 @@ public class TilingSprite
 
 	public TilingSprite( Sprite topSprite, Sprite frontSprite )
 	{
-		for (int i = 0; i < sprites.length; i++)
-		{
-			sprites[i] = topSprite;
-		}
-
-		sprites[7] = frontSprite;
+		sprites.put( "C", topSprite );
+		sprites.put( "S", frontSprite );
 	}
 
 	public TilingSprite ( String name, String texture, String mask )
@@ -50,9 +34,12 @@ public class TilingSprite
 		load( name, texture, mask, spriteElement, null );
 	}
 
-	public Sprite[] sprites = new Sprite[PossibleDirections.length];
+	public HashMap<String, Sprite> sprites = new HashMap<String, Sprite>(  );
 
 	public String name;
+	public String texName;
+	public String maskName;
+	public Element spriteBase = new Element( "Sprite", null );
 
 	public Sprite overhangSprite;
 
@@ -70,16 +57,9 @@ public class TilingSprite
 	public void load( String name, String texName, String maskName, Element spriteElement, Element overhangElement )
 	{
 		this.name = name;
-
-		for ( int i = 0; i < PossibleDirections.length; i++ )
-		{
-			Global.Direction[] dirs = PossibleDirections[i];
-
-			TextureRegion texture = getMaskedSprite( texName, maskName, dirs );
-
-			Sprite sprite = AssetManager.loadSprite( spriteElement, texture );
-			sprites[i] = sprite;
-		}
+		this.texName = texName;
+		this.maskName = maskName;
+		this.spriteBase = spriteElement;
 
 		if ( overhangElement != null )
 		{
@@ -94,21 +74,22 @@ public class TilingSprite
 		return sprite;
 	}
 
-	private static TextureRegion getMaskedSprite( String baseName, String maskBaseName, Global.Direction[] directions )
+	private static TextureRegion getMaskedSprite( String baseName, String maskBaseName, Array<String> masks )
 	{
-		// If this is the center or all no mask, then just return the original texture
-		if ( directions[0] == Global.Direction.CENTER)
+		// If this is the center then just return the original texture
+		if ( masks.size == 0)
 		{
 			return AssetManager.loadTextureRegion( "Sprites/" + baseName + ".png" );
 		}
 
+		// Build the mask suffix
 		String mask = "";
-		for ( Global.Direction dir : directions)
+		for ( String m : masks)
 		{
-			mask += dir.toString().substring( 0, 1 );
+			mask += "_" + m;
 		}
 
-		String maskedName = baseName + "_" + mask;
+		String maskedName = baseName + mask;
 
 		TextureRegion tex = AssetManager.loadTextureRegion( "Sprites/" + maskedName + ".png" );
 
@@ -118,51 +99,136 @@ public class TilingSprite
 			return tex;
 		}
 
+		// If we havent been given a mask, then just return the original texture
 		if (maskBaseName == null)
 		{
 			return AssetManager.loadTextureRegion( "Sprites/" + baseName + ".png" );
 		}
 
-		// We dont have the texture, so generate it
-		Texture maskTex = AssetManager.loadTexture( "Sprites/" + maskBaseName + "_" + mask + ".png" );
+		Pixmap base = ImageUtils.textureToPixmap( AssetManager.loadTexture( "Sprites/" + baseName + ".png" ) );
+		Pixmap merged = base;
+		for (String maskSuffix : masks)
+		{
+			Texture maskTex = AssetManager.loadTexture( "Sprites/" + maskBaseName + "_" + maskSuffix + ".png" );
 
-		Texture baseTex = AssetManager.loadTexture( "Sprites/" + baseName + ".png" );
+			if (maskTex == null)
+			{
+				continue;
+			}
 
-		Pixmap merged = ImageUtils.maskPixmap( baseTex, maskTex );
+			Pixmap maskedTex = ImageUtils.maskPixmap( merged, ImageUtils.textureToPixmap( maskTex ) );
+			if (merged != base) { merged.dispose(); }
+			merged = maskedTex;
+		}
 
 		return AssetManager.packPixmap( "Sprites/" + maskedName + ".png", merged );
 	}
 
-	public Sprite getSprite( EnumBitflag<Global.Direction> emptyDirections )
+	public Array<String> getMasks( EnumBitflag<Global.Direction> emptyDirections )
 	{
-		for ( int i = 0; i < PossibleDirections.length; i++ )
+		Array<String> masks = new Array<String>();
+
+		if (emptyDirections.contains( Global.Direction.NORTH ))
 		{
-			Global.Direction[] dirs = PossibleDirections[i];
-			boolean valid = true;
-			for ( Global.Direction dir : dirs)
+			if (emptyDirections.contains( Global.Direction.EAST ))
 			{
-				if (!emptyDirections.contains( dir ))
-				{
-					valid = false;
-					break;
-				}
+				masks.add("NE");
 			}
 
-			if (valid)
+			if (emptyDirections.contains( Global.Direction.WEST ))
 			{
-				Sprite sprite = sprites[i];
+				masks.add("NW");
+			}
 
-				if (sprite == null)
-				{
-					break;
-				}
-				else
-				{
-					return sprite;
-				}
+			if (!emptyDirections.contains( Global.Direction.EAST ) && !emptyDirections.contains( Global.Direction.WEST ))
+			{
+				masks.add("N");
 			}
 		}
 
-		return sprites[ PossibleDirections.length-1 ];
+		if (emptyDirections.contains( Global.Direction.SOUTH ))
+		{
+			if (emptyDirections.contains( Global.Direction.EAST ))
+			{
+				masks.add("SE");
+			}
+
+			if (emptyDirections.contains( Global.Direction.WEST ))
+			{
+				masks.add("SW");
+			}
+
+			if (!emptyDirections.contains( Global.Direction.EAST ) && !emptyDirections.contains( Global.Direction.WEST ))
+			{
+				masks.add("S");
+			}
+		}
+
+		if (emptyDirections.contains( Global.Direction.EAST ))
+		{
+			if (!emptyDirections.contains( Global.Direction.NORTH ) && !emptyDirections.contains( Global.Direction.SOUTH ))
+			{
+				masks.add("E");
+			}
+		}
+
+		if (emptyDirections.contains( Global.Direction.WEST ))
+		{
+			if (!emptyDirections.contains( Global.Direction.NORTH ) && !emptyDirections.contains( Global.Direction.SOUTH ))
+			{
+				masks.add("W");
+			}
+		}
+
+		if (emptyDirections.contains( Global.Direction.NORTHEAST ) && !emptyDirections.contains( Global.Direction.NORTH ) && !emptyDirections.contains( Global.Direction.EAST ))
+		{
+			masks.add("DNE");
+		}
+
+		if (emptyDirections.contains( Global.Direction.NORTHWEST ) && !emptyDirections.contains( Global.Direction.NORTH ) && !emptyDirections.contains( Global.Direction.WEST ))
+		{
+			masks.add("DNW");
+		}
+
+		if (emptyDirections.contains( Global.Direction.SOUTHEAST ) && !emptyDirections.contains( Global.Direction.SOUTH ) && !emptyDirections.contains( Global.Direction.EAST ))
+		{
+			masks.add("DSE");
+		}
+
+		if (emptyDirections.contains( Global.Direction.SOUTHWEST ) && !emptyDirections.contains( Global.Direction.SOUTH ) && !emptyDirections.contains( Global.Direction.WEST ))
+		{
+			masks.add("DSW");
+		}
+
+		return masks;
+	}
+
+	public Sprite getSprite( EnumBitflag<Global.Direction> emptyDirections )
+	{
+		Array<String> masks = getMasks( emptyDirections );
+
+		String mask = "";
+		for ( String m : masks)
+		{
+			mask += "_" + m;
+		}
+
+		if (sprites.containsKey( mask ))
+		{
+			return sprites.get( mask );
+		}
+		else if (texName != null)
+		{
+			TextureRegion region = getMaskedSprite( texName, maskName, masks );
+			Sprite sprite = AssetManager.loadSprite( spriteBase, region );
+
+			sprites.put( mask, sprite );
+
+			return sprite;
+		}
+		else
+		{
+			return sprites.get( "C" );
+		}
 	}
 }

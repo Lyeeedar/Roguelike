@@ -100,7 +100,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		border = AssetManager.loadSprite( "GUI/frame" );
 		speechBubbleArrow = AssetManager.loadTextureRegion( "Sprites/GUI/SpeechBubbleArrow.png" );
 		speechBubbleBackground = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/SpeechBubble.png" ), 10, 10, 10, 10 );
-		fogSprite = new TilingSprite( "fog", "Masks/fog", null );
+		fogSprite = new TilingSprite( "fog", "Masks/fog", "Masks/fog" );
 
 		gestureDetector = new GestureDetector( this );
 		gestureDetector.setLongPressSeconds( 0.5f );
@@ -935,40 +935,33 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		directionBitflag.clear();
 		for (Direction dir : Direction.values())
 		{
-			if (dir.isCardinal())
+			GameTile otile = Global.CurrentLevel.getGameTile( x + dir.getX(), y + dir.getY() );
+
+			if (otile != null)
 			{
-				GameTile otile = Global.CurrentLevel.getGameTile( x + dir.getX(), y + dir.getY() );
+				// Attempt to find match
+				boolean matchFound = false;
 
-				if (otile == null)
+				if (otile.tileData.tilingSprite != null && otile.tileData.tilingSprite.name.equals( name ))
 				{
-					//directionBitflag.setBit( dir );
+					matchFound = true;
 				}
-				else
+				else if (otile.environmentEntity != null && otile.environmentEntity.tilingSprite != null && otile.environmentEntity.tilingSprite.name.equals( name ))
 				{
-					// Attempt to find match
-					boolean matchFound = false;
+					matchFound = true;
+				}
+				else if (!otile.seen && name.equals( "unseen" ))
+				{
+					matchFound = true;
+				}
+				else if (!otile.visible && name.equals( "seen" ))
+				{
+					matchFound = true;
+				}
 
-					if (otile.tileData.tilingSprite != null && otile.tileData.tilingSprite.name.equals( name ))
-					{
-						matchFound = true;
-					}
-					else if (otile.environmentEntity != null && otile.environmentEntity.tilingSprite != null && otile.environmentEntity.tilingSprite.name.equals( name ))
-					{
-						matchFound = true;
-					}
-					else if (!otile.seen && name.equals( "unseen" ))
-					{
-						matchFound = true;
-					}
-					else if (!otile.visible && name.equals( "seen" ))
-					{
-						matchFound = true;
-					}
-
-					if (!matchFound)
-					{
-						directionBitflag.setBit( dir );
-					}
+				if (!matchFound)
+				{
+					directionBitflag.setBit( dir );
 				}
 			}
 		}

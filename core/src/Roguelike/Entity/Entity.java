@@ -69,10 +69,10 @@ public abstract class Entity
 
 		if ( tilingSprite != null )
 		{
-			for (Sprite sprite : tilingSprite.sprites)
-			{
-				sprite.size = size;
-			}
+			//for (Sprite sprite : tilingSprite.sprites)
+			//{
+			//	sprite.size = size;
+			//}
 		}
 
 		Element lightElement = xml.getChildByName( "Light" );

@@ -416,9 +416,15 @@ public class Global
 	// ----------------------------------------------------------------------
 	public enum Direction
 	{
-		CENTER( 0, 0 ), NORTH( 0, 1 ), SOUTH( 0, -1 ), EAST( 1, 0 ), WEST( -1, 0 ), NORTHEAST( 1, 1 ), NORTHWEST( -1, 1 ), SOUTHEAST( 1, -1 ), SOUTHWEST(
-				-1,
-				-1 );
+		CENTER( 0, 0, "C" ),
+		NORTH( 0, 1, "N" ),
+		SOUTH( 0, -1, "S" ),
+		EAST( 1, 0, "E" ),
+		WEST( -1, 0, "W" ),
+		NORTHEAST( 1, 1, "NE" ),
+		NORTHWEST( -1, 1, "NW" ),
+		SOUTHEAST( 1, -1, "SE" ),
+		SOUTHWEST(-1, -1, "SW" );
 
 		static
 		{
@@ -457,6 +463,7 @@ public class Global
 			Direction.WEST.isCardinal = true;
 		}
 
+		public final String identifier;
 		private final int x;
 		private final int y;
 		private final float angle;
@@ -464,10 +471,11 @@ public class Global
 		private Direction anticlockwise;
 		private boolean isCardinal = false;
 
-		Direction( int x, int y )
+		Direction( int x, int y, String identifier )
 		{
 			this.x = x;
 			this.y = y;
+			this.identifier = identifier;
 
 			// basis vector = 0, 1
 			double dot = 0 * x + 1 * y; // dot product
