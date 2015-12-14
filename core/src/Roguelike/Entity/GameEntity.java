@@ -284,6 +284,11 @@ public class GameEntity extends Entity
 	{
 		float speed = getStatistic( Statistic.SPEED ) / 10.0f;
 
+		if (speed == 0)
+		{
+			speed = 0.1f;
+		}
+
 		return 1.0f / speed;
 	}
 

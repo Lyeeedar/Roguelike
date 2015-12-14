@@ -75,7 +75,8 @@
                     <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
 				</Sprite>
 				<Sprite>
-                    <Name>Oryx/uf_split/uf_map/uf_map_131</Name>
+                    <Name>Oryx/Custom/terrain/tree</Name>
+                    <DrawActualSize>true</DrawActualSize>
 					<Colour>
 						<Red>0.6</Red>
 						<Green>1</Green>
@@ -94,9 +95,18 @@
 			<TileData>
 				<Opaque>true</Opaque>
 				<Passable>false</Passable>
-				<Sprite>
-                    <Name>Oryx/uf_split/uf_terrain/wall_stone_7</Name>
-				</Sprite>
+                <TilingSprite>
+                    <Name>Wall</Name>
+                    <Top>
+                        <Name>Oryx/uf_split/uf_terrain/wall_stone_7</Name>
+                    </Top>
+                    <Front>
+                        <Name>Oryx/uf_split/uf_terrain/wall_stone_14</Name>
+                    </Front>
+                    <Overhang>
+                        <Name>Oryx/uf_split/uf_terrain/wall_stone_1</Name>
+                    </Overhang>
+                </TilingSprite>
 			</TileData>
 		</Symbol>
 
