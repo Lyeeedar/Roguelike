@@ -1,5 +1,6 @@
 package Roguelike.Entity;
 
+import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.IAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
@@ -68,9 +69,9 @@ public class GameEntity extends Entity
 
 		actionDelayAccumulator += cost;
 
-		for ( IAbility a : slottedAbilities )
+		for ( AbilityTree a : slottedAbilities )
 		{
-			a.onTurn();
+			a.current.current.onTurn();
 		}
 
 		for ( GameEventHandler h : getAllHandlers() )
@@ -112,11 +113,11 @@ public class GameEntity extends Entity
 
 		variableMap.put( stat.toString().toLowerCase(), val );
 
-		for ( IAbility a : slottedAbilities )
+		for ( AbilityTree a : slottedAbilities )
 		{
-			if ( a != null && a instanceof PassiveAbility )
+			if ( a != null && a.current.current instanceof PassiveAbility )
 			{
-				PassiveAbility passive = (PassiveAbility) a;
+				PassiveAbility passive = (PassiveAbility) a.current.current;
 				val += passive.getStatistic( variableMap, stat );
 			}
 		}
@@ -184,7 +185,7 @@ public class GameEntity extends Entity
 					ability = PassiveAbility.load( abilityElement );
 				}
 
-				slottedAbilities.add( ability );
+				slottedAbilities.add( new AbilityTree( ability ) );
 			}
 		}
 
@@ -203,11 +204,11 @@ public class GameEntity extends Entity
 	{
 		Array<GameEventHandler> handlers = new Array<GameEventHandler>();
 
-		for ( IAbility a : slottedAbilities )
+		for ( AbilityTree a : slottedAbilities )
 		{
-			if ( a != null && a instanceof PassiveAbility )
+			if ( a != null && a.current.current instanceof PassiveAbility )
 			{
-				handlers.add( (PassiveAbility) a );
+				handlers.add( (PassiveAbility) a.current.current );
 			}
 		}
 
@@ -345,7 +346,7 @@ public class GameEntity extends Entity
 	public String fileName;
 
 	// ----------------------------------------------------------------------
-	public Array<IAbility> slottedAbilities = new Array<IAbility>();
+	public Array<AbilityTree> slottedAbilities = new Array<AbilityTree>();
 
 	// ----------------------------------------------------------------------
 	public Sprite defaultHitEffect = AssetManager.loadSprite( "strike/strike", 0.1f );

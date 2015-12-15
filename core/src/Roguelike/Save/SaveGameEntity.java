@@ -2,6 +2,7 @@ package Roguelike.Save;
 
 import java.util.HashMap;
 
+import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.IAbility;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Items.Inventory;
@@ -38,9 +39,9 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		}
 		inventory = obj.inventory;
 
-		for ( IAbility a : obj.slottedAbilities )
+		for ( AbilityTree a : obj.slottedAbilities )
 		{
-			abilityCooldown.add( new CooldownWrapper( a.getCooldown() ) );
+			abilityCooldown.add( new CooldownWrapper( a.current.current.getCooldown() ) );
 		}
 
 		UID = obj.UID;
@@ -68,7 +69,7 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		{
 			for ( int i = 0; i < abilityCooldown.size; i++ )
 			{
-				entity.slottedAbilities.get( i ).setCooldown( abilityCooldown.get( i ).val );
+				entity.slottedAbilities.get( i ).current.current.setCooldown( abilityCooldown.get( i ).val );
 			}
 		}
 

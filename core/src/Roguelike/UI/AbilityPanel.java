@@ -1,5 +1,6 @@
 package Roguelike.UI;
 
+import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.IAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
@@ -43,7 +44,7 @@ public class AbilityPanel extends TilePanel
 	{
 		tileData.clear();
 
-		for ( IAbility a : Global.CurrentLevel.player.slottedAbilities )
+		for ( AbilityTree a : Global.CurrentLevel.player.slottedAbilities )
 		{
 			if ( a != null )
 			{
@@ -66,58 +67,12 @@ public class AbilityPanel extends TilePanel
 	{
 		if ( data == null || data instanceof Integer ) { return null; }
 
-		return ( (IAbility) data ).getIcon();
+		return ( (AbilityTree) data ).current.current.getIcon();
 	}
 
 	@Override
 	public void handleDataClicked( final Object data, InputEvent event, float x, float y )
 	{
-		if ( event.getButton() == Buttons.RIGHT )
-		{
-			if ( data != null )
-			{
-				Table table = new Table();
-
-				TextButton button = new TextButton( "Clear ability slot?", skin );
-				table.add( button ).width( Value.percentWidth( 1, table ) ).pad( 2 );
-
-				table.addListener( new InputListener()
-				{
-					@Override
-					public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-					{
-						return true;
-					}
-
-					@Override
-					public void touchUp( InputEvent event, float x, float y, int pointer, int button )
-					{
-						if ( data instanceof ActiveAbility )
-						{
-							ActiveAbility aa = (ActiveAbility) data;
-							// Global.CurrentLevel.player.clearActiveAbility( aa
-							// );
-						}
-						else
-						{
-							PassiveAbility pa = (PassiveAbility) data;
-							// Global.CurrentLevel.player.clearPassiveAbility(
-							// pa );
-						}
-
-						GameScreen.Instance.clearContextMenu();
-					}
-				} );
-
-				table.pack();
-
-				Tooltip tooltip = new Tooltip( table, skin, stage );
-				tooltip.show( event, x - tooltip.getWidth() / 2, y - tooltip.getHeight() / 2 );
-
-				GameScreen.Instance.contextMenu = tooltip;
-			}
-		}
-		else
 		{
 			if ( GameScreen.Instance.abilityToEquip != null )
 			{
@@ -128,7 +83,7 @@ public class AbilityPanel extends TilePanel
 				}
 				else
 				{
-					index = Global.CurrentLevel.player.slottedAbilities.indexOf( (IAbility) data, true );
+					index = Global.CurrentLevel.player.slottedAbilities.indexOf( (AbilityTree) data, true );
 				}
 
 				while ( Global.CurrentLevel.player.slottedAbilities.size <= index )
@@ -140,10 +95,10 @@ public class AbilityPanel extends TilePanel
 				Global.CurrentLevel.player.slottedAbilities.insert( index, GameScreen.Instance.abilityToEquip );
 				GameScreen.Instance.abilityToEquip = null;
 
-				if ( data instanceof IAbility )
+				if ( data instanceof AbilityTree )
 				{
 					Item item = new Item();
-					item.ability = (IAbility) data;
+					item.ability = (AbilityTree) data;
 
 					Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
 				}
@@ -153,11 +108,15 @@ public class AbilityPanel extends TilePanel
 			}
 			else
 			{
-				if ( data instanceof ActiveAbility )
+				if ( data instanceof AbilityTree && ((AbilityTree)data).current.current instanceof ActiveAbility )
 				{
-					ActiveAbility aa = (ActiveAbility) data;
+					ActiveAbility aa = (ActiveAbility)((AbilityTree) data).current.current;
 
-					if ( aa.isAvailable() )
+					if (GameScreen.Instance.preparedAbility == aa)
+					{
+						GameScreen.Instance.prepareAbility(null);
+					}
+					else if ( aa.isAvailable() )
 					{
 						GameScreen.Instance.prepareAbility( aa );
 					}
@@ -171,7 +130,7 @@ public class AbilityPanel extends TilePanel
 	{
 		if ( data == null || data instanceof Integer ) { return null; }
 
-		return ( (IAbility) data ).createTable( skin, Global.CurrentLevel.player );
+		return ( (AbilityTree) data ).current.current.createTable( skin, Global.CurrentLevel.player );
 	}
 
 	@Override
@@ -179,7 +138,7 @@ public class AbilityPanel extends TilePanel
 	{
 		if ( data == null || data instanceof Integer ) { return Color.DARK_GRAY; }
 
-		if ( data == GameScreen.Instance.preparedAbility ) { return Color.CYAN; }
+		if ( ((AbilityTree)data).current.current == GameScreen.Instance.preparedAbility ) { return Color.CYAN; }
 
 		return null;
 	}
@@ -197,9 +156,9 @@ public class AbilityPanel extends TilePanel
 	@Override
 	public void onDrawItem( Object data, Batch batch, int x, int y, int width, int height )
 	{
-		if ( data instanceof ActiveAbility )
+		if ( data instanceof AbilityTree && ((AbilityTree)data).current.current instanceof ActiveAbility )
 		{
-			ActiveAbility aa = (ActiveAbility) data;
+			ActiveAbility aa = (ActiveAbility)((AbilityTree) data).current.current;
 
 			if ( !aa.isAvailable() )
 			{

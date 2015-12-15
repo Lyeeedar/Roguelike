@@ -1,5 +1,6 @@
 package Roguelike.Items;
 
+import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.IAbility;
 import Roguelike.Ability.PassiveAbility.PassiveAbility;
@@ -45,7 +46,7 @@ public final class Item extends GameEventHandler
 	public Light light;
 	public boolean canDrop = true;
 	public String dropChanceEqn;
-	public IAbility ability;
+	public AbilityTree ability;
 	private int range = -1000;
 
 	// ----------------------------------------------------------------------
@@ -118,7 +119,7 @@ public final class Item extends GameEventHandler
 	// ----------------------------------------------------------------------
 	public Table createTable( Skin skin, GameEntity entity )
 	{
-		if ( ability != null ) { return ability.createTable( skin, entity ); }
+		if ( ability != null ) { return ability.current.current.createTable( skin, entity ); }
 
 		Inventory inventory = entity.getInventory();
 
@@ -237,7 +238,7 @@ public final class Item extends GameEventHandler
 	@Override
 	public String getName()
 	{
-		if ( ability != null ) { return ability.getName(); }
+		if ( ability != null ) { return ability.current.current.getName(); }
 
 		return name;
 	}
@@ -246,7 +247,7 @@ public final class Item extends GameEventHandler
 	@Override
 	public String getDescription()
 	{
-		if ( ability != null ) { return ability.getDescription(); }
+		if ( ability != null ) { return ability.current.current.getDescription(); }
 
 		return description;
 	}
@@ -375,7 +376,7 @@ public final class Item extends GameEventHandler
 		}
 		else if ( ability != null )
 		{
-			icon = ability.getIcon();
+			icon = ability.current.current.getIcon();
 		}
 
 		if ( icon == null )
@@ -459,15 +460,7 @@ public final class Item extends GameEventHandler
 		if ( abilityElement != null )
 		{
 			abilityElement = abilityElement.getChild( 0 );
-
-			if ( abilityElement.getName() == "Active" )
-			{
-				ability = ActiveAbility.load( abilityElement );
-			}
-			else
-			{
-				ability = PassiveAbility.load( abilityElement );
-			}
+			ability = AbilityTree.load(abilityElement);
 		}
 
 		// Preload sprites

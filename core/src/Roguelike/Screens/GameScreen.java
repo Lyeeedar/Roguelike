@@ -1,5 +1,6 @@
 package Roguelike.Screens;
 
+import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.IAbility;
 import Roguelike.AssetManager;
@@ -180,7 +181,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	// ----------------------------------------------------------------------
 	public ActiveAbility preparedAbility;
-	public IAbility abilityToEquip;
+	public AbilityTree abilityToEquip;
 	private Array<Point> abilityTiles;
 	private Color tempColour = new Color();
 	private Tooltip tooltip;
@@ -1111,15 +1112,15 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			}
 			else if ( item.ability != null )
 			{
-				if ( item.ability instanceof ActiveAbility )
+				if ( item.ability.current.current instanceof ActiveAbility )
 				{
-					( (ActiveAbility) item.ability ).caster = Global.CurrentLevel.player;
+					( (ActiveAbility) item.ability.current.current ).caster = Global.CurrentLevel.player;
 				}
 
 				// Is ability
 				Table table = new Table();
 
-				table.add( item.ability.createTable( skin, Global.CurrentLevel.player ) ).expand().fill();
+				table.add( item.ability.current.current.createTable( skin, Global.CurrentLevel.player ) ).expand().fill();
 				table.row();
 
 				table.add( new Label( "-------------", skin ) );
@@ -1203,7 +1204,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			ActiveAbility ab = ActiveAbility.load( "Firebolt" );
 			Item item = new Item();
-			item.ability = ab;
+			item.ability = new AbilityTree( ab );
 
 			GameTile playerTile = Global.CurrentLevel.player.tile[ 0 ][ 0 ];
 
@@ -1240,10 +1241,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		else if ( keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
 		{
 			int i = keycode - Keys.NUM_1;
-			IAbility a = Global.CurrentLevel.player.slottedAbilities.get( i );
-			if ( a != null && a instanceof ActiveAbility && ( (ActiveAbility) a ).isAvailable() )
+			AbilityTree a = Global.CurrentLevel.player.slottedAbilities.get( i );
+			if ( a != null && a.current.current instanceof ActiveAbility && ( (ActiveAbility) a.current.current ).isAvailable() )
 			{
-				prepareAbility( (ActiveAbility) a );
+				prepareAbility( (ActiveAbility) a.current.current );
 			}
 		}
 		else if ( keycode == Keys.ENTER )
@@ -1606,10 +1607,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		for ( int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++ )
 		{
-			IAbility a = Global.CurrentLevel.player.slottedAbilities.get( i );
-			if ( a != null && a instanceof ActiveAbility && ( (ActiveAbility) a ).isAvailable() )
+			AbilityTree a = Global.CurrentLevel.player.slottedAbilities.get( i );
+			if ( a != null && a.current.current instanceof ActiveAbility && ( (ActiveAbility) a.current.current ).isAvailable() )
 			{
-				available.add( (ActiveAbility) a );
+				available.add( (ActiveAbility) a.current.current );
 			}
 		}
 
@@ -1759,6 +1760,18 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public void prepareAbility( ActiveAbility aa )
 	{
 		preparedAbility = aa;
+
+		if (preparedAbility == null)
+		{
+			if ( abilityTiles != null )
+			{
+				Global.PointPool.freeAll( abilityTiles );
+				abilityTiles = null;
+			}
+
+			return;
+		}
+
 		preparedAbility.caster = Global.CurrentLevel.player;
 		preparedAbility.source = Global.CurrentLevel.player.tile[ 0 ][ 0 ];
 

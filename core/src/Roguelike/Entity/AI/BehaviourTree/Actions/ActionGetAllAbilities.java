@@ -1,5 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
+import Roguelike.Ability.AbilityTree;
 import Roguelike.Global;
 import Roguelike.Ability.IAbility;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
@@ -19,11 +20,11 @@ public class ActionGetAllAbilities extends AbstractAction
 	{
 		Array<ActiveAbility> abilities = new Array<ActiveAbility>();
 
-		for ( IAbility a : entity.slottedAbilities )
+		for ( AbilityTree a : entity.slottedAbilities )
 		{
-			if ( a != null && a instanceof ActiveAbility )
+			if ( a != null && a.current.current instanceof ActiveAbility )
 			{
-				ActiveAbility ab = (ActiveAbility) a;
+				ActiveAbility ab = (ActiveAbility) a.current.current;
 
 				if ( ab.cooldownAccumulator <= 0 )
 				{

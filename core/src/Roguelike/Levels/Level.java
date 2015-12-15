@@ -1,5 +1,6 @@
 package Roguelike.Levels;
 
+import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Ability.IAbility;
 import Roguelike.AssetManager;
@@ -1084,11 +1085,11 @@ public class Level
 			{
 				// Global.save();
 
-				for ( IAbility a : player.slottedAbilities )
+				for ( AbilityTree a : player.slottedAbilities )
 				{
-					if ( a != null && a instanceof ActiveAbility )
+					if ( a != null && a.current.current instanceof ActiveAbility )
 					{
-						ActiveAbility aa = (ActiveAbility) a;
+						ActiveAbility aa = (ActiveAbility) a.current.current;
 
 						aa.source = player.tile[0][0];
 						aa.hasValidTargets = aa.getValidTargets().size > 0;
