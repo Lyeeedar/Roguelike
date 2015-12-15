@@ -42,12 +42,12 @@ public class EffectTypeField extends AbstractEffectType
 		if ( condition != null )
 		{
 			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, aa.variableMap, "" );
+			EquationHelper.setVariableNames( expB, aa.getVariableMap(), "" );
 
 			Expression exp = EquationHelper.tryBuild( expB );
 			if ( exp == null ) { return; }
 
-			EquationHelper.setVariableValues( exp, aa.variableMap, "" );
+			EquationHelper.setVariableValues( exp, aa.getVariableMap(), "" );
 
 			double conditionVal = exp.evaluate();
 
@@ -65,12 +65,12 @@ public class EffectTypeField extends AbstractEffectType
 			else
 			{
 				ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
-				EquationHelper.setVariableNames( expB, aa.variableMap, "" );
+				EquationHelper.setVariableNames( expB, aa.getVariableMap(), "" );
 
 				Expression exp = EquationHelper.tryBuild( expB );
 				if ( exp != null )
 				{
-					EquationHelper.setVariableValues( exp, aa.variableMap, "" );
+					EquationHelper.setVariableValues( exp, aa.getVariableMap(), "" );
 
 					stacks = (int) Math.ceil( exp.evaluate() );
 				}

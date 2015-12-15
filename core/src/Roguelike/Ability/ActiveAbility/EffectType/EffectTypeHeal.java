@@ -53,7 +53,7 @@ public class EffectTypeHeal extends AbstractEffectType
 		}
 		else
 		{
-			HashMap<String, Integer> variableMap = aa.variableMap;
+			HashMap<String, Integer> variableMap = aa.getVariableMap();
 
 			for ( String name : reliesOn )
 			{

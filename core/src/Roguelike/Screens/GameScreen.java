@@ -1114,7 +1114,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				if ( item.ability.current.current instanceof ActiveAbility )
 				{
-					( (ActiveAbility) item.ability.current.current ).caster = Global.CurrentLevel.player;
+					( (ActiveAbility) item.ability.current.current ).setCaster( Global.CurrentLevel.player );
 				}
 
 				// Is ability
@@ -1772,7 +1772,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			return;
 		}
 
-		preparedAbility.caster = Global.CurrentLevel.player;
+		preparedAbility.setCaster( Global.CurrentLevel.player );
 		preparedAbility.source = Global.CurrentLevel.player.tile[ 0 ][ 0 ];
 
 		if ( abilityTiles != null )

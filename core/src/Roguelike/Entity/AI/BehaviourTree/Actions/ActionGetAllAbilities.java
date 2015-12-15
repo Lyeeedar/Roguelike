@@ -28,7 +28,7 @@ public class ActionGetAllAbilities extends AbstractAction
 
 				if ( ab.cooldownAccumulator <= 0 )
 				{
-					ab.caster = entity;
+					ab.setCaster( entity );
 					ab.source = entity.tile[0][0];
 
 					Array<Point> validTargets = ab.getValidTargets();

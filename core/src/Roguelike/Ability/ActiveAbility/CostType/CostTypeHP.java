@@ -22,7 +22,7 @@ public class CostTypeHP extends AbstractCostType
 		int raw = calculateHPCost( aa );
 		if ( raw == -1 ) { return false; }
 
-		return raw < aa.caster.HP;
+		return raw < aa.getCaster().HP;
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class CostTypeHP extends AbstractCostType
 		int raw = calculateHPCost( aa );
 		if ( raw == -1 ) { return; }
 
-		aa.caster.applyDamage( raw, aa.caster );
+		aa.getCaster().applyDamage( raw, aa.getCaster() );
 	}
 
 	private int calculateHPCost( ActiveAbility aa )
@@ -43,7 +43,7 @@ public class CostTypeHP extends AbstractCostType
 		else
 		{
 
-			HashMap<String, Integer> variableMap = aa.variableMap;
+			HashMap<String, Integer> variableMap = aa.getVariableMap();
 
 			for ( String name : reliesOn )
 			{
@@ -90,7 +90,7 @@ public class CostTypeHP extends AbstractCostType
 	public String toString( ActiveAbility aa )
 	{
 		int raw = calculateHPCost( aa );
-		boolean valid = raw < aa.caster.HP;
+		boolean valid = raw < aa.getCaster().HP;
 		String colour = valid ? "[GREEN]" : "[RED]";
 
 		return colour + "Costs " + raw + " HP";

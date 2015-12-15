@@ -54,11 +54,9 @@ public class ActiveAbility implements IAbility, IGameObject
 	public Array<AbstractEffectType> effectTypes = new Array<AbstractEffectType>();
 	public Array<GameTile> AffectedTiles = new Array<GameTile>();
 	public GameTile source;
-	public GameEntity caster;
-	public HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
+	private GameEntity caster;
+	private HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
 	public EnumBitflag<Passability> abilityPassability = new EnumBitflag<Passability>( Passability.LEVITATE );
-	// ----------------------------------------------------------------------
-	// rendering
 	public Light light;
 	public Sprite Icon;
 	public boolean hasValidTargets = true;
@@ -75,6 +73,33 @@ public class ActiveAbility implements IAbility, IGameObject
 	private boolean singleSprite = false;
 	private Sprite useSprite;
 	private boolean spentCost = false;
+
+	// ----------------------------------------------------------------------
+	public void setCaster(GameEntity e)
+	{
+		caster = e;
+		setVariableMap( caster.getVariableMap() );
+	}
+
+	// ----------------------------------------------------------------------
+	public GameEntity getCaster()
+	{
+		return caster;
+	}
+
+	// ----------------------------------------------------------------------
+	public void setVariableMap(HashMap<String, Integer> map)
+	{
+		variableMap = map;
+	}
+
+	// ----------------------------------------------------------------------
+	public HashMap<String, Integer> getVariableMap()
+	{
+		variableMap.put("level", 1);
+
+		return variableMap;
+	}
 
 	// ----------------------------------------------------------------------
 	public static ActiveAbility load( String name )
@@ -153,21 +178,9 @@ public class ActiveAbility implements IAbility, IGameObject
 	}
 
 	// ----------------------------------------------------------------------
-	public Array<GameTile> getAffectedTiles()
-	{
-		return AffectedTiles;
-	}
-
-	// ----------------------------------------------------------------------
 	public Sprite getSprite()
 	{
 		return movementSprite;
-	}
-
-	// ----------------------------------------------------------------------
-	public Sprite getUseSprite()
-	{
-		return useSprite;
 	}
 
 	// ----------------------------------------------------------------------
@@ -623,12 +636,14 @@ public class ActiveAbility implements IAbility, IGameObject
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	@Override
 	public int getCooldown()
 	{
 		return cooldownAccumulator;
 	}
 
+	// ----------------------------------------------------------------------
 	@Override
 	public void setCooldown( int val )
 	{

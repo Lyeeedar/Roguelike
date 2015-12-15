@@ -30,7 +30,7 @@ public class CostTypeStatus extends AbstractCostType
 	@Override
 	public boolean isCostAvailable( ActiveAbility aa )
 	{
-		HashMap<String, Integer> variableMap = aa.variableMap;
+		HashMap<String, Integer> variableMap = aa.getVariableMap();
 
 		for ( String name : reliesOn )
 		{
@@ -40,7 +40,7 @@ public class CostTypeStatus extends AbstractCostType
 			}
 		}
 
-		Array<StatusEffectStack> stacks = aa.caster.stackStatusEffects();
+		Array<StatusEffectStack> stacks = aa.getCaster().stackStatusEffects();
 
 		int count = 0;
 
@@ -79,7 +79,7 @@ public class CostTypeStatus extends AbstractCostType
 	@Override
 	public void spendCost( ActiveAbility aa )
 	{
-		HashMap<String, Integer> variableMap = aa.variableMap;
+		HashMap<String, Integer> variableMap = aa.getVariableMap();
 
 		for ( String name : reliesOn )
 		{
@@ -110,7 +110,7 @@ public class CostTypeStatus extends AbstractCostType
 
 		for ( int i = 0; i < count; i++ )
 		{
-			aa.caster.removeStatusEffect( status );
+			aa.getCaster().removeStatusEffect( status );
 		}
 	}
 
@@ -128,7 +128,7 @@ public class CostTypeStatus extends AbstractCostType
 	@Override
 	public String toString( ActiveAbility aa )
 	{
-		HashMap<String, Integer> variableMap = aa.variableMap;
+		HashMap<String, Integer> variableMap = aa.getVariableMap();
 
 		for ( String name : reliesOn )
 		{
@@ -138,7 +138,7 @@ public class CostTypeStatus extends AbstractCostType
 			}
 		}
 
-		Array<StatusEffectStack> stacks = aa.caster.stackStatusEffects();
+		Array<StatusEffectStack> stacks = aa.getCaster().stackStatusEffects();
 
 		ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
 		EquationHelper.setVariableNames( expB, variableMap, "" );

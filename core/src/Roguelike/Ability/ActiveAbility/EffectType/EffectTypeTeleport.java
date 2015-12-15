@@ -49,7 +49,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 
 		if ( toMove == ToMove.CASTER )
 		{
-			entityToMove = aa.caster;
+			entityToMove = aa.getCaster();
 			destination = getDestination( aa.source, tile, entityToMove );
 		}
 		else if ( toMove == ToMove.TARGET )

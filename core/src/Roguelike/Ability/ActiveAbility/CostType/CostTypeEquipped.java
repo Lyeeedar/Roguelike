@@ -15,7 +15,7 @@ public class CostTypeEquipped extends AbstractCostType
 	{
 		for (EquipmentSlot slot : EquipmentSlot.values())
 		{
-			Item item = aa.caster.getInventory().getEquip(slot);
+			Item item = aa.getCaster().getInventory().getEquip(slot);
 			if (item != null && item.type != null)
 			{
 				if (item.type.equals(equipped))
@@ -24,14 +24,14 @@ public class CostTypeEquipped extends AbstractCostType
 				}
 			}
 		}
-		
+
 		return false;
 	}
 
 	@Override
 	public String toString(ActiveAbility aa)
 	{
-		String colour = isCostAvailable(aa) ? "[GREEN]" : "[RED]";	
+		String colour = isCostAvailable(aa) ? "[GREEN]" : "[RED]";
 		return colour+"Requires "+equipped+" equipped.";
 	}
 
@@ -51,7 +51,7 @@ public class CostTypeEquipped extends AbstractCostType
 	{
 		CostTypeEquipped cost = new CostTypeEquipped();
 		cost.equipped = equipped;
-		
+
 		return cost;
 	}
 

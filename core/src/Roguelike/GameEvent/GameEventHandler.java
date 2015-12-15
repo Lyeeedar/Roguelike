@@ -33,6 +33,7 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnTaskEvent> onUseAbilityEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnDeathEvent> onDeathEvents = new Array<AbstractOnDeathEvent>();
 
+	// ----------------------------------------------------------------------
 	public int getStatistic( HashMap<String, Integer> variableMap, Statistic s )
 	{
 		int val = 0;
@@ -45,6 +46,7 @@ public abstract class GameEventHandler implements IGameObject
 		return val;
 	}
 
+	// ----------------------------------------------------------------------
 	public FastEnumMap<Statistic, Integer> getStatistics( HashMap<String, Integer> variableMap )
 	{
 		FastEnumMap<Statistic, Integer> newMap = new FastEnumMap<Statistic, Integer>( Statistic.class );
@@ -57,11 +59,13 @@ public abstract class GameEventHandler implements IGameObject
 		return newMap;
 	}
 
+	// ----------------------------------------------------------------------
 	public FastEnumMap<Statistic, String> getStatisticsObject()
 	{
 		return constantEvent.equations;
 	}
 
+	// ----------------------------------------------------------------------
 	public void onDeath( Entity entity, Entity killer )
 	{
 		boolean successfulProcess = false;
@@ -81,6 +85,7 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	public void onTurn( Entity entity, float cost )
 	{
 		boolean successfulProcess = false;
@@ -100,6 +105,7 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	public void onDealDamage( DamageObject obj )
 	{
 		boolean successfulProcess = false;
@@ -119,6 +125,7 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	public void onReceiveDamage( DamageObject obj )
 	{
 		boolean successfulProcess = false;
@@ -138,6 +145,7 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	public void onTask( Entity entity, AbstractTask task )
 	{
 		if ( task instanceof TaskMove )
@@ -174,6 +182,7 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	public void onMove( Entity entity, TaskMove task )
 	{
 		boolean successfulProcess = false;
@@ -193,6 +202,7 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	public void onAttack( Entity entity, TaskAttack task )
 	{
 		boolean successfulProcess = false;
@@ -212,6 +222,7 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	public void onWait( Entity entity, TaskWait task )
 	{
 		boolean successfulProcess = false;
@@ -231,6 +242,7 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	public void onUseAbility( Entity entity, TaskUseAbility task )
 	{
 		boolean successfulProcess = false;
@@ -250,11 +262,13 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	public void processed()
 	{
 
 	}
 
+	// ----------------------------------------------------------------------
 	protected void parse( Element xml )
 	{
 		Element onTurnElements = xml.getChildByName( "OnTurn" );
@@ -354,6 +368,7 @@ public abstract class GameEventHandler implements IGameObject
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	public Array<String> toString( HashMap<String, Integer> variableMap )
 	{
 		Array<String> lines = new Array<String>();

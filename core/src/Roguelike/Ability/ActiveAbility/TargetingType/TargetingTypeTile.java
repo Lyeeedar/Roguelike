@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public class TargetingTypeTile extends AbstractTargetingType
 {
 	private boolean notSelf;
-	
+
 	@Override
 	public void parse(Element xml)
 	{
@@ -17,10 +17,10 @@ public class TargetingTypeTile extends AbstractTargetingType
 
 	@Override
 	public boolean isTargetValid(ActiveAbility ab, GameTile tile)
-	{		
+	{
 		if (notSelf)
 		{
-			return tile.entity == null || tile.entity != ab.caster;
+			return tile.entity == null || tile.entity != ab.getCaster();
 		}
 		else
 		{
@@ -28,13 +28,13 @@ public class TargetingTypeTile extends AbstractTargetingType
 		}
 	}
 
-	
+
 	@Override
 	public AbstractTargetingType copy()
 	{
 		TargetingTypeTile t = new TargetingTypeTile();
 		t.notSelf = notSelf;
-		
+
 		return t;
 	}
 }

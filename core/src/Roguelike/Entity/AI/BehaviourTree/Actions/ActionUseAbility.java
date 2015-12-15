@@ -26,7 +26,7 @@ public class ActionUseAbility extends AbstractAction
 			return State;
 		}
 
-		ability.caster = entity;
+		ability.setCaster( entity );
 		ability.source = entity.tile[0][0];
 
 		Array<Point> validTargets = ability.getValidTargets();

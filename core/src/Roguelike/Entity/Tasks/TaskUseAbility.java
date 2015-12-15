@@ -22,9 +22,8 @@ public class TaskUseAbility extends AbstractTask
 
 		ActiveAbility aa = ability.copy();
 
-		aa.caster = obj;
+		aa.setCaster( obj );
 		aa.source = obj.tile[0][0];
-		aa.variableMap = obj.getVariableMap();
 
 		aa.lockTarget( obj.tile[0][0].level.getGameTile( target ) );
 

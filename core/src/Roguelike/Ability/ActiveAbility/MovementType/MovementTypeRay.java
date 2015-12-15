@@ -22,7 +22,7 @@ public class MovementTypeRay extends AbstractMovementType
 	@Override
 	public void init( ActiveAbility ab, int endx, int endy )
 	{
-		Array<Point> path = BresenhamLine.line( ab.source.x, ab.source.y, endx, endy, ab.source.level.getGrid(), false, ab.getRange(), RayPassability, ab.caster );
+		Array<Point> path = BresenhamLine.line( ab.source.x, ab.source.y, endx, endy, ab.source.level.getGrid(), false, ab.getRange(), RayPassability, ab.getCaster() );
 
 		ab.AffectedTiles.clear();
 
@@ -32,7 +32,7 @@ public class MovementTypeRay extends AbstractMovementType
 			GameTile tile = ab.source.level.getGameTile( p );
 			ab.AffectedTiles.add( tile );
 
-			if ( !tile.getPassable( RayPassability, ab.caster ) )
+			if ( !tile.getPassable( RayPassability, ab.getCaster() ) )
 			{
 				break;
 			}

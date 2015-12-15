@@ -13,10 +13,10 @@ public class TargetingTypeEntity extends AbstractTargetingType
 		ENEMY,
 		BOTH
 	}
-	
+
 	private boolean notSelf;
 	private TargetType targetType;
-	
+
 	@Override
 	public void parse(Element xml)
 	{
@@ -28,15 +28,15 @@ public class TargetingTypeEntity extends AbstractTargetingType
 	public boolean isTargetValid(ActiveAbility ab, GameTile tile)
 	{
 		if (tile.entity == null) { return false; }
-		if (notSelf && tile.entity == ab.caster) { return false; }
-		
+		if (notSelf && tile.entity == ab.getCaster()) { return false; }
+
 		if (targetType == TargetType.ALLY)
 		{
-			return tile.entity.isAllies(ab.caster);
+			return tile.entity.isAllies(ab.getCaster());
 		}
 		else if (targetType == TargetType.ENEMY)
 		{
-			return !tile.entity.isAllies(ab.caster);
+			return !tile.entity.isAllies(ab.getCaster());
 		}
 		else
 		{
@@ -44,14 +44,14 @@ public class TargetingTypeEntity extends AbstractTargetingType
 		}
 	}
 
-	
+
 	@Override
 	public AbstractTargetingType copy()
 	{
 		TargetingTypeEntity t = new TargetingTypeEntity();
 		t.notSelf = notSelf;
 		t.targetType = targetType;
-		
+
 		return t;
 	}
 

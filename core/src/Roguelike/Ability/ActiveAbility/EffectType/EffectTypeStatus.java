@@ -23,13 +23,13 @@ public class EffectTypeStatus extends AbstractEffectType
 	{
 		if ( tile.entity != null )
 		{
-			DamageObject ao = new DamageObject( aa.caster, tile.entity, aa.variableMap );
+			DamageObject ao = new DamageObject( aa.getCaster(), tile.entity, aa.getVariableMap() );
 			statusEvent.handle( ao, aa );
 		}
 
 		if ( tile.environmentEntity != null )
 		{
-			DamageObject ao = new DamageObject( aa.caster, tile.environmentEntity, aa.variableMap );
+			DamageObject ao = new DamageObject( aa.getCaster(), tile.environmentEntity, aa.getVariableMap() );
 			statusEvent.handle( ao, aa );
 		}
 	}
@@ -45,6 +45,6 @@ public class EffectTypeStatus extends AbstractEffectType
 	@Override
 	public String toString( ActiveAbility aa )
 	{
-		return String.join( "\n", statusEvent.toString( aa.variableMap, aa ) );
+		return String.join( "\n", statusEvent.toString( aa.getVariableMap(), aa ) );
 	}
 }

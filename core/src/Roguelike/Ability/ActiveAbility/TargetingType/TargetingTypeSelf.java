@@ -15,10 +15,10 @@ public class TargetingTypeSelf extends AbstractTargetingType
 	@Override
 	public boolean isTargetValid(ActiveAbility ab, GameTile tile)
 	{
-		return tile.entity == ab.caster;
+		return tile.entity == ab.getCaster();
 	}
 
-	
+
 	@Override
 	public AbstractTargetingType copy()
 	{
