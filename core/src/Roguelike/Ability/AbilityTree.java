@@ -17,6 +17,8 @@ public class AbilityTree
 	{
 		root = new AbilityStage( ability );
 		current = root;
+
+		ability.setTree(this);
 	}
 
 	public void parse(XmlReader.Element xml )
@@ -36,6 +38,10 @@ public class AbilityTree
 	{
 		public IAbility current;
 
+		public int level = 1;
+		public int expToNextLevel = 100;
+		public int exp;
+
 		public AbilityStage branch1;
 		public AbilityStage branch2;
 
@@ -45,6 +51,20 @@ public class AbilityTree
 		public AbilityStage(IAbility ability)
 		{
 			current = ability;
+		}
+
+		public void gainExp(int _exp)
+		{
+			if (level == 10) { return; }
+
+			exp += _exp;
+
+			if (exp >= expToNextLevel)
+			{
+				level++;
+				exp -= expToNextLevel;
+				expToNextLevel += level * 50;
+			}
 		}
 	}
 }

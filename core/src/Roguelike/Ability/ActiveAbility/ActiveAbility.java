@@ -1,5 +1,6 @@
 package Roguelike.Ability.ActiveAbility;
 
+import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.ActiveAbility.CostType.AbstractCostType;
 import Roguelike.Ability.ActiveAbility.EffectType.AbstractEffectType;
 import Roguelike.Ability.ActiveAbility.MovementType.AbstractMovementType;
@@ -74,11 +75,20 @@ public class ActiveAbility implements IAbility, IGameObject
 	private Sprite useSprite;
 	private boolean spentCost = false;
 
+	public AbilityTree tree;
+
 	// ----------------------------------------------------------------------
 	public void setCaster(GameEntity e)
 	{
 		caster = e;
 		setVariableMap( caster.getVariableMap() );
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public void setTree(AbilityTree tree)
+	{
+		this.tree = tree;
 	}
 
 	// ----------------------------------------------------------------------
@@ -96,7 +106,14 @@ public class ActiveAbility implements IAbility, IGameObject
 	// ----------------------------------------------------------------------
 	public HashMap<String, Integer> getVariableMap()
 	{
-		variableMap.put("level", 1);
+		if (tree != null)
+		{
+			variableMap.put("level", tree.current.level);
+		}
+		else
+		{
+			variableMap.put("level", 1);
+		}
 
 		return variableMap;
 	}
@@ -657,6 +674,22 @@ public class ActiveAbility implements IAbility, IGameObject
 		Table table = new Table();
 
 		table.add( new Label( name, skin, "title" ) ).expandX().left();
+		table.row();
+
+		String level = "Level: " + tree.current.level;
+
+		if (tree.current.level == 10)
+		{
+			level += " ( Mutate )";
+		}
+		else
+		{
+			float per = (float) tree.current.exp / (float) tree.current.expToNextLevel;
+			per *= 100;
+			level += " ( " + (int)per + "% )";
+		}
+
+		table.add(new Label(level, skin)).left();
 		table.row();
 
 		Label descLabel = new Label( description, skin );

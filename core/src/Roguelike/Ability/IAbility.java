@@ -11,6 +11,8 @@ public interface IAbility
 
 	String getName();
 
+	void setTree(AbilityTree tree);
+
 	void onTurn();
 
 	int getCooldown();

@@ -1,7 +1,9 @@
 package Roguelike.Ability.PassiveAbility;
 
 import java.io.IOException;
+import java.util.HashMap;
 
+import Roguelike.Ability.AbilityTree;
 import Roguelike.AssetManager;
 import Roguelike.Ability.IAbility;
 import Roguelike.Entity.Entity;
@@ -21,6 +23,29 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 	public String Description;
 	public Sprite Icon;
 
+	public AbilityTree tree;
+
+	// ----------------------------------------------------------------------
+	@Override
+	public void setTree(AbilityTree tree)
+	{
+		this.tree = tree;
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	protected void appendExtraVariables(HashMap<String, Integer> variableMap )
+	{
+		if (tree != null)
+		{
+			variableMap.put("level", tree.current.level);
+		}
+		else
+		{
+			variableMap.put("level", 1);
+		}
+	}
+
 	// ----------------------------------------------------------------------
 	@Override
 	public Sprite getIcon()
@@ -35,6 +60,22 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 		Table table = new Table();
 
 		table.add( new Label( Name, skin, "title" ) ).expandX().left();
+		table.row();
+
+		String level = "Level: " + tree.current.level;
+
+		if (tree.current.level == 10)
+		{
+			level += " ( Mutate )";
+		}
+		else
+		{
+			float per = (float) tree.current.exp / (float) tree.current.expToNextLevel;
+			per *= 100;
+			level += " ( " + (int)per + "% )";
+		}
+
+		table.add(new Label(level, skin)).left();
 		table.row();
 
 		Label descLabel = new Label( Description, skin );

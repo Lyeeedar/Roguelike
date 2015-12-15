@@ -34,8 +34,16 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnDeathEvent> onDeathEvents = new Array<AbstractOnDeathEvent>();
 
 	// ----------------------------------------------------------------------
+	protected void appendExtraVariables(HashMap<String, Integer> variableMap)
+	{
+
+	}
+
+	// ----------------------------------------------------------------------
 	public int getStatistic( HashMap<String, Integer> variableMap, Statistic s )
 	{
+		appendExtraVariables( variableMap );
+
 		int val = 0;
 
 		if ( constantEvent != null )
@@ -68,6 +76,8 @@ public abstract class GameEventHandler implements IGameObject
 	// ----------------------------------------------------------------------
 	public void onDeath( Entity entity, Entity killer )
 	{
+		appendExtraVariables( entity.getVariableMap() );
+
 		boolean successfulProcess = false;
 		for ( AbstractOnDeathEvent event : onDeathEvents )
 		{
@@ -88,6 +98,8 @@ public abstract class GameEventHandler implements IGameObject
 	// ----------------------------------------------------------------------
 	public void onTurn( Entity entity, float cost )
 	{
+		appendExtraVariables( entity.getVariableMap() );
+
 		boolean successfulProcess = false;
 		for ( AbstractOnTurnEvent event : onTurnEvents )
 		{
@@ -108,6 +120,8 @@ public abstract class GameEventHandler implements IGameObject
 	// ----------------------------------------------------------------------
 	public void onDealDamage( DamageObject obj )
 	{
+		appendExtraVariables( obj.attackerVariableMap );
+
 		boolean successfulProcess = false;
 		for ( AbstractOnDamageEvent event : onDealDamageEvents )
 		{
@@ -128,6 +142,8 @@ public abstract class GameEventHandler implements IGameObject
 	// ----------------------------------------------------------------------
 	public void onReceiveDamage( DamageObject obj )
 	{
+		appendExtraVariables( obj.defenderVariableMap );
+
 		boolean successfulProcess = false;
 		for ( AbstractOnDamageEvent event : onReceiveDamageEvents )
 		{
@@ -148,6 +164,8 @@ public abstract class GameEventHandler implements IGameObject
 	// ----------------------------------------------------------------------
 	public void onTask( Entity entity, AbstractTask task )
 	{
+		appendExtraVariables( entity.getVariableMap() );
+
 		if ( task instanceof TaskMove )
 		{
 			onMove( entity, (TaskMove) task );

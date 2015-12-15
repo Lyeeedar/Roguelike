@@ -2,7 +2,6 @@ package Roguelike.Levels;
 
 import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
-import Roguelike.Ability.IAbility;
 import Roguelike.AssetManager;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.Entity.Entity;
@@ -628,7 +627,14 @@ public class Level
 
 						if ( type == GameTile.OrbType.EXPERIENCE )
 						{
-							GameScreen.Instance.addActorEssenceAction( player, val );
+							GameScreen.Instance.addActorExperienceAction( player, val );
+							for (AbilityTree tree : player.slottedAbilities)
+							{
+								if (tree != null)
+								{
+									tree.current.gainExp( val );
+								}
+							}
 						}
 						else if ( type == GameTile.OrbType.HEALTH )
 						{

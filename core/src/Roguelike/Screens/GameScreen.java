@@ -1933,7 +1933,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
-	public void addActorEssenceAction( Entity entity, int essence )
+	public void addActorExperienceAction( Entity entity, int essence )
 	{
 		int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
 		int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
@@ -1944,7 +1944,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		int cx = x * Global.TileSize + offsetx;
 		int cy = y * Global.TileSize + offsety;
 
-		Label label = new Label( "+" + essence + " essence", skin );
+		Label label = new Label( "+" + essence + " exp", skin );
 		label.setColor( Color.YELLOW );
 
 		label.addAction( new SequenceAction( Actions.moveTo( cx, cy + Global.TileSize / 2 + Global.TileSize / 2, 0.5f ), Actions.removeActor() ) );
