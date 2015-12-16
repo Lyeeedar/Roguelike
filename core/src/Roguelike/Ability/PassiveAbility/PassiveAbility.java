@@ -23,11 +23,11 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 	public String Description;
 	public Sprite Icon;
 
-	public AbilityTree tree;
+	public AbilityTree.AbilityStage tree;
 
 	// ----------------------------------------------------------------------
 	@Override
-	public void setTree(AbilityTree tree)
+	public void setTree(AbilityTree.AbilityStage tree )
 	{
 		this.tree = tree;
 	}
@@ -38,7 +38,7 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 	{
 		if (tree != null)
 		{
-			variableMap.put("level", tree.current.level);
+			variableMap.put("level", tree.level);
 		}
 		else
 		{
@@ -62,15 +62,22 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 		table.add( new Label( Name, skin, "title" ) ).expandX().left();
 		table.row();
 
-		String level = "Level: " + tree.current.level;
+		String level = "Level: " + tree.level;
 
-		if (tree.current.level == 10)
+		if (tree.level == 10)
 		{
-			level += " ( Mutate )";
+			if (tree.branch1 != null)
+			{
+				level += " ( Mutate )";
+			}
+			else
+			{
+				level += " ( Max )";
+			}
 		}
 		else
 		{
-			float per = (float) tree.current.exp / (float) tree.current.expToNextLevel;
+			float per = (float) tree.exp / (float) tree.expToNextLevel;
 			per *= 100;
 			level += " ( " + (int)per + "% )";
 		}

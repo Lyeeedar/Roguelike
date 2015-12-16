@@ -1,0 +1,38 @@
+<ActiveAbility>
+
+    <Name>Firebolt</Name>
+    <Description>A blast of flame.</Description>
+
+    <Cooldown>10</Cooldown>
+    <Range>3</Range>
+
+    <Icon>
+        <Name>Abilities/Pyromaniac/Flamestrike</Name>
+        <Colour><RGB>255,165,0</RGB></Colour>
+    </Icon>
+
+    <HitSprite>
+        <Name>AbilitySprites/FireBurst/FireBurst</Name>
+        <UpdateRate>0.1</UpdateRate>
+        <Sound>
+            <Name>fire_torch_pass_by_large_heavy_with_crackle_2</Name>
+        </Sound>
+    </HitSprite>
+
+    <Targeting>
+        <Entity Type="Enemy"></Entity>
+    </Targeting>
+
+    <Movement>
+        <Smite>
+        </Smite>
+    </Movement>
+
+    <Effect>
+        <Damage>
+            <Attack>50 + 5 * level</Attack>
+            <Willpower>1</Willpower>
+        </Damage>
+    </Effect>
+
+</ActiveAbility>

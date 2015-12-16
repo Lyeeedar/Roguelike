@@ -1,0 +1,45 @@
+<ActiveAbility>
+
+	<Name>Flame Surge</Name>
+	<Description>A surge of fire washes over your foes.</Description>
+
+	<Cooldown>15</Cooldown>
+	<Cone>2</Cone>
+	<Range>1</Range>
+
+	<Icon>
+		<Name>Abilities/Pyromaniac/StickyFlames</Name>
+		<Colour><RGB>255,165,0</RGB></Colour>
+	</Icon>
+
+	<HitSprite>
+		<Name>AbilitySprites/FireBurst/FireBurst</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Sound>
+		    <Name>fire_torch_pass_by_large_heavy_with_crackle_2</Name>
+		</Sound>
+	</HitSprite>
+
+	<Targeting>
+		<Direction></Direction>
+	</Targeting>
+
+	<Movement>
+		<Smite />
+	</Movement>
+
+	<Effect>
+        <Damage>
+            <Attack>100 + 5 * level</Attack>
+            <Willpower>1</Willpower>
+        </Damage>
+		<Status>
+		    <Defender>Burning</Defender>
+		    <Stacks>level</Stacks>
+		</Status>
+		<Field Condition="rnd(1) < 0.05*level">
+		    <Field>Fire</Field>
+		</Field>
+	</Effect>
+
+</ActiveAbility>

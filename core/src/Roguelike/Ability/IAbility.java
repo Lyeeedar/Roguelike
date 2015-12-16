@@ -11,7 +11,7 @@ public interface IAbility
 
 	String getName();
 
-	void setTree(AbilityTree tree);
+	void setTree(AbilityTree.AbilityStage tree );
 
 	void onTurn();
 

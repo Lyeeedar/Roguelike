@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
-public class SpriteWidget extends Widget 
+public class SpriteWidget extends Widget
 {
 	private Sprite drawable;
 	private Scaling scaling = Scaling.stretch;
@@ -19,14 +19,14 @@ public class SpriteWidget extends Widget
 	private float width;
 	private float height;
 
-	public SpriteWidget (Sprite sprite, int width, int height) 
+	public SpriteWidget (Sprite sprite, int width, int height)
 	{
 		this.drawable = sprite;
 		this.width = width;
 		this.height = height;
 	}
 
-	public void layout () 
+	public void layout ()
 	{
 		if (drawable == null) return;
 
@@ -54,7 +54,7 @@ public class SpriteWidget extends Widget
 			imageY = (int)(height / 2 - imageHeight / 2);
 	}
 
-	public void draw (Batch batch, float parentAlpha) 
+	public void draw (Batch batch, float parentAlpha)
 	{
 		validate();
 
@@ -66,28 +66,28 @@ public class SpriteWidget extends Widget
 		float scaleX = getScaleX();
 		float scaleY = getScaleY();
 
-		drawable.render(((SpriteBatch)batch), (int) (x + imageX), (int) (y + imageY), (int) (imageWidth * scaleX), (int) (imageHeight * scaleY));
+		drawable.render(batch, (int) (x + imageX), (int) (y + imageY), (int) (imageWidth * scaleX), (int) (imageHeight * scaleY));
 	}
 
 	@Override
-	public float getPrefWidth () 
+	public float getPrefWidth ()
 	{
 		return width;
 	}
 
 	@Override
-	public float getPrefHeight () 
+	public float getPrefHeight ()
 	{
 		return height;
 	}
-	
+
 	@Override
 	public void setSize(float width, float height)
 	{
 		this.width = width;
 		this.height = height;
 	}
-	
+
 	@Override
 	public void act(float delta)
 	{

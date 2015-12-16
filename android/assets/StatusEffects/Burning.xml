@@ -1,18 +1,18 @@
 <StatusEffect>
 	<Name>Burning</Name>
-	<Description>Flames lick over your body, doing more damage the more stacks there are.</Description>
+	<Description>Flames lick over your body.</Description>
 	<Duration>5</Duration>
-	
+
 	<Icon>
 		<Name>Skills/Burning</Name>
 	</Icon>
-	
+
 	<Events>
 		<OnTurn>
 			<DOT ReliesOn="Burning">
-				<Fire_Atk>5+BURNING/5</Fire_Atk>
+				<Attack>5</Attack>
 			</DOT>
 		</OnTurn>
 	</Events>
-	
+
 </StatusEffect>

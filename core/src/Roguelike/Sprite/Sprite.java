@@ -57,6 +57,11 @@ public final class Sprite
 		this.colour = colour;
 	}
 
+	public float getLifetime()
+	{
+		return animationDelay * textures.size;
+	}
+
 	public boolean update( float delta )
 	{
 		if ( renderDelay > 0 )

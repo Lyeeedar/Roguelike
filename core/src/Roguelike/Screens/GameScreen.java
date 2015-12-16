@@ -261,6 +261,17 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		Global.CurrentLevel.update( delta );
 		processPickupQueue();
 
+		if (contextMenu == null)
+		{
+			for (AbilityTree tree : Global.CurrentLevel.player.slottedAbilities)
+			{
+				if (tree != null && tree.current.level == 10 && tree.current.branch1 != null)
+				{
+					tree.current.mutate( skin, Global.CurrentLevel.player, stage );
+				}
+			}
+		}
+
 		int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
 		int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
 
@@ -1203,8 +1214,21 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		else if ( keycode == Keys.A )
 		{
 			ActiveAbility ab = ActiveAbility.load( "Firebolt" );
+			ActiveAbility ab1 = ActiveAbility.load( "Fireball" );
+			ActiveAbility ab2 = ActiveAbility.load( "FlameSurge" );
+
 			Item item = new Item();
 			item.ability = new AbilityTree( ab );
+			item.ability.current.branch1 = new AbilityTree.AbilityStage( ab1 );
+			item.ability.current.branch2 = new AbilityTree.AbilityStage( ab2 );
+
+			item.ability.current.branch1.tree = item.ability;
+			item.ability.current.branch2.tree = item.ability;
+
+			ab1.setTree( item.ability.current.branch1 );
+			ab2.setTree( item.ability.current.branch2 );
+			ab1.setCaster( Global.CurrentLevel.player );
+			ab2.setCaster( Global.CurrentLevel.player );
 
 			GameTile playerTile = Global.CurrentLevel.player.tile[ 0 ][ 0 ];
 
@@ -1930,6 +1954,19 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		label.setVisible( true );
 
 		entity.damageAccumulator = 0;
+	}
+
+	// ----------------------------------------------------------------------
+	public void addSpriteAction(Sprite sprite, int x, int y, int width, int height)
+	{
+		float duration = sprite.getLifetime();
+
+		Table table = new Table();
+		table.add( new SpriteWidget( sprite, width, height ) );
+		table.addAction( Actions.delay( duration, Actions.removeActor() ) );
+		table.setPosition( x, y );
+		stage.addActor( table );
+		table.setVisible( true );
 	}
 
 	// ----------------------------------------------------------------------

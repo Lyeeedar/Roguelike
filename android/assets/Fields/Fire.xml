@@ -10,10 +10,10 @@
 			<Red>1</Red>
 			<Green>0.9</Green>
 		</Colour>
-		
+
 		<Intensity>4</Intensity>
 		<Flicker>3</Flicker>
-	</Light>  
+	</Light>
     <Duration>
         <Fade>
             <Rate>5</Rate>
@@ -27,7 +27,7 @@
     </Spread>
     <OnTurn>
         <Damage>
-            <Fire_Atk>20</Fire_Atk>
+            <Attack>20</Attack>
         </Damage>
         <Status>
             <Status>Burning</Status>

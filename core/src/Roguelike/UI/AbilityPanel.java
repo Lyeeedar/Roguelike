@@ -9,6 +9,7 @@ import Roguelike.Global;
 import Roguelike.Items.Item;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -177,7 +178,19 @@ public class AbilityPanel extends TilePanel
 	@Override
 	public void onDrawItemForeground( Object data, Batch batch, int x, int y, int width, int height )
 	{
+		if (data instanceof AbilityTree)
+		{
+			AbilityTree tree = (AbilityTree) data;
 
+			if (tree.current.needsLevelAnim)
+			{
+				Sprite sprite = AssetManager.loadSprite( "AbilitySprites/Heal/Heal", 0.1f );
+
+				GameScreen.Instance.addSpriteAction( sprite, x+width/2, y+height/2, width, height );
+
+				tree.current.needsLevelAnim = false;
+			}
+		}
 	}
 
 }
