@@ -1,9 +1,11 @@
 package Roguelike.Ability;
-
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Global;
 import Roguelike.Screens.GameScreen;
 import Roguelike.UI.Tooltip;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,38 +14,42 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.XmlReader;
 
+import java.io.IOException;
+
 /**
  * Created by Philip on 15-Dec-15.
  */
 public class AbilityTree
 {
+	public String treePath;
+
 	public AbilityStage root;
 	public AbilityStage current;
 
-	public AbilityTree()
-	{}
-
-	public AbilityTree(IAbility ability)
+	public AbilityTree( IAbility ability )
 	{
-		root = new AbilityStage( ability );
-		root.tree = this;
-
+		root = new AbilityStage( this, ability );
 		current = root;
-
-		ability.setTree(root);
 	}
 
-	public void parse(XmlReader.Element xml )
-	{}
-
-
-	public static AbilityTree load( XmlReader.Element xml )
+	public AbilityTree( String treePath )
 	{
-		AbilityTree tree = new AbilityTree(  );
+		this.treePath = treePath;
 
-		tree.parse( xml );
+		XmlReader xmlReader = new XmlReader();
+		XmlReader.Element treeElement = null;
 
-		return tree;
+		try
+		{
+			treeElement = xmlReader.parse( Gdx.files.internal( "Abilities/" + treePath + "/AbilityTree.xml" ) );
+		}
+		catch ( IOException e )
+		{
+			e.printStackTrace();
+		}
+
+		root = new AbilityStage( this, treeElement );
+		current = root;
 	}
 
 	public static class AbilityStage
@@ -53,7 +59,7 @@ public class AbilityTree
 		public IAbility current;
 
 		public int level = 1;
-		public int expToNextLevel = 10;
+		public int expToNextLevel = 100;
 		public int exp;
 
 		public boolean needsLevelAnim;
@@ -61,12 +67,17 @@ public class AbilityTree
 		public AbilityStage branch1;
 		public AbilityStage branch2;
 
-		public AbilityStage()
-		{}
-
-		public AbilityStage(IAbility ability)
+		public AbilityStage( AbilityTree tree, IAbility ability )
 		{
-			current = ability;
+			this.tree = tree;
+			this.current = ability;
+			ability.setTree(this);
+		}
+
+		public AbilityStage( AbilityTree tree, XmlReader.Element xml )
+		{
+			this.tree = tree;
+			parse( xml );
 		}
 
 		public void gainExp(int _exp)
@@ -79,7 +90,7 @@ public class AbilityTree
 			{
 				level++;
 				exp -= expToNextLevel;
-				//expToNextLevel += level * 50;
+				expToNextLevel *= 1.5f;
 				needsLevelAnim = true;
 			}
 		}
@@ -87,6 +98,9 @@ public class AbilityTree
 		public void mutate( Skin skin, Entity entity, Stage stage )
 		{
 			Table table = new Table();
+
+			branch1.current.setCaster(entity);
+			branch2.current.setCaster(entity);
 
 			table.add( branch1.current.createTable( skin, entity ) );
 			table.add( branch2.current.createTable( skin, entity ) );
@@ -138,6 +152,46 @@ public class AbilityTree
 			GameScreen.Instance.contextMenu = new Tooltip( table, skin, stage );
 			GameScreen.Instance.contextMenu.show( Global.Resolution[ 0 ] / 2 - GameScreen.Instance.contextMenu.getWidth() / 2, Global.Resolution[ 1 ] / 2 - GameScreen.Instance.contextMenu.getHeight() );
 			GameScreen.Instance.lockContextMenu = true;
+		}
+
+		public void parse( XmlReader.Element xml )
+		{
+			String abilityPath = tree.treePath + "/" + xml.getName();
+
+			XmlReader xmlReader = new XmlReader();
+			XmlReader.Element abilityElement = null;
+
+			try
+			{
+				abilityElement = xmlReader.parse( Gdx.files.internal( "Abilities/" + abilityPath + ".xml" ) );
+			}
+			catch ( IOException e )
+			{
+				e.printStackTrace();
+			}
+
+			if (abilityElement.getName().equalsIgnoreCase("Active"))
+			{
+				current = ActiveAbility.load( abilityElement );
+			}
+			else if (abilityElement.getName().equalsIgnoreCase("Passive"))
+			{
+				current = PassiveAbility.load( abilityElement );
+			}
+			else
+			{
+				throw new RuntimeException("Unknown ability type: "+abilityElement.getName());
+			}
+
+			current.setTree( this );
+
+			expToNextLevel = xml.getIntAttribute("BaseExp", 100);
+
+			if (xml.getChildCount() > 0)
+			{
+				branch1 = new AbilityStage(tree, xml.getChild(0));
+				branch2 = new AbilityStage(tree, xml.getChild(1));
+			}
 		}
 	}
 }

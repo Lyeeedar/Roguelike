@@ -459,8 +459,7 @@ public final class Item extends GameEventHandler
 		Element abilityElement = xmlElement.getChildByName( "Ability" );
 		if ( abilityElement != null )
 		{
-			abilityElement = abilityElement.getChild( 0 );
-			ability = AbilityTree.load(abilityElement);
+			ability = new AbilityTree(abilityElement.getText());
 		}
 
 		// Preload sprites

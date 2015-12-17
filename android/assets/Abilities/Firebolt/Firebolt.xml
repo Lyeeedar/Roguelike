@@ -1,4 +1,4 @@
-<ActiveAbility>
+<Active>
 
     <Name>Firebolt</Name>
     <Description>A blast of flame.</Description>
@@ -35,4 +35,4 @@
         </Damage>
     </Effect>
 
-</ActiveAbility>
+</Active>

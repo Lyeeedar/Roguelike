@@ -78,9 +78,10 @@ public class ActiveAbility implements IAbility, IGameObject
 	public AbilityTree.AbilityStage tree;
 
 	// ----------------------------------------------------------------------
-	public void setCaster(GameEntity e)
+	@Override
+	public void setCaster(Entity e)
 	{
-		caster = e;
+		caster = (GameEntity)e;
 		setVariableMap( caster.getVariableMap() );
 	}
 

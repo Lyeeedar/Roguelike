@@ -1,4 +1,4 @@
-<ActiveAbility>
+<Active>
 
 	<Name>Flame Surge</Name>
 	<Description>A surge of fire washes over your foes.</Description>
@@ -42,4 +42,4 @@
 		</Field>
 	</Effect>
 
-</ActiveAbility>
+</Active>

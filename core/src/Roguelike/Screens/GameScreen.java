@@ -1213,22 +1213,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 		else if ( keycode == Keys.A )
 		{
-			ActiveAbility ab = ActiveAbility.load( "Firebolt" );
-			ActiveAbility ab1 = ActiveAbility.load( "Fireball" );
-			ActiveAbility ab2 = ActiveAbility.load( "FlameSurge" );
+			AbilityTree tree = new AbilityTree( "Firebolt" );
 
 			Item item = new Item();
-			item.ability = new AbilityTree( ab );
-			item.ability.current.branch1 = new AbilityTree.AbilityStage( ab1 );
-			item.ability.current.branch2 = new AbilityTree.AbilityStage( ab2 );
-
-			item.ability.current.branch1.tree = item.ability;
-			item.ability.current.branch2.tree = item.ability;
-
-			ab1.setTree( item.ability.current.branch1 );
-			ab2.setTree( item.ability.current.branch2 );
-			ab1.setCaster( Global.CurrentLevel.player );
-			ab2.setCaster( Global.CurrentLevel.player );
+			item.ability = tree;
 
 			GameTile playerTile = Global.CurrentLevel.player.tile[ 0 ][ 0 ];
 

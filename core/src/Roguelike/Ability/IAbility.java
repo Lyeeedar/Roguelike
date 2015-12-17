@@ -11,6 +11,8 @@ public interface IAbility
 
 	String getName();
 
+	void setCaster(Entity entity);
+
 	void setTree(AbilityTree.AbilityStage tree );
 
 	void onTurn();

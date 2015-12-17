@@ -1,5 +1,6 @@
 package Roguelike.Save;
 
+import Roguelike.Ability.AbilityTree;
 import Roguelike.AssetManager;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom.Orientation;
@@ -27,7 +28,6 @@ import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Items.Item.ItemCategory;
 import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.ShadowCastCache;
-import Roguelike.Save.SaveGameEntity.CooldownWrapper;
 import Roguelike.Save.SaveLevel.SaveLevelItem;
 import Roguelike.Save.SaveLevel.SaveOrb;
 import Roguelike.Sprite.Sprite;
@@ -224,6 +224,26 @@ public final class SaveFile
 			}
 		} );
 
+		kryo.register( AbilityTree.class, new Serializer<AbilityTree> ()
+		{
+			@Override
+			public void write( Kryo kryo, Output output, AbilityTree object )
+			{
+				SaveAbilityTree saveTree = new SaveAbilityTree();
+				saveTree.store( object );
+
+				kryo.writeObject( output, saveTree );
+			}
+
+			@Override
+			public AbilityTree read( Kryo kryo, Input input, Class<AbilityTree> type )
+			{
+				SaveAbilityTree saveTree = kryo.readObject( input, SaveAbilityTree.class );
+
+				return saveTree.create();
+			}
+		} );
+
 		kryo.register( Element.class, new Serializer<Element>()
 		{
 			@Override
@@ -251,8 +271,8 @@ public final class SaveFile
 		kryo.register( SaveFile.class );
 		kryo.register( SaveGameEntity.class );
 		kryo.register( SaveLevel.class );
-
-		kryo.register( CooldownWrapper.class );
+		kryo.register( SaveAbilityTree.class );
+		kryo.register( SaveAbilityTree.SaveAbilityStage.class );
 		kryo.register( SaveOrb.class );
 		kryo.register( SaveLevelItem.class );
 

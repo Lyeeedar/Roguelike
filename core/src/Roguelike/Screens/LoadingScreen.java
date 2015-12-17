@@ -113,30 +113,7 @@ public class LoadingScreen implements Screen
 		{
 			Global.ChangeLevel( level, player, travelData );
 
-			Global.CurrentLevel.player.slottedAbilities.clear();
-
-			// for ( ActiveAbility aa :
-			// Global.abilityPool.slottedActiveAbilities )
-			// {
-			// if ( aa != null )
-			// {
-			// aa.caster = Global.CurrentLevel.player;
-			// Global.CurrentLevel.player.slottedActiveAbilities.add( aa );
-			// }
-			//
-			// }
-			//
-			// for ( PassiveAbility pa :
-			// Global.abilityPool.slottedPassiveAbilities )
-			// {
-			// if ( pa != null )
-			// {
-			// Global.CurrentLevel.player.slottedPassiveAbilities.add( pa );
-			// }
-			// }
-
 			Global.CurrentLevel.player.isVariableMapDirty = true;
-			// Global.abilityPool.isVariableMapDirty = false;
 
 			RoguelikeGame.Instance.switchScreen( ScreenEnum.GAME );
 		}

@@ -1,4 +1,4 @@
-<ActiveAbility>
+<Active>
 
 	<Name>Fireball</Name>
 	<Description>A orb of fiery explosiveness.</Description>
@@ -48,4 +48,4 @@
         </Damage>
     </Effect>
 
-</ActiveAbility>
+</Active>

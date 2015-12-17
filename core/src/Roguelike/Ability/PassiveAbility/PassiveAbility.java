@@ -27,6 +27,11 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 
 	// ----------------------------------------------------------------------
 	@Override
+	public void setCaster(Entity entity)
+	{}
+
+	// ----------------------------------------------------------------------
+	@Override
 	public void setTree(AbilityTree.AbilityStage tree )
 	{
 		this.tree = tree;

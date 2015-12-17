@@ -19,7 +19,7 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 	public Point pos = new Point();
 	public boolean isPlayer = false;
 	public Array<StatusEffect> statuses = new Array<StatusEffect>();
-	public Array<CooldownWrapper> abilityCooldown = new Array<CooldownWrapper>();
+	public Array<SaveAbilityTree> slottedAbilities = new Array<SaveAbilityTree>();
 	public Inventory inventory;
 	public String UID;
 	public HashMap<String, Integer> dialogueData = new HashMap<String, Integer>();
@@ -41,7 +41,17 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 
 		for ( AbilityTree a : obj.slottedAbilities )
 		{
-			abilityCooldown.add( new CooldownWrapper( a.current.current.getCooldown() ) );
+			if (a != null)
+			{
+				SaveAbilityTree saveTree = new SaveAbilityTree();
+				saveTree.store( a );
+
+				slottedAbilities.add( saveTree );
+			}
+			else
+			{
+				slottedAbilities.add( null );
+			}
 		}
 
 		UID = obj.UID;
@@ -65,11 +75,40 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		}
 		entity.inventory = inventory;
 
-		if ( !isPlayer )
+		for ( int i = 0; i < slottedAbilities.size; i++ )
 		{
-			for ( int i = 0; i < abilityCooldown.size; i++ )
+			SaveAbilityTree saveTree = slottedAbilities.get( i );
+
+			if (entity.slottedAbilities.size <= i)
 			{
-				entity.slottedAbilities.get( i ).current.current.setCooldown( abilityCooldown.get( i ).val );
+				if (saveTree == null)
+				{
+					entity.slottedAbilities.add( null );
+				}
+				else
+				{
+					entity.slottedAbilities.add( saveTree.create() );
+					entity.slottedAbilities.get( i ).current.current.setCaster( entity );
+				}
+			}
+			else
+			{
+				AbilityTree tree = entity.slottedAbilities.get( i );
+
+				if (tree == null)
+				{
+					if (saveTree != null)
+					{
+						entity.slottedAbilities.removeIndex( i );
+						entity.slottedAbilities.insert( i, saveTree.create() );
+					}
+				}
+				else
+				{
+					saveTree.writeData( tree );
+				}
+
+				entity.slottedAbilities.get( i ).current.current.setCaster( entity );
 			}
 		}
 
@@ -81,21 +120,5 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		}
 
 		return entity;
-	}
-
-	// Neccessary due to Kryo issue with boxed primitives.
-	public static final class CooldownWrapper
-	{
-		public int val;
-
-		public CooldownWrapper()
-		{
-
-		}
-
-		public CooldownWrapper( int val )
-		{
-			this.val = val;
-		}
 	}
 }
