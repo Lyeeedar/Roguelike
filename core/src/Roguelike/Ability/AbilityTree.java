@@ -4,6 +4,7 @@ import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Global;
 import Roguelike.Screens.GameScreen;
+import Roguelike.UI.Seperator;
 import Roguelike.UI.Tooltip;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -59,7 +60,7 @@ public class AbilityTree
 		public IAbility current;
 
 		public int level = 1;
-		public int expToNextLevel = 100;
+		public int expToNextLevel = 1;
 		public int exp;
 
 		public boolean needsLevelAnim;
@@ -90,7 +91,7 @@ public class AbilityTree
 			{
 				level++;
 				exp -= expToNextLevel;
-				expToNextLevel *= 1.5f;
+				//expToNextLevel *= 1.5f;
 				needsLevelAnim = true;
 			}
 		}
@@ -102,8 +103,9 @@ public class AbilityTree
 			branch1.current.setCaster(entity);
 			branch2.current.setCaster(entity);
 
-			table.add( branch1.current.createTable( skin, entity ) );
-			table.add( branch2.current.createTable( skin, entity ) );
+			table.add( branch1.current.createTable( skin, entity ) ).expand().fillX().top();
+			table.add( new Seperator( skin, true ) ).expandY().fillY().pad( 10 );
+			table.add( branch2.current.createTable( skin, entity ) ).expand().fillX().top();
 			table.row();
 
 			TextButton branch1Button = new TextButton( ""+branch1.current.getName(), skin);
@@ -144,14 +146,13 @@ public class AbilityTree
 				}
 			} );
 
-			table.add( branch1Button );
-			table.add( branch2Button );
+			table.add( branch1Button ).expand().center();
+			table.add( new Table() );
+			table.add( branch2Button ).expand().center();
 
 			table.pack();
 
-			GameScreen.Instance.contextMenu = new Tooltip( table, skin, stage );
-			GameScreen.Instance.contextMenu.show( Global.Resolution[ 0 ] / 2 - GameScreen.Instance.contextMenu.getWidth() / 2, Global.Resolution[ 1 ] / 2 - GameScreen.Instance.contextMenu.getHeight() );
-			GameScreen.Instance.lockContextMenu = true;
+			GameScreen.Instance.displayContextMenu( table, true );
 		}
 
 		public void parse( XmlReader.Element xml )
@@ -185,7 +186,7 @@ public class AbilityTree
 
 			current.setTree( this );
 
-			expToNextLevel = xml.getIntAttribute("BaseExp", 100);
+			expToNextLevel = xml.getIntAttribute("BaseExp", 1);
 
 			if (xml.getChildCount() > 0)
 			{

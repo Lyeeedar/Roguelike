@@ -41,15 +41,10 @@ public class OptionsScreen implements Screen, InputProcessor
 	{
 		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 15 );
 
-		skin = new Skin();
-		skin.addRegions( new TextureAtlas( Gdx.files.internal( "GUI/uiskin.atlas" ) ) );
-		skin.add( "default-font", font, BitmapFont.class );
-		skin.load( Gdx.files.internal( "GUI/uiskin.json" ) );
+		skin = Global.loadSkin();
 
 		stage = new Stage( new ScreenViewport() );
 		batch = new SpriteBatch();
-
-		background = AssetManager.loadTexture( "Sprites/GUI/Title.png" );
 
 		table = new Table();
 		stage.addActor( table );
@@ -308,12 +303,6 @@ public class OptionsScreen implements Screen, InputProcessor
 
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
-
-		batch.begin();
-
-		batch.draw( background, 0, 0, Global.Resolution[0], Global.Resolution[1] );
-
-		batch.end();
 
 		stage.draw();
 

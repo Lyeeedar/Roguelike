@@ -16,6 +16,7 @@ import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.GameTile.LightData;
 import Roguelike.Tiles.Point;
+import Roguelike.UI.Seperator;
 import Roguelike.UI.Tooltip.TooltipStyle;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
@@ -407,6 +408,18 @@ public class Global
 		progressBar.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TextField.png" ), 6, 6, 6, 6 ) );
 		progressBar.knobBefore = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ProgressIndicator.png" ), 8, 8, 8, 8 ) );
 		skin.add( "default-horizontal", progressBar );
+
+		Seperator.SeperatorStyle horiSeperatorStyle = new Seperator.SeperatorStyle(  );
+		horiSeperatorStyle.vertical = false;
+		horiSeperatorStyle.thickness = 6;
+		horiSeperatorStyle.background = new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/SeperatorHorizontal.png" ) );
+		skin.add( "horizontal", horiSeperatorStyle );
+
+		Seperator.SeperatorStyle vertSeperatorStyle = new Seperator.SeperatorStyle(  );
+		vertSeperatorStyle.vertical = true;
+		vertSeperatorStyle.thickness = 6;
+		vertSeperatorStyle.background = new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/SeperatorVertical.png" ) );
+		skin.add( "vertical", vertSeperatorStyle );
 
 		return skin;
 	}

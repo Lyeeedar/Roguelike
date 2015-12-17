@@ -19,7 +19,7 @@ public class Tooltip extends Table
 		super( skin );
 
 		this.Content = Content;
-		add( Content ).width( 200 );
+		add( Content ).expand().fill();
 
 		setVisible( false );
 

@@ -147,6 +147,15 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		equipmentPanel.setY( 10 + abilityPanel.getHeight() );
 		equipmentPanel.setWidth( equipmentPanel.getMinWidth() );
 		equipmentPanel.setHeight( equipmentPanel.getMinHeight() );
+
+		if (contextMenu != null)
+		{
+			boolean lock = lockContextMenu;
+			lockContextMenu = false;
+
+			contextMenu.remove();
+			displayContextMenu( contextMenu.Content, lock );
+		}
 	}
 
 	// endregion Create
@@ -168,7 +177,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public OrthographicCamera camera;
 
 	// ----------------------------------------------------------------------
-	public Tooltip contextMenu;
+	private Tooltip contextMenu;
 	public boolean lockContextMenu;
 
 	// ----------------------------------------------------------------------
@@ -268,6 +277,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				if (tree != null && tree.current.level == 10 && tree.current.branch1 != null)
 				{
 					tree.current.mutate( skin, Global.CurrentLevel.player, stage );
+					break;
 				}
 			}
 		}
@@ -1067,7 +1077,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				table.add( comparison ).expand().fill();
 				table.row();
 
-				table.add( new Label( "-------------", skin ) );
+				table.add( new Seperator( skin, false ) ).expandX().fillX().pad( 10 );
 				table.row();
 
 				TextButton equipButton = new TextButton( "Equip", skin );
@@ -1117,9 +1127,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				table.pack();
 
-				contextMenu = new Tooltip( table, skin, stage );
-				contextMenu.show( Global.Resolution[ 0 ] / 2 - contextMenu.getWidth() / 2, Global.Resolution[ 1 ] / 2 - contextMenu.getHeight() );
-				lockContextMenu = true;
+				displayContextMenu( table, true );
 			}
 			else if ( item.ability != null )
 			{
@@ -1134,7 +1142,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				table.add( item.ability.current.current.createTable( skin, Global.CurrentLevel.player ) ).expand().fill();
 				table.row();
 
-				table.add( new Label( "-------------", skin ) );
+				table.add( new Seperator( skin, false ) ).expandX().fillX().pad( 10 );
 				table.row();
 
 				TextButton dropButton = new TextButton( "Drop", skin );
@@ -1161,9 +1169,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				table.pack();
 
-				contextMenu = new Tooltip( table, skin, stage );
-				contextMenu.show( Global.Resolution[ 0 ] / 2 - contextMenu.getWidth() / 2, Global.Resolution[ 1 ] / 2 - contextMenu.getHeight() );
-				lockContextMenu = true;
+				displayContextMenu( table, true );
 
 				abilityToEquip = item.ability;
 			}
@@ -1680,7 +1686,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				if ( hadAction )
 				{
-					table.add( new Label( "-------------", skin ) );
+					table.add( new Seperator( skin, false ) ).expandX().fillX().pad( 10 );
 					table.row();
 				}
 			}
@@ -1719,7 +1725,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 			if ( hadAbility )
 			{
-				table.add( new Label( "-------------", skin ) );
+				table.add( new Seperator( skin, false ) ).expandX().fillX().pad( 10 );
 				table.row();
 			}
 		}
@@ -1752,8 +1758,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		table.pack();
 
-		contextMenu = new Tooltip( table, skin, stage );
-		contextMenu.show( screenX - contextMenu.getWidth() / 2, screenY - contextMenu.getHeight() );
+		displayContextMenu( table, false );
 	}
 
 	// ----------------------------------------------------------------------
@@ -1905,6 +1910,26 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// endregion Private Methods
 	// ####################################################################//
 	// region Public Methods
+
+	// ----------------------------------------------------------------------
+	public void displayContextMenu(Table content, boolean lock)
+	{
+		if (lockContextMenu)
+		{
+			return;
+		}
+
+		Table table = new Table(  );
+		table.add( content ).expand().fill();
+
+		contextMenu = new Tooltip( table, skin, stage );
+
+		contextMenu.show( 50, 64 + 50 );
+		lockContextMenu = lock;
+
+		contextMenu.setWidth( Global.Resolution[ 0 ] - 120 );
+		contextMenu.setHeight( Global.Resolution[ 1 ] - 64 - 100 );
+	}
 
 	// ----------------------------------------------------------------------
 	public void addAbilityAvailabilityAction( Sprite sprite )
