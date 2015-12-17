@@ -11,7 +11,9 @@ import Roguelike.Items.Item;
 import Roguelike.Levels.Level;
 import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.PathfindingTile;
+import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteEffect;
+import Roguelike.Sprite.TilingSprite;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.graphics.Color;
@@ -43,6 +45,8 @@ public class GameTile implements PathfindingTile
 	public boolean visible;
 	public boolean seen;
 
+	public float ranVal;
+
 	public GameTile( int x, int y, Level level, TileData tileData )
 	{
 		this.x = x;
@@ -52,6 +56,32 @@ public class GameTile implements PathfindingTile
 		this.tileData = tileData;
 
 		light = new Color( Color.WHITE );
+	}
+
+	public TileData.SpriteGroup getSpriteGroup()
+	{
+		float total = 0;
+		for ( TileData.SpriteGroup group : tileData.spriteGroups )
+		{
+			total += group.chance;
+
+			if (total >= ranVal)
+			{
+				return group;
+			}
+		}
+
+		return tileData.spriteGroups.first();
+	}
+
+	public Array<Sprite> getSprites()
+	{
+		return getSpriteGroup().sprites;
+	}
+
+	public TilingSprite getTilingSprite()
+	{
+		return getSpriteGroup().tilingSprite;
 	}
 
 	public final void addEnvironmentEntity( EnvironmentEntity entity )

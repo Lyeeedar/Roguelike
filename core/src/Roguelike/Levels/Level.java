@@ -514,12 +514,12 @@ public class Level
 
 	private void updateSpritesForTile( GameTile tile, float delta )
 	{
-		for ( Sprite sprite : tile.tileData.sprites )
+		for ( Sprite sprite : tile.getSprites() )
 		{
 			sprite.update( delta );
 		}
 
-		if ( tile.tileData.tilingSprite != null )
+		if ( tile.getTilingSprite() != null )
 		{
 			//for (Sprite sprite : tile.tileData.tilingSprite.sprites)
 			//{

@@ -12,9 +12,9 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class TileData
 {
-	public Sprite[] sprites;
+	public Array<SpriteGroup> spriteGroups = new Array<SpriteGroup>( );
+
 	public AmbientShadow shadow;
-	public TilingSprite tilingSprite;
 
 	public EnumBitflag<Passability> passableBy;
 
@@ -30,7 +30,8 @@ public class TileData
 
 	public TileData( EnumBitflag<Passability> passableBy, Sprite... sprites )
 	{
-		this.sprites = sprites;
+		SpriteGroup group = new SpriteGroup( sprites, null );
+
 		this.passableBy = passableBy;
 	}
 
@@ -38,17 +39,78 @@ public class TileData
 	{
 		TileData data = new TileData();
 
-		Array<Sprite> sprites = new Array<Sprite>();
-		for ( Element spriteElement : xml.getChildrenByName( "Sprite" ) )
+		// Load single group
 		{
-			sprites.add( AssetManager.loadSprite( spriteElement ) );
-		}
-		data.sprites = sprites.toArray( Sprite.class );
+			Array<Sprite> sprites = new Array<Sprite>();
+			for ( Element spriteElement : xml.getChildrenByName( "Sprite" ) )
+			{
+				sprites.add( AssetManager.loadSprite( spriteElement ) );
+			}
 
-		Element raisedSpriteElement = xml.getChildByName( "TilingSprite" );
-		if ( raisedSpriteElement != null )
+			TilingSprite tilingSprite = null;
+			Element raisedSpriteElement = xml.getChildByName( "TilingSprite" );
+			if ( raisedSpriteElement != null )
+			{
+				tilingSprite = TilingSprite.load( raisedSpriteElement );
+			}
+
+			if (sprites.size > 0 || tilingSprite != null)
+			{
+				SpriteGroup group = new SpriteGroup( sprites, tilingSprite );
+				data.spriteGroups.add( group );
+			}
+
+		}
+
+		// Load groups
+		for (int i = 0; i < xml.getChildCount(); i++)
 		{
-			data.tilingSprite = TilingSprite.load( raisedSpriteElement );
+			Element el = xml.getChild( i );
+
+			if (el.getName().toLowerCase().startsWith( "group" ))
+			{
+				Array<Sprite> sprites = new Array<Sprite>();
+				for ( Element spriteElement : el.getChildrenByName( "Sprite" ) )
+				{
+					sprites.add( AssetManager.loadSprite( spriteElement ) );
+				}
+
+				TilingSprite tilingSprite = null;
+				Element raisedSpriteElement = el.getChildByName( "TilingSprite" );
+				if ( raisedSpriteElement != null )
+				{
+					tilingSprite = TilingSprite.load( raisedSpriteElement );
+				}
+
+				SpriteGroup group = new SpriteGroup( sprites, tilingSprite );
+				group.chance = el.getFloatAttribute( "Chance", -1 );
+
+				data.spriteGroups.add( group );
+			}
+		}
+
+		// Fix chances
+		float totalChance = 1;
+		int numWithoutChance = 0;
+		for (SpriteGroup group : data.spriteGroups)
+		{
+			if (group.chance < 0)
+			{
+				numWithoutChance++;
+			}
+			else
+			{
+				totalChance -= group.chance;
+			}
+		}
+		totalChance /= numWithoutChance;
+
+		for (SpriteGroup group : data.spriteGroups)
+		{
+			if ( group.chance < 0 )
+			{
+				group.chance = totalChance;
+			}
 		}
 
 		Element ambientShadowElement = xml.getChildByName( "AmbientShadow" );
@@ -77,5 +139,24 @@ public class TileData
 		data.canSpawn = xml.getBoolean( "CanSpawn", true );
 
 		return data;
+	}
+
+	public static class SpriteGroup
+	{
+		public Array<Sprite> sprites;
+		public TilingSprite tilingSprite;
+		public float chance = -1;
+
+		public SpriteGroup(Array<Sprite> sprites, TilingSprite tilingSprite)
+		{
+			this.sprites = sprites;
+			this.tilingSprite = tilingSprite;
+		}
+
+		public SpriteGroup(Sprite[] sprites, TilingSprite tilingSprite)
+		{
+			this.sprites = new Array<Sprite>( sprites );
+			this.tilingSprite = tilingSprite;
+		}
 	}
 }

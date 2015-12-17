@@ -279,6 +279,7 @@ public abstract class AbstractDungeonGenerator
 
 				GameTile newTile = new GameTile( x, y, level, symbol.getTileData() );
 				newTile.metaValue = symbol.metaValue;
+				newTile.ranVal = ran.nextFloat();
 
 				newTile.metaValue = symbol.metaValue;
 
