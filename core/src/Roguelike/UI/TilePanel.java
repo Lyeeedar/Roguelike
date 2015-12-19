@@ -394,7 +394,20 @@ public abstract class TilePanel extends Widget
 
 			if ( !longPressed && !dragged && item != null )
 			{
-				handleDataClicked( item, event, x, y );
+				if (GameScreen.Instance.examineMode)
+				{
+					Table table = getToolTipForData( item );
+
+					if ( table != null )
+					{
+						tooltip = new Tooltip( table, skin, stage );
+						tooltip.show( event, x, y );
+					}
+				}
+				else
+				{
+					handleDataClicked( item, event, x, y );
+				}
 			}
 
 			boolean mouseOverUI = getMouseOverUI( x, y );

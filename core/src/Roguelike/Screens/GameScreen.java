@@ -160,98 +160,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	// endregion Create
 	// ####################################################################//
-	// region Data
-
-	// ----------------------------------------------------------------------
-	private static final float ScreenShakeSpeed = 0.02f;
-
-	// ----------------------------------------------------------------------
-	public static GameScreen Instance;
-	private final GlyphLayout layout = new GlyphLayout();
-	private final Color temp = new Color();
-
-	// ----------------------------------------------------------------------
-	public GestureDetector gestureDetector;
-
-	// ----------------------------------------------------------------------
-	public OrthographicCamera camera;
-
-	// ----------------------------------------------------------------------
-	private Tooltip contextMenu;
-	public boolean lockContextMenu;
-
-	// ----------------------------------------------------------------------
-	public DragDropPayload dragDropPayload;
-	public float screenShakeRadius;
-	public float screenShakeAngle;
-	public InputMultiplexer inputMultiplexer;
-	public boolean mouseOverUI;
-	public Array<Item> pickupQueue = new Array<Item>( false, 16 );
-
-	// ----------------------------------------------------------------------
-	public ActiveAbility preparedAbility;
-	public AbilityTree abilityToEquip;
-	private Array<Point> abilityTiles;
-	private Color tempColour = new Color();
-	private Tooltip tooltip;
-
-	// ----------------------------------------------------------------------
-	private Array<RenderSprite> queuedSprites = new Array<RenderSprite>();
-	private Array<Entity> hasStatus = new Array<Entity>();
-	private Array<Entity> entitiesWithSpeech = new Array<Entity>();
-
-	// ----------------------------------------------------------------------
-	private Pool<RenderSprite> renderSpritePool = Pools.get( RenderSprite.class );
-
-	// ----------------------------------------------------------------------
-	private Sprite border;
-	private int mousePosX;
-	private int mousePosY;
-	private Stage stage;
-	private SpriteBatch batch;
-	private TextureRegion blank;
-	private TextureRegion white;
-	private Sprite bag;
-	private Sprite orb;
-	private TextureRegion speechBubbleArrow;
-	private NinePatch speechBubbleBackground;
-	private float frametime;
-	private BitmapFont font;
-	private BitmapFont hightlightfont;
-	private float screenShakeAccumulator;
-	private TilingSprite fogSprite;
-	private static final Color seenFogCol = new Color( 0, 0, 0, 0.5f );
-	private static final Color unseenFogCol = new Color( 0, 0, 0, 1 );
-
-	// ----------------------------------------------------------------------
-	private AbilityPanel abilityPanel;
-	private EquipmentPanel equipmentPanel;
-	private Skin skin;
-
-	// ----------------------------------------------------------------------
-	private long diff, start = System.currentTimeMillis();
-
-	// ----------------------------------------------------------------------
-	private float lastZoom;
-
-	// ----------------------------------------------------------------------
-	private boolean created;
-
-	// ----------------------------------------------------------------------
-	private boolean longPressed;
-	private boolean dragged;
-	private float startX;
-	private float startY;
-
-	// ----------------------------------------------------------------------
-	private int fps;
-	private float storedFrametime;
-	private float fpsAccumulator;
-
-	private final EnumBitflag<Direction> directionBitflag = new EnumBitflag<Direction>( );
-
-	// endregion Data
-	// ####################################################################//
 	// region InputProcessor
 
 	// ----------------------------------------------------------------------
@@ -1256,6 +1164,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			GameTile newTile = playerTile.level.getGameTile( playerTile.x + 1, playerTile.y + 1 );
 			field.trySpawnInTile( newTile, 10 );
 		}
+		else if ( keycode == Keys.E )
+		{
+			examineMode = !examineMode;
+		}
 		else if ( keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
 		{
 			int i = keycode - Keys.NUM_1;
@@ -1333,7 +1245,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		clearContextMenu();
 
-		if ( contextMenu != null )
+		if ( contextMenu != null || examineMode )
 		{
 			return true;
 		}
@@ -2079,6 +1991,101 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// endregion Public Methods
+	// ####################################################################//
+	// region Data
+
+	// ----------------------------------------------------------------------
+	public boolean examineMode = false;
+
+	// ----------------------------------------------------------------------
+	private static final float ScreenShakeSpeed = 0.02f;
+
+	// ----------------------------------------------------------------------
+	public static GameScreen Instance;
+	private final GlyphLayout layout = new GlyphLayout();
+	private final Color temp = new Color();
+
+	// ----------------------------------------------------------------------
+	public GestureDetector gestureDetector;
+
+	// ----------------------------------------------------------------------
+	public OrthographicCamera camera;
+
+	// ----------------------------------------------------------------------
+	private Tooltip contextMenu;
+	public boolean lockContextMenu;
+
+	// ----------------------------------------------------------------------
+	public DragDropPayload dragDropPayload;
+	public float screenShakeRadius;
+	public float screenShakeAngle;
+	public InputMultiplexer inputMultiplexer;
+	public boolean mouseOverUI;
+	public Array<Item> pickupQueue = new Array<Item>( false, 16 );
+
+	// ----------------------------------------------------------------------
+	public ActiveAbility preparedAbility;
+	public AbilityTree abilityToEquip;
+	private Array<Point> abilityTiles;
+	private Color tempColour = new Color();
+	private Tooltip tooltip;
+
+	// ----------------------------------------------------------------------
+	private Array<RenderSprite> queuedSprites = new Array<RenderSprite>();
+	private Array<Entity> hasStatus = new Array<Entity>();
+	private Array<Entity> entitiesWithSpeech = new Array<Entity>();
+
+	// ----------------------------------------------------------------------
+	private Pool<RenderSprite> renderSpritePool = Pools.get( RenderSprite.class );
+
+	// ----------------------------------------------------------------------
+	private Sprite border;
+	private int mousePosX;
+	private int mousePosY;
+	private Stage stage;
+	private SpriteBatch batch;
+	private TextureRegion blank;
+	private TextureRegion white;
+	private Sprite bag;
+	private Sprite orb;
+	private TextureRegion speechBubbleArrow;
+	private NinePatch speechBubbleBackground;
+	private float frametime;
+	private BitmapFont font;
+	private BitmapFont hightlightfont;
+	private float screenShakeAccumulator;
+	private TilingSprite fogSprite;
+	private static final Color seenFogCol = new Color( 0, 0, 0, 0.5f );
+	private static final Color unseenFogCol = new Color( 0, 0, 0, 1 );
+
+	// ----------------------------------------------------------------------
+	private AbilityPanel abilityPanel;
+	private EquipmentPanel equipmentPanel;
+	private Skin skin;
+
+	// ----------------------------------------------------------------------
+	private long diff, start = System.currentTimeMillis();
+
+	// ----------------------------------------------------------------------
+	private float lastZoom;
+
+	// ----------------------------------------------------------------------
+	private boolean created;
+
+	// ----------------------------------------------------------------------
+	private boolean longPressed;
+	private boolean dragged;
+	private float startX;
+	private float startY;
+
+	// ----------------------------------------------------------------------
+	private int fps;
+	private float storedFrametime;
+	private float fpsAccumulator;
+
+	private final EnumBitflag<Direction> directionBitflag = new EnumBitflag<Direction>( );
+
+	// endregion Data
 	// ####################################################################//
 	// region Classes
 
