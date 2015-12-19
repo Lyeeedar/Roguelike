@@ -131,7 +131,7 @@ public class EnvironmentEntity extends Entity
 	}
 
 	// ----------------------------------------------------------------------
-	private static EnvironmentEntity CreateTransition( final Element data, String levelUID, int depth )
+	private static EnvironmentEntity CreateTransition( final Element data )
 	{
 		ActivationAction action = new ActivationAction( "Change Level" )
 		{
@@ -139,66 +139,37 @@ public class EnvironmentEntity extends Entity
 			public void activate( EnvironmentEntity entity )
 			{
 				Global.save();
-
-				Level current = entity.tile[0][0].level;
-				SaveLevel save = (SaveLevel) entity.data.get( "Destination" );
-
-				boolean needsLoad = LoadingScreen.Instance.set( save, current.player, "Stair: " + current.UID, null );
-
-				if ( needsLoad )
-				{
-					RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
-				}
+				String destination = (String)entity.data.get( "Destination" );
+				Global.LevelManager.nextLevel( destination );
 			}
 		};
 
-		String destination = data.get( "Destination" );
-		final SaveLevel destinationLevel = new SaveLevel( destination, depth + 1, null, MathUtils.random( Long.MAX_VALUE ) );
+		Sprite stairs = null;
 
-		if ( !destination.equals( "this" ) )
+		Element spriteElement = data.getChildByName( "Sprite" );
+		if ( spriteElement != null )
 		{
-			DungeonFileParser dfp = DungeonFileParser.load( destination + "/" + destination );
-			DFPRoom exitRoom = DFPRoom.parse( data.getChildByName( "ExitRoom" ), dfp.sharedSymbolMap );
-			destinationLevel.requiredRooms.add( exitRoom );
+			stairs = AssetManager.loadSprite( spriteElement );
+		}
+		else
+		{
+			stairs = AssetManager.loadSprite( "Oryx/uf_split/uf_terrain/floor_set_grey_9" );
 		}
 
-		// Make stairs down and return
-		{
-			Sprite stairs = null;
+		final EnvironmentEntity entity = new EnvironmentEntity();
+		entity.size = data.getInt( "Size", 1 );
+		entity.passableBy = Passability.parse( "true" );
+		entity.passableBy.setBit( Passability.LIGHT );
+		entity.sprite = stairs;
+		entity.canTakeDamage = false;
+		entity.actions.add( action );
+		entity.data.put( "Destination", data.get( "Destination" ) );
+		entity.UID = "EnvironmentEntity Stair: ID " + entity.hashCode();
 
-			Element spriteElement = data.getChildByName( "Sprite" );
-			if ( spriteElement != null )
-			{
-				stairs = AssetManager.loadSprite( spriteElement );
-			}
-			else
-			{
-				if ( destination.equals( "this" ) )
-				{
-					stairs = AssetManager.loadSprite( "Oryx/uf_split/uf_terrain/floor_set_grey_8" );
-				}
-				else
-				{
-					stairs = AssetManager.loadSprite( "Oryx/uf_split/uf_terrain/floor_set_grey_9" );
-				}
-			}
+		entity.tile = new GameTile[entity.size][entity.size];
+		stairs.size = entity.size;
 
-			final EnvironmentEntity entity = new EnvironmentEntity();
-			entity.size = data.getInt( "Size", 1 );
-			entity.passableBy = Passability.parse( "true" );
-			entity.passableBy.setBit( Passability.LIGHT );
-			entity.sprite = stairs;
-			entity.canTakeDamage = false;
-			entity.actions.add( action );
-			entity.data.put( "Destination", destinationLevel );
-			entity.data.put( "Stair: " + destinationLevel.UID, new Object() );
-			entity.UID = "EnvironmentEntity Stair: ID " + entity.hashCode();
-
-			entity.tile = new GameTile[entity.size][entity.size];
-			stairs.size = entity.size;
-
-			return entity;
-		}
+		return entity;
 	}
 
 	// ----------------------------------------------------------------------
@@ -515,7 +486,7 @@ public class EnvironmentEntity extends Entity
 	}
 
 	// ----------------------------------------------------------------------
-	public static EnvironmentEntity load( Element xml, String levelUID, int depth )
+	public static EnvironmentEntity load( Element xml )
 	{
 		EnvironmentEntity entity = null;
 
@@ -527,7 +498,7 @@ public class EnvironmentEntity extends Entity
 		}
 		else if ( type.equalsIgnoreCase( "Transition" ) )
 		{
-			entity = CreateTransition( xml, levelUID, depth );
+			entity = CreateTransition( xml );
 		}
 		else if ( type.equalsIgnoreCase( "Spawner" ) )
 		{

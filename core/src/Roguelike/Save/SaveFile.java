@@ -26,6 +26,7 @@ import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Items.Item.ItemCategory;
+import Roguelike.Levels.LevelManager;
 import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.ShadowCastCache;
 import Roguelike.Save.SaveLevel.SaveLevelItem;
@@ -58,7 +59,7 @@ public final class SaveFile
 {
 	private static Kryo kryo;
 
-	public SaveLevel currentLevel;
+	public LevelManager levelManager;
 	public HashMap<String, Integer> globalVariables;
 	public HashMap<String, String> globalNames;
 
@@ -76,13 +77,34 @@ public final class SaveFile
 			e.printStackTrace();
 		}
 
-		kryo.writeObject( output, currentLevel );
+		kryo.writeObject( output, levelManager );
 		kryo.writeObject( output, globalVariables );
 		kryo.writeObject( output, globalNames );
 
 		output.close();
 
 		System.out.println( "Saved" );
+	}
+
+	public void load()
+	{
+		setupKryo();
+
+		Input input = null;
+		try
+		{
+			input = new Input( new GZIPInputStream( Gdx.files.local( "save.dat" ).read() ) );
+		}
+		catch ( IOException e )
+		{
+			e.printStackTrace();
+		}
+
+		levelManager = kryo.readObject( input, LevelManager.class );
+		globalVariables = kryo.readObject( input, HashMap.class );
+		globalNames = kryo.readObject( input, HashMap.class );
+
+		input.close();
 	}
 
 	private void setupKryo()
@@ -293,6 +315,9 @@ public final class SaveFile
 		kryo.register( Orientation.class );
 		kryo.register( AnimationState.class );
 		kryo.register( AnimationMode.class );
+		kryo.register( LevelManager.class );
+		kryo.register( LevelManager.LevelData.class );
+		kryo.register( LevelManager.BranchData.class );
 
 		kryo.register( HashMap.class );
 		kryo.register( String[].class );
@@ -322,26 +347,5 @@ public final class SaveFile
 		kryo.register( StatusTaskEvent.class );
 		kryo.register( DamageOverTimeEvent.class );
 		kryo.register( HealOverTimeEvent.class );
-	}
-
-	public void load()
-	{
-		setupKryo();
-
-		Input input = null;
-		try
-		{
-			input = new Input( new GZIPInputStream( Gdx.files.local( "save.dat" ).read() ) );
-		}
-		catch ( IOException e )
-		{
-			e.printStackTrace();
-		}
-
-		currentLevel = kryo.readObject( input, SaveLevel.class );
-		globalVariables = kryo.readObject( input, HashMap.class );
-		globalNames = kryo.readObject( input, HashMap.class );
-
-		input.close();
 	}
 }

@@ -376,6 +376,9 @@ public class DungeonFileParser
 	public RoomGenerator preprocessor;
 
 	// ----------------------------------------------------------------------
+	public HashMap<String, DFPRoom[]> entranceRooms = new HashMap<String, DFPRoom[]>(  );
+
+	// ----------------------------------------------------------------------
 	public Symbol getSymbol( char c )
 	{
 		Symbol s = sharedSymbolMap.get( c );
@@ -571,6 +574,16 @@ public class DungeonFileParser
 		{
 			Symbol symbol = Symbol.parse( symbolsElement.getChild( i ), sharedSymbolMap, null );
 			sharedSymbolMap.put( symbol.character, symbol );
+		}
+
+		for (Element el : xmlElement.getChildrenByName( "Entrance" ))
+		{
+			String key = el.getAttribute( "Key", "all" ).toLowerCase();
+
+			DFPRoom prevRoom = DFPRoom.parse( el.getChildByName( "Prev" ), sharedSymbolMap );
+			DFPRoom thisRoom = DFPRoom.parse( el.getChildByName( "This" ), sharedSymbolMap );
+
+			entranceRooms.put( key, new DFPRoom[]{ prevRoom, thisRoom } );
 		}
 
 		Element requiredElement = xmlElement.getChildByName( "Required" );

@@ -111,7 +111,7 @@ public class LoadingScreen implements Screen
 	{
 		if ( event == null )
 		{
-			Global.ChangeLevel( level, player, travelData );
+			Global.changeLevel( level, player, travelData );
 
 			Global.CurrentLevel.player.isVariableMapDirty = true;
 

@@ -6,6 +6,7 @@ import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Levels.Level;
+import Roguelike.Levels.LevelManager;
 import Roguelike.Lights.Light;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Save.SaveFile;
@@ -45,11 +46,13 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 import java.util.HashMap;
+import java.util.Random;
 
 public class Global
 {
 	// ----------------------------------------------------------------------
 	public static final int NUM_ABILITY_SLOTS = 8;
+
 	// ----------------------------------------------------------------------
 	public static RoguelikeGame Game;
 
@@ -79,20 +82,31 @@ public class Global
 
 	// ----------------------------------------------------------------------
 	public static Skin skin;
+
 	// ----------------------------------------------------------------------
 	public static int TileSize = 32;
+
+	// ----------------------------------------------------------------------
+	public static LevelManager LevelManager;
+
 	// ----------------------------------------------------------------------
 	public static Level CurrentLevel;
+
 	// ----------------------------------------------------------------------
 	public static HashMap<String, Integer> GlobalVariables = new HashMap<String, Integer>();
+
 	// ----------------------------------------------------------------------
 	public static HashMap<String, String> GlobalNames = new HashMap<String, String>();
+
 	// ----------------------------------------------------------------------
 	public static Mixer BGM;
+
 	// ----------------------------------------------------------------------
 	public static float AUT = 0;
+
 	// ----------------------------------------------------------------------
 	public static float DayNightFactor = 1;
+
 	// ----------------------------------------------------------------------
 	public static Pool<Point> PointPool = Pools.get( Point.class );
 	public static Pool<Light> LightPool = Pools.get( Light.class );
@@ -121,8 +135,8 @@ public class Global
 		Global.GlobalVariables = (HashMap<String, Integer>) save.globalVariables.clone();
 		Global.GlobalNames = (HashMap<String, String>) save.globalNames.clone();
 
-		// Dungeon dungeon = Dungeons.get( save.currentDungeon );
-		SaveLevel level = save.currentLevel;
+		LevelManager = save.levelManager;
+		SaveLevel level = LevelManager.current.currentLevel;
 
 		LoadingScreen.Instance.set( level, null, null, null );
 		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
@@ -134,6 +148,7 @@ public class Global
 	// ----------------------------------------------------------------------
 	public static void newGame( GameEntity player )
 	{
+		LevelManager = new LevelManager();
 		AUT = 0;
 		DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
 
@@ -142,15 +157,15 @@ public class Global
 
 		GlobalNames.put( "player", "You" );
 
-		SaveLevel firstLevel = new SaveLevel( "Forest", 0, null, MathUtils.random( Long.MAX_VALUE - 1 ) );
+		SaveLevel firstLevel = new SaveLevel( LevelManager.current.levelName, 0, LevelManager.current.getExtraRooms( "NewGame", 0, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
+		LevelManager.current.currentLevel = firstLevel;
 
 		LoadingScreen.Instance.set( firstLevel, player, "PlayerSpawn", null );
-
 		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
 	}
 
 	// ----------------------------------------------------------------------
-	public static void ChangeLevel( Level level, GameEntity player, Object travelData )
+	public static void changeLevel( Level level, GameEntity player, Object travelData )
 	{
 		if ( CurrentLevel != null )
 		{
@@ -224,8 +239,8 @@ public class Global
 	{
 		SaveFile save = new SaveFile();
 
-		save.currentLevel = new SaveLevel();
-		save.currentLevel.store( Global.CurrentLevel );
+		LevelManager.current.currentLevel.store( Global.CurrentLevel );
+		save.levelManager = LevelManager;
 
 		save.globalVariables = (HashMap<String, Integer>) GlobalVariables.clone();
 		save.globalNames = (HashMap<String, String>) GlobalNames.clone();

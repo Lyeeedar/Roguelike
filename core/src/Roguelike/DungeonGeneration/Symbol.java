@@ -57,7 +57,7 @@ public final class Symbol implements PathfindingTile
 	{
 		if ( environmentData != null )
 		{
-			EnvironmentEntity ee = EnvironmentEntity.load( environmentData, levelUID, depth );
+			EnvironmentEntity ee = EnvironmentEntity.load( environmentData );
 
 			if ( ee.creationData.get( "Type", "" ).equals( "Transition" ) || ee.creationData.get( "Type", "" ).equals( "Dungeon" ) )
 			{
