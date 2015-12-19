@@ -241,6 +241,7 @@ public abstract class Entity
 
 		damageAccumulator += dam;
 		hasDamage = true;
+		extraUIHP += dam;
 
 		if ( dam != 0 )
 		{
@@ -255,6 +256,8 @@ public abstract class Entity
 
 		int appliedHeal = Math.min( heal, ( getStatistic( Statistic.CONSTITUTION ) * 10 ) - HP );
 		HP += appliedHeal;
+		extraUIHP -= appliedHeal;
+		if (extraUIHP < 0) { extraUIHP = 0; }
 
 		healingAccumulator += appliedHeal;
 
@@ -382,6 +385,9 @@ public abstract class Entity
 
 	// ----------------------------------------------------------------------
 	public int HP = 1;
+	public int extraUIHP = 0;
+	public float extraUIHPAccumulator = 0;
+
 	public int essence = 0;
 
 	// ----------------------------------------------------------------------

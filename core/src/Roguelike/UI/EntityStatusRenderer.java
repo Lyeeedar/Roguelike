@@ -21,10 +21,12 @@ public class EntityStatusRenderer
 		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 8 );
 
 		float val = (float) entity.HP / (float) ( entity.getVariable( Statistic.CONSTITUTION ) * 10 );
+		float extraVal = (float) entity.extraUIHP / (float) ( entity.getVariable( Statistic.CONSTITUTION ) * 10 );
+
 		float barheight = height * heightScale;
 		y = y-height+(int)barheight+8;
 
-		drawHpBar( val, batch, x, y, width, height, heightScale );
+		drawHpBar( val, extraVal, batch, x, y, width, height, heightScale );
 
 		Array<StatusEffectStack> stacks = entity.stackStatusEffects();
 
@@ -47,7 +49,7 @@ public class EntityStatusRenderer
 		}
 	}
 
-	public static void drawHpBar( float val, Batch batch, int x, int y, int width, int height, float heightScale )
+	public static void drawHpBar( float val, float extraVal, Batch batch, int x, int y, int width, int height, float heightScale )
 	{
 		TextureRegion white = AssetManager.loadTextureRegion( "Sprites/white.png" );
 
@@ -58,6 +60,9 @@ public class EntityStatusRenderer
 
 		batch.setColor( Color.DARK_GRAY );
 		batch.draw( white, x - 1, y + height - barheight - 1, width + 2, barheight + 2 );
+
+		batch.setColor( Color.LIGHT_GRAY );
+		batch.draw( white, x, y + height - barheight, width * (val + extraVal), barheight );
 
 		batch.setColor( new Color( Color.RED ).lerp( Color.GREEN, val ) );
 		batch.draw( white, x, y + height - barheight, width * val, barheight );

@@ -494,6 +494,31 @@ public class Level
 		}
 	}
 
+	private void updateExtraUIHPForTile( GameTile tile, float delta )
+	{
+		if (tile.entity != null && tile.entity.extraUIHP > 0 && tile.entity.tile[0][0] == tile)
+		{
+			tile.entity.extraUIHPAccumulator += delta;
+
+			while (tile.entity.extraUIHP > 0 && tile.entity.extraUIHPAccumulator > 0)
+			{
+				tile.entity.extraUIHP--;
+				tile.entity.extraUIHPAccumulator -= 0.05f;
+			}
+		}
+
+		if (tile.environmentEntity != null && tile.environmentEntity.extraUIHP > 0 && tile.environmentEntity.tile[0][0] == tile)
+		{
+			tile.environmentEntity.extraUIHPAccumulator += delta;
+
+			while (tile.environmentEntity.extraUIHP > 0 && tile.environmentEntity.extraUIHPAccumulator > 0)
+			{
+				tile.environmentEntity.extraUIHP--;
+				tile.environmentEntity.extraUIHPAccumulator -= 0.05f;
+			}
+		}
+	}
+
 	private void updateSpriteEffectsForTile( GameTile tile, float delta )
 	{
 		if ( tile.spriteEffects.size > 0 )
@@ -1142,6 +1167,7 @@ public class Level
 					updateSpritesForTile( tile, delta );
 					updateSpriteEffectsForTile( tile, delta );
 					updatePopupsForTile( tile, delta );
+					updateExtraUIHPForTile( tile, delta );
 				}
 				else
 				{
