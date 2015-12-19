@@ -86,4 +86,14 @@
 		</Equipment>
 	</Inventory>
 
+    <Light>
+        <Colour>
+            <Red>0.6</Red>
+            <Green>0.5</Green>
+            <Blue>0.4</Blue>
+        </Colour>
+
+        <Intensity>5</Intensity>
+    </Light>
+
 </Entity>

@@ -708,6 +708,18 @@ public class ActiveAbility implements IAbility, IGameObject
 		table.add( new Label( "Range: " + getRange(), skin ) ).expandX().left();
 		table.row();
 
+		if (aoe > 0)
+		{
+			table.add( new Label( "AOE: " + aoe, skin ) ).expandX().left();
+			table.row();
+		}
+
+		if (cone > 0)
+		{
+			table.add( new Label( "Cone: " + cone, skin ) ).expandX().left();
+			table.row();
+		}
+
 		for ( AbstractCostType cost : costTypes )
 		{
 			String string = cost.toString( this );
