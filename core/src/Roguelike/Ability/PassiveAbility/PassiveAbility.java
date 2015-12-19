@@ -65,6 +65,13 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 		Table table = new Table();
 
 		table.add( new Label( Name, skin, "title" ) ).expandX().left();
+
+		{
+			Label label = new Label( "Passive", skin );
+			label.setFontScale( 0.7f );
+			table.add( label ).expandX().right();
+		}
+
 		table.row();
 
 		String level = "Level: " + tree.level;

@@ -132,6 +132,29 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		stage.addActor( equipmentPanel );
 		stage.addActor( abilityPanel );
 
+		if (Global.ANDROID)
+		{
+			TextButton examineButton = new TextButton( "i", skin );
+			examineButton.addListener( new InputListener()
+			{
+				@Override
+				public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+				{
+					return true;
+				}
+
+				@Override
+				public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+				{
+					examineMode = !examineMode;
+				}
+			} );
+
+
+			examineButton.setPosition( 20, 20 );
+			stage.addActor( examineButton );
+		}
+
 		relayoutUI();
 	}
 

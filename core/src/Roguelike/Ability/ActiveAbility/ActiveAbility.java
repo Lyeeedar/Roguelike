@@ -675,6 +675,13 @@ public class ActiveAbility implements IAbility, IGameObject
 		Table table = new Table();
 
 		table.add( new Label( name, skin, "title" ) ).expandX().left();
+
+		{
+			Label label = new Label( "Active", skin );
+			label.setFontScale( 0.7f );
+			table.add( label ).expandX().right();
+		}
+
 		table.row();
 
 		String level = "Level: " + tree.level;
