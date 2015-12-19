@@ -176,7 +176,7 @@ public final class Item extends GameEventHandler
 		table.add( new Label( "", skin ) );
 		table.row();
 
-		Label statLabel = new Label( String.join( "\n", toString( entity.getBaseVariableMap() ) ), skin );
+		Label statLabel = new Label( Global.join( "\n", toString( entity.getBaseVariableMap() ) ), skin );
 		statLabel.setWrap( true );
 		table.add( statLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 
@@ -227,7 +227,7 @@ public final class Item extends GameEventHandler
 		table.add( new Label( "Scales with:", skin ) ).expandX().left();
 		table.row();
 
-		Label statLabel = new Label( String.join( "\n\t", toString( entity.getBaseVariableMap() ) ), skin );
+		Label statLabel = new Label( Global.join( "\n\t", toString( entity.getBaseVariableMap() ) ), skin );
 		statLabel.setWrap( true );
 		table.add( statLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 

@@ -86,7 +86,7 @@ public class EffectTypeDamage extends AbstractEffectType
 			}
 		}
 
-		return String.join( "\n", lines );
+		return Global.join( "\n", lines );
 	}
 
 	private void applyToEntity( Entity target, ActiveAbility aa, HashMap<String, Integer> variableMap )

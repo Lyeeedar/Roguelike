@@ -3,6 +3,7 @@ package Roguelike.Ability.ActiveAbility.EffectType;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.GameEvent.Damage.StatusEvent;
+import Roguelike.Global;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -45,6 +46,6 @@ public class EffectTypeStatus extends AbstractEffectType
 	@Override
 	public String toString( ActiveAbility aa )
 	{
-		return String.join( "\n", statusEvent.toString( aa.getVariableMap(), aa ) );
+		return Global.join( "\n", statusEvent.toString( aa.getVariableMap(), aa ) );
 	}
 }

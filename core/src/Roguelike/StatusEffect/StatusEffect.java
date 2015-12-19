@@ -6,6 +6,7 @@ import Roguelike.AssetManager;
 import Roguelike.Entity.Entity;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.GameEvent.IGameObject;
+import Roguelike.Global;
 import Roguelike.Sprite.Sprite;
 
 import com.badlogic.gdx.Gdx;
@@ -60,7 +61,7 @@ public final class StatusEffect extends GameEventHandler
 		table.add( new Label( "", skin ) );
 		table.row();
 
-		Label statLabel = new Label( String.join( "\n", toString( entity.getBaseVariableMap() ) ), skin );
+		Label statLabel = new Label( Global.join( "\n", toString( entity.getBaseVariableMap() ) ), skin );
 		statLabel.setWrap( true );
 		table.add( statLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 

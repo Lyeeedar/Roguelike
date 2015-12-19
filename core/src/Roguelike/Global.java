@@ -46,6 +46,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Random;
 
 public class Global
@@ -361,6 +362,20 @@ public class Global
 	public static String capitalizeString( String s )
 	{
 		return s.substring( 0, 1 ).toUpperCase() + s.substring( 1 ).toLowerCase();
+	}
+
+	// ----------------------------------------------------------------------
+	public static String join( String seperator, Iterable<String> strings )
+	{
+		Iterator<String> itr = strings.iterator();
+		String out = itr.next();
+
+		while (itr.hasNext())
+		{
+			out += seperator + itr.next();
+		}
+
+		return out;
 	}
 
 	// ----------------------------------------------------------------------
