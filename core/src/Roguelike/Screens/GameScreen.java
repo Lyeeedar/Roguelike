@@ -458,6 +458,14 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					buildTilingBitflag( unseenBitflag, x, y, "unseen" );
 					if (unseenBitflag.getBitFlag() == 0)
 					{
+						// if below was visible, then draw
+						buildTilingBitflag( unseenBitflag, x, y-1, "unseen" );
+						if (unseenBitflag.getBitFlag() != 0)
+						{
+							unseenBitflag.setBitFlag( 0 );
+							queueSprite( fogSprite.getSprite( unseenBitflag ), unseenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.UNSEENFOG );
+						}
+
 						continue;
 					}
 

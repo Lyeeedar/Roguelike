@@ -503,7 +503,7 @@ public class Level
 			while (tile.entity.extraUIHP > 0 && tile.entity.extraUIHPAccumulator > 0)
 			{
 				tile.entity.extraUIHP--;
-				tile.entity.extraUIHPAccumulator -= 0.05f;
+				tile.entity.extraUIHPAccumulator -= 0.02f;
 			}
 		}
 
@@ -514,7 +514,7 @@ public class Level
 			while (tile.environmentEntity.extraUIHP > 0 && tile.environmentEntity.extraUIHPAccumulator > 0)
 			{
 				tile.environmentEntity.extraUIHP--;
-				tile.environmentEntity.extraUIHPAccumulator -= 0.05f;
+				tile.environmentEntity.extraUIHPAccumulator -= 0.02f;
 			}
 		}
 	}
