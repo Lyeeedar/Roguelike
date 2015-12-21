@@ -301,15 +301,15 @@ public class GameEntity extends Entity
 			output.add( light );
 		}
 
-		for ( EquipmentSlot slot : EquipmentSlot.values() )
-		{
-			Item i = inventory.getEquip( slot );
-
-			if ( i != null && i.light != null )
-			{
-				output.add( i.light );
-			}
-		}
+//		for ( EquipmentSlot slot : EquipmentSlot.values() )
+//		{
+//			Item i = inventory.getEquip( slot );
+//
+//			if ( i != null && i.light != null )
+//			{
+//				output.add( i.light );
+//			}
+//		}
 	}
 
 	// ----------------------------------------------------------------------

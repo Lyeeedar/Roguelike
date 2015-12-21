@@ -16,6 +16,9 @@ import java.util.HashMap;
 // Naming priority: NSEW
 public class TilingSprite
 {
+	private static final int CENTER = 1 << ( Global.Direction.CENTER.ordinal() + 1 );
+	private static final int SOUTH = 1 << ( Global.Direction.SOUTH.ordinal() + 1 );
+
 	public TilingSprite()
 	{
 
@@ -23,20 +26,20 @@ public class TilingSprite
 
 	public TilingSprite( Sprite topSprite, Sprite frontSprite )
 	{
-		sprites.put( "C", topSprite );
-		sprites.put( "S", frontSprite );
+		sprites.put( CENTER, topSprite );
+		sprites.put( SOUTH, frontSprite );
 
 		hasAllElements = true;
 	}
 
 	public TilingSprite ( String name, String texture, String mask )
 	{
-		Element spriteElement = new Element( "Sprite", null );
+		Element spriteBase = new Element("Sprite", null);
 
-		load( name, texture, mask, spriteElement, null );
+		load( name, texture, mask, spriteBase, null );
 	}
 
-	public HashMap<String, Sprite> sprites = new HashMap<String, Sprite>(  );
+	public HashMap<Integer, Sprite> sprites = new HashMap<Integer, Sprite>(  );
 
 	public String name;
 	public String texName;
@@ -58,8 +61,8 @@ public class TilingSprite
 			Sprite topSprite = AssetManager.loadSprite( topElement );
 			Sprite frontSprite = AssetManager.loadSprite( xml.getChildByName( "Front" ) );
 
-			sprites.put( "C", topSprite );
-			sprites.put( "S", frontSprite );
+			sprites.put( CENTER, topSprite );
+			sprites.put( SOUTH, frontSprite );
 
 			hasAllElements = true;
 		}
@@ -226,39 +229,42 @@ public class TilingSprite
 		{
 			if (emptyDirections.contains( Global.Direction.SOUTH ))
 			{
-				return sprites.get( "S" );
+				return sprites.get( SOUTH );
 			}
 			else
 			{
-				return sprites.get( "C" );
+				return sprites.get( CENTER );
 			}
 		}
 		else
 		{
-			Array<String> masks = getMasks( emptyDirections );
-
-			String mask = "";
-			for ( String m : masks)
+			Sprite sprite = sprites.get( emptyDirections.getBitFlag() );
+			if (sprite != null)
 			{
-				mask += "_" + m;
-			}
-
-			if (sprites.containsKey( mask ))
-			{
-				return sprites.get( mask );
-			}
-			else if (texName != null)
-			{
-				TextureRegion region = getMaskedSprite( texName, maskName, masks );
-				Sprite sprite = AssetManager.loadSprite( spriteBase, region );
-
-				sprites.put( mask, sprite );
-
 				return sprite;
 			}
 			else
 			{
-				return sprites.get( "C" );
+				Array<String> masks = getMasks( emptyDirections );
+
+				String mask = "";
+				for ( String m : masks)
+				{
+					mask += "_" + m;
+				}
+
+				if (texName != null)
+				{
+					TextureRegion region = getMaskedSprite( texName, maskName, masks );
+					sprite = AssetManager.loadSprite( spriteBase, region );
+				}
+				else
+				{
+					sprite = sprites.get( CENTER );
+				}
+
+				sprites.put( emptyDirections.getBitFlag(), sprite );
+				return sprite;
 			}
 		}
 	}

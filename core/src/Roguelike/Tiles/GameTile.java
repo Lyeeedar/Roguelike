@@ -43,23 +43,25 @@ public class GameTile implements PathfindingTile
 	public FastEnumMap<OrbType, Integer> orbs = new FastEnumMap<OrbType, Integer>( OrbType.class );
 	public String metaValue;
 	public boolean visible;
+	public boolean tempVisible;
 	public boolean seen;
+
+	public EnumBitflag<Global.Direction> seenBitflag = new EnumBitflag<Global.Direction>( );
+	public EnumBitflag<Global.Direction> unseenBitflag = new EnumBitflag<Global.Direction>(  );
+
+	public TileData.SpriteGroup spriteGroup;
 
 	public float ranVal;
 
-	public GameTile( int x, int y, Level level, TileData tileData )
+	public GameTile( int x, int y, Level level, TileData tileData, float ranVal )
 	{
 		this.x = x;
 		this.y = y;
 		this.level = level;
 
 		this.tileData = tileData;
+		this.ranVal = ranVal;
 
-		light = new Color( Color.WHITE );
-	}
-
-	public TileData.SpriteGroup getSpriteGroup()
-	{
 		float total = 0;
 		for ( TileData.SpriteGroup group : tileData.spriteGroups )
 		{
@@ -67,21 +69,27 @@ public class GameTile implements PathfindingTile
 
 			if (total >= ranVal)
 			{
-				return group;
+				spriteGroup = group;
+				break;
 			}
 		}
 
-		return tileData.spriteGroups.first();
+		if (spriteGroup == null)
+		{
+			spriteGroup = tileData.spriteGroups.first();
+		}
+
+		light = new Color( Color.WHITE );
 	}
 
 	public Array<Sprite> getSprites()
 	{
-		return getSpriteGroup().sprites;
+		return spriteGroup.sprites;
 	}
 
 	public TilingSprite getTilingSprite()
 	{
-		return getSpriteGroup().tilingSprite;
+		return spriteGroup.tilingSprite;
 	}
 
 	public final void addEnvironmentEntity( EnvironmentEntity entity )

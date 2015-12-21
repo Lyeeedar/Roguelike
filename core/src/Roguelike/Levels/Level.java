@@ -454,18 +454,107 @@ public class Level
 			{
 				for ( int y = 0; y < height; y++ )
 				{
+					Grid[x][y].tempVisible = Grid[x][y].visible;
 					Grid[x][y].visible = false;
 				}
 			}
 
+			shadowCastStore.clear();
+			shadowCastStore.addAll( visibilityData.getCurrentShadowCast() );
 			Array<Point> output = visibilityData.getShadowCast( Grid, player.tile[0][0].x, player.tile[0][0].y, player.getVariable( Statistic.PERCEPTION ), player, true );
 
 			for ( Point tilePos : output )
 			{
-				if ( tilePos.x >= 0 && tilePos.y >= 0 && tilePos.x < width && tilePos.y < height )
+				GameTile tile = getGameTile( tilePos );
+				if ( tile != null )
 				{
-					getGameTile( tilePos ).visible = true;
-					getGameTile( tilePos ).seen = true;
+					tile.visible = true;
+
+					if (!tile.seen)
+					{
+						tile.seen = true;
+						updateUnseenBitflag( tilePos.x, tilePos.y );
+					}
+				}
+			}
+
+			for ( int x = 0; x < width; x++ )
+			{
+				for ( int y = 0; y < height; y++ )
+				{
+					GameTile tile = Grid[x][y];
+
+					if (tile.tempVisible != tile.visible)
+					{
+						updateSeenBitflag( x, y );
+					}
+				}
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	private void updateSeenBitflag(int x, int y)
+	{
+		for (Direction dir : Direction.values())
+		{
+			GameTile tile = getGameTile( x + dir.getX(), y + dir.getY() );
+
+			if (tile != null)
+			{
+				buildTilingBitflag( tile.seenBitflag, tile.x, tile.y, "seen" );
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	private void updateUnseenBitflag(int x, int y)
+	{
+		for (Direction dir : Direction.values())
+		{
+			GameTile tile = getGameTile( x + dir.getX(), y + dir.getY() );
+
+			if (tile != null)
+			{
+				buildTilingBitflag( tile.unseenBitflag, tile.x, tile.y, "unseen" );
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	public void buildTilingBitflag(EnumBitflag<Direction> bitflag, int x, int y, String name)
+	{
+		// Build bitflag of surrounding tiles
+		bitflag.clear();
+		for (Direction dir : Direction.values())
+		{
+			GameTile otile = getGameTile( x + dir.getX(), y + dir.getY() );
+
+			if (otile != null)
+			{
+				// Attempt to find match
+				boolean matchFound = false;
+
+				if (otile.spriteGroup.tilingSprite != null && otile.spriteGroup.tilingSprite.name.equals( name ))
+				{
+					matchFound = true;
+				}
+				else if (otile.environmentEntity != null && otile.environmentEntity.tilingSprite != null && otile.environmentEntity.tilingSprite.name.equals( name ))
+				{
+					matchFound = true;
+				}
+				else if (!otile.seen && name.equals( "unseen" ))
+				{
+					matchFound = true;
+				}
+				else if (!otile.visible && name.equals( "seen" ))
+				{
+					matchFound = true;
+				}
+
+				if (!matchFound)
+				{
+					bitflag.setBit( dir );
 				}
 			}
 		}
@@ -1234,6 +1323,8 @@ public class Level
 	private Array<Light> tempLightList = new Array<Light>( false, 16 );
 	private float updateDeltaStep = 0.05f;
 	private float updateAccumulator;
+
+	private Array<Point> shadowCastStore = new Array<Point>(  );
 
 	private static final EnumBitflag<Passability> ItemDropPassability = new EnumBitflag<Passability>( Passability.WALK, Passability.ENTITY );
 

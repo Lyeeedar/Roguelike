@@ -277,9 +277,8 @@ public abstract class AbstractDungeonGenerator
 			{
 				Symbol symbol = symbolGrid[x][y];
 
-				GameTile newTile = new GameTile( x, y, level, symbol.getTileData() );
+				GameTile newTile = new GameTile( x, y, level, symbol.getTileData(), ran.nextFloat() );
 				newTile.metaValue = symbol.metaValue;
-				newTile.ranVal = ran.nextFloat();
 
 				newTile.metaValue = symbol.metaValue;
 

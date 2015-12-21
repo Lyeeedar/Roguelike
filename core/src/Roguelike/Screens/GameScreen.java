@@ -54,6 +54,9 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 public class GameScreen implements Screen, InputProcessor, GestureListener
 {
 	// ####################################################################//
@@ -442,28 +445,24 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 			for ( int y = -1; y < Global.CurrentLevel.height+1; y++ )
 			{
-				GameTile gtile = Global.CurrentLevel.getGameTile( x, y );
-
 				int drawY = y * Global.TileSize + offsety;
+				if (drawY + Global.TileSize < 0 || drawY > Global.Resolution[1])
+				{
+					continue;
+				}
 
+				GameTile gtile = Global.CurrentLevel.getGameTile( x, y );
 				if (gtile != null)
 				{
-					// Quick skip if outside screen
-					if (drawY + Global.TileSize < 0 || drawY > Global.Resolution[1])
-					{
-						continue;
-					}
 
 					// skip if not visible
-					buildTilingBitflag( unseenBitflag, x, y, "unseen" );
-					if (unseenBitflag.getBitFlag() == 0)
+					if (gtile.unseenBitflag.getBitFlag() == 0)
 					{
 						// if below was visible, then draw
-						buildTilingBitflag( unseenBitflag, x, y-1, "unseen" );
-						if (unseenBitflag.getBitFlag() != 0)
+						GameTile btile = Global.CurrentLevel.getGameTile( x, y-1 );
+						if (btile != null && btile.unseenBitflag.getBitFlag() != 0)
 						{
-							unseenBitflag.setBitFlag( 0 );
-							queueSprite( fogSprite.getSprite( unseenBitflag ), unseenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.UNSEENFOG );
+							queueSprite( fogSprite.getSprite( gtile.unseenBitflag ), unseenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.UNSEENFOG );
 						}
 
 						continue;
@@ -472,9 +471,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					for ( int i = 0; i < gtile.getSprites().size; i++ )
 					{
 						Sprite sprite = gtile.getSprites().get(i);
-						queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize,
-									 sprite.drawActualSize ? RenderLayer.RAISEDTILE : RenderLayer.GROUNDTILE,
-									 i );
+						queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, sprite.drawActualSize ? RenderLayer.RAISEDENTITY : RenderLayer.GROUNDTILE, i );
 					}
 
 					GameTile nextTile = Global.CurrentLevel.getGameTile( x, y - 1 );
@@ -493,9 +490,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 					if ( gtile.getTilingSprite() != null )
 					{
-						buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().name);
+						Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().name);
 						Sprite sprite = gtile.getTilingSprite().getSprite( directionBitflag );
-						queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.GROUNDTILE );
+						queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, sprite.drawActualSize ? RenderLayer.RAISEDENTITY : RenderLayer.GROUNDTILE, gtile.getSprites().size );
 					}
 
 					if ( gtile.hasFields )
@@ -531,7 +528,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 						if ( entity.tilingSprite != null )
 						{
-							buildTilingBitflag(directionBitflag, x, y, entity.tilingSprite.name);
+							Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, entity.tilingSprite.name);
 							sprite = entity.tilingSprite.getSprite( directionBitflag );
 						}
 
@@ -571,9 +568,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 					}
 
-					buildTilingBitflag(seenBitflag, x, y, "seen");
-
-					if ( gtile.visible || seenBitflag.getBitFlag() != 0 )
+					if ( gtile.visible || gtile.seenBitflag.getBitFlag() != 0 )
 					{
 						GameEntity entity = gtile.entity;
 
@@ -589,7 +584,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 							if ( entity.tilingSprite != null )
 							{
-								buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().name);
+								Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().name);
 								sprite = gtile.getTilingSprite().getSprite( directionBitflag );
 							}
 
@@ -657,29 +652,23 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 									float size = Global.TileSize * scale;
 
-									queueSprite( orb, gtile.light, ( cx + Global.TileSize / 2 ) - size / 2, ( cy + Global.TileSize / 2 ) - size / 2, size, size, RenderLayer.ESSENCE );
+									queueSprite( orb, gtile.light, (int) (( cx + Global.TileSize / 2 ) - size / 2), (int) (( cy + Global.TileSize / 2 ) - size / 2), (int) size, (int) size, RenderLayer.ESSENCE );
 								}
 							}
 						}
 					}
 				}
 
-				if (gtile == null || !gtile.visible)
+				if (gtile != null && !gtile.visible)
 				{
 					// not visible, so draw fog
 
-					if (gtile == null)
-					{
-						buildTilingBitflag( unseenBitflag, x, y, "unseen" );
-						buildTilingBitflag( seenBitflag, x, y, "seen" );
-					}
-
-					Sprite sprite = fogSprite.getSprite( seenBitflag );
+					Sprite sprite = fogSprite.getSprite( gtile.seenBitflag );
 					queueSprite( sprite, seenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.SEENFOG );
 
 					if (gtile == null || !gtile.seen)
 					{
-						sprite = fogSprite.getSprite( unseenBitflag );
+						sprite = fogSprite.getSprite( gtile.unseenBitflag );
 						queueSprite( sprite, unseenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.UNSEENFOG );
 					}
 				}
@@ -687,44 +676,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 	}
 
-	// ----------------------------------------------------------------------
-	private void buildTilingBitflag(EnumBitflag<Direction> bitflag, int x, int y, String name)
-	{
-		// Build bitflag of surrounding tiles
-		bitflag.clear();
-		for (Direction dir : Direction.values())
-		{
-			GameTile otile = Global.CurrentLevel.getGameTile( x + dir.getX(), y + dir.getY() );
 
-			if (otile != null)
-			{
-				// Attempt to find match
-				boolean matchFound = false;
-
-				if (otile.getTilingSprite() != null && otile.getTilingSprite().name.equals( name ))
-				{
-					matchFound = true;
-				}
-				else if (otile.environmentEntity != null && otile.environmentEntity.tilingSprite != null && otile.environmentEntity.tilingSprite.name.equals( name ))
-				{
-					matchFound = true;
-				}
-				else if (!otile.seen && name.equals( "unseen" ))
-				{
-					matchFound = true;
-				}
-				else if (!otile.visible && name.equals( "seen" ))
-				{
-					matchFound = true;
-				}
-
-				if (!matchFound)
-				{
-					bitflag.setBit( dir );
-				}
-			}
-		}
-	}
 
 	// ----------------------------------------------------------------------
 	private void renderCursor( int offsetx, int offsety, int mousex, int mousey, float delta )
@@ -968,13 +920,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
-	private void queueSprite( Sprite sprite, Color colour, float x, float y, float width, float height, RenderLayer layer )
+	private void queueSprite( Sprite sprite, Color colour, int x, int y, int width, int height, RenderLayer layer )
 	{
 		queueSprite( sprite, colour, x, y, width, height, layer, 0 );
 	}
 
 	// ----------------------------------------------------------------------
-	private void queueSprite( Sprite sprite, Color colour, float x, float y, float width, float height, RenderLayer layer, int index )
+	private void queueSprite( Sprite sprite, Color colour, int x, int y, int width, int height, RenderLayer layer, int index )
 	{
 		if ( sprite != null && sprite.spriteAnimation != null )
 		{
@@ -991,11 +943,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private void flush( Batch batch )
 	{
-		queuedSprites.sort();
-
 		Color col = batch.getColor();
-		for ( RenderSprite rs : queuedSprites )
+		while (!queuedSprites.isEmpty())
 		{
+			RenderSprite rs = queuedSprites.poll();
+
 			temp.set( rs.colour );
 			if ( !temp.equals( col ) )
 			{
@@ -1003,11 +955,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				col.set( temp );
 			}
 
-			rs.sprite.render( batch, (int) rs.x, (int) rs.y, (int) rs.width, (int) rs.height );
+			rs.sprite.render( batch, rs.x, rs.y, rs.width, rs.height );
+			renderSpritePool.free( rs );
 		}
-
-		renderSpritePool.freeAll( queuedSprites );
-		queuedSprites.clear();
 	}
 
 	// ----------------------------------------------------------------------
@@ -2017,6 +1967,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		label.setVisible( true );
 	}
 
+	// endregion Public Methods
+	// ####################################################################//
+	// region Data
+
 	// ----------------------------------------------------------------------
 	public enum RenderLayer
 	{
@@ -2024,7 +1978,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		ITEM, ESSENCE, CURSOR,
 
-		RAISEDTILE, RAISEDENTITY,
+		RAISEDENTITY,
 
 		EFFECT, ABILITY,
 
@@ -2032,10 +1986,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		SEENFOG, UNSEENFOG
 	}
-
-	// endregion Public Methods
-	// ####################################################################//
-	// region Data
 
 	// ----------------------------------------------------------------------
 	public boolean examineMode = false;
@@ -2074,7 +2024,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private Tooltip tooltip;
 
 	// ----------------------------------------------------------------------
-	private Array<RenderSprite> queuedSprites = new Array<RenderSprite>();
+	private PriorityQueue<RenderSprite> queuedSprites = new PriorityQueue<RenderSprite>( );
 	private Array<Entity> hasStatus = new Array<Entity>();
 	private Array<Entity> entitiesWithSpeech = new Array<Entity>();
 
@@ -2127,8 +2077,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private float fpsAccumulator;
 
 	private final EnumBitflag<Direction> directionBitflag = new EnumBitflag<Direction>( );
-	private final EnumBitflag<Direction> seenBitflag = new EnumBitflag<Direction>( );
-	private final EnumBitflag<Direction> unseenBitflag = new EnumBitflag<Direction>( );
 
 	// endregion Data
 	// ####################################################################//
@@ -2139,13 +2087,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		public final Color colour = new Color();
 		public Sprite sprite;
 		public RenderLayer layer;
-		public float x;
-		public float y;
-		public float width;
-		public float height;
+		public int x;
+		public int y;
+		public int width;
+		public int height;
 		public int index;
 
-		public RenderSprite set( Sprite sprite, Color colour, float x, float y, float width, float height, RenderLayer layer, int index )
+		public RenderSprite set( Sprite sprite, Color colour, int x, int y, int width, int height, RenderLayer layer, int index )
 		{
 			this.sprite = sprite;
 			this.colour.set( colour );
@@ -2162,21 +2110,21 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		@Override
 		public int compareTo( RenderSprite o )
 		{
-			int comp = Integer.compare( layer.ordinal(), o.layer.ordinal() );
+			int comp = layer.ordinal() - o.layer.ordinal();
 
 			if ( comp == 0 )
 			{
-				comp = Integer.compare( index, o.index );
+				comp = o.y - y;
 			}
 
 			if ( comp == 0 )
 			{
-				comp = Float.compare( o.y, y );
+				comp = o.x - x;
 			}
 
 			if ( comp == 0 )
 			{
-				comp = Float.compare( o.x, x );
+				comp = index - o.index;
 			}
 
 			return comp;
