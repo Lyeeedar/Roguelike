@@ -77,7 +77,7 @@ public final class HealOnDeathEvent extends AbstractOnDeathEvent
 			condition = condition.toLowerCase();
 		}
 		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
-		amountEqn = xml.get( "Amount" );
+		amountEqn = xml.getText();
 	}
 
 	@Override

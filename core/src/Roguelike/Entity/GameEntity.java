@@ -47,14 +47,7 @@ public class GameEntity extends Entity
 	// ----------------------------------------------------------------------
 	public void attack( Entity other, Direction dir )
 	{
-		if ( inventory.getEquip( EquipmentSlot.WEAPON ) == null )
-		{
-			Global.calculateDamage( this, other, variableMap, Statistic.emptyMap, true );
-		}
-		else
-		{
-			Global.calculateDamage( this, other, Statistic.statsBlockToVariableBlock( inventory.getEquip( EquipmentSlot.WEAPON ).getStatistics( baseVariableMap ) ), getVariableMap(), true );
-		}
+		Global.calculateDamage( this, other, getVariable( Statistic.ATTACK ), other.getVariable( Statistic.DEFENSE ), true );
 	}
 
 	// ----------------------------------------------------------------------

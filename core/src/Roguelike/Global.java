@@ -45,12 +45,16 @@ import exp4j.Helpers.EquationHelper;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
 public class Global
 {
+	// ----------------------------------------------------------------------
+	public static final boolean CanMoveDiagonal = true;
+
 	// ----------------------------------------------------------------------
 	public static final int NUM_ABILITY_SLOTS = 8;
 
@@ -250,35 +254,29 @@ public class Global
 	}
 
 	// ----------------------------------------------------------------------
-	public static void calculateDamage( Entity attacker, Entity defender, HashMap<String, Integer> attackVariableMap, HashMap<String, Integer> attackerVariableMap, boolean doEvents )
+	public static void calculateDamage( Entity attacker, Entity defender, int atk, int def, boolean doEvents )
 	{
-		DamageObject damObj = new DamageObject( attacker, defender, attackerVariableMap );
+		if ( atk <= 0 ) { return; }
 
-		int baseDef = damObj.defenderVariableMap.get( Statistic.DEFENSE.toString().toLowerCase() );
+		int damage = atk - def;
 
-		int totalAtk = calculateDamage( attackVariableMap, attackerVariableMap );
-
-		if ( totalAtk <= 0 ) { return; }
-
-		int dam = totalAtk - baseDef;
-
-		if ( dam <= 0 && totalAtk > 0 )
+		if ( damage <= 0 )
 		{
-			dam = 1;
+			damage = 1;
 		}
 
-		damObj.damage = dam;
+		DamageObject damObj = new DamageObject(damage);
 
 		if ( doEvents )
 		{
 			for ( GameEventHandler handler : attacker.getAllHandlers() )
 			{
-				handler.onDealDamage( damObj );
+				handler.onDealDamage( defender, damObj );
 			}
 
 			for ( GameEventHandler handler : defender.getAllHandlers() )
 			{
-				handler.onReceiveDamage( damObj );
+				handler.onReceiveDamage( defender, damObj );
 			}
 		}
 
@@ -286,7 +284,7 @@ public class Global
 	}
 
 	// ----------------------------------------------------------------------
-	public static int calculateDamage( HashMap<String, Integer> attackVariableMap, HashMap<String, Integer> attackerVariableMap )
+	public static int calculateScaledAttack( HashMap<String, Integer> attackVariableMap, HashMap<String, Integer> attackerVariableMap )
 	{
 		int baseAtk = attackVariableMap.get( Statistic.ATTACK.toString().toLowerCase() );
 		int totalAtk = baseAtk;

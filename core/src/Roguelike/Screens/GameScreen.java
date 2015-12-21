@@ -659,14 +659,29 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					}
 				}
 
-				if (gtile != null && !gtile.visible)
+				if (gtile == null)
+				{
+					Global.CurrentLevel.buildTilingBitflag( directionBitflag, x, y, "seen" );
+					//if (directionBitflag.getBitFlag() != 0)
+					{
+						Sprite sprite = fogSprite.getSprite( directionBitflag );
+						queueSprite( sprite, seenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.SEENFOG );
+					}
+
+					Global.CurrentLevel.buildTilingBitflag( directionBitflag, x, y, "unseen" );
+					//if (directionBitflag.getBitFlag() != 0)
+					{
+						Sprite sprite = fogSprite.getSprite( directionBitflag );
+						queueSprite( sprite, unseenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.UNSEENFOG );
+					}
+				}
+				else if (!gtile.visible)
 				{
 					// not visible, so draw fog
-
 					Sprite sprite = fogSprite.getSprite( gtile.seenBitflag );
 					queueSprite( sprite, seenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.SEENFOG );
 
-					if (gtile == null || !gtile.seen)
+					if (!gtile.seen)
 					{
 						sprite = fogSprite.getSprite( gtile.unseenBitflag );
 						queueSprite( sprite, unseenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.UNSEENFOG );
@@ -1120,7 +1135,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 		else if ( keycode == Keys.A )
 		{
-			AbilityTree tree = new AbilityTree( "Firebolt" );
+			AbilityTree tree = new AbilityTree( "FireAttunement" );
 
 			Item item = new Item();
 			item.ability = tree;

@@ -2,6 +2,7 @@ package Roguelike.GameEvent.Damage;
 
 import java.util.HashMap;
 
+import Roguelike.Entity.Entity;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
@@ -16,24 +17,34 @@ import exp4j.Helpers.EquationHelper;
 public final class StatusEvent extends AbstractOnDamageEvent
 {
 	public String condition;
-	public Element attackerStatus;
-	public Element defenderStatus;
+	public Element statusData;
 	public String stacksEqn;
 
 	private String[] reliesOn;
 
 	@Override
-	public boolean handle( DamageObject obj, IGameObject parent )
+	public boolean handle( Entity entity, DamageObject obj, IGameObject parent )
 	{
+		HashMap<String, Integer> variableMap = entity.getVariableMap();
+		for ( String name : reliesOn )
+		{
+			if ( !variableMap.containsKey( name.toLowerCase() ) )
+			{
+				variableMap.put( name.toLowerCase(), 0 );
+			}
+		}
+
 		if ( condition != null )
 		{
 			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			obj.writeVariableNames( expB, reliesOn );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
+			expB.variable( "damage" );
 
 			Expression exp = EquationHelper.tryBuild( expB );
 			if ( exp == null ) { return false; }
 
-			obj.writeVariableValues( exp, reliesOn );
+			EquationHelper.setVariableValues( exp, variableMap, "" );
+			exp.setVariable( "damage", obj.damage );
 
 			double conditionVal = exp.evaluate();
 
@@ -51,32 +62,23 @@ public final class StatusEvent extends AbstractOnDamageEvent
 			else
 			{
 				ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
-				obj.writeVariableNames( expB, reliesOn );
+				EquationHelper.setVariableNames( expB, variableMap, "" );
+				expB.variable( "damage" );
 
 				Expression exp = EquationHelper.tryBuild( expB );
 				if ( exp != null )
 				{
-					obj.writeVariableValues( exp, reliesOn );
+					EquationHelper.setVariableValues( exp, variableMap, "" );
+					exp.setVariable( "damage", obj.damage );
 
 					stacks = (int) Math.ceil( exp.evaluate() );
 				}
 			}
 		}
 
-		if ( attackerStatus != null )
+		for ( int i = 0; i < stacks; i++ )
 		{
-			for ( int i = 0; i < stacks; i++ )
-			{
-				obj.attacker.addStatusEffect( StatusEffect.load( attackerStatus, parent ) );
-			}
-		}
-
-		if ( defenderStatus != null )
-		{
-			for ( int i = 0; i < stacks; i++ )
-			{
-				obj.defender.addStatusEffect( StatusEffect.load( defenderStatus, parent ) );
-			}
+			entity.addStatusEffect( StatusEffect.load( statusData, parent ) );
 		}
 
 		return true;
@@ -91,13 +93,13 @@ public final class StatusEvent extends AbstractOnDamageEvent
 		{
 			condition = condition.toLowerCase();
 		}
-		attackerStatus = xml.getChildByName( "Attacker" );
-		defenderStatus = xml.getChildByName( "Defender" );
-		stacksEqn = xml.get( "Stacks", null );
+		stacksEqn = xml.getAttribute( "Stacks", null );
 		if ( stacksEqn != null )
 		{
 			stacksEqn = stacksEqn.toLowerCase();
 		}
+
+		statusData = xml;
 	}
 
 	@Override
@@ -107,16 +109,8 @@ public final class StatusEvent extends AbstractOnDamageEvent
 
 		lines.add( "Spawns a status:" );
 
-		if ( attackerStatus != null )
-		{
-			StatusEffect status = StatusEffect.load( attackerStatus, parent );
-			lines.addAll( status.toString( variableMap ) );
-		}
-		else
-		{
-			StatusEffect status = StatusEffect.load( defenderStatus, parent );
-			lines.addAll( status.toString( variableMap ) );
-		}
+		StatusEffect status = StatusEffect.load( statusData, parent );
+		lines.addAll( status.toString( variableMap ) );
 
 		return lines;
 	}

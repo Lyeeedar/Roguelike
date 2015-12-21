@@ -203,8 +203,8 @@ public final class Item extends GameEventHandler
 		table.add( descLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 		table.row();
 
-		int oldDam = other != null ? Global.calculateDamage( Statistic.statsBlockToVariableBlock( other.getStatistics( entity.getBaseVariableMap() ) ), entity.getBaseVariableMap() ) : 0;
-		int newDam = Global.calculateDamage( Statistic.statsBlockToVariableBlock( getStatistics( entity.getBaseVariableMap() ) ), entity.getBaseVariableMap() );
+		int oldDam = other != null ? Global.calculateScaledAttack( Statistic.statsBlockToVariableBlock( other.getStatistics( entity.getVariableMap() ) ), entity.getVariableMap() ) : 0;
+		int newDam = Global.calculateScaledAttack( Statistic.statsBlockToVariableBlock( getStatistics( entity.getVariableMap() ) ), entity.getVariableMap() );
 
 		String damText = "Damage: " + newDam;
 		if ( newDam != oldDam )

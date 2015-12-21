@@ -2,6 +2,7 @@ package Roguelike.GameEvent.Damage;
 
 import java.util.HashMap;
 
+import Roguelike.Entity.Entity;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
@@ -19,17 +20,28 @@ public final class DamageEvent extends AbstractOnDamageEvent
 	private String[] reliesOn;
 
 	@Override
-	public boolean handle( DamageObject obj, IGameObject parent )
+	public boolean handle( Entity entity, DamageObject obj, IGameObject parent )
 	{
+		HashMap<String, Integer> variableMap = entity.getVariableMap();
+		for ( String name : reliesOn )
+		{
+			if ( !variableMap.containsKey( name.toLowerCase() ) )
+			{
+				variableMap.put( name.toLowerCase(), 0 );
+			}
+		}
+
 		if ( condition != null )
 		{
 			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			obj.writeVariableNames( expB, reliesOn );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
+			expB.variable( "damage" );
 
 			Expression exp = EquationHelper.tryBuild( expB );
 			if ( exp == null ) { return false; }
 
-			obj.writeVariableValues( exp, reliesOn );
+			EquationHelper.setVariableValues( exp, variableMap, "" );
+			exp.setVariable( "damage", obj.damage );
 
 			double conditionVal = exp.evaluate();
 
@@ -45,12 +57,14 @@ public final class DamageEvent extends AbstractOnDamageEvent
 		else
 		{
 			ExpressionBuilder expB = EquationHelper.createEquationBuilder( equation );
-			obj.writeVariableNames( expB, reliesOn );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
+			expB.variable( "damage" );
 
 			Expression exp = EquationHelper.tryBuild( expB );
 			if ( exp != null )
 			{
-				obj.writeVariableValues( exp, reliesOn );
+				EquationHelper.setVariableValues( exp, variableMap, "" );
+				exp.setVariable( "damage", obj.damage );
 
 				raw = (int) exp.evaluate();
 			}

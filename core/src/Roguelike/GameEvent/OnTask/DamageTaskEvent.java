@@ -19,7 +19,7 @@ import exp4j.Helpers.EquationHelper;
 public final class DamageTaskEvent extends AbstractOnTaskEvent
 {
 	private String condition;
-	private FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
+	private String eqn;
 	private String[] reliesOn;
 
 	@Override
@@ -49,42 +49,26 @@ public final class DamageTaskEvent extends AbstractOnTaskEvent
 			if ( conditionVal == 0 ) { return false; }
 		}
 
-		FastEnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
+		int raw = 0;
 
-		for ( Statistic stat : Statistic.values() )
+		if ( Global.isNumber( eqn ) )
 		{
-			if ( equations.containsKey( stat ) )
+			raw = Integer.parseInt( eqn );
+		}
+		else
+		{
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
+
+			Expression exp = EquationHelper.tryBuild( expB );
+			if ( exp != null )
 			{
-				int raw = 0;
-				String eqn = equations.get( stat );
-
-				if ( Global.isNumber( eqn ) )
-				{
-					raw = Integer.parseInt( eqn );
-				}
-				else
-				{
-					ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-					EquationHelper.setVariableNames( expB, variableMap, "" );
-
-					Expression exp = EquationHelper.tryBuild( expB );
-					if ( exp == null )
-					{
-						continue;
-					}
-
-					EquationHelper.setVariableValues( exp, variableMap, "" );
-
-					raw = (int) exp.evaluate();
-				}
-
-				raw += stats.get( stat );
-
-				stats.put( stat, raw );
+				EquationHelper.setVariableValues( exp, variableMap, "" );
+				raw = (int) exp.evaluate();
 			}
 		}
 
-		Global.calculateDamage( entity, entity, Statistic.statsBlockToVariableBlock( stats ), entity.getVariableMap(), false );
+		Global.calculateDamage( entity, entity, raw, 0, false );
 
 		return true;
 	}
@@ -100,13 +84,7 @@ public final class DamageTaskEvent extends AbstractOnTaskEvent
 
 		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
 
-		for ( int i = 0; i < xml.getChildCount(); i++ )
-		{
-			Element sEl = xml.getChild( i );
-
-			Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
-			equations.put( stat, sEl.getText().toLowerCase() );
-		}
+		eqn = xml.getText();
 	}
 
 	@Override
@@ -114,7 +92,7 @@ public final class DamageTaskEvent extends AbstractOnTaskEvent
 	{
 		Array<String> lines = new Array<String>();
 
-		lines.add( "Take damage" );
+		lines.add( "Take " + eqn + " damage every turn" );
 
 		return lines;
 	}

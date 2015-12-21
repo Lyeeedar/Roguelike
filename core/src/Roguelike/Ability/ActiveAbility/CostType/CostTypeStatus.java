@@ -23,8 +23,8 @@ public class CostTypeStatus extends AbstractCostType
 	public void parse( Element xml )
 	{
 		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
-		status = xml.get( "Status" ).toLowerCase();
-		stacksEqn = xml.get( "Stacks", "1" ).toLowerCase();
+		status = xml.getText().toLowerCase();
+		stacksEqn = xml.getAttribute( "Stacks", "1" ).toLowerCase();
 	}
 
 	@Override

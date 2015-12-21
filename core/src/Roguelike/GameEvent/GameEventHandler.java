@@ -33,10 +33,15 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnTaskEvent> onUseAbilityEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnDeathEvent> onDeathEvents = new Array<AbstractOnDeathEvent>();
 
+	public Array<Object[]> extraData = new Array<Object[]>();
+
 	// ----------------------------------------------------------------------
 	protected void appendExtraVariables(HashMap<String, Integer> variableMap)
 	{
-
+		for (Object[] data : extraData)
+		{
+			variableMap.put( (String)data[0], (Integer)data[1] );
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -76,11 +81,10 @@ public abstract class GameEventHandler implements IGameObject
 	// ----------------------------------------------------------------------
 	public void onDeath( Entity entity, Entity killer )
 	{
-		appendExtraVariables( entity.getVariableMap() );
-
 		boolean successfulProcess = false;
 		for ( AbstractOnDeathEvent event : onDeathEvents )
 		{
+			appendExtraVariables( entity.getVariableMap() );
 			boolean success = event.handle( entity, killer );
 
 			if ( success )
@@ -98,11 +102,10 @@ public abstract class GameEventHandler implements IGameObject
 	// ----------------------------------------------------------------------
 	public void onTurn( Entity entity, float cost )
 	{
-		appendExtraVariables( entity.getVariableMap() );
-
 		boolean successfulProcess = false;
 		for ( AbstractOnTurnEvent event : onTurnEvents )
 		{
+			appendExtraVariables( entity.getVariableMap() );
 			boolean success = event.handle( entity, cost );
 
 			if ( success )
@@ -118,14 +121,13 @@ public abstract class GameEventHandler implements IGameObject
 	}
 
 	// ----------------------------------------------------------------------
-	public void onDealDamage( DamageObject obj )
+	public void onDealDamage( Entity entity, DamageObject obj )
 	{
-		appendExtraVariables( obj.attackerVariableMap );
-
 		boolean successfulProcess = false;
 		for ( AbstractOnDamageEvent event : onDealDamageEvents )
 		{
-			boolean success = event.handle( obj, this );
+			appendExtraVariables( entity.getVariableMap() );
+			boolean success = event.handle( entity, obj, this );
 
 			if ( success )
 			{
@@ -140,14 +142,13 @@ public abstract class GameEventHandler implements IGameObject
 	}
 
 	// ----------------------------------------------------------------------
-	public void onReceiveDamage( DamageObject obj )
+	public void onReceiveDamage( Entity entity, DamageObject obj )
 	{
-		appendExtraVariables( obj.defenderVariableMap );
-
 		boolean successfulProcess = false;
 		for ( AbstractOnDamageEvent event : onReceiveDamageEvents )
 		{
-			boolean success = event.handle( obj, this );
+			appendExtraVariables( entity.getVariableMap() );
+			boolean success = event.handle( entity, obj, this );
 
 			if ( success )
 			{
@@ -164,8 +165,6 @@ public abstract class GameEventHandler implements IGameObject
 	// ----------------------------------------------------------------------
 	public void onTask( Entity entity, AbstractTask task )
 	{
-		appendExtraVariables( entity.getVariableMap() );
-
 		if ( task instanceof TaskMove )
 		{
 			onMove( entity, (TaskMove) task );
@@ -186,6 +185,7 @@ public abstract class GameEventHandler implements IGameObject
 		boolean successfulProcess = false;
 		for ( AbstractOnTaskEvent event : onTaskEvents )
 		{
+			appendExtraVariables( entity.getVariableMap() );
 			boolean success = event.handle( entity, task, this );
 
 			if ( success )
@@ -206,6 +206,7 @@ public abstract class GameEventHandler implements IGameObject
 		boolean successfulProcess = false;
 		for ( AbstractOnTaskEvent event : onMoveEvents )
 		{
+			appendExtraVariables( entity.getVariableMap() );
 			boolean success = event.handle( entity, task, this );
 
 			if ( success )
@@ -226,6 +227,7 @@ public abstract class GameEventHandler implements IGameObject
 		boolean successfulProcess = false;
 		for ( AbstractOnTaskEvent event : onAttackEvents )
 		{
+			appendExtraVariables( entity.getVariableMap() );
 			boolean success = event.handle( entity, task, this );
 
 			if ( success )
@@ -246,6 +248,7 @@ public abstract class GameEventHandler implements IGameObject
 		boolean successfulProcess = false;
 		for ( AbstractOnTaskEvent event : onWaitEvents )
 		{
+			appendExtraVariables( entity.getVariableMap() );
 			boolean success = event.handle( entity, task, this );
 
 			if ( success )
@@ -266,6 +269,7 @@ public abstract class GameEventHandler implements IGameObject
 		boolean successfulProcess = false;
 		for ( AbstractOnTaskEvent event : onUseAbilityEvents )
 		{
+			appendExtraVariables( entity.getVariableMap() );
 			boolean success = event.handle( entity, task, this );
 
 			if ( success )

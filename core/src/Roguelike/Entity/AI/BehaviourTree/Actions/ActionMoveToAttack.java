@@ -97,7 +97,7 @@ public class ActionMoveToAttack extends AbstractAction
 				return State;
 			}
 
-			Pathfinder pathFinder = new Pathfinder( entity.tile[0][0].level.getGrid(), entity.tile[0][0].x, entity.tile[0][0].y, pos.x, pos.y, true, entity.size, entity );
+			Pathfinder pathFinder = new Pathfinder( entity.tile[0][0].level.getGrid(), entity.tile[0][0].x, entity.tile[0][0].y, pos.x, pos.y, Global.CanMoveDiagonal, entity.size, entity );
 			Array<Point> path = pathFinder.getPath( entity.getTravelType() );
 
 			if ( path.size > 1 && path.size < bestDist )

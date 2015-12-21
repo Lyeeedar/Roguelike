@@ -323,6 +323,7 @@ public final class SaveFile
 		kryo.register( String[].class );
 		kryo.register( int[].class );
 		kryo.register( Object.class );
+		kryo.register( Object[].class );
 		kryo.register( char[].class );
 		kryo.register( char[][].class );
 		kryo.register( Float[].class );

@@ -1,22 +1,45 @@
 package Roguelike.Ability.ActiveAbility.EffectType;
 
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Entity.Entity;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.GameEvent.Damage.StatusEvent;
 import Roguelike.Global;
+import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
+import exp4j.Helpers.EquationHelper;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+
+import java.util.HashMap;
 
 public class EffectTypeStatus extends AbstractEffectType
 {
-	private StatusEvent statusEvent;
+	public String condition;
+	public Element statusData;
+	public String stacksEqn;
+
+	private String[] reliesOn;
 
 	@Override
 	public void parse( Element xml )
 	{
-		statusEvent = new StatusEvent();
-		statusEvent.parse( xml );
+		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
+		condition = xml.getAttribute( "Condition", null );
+		if ( condition != null )
+		{
+			condition = condition.toLowerCase();
+		}
+		statusData = xml;
+
+		stacksEqn = xml.getAttribute( "Stacks", null );
+		if ( stacksEqn != null )
+		{
+			stacksEqn = stacksEqn.toLowerCase();
+		}
 	}
 
 	@Override
@@ -24,14 +47,68 @@ public class EffectTypeStatus extends AbstractEffectType
 	{
 		if ( tile.entity != null )
 		{
-			DamageObject ao = new DamageObject( aa.getCaster(), tile.entity, aa.getVariableMap() );
-			statusEvent.handle( ao, aa );
+			handle( aa, tile.entity );
 		}
 
 		if ( tile.environmentEntity != null )
 		{
-			DamageObject ao = new DamageObject( aa.getCaster(), tile.environmentEntity, aa.getVariableMap() );
-			statusEvent.handle( ao, aa );
+			handle( aa, tile.environmentEntity );
+		}
+	}
+
+	public void handle( ActiveAbility aa, Entity target )
+	{
+		HashMap<String, Integer> variableMap = aa.getVariableMap();
+		for ( String name : reliesOn )
+		{
+			if ( !variableMap.containsKey( name ) )
+			{
+				variableMap.put(name, 0);
+			}
+		}
+
+		if ( condition != null )
+		{
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
+			EquationHelper.setVariableNames( expB, aa.getVariableMap(), "" );
+
+			Expression exp = EquationHelper.tryBuild( expB );
+			if ( exp == null ) { return; }
+
+			EquationHelper.setVariableValues( exp, aa.getVariableMap(), "" );
+
+			double conditionVal = exp.evaluate();
+
+			if ( conditionVal == 0 ) { return; }
+		}
+
+		int stacks = 1;
+
+		if ( stacksEqn != null )
+		{
+			if ( Global.isNumber( stacksEqn ) )
+			{
+				stacks = Integer.parseInt( stacksEqn );
+			}
+			else
+			{
+				ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
+				EquationHelper.setVariableNames( expB, aa.getVariableMap(), "" );
+
+				Expression exp = EquationHelper.tryBuild( expB );
+				if ( exp != null )
+				{
+					EquationHelper.setVariableValues( exp, aa.getVariableMap(), "" );
+					stacks = (int) Math.ceil( exp.evaluate() );
+				}
+			}
+		}
+
+		for ( int i = 0; i < stacks; i++ )
+		{
+			StatusEffect status = StatusEffect.load( statusData, aa );
+			status.extraData.add( new Object[]{ "level", aa.tree.level } );
+			aa.getCaster().addStatusEffect( status );
 		}
 	}
 
@@ -39,13 +116,23 @@ public class EffectTypeStatus extends AbstractEffectType
 	public AbstractEffectType copy()
 	{
 		EffectTypeStatus e = new EffectTypeStatus();
-		e.statusEvent = statusEvent;
+		e.condition = condition;
+		e.statusData = statusData;
+		e.stacksEqn = stacksEqn;
+		e.reliesOn = reliesOn;
 		return e;
 	}
 
 	@Override
 	public String toString( ActiveAbility aa )
 	{
-		return Global.join( "\n", statusEvent.toString( aa.getVariableMap(), aa ) );
+		Array<String> lines = new Array<String>();
+
+		lines.add( "Spawns a status:" );
+
+		StatusEffect status = StatusEffect.load( statusData, aa );
+		lines.addAll( status.toString( aa.getVariableMap() ) );
+
+		return Global.join( "\n", lines);
 	}
 }

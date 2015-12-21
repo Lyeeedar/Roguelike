@@ -18,7 +18,7 @@ import exp4j.Helpers.EquationHelper;
 public class DamageOnDeathEffect extends AbstractOnDeathEffect
 {
 	private String condition;
-	private FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
+	private String eqn;
 	private String[] reliesOn;
 
 	@Override
@@ -64,32 +64,26 @@ public class DamageOnDeathEffect extends AbstractOnDeathEffect
 			if ( conditionVal == 0 ) { return; }
 		}
 
-		FastEnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
+		int raw = 0;
 
-		for ( Statistic stat : Statistic.values() )
+		if (Global.isNumber( eqn ))
 		{
-			if ( equations.containsKey( stat ) )
+			raw = Integer.parseInt( eqn );
+		}
+		else
+		{
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
+
+			Expression exp = EquationHelper.tryBuild( expB );
+			if ( exp != null )
 			{
-				String eqn = equations.get( stat );
-
-				ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-				EquationHelper.setVariableNames( expB, variableMap, "" );
-
-				Expression exp = EquationHelper.tryBuild( expB );
-				if ( exp == null )
-				{
-					continue;
-				}
-
 				EquationHelper.setVariableValues( exp, variableMap, "" );
-
-				int raw = (int) exp.evaluate();
-
-				stats.put( stat, raw );
+				raw = (int) exp.evaluate();
 			}
 		}
 
-		Global.calculateDamage( entity, entity, Statistic.statsBlockToVariableBlock( stats ), Statistic.emptyMap, false );
+		Global.calculateDamage( entity, entity, raw, entity.getVariable( Statistic.DEFENSE ), true );
 	}
 
 	@Override
@@ -103,13 +97,7 @@ public class DamageOnDeathEffect extends AbstractOnDeathEffect
 
 		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
 
-		for ( int i = 0; i < xml.getChildCount(); i++ )
-		{
-			Element sEl = xml.getChild( i );
-
-			Statistic el = Statistic.valueOf( sEl.getName().toUpperCase() );
-			equations.put( el, sEl.getText().toLowerCase() );
-		}
+		eqn = xml.getText();
 	}
 
 }

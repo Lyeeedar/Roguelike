@@ -68,7 +68,7 @@ public class EffectTypeDamage extends AbstractEffectType
 
 		Array<String> lines = new Array<String>();
 
-		int damage = Global.calculateDamage( variableMap, aa.getVariableMap() );
+		int damage = Global.calculateScaledAttack( variableMap, aa.getVariableMap() );
 
 		lines.add( "Total Damage: " + damage );
 
@@ -91,7 +91,8 @@ public class EffectTypeDamage extends AbstractEffectType
 
 	private void applyToEntity( Entity target, ActiveAbility aa, HashMap<String, Integer> variableMap )
 	{
-		Global.calculateDamage( aa.getCaster(), target, variableMap, aa.getVariableMap(), true );
+		int atk = Global.calculateScaledAttack( variableMap, aa.getVariableMap() );
+		Global.calculateDamage( aa.getCaster(), target, atk, target.getVariable( Statistic.DEFENSE ), true );
 	}
 
 	private HashMap<String, Integer> calculateVariableMap( ActiveAbility aa )

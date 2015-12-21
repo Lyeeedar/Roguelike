@@ -17,7 +17,7 @@ import exp4j.Helpers.EquationHelper;
 public class DamageOnTurnEffect extends AbstractOnTurnEffect
 {
 	private String condition;
-	private FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
+	private String eqn;
 	private String[] reliesOn;
 
 	private void doDamage( Entity entity, Field field, float cost )
@@ -47,40 +47,26 @@ public class DamageOnTurnEffect extends AbstractOnTurnEffect
 			if ( conditionVal == 0 ) { return; }
 		}
 
-		FastEnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
+		int raw = 0;
 
-		for ( Statistic stat : Statistic.values() )
+		if ( Global.isNumber( eqn ) )
 		{
-			if ( equations.containsKey( stat ) )
+			raw = Integer.parseInt( eqn );
+		}
+		else
+		{
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
+
+			Expression exp = EquationHelper.tryBuild( expB );
+			if ( exp != null )
 			{
-				int raw = 0;
-				String eqn = equations.get( stat );
-
-				if ( Global.isNumber( eqn ) )
-				{
-					raw = Integer.parseInt( eqn );
-				}
-				else
-				{
-					ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-					EquationHelper.setVariableNames( expB, variableMap, "" );
-
-					Expression exp = EquationHelper.tryBuild( expB );
-					if ( exp == null )
-					{
-						continue;
-					}
-
-					EquationHelper.setVariableValues( exp, variableMap, "" );
-
-					raw = (int) ( exp.evaluate() * cost );
-				}
-
-				stats.put( stat, raw );
+				EquationHelper.setVariableValues( exp, variableMap, "" );
+				raw = (int) ( exp.evaluate() * cost );
 			}
 		}
 
-		Global.calculateDamage( entity, entity, Statistic.statsBlockToVariableBlock( stats ), Statistic.emptyMap, false );
+		Global.calculateDamage( entity, entity, raw, 0, false );
 	}
 
 	@Override
@@ -94,13 +80,7 @@ public class DamageOnTurnEffect extends AbstractOnTurnEffect
 
 		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
 
-		for ( int i = 0; i < xml.getChildCount(); i++ )
-		{
-			Element sEl = xml.getChild( i );
-
-			Statistic el = Statistic.valueOf( sEl.getName().toUpperCase() );
-			equations.put( el, sEl.getText().toLowerCase() );
-		}
+		eqn = xml.getText();
 	}
 
 	@Override

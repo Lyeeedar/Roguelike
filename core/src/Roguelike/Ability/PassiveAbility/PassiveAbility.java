@@ -50,6 +50,11 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 		{
 			variableMap.put("level", 1);
 		}
+
+		for (Object[] data : extraData)
+		{
+			variableMap.put( (String)data[0], (Integer)data[1] );
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -65,13 +70,16 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 	{
 		Table table = new Table();
 
-		table.add( new Label( Name, skin, "title" ) ).expandX().left();
+		Table header = new Table();
+
+		header.add( new Label( Name, skin, "title" ) ).expandX().left();
 
 		{
 			Label label = new Label( "Passive", skin );
 			label.setFontScale( 0.7f );
-			table.add( label ).expandX().right();
+			header.add( label ).expandX().right();
 		}
+		table.add(header).expandX().fillX().left();
 
 		table.row();
 

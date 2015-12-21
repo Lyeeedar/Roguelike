@@ -3,6 +3,7 @@ package Roguelike.Entity;
 import java.util.HashMap;
 
 import Roguelike.AssetManager;
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
@@ -105,7 +106,7 @@ public abstract class Entity
 	// ----------------------------------------------------------------------
 	public int getVariable( Statistic stat )
 	{
-		return variableMap.get( stat.toString().toLowerCase() );
+		return getVariableMap().get( stat.toString().toLowerCase() );
 	}
 
 	// ----------------------------------------------------------------------
@@ -188,6 +189,16 @@ public abstract class Entity
 		}
 
 		variableMap.put( "maxhp", variableMap.get( Statistic.CONSTITUTION.toString().toLowerCase() ) * 10 );
+
+		if (inventory.getEquip( EquipmentSlot.WEAPON ) != null)
+		{
+			Item wep = inventory.getEquip( EquipmentSlot.WEAPON );
+
+			int atk = Global.calculateScaledAttack( Statistic.statsBlockToVariableBlock( wep.getStatistics( variableMap ) ), variableMap );
+
+			String key = Statistic.ATTACK.toString().toLowerCase();
+			variableMap.put( key, variableMap.get( key ) + atk );
+		}
 	}
 
 	// ----------------------------------------------------------------------

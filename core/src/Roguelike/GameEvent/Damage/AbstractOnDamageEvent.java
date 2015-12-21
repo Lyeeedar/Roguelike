@@ -2,6 +2,7 @@ package Roguelike.GameEvent.Damage;
 
 import java.util.HashMap;
 
+import Roguelike.Entity.Entity;
 import Roguelike.GameEvent.IGameObject;
 
 import com.badlogic.gdx.utils.Array;
@@ -11,7 +12,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 public abstract class AbstractOnDamageEvent
 {
-	public abstract boolean handle( DamageObject obj, IGameObject parent );
+	public abstract boolean handle( Entity entity, DamageObject obj, IGameObject parent );
 
 	public abstract void parse( Element xml );
 

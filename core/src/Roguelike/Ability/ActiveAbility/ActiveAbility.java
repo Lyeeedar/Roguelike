@@ -8,6 +8,7 @@ import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeBolt;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeRay;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeSmite;
 import Roguelike.Ability.ActiveAbility.TargetingType.AbstractTargetingType;
+import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeSelf;
 import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeTile;
 import Roguelike.Ability.IAbility;
 import Roguelike.AssetManager;
@@ -191,6 +192,8 @@ public class ActiveAbility implements IAbility, IGameObject
 		aa.hitSprite = hitSprite != null ? hitSprite.copy() : null;
 		aa.useSprite = useSprite != null ? useSprite.copy() : null;
 		aa.singleSprite = singleSprite;
+
+		aa.tree = tree;
 
 		return aa;
 	}
@@ -611,6 +614,10 @@ public class ActiveAbility implements IAbility, IGameObject
 		{
 			movementType = AbstractMovementType.load( movementElement.getChild( 0 ) );
 		}
+		else if (targetingType instanceof TargetingTypeSelf)
+		{
+			movementType = new MovementTypeSmite();
+		}
 
 		Element effectsElement = xmlElement.getChildByName( "Effect" );
 		if ( effectsElement != null )
@@ -674,13 +681,16 @@ public class ActiveAbility implements IAbility, IGameObject
 	{
 		Table table = new Table();
 
-		table.add( new Label( name, skin, "title" ) ).expandX().left();
+		Table header = new Table();
+
+		header.add( new Label( name, skin, "title" ) ).expandX().left();
 
 		{
 			Label label = new Label( "Active", skin );
 			label.setFontScale( 0.7f );
-			table.add( label ).expandX().right();
+			header.add( label ).expandX().right();
 		}
+		table.add(header).expandX().fillX().left();
 
 		table.row();
 
@@ -710,6 +720,9 @@ public class ActiveAbility implements IAbility, IGameObject
 		Label descLabel = new Label( description, skin );
 		descLabel.setWrap( true );
 		table.add( descLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
+		table.row();
+
+		table.add( new Label( "Cooldown: " + cooldown, skin ) ).expandX().left();
 		table.row();
 
 		table.add( new Label( "Range: " + getRange(), skin ) ).expandX().left();

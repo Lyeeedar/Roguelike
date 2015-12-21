@@ -83,20 +83,20 @@ public final class StatusTaskEvent extends AbstractOnTaskEvent
 	@Override
 	public void parse( Element xml )
 	{
+		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
 		condition = xml.getAttribute( "Condition", null );
 		if ( condition != null )
 		{
 			condition = condition.toLowerCase();
 		}
-
-		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
-
-		status = xml.getChildByName( "Status" );
-		stacksEqn = xml.get( "Stacks", null );
+		stacksEqn = xml.getAttribute( "Stacks", null );
 		if ( stacksEqn != null )
 		{
 			stacksEqn = stacksEqn.toLowerCase();
 		}
+
+		status = xml;
+
 	}
 
 	@Override

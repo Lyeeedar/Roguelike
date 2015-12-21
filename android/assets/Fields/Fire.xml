@@ -26,16 +26,10 @@
         </Adjacent>
     </Spread>
     <OnTurn>
-        <Damage>
-            <Attack>20</Attack>
-        </Damage>
-        <Status>
-            <Status>Burning</Status>
-        </Status>
+        <Damage>20</Damage>
+        <Status>Burning</Status>
     </OnTurn>
     <OnDeath>
-        <Spawn>
-            <Field>Smoke</Field>
-        </Spawn>
+        <Spawn>Smoke</Spawn>
     </OnDeath>
 </Field>

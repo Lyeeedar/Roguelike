@@ -6,7 +6,7 @@
 	<Cooldown>17</Cooldown>
 	<AOE>1</AOE>
 	<Range>6</Range>
-	<ScreenShake>30</ScreenShake>
+	<ScreenShake>10</ScreenShake>
 
 	<Icon>
 		<Name>Abilities/Pyromaniac/Fireball</Name>
@@ -31,15 +31,14 @@
 		<Intensity>3</Intensity>
 	</Light>
 
-	<Targeting>
-		<Direction></Direction>
-	</Targeting>
+    <Targeting>
+        <Entity Type="Enemy"></Entity>
+    </Targeting>
 
-	<Movement>
-		<Bolt>
-			<Speed>1</Speed>
-		</Bolt>
-	</Movement>
+    <Movement>
+        <Smite>
+        </Smite>
+    </Movement>
 
     <Effect>
         <Damage>

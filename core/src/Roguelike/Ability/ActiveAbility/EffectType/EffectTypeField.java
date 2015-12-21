@@ -28,8 +28,8 @@ public class EffectTypeField extends AbstractEffectType
 		{
 			condition = condition.toLowerCase();
 		}
-		fieldName = xml.get( "Field" );
-		stacksEqn = xml.get( "Stacks", null );
+		fieldName = xml.getText();
+		stacksEqn = xml.getAttribute( "Stacks", null );
 		if ( stacksEqn != null )
 		{
 			stacksEqn = stacksEqn.toLowerCase();

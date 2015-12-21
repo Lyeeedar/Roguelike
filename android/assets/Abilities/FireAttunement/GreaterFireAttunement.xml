@@ -1,0 +1,29 @@
+<Active>
+
+	<Name>Greater Fire Attunement</Name>
+	<Description>Enchant your weaponry with intense fire.</Description>
+
+	<Cooldown>22</Cooldown>
+	<Range>1</Range>
+
+	<Icon>
+		<Name>Abilities/Pyromaniac/BurningBlades</Name>
+		<Colour><RGB>255,165,0</RGB></Colour>
+	</Icon>
+
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+
+	<Effect>
+		<Status>
+            <Duration>10</Duration>
+            <Events>
+                <Constant>
+                    <Attack>20 + level * 2</Attack>
+                </Constant>
+            </Events>
+		</Status>
+	</Effect>
+
+</Active>

@@ -31,8 +31,8 @@ public class StatusOnTurnEffect extends AbstractOnTurnEffect
 
 		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
 
-		status = xml.getChildByName( "Status" );
-		stacksEqn = xml.get( "Stacks", null );
+		status = xml;
+		stacksEqn = xml.getAttribute( "Stacks", null );
 		if ( stacksEqn != null )
 		{
 			stacksEqn = stacksEqn.toLowerCase();

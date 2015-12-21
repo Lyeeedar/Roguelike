@@ -3,7 +3,7 @@
 	<Name>Flame Surge</Name>
 	<Description>A surge of fire washes over your foes.</Description>
 
-	<Cooldown>15</Cooldown>
+	<Cooldown>13</Cooldown>
 	<Cone>2</Cone>
 	<Range>1</Range>
 
@@ -33,13 +33,6 @@
             <Attack>100 + 5 * level</Attack>
             <Willpower>1</Willpower>
         </Damage>
-		<Status>
-		    <Defender>Burning</Defender>
-		    <Stacks>level</Stacks>
-		</Status>
-		<Field Condition="rnd(1) < 0.05*level">
-		    <Field>Fire</Field>
-		</Field>
 	</Effect>
 
 </Active>

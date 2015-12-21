@@ -17,7 +17,7 @@ import exp4j.Helpers.EquationHelper;
 public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 {
 	private String condition;
-	private FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
+	private String eqn;
 	private String[] reliesOn;
 
 	private float accumulator;
@@ -61,38 +61,21 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 			}
 		}
 
-		FastEnumMap<Statistic, Integer> stats = Statistic.getStatisticsBlock();
-
-		for ( Statistic stat : Statistic.values() )
+		int raw = 0;
+		if ( Global.isNumber( eqn ) )
 		{
-			if ( equations.containsKey( stat ) )
+			raw = Integer.parseInt( eqn );
+		}
+		else
+		{
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
+
+			Expression exp = EquationHelper.tryBuild( expB );
+			if ( exp != null )
 			{
-				int raw = 0;
-				String eqn = equations.get( stat );
-
-				if ( Global.isNumber( eqn ) )
-				{
-					raw = Integer.parseInt( eqn );
-				}
-				else
-				{
-					ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-					EquationHelper.setVariableNames( expB, variableMap, "" );
-
-					Expression exp = EquationHelper.tryBuild( expB );
-					if ( exp == null )
-					{
-						continue;
-					}
-
-					EquationHelper.setVariableValues( exp, variableMap, "" );
-
-					raw = (int) exp.evaluate();
-				}
-
-				raw += stats.get( stat );
-
-				stats.put( stat, raw );
+				EquationHelper.setVariableValues( exp, variableMap, "" );
+				raw = (int) exp.evaluate();
 			}
 		}
 
@@ -100,7 +83,7 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 		{
 			accumulator -= 1;
 
-			Global.calculateDamage( entity, entity, Statistic.statsBlockToVariableBlock( stats ), entity.getVariableMap(), false );
+			Global.calculateDamage( entity, entity, raw, 0, false );
 		}
 
 		return true;
@@ -117,13 +100,7 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 
 		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
 
-		for ( int i = 0; i < xml.getChildCount(); i++ )
-		{
-			Element sEl = xml.getChild( i );
-
-			Statistic stat = Statistic.valueOf( sEl.getName().toUpperCase() );
-			equations.put( stat, sEl.getText().toLowerCase() );
-		}
+		eqn = xml.getText();
 	}
 
 	@Override
@@ -131,9 +108,33 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 	{
 		Array<String> lines = new Array<String>();
 
-		int damage = Global.calculateDamage( variableMap, Statistic.emptyMap );
+		for ( String name : reliesOn )
+		{
+			if ( !variableMap.containsKey( name.toLowerCase() ) )
+			{
+				variableMap.put( name.toLowerCase(), 0 );
+			}
+		}
 
-		lines.add( "Total Damage: " + damage );
+		int raw = 0;
+		if ( Global.isNumber( eqn ) )
+		{
+			raw = Integer.parseInt( eqn );
+		}
+		else
+		{
+			ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
+			EquationHelper.setVariableNames( expB, variableMap, "" );
+
+			Expression exp = EquationHelper.tryBuild( expB );
+			if ( exp != null )
+			{
+				EquationHelper.setVariableValues( exp, variableMap, "" );
+				raw = (int) exp.evaluate();
+			}
+		}
+
+		lines.add( "Total Damage: " + raw );
 
 		return lines;
 	}

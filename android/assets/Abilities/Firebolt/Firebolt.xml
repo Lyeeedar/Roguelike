@@ -19,6 +19,11 @@
         </Sound>
     </HitSprite>
 
+    <MovementSprite>
+        <Name>AbilitySprites/FireBoltMove/FireBoltMove</Name>
+        <UpdateRate>0.1</UpdateRate>
+    </MovementSprite>
+
     <Targeting>
         <Entity Type="Enemy"></Entity>
     </Targeting>

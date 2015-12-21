@@ -79,14 +79,19 @@ public final class FieldOnDeathEvent extends AbstractOnDeathEvent
 	@Override
 	public void parse( Element xml )
 	{
+		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
 		condition = xml.getAttribute( "Condition", null );
 		if ( condition != null )
 		{
 			condition = condition.toLowerCase();
 		}
-		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
-		fieldName = xml.get( "Field" );
-		stacksEqn = xml.get( "Stacks", "1" ).toLowerCase();
+		stacksEqn = xml.getAttribute( "Stacks", null );
+		if ( stacksEqn != null )
+		{
+			stacksEqn = stacksEqn.toLowerCase();
+		}
+
+		fieldName = xml.getText();
 	}
 
 	@Override

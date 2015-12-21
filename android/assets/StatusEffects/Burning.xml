@@ -9,9 +9,7 @@
 
 	<Events>
 		<OnTurn>
-			<DOT ReliesOn="Burning">
-				<Attack>5</Attack>
-			</DOT>
+			<DOT>5</DOT>
 		</OnTurn>
 	</Events>
 

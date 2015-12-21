@@ -76,11 +76,7 @@ public final class HealOverTimeEvent extends AbstractOnTurnEvent
 		{
 			condition = condition.toLowerCase();
 		}
-		equation = xml.get( "Heal" );
-		if ( equation != null )
-		{
-			equation = equation.toLowerCase();
-		}
+		equation = xml.getText().toLowerCase();
 	}
 
 	@Override
