@@ -26,7 +26,7 @@ public final class StatusEffect extends GameEventHandler
 	public boolean persistUntilProcessed = false;
 
 	public Sprite icon;
-	public float duration;
+	public int duration;
 
 	@Override
 	public void onTurn( Entity entity, float cost )
@@ -35,7 +35,7 @@ public final class StatusEffect extends GameEventHandler
 
 		if ( !persistUntilProcessed )
 		{
-			duration -= cost;
+			duration -= 1;
 		}
 	}
 
@@ -99,7 +99,7 @@ public final class StatusEffect extends GameEventHandler
 		description = xmlElement.get( "Description", description );
 
 		icon = xmlElement.getChildByName( "Icon" ) != null ? AssetManager.loadSprite( xmlElement.getChildByName( "Icon" ) ) : icon;
-		duration = xmlElement.getFloat( "Duration", duration );
+		duration = xmlElement.getInt( "Duration", duration );
 		persistUntilProcessed = xmlElement.getBoolean( "PersistUntilProcessed", persistUntilProcessed );
 		if ( persistUntilProcessed )
 		{

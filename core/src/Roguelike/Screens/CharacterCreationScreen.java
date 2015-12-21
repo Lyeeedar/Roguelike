@@ -1,5 +1,6 @@
 package Roguelike.Screens;
 
+import Roguelike.Ability.AbilityTree;
 import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Items.Item;
@@ -160,6 +161,18 @@ public class CharacterCreationScreen implements Screen
 		descLabel.setWrap( true );
 		selectedClass.add( descLabel ).expandX().left().top();
 		selectedClass.row();
+
+		selectedClass.add( new Label( "Starting Abilities:", skin ) ).expandX().left().top();
+		selectedClass.row();
+
+		for (AbilityTree tree : lastSelected.entity.slottedAbilities)
+		{
+			if (tree != null)
+			{
+				selectedClass.add( new Label( tree.current.current.getName(), skin ) ).expandX().left().padLeft( 30 ).top();
+				selectedClass.row();
+			}
+		}
 
 		selectedClass.add( new Label( "Starting Inventory:", skin ) ).expandX().left().top();
 		selectedClass.row();

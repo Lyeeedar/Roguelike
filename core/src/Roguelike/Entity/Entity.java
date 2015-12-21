@@ -254,6 +254,11 @@ public abstract class Entity
 		hasDamage = true;
 		extraUIHP += dam;
 
+		if (HP + extraUIHP > ( getStatistic( Statistic.CONSTITUTION ) * 10 ))
+		{
+			extraUIHP = ( getStatistic( Statistic.CONSTITUTION ) * 10 ) - HP;
+		}
+
 		if ( dam != 0 )
 		{
 			isVariableMapDirty = true;

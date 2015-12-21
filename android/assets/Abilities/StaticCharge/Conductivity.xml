@@ -1,0 +1,40 @@
+<Active>
+
+	<Name>Conductivity</Name>
+	<Description>Charge your targets with electricity, increasing the damage they take.</Description>
+
+	<Cooldown>20</Cooldown>
+	<AOE>1</AOE>
+	<Range>4</Range>
+
+	<Icon>
+		<Name>Abilities/Electron/Conductivity</Name>
+		<Colour><RGB>248,255,43</RGB></Colour>
+	</Icon>
+
+	<HitSprite>
+		<Name>AbilitySprites/LightningBurst/LightningBurst</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Colour><RGB>220,200,250</RGB></Colour>
+	</HitSprite>
+
+	<Targeting>
+		<Tile />
+	</Targeting>
+
+	<Movement>
+		<Smite />
+	</Movement>
+
+    <Effect>
+        <Status>
+            <Duration>10</Duration>
+            <Events>
+                <Constant>
+                    <Defense>-5 - level</Defense>
+                </Constant>
+            </Events>
+        </Status>
+    </Effect>
+
+</Active>

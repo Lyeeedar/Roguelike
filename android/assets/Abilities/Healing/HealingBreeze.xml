@@ -1,0 +1,36 @@
+<Active>
+
+	<Name>Healing Breeze</Name>
+	<Description>A faint wind washes your ills away.</Description>
+
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+
+	<Icon>
+		<Name>Abilities/Life/HealingBreeze</Name>
+		<Colour><RGB>175,255,47</RGB></Colour>
+	</Icon>
+
+	<HitSprite>
+	    <Name>AbilitySprites/Heal/Heal</Name>
+	    <UpdateRate>0.1</UpdateRate>
+	    <Colour><RGB>175,255,47</RGB></Colour>
+	    <Sound><Name>whoosh</Name></Sound>
+	</HitSprite>
+
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+
+	<Effect>
+		<Status>
+            <Duration>10</Duration>
+            <Events>
+                <OnTurn>
+                    <HOT>3 + level / 2</HOT>
+                </OnTurn>
+            </Events>
+		</Status>
+	</Effect>
+
+</Active>

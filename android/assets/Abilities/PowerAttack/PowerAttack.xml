@@ -1,0 +1,31 @@
+<Active>
+
+<Name>Power Attack</Name>
+<Description>Strike your opponent with a powerful blow.</Description>
+
+<Cooldown>15</Cooldown>
+<Range>1</Range>
+
+<Icon>
+    <Name>Abilities/Ravager/PowerStrike</Name>
+    <Colour><RGB>220,220,220</RGB></Colour>
+</Icon>
+
+<Targeting>
+    <Entity Type="Enemy">
+    </Entity>
+</Targeting>
+
+<Movement>
+    <Smite>
+    </Smite>
+</Movement>
+
+<Effect>
+    <Damage>
+        <Attack>attack + 20 + level * 3</Attack>
+        <Strength>1</Strength>
+    </Damage>
+</Effect>
+
+</Active>

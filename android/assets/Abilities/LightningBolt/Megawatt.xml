@@ -1,0 +1,45 @@
+<Active>
+
+	<Name>Megawatt</Name>
+	<Description>A bolt of lightning blasts your target.</Description>
+
+	<Cooldown>15</Cooldown>
+	<Range>4</Range>
+	<ScreenShake>10</ScreenShake>
+
+	<Icon>
+		<Name>Abilities/Electron/Megawatt</Name>
+		<Colour><RGB>248,255,43</RGB></Colour>
+	</Icon>
+
+	<HitSprite>
+		<Name>AbilitySprites/LightningBurst/LightningBurst</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</HitSprite>
+
+	<MovementSprite>
+		<Name>AbilitySprites/LightningBoltMove/LightningBolt</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Animation>
+		    <Stretch>
+		        <Equation>ReverseExtend</Equation>
+		    </Stretch>
+		</Animation>
+	</MovementSprite>
+
+	<Targeting>
+		<Entity Type="Enemy"></Entity>
+	</Targeting>
+
+	<Movement>
+		<Smite />
+	</Movement>
+
+	<Effect>
+		<Damage>
+            <Attack>100 + 15 * level</Attack>
+            <Willpower>1</Willpower>
+        </Damage>
+	</Effect>
+
+</Active>

@@ -167,18 +167,29 @@ public class GameEntity extends Entity
 			for ( int i = 0; i < abilitiesElement.getChildCount(); i++ )
 			{
 				Element abilityElement = abilitiesElement.getChild( i );
+				AbilityTree tree = null;
 
-				IAbility ability = null;
-				if ( abilityElement.getName() == "Active" )
+				if (abilityElement.getChildCount() == 0)
 				{
-					ability = ActiveAbility.load( abilityElement );
+					tree = new AbilityTree( abilityElement.getText() );
 				}
 				else
 				{
-					ability = PassiveAbility.load( abilityElement );
+					IAbility ability = null;
+					if ( abilityElement.getName() == "Active" )
+					{
+						ability = ActiveAbility.load( abilityElement );
+					}
+					else
+					{
+						ability = PassiveAbility.load( abilityElement );
+					}
+
+					tree = new AbilityTree( ability );
 				}
 
-				slottedAbilities.add( new AbilityTree( ability ) );
+				tree.current.current.setCaster( this );
+				slottedAbilities.add( tree );
 			}
 		}
 

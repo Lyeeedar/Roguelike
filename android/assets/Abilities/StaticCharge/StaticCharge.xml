@@ -1,0 +1,29 @@
+<Active>
+
+	<Name>Static Charge</Name>
+	<Description>Enchant your weaponry with lightning.</Description>
+
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+
+	<Icon>
+		<Name>Abilities/Electron/StaticCharge</Name>
+		<Colour><RGB>248,255,43</RGB></Colour>
+	</Icon>
+
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+
+    <Effect>
+        <Status>
+            <Duration>10</Duration>
+            <Events>
+                <Constant>
+                    <Attack>5 + level</Attack>
+                </Constant>
+            </Events>
+        </Status>
+    </Effect>
+
+</Active>

@@ -1,0 +1,32 @@
+<Active>
+
+    <Name>Cleave</Name>
+    <Description>Strike a cone before you.</Description>
+
+    <Cooldown>15</Cooldown>
+    <Range>1</Range>
+    <Cone>1</Cone>
+
+    <Icon>
+        <Name>Abilities/Ravager/PowerStrike</Name>
+        <Colour><RGB>220,220,220</RGB></Colour>
+    </Icon>
+
+    <Targeting>
+        <Entity Type="Enemy">
+        </Entity>
+    </Targeting>
+
+    <Movement>
+        <Smite>
+        </Smite>
+    </Movement>
+
+    <Effect>
+        <Damage>
+            <Attack>attack + 30 + level * 4</Attack>
+            <Strength>1</Strength>
+        </Damage>
+    </Effect>
+
+</Active>

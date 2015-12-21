@@ -32,7 +32,7 @@
 	</Light>
 
     <Targeting>
-        <Entity Type="Enemy"></Entity>
+        <Tile />
     </Targeting>
 
     <Movement>

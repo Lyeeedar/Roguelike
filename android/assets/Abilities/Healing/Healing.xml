@@ -1,0 +1,29 @@
+<Active>
+
+	<Name>Healing</Name>
+	<Description>Knit your wounds.</Description>
+
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+
+	<Icon>
+		<Name>Abilities/Life/KnitWounds</Name>
+		<Colour><RGB>175,255,47</RGB></Colour>
+	</Icon>
+
+	<HitSprite>
+	    <Name>AbilitySprites/Heal/Heal</Name>
+	    <UpdateRate>0.1</UpdateRate>
+	    <Colour><RGB>175,255,47</RGB></Colour>
+	    <Sound><Name>whoosh</Name></Sound>
+	</HitSprite>
+
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+
+	<Effect>
+		<Heal>15 + level</Heal>
+	</Effect>
+
+</Active>
