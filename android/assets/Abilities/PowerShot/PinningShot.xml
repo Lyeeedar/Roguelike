@@ -1,0 +1,39 @@
+<Active>
+
+	<Name>Pinning Shot</Name>
+	<Description>Pin an enemy to the ground.</Description>
+
+	<Cooldown>15</Cooldown>
+	<Range>-1</Range>
+
+	<Icon>
+		<Name>Abilities/Marksman/PinningShot</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+
+	<Cost>
+	    <Equipped>bow</Equipped>
+	</Cost>
+
+	<Targeting>
+		<Entity Type="Enemy"></<Entity>
+	</Targeting>
+
+	<Movement>
+		<Smite></Smite>
+	</Movement>
+
+	<Effect>
+	    <Damage>
+            <Attack>attack + 20 + level * 3</Attack>
+            <Perception>1</Perception>
+		</Damage>
+		<Status>
+            <Duration>4</Duration>
+            <Events>
+                <OnMove><Cancel/></OnMove>
+            </Events>
+		</Status>
+	</Effect>
+
+</Active>

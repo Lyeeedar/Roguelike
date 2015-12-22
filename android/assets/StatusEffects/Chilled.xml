@@ -2,15 +2,15 @@
 	<Name>Chilled</Name>
 	<Description>Deep cold slows your movements.</Description>
 	<Duration>5</Duration>
-	
+
 	<Icon>
 		<Name>Skills/SpikeTrap</Name>
 	</Icon>
-	
+
 	<Events>
-		<OnTask>
-		    <Cost>cost*1.2</Cost>
-		</OnTask>
+		<Constant>
+            <Speed>-2</Speed>
+        </Constant>
 	</Events>
-	
+
 </StatusEffect>

@@ -1,0 +1,34 @@
+<Active>
+
+	<Name>Power Shot</Name>
+	<Description>Fire a powerful arrow.</Description>
+
+	<Cooldown>10</Cooldown>
+	<Range>-1</Range>
+
+	<Icon>
+		<Name>Abilities/Marksman/PowerShot</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+
+	<Cost>
+	    <Equipped>bow</Equipped>
+	</Cost>
+
+	<Targeting>
+		<Entity Type="Enemy" />
+	</Targeting>
+
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+
+	<Effect>
+		<Damage>
+            <Attack>attack + 20 + level * 3</Attack>
+            <Perception>1</Perception>
+		</Damage>
+	</Effect>
+
+</Active>

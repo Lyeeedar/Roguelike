@@ -1,0 +1,34 @@
+<Active>
+
+    <Name>Shield Strike</Name>
+    <Description>Strike your opponent with your shield.</Description>
+
+    <Cooldown>15</Cooldown>
+    <Range>1</Range>
+
+    <Icon>
+        <Name>Abilities/Ravager/PowerStrike</Name>
+        <Colour><RGB>220,220,220</RGB></Colour>
+    </Icon>
+
+    <Cost>
+        <Equipped>shield</Equipped>
+    </Cost>
+
+    <Targeting>
+        <Entity Type="Enemy"></Entity>
+    </Targeting>
+
+    <Movement>
+        <Smite>
+        </Smite>
+    </Movement>
+
+    <Effect>
+        <Damage>
+            <Attack>attack + 20 + level * 3</Attack>
+            <Strength>1</Strength>
+        </Damage>
+    </Effect>
+
+</Active>

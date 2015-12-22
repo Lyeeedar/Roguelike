@@ -44,5 +44,6 @@ public abstract class AbstractOnDamageEvent
 		ClassMap.put( "HEAL", HealEvent.class );
 		ClassMap.put( "DAMAGE", DamageEvent.class );
 		ClassMap.put( "FIELD", FieldEvent.class );
+		ClassMap.put( "BLOCK", BlockEvent.class );
 	}
 }

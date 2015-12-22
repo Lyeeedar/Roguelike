@@ -1,0 +1,43 @@
+<Active>
+
+	<Name>Arctic Surge</Name>
+	<Description>Immense cold blasts from your body, freezing everything in its tracks.</Description>
+
+	<Cooldown>20</Cooldown>
+	<Range>1</Range>
+
+	<AOE ExcludeSelf="true">2</AOE>
+
+	<Icon>
+		<Name>Abilities/WinterMagus/ArcticSurge</Name>
+		<Colour><RGB>240,255,255</RGB></Colour>
+	</Icon>
+
+	<HitSprite>
+		<Name>AbilitySprites/IceBurst/IceBurst</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</HitSprite>
+
+	<Targeting>
+		<Self />
+	</Targeting>
+
+	<Movement>
+		<Smite />
+	</Movement>
+
+	<Effect>
+		<Damage>
+            <Attack>80 + 2 * level</Attack>
+            <Willpower>1</Willpower>
+		</Damage>
+		<Status>
+            <Name>Frozen</Name>
+            <Duration>3</Duration>
+            <Events>
+                <OnTask><Cancel /></OnTask>
+            </Events>
+		</Status>
+	</Effect>
+
+</Active>

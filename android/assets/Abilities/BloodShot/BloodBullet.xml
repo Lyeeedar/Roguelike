@@ -1,0 +1,50 @@
+<Active>
+
+	<Name>Blood Bullet</Name>
+	<Description>Sacrifice some health to fire a bullet of blood at your target.</Description>
+
+	<Cooldown>15</Cooldown>
+	<Range>4</Range>
+
+	<Icon>
+		<Name>Abilities/BloodMagic/BloodBullet</Name>
+		<Colour><RGB>153,0,0</RGB></Colour>
+	</Icon>
+
+	<UseSprite>
+	    <Name>dc-misc/demon_pentagram</Name>
+	    <UpdateRate>0.1</UpdateRate>
+	</UseSprite>
+
+	<HitSprite>
+		<Name>AbilitySprites/Splatter/Splatter</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Colour><RGB>153,0,0</RGB></Colour>
+	</HitSprite>
+
+	<MovementSprite>
+		<Name>bolt</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Colour><RGB>153,0,0</RGB></Colour>
+	</MovementSprite>
+
+	<Cost>
+	    <Health>10</Health>
+	</Cost>
+
+	<Targeting>
+		<Entity Type="Enemy"></Entity>
+	</Targeting>
+
+	<Movement>
+		<Smite />
+	</Movement>
+
+	<Effect>
+		<Damage>
+            <Attack>100 + 10 * level</Attack>
+            <Constitution>1</Constitution>
+		</Damage>
+	</Effect>
+
+</Active>

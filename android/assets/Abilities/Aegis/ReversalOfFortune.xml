@@ -1,0 +1,36 @@
+<Active>
+
+	<Name>Reversal of Fortune</Name>
+	<Description>Next time you would take damage, heal by a portion of that amount instead.</Description>
+
+	<Cooldown>30</Cooldown>
+	<Range>1</Range>
+
+	<Icon>
+		<Name>Abilities/Protection/ReversalOfFortune</Name>
+		<Colour><RGB>210,247,247</RGB></Colour>
+	</Icon>
+
+	<HitSprite>
+		<Name>AbilitySprites/Aegis/Aegis</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Colour><RGB>210,247,247</RGB></Colour>
+	</HitSprite>
+
+	<Targeting>
+		<Self></Self>
+	</Targeting>
+
+	<Effect>
+	    <Status>
+            <PersistUntilProcessed>true</PersistUntilProcessed>
+            <Events>
+                <OnReceiveDamage>
+                    <Heal>Damage * (0.15*level)</Heal>
+                    <Block />
+                </OnReceiveDamage>
+            </Events>
+	    </Status>
+	</Effect>
+
+</Active>

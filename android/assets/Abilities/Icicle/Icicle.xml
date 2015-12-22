@@ -1,0 +1,35 @@
+<Active>
+
+	<Name>Icicle</Name>
+	<Description>A shard of ice spears your target.</Description>
+
+	<Cooldown>10</Cooldown>
+	<Range>4</Range>
+
+	<Icon>
+		<Name>Abilities/WinterMagus/Icicle</Name>
+		<Colour><RGB>240,255,255</RGB></Colour>
+	</Icon>
+
+	<MovementSprite>
+		<Name>AbilitySprites/IceShard/IceShard</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</MovementSprite>
+
+	<Targeting>
+		<Entity Type="Enemy"></Entity>
+	</Targeting>
+
+	<Movement>
+		<Smite />
+	</Movement>
+
+	<Effect>
+		<Damage>
+            <Attack>40 + 4 * level</Attack>
+            <Willpower>1</Willpower>
+		</Damage>
+        <Status>Chilled</Status>
+	</Effect>
+
+</Active>

@@ -1,0 +1,41 @@
+<Active>
+
+	<Name>Blood Turbulence</Name>
+	<Description>Excite the blood of the creatures in the target area, dealing damage.</Description>
+
+	<Cooldown>15</Cooldown>
+	<Range>4</Range>
+	<AOE>1</AOE>
+
+	<Icon>
+		<Name>Abilities/BloodMagic/BloodTurbulence</Name>
+		<Colour><RGB>153,0,0</RGB></Colour>
+	</Icon>
+
+	<HitSprite>
+		<Name>AbilitySprites/Splatter/Splatter</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Colour><RGB>153,0,0</RGB></Colour>
+	</HitSprite>
+
+	<Targeting>
+		<Entity Type="Enemy"></Entity>
+	</Targeting>
+
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+
+	<Cost>
+	    <Health>10</Health>
+	</Cost>
+
+	<Effect>
+		<Damage>
+            <Attack>100 + 5 * level</Attack>
+            <Constitution>1</Constitution>
+		</Damage>
+	</Effect>
+
+</Active>

@@ -1,0 +1,33 @@
+<Active>
+
+	<Name>Open Vein</Name>
+	<Description>Split your targets skin, letting its lifeforce drain out.</Description>
+
+	<Cooldown>15</Cooldown>
+	<Range>4</Range>
+
+	<Icon>
+		<Name>Abilities/BloodMagic/OpenVein</Name>
+		<Colour><RGB>153,0,0</RGB></Colour>
+	</Icon>
+
+	<HitSprite>
+		<Name>AbilitySprites/Splatter/Splatter</Name>
+		<UpdateRate>0.1</UpdateRate>
+		<Colour><RGB>153,0,0</RGB></Colour>
+	</HitSprite>
+
+	<Targeting>
+		<Entity Type="Enemy"></Entity>
+	</Targeting>
+
+	<Movement>
+		<Smite>
+		</Smite>
+	</Movement>
+
+	<Effect>
+		<Status Stacks="level/2">Bleeding</Status>
+	</Effect>
+
+</Active>

@@ -1,0 +1,36 @@
+<Active>
+
+	<Name>Cone of Cold</Name>
+	<Description>A cone of freezing magic blasts from your hands.</Description>
+
+	<Cooldown>15</Cooldown>
+	<Cone>1</Cone>
+	<Range>1</Range>
+
+	<Icon>
+		<Name>Abilities/WinterMagus/ConeOfCold</Name>
+		<Colour><RGB>240,255,255</RGB></Colour>
+	</Icon>
+
+	<HitSprite>
+		<Name>AbilitySprites/IceBurst/IceBurst</Name>
+		<UpdateRate>0.1</UpdateRate>
+	</HitSprite>
+
+	<Targeting>
+		<Direction></Direction>
+	</Targeting>
+
+	<Movement>
+		<Smite />
+	</Movement>
+
+	<Effect>
+		<Damage>
+			<Attack>80 + 2 * level</Attack>
+            <Willpower>1</Willpower>
+		</Damage>
+		<Status Stacks="level/2">Chilled</Status>
+	</Effect>
+
+</Active>

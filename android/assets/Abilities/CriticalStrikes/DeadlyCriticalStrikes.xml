@@ -1,0 +1,17 @@
+<Passive>
+	<Name>Deadly Critical Strikes</Name>
+	<Description>You have a chance to hit a weakpoint for extra damage.</Description>
+	<Icon>
+		<Name>Abilities/Swordmaster/CriticalStrikes</Name>
+		<Colour><RGB>220,220,220</RGB></Colour>
+	</Icon>
+
+	<Events>
+		<OnDealDamage>
+		    <Damage Condition="rnd(1) < 0.2">
+		        Damage*(1 + 0.1*level)
+		    </Damage>
+		</OnDealDamage>
+	</Events>
+
+</Passive>
