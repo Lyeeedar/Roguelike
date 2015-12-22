@@ -235,6 +235,14 @@
 			</EnvironmentData>
 		</Symbol>
 
+        <Symbol Extends=",">
+            <Char>t</Char>
+            <EnvironmentData>
+                <Type>Treasure</Type>
+                <Treasure>Currency</Treasure>
+            </EnvironmentData>
+        </Symbol>
+
 	</Symbols>
 
 	<Required>

@@ -2,12 +2,14 @@ package Roguelike.Entity;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
+import Roguelike.Items.TreasureGenerator;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.DungeonGeneration.DungeonFileParser;
@@ -128,6 +130,59 @@ public class EnvironmentEntity extends Entity
 		}
 
 		return handlers;
+	}
+
+	// ----------------------------------------------------------------------
+	private static EnvironmentEntity CreateTreasureChest( Element xml )
+	{
+		EnvironmentEntity entity = new EnvironmentEntity();
+
+		entity.passableBy = Passability.parse( "false" );
+		entity.passableBy.setBit( Passability.LIGHT );
+
+		entity.canTakeDamage = false;
+
+		String type = xml.get( "Treasure", "Random" ).toLowerCase();
+		int quality = xml.getInt( "Quality", 1 );
+
+		entity.data.put( "Treasure", type );
+		entity.data.put( "Quality", quality );
+
+		entity.actions.add( new ActivationAction( "Loot" ) {
+			@Override
+			public void activate( EnvironmentEntity entity )
+			{
+				String type = (String) entity.data.get( "Treasure" );
+				int quality = (Integer) entity.data.get( "Quality" );
+				int choice = MathUtils.random.nextInt( 2 );
+
+				if ( type.equalsIgnoreCase( "currency" ) || ( type.equalsIgnoreCase( "random" ) && choice == 0 ) )
+				{
+					entity.inventory.m_items.addAll( TreasureGenerator.generateCurrency( quality, MathUtils.random ) );
+				}
+				else if ( type.equalsIgnoreCase( "ability" ) || ( type.equalsIgnoreCase( "random" ) && choice == 1 ) )
+				{
+					entity.inventory.m_items.addAll( TreasureGenerator.generateAbility( quality, MathUtils.random ) );
+				}
+
+				entity.HP = 0;
+				entity.canTakeDamage = true;
+			}
+		} );
+
+		Element spriteElement = xml.getChildByName( "Sprite" );
+		if (spriteElement != null)
+		{
+			entity.sprite = AssetManager.loadSprite( spriteElement );
+		}
+		else
+		{
+			entity.sprite = AssetManager.loadSprite( "Oryx/uf_split/uf_items/chest_gold" );
+		}
+
+		entity.baseInternalLoad( xml );
+
+		return entity;
 	}
 
 	// ----------------------------------------------------------------------
@@ -503,6 +558,10 @@ public class EnvironmentEntity extends Entity
 		else if ( type.equalsIgnoreCase( "Spawner" ) )
 		{
 			entity = CreateSpawner( xml );
+		}
+		else if ( type.equalsIgnoreCase( "Treasure" ) )
+		{
+			entity = CreateTreasureChest( xml );
 		}
 		else
 		{

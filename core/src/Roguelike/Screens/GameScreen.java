@@ -55,6 +55,7 @@ import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.PriorityQueue;
 
 public class GameScreen implements Screen, InputProcessor, GestureListener
@@ -97,8 +98,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		blank = AssetManager.loadTextureRegion( "Sprites/blank.png" );
 		white = AssetManager.loadTextureRegion( "Sprites/white.png" );
-		bag = AssetManager.loadSprite( "bag" );
-		orb = AssetManager.loadSprite( "orb" );
+		bag = AssetManager.loadSprite( "Oryx/uf_split/uf_items/satchel" );
+		bag.drawActualSize = true;
 		border = AssetManager.loadSprite( "GUI/frame" );
 		speechBubbleArrow = AssetManager.loadTextureRegion( "Sprites/GUI/SpeechBubbleArrow.png" );
 		speechBubbleBackground = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/SpeechBubble.png" ), 10, 10, 10, 10 );
@@ -639,6 +640,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 						if ( gtile.orbs.size > 0 && gtile.spriteEffects.size == 0 )
 						{
+							int index = 0;
 							for ( GameTile.OrbType type : GameTile.OrbType.values() )
 							{
 								if ( gtile.orbs.containsKey( type ) )
@@ -651,8 +653,22 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 									float scale = 0.5f + 0.5f * ( MathUtils.clamp( val, 10.0f, 1000.0f ) / 1000.0f );
 
 									float size = Global.TileSize * scale;
+									cx = (int) (( cx + Global.TileSize / 2 ) - size / 2);
+									cy = (int) (( cy + Global.TileSize / 2 ) - size / 2);
 
-									queueSprite( orb, gtile.light, (int) (( cx + Global.TileSize / 2 ) - size / 2), (int) (( cy + Global.TileSize / 2 ) - size / 2), (int) size, (int) size, RenderLayer.ESSENCE );
+									Direction dir = Direction.values()[index++];
+
+									cx += dir.getX() * (size/2);
+									cy += dir.getY() * (size/2);
+
+									Sprite sprite = orbs.get( type );
+									if (sprite == null)
+									{
+										sprite = AssetManager.loadSprite( type.spriteName );
+										orbs.put( type, sprite );
+									}
+
+									queueSprite( sprite, gtile.light, cx, cy, (int) size, (int) size, RenderLayer.ESSENCE );
 								}
 							}
 						}
@@ -690,8 +706,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			}
 		}
 	}
-
-
 
 	// ----------------------------------------------------------------------
 	private void renderCursor( int offsetx, int offsety, int mousex, int mousey, float delta )
@@ -2055,7 +2069,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private TextureRegion blank;
 	private TextureRegion white;
 	private Sprite bag;
-	private Sprite orb;
+	private EnumMap<GameTile.OrbType, Sprite> orbs = new EnumMap<GameTile.OrbType, Sprite>( GameTile.OrbType.class );
 	private TextureRegion speechBubbleArrow;
 	private NinePatch speechBubbleBackground;
 	private float frametime;

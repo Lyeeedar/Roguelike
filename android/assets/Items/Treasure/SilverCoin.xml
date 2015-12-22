@@ -1,0 +1,8 @@
+<Item>
+    <Name>Silver Coin</Name>
+    <Description>A coin made of silver. Worth 10 crown.</Description>
+    <Icon>
+        <Name>Oryx/uf_split/uf_items/coin_silver</Name>
+    </Icon>
+    <Category>Treasure</Category>
+</Item>

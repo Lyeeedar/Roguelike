@@ -251,8 +251,15 @@ public class GameTile implements PathfindingTile
 
 	public enum OrbType
 	{
-		EXPERIENCE,
-		HEALTH
+		EXPERIENCE("Oryx/uf_split/uf_items/crystal_sun"),
+		HEALTH("Oryx/uf_split/uf_items/crystal_blood");
+
+		public final String spriteName;
+
+		OrbType(String spriteName)
+		{
+			this.spriteName = spriteName;
+		}
 	}
 
 	public static class LightData

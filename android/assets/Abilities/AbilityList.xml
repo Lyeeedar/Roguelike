@@ -1,0 +1,24 @@
+<Data>
+    <Quality1>
+        <Firebolt></Firebolt>
+        <MagicArrow></MagicArrow>
+        <PowerAttack></PowerAttack>
+        <PowerShot></PowerShot>
+        <BloodShot></BloodShot>
+    </Quality1>
+    <Quality2>
+        <Aegis></Aegis>
+        <Healing></Healing>
+        <Icicle></Icicle>
+        <LightningBolt></LightningBolt>
+        <ShieldStrike></ShieldStrike>
+        <JumpStrike></JumpStrike>
+    </Quality2>
+    <Quality3>
+        <AortalBlockage></AortalBlockage>
+        <CriticalStrikes></CriticalStrikes>
+        <FireAttunement></FireAttunement>
+        <StaticCharge></StaticCharge>
+        <WeaponTraining></WeaponTraining>
+    </Quality3>
+</Data>

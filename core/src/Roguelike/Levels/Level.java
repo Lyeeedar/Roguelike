@@ -366,7 +366,7 @@ public class Level
 
 					int[] diff = tile.getPosDiff( source );
 
-					Sprite sprite = AssetManager.loadSprite( "orb" );
+					Sprite sprite = AssetManager.loadSprite( type.spriteName );
 					MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
 					anim.leapHeight = 6;
 					sprite.spriteAnimation = anim;
@@ -387,7 +387,7 @@ public class Level
 
 				int[] diff = new int[] { 0, 0 };
 
-				Sprite sprite = AssetManager.loadSprite( "orb" );
+				Sprite sprite = AssetManager.loadSprite( type.spriteName );
 				MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
 				anim.leapHeight = 6;
 				sprite.spriteAnimation = anim;

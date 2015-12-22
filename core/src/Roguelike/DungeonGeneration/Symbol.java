@@ -1,6 +1,7 @@
 package Roguelike.DungeonGeneration;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
