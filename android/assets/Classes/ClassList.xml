@@ -1,11 +1,15 @@
 <Classes>
-    
+
     <Class>
         <Name>Soldier</Name>
         <Description>A physical fighter proficient in all manner of weaponry</Description>
-        <Lines>Swordmaster,Lancer,Bulwark,Marksman,Protection</Lines>
         <EntityPath>Classes/Soldier</EntityPath>
     </Class>
-   
-    
+
+    <Class>
+        <Name>Wizard</Name>
+        <Description>A magical master proficient in slinging spells</Description>
+        <EntityPath>Classes/Wizard</EntityPath>
+    </Class>
+
 </Classes>

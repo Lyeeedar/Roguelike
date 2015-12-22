@@ -25,7 +25,7 @@
 	</MovementSprite>
 
 	<Targeting>
-		<Entity></Entity>
+		<Entity Type="Enemy"></Entity>
 	</Targeting>
 
 	<Movement>
