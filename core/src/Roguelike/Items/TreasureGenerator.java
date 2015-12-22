@@ -2,6 +2,7 @@ package Roguelike.Items;
 
 import Roguelike.Ability.AbilityTree;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 
@@ -13,6 +14,28 @@ import java.util.Random;
  */
 public class TreasureGenerator
 {
+	public static Array<Item> generateLoot( int quality, String typeBlock, Random ran )
+	{
+		Array<Item> items = new Array<Item>(  );
+		String[] types = typeBlock.toLowerCase().split( "," );
+
+		for (String type : types)
+		{
+			int choice = MathUtils.random.nextInt( 2 );
+
+			if ( type.equals( "currency" ) || ( type.equals( "random" ) && choice == 0 ) )
+			{
+				items.addAll( TreasureGenerator.generateCurrency( quality, MathUtils.random ) );
+			}
+			else if ( type.equals( "ability" ) || ( type.equals( "random" ) && choice == 1 ) )
+			{
+				items.addAll( TreasureGenerator.generateAbility( quality, MathUtils.random ) );
+			}
+		}
+
+		return items;
+	}
+
 	public static Array<Item> generateCurrency( int quality, Random ran )
 	{
 		Array<Item> items = new Array<Item>(  );

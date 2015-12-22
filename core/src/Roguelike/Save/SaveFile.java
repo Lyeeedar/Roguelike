@@ -135,7 +135,11 @@ public final class SaveFile
 				int length = array.size;
 				output.writeInt( length, true );
 
-				if ( length == 0 ) { return; }
+				if ( length == 0 )
+				{
+					genericType = null;
+					return;
+				}
 
 				if ( genericType != null )
 				{

@@ -1133,7 +1133,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 						influence = 100 - influence;
 
-						room.addFeatures( ran, dfp, closestFaction, influence );
+						room.addFeatures( ran, dfp, closestFaction, influence, false );
 
 						// Copy placed features back into map
 						for ( int rx = 0; rx < room.width; rx++ )
@@ -1278,7 +1278,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 				if ( fp != null )
 				{
-					room.addFeatures( ran, dfp, fp, influence );
+					room.addFeatures( ran, dfp, fp, influence, false );
 
 					factions.put( fp, new Point( room.x + room.width / 2, room.y + room.height / 2 ) );
 				}
@@ -1296,6 +1296,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 		int numMinor = (int) MathUtils.lerp( sortedRooms.size / 2.0f, sortedRooms.size / 4.0f, depthScale );
 
 		// Add features
+		boolean spawnMiniboss = true;
 		for ( int i = 0; i < sortedRooms.size; i++ )
 		{
 			Pair pair = sortedRooms.get( i );
@@ -1315,7 +1316,8 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 				influence = 100 - influence;
 
-				pair.room.addFeatures( ran, dfp, majorFaction, influence );
+				pair.room.addFeatures( ran, dfp, majorFaction, influence, spawnMiniboss );
+				spawnMiniboss = false;
 			}
 			else
 			{
@@ -1323,7 +1325,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 				FactionParser fp = FactionParser.load( dfp.getMinorFaction( ran ) );
 
-				pair.room.addFeatures( ran, dfp, fp, influence );
+				pair.room.addFeatures( ran, dfp, fp, influence, false );
 
 				factions.put( fp, new Point( pair.room.x + pair.room.width / 2, pair.room.y + pair.room.height / 2 ) );
 			}

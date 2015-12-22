@@ -154,16 +154,8 @@ public class EnvironmentEntity extends Entity
 			{
 				String type = (String) entity.data.get( "Treasure" );
 				int quality = (Integer) entity.data.get( "Quality" );
-				int choice = MathUtils.random.nextInt( 2 );
 
-				if ( type.equalsIgnoreCase( "currency" ) || ( type.equalsIgnoreCase( "random" ) && choice == 0 ) )
-				{
-					entity.inventory.m_items.addAll( TreasureGenerator.generateCurrency( quality, MathUtils.random ) );
-				}
-				else if ( type.equalsIgnoreCase( "ability" ) || ( type.equalsIgnoreCase( "random" ) && choice == 1 ) )
-				{
-					entity.inventory.m_items.addAll( TreasureGenerator.generateAbility( quality, MathUtils.random ) );
-				}
+				entity.inventory.m_items.addAll( TreasureGenerator.generateLoot( quality, type, MathUtils.random ) );
 
 				entity.HP = 0;
 				entity.canTakeDamage = true;

@@ -317,7 +317,7 @@ public final class Room
 	}
 
 	// ----------------------------------------------------------------------
-	public void addFeatures( Random ran, DungeonFileParser dfp, FactionParser faction, int influence )
+	public void addFeatures( Random ran, DungeonFileParser dfp, FactionParser faction, int influence, boolean spawnMiniBoss )
 	{
 		if ( faction == null ) { return; }
 
@@ -628,6 +628,19 @@ public final class Room
 				if ( roomContents[x][y].getTileData().canSpawn && roomContents[x][y].isPassable( GeneratorPassability ) && !roomContents[x][y].hasGameEntity() )
 				{
 					spawnList.add( tile );
+				}
+			}
+
+			if (spawnMiniBoss)
+			{
+				if ( spawnList.size > 0 )
+				{
+					String entityName = faction.minibosses.get( ran.nextInt( faction.minibosses.size ) );
+
+					int[] pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
+
+					roomContents[pos[0]][pos[1]] = roomContents[pos[0]][pos[1]].copy();
+					roomContents[pos[0]][pos[1]].entityData = entityName;
 				}
 			}
 

@@ -1,0 +1,21 @@
+<Entity Extends="Enemies/Goblin/GoblinBase">
+
+	<Sprite>
+		<Name>Oryx/uf_split/uf_heroes/troll</Name>
+		<DrawActualSize>true</DrawActualSize>
+	</Sprite>
+
+	<IsBoss>true</IsBoss>
+
+	<Statistics>
+
+		<Attack>20</Attack>
+		<Defense>20</Defense>
+
+		<Constitution>13</Constitution>
+        <Perception>5</Perception>
+        <Speed>6</Speed>
+
+	</Statistics>
+
+</Entity>

@@ -17,6 +17,7 @@ import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
+import Roguelike.Items.TreasureGenerator;
 import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.ShadowCastCache;
 import Roguelike.Pathfinding.ShadowCaster;
@@ -235,22 +236,7 @@ public class Level
 				{
 					if ( e.isBoss )
 					{
-						// if ( dungeon.isCleared( this ) )
-						// {
-						// dungeon.isCleared = true;
-						// EnvironmentEntity portal =
-						// EnvironmentEntity.CreateDungeonExitPortal( dungeon );
-						// tile.addEnvironmentEntity( portal );
-						//
-						// GameScreen.Instance.addFullScreenMessage(
-						// "Dungeon Cleared" );
-						//
-						// for ( String key : dungeon.clearData.keySet() )
-						// {
-						// Global.GlobalVariables.put( key,
-						// dungeon.clearData.get( key ) );
-						// }
-						// }
+						e.inventory.m_items.addAll( TreasureGenerator.generateLoot( 1, "random", MathUtils.random ) );
 					}
 
 					dropItems( e.getInventory(), e.tile[0][0], e.essence, e );
@@ -765,10 +751,6 @@ public class Level
 				for ( Item item : player.tile[0][0].items )
 				{
 					GameScreen.Instance.pickupQueue.add( item );
-
-					//GameScreen.Instance.addActorItemPickupAction( player, item );
-
-					//player.inventory.addItem( item );
 				}
 
 				player.tile[0][0].items.clear();

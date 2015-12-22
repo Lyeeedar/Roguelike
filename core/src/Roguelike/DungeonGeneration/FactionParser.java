@@ -20,6 +20,7 @@ public class FactionParser
 
 	public Array<Creature> creatures = new Array<Creature>();
 	public Array<String> bosses = new Array<String>();
+	public Array<String> minibosses = new Array<String>(  );
 
 	public FastEnumMap<FeaturePlacementType, Array<Feature>> features = new FastEnumMap<FeaturePlacementType, Array<Feature>>( FeaturePlacementType.class );
 
@@ -114,6 +115,17 @@ public class FactionParser
 				Element bossElement = bossesElement.getChild( i );
 
 				bosses.add( path + "/" + bossElement.getName() );
+			}
+		}
+
+		Element miniBossesElement = xmlElement.getChildByName( "MiniBosses" );
+		if ( miniBossesElement != null )
+		{
+			for ( int i = 0; i < miniBossesElement.getChildCount(); i++ )
+			{
+				Element miniBossElement = miniBossesElement.getChild( i );
+
+				minibosses.add( path + "/" + miniBossElement.getName() );
 			}
 		}
 	}

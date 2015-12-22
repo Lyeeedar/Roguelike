@@ -29,6 +29,7 @@ public class AbilityPanel extends TilePanel
 	private final GlyphLayout layout = new GlyphLayout();
 	private BitmapFont font;
 	private TextureRegion white;
+	private TextureRegion passiveTileBorder;
 
 	public AbilityPanel( Skin skin, Stage stage )
 	{
@@ -38,6 +39,7 @@ public class AbilityPanel extends TilePanel
 		padding = 3;
 
 		this.white = AssetManager.loadTextureRegion( "Sprites/white.png" );
+		passiveTileBorder = AssetManager.loadTextureRegion( "Sprites/GUI/PassiveTileBorder.png" );
 	}
 
 	@Override
@@ -181,6 +183,11 @@ public class AbilityPanel extends TilePanel
 		if (data instanceof AbilityTree)
 		{
 			AbilityTree tree = (AbilityTree) data;
+
+			if (( (AbilityTree) data ).current.current instanceof PassiveAbility)
+			{
+				batch.draw( passiveTileBorder, x, y, width, height );
+			}
 
 			if (tree.current.needsLevelAnim)
 			{
