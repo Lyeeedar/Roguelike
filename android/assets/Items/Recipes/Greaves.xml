@@ -1,0 +1,12 @@
+<Recipe>
+    <Name>Greaves</Name>
+    <Description>Protective greaves</Description>
+    <Slot>Legs</Slot>
+    <Category>Armour</Category>
+
+    <Events>
+        <Constant>
+            <Defense>3 * quality</Defense>
+        </Constant>
+    </Events>
+</Recipe>

@@ -22,8 +22,8 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public abstract class GameEventHandler implements IGameObject
 {
-	public Array<AbstractOnTurnEvent> onTurnEvents = new Array<AbstractOnTurnEvent>();
 	public ConstantEvent constantEvent;
+	public Array<AbstractOnTurnEvent> onTurnEvents = new Array<AbstractOnTurnEvent>();
 	public Array<AbstractOnDamageEvent> onDealDamageEvents = new Array<AbstractOnDamageEvent>();
 	public Array<AbstractOnDamageEvent> onReceiveDamageEvents = new Array<AbstractOnDamageEvent>();
 	public Array<AbstractOnTaskEvent> onTaskEvents = new Array<AbstractOnTaskEvent>();

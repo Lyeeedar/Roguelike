@@ -1,0 +1,11 @@
+<Recipe>
+
+    <Name>Brute</Name>
+
+    <Events>
+        <Constant>
+            <Strength>2</Strength>
+        </Constant>
+    </Events>
+
+</Recipe>

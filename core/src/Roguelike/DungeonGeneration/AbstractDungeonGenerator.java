@@ -408,7 +408,7 @@ public abstract class AbstractDungeonGenerator
 
 					if ( e != null )
 					{
-					//	newTile.addGameEntity( e );
+						newTile.addGameEntity( e );
 					}
 				}
 			}

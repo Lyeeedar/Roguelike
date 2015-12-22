@@ -1,0 +1,17 @@
+<Recipe>
+
+	<Name>Sword</Name>
+    <Description>It's a sword</Description>
+
+    <Slot>Weapon</Slot>
+    <Category>Weapon</Category>
+    <Type>Sword</Type>
+
+    <Events>
+        <Constant>
+            <Attack>25 * quality</Attack>
+            <Strength>ceil(quality / 4)</Strength>
+        </Constant>
+    </Events>
+
+</Recipe>

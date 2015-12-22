@@ -33,58 +33,19 @@
 	<Inventory>
 		<Equipment>
 
-		    <Dagger>
-		        <Name>Iron Sword</Name>
-		        <Description>A plain metal blade.</Description>
+		    <Weapon>
+		        <Recipe>Sword</Recipe>
+                <Material>Copper</Material>
+		    </Weapon>
 
-                <Slot>Weapon</Slot>
-				<Category>Weapon</Category>
-				<Type>Sword</Type>
-
-				<Events>
-					<Constant>
-                        <Attack>25</Attack>
-						<Strength>1</Strength>
-					</Constant>
-				</Events>
-		    </Dagger>
-
-		    <Top>
-
-		        <Name>Padded Shirt</Name>
-		        <Description>A thick padded shirt. Can keep you warm in the cold nights and protect you from small amounts of stabbing.</Description>
-		        <Slot>Body</Slot>
-		        <Category>Armour</Category>
-
-		        <Events>
-					<Constant>
-						<Defense>5</Defense>
-					</Constant>
-				</Events>
-
-		        <Icon>
-		            <Name>Oryx/uf_split/uf_items/armor_leather_chest</Name>
-		        </Icon>
-
-		    </Top>
+		    <Body>
+                <Recipe>Cuirass</Recipe>
+                <Material>Copper</Material>
+		    </Body>
 
 		     <Leg>
-
-		        <Name>Padded Trousers</Name>
-		        <Description>Is that a large amount of protective insulation in your pocket, or are you just happy to see me?</Description>
-		        <Slot>Legs</Slot>
-		        <Category>Armour</Category>
-
-		        <Events>
-					<Constant>
-						<Defense>3</Defense>
-					</Constant>
-				</Events>
-
-		        <Icon>
-		            <Name>Oryx/uf_split/uf_items/armor_leather_leg</Name>
-		        </Icon>
-
+                 <Recipe>Greaves</Recipe>
+                 <Material>Copper</Material>
 		    </Leg>
 
 		</Equipment>

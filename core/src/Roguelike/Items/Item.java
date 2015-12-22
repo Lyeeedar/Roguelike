@@ -48,6 +48,7 @@ public final class Item extends GameEventHandler
 	public String dropChanceEqn;
 	public AbilityTree ability;
 	private int range = -1000;
+	public int quality = 1;
 
 	// ----------------------------------------------------------------------
 	public Item()
@@ -68,9 +69,44 @@ public final class Item extends GameEventHandler
 	// ----------------------------------------------------------------------
 	public static Item load( Element xml )
 	{
-		Item item = new Item();
+		Item item = null;
 
-		item.internalLoad( xml );
+		if ( xml.getChildByName( "Recipe" ) != null )
+		{
+			String recipe = xml.getChildByName( "Recipe" ).getText();
+			String material = xml.getChildByName( "Material" ).getText();
+
+			Item materialItem = Item.load( "Material/"+material );
+
+			item = Recipe.createRecipe( recipe, materialItem );
+
+			Element prefixElement = xml.getChildByName( "Prefix" );
+			if ( prefixElement != null )
+			{
+				String[] prefixes = prefixElement.getText().split( "," );
+
+				for (String prefix : prefixes)
+				{
+					Recipe.applyModifer( item, prefix, true );
+				}
+			}
+
+			Element suffixElement = xml.getChildByName( "Suffix" );
+			if ( suffixElement != null )
+			{
+				String[] suffixes = suffixElement.getText().split( "," );
+
+				for (String suffix : suffixes)
+				{
+					Recipe.applyModifer( item, suffix, false );
+				}
+			}
+		}
+		else
+		{
+			item = new Item();
+			item.internalLoad( xml );
+		}
 
 		return item;
 	}
@@ -455,6 +491,7 @@ public final class Item extends GameEventHandler
 		}
 		category = xmlElement.get( "Category", null ) != null ? ItemCategory.valueOf( xmlElement.get( "Category" ).toUpperCase() ) : category;
 		type = xmlElement.get( "Type", null ) != null ? xmlElement.get( "Type" ).toLowerCase() : type;
+		quality = xmlElement.getInt( "Quality", quality );
 
 		Element abilityElement = xmlElement.getChildByName( "Ability" );
 		if ( abilityElement != null )

@@ -1,0 +1,12 @@
+<Recipe>
+    <Name>Cuirass</Name>
+    <Description>A protective cuirass</Description>
+    <Slot>Body</Slot>
+    <Category>Armour</Category>
+
+    <Events>
+        <Constant>
+            <Defense>5 * quality</Defense>
+        </Constant>
+    </Events>
+</Recipe>
