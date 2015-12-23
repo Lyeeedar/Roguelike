@@ -2,8 +2,12 @@ package Roguelike.Items;
 
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.Global;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.XmlReader;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Created by Philip on 22-Dec-15.
@@ -13,17 +17,9 @@ public class Recipe
 	public static Item createRecipe( String recipe, Item material )
 	{
 		Item item = Item.load( "Recipes/"+recipe );
+		item.quality = material.quality;
 
-		HashMap<String, Integer> variables = new HashMap<String, Integer>(  );
-		variables.put( "quality", material.quality );
-
-		for ( Global.Statistic stat : Global.Statistic.values() )
-		{
-			if ( item.constantEvent.equations.containsKey( stat ) )
-			{
-				item.constantEvent.putStatistic( stat, ""+item.constantEvent.getStatistic( variables, stat ) );
-			}
-		}
+		applyQuality( item, material.quality );
 
 		combineItems( item, material );
 
@@ -32,9 +28,9 @@ public class Recipe
 		return item;
 	}
 
-	public static void applyModifer( Item item, String modifierName, boolean isPrefix )
+	public static void applyModifer( Item item, String modifierName, int quality, boolean isPrefix )
 	{
-		Item modifier = Item.load( "Modifiers/"+modifierName );
+		Item modifier = loadModifier(modifierName, quality);
 
 		combineItems( item, modifier );
 
@@ -44,7 +40,7 @@ public class Recipe
 		}
 		else
 		{
-			item.name += " of " + item.name;
+			item.name += " of the " + item.name;
 		}
 	}
 
@@ -80,5 +76,50 @@ public class Recipe
 		item1.onWaitEvents.addAll( item2.onWaitEvents );
 		item1.onUseAbilityEvents.addAll( item2.onUseAbilityEvents );
 		item1.onDeathEvents.addAll( item2.onDeathEvents );
+	}
+
+	public static Item loadModifier( String modifier, int quality )
+	{
+		Item item = Item.load( "Modifiers/"+modifier );
+
+		applyQuality( item, quality );
+
+		XmlReader reader = new XmlReader();
+		XmlReader.Element xml = null;
+
+		try
+		{
+			xml = reader.parse( Gdx.files.internal( "Items/Modifiers/" + modifier + ".xml" ) );
+		}
+		catch ( IOException e )
+		{
+			e.printStackTrace();
+		}
+
+		XmlReader.Element namesElement = xml.getChildByName( "Names" );
+		if (quality > namesElement.getChildCount())
+		{
+			quality = namesElement.getChildCount()-1;
+		}
+
+		String name = namesElement.getChild( quality ).getName();
+
+		item.name = name;
+
+		return item;
+	}
+
+	public static void applyQuality( Item item, int quality )
+	{
+		HashMap<String, Integer> variables = new HashMap<String, Integer>(  );
+		variables.put( "quality", quality );
+
+		for ( Global.Statistic stat : Global.Statistic.values() )
+		{
+			if ( item.constantEvent.equations.containsKey( stat ) )
+			{
+				item.constantEvent.putStatistic( stat, ""+item.constantEvent.getStatistic( variables, stat ) );
+			}
+		}
 	}
 }

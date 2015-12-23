@@ -1,0 +1,19 @@
+<Recipe>
+
+    <Names>
+        <Mongoose></Mongoose>
+        <Lynx></Lynx>
+        <Fox></Fox>
+        <Falcon></Falcon>
+        <Panther></Panther>
+        <Leopard></Leopard>
+        <Jaguar></Jaguar>
+    </Names>
+
+    <Events>
+        <Constant>
+            <Perception>quality</Perception>
+        </Constant>
+    </Events>
+
+</Recipe>

@@ -1,0 +1,20 @@
+<Recipe>
+
+    <Names>
+        <Hale></Hale>
+        <Healthy></Healthy>
+        <Sanguine></Sanguine>
+        <Stalwart></Stalwart>
+        <Stout></Stout>
+        <Robust></Robust>
+        <Rotund></Rotund>
+        <Virile></Virile>
+    </Names>
+
+    <Events>
+        <Constant>
+            <Constitution>quality</Constitution>
+        </Constant>
+    </Events>
+
+</Recipe>

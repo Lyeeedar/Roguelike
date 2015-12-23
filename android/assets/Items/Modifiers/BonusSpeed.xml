@@ -1,0 +1,18 @@
+<Recipe>
+
+    <Names>
+        <Nimbleness></Nimbleness>
+        <Expertise></Expertise>
+        <Talent></Talent>
+        <Finesse></Finesse>
+        <Legerdemain></Legerdemain>
+        <Prestidigitation></Prestidigitation>
+    </Names>
+
+    <Events>
+        <Constant>
+            <Speed>quality</Speed>
+        </Constant>
+    </Events>
+
+</Recipe>

@@ -1,0 +1,19 @@
+<Recipe>
+
+    <Names>
+        <Clouds></Clouds>
+        <Sky></Sky>
+        <Meteor></Meteor>
+        <Comet></Comet>
+        <Heavens></Heavens>
+        <Galaxy></Galaxy>
+        <Universe></Universe>
+    </Names>
+
+    <Events>
+        <Constant>
+            <Willpower>quality</Willpower>
+        </Constant>
+    </Events>
+
+</Recipe>

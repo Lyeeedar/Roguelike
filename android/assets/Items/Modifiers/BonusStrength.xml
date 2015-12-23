@@ -1,0 +1,17 @@
+<Recipe>
+
+    <Names>
+        <Strong></Strong>
+        <Brute></Brute>
+        <Bear></Bear>
+        <Lion></Lion>
+        <Goliath></Goliath>
+    </Names>
+
+    <Events>
+        <Constant>
+            <Strength>quality</Strength>
+        </Constant>
+    </Events>
+
+</Recipe>

@@ -1,0 +1,19 @@
+<Recipe>
+
+    <Names>
+        <Pupil></Pupil>
+        <Student></Student>
+        <Prodigy></Prodigy>
+        <Augur></Augur>
+        <Philosopher></Philosopher>
+        <Sage></Sage>
+        <Savant></Savant>
+    </Names>
+
+    <Events>
+        <Constant>
+            <Intelligence>quality</Intelligence>
+        </Constant>
+    </Events>
+
+</Recipe>

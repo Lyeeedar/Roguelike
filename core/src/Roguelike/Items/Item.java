@@ -87,7 +87,7 @@ public final class Item extends GameEventHandler
 
 				for (String prefix : prefixes)
 				{
-					Recipe.applyModifer( item, prefix, true );
+					Recipe.applyModifer( item, prefix, materialItem.quality, true );
 				}
 			}
 
@@ -98,7 +98,7 @@ public final class Item extends GameEventHandler
 
 				for (String suffix : suffixes)
 				{
-					Recipe.applyModifer( item, suffix, false );
+					Recipe.applyModifer( item, suffix, materialItem.quality, false );
 				}
 			}
 		}

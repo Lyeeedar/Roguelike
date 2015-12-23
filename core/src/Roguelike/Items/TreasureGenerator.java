@@ -142,8 +142,6 @@ public class TreasureGenerator
 
 	public static Item itemFromRecipe( RecipeData recipe, int quality, Random ran )
 	{
-		quality = quality - 1;
-
 		String materialType = recipe.acceptedMaterials[ ran.nextInt( recipe.acceptedMaterials.length ) ];
 
 		QualityMap materialMap = materialLists.get( materialType );
@@ -153,27 +151,40 @@ public class TreasureGenerator
 			materialLists.put( materialType, materialMap );
 		}
 
+		int materialQuality = Math.min( quality, materialMap.qualityData.size );
+
 		String material = null;
-		while (material == null)
 		{
-			if (quality < materialMap.qualityData.size)
-			{
-				int numChoices = materialMap.qualityData.get( quality ).size;
-				int choice = ran.nextInt( numChoices );
-				material = materialMap.qualityData.get( quality ).get( choice );
-			}
-			else
-			{
-				quality--;
-			}
+			int numChoices = materialMap.qualityData.get( materialQuality - 1 ).size;
+			int choice = ran.nextInt( numChoices );
+			material = materialMap.qualityData.get( materialQuality - 1 ).get( choice );
 		}
 
 		Item item = Recipe.createRecipe( recipe.recipeName, Item.load( "Material/" + material ) );
 
+		int numModifiers = ran.nextInt( Math.max( 1, quality / 2 ) );
+		int maxModifierQuality = Math.min( quality, modifierList.qualityData.size );
+
+		while (numModifiers > 0)
+		{
+			int chosenQuality = ran.nextInt( maxModifierQuality );
+
+			int numChoices = modifierList.qualityData.get( chosenQuality ).size;
+			int choice = ran.nextInt( numChoices );
+			String modifier = modifierList.qualityData.get( chosenQuality ).get( choice );
+
+			Recipe.applyModifer( item, modifier, quality, ran.nextBoolean() );
+
+			numModifiers--;
+		}
+
 		return item;
 	}
 
+
+
 	private static final QualityMap abilityList = new QualityMap( "Abilities/AbilityList.xml" );
+	private static final QualityMap modifierList = new QualityMap( "Items/Modifiers/ModifierList.xml" );
 	private static final HashMap<String, QualityMap> materialLists = new HashMap<String, QualityMap>(  );
 	private static final RecipeList recipeList = new RecipeList();
 
