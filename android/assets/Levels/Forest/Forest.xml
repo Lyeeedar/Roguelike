@@ -239,7 +239,7 @@
             <Char>t</Char>
             <EnvironmentData>
                 <Type>Treasure</Type>
-                <Treasure>Currency</Treasure>
+                <Treasure>random</Treasure>
             </EnvironmentData>
         </Symbol>
 

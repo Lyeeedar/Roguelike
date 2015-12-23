@@ -7,8 +7,8 @@
 
 	<Statistics>
 
-		<Attack>15</Attack>
-		<Defense>20</Defense>
+		<Attack>16</Attack>
+		<Defense>10</Defense>
 
 		<Constitution>5</Constitution>
         <Perception>4</Perception>

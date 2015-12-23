@@ -35,8 +35,8 @@
 
 	<Statistics>
 
-		<Attack>25</Attack>
-		<Defense>25</Defense>
+		<Attack>20</Attack>
+		<Defense>14</Defense>
 
 		<Constitution>15</Constitution>
         <Perception>5</Perception>

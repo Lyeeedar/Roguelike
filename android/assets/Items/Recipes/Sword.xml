@@ -9,9 +9,8 @@
 
     <Events>
         <Constant>
-            <Attack>25 * quality</Attack>
+            <Attack>10 + 5 * quality</Attack>
             <Strength>ceil(quality / 4)</Strength>
         </Constant>
     </Events>
-
 </Recipe>

@@ -6,7 +6,7 @@
 
     <Events>
         <Constant>
-            <Defense>3 * quality</Defense>
+            <Defense>3 + quality</Defense>
         </Constant>
     </Events>
 </Recipe>

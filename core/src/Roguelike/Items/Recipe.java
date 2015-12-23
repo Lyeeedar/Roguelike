@@ -1,5 +1,6 @@
 package Roguelike.Items;
 
+import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.Global;
 
 import java.util.HashMap;
@@ -24,6 +25,8 @@ public class Recipe
 			}
 		}
 
+		combineItems( item, material );
+
 		item.name = material.name + " " + item.name;
 
 		return item;
@@ -33,31 +36,7 @@ public class Recipe
 	{
 		Item modifier = Item.load( "Modifiers/"+modifierName );
 
-		if ( modifier.constantEvent != null )
-		{
-			for ( Global.Statistic stat : Global.Statistic.values() )
-			{
-				if ( modifier.constantEvent.equations.containsKey( stat ) )
-				{
-					int itemVal = item.constantEvent.getStatistic( Global.Statistic.emptyMap, stat );
-					int modifierVal = modifier.constantEvent.getStatistic( Global.Statistic.emptyMap, stat );
-
-					int newVal = itemVal + modifierVal;
-
-					item.constantEvent.putStatistic( stat, ""+newVal );
-				}
-			}
-		}
-
-		item.onTurnEvents.addAll( modifier.onTurnEvents );
-		item.onDealDamageEvents.addAll( modifier.onDealDamageEvents );
-		item.onReceiveDamageEvents.addAll( modifier.onReceiveDamageEvents );
-		item.onTaskEvents.addAll( modifier.onTaskEvents );
-		item.onMoveEvents.addAll( modifier.onMoveEvents );
-		item.onAttackEvents.addAll( modifier.onAttackEvents );
-		item.onWaitEvents.addAll( modifier.onWaitEvents );
-		item.onUseAbilityEvents.addAll( modifier.onUseAbilityEvents );
-		item.onDeathEvents.addAll( modifier.onDeathEvents );
+		combineItems( item, modifier );
 
 		if (isPrefix)
 		{
@@ -67,5 +46,39 @@ public class Recipe
 		{
 			item.name += " of " + item.name;
 		}
+	}
+
+	public static void combineItems( Item item1, Item item2 )
+	{
+		if ( item2.constantEvent != null )
+		{
+			if (item1.constantEvent == null)
+			{
+				item1.constantEvent = new ConstantEvent();
+			}
+
+			for ( Global.Statistic stat : Global.Statistic.values() )
+			{
+				if ( item2.constantEvent.equations.containsKey( stat ) )
+				{
+					int itemVal = item1.constantEvent.getStatistic( Global.Statistic.emptyMap, stat );
+					int modifierVal = item2.constantEvent.getStatistic( Global.Statistic.emptyMap, stat );
+
+					int newVal = itemVal + modifierVal;
+
+					item1.constantEvent.putStatistic( stat, ""+newVal );
+				}
+			}
+		}
+
+		item1.onTurnEvents.addAll( item2.onTurnEvents );
+		item1.onDealDamageEvents.addAll( item2.onDealDamageEvents );
+		item1.onReceiveDamageEvents.addAll( item2.onReceiveDamageEvents );
+		item1.onTaskEvents.addAll( item2.onTaskEvents );
+		item1.onMoveEvents.addAll( item2.onMoveEvents );
+		item1.onAttackEvents.addAll( item2.onAttackEvents );
+		item1.onWaitEvents.addAll( item2.onWaitEvents );
+		item1.onUseAbilityEvents.addAll( item2.onUseAbilityEvents );
+		item1.onDeathEvents.addAll( item2.onDeathEvents );
 	}
 }
