@@ -1,0 +1,16 @@
+<Recipe>
+
+	<Name>Bow</Name>
+    <Description>A device for flinging pointy things a long distance</Description>
+
+    <Slot>Weapon</Slot>
+    <Category>Weapon</Category>
+    <Type>Bow</Type>
+
+    <Events>
+        <Constant>
+            <Attack>8 + 4 * quality</Attack>
+            <Perception>ceil(quality / 4)</Perception>
+        </Constant>
+    </Events>
+</Recipe>

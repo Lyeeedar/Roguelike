@@ -1,0 +1,10 @@
+<Weapon>
+
+    <HitType>Closest(1)</HitType>
+
+    <HitPattern>
+        <Line>.</Line>
+        <Line>x</Line>
+    </HitPattern>
+
+</Weapon>

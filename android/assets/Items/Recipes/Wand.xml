@@ -1,0 +1,17 @@
+<Recipe>
+
+	<Name>Wand</Name>
+    <Description>A short stave that acts as a conduit for magical force</Description>
+
+    <Slot>Weapon</Slot>
+    <Category>Weapon</Category>
+    <Type>Wand</Type>
+
+    <Events>
+        <Constant>
+            <Attack>7 + 3.5 * quality</Attack>
+            <Willpower>ceil(quality / 4)</Willpower>
+            <Intelligence>ceil(quality / 4)</Intelligence>
+        </Constant>
+    </Events>
+</Recipe>

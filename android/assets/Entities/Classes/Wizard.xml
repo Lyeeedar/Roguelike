@@ -33,59 +33,20 @@
     <Inventory>
         <Equipment>
 
-            <Dagger>
-                <Name>Wand</Name>
-                <Description>You're a wizard Harry</Description>
-
-                <Slot>Weapon</Slot>
-                <Category>Weapon</Category>
-                <Type>Wand</Type>
-
-                <Events>
-                    <Constant>
-                        <Attack>25</Attack>
-                        <Intelligence>1</Intelligence>
-                    </Constant>
-                </Events>
-            </Dagger>
+            <Wand>
+                <Recipe>Wand</Recipe>
+                <Material>Copper</Material>
+            </Wand>
 
             <Top>
-
-                <Name>Padded Shirt</Name>
-                <Description>A thick padded shirt. Can keep you warm in the cold nights and protect you from small amounts of stabbing.</Description>
-                <Slot>Body</Slot>
-                <Category>Armour</Category>
-
-                <Events>
-                    <Constant>
-                        <Defense>5</Defense>
-                    </Constant>
-                </Events>
-
-                <Icon>
-                    <Name>Oryx/uf_split/uf_items/armor_leather_chest</Name>
-                </Icon>
-
+                <Recipe>Shirt</Recipe>
+                <Material>RoughCotton</Material>
             </Top>
 
-            <Leg>
-
-                <Name>Padded Trousers</Name>
-                <Description>Is that a large amount of protective insulation in your pocket, or are you just happy to see me?</Description>
-                <Slot>Legs</Slot>
-                <Category>Armour</Category>
-
-                <Events>
-                    <Constant>
-                        <Defense>3</Defense>
-                    </Constant>
-                </Events>
-
-                <Icon>
-                    <Name>Oryx/uf_split/uf_items/armor_leather_leg</Name>
-                </Icon>
-
-            </Leg>
+            <Legs>
+                <Recipe>Trousers</Recipe>
+                <Material>RoughCotton</Material>
+            </Legs>
 
         </Equipment>
     </Inventory>

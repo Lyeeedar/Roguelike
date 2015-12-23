@@ -1,0 +1,14 @@
+<Recipe>
+    <Name>Trousers</Name>
+    <Description>Some nice trousers</Description>
+    <Slot>Legs</Slot>
+    <Category>Armour</Category>
+
+    <Events>
+        <Constant>
+            <Defense>2 + quality</Defense>
+            <Intelligence>quality/3</Intelligence>
+            <Willpower>quality/3</Willpower>
+        </Constant>
+    </Events>
+</Recipe>

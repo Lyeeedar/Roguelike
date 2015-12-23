@@ -13,9 +13,12 @@ import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation.MoveEquation;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 public class TaskAttack extends AbstractTask
@@ -27,6 +30,37 @@ public class TaskAttack extends AbstractTask
 	public TaskAttack( Direction dir )
 	{
 		this.dir = dir;
+	}
+
+	public Array<GameTile> buildHitTileArray( GameEntity attacker, Direction dir )
+	{
+		Array<GameTile> tiles = new Array<GameTile>(  );
+
+		Item weapon = attacker.getInventory().getEquip( EquipmentSlot.WEAPON );
+		if (weapon != null && weapon.wepDef != null)
+		{
+			GameTile attackerTile = attacker.tile[0][0];
+
+			Matrix3 mat = new Matrix3(  );
+			mat.setToRotation( dir.getAngle() );
+			Vector3 vec = new Vector3();
+
+			for (Point point : weapon.wepDef.hitPoints)
+			{
+				vec.set( point.x, point.y, 0 );
+				vec.mul( mat );
+
+				tiles.add( attackerTile.level.getGameTile( attackerTile.x + (int)vec.x, attackerTile.y + (int)vec.y ) );
+			}
+		}
+		else
+		{
+			// TODO: attacks for large creatures
+			GameTile attackerTile = attacker.tile[0][0];
+			tiles.add( attackerTile.level.getGameTile( attackerTile.x + dir.getX(), attackerTile.y + dir.getY() ) );
+		}
+
+		return tiles;
 	}
 
 	public boolean checkHitSomething( GameEntity obj )
@@ -45,135 +79,6 @@ public class TaskAttack extends AbstractTask
 		}
 
 		return hitSomething;
-	}
-
-	public Array<GameTile> buildHitTileArray( GameEntity attacker, Direction dir )
-	{
-		if ( dir.isCardinal() )
-		{
-			Item wep = attacker.getInventory().getEquip( EquipmentSlot.WEAPON );
-
-			int xstep = 0;
-			int ystep = 0;
-
-			int sx = 0;
-			int sy = 0;
-
-			if ( dir == Direction.NORTH )
-			{
-				sx = 0;
-				sy = attacker.size - 1;
-
-				xstep = 1;
-				ystep = 0;
-			}
-			else if ( dir == Direction.SOUTH )
-			{
-				sx = 0;
-				sy = 0;
-
-				xstep = 1;
-				ystep = 0;
-			}
-			else if ( dir == Direction.EAST )
-			{
-				sx = attacker.size - 1;
-				sy = 0;
-
-				xstep = 0;
-				ystep = 1;
-			}
-			else if ( dir == Direction.WEST )
-			{
-				sx = 0;
-				sy = 0;
-
-				xstep = 0;
-				ystep = 1;
-			}
-
-			Array<GameTile> hitTiles = new Array<GameTile>();
-
-			for ( int i = 0; i < attacker.size; i++ )
-			{
-				GameTile oldTile = attacker.tile[sx + xstep * i][sy + ystep * i];
-
-				int newX = oldTile.x + dir.getX();
-				int newY = oldTile.y + dir.getY();
-
-				GameTile newTile = oldTile.level.getGameTile( newX, newY );
-
-				hitTiles.addAll( getHitTiles( oldTile, newTile, attacker, wep ) );
-			}
-
-			return hitTiles;
-		}
-		else
-		{
-			// Collect data
-			GameTile oldTile = attacker.tile[Math.max( 0, dir.getX() ) * ( attacker.size - 1 )][Math.max( 0, dir.getY() ) * ( attacker.size - 1 )];
-
-			int newX = oldTile.x + dir.getX();
-			int newY = oldTile.y + dir.getY();
-
-			GameTile newTile = oldTile.level.getGameTile( newX, newY );
-
-			Item wep = attacker.getInventory().getEquip( EquipmentSlot.WEAPON );
-
-			Array<GameTile> hitTiles = getHitTiles( oldTile, newTile, attacker, wep );
-			return hitTiles;
-		}
-	}
-
-	private Array<GameTile> getHitTiles( GameTile oldTile, GameTile newTile, GameEntity entity, Item weapon )
-	{
-		String type = "none";
-		int range = 1;
-
-		if ( weapon != null )
-		{
-			type = weapon.type;
-			range = weapon.getRange( entity );
-		}
-
-		Array<GameTile> hitTiles = new Array<GameTile>();
-		hitTiles.add( newTile );
-
-		if ( type.equals( "axe" ) )
-		{
-			Direction anticlockwise = dir.getAnticlockwise();
-			Direction clockwise = dir.getClockwise();
-
-			hitTiles.add( oldTile.level.getGameTile( oldTile.x + anticlockwise.getX(), oldTile.y + anticlockwise.getY() ) );
-
-			hitTiles.add( oldTile.level.getGameTile( oldTile.x + clockwise.getX(), oldTile.y + clockwise.getY() ) );
-		}
-		else if ( type.equals( "spear" ) || type.equals( "bow" ) || type.equals( "wand" ) )
-		{
-			for ( int i = 2; i <= range; i++ )
-			{
-				int nx = oldTile.x + dir.getX() * i;
-				int ny = oldTile.y + dir.getY() * i;
-
-				GameTile tile = oldTile.level.getGameTile( nx, ny );
-
-				if ( tile != null )
-				{
-					hitTiles.add( tile );
-
-					if ( !tile.getPassable( WeaponPassability, entity ) )
-					{
-						break;
-					}
-				}
-				else
-				{
-					break;
-				}
-			}
-		}
-
-		return hitTiles;
 	}
 
 	public boolean canAttackTile( GameEntity obj, GameTile tile )

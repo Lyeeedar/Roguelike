@@ -1,0 +1,16 @@
+<Recipe>
+
+	<Name>Axe</Name>
+    <Description>Choppy chop</Description>
+
+    <Slot>Weapon</Slot>
+    <Category>Weapon</Category>
+    <Type>Axe</Type>
+
+    <Events>
+        <Constant>
+            <Attack>9 + 4 * quality</Attack>
+            <Strength>ceil(quality / 3)</Strength>
+        </Constant>
+    </Events>
+</Recipe>

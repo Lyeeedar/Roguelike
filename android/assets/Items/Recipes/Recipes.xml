@@ -3,10 +3,20 @@
     <Armours>
         <Cuirass>Metal</Cuirass>
         <Greaves>Metal</Greaves>
+
+        <Jerkin>Leather</Jerkin>
+        <Boots>Leather</Boots>
+
+        <Shirt>Cloth</Shirt>
+        <Trousers>Cloth</Trousers>
     </Armours>
 
     <Weapons>
         <Sword>Metal</Sword>
+        <Spear>Metal</Spear>
+        <Axe>Metal</Axe>
+        <Bow>Metal</Bow>
+        <Wand>Metal</Wand>
     </Weapons>
 
 </Recipes>

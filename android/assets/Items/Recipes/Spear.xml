@@ -1,0 +1,16 @@
+<Recipe>
+
+	<Name>Spear</Name>
+    <Description>Stick em with the pointy end</Description>
+
+    <Slot>Weapon</Slot>
+    <Category>Weapon</Category>
+    <Type>Spear</Type>
+
+    <Events>
+        <Constant>
+            <Attack>9 + 4.3 * quality</Attack>
+            <Strength>ceil(quality / 4)</Strength>
+        </Constant>
+    </Events>
+</Recipe>

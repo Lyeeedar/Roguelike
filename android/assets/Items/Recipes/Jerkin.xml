@@ -1,0 +1,14 @@
+<Recipe>
+    <Name>Jerkin</Name>
+    <Description>A protective thingy</Description>
+    <Slot>Body</Slot>
+    <Category>Armour</Category>
+
+    <Events>
+        <Constant>
+            <Defense>5 + 3 * quality</Defense>
+            <Perception>quality/2</Perception>
+            <Speed>quality/3</Speed>
+        </Constant>
+    </Events>
+</Recipe>

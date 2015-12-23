@@ -505,7 +505,7 @@ public class Global
 		public final String identifier;
 		private final int x;
 		private final int y;
-		private final float angle;
+		private final float angle; // In degrees
 		private Direction clockwise;
 		private Direction anticlockwise;
 		private boolean isCardinal = false;

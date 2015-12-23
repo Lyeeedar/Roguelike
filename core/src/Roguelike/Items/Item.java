@@ -13,6 +13,7 @@ import Roguelike.Global.Statistic;
 import Roguelike.Lights.Light;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Tiles.Point;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -47,7 +48,7 @@ public final class Item extends GameEventHandler
 	public boolean canDrop = true;
 	public String dropChanceEqn;
 	public AbilityTree ability;
-	private int range = -1000;
+	public WeaponDefinition wepDef;
 	public int quality = 1;
 
 	// ----------------------------------------------------------------------
@@ -109,32 +110,6 @@ public final class Item extends GameEventHandler
 		}
 
 		return item;
-	}
-
-	// ----------------------------------------------------------------------
-	public int getRange( Entity entity )
-	{
-		if ( range == -1000 )
-		{
-			range = getStatistic( entity.getBaseVariableMap(), Statistic.PERCEPTION );
-			if ( range == 0 )
-			{
-				if ( type.equals( "spear" ) )
-				{
-					range = 2;
-				}
-				else if ( type.equals( "bow" ) || type.equals( "wand" ) )
-				{
-					range = 4;
-				}
-				else
-				{
-					range = 1;
-				}
-			}
-		}
-
-		return range;
 	}
 
 	// ----------------------------------------------------------------------
@@ -490,8 +465,14 @@ public final class Item extends GameEventHandler
 			}
 		}
 		category = xmlElement.get( "Category", null ) != null ? ItemCategory.valueOf( xmlElement.get( "Category" ).toUpperCase() ) : category;
-		type = xmlElement.get( "Type", null ) != null ? xmlElement.get( "Type" ).toLowerCase() : type;
+		type = xmlElement.get( "Type", type ).toLowerCase();
 		quality = xmlElement.getInt( "Quality", quality );
+
+		// Load the wep def
+		if (slots.contains( EquipmentSlot.WEAPON, true ) && type != null)
+		{
+			wepDef = WeaponDefinition.load( type );
+		}
 
 		Element abilityElement = xmlElement.getChildByName( "Ability" );
 		if ( abilityElement != null )
@@ -597,5 +578,81 @@ public final class Item extends GameEventHandler
 		MISC,
 
 		ALL
+	}
+
+	// ----------------------------------------------------------------------
+	public static class WeaponDefinition
+	{
+		public enum HitType
+		{
+			ALL,
+			CLOSEST,
+			RANDOM
+		}
+
+		public HitType hitType;
+		public String hitData;
+
+		public Array<Point> hitPoints = new Array<Point>(  );
+
+		public static WeaponDefinition load( String name )
+		{
+			WeaponDefinition wepDef = new WeaponDefinition();
+
+			name = Global.capitalizeString( name );
+
+			XmlReader reader = new XmlReader();
+			XmlReader.Element xml = null;
+
+			try
+			{
+				xml = reader.parse( Gdx.files.internal( "Items/Weapons/" + name + ".xml" ) );
+			}
+			catch ( IOException e )
+			{
+				e.printStackTrace();
+			}
+
+			String[] hitTypeData = xml.get( "HitType" ).split( "[\\(\\)]" );
+			wepDef.hitType = HitType.valueOf( hitTypeData[0] );
+			wepDef.hitData = hitTypeData.length > 1 ? hitTypeData[1] : null;
+
+			Element hitPatternElement = xml.getChildByName( "HitPattern" );
+
+			char[][] hitGrid = new char[hitPatternElement.getChildCount()][];
+			Point centralPoint = new Point();
+
+			for (int y = 0; y < hitPatternElement.getChildCount(); y++)
+			{
+				Element lineElement = hitPatternElement.getChild( y );
+
+				hitGrid[ y ] = lineElement.getText().toCharArray();
+
+				for (int x = 0; x < hitGrid[ y ].length; x++)
+				{
+					if (hitGrid[ y ][ x ] == 'x')
+					{
+						centralPoint.x = x;
+						centralPoint.y = y;
+					}
+				}
+			}
+
+			for (int y = 0; y < hitGrid.length; y++)
+			{
+				for (int x = 0; x < hitGrid[0].length; x++)
+				{
+					if (hitGrid[y][x] == '.')
+					{
+						int dx = x - centralPoint.x;
+						int dy = y - centralPoint.y;
+
+						wepDef.hitPoints.add( new Point(dx, dy) );
+					}
+				}
+			}
+
+			return wepDef;
+		}
 	}
 }

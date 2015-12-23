@@ -1,0 +1,14 @@
+<Recipe>
+    <Name>Shirt</Name>
+    <Description>A shirt</Description>
+    <Slot>Body</Slot>
+    <Category>Armour</Category>
+
+    <Events>
+        <Constant>
+            <Defense>3 + 2 * quality</Defense>
+            <Intelligence>quality/2</Intelligence>
+            <Willpower>quality/2</Willpower>
+        </Constant>
+    </Events>
+</Recipe>

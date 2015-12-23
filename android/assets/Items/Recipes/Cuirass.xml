@@ -6,7 +6,10 @@
 
     <Events>
         <Constant>
-            <Defense>5 + 3 * quality</Defense>
+            <Defense>7 + 4 * quality</Defense>
+            <Strength>quality/2</Strength>
+            <Constitution>quality/2</Constitution>
+            <Speed>-2</Speed>
         </Constant>
     </Events>
 </Recipe>
