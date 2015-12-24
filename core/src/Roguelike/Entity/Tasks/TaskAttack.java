@@ -21,6 +21,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.Comparator;
+import java.util.Iterator;
+
 public class TaskAttack extends AbstractTask
 {
 	private static final EnumBitflag<Passability> WeaponPassability = new EnumBitflag<Passability>( Passability.LIGHT );
@@ -53,14 +56,45 @@ public class TaskAttack extends AbstractTask
 				int dx = Math.round( vec.x );
 				int dy = Math.round( vec.y );
 
-				tiles.add( attackerTile.level.getGameTile( attackerTile.x + dx, attackerTile.y + dy ) );
+				GameTile tile = attackerTile.level.getGameTile( attackerTile.x + dx, attackerTile.y + dy );
+
+				if (tile != null)
+				{
+					tiles.add( tile );
+				}
 			}
 		}
 		else
 		{
+
 			// TODO: attacks for large creatures
 			GameTile attackerTile = attacker.tile[0][0];
 			tiles.add( attackerTile.level.getGameTile( attackerTile.x + dir.getX(), attackerTile.y + dir.getY() ) );
+		}
+
+		// restrict by visibility
+		Array<Point> visibleTiles = attacker.visibilityCache.getCurrentShadowCast();
+
+		Iterator<GameTile> itr = tiles.iterator();
+		while (itr.hasNext())
+		{
+			GameTile tile = itr.next();
+
+			boolean matchFound = false;
+
+			for (Point point : visibleTiles)
+			{
+				if (point.x == tile.x && point.y == tile.y)
+				{
+					matchFound = true;
+					break;
+				}
+			}
+
+			if (!matchFound)
+			{
+				itr.remove();
+			}
 		}
 
 		return tiles;
@@ -130,32 +164,83 @@ public class TaskAttack extends AbstractTask
 		// Do attack
 		if ( hitSomething )
 		{
-			if ( wep != null && ( wep.type.equals( "bow" ) || wep.type.equals( "wand" ) ) )
-			{
-				doRangedAttack( hitTiles, newTile, obj, wep );
-			}
-			else
-			{
-				doNormalAttack( hitTiles, obj, wep );
-			}
+			doAttack( hitTiles, obj, wep );
 
 			// do graphics stuff
 			obj.sprite.spriteAnimation = new BumpAnimation( 0.1f, dir );
 		}
 	}
 
-	private void doNormalAttack( Array<GameTile> hitTiles, GameEntity entity, Item weapon )
+	private void doAttack( Array<GameTile> hitTiles, GameEntity entity, Item weapon )
 	{
-		// hit all tiles
-		for ( GameTile tile : hitTiles )
+		final GameTile source = entity.tile[0][0];
+
+		// Get all the attacked tiles
+		Array<GameTile> attackedTiles = new Array<GameTile>(  );
+
+		if (weapon == null || weapon.wepDef == null || weapon.wepDef.hitType == Item.WeaponDefinition.HitType.ALL)
 		{
-			if ( tile.entity != null && !tile.entity.isAllies( entity ) )
+			attackedTiles.addAll( hitTiles );
+		}
+		else if (weapon.wepDef.hitType == Item.WeaponDefinition.HitType.CLOSEST)
+		{
+			int num = weapon.wepDef.hitData != null ? Integer.parseInt( weapon.wepDef.hitData ) : 1;
+
+			Array<GameTile> validTiles = new Array<GameTile>(  );
+
+			// Get tiles valid to hit
+			for ( GameTile tile : hitTiles )
 			{
-				entity.attack( tile.entity, dir );
+				if ( tile.entity != null && !tile.entity.isAllies( entity ) )
+				{
+					validTiles.add( tile );
+				}
+				else if ( tile.environmentEntity != null && tile.environmentEntity.canTakeDamage )
+				{
+					validTiles.add( tile );
+				}
 			}
-			else if ( tile.environmentEntity != null && !tile.environmentEntity.passableBy.intersect( entity.getTravelType() ) )
+
+			// sort by distance
+			validTiles.sort( new Comparator<GameTile>()
 			{
-				entity.attack( tile.environmentEntity, dir );
+				@Override
+				public int compare( GameTile o1, GameTile o2 )
+				{
+					int dist1 = Math.abs( o1.x - source.x ) + Math.abs( o1.y - source.y );
+					int dist2 = Math.abs( o2.x - source.x ) + Math.abs( o2.y - source.y );
+
+					return dist1 - dist2;
+				}
+			} );
+
+			for (int i = 0; i < num; i++)
+			{
+				attackedTiles.add( validTiles.get( i ) );
+			}
+		}
+		else if (weapon.wepDef.hitType == Item.WeaponDefinition.HitType.RANDOM)
+		{
+			int num = weapon.wepDef.hitData != null ? Integer.parseInt( weapon.wepDef.hitData ) : 1;
+
+			Array<GameTile> validTiles = new Array<GameTile>(  );
+
+			// Get tiles valid to hit
+			for ( GameTile tile : hitTiles )
+			{
+				if ( tile.entity != null && !tile.entity.isAllies( entity ) )
+				{
+					validTiles.add( tile );
+				}
+				else if ( tile.environmentEntity != null && tile.environmentEntity.canTakeDamage )
+				{
+					validTiles.add( tile );
+				}
+			}
+
+			for (int i = 0; i < num; i++)
+			{
+				attackedTiles.add( validTiles.random() );
 			}
 		}
 
@@ -169,126 +254,50 @@ public class TaskAttack extends AbstractTask
 			hitEffect = weapon.getWeaponHitEffect();
 		}
 
-		// add hit effects
-		for ( GameTile tile : hitTiles )
+		// Do the attack
+		for ( GameTile tile : attackedTiles )
 		{
-			if ( tile.entity != null )
+			if ( tile.entity != null && !tile.entity.isAllies( entity ) )
 			{
-				SpriteEffect e = new SpriteEffect( hitEffect.copy(), Direction.CENTER, null );
-				e.Sprite.rotation = dir.getAngle();
+				entity.attack( tile.entity, dir );
+			}
+			else if ( tile.environmentEntity != null && !tile.environmentEntity.passableBy.intersect( entity.getTravelType() ) )
+			{
+				entity.attack( tile.environmentEntity, dir );
 			}
 
-			if ( tile.environmentEntity != null )
+			int[] diff = tile.getPosDiff( source );
+
+			Sprite sprite = hitEffect.copy();
+
+			if ( sprite.spriteAnimation != null )
 			{
-				SpriteEffect e = new SpriteEffect( hitEffect.copy(), Direction.CENTER, null );
-				e.Sprite.rotation = dir.getAngle();
+				int distMoved = ( Math.abs( diff[ 0 ] ) + Math.abs( diff[ 1 ] ) ) / Global.TileSize;
+				sprite.spriteAnimation.set( 0.05f * distMoved, diff );
 			}
 
-			SpriteEffect e = new SpriteEffect( hitEffect.copy(), Direction.CENTER, null );
-			e.Sprite.rotation = dir.getAngle();
+			Vector2 vec = new Vector2( diff[ 0 ] * -1, diff[ 1 ] * -1 );
+			vec.nor();
+			float x = vec.x;
+			float y = vec.y;
+			double dot = 0 * x + 1 * y; // dot product
+			double det = 0 * y - 1 * x; // determinant
+			float angle = (float) Math.atan2( det, dot ) * MathUtils.radiansToDegrees;
+			sprite.rotation = angle;
 
-			tile.spriteEffects.add( e );
+			if ( attackedTiles.size > 1 )
+			{
+				sprite.renderDelay = sprite.animationDelay * tile.getDist( source ) + sprite.animationDelay;
+			}
+
+			SpriteEffect effect = new SpriteEffect( sprite, Direction.CENTER, weapon != null && weapon.light != null ? weapon.light.copyNoFlag() : null );
+
+			tile.spriteEffects.add( effect );
 
 			SoundInstance sound = hitEffect.sound;
 			if ( sound != null )
 			{
 				sound.play( tile );
-			}
-		}
-	}
-
-	private void doRangedAttack( Array<GameTile> hitTiles, GameTile newTile, GameEntity entity, Item weapon )
-	{
-		// if bow only hit closest
-
-		int cx = 0;
-		int cy = 0;
-		int dst = Integer.MAX_VALUE;
-
-		for ( int x = 0; x < entity.size; x++ )
-		{
-			for ( int y = 0; y < entity.size; y++ )
-			{
-				int tmpdst = Math.abs( newTile.x - ( entity.tile[0][0].x + x ) ) + Math.abs( newTile.y - ( entity.tile[0][0].y + y ) );
-
-				if ( tmpdst < dst )
-				{
-					dst = tmpdst;
-					cx = x;
-					cy = y;
-				}
-			}
-		}
-
-		GameTile source = entity.tile[cx][cy];
-
-		GameTile bestTarget = null;
-
-		// Find closest game entity first
-		int closest = Integer.MAX_VALUE;
-		for ( GameTile tile : hitTiles )
-		{
-			if ( tile.entity != null && !tile.entity.isAllies( entity ) )
-			{
-				int dist = Math.abs( tile.x - source.x ) + Math.abs( tile.y - source.y );
-
-				if ( dist < closest )
-				{
-					closest = dist;
-					bestTarget = tile;
-				}
-			}
-			else if ( tile.environmentEntity != null && tile.environmentEntity.canTakeDamage )
-			{
-				int dist = Math.abs( tile.x - source.x ) + Math.abs( tile.y - source.y );
-
-				if ( dist < closest )
-				{
-					closest = dist;
-					bestTarget = tile;
-				}
-			}
-		}
-
-		if ( bestTarget == null )
-		{
-			bestTarget = newTile;
-		}
-
-		if ( bestTarget != null )
-		{
-			if ( bestTarget.entity != null && !bestTarget.entity.isAllies( entity ) )
-			{
-				entity.attack( bestTarget.entity, dir );
-			}
-			else if ( bestTarget.environmentEntity != null && !bestTarget.environmentEntity.passableBy.intersect( entity.getTravelType() ) )
-			{
-				entity.attack( bestTarget.environmentEntity, dir );
-			}
-
-			Sprite hitEffect = weapon.getWeaponHitEffect();
-
-			Sprite sprite = hitEffect.copy();
-
-			int[] diff = bestTarget.getPosDiff( source );
-			float distMoved = (float) Math.sqrt( diff[0] * diff[0] + diff[1] * diff[1] ) / Global.TileSize;
-
-			sprite.spriteAnimation = new MoveAnimation( 0.025f * distMoved, diff, MoveEquation.LINEAR );
-			SpriteEffect e = new SpriteEffect( sprite, Direction.CENTER, null );
-
-			// basis vector = 0, 1
-			Vector2 direction = new Vector2( diff[0] * -1, diff[1] * -1 );
-			direction.nor();
-			double dot = 0 * direction.x + 1 * direction.y; // dot product
-			double det = 0 * direction.y - 1 * direction.x; // determinant
-			e.Sprite.rotation = (float) Math.atan2( det, dot ) * MathUtils.radiansToDegrees;
-
-			bestTarget.spriteEffects.add( e );
-
-			SoundInstance sound = hitEffect.sound;
-			if ( sound != null )
-			{
-				sound.play( bestTarget );
 			}
 		}
 	}

@@ -546,6 +546,7 @@ public class Level
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	private void updatePopupsForTile( GameTile tile, float delta )
 	{
 		if ( tile.entity != null && tile.entity.tile[0][0] == tile )
@@ -569,6 +570,7 @@ public class Level
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	private void updateExtraUIHPForTile( GameTile tile, float delta )
 	{
 		if (tile.entity != null && tile.entity.extraUIHP > 0 && tile.entity.tile[0][0] == tile)
@@ -594,6 +596,7 @@ public class Level
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	private void updateSpriteEffectsForTile( GameTile tile, float delta )
 	{
 		if ( tile.spriteEffects.size > 0 )
@@ -612,6 +615,7 @@ public class Level
 		}
 	}
 
+	// ----------------------------------------------------------------------
 	private void updateSpritesForTile( GameTile tile, float delta )
 	{
 		for ( Sprite sprite : tile.getSprites() )
@@ -664,6 +668,8 @@ public class Level
 
 	private void processPlayer()
 	{
+		player.updateShadowCast();
+
 		if ( player.tasks.size == 0 )
 		{
 			player.AI.update( player );
@@ -787,6 +793,8 @@ public class Level
 				continue;
 			}
 
+			e.updateShadowCast();
+
 			// If entity can take action
 			if ( e.actionDelayAccumulator > 0 )
 			{
@@ -851,6 +859,8 @@ public class Level
 					itr.remove();
 					continue;
 				}
+
+				e.updateShadowCast();
 
 				// If entity can take action
 				if ( e.actionDelayAccumulator > 0 )

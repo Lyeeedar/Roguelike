@@ -13,6 +13,7 @@ import Roguelike.Global.Statistic;
 import Roguelike.Lights.Light;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Tiles.Point;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -513,9 +514,16 @@ public final class Item extends GameEventHandler
 		}
 		else if ( type.equals( "bow" ) )
 		{
-			return AssetManager.loadSprite( "arrow", 0.1f );
+			Sprite sprite = AssetManager.loadSprite( "arrow", 0.1f );
+			sprite.spriteAnimation = new MoveAnimation(  );
+			return sprite;
 		}
-		else if ( type.equals( "wand" ) ) { return AssetManager.loadSprite( "bolt", 0.1f ); }
+		else if ( type.equals( "wand" ) )
+		{
+			Sprite sprite = AssetManager.loadSprite( "bolt", 0.1f );
+			sprite.spriteAnimation = new MoveAnimation(  );
+			return sprite;
+		}
 
 		return AssetManager.loadSprite( "strike/strike", 0.1f );
 	}

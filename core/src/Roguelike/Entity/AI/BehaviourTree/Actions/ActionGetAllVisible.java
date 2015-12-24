@@ -21,8 +21,6 @@ public class ActionGetAllVisible extends AbstractAction
 	private String Key;
 	private String srcKey;
 
-	private final ShadowCastCache cache = new ShadowCastCache();
-
 	@Override
 	public BehaviourTreeState evaluate( GameEntity entity )
 	{
@@ -34,7 +32,7 @@ public class ActionGetAllVisible extends AbstractAction
 		}
 		else
 		{
-			Array<Point> output = cache.getShadowCast( entity.tile[0][0].level.getGrid(), entity.tile[0][0].x, entity.tile[0][0].y, entity.getVariable( Statistic.PERCEPTION ), entity );
+			Array<Point> output = entity.visibilityCache.getCurrentShadowCast();
 			visibleTiles = new Array<GameTile>();
 			for ( Point tile : output )
 			{

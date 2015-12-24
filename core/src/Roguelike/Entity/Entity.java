@@ -12,6 +12,7 @@ import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
+import Roguelike.Pathfinding.ShadowCastCache;
 import Roguelike.Sprite.TilingSprite;
 import Roguelike.Sprite.Sprite;
 import Roguelike.StatusEffect.StatusEffect;
@@ -361,6 +362,12 @@ public abstract class Entity
 	public abstract void removeFromTile();
 
 	// ----------------------------------------------------------------------
+	public void updateShadowCast()
+	{
+		visibilityCache.getShadowCast( tile[0][0].level.Grid, tile[0][0].x, tile[0][0].y, getStatistic( Statistic.PERCEPTION ), this );
+	}
+
+	// ----------------------------------------------------------------------
 	public boolean isVariableMapDirty = true;
 
 	// ----------------------------------------------------------------------
@@ -414,6 +421,9 @@ public abstract class Entity
 
 	// ----------------------------------------------------------------------
 	public String UID;
+
+	// ----------------------------------------------------------------------
+	public ShadowCastCache visibilityCache = new ShadowCastCache(  );
 
 	// ----------------------------------------------------------------------
 	public static class StatusEffectStack

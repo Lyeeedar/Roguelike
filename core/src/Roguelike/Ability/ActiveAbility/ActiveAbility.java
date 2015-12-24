@@ -69,7 +69,6 @@ public class ActiveAbility implements IAbility, IGameObject
 	private boolean excludeSelf = false;
 	private int range = 1;
 	private float screenshake = 0;
-	private ShadowCastCache cache = new ShadowCastCache();
 	private Sprite movementSprite;
 	private Sprite hitSprite;
 	private boolean singleSprite = false;
@@ -166,7 +165,6 @@ public class ActiveAbility implements IAbility, IGameObject
 		aa.range = range;
 		aa.cone = cone;
 		aa.screenshake = screenshake;
-		aa.cache = cache.copy();
 
 		aa.targetingType = targetingType.copy();
 		aa.movementType = movementType.copy();
@@ -220,15 +218,18 @@ public class ActiveAbility implements IAbility, IGameObject
 	{
 		Array<Point> validTargets = new Array<Point>();
 
-		Array<Point> output = cache.getShadowCast( source.level.getGrid(), source.x, source.y, getRange(), caster );
+		Array<Point> output = caster.visibilityCache.getCurrentShadowCast();
 
 		for ( Point tilePos : output )
 		{
-			GameTile tile = source.level.getGameTile( tilePos );
-
-			if ( targetingType.isTargetValid( this, tile ) )
+			if ( Math.abs(tilePos.x-caster.tile[0][0].x) <= getRange() && Math.abs( tilePos.y-caster.tile[0][0].y ) <= getRange() )
 			{
-				validTargets.add( tilePos.copy() );
+				GameTile tile = source.level.getGameTile( tilePos );
+
+				if ( targetingType.isTargetValid( this, tile ) )
+				{
+					validTargets.add( tilePos.copy() );
+				}
 			}
 		}
 
