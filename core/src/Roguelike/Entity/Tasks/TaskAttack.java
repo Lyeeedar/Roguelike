@@ -50,7 +50,10 @@ public class TaskAttack extends AbstractTask
 				vec.set( point.x, point.y, 0 );
 				vec.mul( mat );
 
-				tiles.add( attackerTile.level.getGameTile( attackerTile.x + (int)vec.x, attackerTile.y + (int)vec.y ) );
+				int dx = Math.round( vec.x );
+				int dy = Math.round( vec.y );
+
+				tiles.add( attackerTile.level.getGameTile( attackerTile.x + dx, attackerTile.y + dy ) );
 			}
 		}
 		else

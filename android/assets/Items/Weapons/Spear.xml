@@ -3,8 +3,8 @@
     <HitType>All</HitType>
 
     <HitPattern>
-        <Line>.</Line>
-        <Line>.</Line>
+        <Line>#</Line>
+        <Line>#</Line>
         <Line>x</Line>
     </HitPattern>
 

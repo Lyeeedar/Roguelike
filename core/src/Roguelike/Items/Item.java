@@ -41,7 +41,7 @@ public final class Item extends GameEventHandler
 	public Sprite hitEffect;
 	public Array<EquipmentSlot> slots = new Array<EquipmentSlot>();
 	public ItemCategory category;
-	public String type;
+	public String type = "";
 	public boolean canStack;
 	public int count = 1;
 	public Light light;
@@ -614,7 +614,7 @@ public final class Item extends GameEventHandler
 			}
 
 			String[] hitTypeData = xml.get( "HitType" ).split( "[\\(\\)]" );
-			wepDef.hitType = HitType.valueOf( hitTypeData[0] );
+			wepDef.hitType = HitType.valueOf( hitTypeData[0].toUpperCase() );
 			wepDef.hitData = hitTypeData.length > 1 ? hitTypeData[1] : null;
 
 			Element hitPatternElement = xml.getChildByName( "HitPattern" );
@@ -625,8 +625,9 @@ public final class Item extends GameEventHandler
 			for (int y = 0; y < hitPatternElement.getChildCount(); y++)
 			{
 				Element lineElement = hitPatternElement.getChild( y );
+				String text = lineElement.getText();
 
-				hitGrid[ y ] = lineElement.getText().toCharArray();
+				hitGrid[ y ] = text.toCharArray();
 
 				for (int x = 0; x < hitGrid[ y ].length; x++)
 				{
@@ -642,10 +643,10 @@ public final class Item extends GameEventHandler
 			{
 				for (int x = 0; x < hitGrid[0].length; x++)
 				{
-					if (hitGrid[y][x] == '.')
+					if (hitGrid[y][x] == '#')
 					{
 						int dx = x - centralPoint.x;
-						int dy = y - centralPoint.y;
+						int dy = centralPoint.y - y;
 
 						wepDef.hitPoints.add( new Point(dx, dy) );
 					}

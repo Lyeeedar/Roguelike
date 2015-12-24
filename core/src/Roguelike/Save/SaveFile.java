@@ -305,6 +305,7 @@ public final class SaveFile
 		kryo.register( Element.class );
 		kryo.register( DFPRoom.class );
 		kryo.register( Item.class );
+		kryo.register( Item.WeaponDefinition.class );
 		kryo.register( Light.class );
 		kryo.register( ShadowCastCache.class );
 		kryo.register( EnumBitflag.class );
@@ -335,6 +336,7 @@ public final class SaveFile
 		kryo.register( Statistic.class );
 		kryo.register( Direction.class );
 		kryo.register( GameTile.OrbType.class );
+		kryo.register( Item.WeaponDefinition.HitType.class );
 
 		kryo.register( ConstantEvent.class );
 		kryo.register( DamageEvent.class );

@@ -240,7 +240,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	{
 		if ( range > 0 ) { return range; }
 		Item item = caster.getInventory().getEquip( EquipmentSlot.WEAPON );
-		if ( item != null ) { return item.getRange( caster ); }
+		//if ( item != null ) { return item.getRange( caster ); }
 		return 1;
 	}
 
