@@ -1,0 +1,27 @@
+<Active>
+
+    <Name>Animal Companion</Name>
+    <Description>Summon an animal ally.</Description>
+
+    <Cooldown>100</Cooldown>
+    <Range>2</Range>
+
+    <Icon>
+        <Name>Abilities/Life/KnitWounds</Name>
+        <Colour><RGB>175,255,47</RGB></Colour>
+    </Icon>
+
+    <HitSprite>
+        <Name>AbilitySprites/Heal/Heal</Name>
+        <UpdateRate>0.1</UpdateRate>
+        <Colour><RGB>175,255,47</RGB></Colour>
+        <Sound><Name>whoosh</Name></Sound>
+    </HitSprite>
+
+    <Targeting><Tile Type="Empty"/></Targeting>
+
+    <Effect>
+        <Summon>Enemies/Goblin/GoblinGrunt</Summon>
+    </Effect>
+
+</Active>

@@ -79,6 +79,7 @@ public class GameEntity extends Entity
 
 			if ( se.duration <= 0 )
 			{
+				se.onExpire( this );
 				itr.remove();
 			}
 		}

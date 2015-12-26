@@ -2,6 +2,7 @@ package Roguelike.GameEvent;
 
 import java.util.HashMap;
 
+import Roguelike.GameEvent.OnExpire.AbstractOnExpireEvent;
 import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.Tasks.AbstractTask;
@@ -32,6 +33,7 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnTaskEvent> onWaitEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnTaskEvent> onUseAbilityEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnDeathEvent> onDeathEvents = new Array<AbstractOnDeathEvent>();
+	public Array<AbstractOnExpireEvent> onExpireEvents = new Array<AbstractOnExpireEvent>();
 
 	public Array<Object[]> extraData = new Array<Object[]>();
 
@@ -285,6 +287,27 @@ public abstract class GameEventHandler implements IGameObject
 	}
 
 	// ----------------------------------------------------------------------
+	public void onExpire( Entity entity )
+	{
+		boolean successfulProcess = false;
+		for ( AbstractOnExpireEvent event : onExpireEvents )
+		{
+			appendExtraVariables( entity.getVariableMap() );
+			boolean success = event.handle( entity );
+
+			if ( success )
+			{
+				successfulProcess = true;
+			}
+		}
+
+		if ( successfulProcess )
+		{
+			processed();
+		}
+	}
+
+	// ----------------------------------------------------------------------
 	public void processed()
 	{
 
@@ -386,6 +409,16 @@ public abstract class GameEventHandler implements IGameObject
 			{
 				Element onUseAbilityElement = onUseAbilityElements.getChild( i );
 				onUseAbilityEvents.add( AbstractOnTaskEvent.load( onUseAbilityElement ) );
+			}
+		}
+
+		Element onExpireElements = xml.getChildByName( "OnExpire" );
+		if ( onExpireElements != null )
+		{
+			for ( int i = 0; i < onExpireElements.getChildCount(); i++ )
+			{
+				Element onExpireElement = onExpireElements.getChild( i );
+				onExpireEvents.add( AbstractOnExpireEvent.load( onExpireElement ) );
 			}
 		}
 	}
@@ -517,6 +550,20 @@ public abstract class GameEventHandler implements IGameObject
 			lines.add( "On Death:" );
 
 			for ( AbstractOnDeathEvent event : onDeathEvents )
+			{
+				Array<String> elines = event.toString( variableMap );
+				for ( String line : elines )
+				{
+					lines.add( "   " + line );
+				}
+			}
+		}
+
+		if ( onExpireEvents.size > 0 )
+		{
+			lines.add( "On Expire:" );
+
+			for ( AbstractOnExpireEvent event : onExpireEvents )
 			{
 				Array<String> elines = event.toString( variableMap );
 				for ( String line : elines )

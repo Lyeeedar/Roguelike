@@ -11,7 +11,10 @@
 	<CanSwap>true</CanSwap>
 
     <Abilities>
-        <PowerAttack>PowerAttack</PowerAttack>
+
+		<Summon>AnimalCompanion</Summon>
+
+		<PowerAttack>PowerAttack</PowerAttack>
     </Abilities>
 
 	<Sprite>

@@ -76,6 +76,7 @@ public class Recipe
 		item1.onWaitEvents.addAll( item2.onWaitEvents );
 		item1.onUseAbilityEvents.addAll( item2.onUseAbilityEvents );
 		item1.onDeathEvents.addAll( item2.onDeathEvents );
+		item1.onExpireEvents.addAll( item2.onExpireEvents );
 	}
 
 	public static Item loadModifier( String modifier, int quality )

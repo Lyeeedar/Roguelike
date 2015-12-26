@@ -1,0 +1,16 @@
+<StatusEffect>
+    <Name>Summon</Name>
+    <Description>A creature summoned from beyond for a certain length of time.</Description>
+    <Duration>5</Duration>
+
+    <Icon>
+        <Name>Skills/Burning</Name>
+    </Icon>
+
+    <Events>
+       <OnExpire>
+           <Kill />
+       </OnExpire>
+    </Events>
+
+</StatusEffect>

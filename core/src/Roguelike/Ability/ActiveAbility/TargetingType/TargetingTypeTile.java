@@ -7,18 +7,29 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class TargetingTypeTile extends AbstractTargetingType
 {
-	private boolean notSelf;
+	public enum TileType
+	{
+		ANY,
+		NOTSELF,
+		EMPTY
+	}
+
+	public TileType type;
 
 	@Override
 	public void parse(Element xml)
 	{
-		notSelf = xml.getChildByName("NotSelf") != null;
+		type = TileType.valueOf( xml.getAttribute( "Type", "Any" ).toUpperCase() );
 	}
 
 	@Override
 	public boolean isTargetValid(ActiveAbility ab, GameTile tile)
 	{
-		if (notSelf)
+		if (type == TileType.EMPTY)
+		{
+			return tile.entity == null;
+		}
+		else if ( type != TileType.NOTSELF )
 		{
 			return tile.entity == null || tile.entity != ab.getCaster();
 		}
@@ -33,7 +44,7 @@ public class TargetingTypeTile extends AbstractTargetingType
 	public AbstractTargetingType copy()
 	{
 		TargetingTypeTile t = new TargetingTypeTile();
-		t.notSelf = notSelf;
+		t.type = type;
 
 		return t;
 	}
