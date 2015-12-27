@@ -88,10 +88,17 @@ public class ActionProcessInput extends AbstractAction
 						}
 					}
 				}
-				else if ( tile.entity != null && tile.entity.isAllies( entity ) && tile.entity.dialogue != null )
+				else if ( tile.entity != null )
 				{
-					dialogueWithinRange = Math.abs( Global.CurrentLevel.player.tile[0][0].x - tile.x ) <= 1
-							&& Math.abs( Global.CurrentLevel.player.tile[0][0].y - tile.y ) <= 1;
+					if (!tile.entity.isAllies( entity ))
+					{
+						entity.weaponSheathed = false;
+					}
+					else if ( tile.entity.dialogue != null )
+					{
+						dialogueWithinRange = Math.abs( Global.CurrentLevel.player.tile[0][0].x - tile.x ) <= 1
+													  && Math.abs( Global.CurrentLevel.player.tile[0][0].y - tile.y ) <= 1;
+					}
 				}
 			}
 

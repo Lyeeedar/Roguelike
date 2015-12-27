@@ -13,6 +13,8 @@ import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
+import com.badlogic.gdx.math.Matrix3;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -35,43 +37,48 @@ public class ActionMoveToAttack extends AbstractAction
 			return State;
 		}
 
-		Item wep = entity.getInventory().getEquip( EquipmentSlot.WEAPON );
-		int range = 1;
+		Array<Point> possibleTiles = new Array<Point>();
+		Item weapon = entity.getInventory().getEquip( EquipmentSlot.WEAPON );
 
-		if ( wep != null )
+		if (weapon != null && weapon.wepDef != null)
 		{
-			String type = wep.type;
-
-			range = wep.getStatistic( entity.getBaseVariableMap(), Statistic.PERCEPTION );
-			if ( range == 0 )
+			for (Direction dir : Direction.values())
 			{
-				if ( type.equals( "spear" ) )
+				// For each direction, find the attack points
+
+				Matrix3 mat = new Matrix3();
+				mat.setToRotation( dir.getAngle() );
+
+				Vector3 vec = new Vector3();
+
+				for (Point p : weapon.wepDef.hitPoints)
 				{
-					range = 2;
-				}
-				else if ( type.equals( "bow" ) || type.equals( "wand" ) )
-				{
-					range = 4;
-				}
-				else
-				{
-					range = 1;
+					vec.set(p.x, p.y, 0);
+					vec.mul( mat );
+
+					int dx = Math.round( vec.x );
+					int dy = Math.round( vec.y );
+
+					Point newPos = Global.PointPool.obtain().set( target.x - dx, target.y - dy );
+					GameTile tile = entity.tile[0][0].level.getGameTile( newPos );
+
+					if ( tile != null && tile.getPassable( entity.getTravelType(), entity ) )
+					{
+						possibleTiles.add( newPos );
+					}
 				}
 			}
 		}
-
-		Array<Point> possibleTiles = new Array<Point>();
-
-		for ( Direction dir : Direction.values() )
+		else
 		{
-			if ( dir == Direction.CENTER )
+			for ( Direction dir : Direction.values() )
 			{
-				continue;
-			}
+				if ( dir == Direction.CENTER )
+				{
+					continue;
+				}
 
-			for ( int i = 0; i < range; i++ )
-			{
-				Point newPos = Global.PointPool.obtain().set( target.x + dir.getX() * ( i + 1 ), target.y + dir.getY() * ( i + 1 ) );
+				Point newPos = Global.PointPool.obtain().set( target.x + dir.getX(), target.y + dir.getY() );
 				GameTile tile = entity.tile[0][0].level.getGameTile( newPos );
 
 				if ( !tile.getPassable( WeaponPassability, entity ) )

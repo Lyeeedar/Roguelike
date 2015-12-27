@@ -16,6 +16,12 @@ public class ActionAttack extends AbstractAction
 	@Override
 	public BehaviourTreeState evaluate( GameEntity entity )
 	{
+		if ( entity.weaponSheathed )
+		{
+			State = BehaviourTreeState.FAILED;
+			return State;
+		}
+
 		Point target = (Point) getData( key, null );
 
 		// if no target, fail

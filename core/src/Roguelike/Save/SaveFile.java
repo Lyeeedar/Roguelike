@@ -11,6 +11,7 @@ import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.GameEvent.Damage.*;
 import Roguelike.GameEvent.OnDeath.FieldOnDeathEvent;
 import Roguelike.GameEvent.OnDeath.HealOnDeathEvent;
+import Roguelike.GameEvent.OnExpire.KillOnExpireEvent;
 import Roguelike.GameEvent.OnTask.CancelTaskEvent;
 import Roguelike.GameEvent.OnTask.CostTaskEvent;
 import Roguelike.GameEvent.OnTask.DamageTaskEvent;
@@ -352,5 +353,6 @@ public final class SaveFile
 		kryo.register( StatusTaskEvent.class );
 		kryo.register( DamageOverTimeEvent.class );
 		kryo.register( HealOverTimeEvent.class );
+		kryo.register( KillOnExpireEvent.class );
 	}
 }

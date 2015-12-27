@@ -306,8 +306,16 @@ public class Level
 
 		float delay = 0;
 
-		delay = dropOrbs( essence, delay, GameTile.OrbType.EXPERIENCE, source, possibleTiles );
-		delay = dropOrbs( 10, delay, GameTile.OrbType.HEALTH, source, possibleTiles );
+		if (essence > 0)
+		{
+			delay = dropOrbs( essence, delay, GameTile.OrbType.EXPERIENCE, source, possibleTiles );
+
+			if ( MathUtils.random( 5 ) == 0 )
+			{
+				int amount = Math.max( 10, (player.getStatistic( Statistic.CONSTITUTION ) * 10) / 5 );
+				delay = dropOrbs( amount, delay, GameTile.OrbType.HEALTH, source, possibleTiles );
+			}
+		}
 
 		for ( Item i : inventory.m_items )
 		{
@@ -1148,6 +1156,8 @@ public class Level
 
 	private boolean hasActiveEffects( Entity e )
 	{
+		if ( e.extraUIHP > 0 ) { return true; }
+
 		if ( e.tile[0][0].spriteEffects.size > 0 ) { return true; }
 
 		boolean activeEffects = false;

@@ -21,6 +21,7 @@ public class EffectTypeSummon extends AbstractEffectType
 		GameEntity entity = GameEntity.load( entityName );
 
 		entity.factions = aa.getCaster().factions;
+		entity.essence = 0;
 
 		StatusEffect status = StatusEffect.load( "Summon" );
 		status.duration = duration;

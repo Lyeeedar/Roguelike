@@ -761,7 +761,34 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				cy += offset[ 1 ];
 			}
 
-			EntityStatusRenderer.draw( e, batch, cx, cy, Global.TileSize, Global.TileSize, 1.0f / 12.0f );
+			Color colour = null;
+
+			if (e instanceof GameEntity)
+			{
+				GameEntity ge = (GameEntity)e;
+
+				if (ge.isAllies( Global.CurrentLevel.player ))
+				{
+					if (ge.getVariableMap().containsKey( "summon" ))
+					{
+						colour = Color.CYAN;
+					}
+					else
+					{
+						colour = Color.GREEN;
+					}
+				}
+				else
+				{
+					colour = Color.RED;
+				}
+			}
+			else
+			{
+				colour = Color.CYAN;
+			}
+
+			EntityStatusRenderer.draw( e, batch, cx, cy, Global.TileSize, Global.TileSize, 1.0f / 12.0f, colour );
 		}
 	}
 
