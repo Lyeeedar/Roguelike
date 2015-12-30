@@ -1,5 +1,6 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
@@ -50,24 +51,29 @@ public class ActionAttack extends AbstractAction
 			}
 		}
 
-		TaskAttack task = new TaskAttack( Direction.getDirection( target.x - cx, target.y - cy ) );
-		GameTile targetTile = entity.tile[0][0].level.getGameTile( target );
-		if ( targetTile != null
-				&& targetTile.environmentEntity != null
-				&& targetTile.environmentEntity.canTakeDamage
-				&& task.canAttackTile( entity, targetTile ) )
-		{
-			entity.tasks.add( task );
+		Direction dir = Direction.getDirection( target.x - cx, target.y - cy );
 
-			State = BehaviourTreeState.SUCCEEDED;
-			return State;
-		}
-		else if ( task.checkHitSomething( entity ) )
+		if ( dir != Direction.CENTER && ( Global.CanMoveDiagonal || dir.isCardinal() ) )
 		{
-			entity.tasks.add( task );
+			TaskAttack task = new TaskAttack( dir );
+			GameTile targetTile = entity.tile[0][0].level.getGameTile( target );
+			if ( targetTile != null
+						 && targetTile.environmentEntity != null
+						 && targetTile.environmentEntity.canTakeDamage
+						 && task.canAttackTile( entity, targetTile ) )
+			{
+				entity.tasks.add( task );
 
-			State = BehaviourTreeState.SUCCEEDED;
-			return State;
+				State = BehaviourTreeState.SUCCEEDED;
+				return State;
+			}
+			else if ( task.checkHitSomething( entity ) )
+			{
+				entity.tasks.add( task );
+
+				State = BehaviourTreeState.SUCCEEDED;
+				return State;
+			}
 		}
 
 		State = BehaviourTreeState.FAILED;

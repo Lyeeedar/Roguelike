@@ -1,5 +1,6 @@
 package Roguelike.Pathfinding;
 
+import Roguelike.Global;
 import Roguelike.Global.Passability;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
@@ -36,7 +37,14 @@ public class Pathfinder
 
 		if ( path == null )
 		{
-			path = BresenhamLine.line( startx, starty, endx, endy, Grid, true, Integer.MAX_VALUE, travelType, self );
+			if ( Global.CanMoveDiagonal )
+			{
+				path = BresenhamLine.line( startx, starty, endx, endy, Grid, true, Integer.MAX_VALUE, travelType, self );
+			}
+			else
+			{
+				path = BresenhamLine.lineNoDiag( startx, starty, endx, endy, Grid, true, Integer.MAX_VALUE, travelType, self );
+			}
 		}
 
 		return path;

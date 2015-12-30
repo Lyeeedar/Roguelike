@@ -1,5 +1,6 @@
 package Roguelike.Entity.Tasks;
 
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
@@ -12,6 +13,11 @@ public class TaskMove extends AbstractTask
 
 	public TaskMove( Direction dir )
 	{
+		if ( !Global.CanMoveDiagonal && !dir.isCardinal() )
+		{
+			throw new RuntimeException( "Invalid move direction: " + dir.toString() );
+		}
+
 		this.dir = dir;
 	}
 

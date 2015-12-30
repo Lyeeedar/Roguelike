@@ -32,6 +32,11 @@ public class TaskAttack extends AbstractTask
 
 	public TaskAttack( Direction dir )
 	{
+		if ( !Global.CanMoveDiagonal && !dir.isCardinal() )
+		{
+			throw new RuntimeException( "Invalid attack direction: " + dir.toString() );
+		}
+
 		this.dir = dir;
 	}
 
@@ -334,13 +339,21 @@ public class TaskAttack extends AbstractTask
 			Sprite sprite = hitEffect.copy();
 
 			sprite.rotation = dir.getAngle();
-			sprite.size[0] = ( maxPoint.x - minPoint.x ) + 1;
-			sprite.size[1] = ( maxPoint.y - minPoint.y ) + 1;
+			sprite.baseScale[0] = ( maxPoint.x - minPoint.x ) + 1;
+			sprite.baseScale[1] = ( maxPoint.y - minPoint.y ) + 1;
+
+
+			if (dir == Direction.WEST || dir == Direction.EAST)
+			{
+				float temp = sprite.baseScale[0];
+				sprite.baseScale[0] = sprite.baseScale[1];
+				sprite.baseScale[1] = temp;
+			}
 
 			SpriteEffect effect = new SpriteEffect( sprite, Direction.CENTER, weapon != null && weapon.light != null ? weapon.light.copyNoFlag() : null );
 
-			int px = minPoint.x;// + ( maxPoint.x - minPoint.x ) / 2;
-			int py = minPoint.y;// + ( maxPoint.y - minPoint.y ) / 2;
+			int px = minPoint.x + Math.round( ( maxPoint.x - minPoint.x ) / 2.0f );
+			int py = minPoint.y + Math.round( ( maxPoint.y - minPoint.y ) / 2.0f );
 
 			GameTile tile = attackedTiles.first().level.getGameTile( px, py );
 

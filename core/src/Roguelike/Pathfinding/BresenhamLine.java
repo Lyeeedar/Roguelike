@@ -12,6 +12,11 @@ public class BresenhamLine
 {
 	public static Array<Point> lineNoDiag( int x0, int y0, int x1, int y1 )
 	{
+		return lineNoDiag( x0, y0, x1, y1, null, false, 0, null, null );
+	}
+
+	public static Array<Point> lineNoDiag( int x0, int y0, int x1, int y1, PathfindingTile[][] Grid, boolean checkPassable, int range, EnumBitflag<Passability> travelType, Object self )
+	{
 		int xDist = Math.abs( x1 - x0 );
 		int yDist = -Math.abs( y1 - y0 );
 		int xStep = ( x0 < x1 ? +1 : -1 );
@@ -35,6 +40,11 @@ public class BresenhamLine
 				// vertical step
 				error += xDist;
 				y0 += yStep;
+			}
+
+			if ( Grid != null && (x0 < 0 || y0 < 0 || x0 >= Grid.length - 1 || y0 >= Grid[0].length - 1 || ( checkPassable && !Grid[x0][y0].getPassable( travelType, self ) ) ) )
+			{
+				break;
 			}
 
 			path.add( Global.PointPool.obtain().set( x0, y0 ) );
