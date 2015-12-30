@@ -53,7 +53,7 @@ import java.util.Random;
 public class Global
 {
 	// ----------------------------------------------------------------------
-	public static final boolean CanMoveDiagonal = true;
+	public static final boolean CanMoveDiagonal = false;
 
 	// ----------------------------------------------------------------------
 	public static final int NUM_ABILITY_SLOTS = 8;

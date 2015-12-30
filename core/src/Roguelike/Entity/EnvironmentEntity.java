@@ -214,7 +214,8 @@ public class EnvironmentEntity extends Entity
 		entity.UID = "EnvironmentEntity Stair: ID " + entity.hashCode();
 
 		entity.tile = new GameTile[entity.size][entity.size];
-		stairs.size = entity.size;
+		stairs.size[0] = entity.size;
+		stairs.size[1] = entity.size;
 
 		return entity;
 	}

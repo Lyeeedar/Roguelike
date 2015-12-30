@@ -591,7 +591,7 @@ public final class Room
 					continue;
 				}
 
-				AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], true, false, 1, GeneratorPassability, null );
+				AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], Global.CanMoveDiagonal, false, 1, GeneratorPassability, null );
 				Array<Point> path = pathfind.getPath();
 
 				for ( Point point : path )

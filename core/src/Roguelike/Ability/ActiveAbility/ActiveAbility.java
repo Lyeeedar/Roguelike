@@ -299,7 +299,8 @@ public class ActiveAbility implements IAbility, IGameObject
 			if ( useSprite != null )
 			{
 				Sprite sprite = useSprite.copy();
-				sprite.size = caster.size;
+				sprite.size[0] = caster.size;
+				sprite.size[1] = caster.size;
 
 				caster.tile[ 0 ][ 0 ].spriteEffects.add( new SpriteEffect( sprite, Direction.CENTER, light != null ? light.copyNoFlag() : null ) );
 			}
@@ -491,7 +492,8 @@ public class ActiveAbility implements IAbility, IGameObject
 					int distMoved = ( Math.abs( diff[ 0 ] ) + Math.abs( diff[ 1 ] ) ) / Global.TileSize;
 					sprite.spriteAnimation.set( 0.05f * distMoved, diff );
 				}
-				sprite.size = aoe * 2 + 1;
+				sprite.size[0] = aoe * 2 + 1;
+				sprite.size[1] = aoe * 2 + 1;
 
 				SpriteEffect effect = new SpriteEffect( sprite, Direction.CENTER, light != null ? light.copyNoFlag() : null );
 

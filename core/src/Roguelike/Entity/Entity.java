@@ -60,7 +60,8 @@ public abstract class Entity
 
 		if ( sprite != null )
 		{
-			sprite.size = size;
+			sprite.size[0] = size;
+			sprite.size[1] = size;
 		}
 
 		Element raisedSpriteElement = xml.getChildByName( "TilingSprite" );

@@ -254,6 +254,9 @@ public class TaskAttack extends AbstractTask
 			hitEffect = weapon.getWeaponHitEffect();
 		}
 
+		Point minPoint = Global.PointPool.obtain().set( Integer.MAX_VALUE, Integer.MAX_VALUE );
+		Point maxPoint = Global.PointPool.obtain().set( 0, 0 );
+
 		// Do the attack
 		for ( GameTile tile : attackedTiles )
 		{
@@ -266,31 +269,80 @@ public class TaskAttack extends AbstractTask
 				entity.attack( tile.environmentEntity, dir );
 			}
 
-			int[] diff = tile.getPosDiff( source );
+			if ( weapon == null || weapon.wepDef == null || weapon.wepDef.hitType != Item.WeaponDefinition.HitType.ALL )
+			{
+				int[] diff = tile.getPosDiff( source );
+
+				Sprite sprite = hitEffect.copy();
+
+				if ( sprite.spriteAnimation != null )
+				{
+					int distMoved = ( Math.abs( diff[ 0 ] ) + Math.abs( diff[ 1 ] ) ) / Global.TileSize;
+					sprite.spriteAnimation.set( 0.05f * distMoved, diff );
+				}
+
+				Vector2 vec = new Vector2( diff[ 0 ] * -1, diff[ 1 ] * -1 );
+				vec.nor();
+				float x = vec.x;
+				float y = vec.y;
+				double dot = 0 * x + 1 * y; // dot product
+				double det = 0 * y - 1 * x; // determinant
+				float angle = (float) Math.atan2( det, dot ) * MathUtils.radiansToDegrees;
+				sprite.rotation = angle;
+
+				if ( attackedTiles.size > 1 )
+				{
+					sprite.renderDelay = sprite.animationDelay * tile.getDist( source ) + sprite.animationDelay;
+				}
+
+				SpriteEffect effect = new SpriteEffect( sprite, Direction.CENTER, weapon != null && weapon.light != null ? weapon.light.copyNoFlag() : null );
+
+				tile.spriteEffects.add( effect );
+
+				SoundInstance sound = hitEffect.sound;
+				if ( sound != null )
+				{
+					sound.play( tile );
+				}
+			}
+			else
+			{
+				if (tile.x < minPoint.x)
+				{
+					minPoint.x = tile.x;
+				}
+				if (tile.x > maxPoint.x)
+				{
+					maxPoint.x = tile.x;
+				}
+				if (tile.y < minPoint.y)
+				{
+					minPoint.y = tile.y;
+				}
+				if (tile.y > maxPoint.y)
+				{
+					maxPoint.y = tile.y;
+				}
+
+			}
+		}
+
+		if ( weapon != null && weapon.wepDef != null && weapon.wepDef.hitType == Item.WeaponDefinition.HitType.ALL )
+		{
+			// Use a joined sprite
 
 			Sprite sprite = hitEffect.copy();
 
-			if ( sprite.spriteAnimation != null )
-			{
-				int distMoved = ( Math.abs( diff[ 0 ] ) + Math.abs( diff[ 1 ] ) ) / Global.TileSize;
-				sprite.spriteAnimation.set( 0.05f * distMoved, diff );
-			}
-
-			Vector2 vec = new Vector2( diff[ 0 ] * -1, diff[ 1 ] * -1 );
-			vec.nor();
-			float x = vec.x;
-			float y = vec.y;
-			double dot = 0 * x + 1 * y; // dot product
-			double det = 0 * y - 1 * x; // determinant
-			float angle = (float) Math.atan2( det, dot ) * MathUtils.radiansToDegrees;
-			sprite.rotation = angle;
-
-			if ( attackedTiles.size > 1 )
-			{
-				sprite.renderDelay = sprite.animationDelay * tile.getDist( source ) + sprite.animationDelay;
-			}
+			sprite.rotation = dir.getAngle();
+			sprite.size[0] = ( maxPoint.x - minPoint.x ) + 1;
+			sprite.size[1] = ( maxPoint.y - minPoint.y ) + 1;
 
 			SpriteEffect effect = new SpriteEffect( sprite, Direction.CENTER, weapon != null && weapon.light != null ? weapon.light.copyNoFlag() : null );
+
+			int px = minPoint.x;// + ( maxPoint.x - minPoint.x ) / 2;
+			int py = minPoint.y;// + ( maxPoint.y - minPoint.y ) / 2;
+
+			GameTile tile = attackedTiles.first().level.getGameTile( px, py );
 
 			tile.spriteEffects.add( effect );
 

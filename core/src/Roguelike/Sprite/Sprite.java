@@ -29,7 +29,7 @@ public final class Sprite
 
 	public float rotation;
 
-	public int size = 1;
+	public int[] size = { 1, 1 };
 
 	public Array<TextureRegion> textures;
 
@@ -175,8 +175,8 @@ public final class Sprite
 			height = trueHeight;
 		}
 
-		width = width * size;
-		height = height * size;
+		width = width * size[0];
+		height = height * size[1];
 
 		if ( animationState.mode == AnimationMode.SHRINK && animationState.isShrunk )
 		{
@@ -188,8 +188,9 @@ public final class Sprite
 		}
 
 		// Check if not onscreen
-		if ( x + width < 0 || y + height < 0 || x > Global.Resolution[0] || y > Global.Resolution[1] ) { return; // skip
-		// drawing
+		if ( x + width < 0 || y + height < 0 || x > Global.Resolution[0] || y > Global.Resolution[1] )
+		{
+			return; // skip drawing
 		}
 
 		batch.draw( texture, x, y, width / 2.0f, height / 2.0f, width, height, scaleX, scaleY, rotation );
