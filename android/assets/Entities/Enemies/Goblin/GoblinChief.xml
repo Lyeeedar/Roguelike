@@ -35,12 +35,11 @@
 
 	<Statistics>
 
-		<Attack>20</Attack>
-		<Defense>14</Defense>
+		<Attack>val+6</Attack>
+		<Defense>val+6</Defense>
 
-		<Constitution>15</Constitution>
-        <Perception>5</Perception>
-        <Speed>6</Speed>
+		<Constitution>val+5</Constitution>
+        <Speed>val+1</Speed>
 
 	</Statistics>
 

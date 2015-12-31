@@ -34,28 +34,15 @@
 	<Inventory>
 		<Equipment>
 			<Wand DropChance="rnd(5)<=1">
-			    <Name>Goblin Staff</Name>
-			    <Description>A wooden staff, adorned with spiritual symbols. Mounted on the end is a magic channeling stone.</Description>
-                <Slot>Weapon</Slot>
-				<Category>Weapon</Category>
-				<Type>Wand</Type>
-				<Events>
-					<Constant>
-						<Attack>15</Attack>
-					</Constant>
-				</Events>
+			    <Recipe>Wand</Recipe>
+				<Material>Iron</Material>
 			</Wand>
 		</Equipment>
 	</Inventory>
 
 	<Statistics>
 
-		<Attack>13</Attack>
-		<Defense>8</Defense>
-
-		<Constitution>6</Constitution>
-        <Perception>5</Perception>
-        <Speed>6</Speed>
+		<Willpower>val+5</Willpower>
 
 	</Statistics>
 

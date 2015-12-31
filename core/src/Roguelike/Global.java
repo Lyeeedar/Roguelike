@@ -819,17 +819,27 @@ public class Global
 				Element el = xml.getChild( i );
 
 				Statistic stat = Statistic.valueOf( el.getName().toUpperCase() );
-				String eqn = el.getText();
+				String eqn = el.getText().toLowerCase();
 				int newVal = values.get( stat );
 
-				ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-				expB.variable( "Value" );
-
-				Expression exp = EquationHelper.tryBuild( expB );
-				if ( exp != null )
+				if ( Global.isNumber( eqn ) )
 				{
-					exp.setVariable( "Value", newVal );
-					newVal = (int) exp.evaluate();
+					newVal = Integer.parseInt( eqn );
+				}
+				else
+				{
+					ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
+					expB.variable( "value" );
+					expB.variable( "val" );
+
+					Expression exp = EquationHelper.tryBuild( expB );
+					if ( exp != null )
+					{
+						exp.setVariable( "value", newVal );
+						exp.setVariable( "val", newVal );
+
+						newVal = (int) exp.evaluate();
+					}
 				}
 
 				values.put( stat, newVal );

@@ -7,12 +7,8 @@
 
 	<Statistics>
 
-		<Attack>16</Attack>
-		<Defense>10</Defense>
-
-		<Constitution>5</Constitution>
-        <Perception>4</Perception>
-        <Speed>6</Speed>
+		<Attack>val+3</Attack>
+		<Defense>+5</Defense>
 
 	</Statistics>
 

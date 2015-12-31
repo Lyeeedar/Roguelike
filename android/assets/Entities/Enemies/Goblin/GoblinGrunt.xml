@@ -5,15 +5,4 @@
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
 
-	<Statistics>
-
-		<Attack>13</Attack>
-		<Defense>7</Defense>
-
-		<Constitution>5</Constitution>
-        <Perception>4</Perception>
-        <Speed>6</Speed>
-
-	</Statistics>
-
 </Entity>

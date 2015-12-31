@@ -18,6 +18,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
+import java.util.Iterator;
+
 public class ActionMoveToAttack extends AbstractAction
 {
 	// ----------------------------------------------------------------------
@@ -89,6 +91,46 @@ public class ActionMoveToAttack extends AbstractAction
 				{
 					possibleTiles.add( newPos );
 				}
+			}
+		}
+
+		Array<Point> shadowCast = null;
+		GameTile targetTile = entity.tile[0][0].level.getGameTile( target );
+		if (targetTile.entity != null)
+		{
+			shadowCast = targetTile.entity.visibilityCache.getCurrentShadowCast();
+		}
+		else if (targetTile.environmentEntity != null)
+		{
+			targetTile.environmentEntity.updateShadowCast();
+			shadowCast = targetTile.environmentEntity.visibilityCache.getCurrentShadowCast();
+		}
+		else
+		{
+			// Theres nothing there to attack, so give up
+			State = BehaviourTreeState.FAILED;
+			return State;
+		}
+
+		// minimise possible tiles
+		Iterator<Point> itr = possibleTiles.iterator();
+		while (itr.hasNext())
+		{
+			Point p = itr.next();
+
+			boolean found = false;
+			for (Point visibleP : shadowCast)
+			{
+				if (visibleP.x == p.x && visibleP.y == p.y)
+				{
+					found = true;
+					break;
+				}
+			}
+
+			if (!found)
+			{
+				itr.remove();
 			}
 		}
 

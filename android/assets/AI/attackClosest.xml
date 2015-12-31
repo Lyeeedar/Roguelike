@@ -3,7 +3,8 @@
 		<Priority>
 		    <Attack Key="EnemyPos"></Attack>
 		    <Until State="Running">		    
-				<MoveToAttack Key="EnemyPos"></MoveTo>
+				<MoveToAttack Key="EnemyPos"></MoveToAttack>
+				<MoveTo Key="EnemyPos"></MoveTo>
 				<ClearValue Key="EnemyPos"></ClearValue>
 			</Until>
 		</Priority>	
