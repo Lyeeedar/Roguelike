@@ -19,6 +19,7 @@ import Roguelike.Items.Item;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
+import Roguelike.Sprite.SpriteAnimation.StretchAnimation;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Sprite.TilingSprite;
 import Roguelike.Tiles.GameTile;
@@ -1268,11 +1269,39 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean touchDown( int screenX, int screenY, int pointer, int button )
 	{
+		addTouchAction( screenX, Global.ScreenSize[1] - screenY );
+
+
 		if ( tooltip != null )
 		{
 			tooltip.setVisible( false );
 			tooltip.remove();
 			tooltip = null;
+		}
+
+		{
+			Vector3 mousePos = camera.unproject( new Vector3( screenX, screenY, 0 ) );
+
+			int mousePosX = (int) mousePos.x;
+			int mousePosY = (int) mousePos.y;
+
+			int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
+			int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
+
+			int x = ( mousePosX - offsetx ) / Global.TileSize;
+			int y = ( mousePosY - offsety ) / Global.TileSize;
+
+			GameTile tile = Global.CurrentLevel.getGameTile( x, y );
+
+			if ( tile != null )
+			{
+				Sprite sprite = AssetManager.loadSprite( "Oryx/uf_split/uf_interface/uf_interface_460" );
+				sprite.spriteAnimation = new StretchAnimation( 0.5f, new int[]{1, 1}, 0, StretchAnimation.StretchEquation.EXPAND );
+
+				SpriteEffect effect = new SpriteEffect( sprite );
+
+				tile.spriteEffects.add( effect );
+			}
 		}
 
 		clearContextMenu();
@@ -1905,6 +1934,18 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.setPosition( Global.Resolution[ 0 ] / 2 + Global.TileSize / 2, Global.Resolution[ 1 ] / 2 + Global.TileSize );
 		stage.addActor( table );
 		table.setVisible( true );
+	}
+
+	// ----------------------------------------------------------------------
+	public void addTouchAction( float x, float y )
+	{
+		Widget widget = new Label("O", skin);//new SpriteWidget( AssetManager.loadSprite( "Oryx/uf_split/uf_interface/uf_interface_460" ), 32, 32 );
+		//widget.setScale( 0.1f );
+		widget.addAction( new SequenceAction( Actions.delay( 2 ), Actions.removeActor() ) );
+
+		widget.setPosition( x - widget.getWidth()/2, y - widget.getHeight()/2 );
+		stage.addActor( widget );
+		widget.setVisible( true );
 	}
 
 	// ----------------------------------------------------------------------

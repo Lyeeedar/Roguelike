@@ -1,6 +1,7 @@
 package Roguelike.UI;
 
 import Roguelike.AssetManager;
+import Roguelike.Global;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 
@@ -368,6 +369,7 @@ public abstract class TilePanel extends Widget
 				tooltip = null;
 			}
 			GameScreen.Instance.clearContextMenu();
+			GameScreen.Instance.addTouchAction( event.getStageX(), event.getStageY() );
 
 			boolean mouseOverUI = getMouseOverUI( x, y );
 			GameScreen.Instance.mouseOverUI = mouseOverUI;

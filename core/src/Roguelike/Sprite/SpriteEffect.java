@@ -9,6 +9,11 @@ public final class SpriteEffect
 	public Direction Corner;
 	public Light light;
 
+	public SpriteEffect( Sprite sprite )
+	{
+		this( sprite, Direction.CENTER, null );
+	}
+
 	public SpriteEffect( Sprite sprite, Direction Corner, Light light )
 	{
 		this.Sprite = sprite;

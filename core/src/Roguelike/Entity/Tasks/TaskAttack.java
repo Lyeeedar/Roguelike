@@ -352,8 +352,14 @@ public class TaskAttack extends AbstractTask
 
 			SpriteEffect effect = new SpriteEffect( sprite, Direction.CENTER, weapon != null && weapon.light != null ? weapon.light.copyNoFlag() : null );
 
-			int px = minPoint.x + Math.round( ( maxPoint.x - minPoint.x ) / 2.0f );
-			int py = minPoint.y + Math.round( ( maxPoint.y - minPoint.y ) / 2.0f );
+			int px = minPoint.x;
+			int py = minPoint.y;
+
+			float dx = ( maxPoint.x - minPoint.x ) / 2.0f;
+			float dy = ( maxPoint.y - minPoint.y ) / 2.0f;
+
+			px += dir.getX() < 0 ? Math.ceil( dx ) : Math.floor( dx );
+			py += dir.getY() < 0 ? Math.ceil( dy ) : Math.floor( dy );
 
 			GameTile tile = attackedTiles.first().level.getGameTile( px, py );
 
