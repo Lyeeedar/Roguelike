@@ -282,6 +282,14 @@ public final class Room
 		EnumBitflag<Direction> solid = new EnumBitflag<Direction>();
 		for ( Direction dir : Direction.values() )
 		{
+			if ( !Global.CanMoveDiagonal )
+			{
+				if ( !dir.isCardinal() )
+				{
+					solid.setBit( dir );
+				}
+			}
+
 			int x1 = x + dir.getX();
 			int y1 = y + dir.getY();
 

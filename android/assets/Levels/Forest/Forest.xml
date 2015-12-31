@@ -43,9 +43,9 @@
     </Entrance>
 
 	<Ambient>
-		<Red>0.45</Red>
-		<Green>0.6</Green>
-		<Blue>0.2</Blue>
+		<Red>0.05</Red>
+		<Green>0.02</Green>
+		<Blue>0.1</Blue>
 		<Alpha>1</Alpha>
 	</Ambient>
 

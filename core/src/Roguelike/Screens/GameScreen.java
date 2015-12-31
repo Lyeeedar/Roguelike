@@ -43,12 +43,14 @@ import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
@@ -160,6 +162,19 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			stage.addActor( examineButton );
 		}
 
+		sheathButton = new Button( skin, "sheath" );
+		sheathButton.addListener( new ChangeListener()
+		{
+			@Override
+			public void changed( ChangeEvent event, Actor actor )
+			{
+				Global.CurrentLevel.player.weaponSheathed = sheathButton.isChecked();
+			}
+		} );
+
+		sheathButton.setPosition( Global.Resolution[0] - sheathButton.getWidth() - 20, 20 );
+		stage.addActor( sheathButton );
+
 		relayoutUI();
 	}
 
@@ -205,6 +220,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		Global.CurrentLevel.update( delta );
 		processPickupQueue();
+
+		sheathButton.setChecked( Global.CurrentLevel.player.weaponSheathed );
 
 		if (contextMenu == null)
 		{
@@ -749,6 +766,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		for ( Entity e : hasStatus )
 		{
+			if (!e.tile[0][0].visible)
+			{
+				continue;
+			}
+
 			int x = e.tile[ 0 ][ 0 ].x;
 			int y = e.tile[ 0 ][ 0 ].y;
 
@@ -2152,6 +2174,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private AbilityPanel abilityPanel;
 	private EquipmentPanel equipmentPanel;
 	private Skin skin;
+	private Button sheathButton;
 
 	// ----------------------------------------------------------------------
 	private long diff, start = System.currentTimeMillis();

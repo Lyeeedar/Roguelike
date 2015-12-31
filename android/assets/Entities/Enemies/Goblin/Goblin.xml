@@ -14,7 +14,7 @@
 			    <Opaque>false</Opaque>
 			</EnvironmentData>
 
-			<Coverage>10</Coverage>
+			<Coverage>2</Coverage>
 		</Feature>
 
 		<Feature>
@@ -28,7 +28,7 @@
 			    <Opaque>false</Opaque>
 			</EnvironmentData>
 
-			<Coverage>10</Coverage>
+			<Coverage>3</Coverage>
 		</Feature>
 
 		<Feature>
@@ -38,6 +38,8 @@
 			    <Sprite>
 			        <Name>LevelDetail/GoblinTent</Name>
 			    </Sprite>
+
+				<Size>2</Size>
 
 			    <Passable>false</Passable>
 			    <Opaque>false</Opaque>
@@ -51,21 +53,6 @@
 
 			<RangeMin>60</RangeMin>
 			<Coverage>1</Coverage>
-		</Feature>
-
-		<Feature>
-			<Name>Loot</Name>
-			<Placement>Centre</Placement>
-			<EnvironmentData>
-			    <Sprite>
-			        <Name>LevelDetail/BagPile</Name>
-			    </Sprite>
-			    <Passable>false</Passable>
-			    <Opaque>false</Opaque>
-			</EnvironmentData>
-
-			<RangeMin>60</RangeMin>
-			<Coverage>5</Coverage>
 		</Feature>
 
 	</Features>
