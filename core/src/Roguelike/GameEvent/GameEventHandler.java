@@ -424,11 +424,11 @@ public abstract class GameEventHandler implements IGameObject
 	}
 
 	// ----------------------------------------------------------------------
-	public Array<String> toString( HashMap<String, Integer> variableMap )
+	public Array<String> toString( HashMap<String, Integer> variableMap, boolean skipStats )
 	{
 		Array<String> lines = new Array<String>();
 
-		if ( constantEvent != null )
+		if ( constantEvent != null && !skipStats )
 		{
 			lines.addAll( constantEvent.toString( variableMap ) );
 		}

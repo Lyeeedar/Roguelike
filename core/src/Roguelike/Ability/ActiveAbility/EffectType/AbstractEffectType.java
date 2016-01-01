@@ -5,6 +5,7 @@ import java.util.HashMap;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Tiles.GameTile;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
@@ -17,7 +18,7 @@ public abstract class AbstractEffectType
 
 	public abstract AbstractEffectType copy();
 
-	public abstract String toString( ActiveAbility aa );
+	public abstract Array<String> toString( ActiveAbility aa );
 
 	public static AbstractEffectType load( Element xml )
 	{

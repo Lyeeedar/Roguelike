@@ -107,7 +107,7 @@ public final class StatusTaskEvent extends AbstractOnTaskEvent
 		StatusEffect s = StatusEffect.load( status, parent );
 
 		lines.add( "Spawn a status:" );
-		lines.addAll( s.toString( variableMap ) );
+		lines.addAll( s.toString( variableMap, false ) );
 
 		return lines;
 	}

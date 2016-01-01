@@ -124,15 +124,15 @@ public class EffectTypeStatus extends AbstractEffectType
 	}
 
 	@Override
-	public String toString( ActiveAbility aa )
+	public Array<String> toString( ActiveAbility aa )
 	{
 		Array<String> lines = new Array<String>();
 
 		lines.add( "Spawns a status:" );
 
 		StatusEffect status = StatusEffect.load( statusData, aa );
-		lines.addAll( status.toString( aa.getVariableMap() ) );
+		lines.addAll( status.toString( aa.getVariableMap(), false ) );
 
-		return Global.join( "\n", lines);
+		return lines;
 	}
 }

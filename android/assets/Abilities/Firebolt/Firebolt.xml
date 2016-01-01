@@ -35,7 +35,7 @@
 
     <Effect>
         <Damage>
-            <Attack>50 + 5 * level</Attack>
+            <Attack>100 + 5 * level</Attack>
             <Willpower>1</Willpower>
         </Damage>
     </Effect>

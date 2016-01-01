@@ -62,17 +62,23 @@ public class EffectTypeDamage extends AbstractEffectType
 	}
 
 	@Override
-	public String toString( ActiveAbility aa )
+	public Array<String> toString( ActiveAbility aa )
 	{
 		HashMap<String, Integer> variableMap = calculateVariableMap( aa );
 
 		Array<String> lines = new Array<String>();
 
-		int damage = Global.calculateScaledAttack( variableMap, aa.getVariableMap() );
+		float damage = Global.calculateScaledAttack( variableMap, aa.getVariableMap() );
+		damage /= 100.0f;
+		damage *= aa.getCaster().getVariable( Statistic.ATTACK );
 
-		lines.add( "Total Damage: " + damage );
+		lines.add( "Total Damage: " + (int)damage );
 
-		lines.add( "Base Attack: " + variableMap.get( Statistic.ATTACK.toString().toLowerCase() ) );
+		lines.add( "---" );
+
+		lines.add( "Weapon Damage: " + variableMap.get( Statistic.ATTACK.toString().toLowerCase() ) + "%" );
+
+		lines.add( "---" );
 
 		lines.add( "Scales By:" );
 
@@ -82,17 +88,22 @@ public class EffectTypeDamage extends AbstractEffectType
 
 			if ( val > 0 )
 			{
-				lines.add( Global.capitalizeString( stat.toString() ) + " : " + val );
+				Global.ScaleLevel scale = Global.ScaleLevel.values()[val-1];
+
+				lines.add( Global.capitalizeString( stat.toString() ) + " : " + scale );
 			}
 		}
 
-		return Global.join( "\n", lines );
+		return lines;
 	}
 
 	private void applyToEntity( Entity target, ActiveAbility aa, HashMap<String, Integer> variableMap )
 	{
-		int atk = Global.calculateScaledAttack( variableMap, aa.getVariableMap() );
-		Global.calculateDamage( aa.getCaster(), target, atk, target.getVariable( Statistic.DEFENSE ), true );
+		float damage = Global.calculateScaledAttack( variableMap, aa.getVariableMap() );
+		damage /= 100.0f;
+		damage *= aa.getCaster().getVariable( Statistic.ATTACK );
+
+		Global.calculateDamage( aa.getCaster(), target, (int)damage, target.getVariable( Statistic.DEFENSE ), true );
 	}
 
 	private HashMap<String, Integer> calculateVariableMap( ActiveAbility aa )

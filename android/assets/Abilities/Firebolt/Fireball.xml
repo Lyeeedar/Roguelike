@@ -42,7 +42,7 @@
 
     <Effect>
         <Damage>
-            <Attack>100 + 10 * level</Attack>
+            <Attack>120 + 5 * level</Attack>
             <Willpower>1</Willpower>
         </Damage>
     </Effect>

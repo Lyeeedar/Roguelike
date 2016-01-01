@@ -181,8 +181,10 @@ public class EffectTypeTeleport extends AbstractEffectType
 	}
 
 	@Override
-	public String toString( ActiveAbility aa )
+	public Array<String> toString( ActiveAbility aa )
 	{
+		Array<String> lines = new Array<String>(  );
+
 		String line = "";
 
 		line += Global.capitalizeString( style.toString() ) + "s the ";
@@ -192,6 +194,8 @@ public class EffectTypeTeleport extends AbstractEffectType
 
 		line += "to a point within " + distance;
 
-		return line;
+		lines.add( line );
+
+		return lines;
 	}
 }

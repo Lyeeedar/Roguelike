@@ -1,5 +1,6 @@
 package Roguelike.Ability.ActiveAbility.EffectType;
 
+import com.badlogic.gdx.utils.Array;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
@@ -96,8 +97,10 @@ public class EffectTypeField extends AbstractEffectType
 	}
 
 	@Override
-	public String toString( ActiveAbility aa )
+	public Array<String> toString( ActiveAbility aa )
 	{
-		return "Has a chance of creating " + fieldName;
+		Array<String> lines = new Array<String>(  );
+		lines.add( "Has a chance of creating " + fieldName );
+		return lines;
 	}
 }

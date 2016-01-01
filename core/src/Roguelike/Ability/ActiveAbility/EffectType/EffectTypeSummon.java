@@ -5,6 +5,7 @@ import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 
 /**
@@ -49,8 +50,10 @@ public class EffectTypeSummon extends AbstractEffectType
 	}
 
 	@Override
-	public String toString( ActiveAbility aa )
+	public Array<String> toString( ActiveAbility aa )
 	{
-		return "Summons " + entityName + " for " + duration + " turns.";
+		Array<String> lines = new Array<String>(  );
+		lines.add( "Summons " + entityName + " for " + duration + " turns." );
+		return lines;
 	}
 }

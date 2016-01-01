@@ -30,6 +30,7 @@ import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
+import Roguelike.UI.Seperator;
 import Roguelike.Util.EnumBitflag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
@@ -725,6 +726,9 @@ public class ActiveAbility implements IAbility, IGameObject
 		table.add( descLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 		table.row();
 
+		table.add( new Seperator( skin, false ) ).expandX().fillX();
+		table.row();
+
 		table.add( new Label( "Cooldown: " + cooldown, skin ) ).expandX().left();
 		table.row();
 
@@ -753,17 +757,28 @@ public class ActiveAbility implements IAbility, IGameObject
 			table.row();
 		}
 
-		table.add( new Label( "", skin ) );
+		table.add( new Seperator( skin, false ) ).expandX().fillX();
 		table.row();
 
 		for ( AbstractEffectType effect : effectTypes )
 		{
-			String string = effect.toString( this );
-			Label label = new Label( string, skin );
-			label.setWrap( true );
+			Array<String> lines = effect.toString( this );
+			for (String line : lines)
+			{
+				if (line.equals( "---" ))
+				{
+					table.add( new Seperator( skin, false ) ).expandX().fillX();
+				}
+				else
+				{
+					Label lineLabel = new Label( line, skin );
+					lineLabel.setWrap( true );
+					table.add( lineLabel ).expandX().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) ).padBottom( 5 );
+					table.row();
+				}
 
-			table.add( label ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) ).padBottom( 5 );
-			table.row();
+				table.row();
+			}
 		}
 
 		if ( !hasValidTargets )

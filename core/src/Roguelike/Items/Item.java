@@ -15,6 +15,7 @@ import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Tiles.Point;
+import Roguelike.UI.Seperator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -188,9 +189,23 @@ public final class Item extends GameEventHandler
 		table.add( new Label( "", skin ) );
 		table.row();
 
-		Label statLabel = new Label( Global.join( "\n", toString( entity.getBaseVariableMap() ) ), skin );
-		statLabel.setWrap( true );
-		table.add( statLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
+		Array<String> lines = toString( entity.getVariableMap(), false );
+		for (String line : lines)
+		{
+			if (line.equals( "---" ))
+			{
+				table.add( new Seperator( skin, false ) ).expandX().fillX();
+			}
+			else
+			{
+				Label lineLabel = new Label( line, skin );
+				lineLabel.setWrap( true );
+				table.add( lineLabel ).expandX().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
+				table.row();
+			}
+
+			table.row();
+		}
 
 		return table;
 	}
@@ -215,6 +230,9 @@ public final class Item extends GameEventHandler
 		table.add( descLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 		table.row();
 
+		table.add( new Seperator( skin, false ) ).expandX().fillX();
+		table.row();
+
 		int oldDam = other != null ? Global.calculateScaledAttack( Statistic.statsBlockToVariableBlock( other.getStatistics( entity.getVariableMap() ) ), entity.getVariableMap() ) : 0;
 		int newDam = Global.calculateScaledAttack( Statistic.statsBlockToVariableBlock( getStatistics( entity.getVariableMap() ) ), entity.getVariableMap() );
 
@@ -236,12 +254,49 @@ public final class Item extends GameEventHandler
 		table.add( new Label( damText, skin ) ).expandX().left();
 		table.row();
 
+		table.add( new Seperator( skin, false ) ).expandX().fillX();
+		table.row();
+
 		table.add( new Label( "Scales with:", skin ) ).expandX().left();
 		table.row();
 
-		Label statLabel = new Label( Global.join( "\n\t", toString( entity.getBaseVariableMap() ) ), skin );
-		statLabel.setWrap( true );
-		table.add( statLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
+		for (Statistic stat : Statistic.values())
+		{
+			int val = getStatistic( entity.getVariableMap(), stat );
+
+			if ( stat == Statistic.ATTACK || stat == Statistic.DEFENSE )
+			{
+				continue;
+			}
+
+			if (val > 0)
+			{
+				Global.ScaleLevel scale = Global.ScaleLevel.values()[ val - 1 ];
+
+				Label statLabel = new Label( Global.capitalizeString( stat.toString() ) + ": " + scale.toString(), skin );
+				statLabel.setWrap( true );
+				table.add( statLabel ).expandX().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
+				table.row();
+			}
+		}
+
+		Array<String> lines = toString( entity.getVariableMap(), true );
+		for (String line : lines)
+		{
+			if (line.equals( "---" ))
+			{
+				table.add( new Seperator( skin, false ) ).expandX().fillX();
+			}
+			else
+			{
+				Label lineLabel = new Label( line, skin );
+				lineLabel.setWrap( true );
+				table.add( lineLabel ).expandX().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
+				table.row();
+			}
+
+			table.row();
+		}
 
 		return table;
 	}

@@ -110,7 +110,7 @@ public final class StatusEvent extends AbstractOnDamageEvent
 		lines.add( "Spawns a status:" );
 
 		StatusEffect status = StatusEffect.load( statusData, parent );
-		lines.addAll( status.toString( variableMap ) );
+		lines.addAll( status.toString( variableMap, false ) );
 
 		return lines;
 	}

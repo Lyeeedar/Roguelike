@@ -2,6 +2,7 @@ package Roguelike.Ability.ActiveAbility.EffectType;
 
 import java.util.HashMap;
 
+import com.badlogic.gdx.utils.Array;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
@@ -89,8 +90,10 @@ public class EffectTypeHeal extends AbstractEffectType
 	}
 
 	@Override
-	public String toString( ActiveAbility aa )
+	public Array<String> toString( ActiveAbility aa )
 	{
-		return "Heals " + getHealing( aa ) + " health";
+		Array<String> lines = new Array<String>(  );
+		lines.add( "Heals " + getHealing( aa ) + " health" );
+		return lines;
 	}
 }
