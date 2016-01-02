@@ -15,18 +15,13 @@
         <Equipped>shield</Equipped>
     </Cost>
 
-    <Targeting>
-        <Entity Type="Enemy"></Entity>
-    </Targeting>
-
-    <Movement>
-        <Smite>
-        </Smite>
-    </Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
     <Effect>
         <Damage>
-            <Attack>attack + 20 + level * 3</Attack>
+            <Attack>130 + level * 3</Attack>
             <Strength>1</Strength>
         </Damage>
     </Effect>

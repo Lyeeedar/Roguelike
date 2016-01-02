@@ -21,13 +21,13 @@
 		<Direction></Direction>
 	</Targeting>
 
-	<Movement>
-		<Smite />
-	</Movement>
+    <HitType>
+        <Any></Any>
+    </HitType>
 
 	<Effect>
 		<Damage>
-			<Attack>80 + 2 * level</Attack>
+			<Attack>150 + 2 * level</Attack>
             <Willpower>1</Willpower>
 		</Damage>
 		<Status Stacks="level/2">Chilled</Status>

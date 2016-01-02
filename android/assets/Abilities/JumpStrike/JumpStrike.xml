@@ -15,20 +15,16 @@
 	    <Equipped>spear</Equipped>
 	</Cost>
 
-	<Targeting>
-		<Entity Type="Enemy"></<Entity>
-	</Targeting>
-
-	<Movement>
-		<Smite></Smite>
-	</Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
 	<Effect>
 		<Teleport>
 		    <Style>Leap</Style>
 		</Teleport>
 		<Damage>
-            <Attack>attack + 20 + level * 3</Attack>
+            <Attack>140 + level * 3</Attack>
             <Strength>1</Strength>
 		</Damage>
 	</Effect>

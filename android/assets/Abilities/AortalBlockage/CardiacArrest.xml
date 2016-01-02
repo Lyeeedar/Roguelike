@@ -1,7 +1,7 @@
 <Active>
 
 	<Name>Cardiac Arrest</Name>
-	<Description>Temporarily stop your targets heart, causing them to stop in their tracks and take damage.</Description>
+	<Description>Temporarily stop your targets heart, causing them to pause in their tracks and take damage.</Description>
 
 	<Cooldown>20</Cooldown>
 	<Range>4</Range>
@@ -17,13 +17,9 @@
 		<Colour><RGB>153,0,0</RGB></Colour>
 	</HitSprite>
 
-	<Targeting>
-		<Entity Type="Enemy"></Entity>
-	</Targeting>
-
-	<Movement>
-		<Smite />
-	</Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
 	<Cost>
 	    <Health>10</Health>
@@ -32,7 +28,7 @@
 	<Effect>
 		<Status Stacks="level/2">Stunned</Status>
         <Damage>
-            <Attack>60 + 2 * level</Attack>
+            <Attack>150 + 2 * level</Attack>
             <Constitution>1</Constitution>
         </Damage>
 	</Effect>

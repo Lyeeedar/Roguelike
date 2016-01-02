@@ -25,17 +25,13 @@
 		<UpdateRate>0.1</UpdateRate>
 	</MovementSprite>
 
-	<Targeting>
-		<Entity Type="Enemy"></Entity>
-	</Targeting>
-
-	<Movement>
-		<Smite />
-	</Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
 	<Effect>
 		<Damage>
-            <Attack>100 + 10 * level</Attack>
+            <Attack>150 + 10 * level</Attack>
             <Intelligence>1</Intelligence>
 		</Damage>
 	</Effect>

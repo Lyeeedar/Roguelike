@@ -16,13 +16,9 @@
 	    <Equipped>shield</Equipped>
 	</Cost>
 
-	<Targeting>
-		<Direction/>
-	</Targeting>
-
-	<Movement>
-		<Smite></Smite>
-	</Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
 	<Effect>
 		<Teleport>
@@ -33,7 +29,7 @@
 		    <Distance>3</Distance>
 		</Teleport>
 		<Damage>
-            <Attack>attack + 50 + level * 3</Attack>
+            <Attack>160 + level * 3</Attack>
             <Strength>1</Strength>
 		</Damage>
 	</Effect>

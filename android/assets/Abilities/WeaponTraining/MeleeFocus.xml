@@ -8,7 +8,7 @@
 
     <Events>
         <Constant ReliesOn="sword || spear || axe">
-            <Attack>(sword || spear || axe)* (10 + level * 2)</Attack>
+            <Attack>(sword || spear || axe) * (5 + level / 2)</Attack>
         </Constant>
     </Events>
 

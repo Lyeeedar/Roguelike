@@ -17,9 +17,9 @@
 		<Colour><RGB>210,247,247</RGB></Colour>
 	</HitSprite>
 
-	<Targeting>
-		<Self></Self>
-	</Targeting>
+    <HitType>
+        <Self></Self>
+    </HitType>
 
 	<Effect>
 	    <Status>

@@ -11,20 +11,16 @@
 		<Colour><RGB>220,220,220</RGB></Colour>
 	</Icon>
 
-	<Targeting>
-		<Entity Type="Enemy"></<Entity>
-	</Targeting>
-
-	<Movement>
-		<Smite></Smite>
-	</Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
 	<Effect>
 		<Teleport>
 		    <Style>Charge</Style>
 		</Teleport>
 		<Damage>
-            <Attack>attack + 50 + level * 5</Attack>
+            <Attack>200 + level * 5</Attack>
             <Strength>1</Strength>
         </Damage>
 	</Effect>

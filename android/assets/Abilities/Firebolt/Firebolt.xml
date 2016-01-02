@@ -24,18 +24,13 @@
         <UpdateRate>0.1</UpdateRate>
     </MovementSprite>
 
-    <Targeting>
-        <Entity Type="Enemy"></Entity>
-    </Targeting>
-
-    <Movement>
-        <Smite>
-        </Smite>
-    </Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
     <Effect>
         <Damage>
-            <Attack>100 + 5 * level</Attack>
+            <Attack>120 + 5 * level</Attack>
             <Willpower>1</Willpower>
         </Damage>
     </Effect>

@@ -15,17 +15,13 @@
 	    <Equipped>bow</Equipped>
 	</Cost>
 
-	<Targeting>
-		<Entity Type="Enemy"></<Entity>
-	</Targeting>
-
-	<Movement>
-		<Smite></Smite>
-	</Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
 	<Effect>
 	    <Damage>
-            <Attack>attack + 20 + level * 3</Attack>
+            <Attack>190 + level * 3</Attack>
             <Perception>1</Perception>
 		</Damage>
 		<Status>

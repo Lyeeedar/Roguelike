@@ -32,17 +32,13 @@
 	    <Health>10</Health>
 	</Cost>
 
-	<Targeting>
-		<Entity Type="Enemy"></Entity>
-	</Targeting>
-
-	<Movement>
-		<Smite />
-	</Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
 	<Effect>
 		<Damage>
-            <Attack>100 + 10 * level</Attack>
+            <Attack>200 + 10 * level</Attack>
             <Constitution>1</Constitution>
 		</Damage>
 	</Effect>

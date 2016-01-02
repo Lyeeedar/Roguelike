@@ -33,13 +33,17 @@
 		<Direction />
 	</Targeting>
 
+    <HitType>
+        <Any></Any>
+    </HitType>
+
 	<Movement>
 		<Ray/>
 	</Movement>
 
 	<Effect>
         <Damage>
-            <Attack>30 + 5 * level</Attack>
+            <Attack>150 + 4 * level</Attack>
             <Willpower>1</Willpower>
         </Damage>
 	</Effect>

@@ -3,7 +3,7 @@
 	<Name>Spinning Magic Arrow</Name>
 	<Description>A bolt of pure elemental energy shoots at a nearby foe. It spins and drills through their armour.</Description>
 
-	<Cooldown>15</Cooldown>
+	<Cooldown>6</Cooldown>
 	<Range>4</Range>
 
 	<Icon>
@@ -24,13 +24,9 @@
 		<UpdateRate>0.1</UpdateRate>
 	</MovementSprite>
 
-	<Targeting>
-		<Entity Type="Enemy"></Entity>
-	</Targeting>
-
-	<Movement>
-		<Smite />
-	</Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
 	<Effect>
         <Status>
@@ -42,7 +38,7 @@
             </Events>
         </Status>
 		<Damage>
-            <Attack>100 + 10 * level</Attack>
+            <Attack>150 + 5 * level</Attack>
             <Intelligence>1</Intelligence>
 		</Damage>
 	</Effect>

@@ -10,7 +10,6 @@ public class TargetingTypeTile extends AbstractTargetingType
 	public enum TileType
 	{
 		ANY,
-		NOTSELF,
 		EMPTY
 	}
 
@@ -28,10 +27,6 @@ public class TargetingTypeTile extends AbstractTargetingType
 		if (type == TileType.EMPTY)
 		{
 			return tile.entity == null;
-		}
-		else if ( type != TileType.NOTSELF )
-		{
-			return tile.entity == null || tile.entity != ab.getCaster();
 		}
 		else
 		{

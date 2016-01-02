@@ -1,6 +1,6 @@
 <Active>
 	<Name>Protective Spirit</Name>
-	<Description>Reduce all incoming damage.</Description>
+	<Description>Boost defense by 25%</Description>
 
 	<Cooldown>30</Cooldown>
 	<Range>1</Range>
@@ -16,19 +16,17 @@
 		<Colour><RGB>210,247,247</RGB></Colour>
 	</HitSprite>
 
-	<Targeting>
-		<Self></Self>
-	</Targeting>
+    <HitType>
+        <Self></Self>
+    </HitType>
 
 	<Effect>
 	    <Status>
             <Duration>15</Duration>
             <Events>
-                <OnReceiveDamage>
-                    <Damage>
-                        -Damage*(0.05*level)
-                    </Damage>
-                </OnReceiveDamage>
+                <Constant>
+                    <Defense>Defense*0.25</Defense>
+                </Constant>
             </Events>
 	    </Status>
 	</Effect>

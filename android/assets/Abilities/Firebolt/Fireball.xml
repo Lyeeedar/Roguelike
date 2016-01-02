@@ -31,18 +31,13 @@
 		<Intensity>3</Intensity>
 	</Light>
 
-    <Targeting>
-        <Tile />
-    </Targeting>
-
-    <Movement>
-        <Smite>
-        </Smite>
-    </Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
     <Effect>
         <Damage>
-            <Attack>120 + 5 * level</Attack>
+            <Attack>150 + 5 * level</Attack>
             <Willpower>1</Willpower>
         </Damage>
     </Effect>

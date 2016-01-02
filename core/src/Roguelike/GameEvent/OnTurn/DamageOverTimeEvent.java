@@ -20,15 +20,9 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 	private String eqn;
 	private String[] reliesOn;
 
-	private float accumulator;
-
 	@Override
 	public boolean handle( Entity entity, float time )
 	{
-		accumulator += time;
-
-		if ( accumulator < 0 ) { return false; }
-
 		HashMap<String, Integer> variableMap = entity.getVariableMap();
 		for ( String name : reliesOn )
 		{
@@ -43,19 +37,13 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 			int conditionVal = EquationHelper.evaluate( condition, variableMap );
 			if ( conditionVal == 0 )
 			{
-				accumulator = 0;
 				return false;
 			}
 		}
 
 		int raw = EquationHelper.evaluate( eqn, variableMap );
 
-		while ( accumulator > 1 )
-		{
-			accumulator -= 1;
-
-			Global.calculateDamage( entity, entity, raw, 0, false );
-		}
+		Global.calculateDamage( entity, entity, raw, 0, false );
 
 		return true;
 	}
@@ -89,7 +77,7 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 
 		int raw = EquationHelper.evaluate( eqn, variableMap );
 
-		lines.add( "Total Damage: " + raw );
+		lines.add( "Deals " + raw + " damage a turn" );
 
 		return lines;
 	}

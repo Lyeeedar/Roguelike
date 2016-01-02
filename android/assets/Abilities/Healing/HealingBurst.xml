@@ -18,9 +18,9 @@
 	    <Sound><Name>whoosh</Name></Sound>
 	</HitSprite>
 
-	<Targeting>
+	<HitType>
 		<Self></Self>
-	</Targeting>
+	</HitType>
 
 	<Effect>
 		<Heal>30 + level * 2</Heal>

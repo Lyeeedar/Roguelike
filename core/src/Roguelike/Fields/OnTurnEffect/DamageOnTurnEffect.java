@@ -38,7 +38,7 @@ public class DamageOnTurnEffect extends AbstractOnTurnEffect
 			if ( conditionVal == 0 ) { return; }
 		}
 
-		int raw = Math.round(EquationHelper.evaluate( eqn, variableMap ) * cost);
+		int raw = EquationHelper.evaluate( eqn, variableMap );
 
 		Global.calculateDamage( entity, entity, raw, 0, false );
 	}

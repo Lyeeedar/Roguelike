@@ -3,12 +3,13 @@ package Roguelike.Ability.ActiveAbility;
 import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.ActiveAbility.CostType.AbstractCostType;
 import Roguelike.Ability.ActiveAbility.EffectType.AbstractEffectType;
+import Roguelike.Ability.ActiveAbility.HitType.*;
 import Roguelike.Ability.ActiveAbility.MovementType.AbstractMovementType;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeBolt;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeRay;
 import Roguelike.Ability.ActiveAbility.MovementType.MovementTypeSmite;
 import Roguelike.Ability.ActiveAbility.TargetingType.AbstractTargetingType;
-import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeSelf;
+import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeEntity;
 import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeTile;
 import Roguelike.Ability.IAbility;
 import Roguelike.AssetManager;
@@ -21,7 +22,6 @@ import Roguelike.Global.Passability;
 import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
-import Roguelike.Pathfinding.ShadowCastCache;
 import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.SoundInstance;
@@ -53,6 +53,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	public int cooldown = 1;
 	public Array<AbstractCostType> costTypes = new Array<AbstractCostType>();
 	public AbstractTargetingType targetingType = new TargetingTypeTile();
+	public AbstractHitType hitType = new HitTypeAny();
 	public AbstractMovementType movementType = new MovementTypeSmite();
 	public Array<AbstractEffectType> effectTypes = new Array<AbstractEffectType>();
 	public Array<GameTile> AffectedTiles = new Array<GameTile>();
@@ -67,7 +68,6 @@ public class ActiveAbility implements IAbility, IGameObject
 	private String description;
 	private int cone = 0;
 	private int aoe = 0;
-	private boolean excludeSelf = false;
 	private int range = 1;
 	private float screenshake = 0;
 	private Sprite movementSprite;
@@ -229,7 +229,10 @@ public class ActiveAbility implements IAbility, IGameObject
 
 				if ( targetingType.isTargetValid( this, tile ) )
 				{
-					validTargets.add( tilePos.copy() );
+					if (hitType.isTargetValid( this, tile.entity ))
+					{
+						validTargets.add( tilePos.copy() );
+					}
 				}
 			}
 		}
@@ -423,7 +426,11 @@ public class ActiveAbility implements IAbility, IGameObject
 			{
 				GameTile tile = itr.next();
 
-				if ( !added.contains( tile ) )
+				if ( !hitType.isTargetValid( this, tile.entity ) )
+				{
+					itr.remove();
+				}
+				else if ( !added.contains( tile ) )
 				{
 					added.add( tile );
 				}
@@ -431,11 +438,6 @@ public class ActiveAbility implements IAbility, IGameObject
 				{
 					itr.remove();
 				}
-			}
-
-			if ( excludeSelf )
-			{
-				AffectedTiles.removeValue( epicenter, true );
 			}
 
 			for ( GameTile tile : AffectedTiles )
@@ -572,7 +574,6 @@ public class ActiveAbility implements IAbility, IGameObject
 		if ( aoeElement != null )
 		{
 			aoe = Integer.parseInt( aoeElement.getText() );
-			excludeSelf = aoeElement.getBoolean( "ExcludeSelf", false );
 		}
 
 		cone = xmlElement.getInt( "Cone", cone );
@@ -607,6 +608,17 @@ public class ActiveAbility implements IAbility, IGameObject
 			}
 		}
 
+		Element hitTypeElement = xmlElement.getChildByName( "HitType" );
+		if (hitTypeElement != null)
+		{
+			hitType = AbstractHitType.load( hitTypeElement.getChild( 0 ) );
+
+			if ( hitType instanceof HitTypeSelf || hitType instanceof HitTypeEnemy || hitType instanceof HitTypeAlly )
+			{
+				targetingType = new TargetingTypeEntity();
+			}
+		}
+
 		Element targetingElement = xmlElement.getChildByName( "Targeting" );
 		if ( targetingElement != null )
 		{
@@ -617,10 +629,6 @@ public class ActiveAbility implements IAbility, IGameObject
 		if ( movementElement != null )
 		{
 			movementType = AbstractMovementType.load( movementElement.getChild( 0 ) );
-		}
-		else if (targetingType instanceof TargetingTypeSelf)
-		{
-			movementType = new MovementTypeSmite();
 		}
 
 		Element effectsElement = xmlElement.getChildByName( "Effect" );

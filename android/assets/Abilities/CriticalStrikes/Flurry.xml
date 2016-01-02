@@ -22,9 +22,9 @@
 	    <Equipped>sword</Equipped>
 	</Cost>
 
-	<Targeting>
+	<HitType>
 		<Self></Self>
-	</Targeting>
+	</HitType>
 
 	<Effect>
 		<Status>

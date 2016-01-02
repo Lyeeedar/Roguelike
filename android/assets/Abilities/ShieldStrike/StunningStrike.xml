@@ -15,21 +15,16 @@
 	    <Equipped>shield</Equipped>
 	</Cost>
 
-	<Targeting>
-		<Entity Type="Enemy" />
-	</Targeting>
-
-	<Movement>
-		<Smite>
-		</Smite>
-	</Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
 	<Effect>
 		<Status>
 			<Defender>Stunned</Defender>
 		</Status>
 		<Damage>
-            <Attack>attack + 50 + level * 3</Attack>
+            <Attack>170 + level * 3</Attack>
             <Strength>1</Strength>
 		</Damage>
 	</Effect>

@@ -17,7 +17,6 @@ public final class HealOverTimeEvent extends AbstractOnTurnEvent
 	String condition;
 
 	String equation;
-	float remainder;
 
 	@Override
 	public boolean handle( Entity entity, float time )
@@ -32,11 +31,7 @@ public final class HealOverTimeEvent extends AbstractOnTurnEvent
 
 		int raw = EquationHelper.evaluate( equation, variableMap );
 
-		int rounded = (int) Math.floor( raw * time + remainder );
-
-		remainder = raw - rounded;
-
-		entity.applyHealing( rounded );
+		entity.applyHealing( raw );
 
 		return true;
 	}
@@ -59,7 +54,7 @@ public final class HealOverTimeEvent extends AbstractOnTurnEvent
 
 		int rounded = EquationHelper.evaluate( equation, variableMap );
 
-		lines.add( "Heals " + rounded + " health" );
+		lines.add( "Heals " + rounded + " health a turn" );
 
 		return lines;
 	}

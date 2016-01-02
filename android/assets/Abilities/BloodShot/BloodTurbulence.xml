@@ -18,14 +18,9 @@
 		<Colour><RGB>153,0,0</RGB></Colour>
 	</HitSprite>
 
-	<Targeting>
-		<Entity Type="Enemy"></Entity>
-	</Targeting>
-
-	<Movement>
-		<Smite>
-		</Smite>
-	</Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
 	<Cost>
 	    <Health>10</Health>
@@ -33,7 +28,7 @@
 
 	<Effect>
 		<Damage>
-            <Attack>100 + 5 * level</Attack>
+            <Attack>200 + 5 * level</Attack>
             <Constitution>1</Constitution>
 		</Damage>
 	</Effect>

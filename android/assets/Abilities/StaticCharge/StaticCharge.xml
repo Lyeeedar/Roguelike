@@ -11,9 +11,9 @@
 		<Colour><RGB>248,255,43</RGB></Colour>
 	</Icon>
 
-	<Targeting>
+	<HitType>
 		<Self></Self>
-	</Targeting>
+	</HitType>
 
     <Effect>
         <Status>

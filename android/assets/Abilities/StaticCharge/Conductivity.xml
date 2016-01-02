@@ -18,13 +18,9 @@
 		<Colour><RGB>220,200,250</RGB></Colour>
 	</HitSprite>
 
-	<Targeting>
-		<Tile />
-	</Targeting>
-
-	<Movement>
-		<Smite />
-	</Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
     <Effect>
         <Status>

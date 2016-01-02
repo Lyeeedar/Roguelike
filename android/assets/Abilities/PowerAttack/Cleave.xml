@@ -12,19 +12,13 @@
         <Colour><RGB>220,220,220</RGB></Colour>
     </Icon>
 
-    <Targeting>
-        <Entity Type="Enemy">
-        </Entity>
-    </Targeting>
-
-    <Movement>
-        <Smite>
-        </Smite>
-    </Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
     <Effect>
         <Damage>
-            <Attack>attack + 30 + level * 4</Attack>
+            <Attack>200 + level * 4</Attack>
             <Strength>1</Strength>
         </Damage>
     </Effect>

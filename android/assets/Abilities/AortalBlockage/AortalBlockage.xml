@@ -17,13 +17,9 @@
         <Colour><RGB>153,0,0</RGB></Colour>
     </HitSprite>
 
-    <Targeting>
-        <Entity Type="Enemy"></Entity>
-    </Targeting>
-
-    <Movement>
-        <Smite />
-    </Movement>
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
 
     <Cost>
         <Health>5</Health>

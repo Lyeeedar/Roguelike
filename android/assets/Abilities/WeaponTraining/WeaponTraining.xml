@@ -8,7 +8,7 @@
 
     <Events>
         <Constant>
-            <Attack>5 + level / 2</Attack>
+            <Attack>2 + level / 3</Attack>
         </Constant>
     </Events>
 

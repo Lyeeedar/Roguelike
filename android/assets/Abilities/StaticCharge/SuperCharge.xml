@@ -11,9 +11,9 @@
 		<Colour><RGB>248,255,43</RGB></Colour>
 	</Icon>
 
-	<Targeting>
+	<HitType>
 		<Self></Self>
-	</Targeting>
+	</HitType>
 
     <Effect>
         <Status>
@@ -21,7 +21,7 @@
             <Events>
                 <Constant>
                     <Attack>10 + level</Attack>
-                    <Speed>level / 2</Speed>
+                    <Speed>level / 3</Speed>
                 </Constant>
             </Events>
         </Status>
