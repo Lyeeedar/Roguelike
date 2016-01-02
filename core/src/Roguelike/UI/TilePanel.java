@@ -41,7 +41,6 @@ public abstract class TilePanel extends Widget
 
 	protected final Skin skin;
 	protected final Stage stage;
-	protected Tooltip tooltip;
 
 	public int padding = 10;
 
@@ -326,12 +325,11 @@ public abstract class TilePanel extends Widget
 		@Override
 		public boolean mouseMoved( InputEvent event, float x, float y )
 		{
-			if ( tooltip != null )
+			if ( Tooltip.openTooltip != null )
 			{
-				tooltip.setVisible( false );
-				tooltip.remove();
-				tooltip.openTooltip = null;
-				tooltip = null;
+				Tooltip.openTooltip.setVisible( false );
+				Tooltip.openTooltip.remove();
+				Tooltip.openTooltip = null;
 			}
 
 			Object item = pointToItem( x, y );
@@ -342,7 +340,7 @@ public abstract class TilePanel extends Widget
 
 				if ( table != null )
 				{
-					tooltip = new Tooltip( table, skin, stage );
+					Tooltip tooltip = new Tooltip( table, skin, stage );
 					tooltip.show( event, x, y, false );
 				}
 			}
@@ -363,14 +361,15 @@ public abstract class TilePanel extends Widget
 		@Override
 		public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
 		{
-			if ( tooltip != null )
+			if ( Tooltip.openTooltip != null )
 			{
-				tooltip.setVisible( false );
-				tooltip.remove();
-				tooltip.openTooltip = null;
-				tooltip = null;
+				Tooltip.openTooltip.setVisible( false );
+				Tooltip.openTooltip.remove();
+				Tooltip.openTooltip.openTooltip.openTooltip = null;
+				Tooltip.openTooltip = null;
 			}
 			GameScreen.Instance.clearContextMenu();
+			GameScreen.Instance.addTouchAction( event.getStageX(), event.getStageY() );
 
 			boolean mouseOverUI = getMouseOverUI( x, y );
 			GameScreen.Instance.mouseOverUI = mouseOverUI;
@@ -385,12 +384,11 @@ public abstract class TilePanel extends Widget
 		@Override
 		public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 		{
-			if ( tooltip != null )
+			if ( Tooltip.openTooltip != null )
 			{
-				tooltip.setVisible( false );
-				tooltip.remove();
-				tooltip.openTooltip = null;
-				tooltip = null;
+				Tooltip.openTooltip.setVisible( false );
+				Tooltip.openTooltip.remove();
+				Tooltip.openTooltip = null;
 			}
 			GameScreen.Instance.clearContextMenu();
 
@@ -404,7 +402,7 @@ public abstract class TilePanel extends Widget
 
 					if ( table != null )
 					{
-						tooltip = new Tooltip( table, skin, stage );
+						Tooltip tooltip = new Tooltip( table, skin, stage );
 						tooltip.show( event, x, y, false );
 					}
 				}
@@ -439,12 +437,12 @@ public abstract class TilePanel extends Widget
 		{
 			mouseOver = null;
 
-			if ( tooltip != null )
+			if ( Tooltip.openTooltip != null )
 			{
-				tooltip.setVisible( false );
-				tooltip.remove();
-				tooltip.openTooltip = null;
-				tooltip = null;
+				Tooltip.openTooltip.setVisible( false );
+				Tooltip.openTooltip.remove();
+				Tooltip.openTooltip.openTooltip.openTooltip = null;
+				Tooltip.openTooltip = null;
 			}
 
 			GameScreen.Instance.mouseOverUI = false;
@@ -468,12 +466,11 @@ public abstract class TilePanel extends Widget
 		{
 			longPressed = true;
 
-			if ( tooltip != null )
+			if ( Tooltip.openTooltip != null )
 			{
-				tooltip.setVisible( false );
-				tooltip.remove();
-				tooltip.openTooltip = null;
-				tooltip = null;
+				Tooltip.openTooltip.setVisible( false );
+				Tooltip.openTooltip.remove();
+				Tooltip.openTooltip = null;
 			}
 
 			Object item = pointToItem( x, y );
@@ -484,7 +481,7 @@ public abstract class TilePanel extends Widget
 
 				if ( table != null )
 				{
-					tooltip = new Tooltip( table, skin, stage );
+					Tooltip tooltip = new Tooltip( table, skin, stage );
 					tooltip.show( x, y, false );
 				}
 			}

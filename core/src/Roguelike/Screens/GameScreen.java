@@ -1363,6 +1363,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean touchDown( int screenX, int screenY, int pointer, int button )
 	{
+		addTouchAction( screenX, Global.ScreenSize[1] - screenY );
+
 		if ( Tooltip.openTooltip != null )
 		{
 			Tooltip.openTooltip.setVisible( false );
@@ -1385,6 +1387,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			Tooltip.openTooltip.setVisible( false );
 			Tooltip.openTooltip.remove();
 			Tooltip.openTooltip = null;
+		}
+
+		if (Global.ANDROID && examineMode)
+		{
+			mouseMoved( screenX, screenY );
 		}
 
 		clearContextMenu();
@@ -2001,6 +2008,18 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.setPosition( Global.Resolution[ 0 ] / 2 + Global.TileSize / 2, Global.Resolution[ 1 ] / 2 + Global.TileSize );
 		stage.addActor( table );
 		table.setVisible( true );
+	}
+
+	// ----------------------------------------------------------------------
+	public void addTouchAction( float x, float y )
+	{
+		Widget widget = new Label("O", skin);//new SpriteWidget( AssetManager.loadSprite( "Oryx/uf_split/uf_interface/uf_interface_460" ), 32, 32 );
+		//widget.setScale( 0.1f );
+		widget.addAction( new SequenceAction( Actions.delay( 2 ), Actions.removeActor() ) );
+
+		widget.setPosition( x - widget.getWidth()/2, y - widget.getHeight()/2 );
+		stage.addActor( widget );
+		widget.setVisible( true );
 	}
 
 	// ----------------------------------------------------------------------

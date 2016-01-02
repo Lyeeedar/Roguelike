@@ -48,7 +48,7 @@ public class MainMenuScreen implements Screen
 		// table.add( title ).expandY().top().padTop( 100 );
 		// table.row();
 		Image image = new Image( AssetManager.loadTextureRegion( "Sprites/GUI/Title.png" ) );
-		table.add( image ).expandX().center().top().pad( 20 ).width( 500 );
+		table.add( image ).expandX().fillX();
 		table.row();
 
 		Table buttonTable = new Table();
@@ -127,7 +127,14 @@ public class MainMenuScreen implements Screen
 		buttonTable.add( qbutton ).expandX().fillX();
 		buttonTable.row();
 
-		table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expand().pad( 20 ).bottom().right();
+		if (Global.ANDROID)
+		{
+			table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expand().fill().pad( 20 );
+		}
+		else
+		{
+			table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expand().pad( 20 ).bottom().right();
+		}
 
 		table.setFillParent( true );
 		stage.addActor( table );
