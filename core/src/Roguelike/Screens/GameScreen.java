@@ -659,7 +659,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 					}
 
-					if ( gtile.visible || gtile.seenBitflag.getBitFlag() != 0 )
+					if ( gtile.visible || ( gtile.seen && gtile.seenBitflag.getBitFlag() != 0 ) )
 					{
 						GameEntity entity = gtile.entity;
 

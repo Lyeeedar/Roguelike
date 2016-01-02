@@ -30,46 +30,16 @@ public final class HealEvent extends AbstractOnDamageEvent
 				variableMap.put( name.toLowerCase(), 0 );
 			}
 		}
+		variableMap.put( "damage", obj.damage );
 
 		if ( condition != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-			expB.variable( "damage" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return false; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-			exp.setVariable( "damage", obj.damage );
-
-			double conditionVal = exp.evaluate();
-
+			int conditionVal = EquationHelper.evaluate( condition, variableMap );
 			if ( conditionVal == 0 ) { return false; }
 		}
 
-		if ( Global.isNumber( eqn ) )
-		{
-			int raw = Integer.parseInt( eqn );
-			entity.applyHealing( raw );
-		}
-		else
-		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-			expB.variable( "damage" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp != null )
-			{
-				EquationHelper.setVariableValues( exp, variableMap, "" );
-				exp.setVariable( "damage", obj.damage );
-
-				int raw = (int) exp.evaluate();
-
-				entity.applyHealing( raw );
-			}
-		}
+		int raw = EquationHelper.evaluate( eqn, variableMap );
+		entity.applyHealing( raw );
 
 		return true;
 	}

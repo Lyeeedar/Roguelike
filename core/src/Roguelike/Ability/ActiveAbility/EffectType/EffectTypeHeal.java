@@ -48,35 +48,17 @@ public class EffectTypeHeal extends AbstractEffectType
 
 	private int getHealing( ActiveAbility aa )
 	{
-		if ( Global.isNumber( equation ) )
-		{
-			return Integer.parseInt( equation );
-		}
-		else
-		{
-			HashMap<String, Integer> variableMap = aa.getVariableMap();
+		HashMap<String, Integer> variableMap = aa.getVariableMap();
 
-			for ( String name : reliesOn )
+		for ( String name : reliesOn )
+		{
+			if ( !variableMap.containsKey( name.toLowerCase() ) )
 			{
-				if ( !variableMap.containsKey( name.toLowerCase() ) )
-				{
-					variableMap.put( name.toLowerCase(), 0 );
-				}
+				variableMap.put( name.toLowerCase(), 0 );
 			}
-
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( equation );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return 0; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-
-			int raw = (int) exp.evaluate();
-
-			return raw;
-
 		}
+
+		return EquationHelper.evaluate( equation, variableMap );
 	}
 
 	@Override

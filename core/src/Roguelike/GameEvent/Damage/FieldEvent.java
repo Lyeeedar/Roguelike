@@ -33,21 +33,11 @@ public final class FieldEvent extends AbstractOnDamageEvent
 				variableMap.put( name.toLowerCase(), 0 );
 			}
 		}
+		variableMap.put( "damage", obj.damage );
 
 		if ( condition != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-			expB.variable( "damage" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return false; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-			exp.setVariable( "damage", obj.damage );
-
-			double conditionVal = exp.evaluate();
-
+			int conditionVal = EquationHelper.evaluate( condition, variableMap );
 			if ( conditionVal == 0 ) { return false; }
 		}
 
@@ -55,25 +45,7 @@ public final class FieldEvent extends AbstractOnDamageEvent
 
 		if ( stacksEqn != null )
 		{
-			if ( Global.isNumber( stacksEqn ) )
-			{
-				stacks = Integer.parseInt( stacksEqn );
-			}
-			else
-			{
-				ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
-				EquationHelper.setVariableNames( expB, variableMap, "" );
-				expB.variable( "damage" );
-
-				Expression exp = EquationHelper.tryBuild( expB );
-				if ( exp != null )
-				{
-					EquationHelper.setVariableValues( exp, variableMap, "" );
-					exp.setVariable( "damage", obj.damage );
-
-					stacks = (int) Math.ceil( exp.evaluate() );
-				}
-			}
+			stacks = EquationHelper.evaluate( stacksEqn, variableMap );
 		}
 
 		if (stacks > 0)

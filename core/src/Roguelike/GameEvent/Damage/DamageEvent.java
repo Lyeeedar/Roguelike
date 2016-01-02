@@ -30,45 +30,15 @@ public final class DamageEvent extends AbstractOnDamageEvent
 				variableMap.put( name.toLowerCase(), 0 );
 			}
 		}
+		variableMap.put( "damage", obj.damage );
 
 		if ( condition != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-			expB.variable( "damage" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return false; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-			exp.setVariable( "damage", obj.damage );
-
-			double conditionVal = exp.evaluate();
-
+			int conditionVal = EquationHelper.evaluate( condition, variableMap );
 			if ( conditionVal == 0 ) { return false; }
 		}
 
-		int raw = 0;
-
-		if ( Global.isNumber( equation ) )
-		{
-			raw = Integer.parseInt( equation );
-		}
-		else
-		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( equation );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-			expB.variable( "damage" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp != null )
-			{
-				EquationHelper.setVariableValues( exp, variableMap, "" );
-				exp.setVariable( "damage", obj.damage );
-
-				raw = (int) exp.evaluate();
-			}
-		}
+		int raw = EquationHelper.evaluate( equation, variableMap );
 
 		obj.damage += raw;
 

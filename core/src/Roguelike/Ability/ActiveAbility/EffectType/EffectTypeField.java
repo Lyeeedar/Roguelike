@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 import exp4j.Helpers.EquationHelper;
 
+import java.util.HashMap;
+
 public class EffectTypeField extends AbstractEffectType
 {
 	public String condition;
@@ -40,18 +42,19 @@ public class EffectTypeField extends AbstractEffectType
 	@Override
 	public void update( ActiveAbility aa, float time, GameTile tile )
 	{
+		HashMap<String, Integer> variableMap = aa.getVariableMap();
+
+		for ( String name : reliesOn )
+		{
+			if ( !variableMap.containsKey( name.toLowerCase() ) )
+			{
+				variableMap.put( name.toLowerCase(), 0 );
+			}
+		}
+
 		if ( condition != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, aa.getVariableMap(), "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return; }
-
-			EquationHelper.setVariableValues( exp, aa.getVariableMap(), "" );
-
-			double conditionVal = exp.evaluate();
-
+			int conditionVal = EquationHelper.evaluate( condition, variableMap );
 			if ( conditionVal == 0 ) { return; }
 		}
 
@@ -59,23 +62,7 @@ public class EffectTypeField extends AbstractEffectType
 
 		if ( stacksEqn != null )
 		{
-			if ( Global.isNumber( stacksEqn ) )
-			{
-				stacks = Integer.parseInt( stacksEqn );
-			}
-			else
-			{
-				ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
-				EquationHelper.setVariableNames( expB, aa.getVariableMap(), "" );
-
-				Expression exp = EquationHelper.tryBuild( expB );
-				if ( exp != null )
-				{
-					EquationHelper.setVariableValues( exp, aa.getVariableMap(), "" );
-
-					stacks = (int) Math.ceil( exp.evaluate() );
-				}
-			}
+			stacks = EquationHelper.evaluate( stacksEqn, variableMap );
 		}
 
 		if ( stacks > 0 )

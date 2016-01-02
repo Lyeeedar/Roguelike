@@ -37,35 +37,18 @@ public final class ConstantEvent
 
 		if ( eqn == null ) { return 0; }
 
-		if ( Global.isNumber( eqn ) )
+		if ( reliesOn != null )
 		{
-			return Integer.parseInt( eqn );
-		}
-		else
-		{
-			if ( reliesOn != null )
+			for ( String name : reliesOn )
 			{
-				for ( String name : reliesOn )
+				if ( !variableMap.containsKey( name ) )
 				{
-					if ( !variableMap.containsKey( name ) )
-					{
-						variableMap.put( name, 0 );
-					}
+					variableMap.put( name, 0 );
 				}
 			}
-
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return 0; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-
-			int val = (int) exp.evaluate();
-
-			return val;
 		}
+
+		return EquationHelper.evaluate( eqn, variableMap );
 	}
 
 	public void putStatistic( Statistic stat, String eqn )

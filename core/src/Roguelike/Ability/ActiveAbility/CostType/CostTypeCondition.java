@@ -28,18 +28,7 @@ public class CostTypeCondition extends AbstractCostType
 			}
 		}
 
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder(equation);
-		EquationHelper.setVariableNames(expB, variableMap, "");
-
-		Expression exp = EquationHelper.tryBuild(expB);
-		if (exp == null)
-		{
-			return false;
-		}
-
-		EquationHelper.setVariableValues(exp, variableMap, "");
-
-		int raw = (int)exp.evaluate();
+		int raw = EquationHelper.evaluate( equation, variableMap );
 
 		return raw > 0;
 	}

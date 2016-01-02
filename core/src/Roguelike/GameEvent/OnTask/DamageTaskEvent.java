@@ -36,37 +36,11 @@ public final class DamageTaskEvent extends AbstractOnTaskEvent
 
 		if ( condition != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return false; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-
-			double conditionVal = exp.evaluate();
-
+			int conditionVal = EquationHelper.evaluate( condition, variableMap );
 			if ( conditionVal == 0 ) { return false; }
 		}
 
-		int raw = 0;
-
-		if ( Global.isNumber( eqn ) )
-		{
-			raw = Integer.parseInt( eqn );
-		}
-		else
-		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp != null )
-			{
-				EquationHelper.setVariableValues( exp, variableMap, "" );
-				raw = (int) exp.evaluate();
-			}
-		}
+		int raw = EquationHelper.evaluate( eqn, variableMap );
 
 		Global.calculateDamage( entity, entity, raw, 0, false );
 

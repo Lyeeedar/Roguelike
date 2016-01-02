@@ -69,16 +69,7 @@ public class EffectTypeStatus extends AbstractEffectType
 
 		if ( condition != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, aa.getVariableMap(), "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return; }
-
-			EquationHelper.setVariableValues( exp, aa.getVariableMap(), "" );
-
-			double conditionVal = exp.evaluate();
-
+			int conditionVal = EquationHelper.evaluate( condition, variableMap );
 			if ( conditionVal == 0 ) { return; }
 		}
 
@@ -86,22 +77,7 @@ public class EffectTypeStatus extends AbstractEffectType
 
 		if ( stacksEqn != null )
 		{
-			if ( Global.isNumber( stacksEqn ) )
-			{
-				stacks = Integer.parseInt( stacksEqn );
-			}
-			else
-			{
-				ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
-				EquationHelper.setVariableNames( expB, aa.getVariableMap(), "" );
-
-				Expression exp = EquationHelper.tryBuild( expB );
-				if ( exp != null )
-				{
-					EquationHelper.setVariableValues( exp, aa.getVariableMap(), "" );
-					stacks = (int) Math.ceil( exp.evaluate() );
-				}
-			}
+			stacks = EquationHelper.evaluate( stacksEqn, variableMap );
 		}
 
 		for ( int i = 0; i < stacks; i++ )

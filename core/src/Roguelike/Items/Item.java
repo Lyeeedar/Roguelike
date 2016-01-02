@@ -485,7 +485,7 @@ public final class Item extends GameEventHandler
 		canStack = xmlElement.getBoolean( "CanStack", canStack );
 
 		String countEqn = xmlElement.get( "Count", "" + count );
-		count = EquationHelper.evaluate( countEqn );
+		count = EquationHelper.evaluate( countEqn, Statistic.emptyMap );
 
 		Element iconElement = xmlElement.getChildByName( "Icon" );
 		if ( iconElement != null )

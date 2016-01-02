@@ -34,16 +34,7 @@ public final class FieldOnDeathEvent extends AbstractOnDeathEvent
 
 		if ( condition != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return false; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-
-			double conditionVal = exp.evaluate();
-
+			int conditionVal = EquationHelper.evaluate( condition, variableMap );
 			if ( conditionVal == 0 ) { return false; }
 		}
 
@@ -51,23 +42,7 @@ public final class FieldOnDeathEvent extends AbstractOnDeathEvent
 
 		if ( stacksEqn != null )
 		{
-			if ( Global.isNumber( stacksEqn ) )
-			{
-				stacks = Integer.parseInt( stacksEqn );
-			}
-			else
-			{
-				ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
-				EquationHelper.setVariableNames( expB, variableMap, "" );
-
-				Expression exp = EquationHelper.tryBuild( expB );
-				if ( exp != null )
-				{
-					EquationHelper.setVariableValues( exp, variableMap, "" );
-
-					stacks = (int) Math.ceil( exp.evaluate() );
-				}
-			}
+			stacks = EquationHelper.evaluate( stacksEqn, variableMap );
 		}
 
 		Field field = Field.load( fieldName );

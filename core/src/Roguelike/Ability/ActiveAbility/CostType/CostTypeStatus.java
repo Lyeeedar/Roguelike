@@ -42,23 +42,11 @@ public class CostTypeStatus extends AbstractCostType
 
 		Array<StatusEffectStack> stacks = aa.getCaster().stackStatusEffects();
 
-		int count = 0;
+		int count = EquationHelper.evaluate( stacksEqn, variableMap );
 
-		if ( Global.isNumber( stacksEqn ) )
+		if ( count == 0 )
 		{
-			count = Integer.parseInt( stacksEqn );
-		}
-		else
-		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return false; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-
-			count = (int) exp.evaluate();
+			return false;
 		}
 
 		StatusEffectStack stack = null;
@@ -89,24 +77,7 @@ public class CostTypeStatus extends AbstractCostType
 			}
 		}
 
-		int count = 0;
-
-		if ( Global.isNumber( stacksEqn ) )
-		{
-			count = Integer.parseInt( stacksEqn );
-		}
-		else
-		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-
-			count = (int) exp.evaluate();
-		}
+		int count = EquationHelper.evaluate( stacksEqn, variableMap );
 
 		for ( int i = 0; i < count; i++ )
 		{
@@ -140,15 +111,7 @@ public class CostTypeStatus extends AbstractCostType
 
 		Array<StatusEffectStack> stacks = aa.getCaster().stackStatusEffects();
 
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder( stacksEqn );
-		EquationHelper.setVariableNames( expB, variableMap, "" );
-
-		Expression exp = EquationHelper.tryBuild( expB );
-		if ( exp == null ) { return "[RED]ERROR: Parsing equation '" + stacksEqn + "'"; }
-
-		EquationHelper.setVariableValues( exp, variableMap, "" );
-
-		int count = (int) exp.evaluate();
+		int count = EquationHelper.evaluate( stacksEqn, variableMap );
 
 		StatusEffectStack stack = null;
 		for ( StatusEffectStack s : stacks )

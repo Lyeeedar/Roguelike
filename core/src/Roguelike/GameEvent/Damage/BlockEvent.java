@@ -29,21 +29,11 @@ public final class BlockEvent extends AbstractOnDamageEvent
 				variableMap.put( name.toLowerCase(), 0 );
 			}
 		}
+		variableMap.put( "damage", obj.damage );
 
 		if ( condition != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-			expB.variable( "damage" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return false; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-			exp.setVariable( "damage", obj.damage );
-
-			double conditionVal = exp.evaluate();
-
+			int conditionVal = EquationHelper.evaluate( condition, variableMap );
 			if ( conditionVal == 0 ) { return false; }
 		}
 

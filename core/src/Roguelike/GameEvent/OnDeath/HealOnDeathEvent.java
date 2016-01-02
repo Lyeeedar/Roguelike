@@ -32,36 +32,11 @@ public final class HealOnDeathEvent extends AbstractOnDeathEvent
 
 		if ( condition != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return false; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-
-			double conditionVal = exp.evaluate();
-
+			int conditionVal = EquationHelper.evaluate( condition, variableMap );
 			if ( conditionVal == 0 ) { return false; }
 		}
 
-		int healVal = 0;
-		if ( Global.isNumber( amountEqn ) )
-		{
-			healVal = Integer.parseInt( amountEqn );
-		}
-		else
-		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( amountEqn );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return false; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-
-			healVal = (int) exp.evaluate();
-		}
+		int healVal = EquationHelper.evaluate( amountEqn, variableMap );
 
 		entity.applyHealing( healVal );
 
@@ -85,15 +60,15 @@ public final class HealOnDeathEvent extends AbstractOnDeathEvent
 	{
 		Array<String> lines = new Array<String>();
 
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder( amountEqn );
-		EquationHelper.setVariableNames( expB, variableMap, "" );
+		for ( String name : reliesOn )
+		{
+			if ( !variableMap.containsKey( name.toLowerCase() ) )
+			{
+				variableMap.put( name.toLowerCase(), 0 );
+			}
+		}
 
-		Expression exp = EquationHelper.tryBuild( expB );
-		if ( exp == null ) { return lines; }
-
-		EquationHelper.setVariableValues( exp, variableMap, "" );
-
-		int healVal = (int) exp.evaluate();
+		int healVal = EquationHelper.evaluate( amountEqn, variableMap );
 
 		lines.add( "Heal for " + healVal );
 

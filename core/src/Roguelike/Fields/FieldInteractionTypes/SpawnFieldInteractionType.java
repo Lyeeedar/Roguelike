@@ -22,28 +22,17 @@ public class SpawnFieldInteractionType extends AbstractFieldInteractionType
 
 		variableMap.put("srcstacks", src.stacks);
 		variableMap.put("dststacks", dst.stacks);
-		
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder(stacksEqn);
-		EquationHelper.setVariableNames(expB, variableMap, "");
-				
-		Expression exp = EquationHelper.tryBuild(expB);
-		if (exp == null)
-		{
-			return null;
-		}
-		
-		EquationHelper.setVariableValues(exp, variableMap, "");
-		
-		int stacks = (int)exp.evaluate();
-		
+
+		int stacks = EquationHelper.evaluate( stacksEqn, variableMap );
+
 		if (stacks == 0)
 		{
 			return null;
 		}
-		
+
 		Field field = Field.load(fieldName);
 		field.stacks = stacks;
-		
+
 		return field;
 	}
 

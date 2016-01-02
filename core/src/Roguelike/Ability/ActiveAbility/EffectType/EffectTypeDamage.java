@@ -124,28 +124,8 @@ public class EffectTypeDamage extends AbstractEffectType
 		{
 			if ( equations.containsKey( stat ) )
 			{
-				int raw = 0;
 				String eqn = equations.get( stat );
-
-				if ( Global.isNumber( eqn ) )
-				{
-					raw = Integer.parseInt( eqn );
-				}
-				else
-				{
-					ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-					EquationHelper.setVariableNames( expB, variableMap, "" );
-
-					Expression exp = EquationHelper.tryBuild( expB );
-					if ( exp == null )
-					{
-						continue;
-					}
-
-					EquationHelper.setVariableValues( exp, variableMap, "" );
-
-					raw = (int) exp.evaluate();
-				}
+				int raw = EquationHelper.evaluate( eqn, variableMap );
 
 				stats.put( stat, raw );
 			}

@@ -177,18 +177,47 @@
 			<TileData>
 				<Opaque>true</Opaque>
 				<Passable>false</Passable>
-				<Sprite>
-                    <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
-				</Sprite>
-				<Sprite>
-                    <Name>Oryx/Custom/terrain/tree</Name>
-                    <DrawActualSize>true</DrawActualSize>
-					<Colour>
-						<Red>0.6</Red>
-						<Green>1</Green>
-						<Blue>0</Blue>
-					</Colour>
-				</Sprite>
+
+                <Group Chance="0.75">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <Sprite>
+                        <Name>Oryx/Custom/terrain/tree1</Name>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.15">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <Sprite>
+                        <Name>Oryx/Custom/terrain/tree2</Name>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <Sprite>
+                        <Name>Oryx/Custom/terrain/tree3</Name>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <Sprite>
+                        <Name>Oryx/Custom/terrain/tree4</Name>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+                </Group>
+
 				<AmbientShadow>
 				    <Factor>0.2</Factor>
 				    <Range>2</Range>

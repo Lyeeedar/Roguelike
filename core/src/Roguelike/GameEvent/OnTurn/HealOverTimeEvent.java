@@ -26,40 +26,13 @@ public final class HealOverTimeEvent extends AbstractOnTurnEvent
 
 		if ( condition != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return false; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-
-			double conditionVal = exp.evaluate();
-
+			int conditionVal = EquationHelper.evaluate( condition, variableMap );
 			if ( conditionVal == 0 ) { return false; }
 		}
 
-		float raw = 0;
-		if ( Global.isNumber( equation ) )
-		{
-			raw = Float.parseFloat( equation );
-		}
-		else
-		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( equation );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
+		int raw = EquationHelper.evaluate( equation, variableMap );
 
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return false; }
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-
-			raw = (float) exp.evaluate();
-		}
-
-		raw = raw * time + remainder;
-
-		int rounded = (int) Math.floor( raw );
+		int rounded = (int) Math.floor( raw * time + remainder );
 
 		remainder = raw - rounded;
 
@@ -84,16 +57,7 @@ public final class HealOverTimeEvent extends AbstractOnTurnEvent
 	{
 		Array<String> lines = new Array<String>();
 
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder( equation );
-		EquationHelper.setVariableNames( expB, variableMap, "" );
-
-		Expression exp = EquationHelper.tryBuild( expB );
-		if ( exp == null ) { return lines; }
-
-		EquationHelper.setVariableValues( exp, variableMap, "" );
-
-		float raw = (float) exp.evaluate();
-		int rounded = (int) Math.floor( raw );
+		int rounded = EquationHelper.evaluate( equation, variableMap );
 
 		lines.add( "Heals " + rounded + " health" );
 

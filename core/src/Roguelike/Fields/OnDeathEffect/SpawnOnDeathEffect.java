@@ -23,18 +23,7 @@ public class SpawnOnDeathEffect extends AbstractOnDeathEffect
 
 		variableMap.put("stacks", field.stacks);
 
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder(stacksEqn);
-		EquationHelper.setVariableNames(expB, variableMap, "");
-
-		Expression exp = EquationHelper.tryBuild(expB);
-		if (exp == null)
-		{
-			return;
-		}
-
-		EquationHelper.setVariableValues(exp, variableMap, "");
-
-		int stacks = (int)exp.evaluate();
+		int stacks = EquationHelper.evaluate( stacksEqn, variableMap );
 
 		if (stacks == 0)
 		{

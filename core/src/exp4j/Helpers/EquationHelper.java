@@ -61,7 +61,7 @@ public class EquationHelper
 		return expB;
 	}
 
-	public static int evaluate( String eqn )
+	public static int evaluate( String eqn, HashMap<String, Integer> variableMap )
 	{
 		if ( Global.isNumber( eqn ) )
 		{
@@ -70,6 +70,7 @@ public class EquationHelper
 		else
 		{
 			ExpressionBuilder expB = createEquationBuilder( eqn );
+			setVariableNames( expB, variableMap, "" );
 			Expression exp = tryBuild( expB );
 
 			if ( exp == null )
@@ -78,7 +79,11 @@ public class EquationHelper
 			}
 			else
 			{
-				return (int) exp.evaluate();
+				setVariableValues( exp, variableMap, "" );
+				double rawVal = exp.evaluate();
+				int val = Math.round( (float)rawVal );
+
+				return val;
 			}
 		}
 	}

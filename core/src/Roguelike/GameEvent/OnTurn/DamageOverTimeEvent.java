@@ -40,20 +40,7 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 
 		if ( condition != null )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null )
-			{
-				accumulator = 0;
-				return false;
-			}
-
-			EquationHelper.setVariableValues( exp, variableMap, "" );
-
-			double conditionVal = exp.evaluate();
-
+			int conditionVal = EquationHelper.evaluate( condition, variableMap );
 			if ( conditionVal == 0 )
 			{
 				accumulator = 0;
@@ -61,23 +48,7 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 			}
 		}
 
-		int raw = 0;
-		if ( Global.isNumber( eqn ) )
-		{
-			raw = Integer.parseInt( eqn );
-		}
-		else
-		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp != null )
-			{
-				EquationHelper.setVariableValues( exp, variableMap, "" );
-				raw = (int) exp.evaluate();
-			}
-		}
+		int raw = EquationHelper.evaluate( eqn, variableMap );
 
 		while ( accumulator > 1 )
 		{
@@ -116,23 +87,7 @@ public final class DamageOverTimeEvent extends AbstractOnTurnEvent
 			}
 		}
 
-		int raw = 0;
-		if ( Global.isNumber( eqn ) )
-		{
-			raw = Integer.parseInt( eqn );
-		}
-		else
-		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( eqn );
-			EquationHelper.setVariableNames( expB, variableMap, "" );
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp != null )
-			{
-				EquationHelper.setVariableValues( exp, variableMap, "" );
-				raw = (int) exp.evaluate();
-			}
-		}
+		int raw = EquationHelper.evaluate( eqn, variableMap );
 
 		lines.add( "Total Damage: " + raw );
 

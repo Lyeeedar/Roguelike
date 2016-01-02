@@ -15,16 +15,16 @@ public class ConditionalCheckValue extends AbstractConditional
 {
 	//####################################################################//
 	//region Public Methods
-	
+
 	//----------------------------------------------------------------------
 	@Override
 	public BehaviourTreeState evaluate(GameEntity entity)
 	{
-		float keyVal = 0;		
+		int keyVal = 0;
 		if (key != null)
 		{
 			Object storedValue = getData(key, null);
-			
+
 			if (condition == null)
 			{
 				State = storedValue != null ? succeed : fail;
@@ -42,7 +42,7 @@ public class ConditionalCheckValue extends AbstractConditional
 				}
 				else if (storedValue instanceof Float)
 				{
-					keyVal = (Float)storedValue;
+					keyVal = Math.round((Float)storedValue);
 				}
 				else
 				{
@@ -50,25 +50,15 @@ public class ConditionalCheckValue extends AbstractConditional
 				}
 			}
 		}
-		
-		HashMap<String, Integer> variableMap = entity.getVariableMap();
-		
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder(condition);
-		EquationHelper.setVariableNames(expB, variableMap, "");		
-		if (key != null) { expB.variable(key.toLowerCase()); }
 
-		Expression exp = EquationHelper.tryBuild(expB);
-		if (exp == null)
+		HashMap<String, Integer> variableMap = entity.getVariableMap();
+		if (key != null)
 		{
-			State = fail;
-			return State;
+			variableMap.put( key.toLowerCase(), keyVal );
 		}
-		
-		EquationHelper.setVariableValues(exp, variableMap, "");
-		if (key != null) { exp.setVariable(key.toLowerCase(), keyVal); }
-					
-		double conditionVal = exp.evaluate();
-		
+
+		int conditionVal = EquationHelper.evaluate( condition, variableMap );
+
 		State = conditionVal == 1 ? succeed : fail;
 		return State;
 	}
@@ -77,9 +67,9 @@ public class ConditionalCheckValue extends AbstractConditional
 	@Override
 	public void cancel()
 	{
-		
+
 	}
-	
+
 	//----------------------------------------------------------------------
 	@Override
 	public void parse(Element xml)
@@ -87,27 +77,27 @@ public class ConditionalCheckValue extends AbstractConditional
 		this.key = xml.getAttribute("Key", null);
 		this.succeed = BehaviourTreeState.valueOf(xml.getAttribute("Success", "SUCCEEDED").toUpperCase());
 		this.fail = BehaviourTreeState.valueOf(xml.getAttribute("Failure", "FAILED").toUpperCase());
-		
+
 		this.condition = xml.getAttribute("Condition", null);
 		if (this.condition != null) { this.condition = this.condition.toLowerCase(); }
 	}
-	
+
 	//endregion Public Methods
 	//####################################################################//
 	//region Data
 
 	//----------------------------------------------------------------------
 	public String key;
-	
+
 	//----------------------------------------------------------------------
 	public String condition;
 
 	//----------------------------------------------------------------------
 	public BehaviourTreeState succeed;
-	
+
 	//----------------------------------------------------------------------
 	public BehaviourTreeState fail;
-		
+
 	//endregion Data
 	//####################################################################//
 }
