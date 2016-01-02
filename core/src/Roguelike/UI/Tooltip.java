@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class Tooltip extends Table
 {
-	private static Tooltip openTooltip;
+	public static Tooltip openTooltip;
 
 	public Table Content;
 	private TooltipStyle m_style;
@@ -36,14 +36,14 @@ public class Tooltip extends Table
 		setBackground( m_style.background );
 	}
 
-	public void show( InputEvent event, float x, float y )
+	public void show( InputEvent event, float x, float y, boolean lockedMenu )
 	{
 		Vector2 tmp = new Vector2( x, y );
 		event.getListenerActor().localToStageCoordinates( tmp );
-		show( tmp.x, tmp.y );
+		show( tmp.x, tmp.y, lockedMenu );
 	}
 
-	public void show( float x, float y )
+	public void show( float x, float y, boolean lockedMenu )
 	{
 		if ( openTooltip != null )
 		{
@@ -82,7 +82,7 @@ public class Tooltip extends Table
 		setPosition( tmp.x, tmp.y );
 		toFront();
 
-		// openTooltip = this;
+		if (!lockedMenu) { openTooltip = this; }
 	}
 
 	public static class TooltipStyle

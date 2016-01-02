@@ -57,6 +57,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import javax.tools.Tool;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.PriorityQueue;
@@ -141,7 +142,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		if (Global.ANDROID)
 		{
-			TextButton examineButton = new TextButton( "i", skin );
+			Button examineButton = new Button( skin, "examine" );
 			examineButton.addListener( new InputListener()
 			{
 				@Override
@@ -168,8 +169,66 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			@Override
 			public void changed( ChangeEvent event, Actor actor )
 			{
-				Global.CurrentLevel.player.weaponSheathed = sheathButton.isChecked();
+				if (!examineMode)
+				{
+					Global.CurrentLevel.player.weaponSheathed = sheathButton.isChecked();
+				}
+				else
+				{
+					sheathButton.setChecked( Global.CurrentLevel.player.weaponSheathed );
+				}
 			}
+		} );
+		sheathButton.addListener( new InputListener()
+		{
+			private Tooltip tooltip;
+
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
+			{
+				return mouseMoved( event, x, y );
+			}
+
+			@Override
+			public boolean mouseMoved(InputEvent event, float x, float y)
+			{
+				if (!Global.ANDROID || examineMode)
+				{
+					String text = "";
+
+					if ( sheathButton.isChecked() )
+					{
+						text = "Enable auto-attack";
+					}
+					else
+					{
+						text = "Disable auto-attack";
+					}
+
+					Label label = new Label( text, skin );
+					Table table = new Table();
+					table.add( label ).expand().fill();
+
+					tooltip = new Tooltip( table, skin, stage );
+					tooltip.show( event, x, y, false );
+
+					return true;
+				}
+
+				return false;
+			}
+
+			@Override
+			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor)
+			{
+				if (!Global.ANDROID)
+				{
+					tooltip.setVisible(false);
+					tooltip.remove();
+					tooltip.openTooltip = null;
+				}
+			}
+
 		} );
 
 		sheathButton.setPosition( Global.Resolution[0] - sheathButton.getWidth() - 20, 20 );
@@ -218,19 +277,22 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			fpsAccumulator = 0;
 		}
 
-		Global.CurrentLevel.update( delta );
-		processPickupQueue();
-
-		sheathButton.setChecked( Global.CurrentLevel.player.weaponSheathed );
-
-		if (contextMenu == null)
+		if ( !examineMode )
 		{
-			for (AbilityTree tree : Global.CurrentLevel.player.slottedAbilities)
+			Global.CurrentLevel.update( delta );
+			processPickupQueue();
+
+			sheathButton.setChecked( Global.CurrentLevel.player.weaponSheathed );
+
+			if (contextMenu == null)
 			{
-				if (tree != null && tree.current.level == 10 && tree.current.branch1 != null)
+				for (AbilityTree tree : Global.CurrentLevel.player.slottedAbilities)
 				{
-					tree.current.mutate( skin, Global.CurrentLevel.player, stage );
-					break;
+					if (tree != null && tree.current.level == 10 && tree.current.branch1 != null)
+					{
+						tree.current.mutate( skin, Global.CurrentLevel.player, stage );
+						break;
+					}
 				}
 			}
 		}
@@ -268,13 +330,18 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
+
+		if ( examineMode )
+		{
+			batch.setShader( GrayscaleShader.Instance );
+		}
+
 		batch.begin();
 
 		hasStatus.clear();
 		entitiesWithSpeech.clear();
 
 		renderBackground( offsetx, offsety );
-		//renderSeenTiles( offsetx, offsety, tileSize3 );
 
 		renderVisibleTiles( offsetx, offsety, tileSize3 );
 		if ( Global.CurrentDialogue == null )
@@ -285,6 +352,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		renderSpriteEffects( offsetx, offsety, tileSize3 );
 
 		flush( batch );
+
+		if ( examineMode )
+		{
+			batch.setShader( null );
+		}
 
 		renderStatus( offsetx, offsety );
 
@@ -1291,39 +1363,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean touchDown( int screenX, int screenY, int pointer, int button )
 	{
-		addTouchAction( screenX, Global.ScreenSize[1] - screenY );
-
-
-		if ( tooltip != null )
+		if ( Tooltip.openTooltip != null )
 		{
-			tooltip.setVisible( false );
-			tooltip.remove();
-			tooltip = null;
-		}
-
-		{
-			Vector3 mousePos = camera.unproject( new Vector3( screenX, screenY, 0 ) );
-
-			int mousePosX = (int) mousePos.x;
-			int mousePosY = (int) mousePos.y;
-
-			int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
-			int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
-
-			int x = ( mousePosX - offsetx ) / Global.TileSize;
-			int y = ( mousePosY - offsety ) / Global.TileSize;
-
-			GameTile tile = Global.CurrentLevel.getGameTile( x, y );
-
-			if ( tile != null )
-			{
-				Sprite sprite = AssetManager.loadSprite( "Oryx/uf_split/uf_interface/uf_interface_460" );
-				sprite.spriteAnimation = new StretchAnimation( 0.5f, new int[]{1, 1}, 0, StretchAnimation.StretchEquation.EXPAND );
-
-				SpriteEffect effect = new SpriteEffect( sprite );
-
-				tile.spriteEffects.add( effect );
-			}
+			Tooltip.openTooltip.setVisible( false );
+			Tooltip.openTooltip.remove();
+			Tooltip.openTooltip = null;
 		}
 
 		clearContextMenu();
@@ -1336,11 +1380,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		if ( longPressed || dragged ) { return false; }
 
-		if ( tooltip != null )
+		if ( Tooltip.openTooltip != null )
 		{
-			tooltip.setVisible( false );
-			tooltip.remove();
-			tooltip = null;
+			Tooltip.openTooltip.setVisible( false );
+			Tooltip.openTooltip.remove();
+			Tooltip.openTooltip = null;
 		}
 
 		clearContextMenu();
@@ -1455,10 +1499,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean mouseMoved( int screenX, int screenY )
 	{
-		if ( tooltip != null )
+		if ( Tooltip.openTooltip != null )
 		{
-			tooltip.remove();
-			tooltip = null;
+			Tooltip.openTooltip.setVisible( false );
+			Tooltip.openTooltip.remove();
+			Tooltip.openTooltip = null;
 		}
 
 		if ( Global.CurrentDialogue != null )
@@ -1496,8 +1541,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 					if ( table != null )
 					{
-						tooltip = new Tooltip( table, skin, stage );
-						tooltip.show( mousePosX, mousePosY );
+						Tooltip tooltip = new Tooltip( table, skin, stage );
+						tooltip.show( mousePosX, mousePosY, false );
 					}
 				}
 			}
@@ -1507,8 +1552,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				if ( table != null )
 				{
-					tooltip = new Tooltip( table, skin, stage );
-					tooltip.show( mousePosX, mousePosY );
+					Tooltip tooltip = new Tooltip( table, skin, stage );
+					tooltip.show( mousePosX, mousePosY, false );
 				}
 			}
 		}
@@ -1936,7 +1981,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		contextMenu = new Tooltip( table, skin, stage );
 
-		contextMenu.show( 50, 64 + 50 );
+		contextMenu.show( 50, 64 + 50, lock );
 		lockContextMenu = lock;
 
 		contextMenu.setWidth( Global.Resolution[ 0 ] - 120 );
@@ -1956,18 +2001,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.setPosition( Global.Resolution[ 0 ] / 2 + Global.TileSize / 2, Global.Resolution[ 1 ] / 2 + Global.TileSize );
 		stage.addActor( table );
 		table.setVisible( true );
-	}
-
-	// ----------------------------------------------------------------------
-	public void addTouchAction( float x, float y )
-	{
-		Widget widget = new Label("O", skin);//new SpriteWidget( AssetManager.loadSprite( "Oryx/uf_split/uf_interface/uf_interface_460" ), 32, 32 );
-		//widget.setScale( 0.1f );
-		widget.addAction( new SequenceAction( Actions.delay( 2 ), Actions.removeActor() ) );
-
-		widget.setPosition( x - widget.getWidth()/2, y - widget.getHeight()/2 );
-		stage.addActor( widget );
-		widget.setVisible( true );
 	}
 
 	// ----------------------------------------------------------------------
@@ -2140,7 +2173,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public AbilityTree abilityToEquip;
 	private Array<Point> abilityTiles;
 	private Color tempColour = new Color();
-	private Tooltip tooltip;
+	//private Tooltip tooltip;
 
 	// ----------------------------------------------------------------------
 	private PriorityQueue<RenderSprite> queuedSprites = new PriorityQueue<RenderSprite>( );

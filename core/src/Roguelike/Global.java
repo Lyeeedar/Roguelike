@@ -17,6 +17,7 @@ import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.GameTile.LightData;
 import Roguelike.Tiles.Point;
+import Roguelike.UI.LayeredDrawable;
 import Roguelike.UI.Seperator;
 import Roguelike.UI.Tooltip.TooltipStyle;
 import Roguelike.Util.EnumBitflag;
@@ -439,9 +440,22 @@ public class Global
 		skin.add( "default-horizontal", progressBar );
 
 		Button.ButtonStyle sheathButton = new Button.ButtonStyle(  );
-		sheathButton.up = new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/Oryx/uf_split/uf_interface/uf_interface_335.png" ) );
-		sheathButton.checked = new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/Oryx/uf_split/uf_interface/uf_interface_333.png" ) );
+		sheathButton.up = new LayeredDrawable(
+				new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) ),
+				new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/Unsheathed.png" ) ) );
+		sheathButton.checked = new LayeredDrawable(
+				new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) ),
+				new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/Sheathed.png" ) ) );
 		skin.add( "sheath", sheathButton );
+
+		Button.ButtonStyle examineButton = new Button.ButtonStyle(  );
+		examineButton.up = new LayeredDrawable(
+				new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) ),
+				new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/QuestionMark.png" ) ) );
+		examineButton.checked = new LayeredDrawable(
+				new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) ),
+				new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/Eye.png" ) ) );
+		skin.add( "examine", examineButton );
 
 		Seperator.SeperatorStyle horiSeperatorStyle = new Seperator.SeperatorStyle(  );
 		horiSeperatorStyle.vertical = false;

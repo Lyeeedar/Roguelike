@@ -76,7 +76,7 @@ public final class Item extends GameEventHandler
 
 		if ( xml.getChildByName( "Recipe" ) != null )
 		{
-			String recipe = xml.getChildByName( "Recipe" ).getText();
+			String recipe = Global.capitalizeString( xml.getChildByName( "Recipe" ).getText() );
 			String material = xml.getChildByName( "Material" ).getText();
 
 			Item materialItem = Item.load( "Material/"+material );
