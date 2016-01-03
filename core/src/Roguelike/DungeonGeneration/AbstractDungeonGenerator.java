@@ -411,7 +411,7 @@ public abstract class AbstractDungeonGenerator
 
 					if ( symbol.entityData.equals( "Boss" ) )
 					{
-						e = GameEntity.load( fp.bosses.random() );
+						e = GameEntity.load( fp.bosses.get( ran.nextInt( fp.bosses.size ) ) );
 					}
 					else if ( Global.isNumber( symbol.entityData ) )
 					{

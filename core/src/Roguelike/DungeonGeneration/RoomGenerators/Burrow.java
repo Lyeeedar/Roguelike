@@ -29,7 +29,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
  *
  * Algorithm description:
  * The algorithm operates on a rectangular grid. Each cell can be 'wall'
- * or 'floor'. A (non-border) cell has 8 neigbours - diagonals count. 
+ * or 'floor'. A (non-border) cell has 8 neigbours - diagonals count.
  * There is also a cell store with two operations: store a given cell on
  * top, and pull a cell from the store. The cell to be pulled is selected
  * randomly from the store if N_cells_in_store < 125, and from the top
@@ -38,11 +38,11 @@ import com.badlogic.gdx.utils.XmlReader.Element;
  *
  * The algorithm starts with most of the map filled with 'wall', with a
  * "seed" of some floor cells; their neigbouring wall cells are in store.
- * The main loop in delveon() is repeated until the desired number of 
+ * The main loop in delveon() is repeated until the desired number of
  * floor cells is achieved, or there is nothing in store:
  *	 1) Get a cell from the store;
- *	 Check the conditions: 
- *	 a) the cell has between ngb_min and ngb_max floor neighbours, 
+ *	 Check the conditions:
+ *	 a) the cell has between ngb_min and ngb_max floor neighbours,
  *	 b) making it a floor cell won't open new connections,
  *		 or the RNG allows it with connchance/100 chance.
  *	 if a) and b) are met, the cell becomes floor, and its wall
@@ -117,7 +117,7 @@ public class Burrow extends AbstractRoomGenerator
 			}
 		}
 
-		Point chosen = tempArray.random().copy();
+		Point chosen = tempArray.get( ran.nextInt( tempArray.size ) ).copy();
 		grid[chosen.x][chosen.y] = floor;
 
 		Global.PointPool.freeAll( tempArray );
