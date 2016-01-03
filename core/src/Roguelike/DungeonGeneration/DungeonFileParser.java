@@ -2,6 +2,7 @@ package Roguelike.DungeonGeneration;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import net.objecthunter.exp4j.Expression;
@@ -140,17 +141,17 @@ public class DungeonFileParser
 
 		public int width;
 		public int height;
-		public HashMap<Character, Symbol> localSymbolMap = new HashMap<Character, Symbol>();
-		public HashMap<Character, Symbol> sharedSymbolMap;
+		public HashMap<Character, Symbol> symbolMap = new HashMap<Character, Symbol>();
 		public char[][] roomDef;
 		public String faction;
 		public AbstractRoomGenerator generator;
 		public String placementHint;
 
-		public static DFPRoom parse( Element xml, HashMap<Character, Symbol> sharedSymbolMap )
+		private boolean symbolsResolved = false;
+
+		public static DFPRoom parse( Element xml )
 		{
 			DFPRoom room = new DFPRoom();
-			room.sharedSymbolMap = sharedSymbolMap;
 
 			room.spawnEquation = xml.getAttribute( "Condition", "1" ).toLowerCase();
 
@@ -227,8 +228,8 @@ public class DungeonFileParser
 			{
 				for ( int i = 0; i < symbolsElement.getChildCount(); i++ )
 				{
-					Symbol symbol = Symbol.parse( symbolsElement.getChild( i ), sharedSymbolMap, room.localSymbolMap );
-					room.localSymbolMap.put( symbol.character, symbol );
+					Symbol symbol = Symbol.parse( symbolsElement.getChild( i ) );
+					room.symbolMap.put( symbol.character, symbol );
 
 					if ( symbol.environmentData != null
 							&& ( symbol.environmentData.get( "Type", "" ).equals( "Transition" ) || symbol.environmentData.get( "Type", "" ).equals( "Dungeon" ) ) )
@@ -241,6 +242,21 @@ public class DungeonFileParser
 			return room;
 		}
 
+		public void resolveSymbols(HashMap<Character, Symbol> sharedSymbolMap)
+		{
+			for (Map.Entry<Character, Symbol> pair : sharedSymbolMap.entrySet())
+			{
+				symbolMap.put( pair.getKey(), pair.getValue().copy() );
+			}
+
+			for (Symbol s : symbolMap.values())
+			{
+				s.resolveExtends( symbolMap );
+			}
+
+			symbolsResolved = true;
+		}
+
 		public DFPRoom copy()
 		{
 			DFPRoom room = new DFPRoom();
@@ -250,15 +266,14 @@ public class DungeonFileParser
 			room.spawnEquation = spawnEquation;
 			room.width = width;
 			room.height = height;
-			room.sharedSymbolMap = sharedSymbolMap;
 			room.roomDef = roomDef;
 			room.faction = faction;
 			room.generator = generator;
 			room.placementHint = placementHint;
 
-			for ( Character key : localSymbolMap.keySet() )
+			for ( Character key : symbolMap.keySet() )
 			{
-				room.localSymbolMap.put( key, localSymbolMap.get( key ).copy() );
+				room.symbolMap.put( key, symbolMap.get( key ).copy() );
 			}
 
 			return room;
@@ -266,16 +281,11 @@ public class DungeonFileParser
 
 		public Symbol getSymbol( char c )
 		{
-			Symbol s = localSymbolMap.get( c );
-			if ( s == null )
-			{
-				s = sharedSymbolMap.get( c );
-			}
+			Symbol s = symbolMap.get( c );
 
 			if ( s == null )
 			{
-				System.out.println( "Failed to find symbol for character '" + c + "'! Falling back to using '.'" );
-				s = sharedSymbolMap.get( '.' );
+				throw new RuntimeException( "Attempted to use undefined symbol: " + c );
 			}
 
 			return s;
@@ -307,6 +317,11 @@ public class DungeonFileParser
 
 		public void fillRoom( Room room, Random ran, DungeonFileParser dfp )
 		{
+			if (!symbolsResolved)
+			{
+				resolveSymbols( dfp.sharedSymbolMap );
+			}
+
 			room.roomData = this;
 			room.width = width;
 			room.height = height;
@@ -390,7 +405,7 @@ public class DungeonFileParser
 	}
 
 	// ----------------------------------------------------------------------
-	public Array<DFPRoom> getRooms( int depth, Random ran, boolean isBoss )
+	public Array<DFPRoom> getRooms( int depth, Random ran, boolean isBoss, FactionParser majorFaction, Array<FactionParser> minorFactions )
 	{
 		Array<DFPRoom> rooms = new Array<DFPRoom>();
 
@@ -400,6 +415,38 @@ public class DungeonFileParser
 			for ( int i = 0; i < count; i++ )
 			{
 				rooms.add( room.copy() );
+			}
+		}
+
+		for (DFPRoom room : majorFaction.rooms)
+		{
+			int count = room.processCondition( depth, ran, isBoss );
+			for ( int i = 0; i < count; i++ )
+			{
+				DFPRoom cpy = room.copy();
+				cpy.faction = majorFaction.name;
+				rooms.add( cpy );
+			}
+		}
+
+		for (FactionParser faction : minorFactions)
+		{
+			if (ran.nextInt( 3 ) == 0)
+			{
+				Array<DFPRoom> validRooms = new Array<DFPRoom>(  );
+
+				for (DFPRoom room : faction.rooms)
+				{
+					int count = room.processCondition( depth, ran, false );
+					for ( int i = 0; i < count; i++ )
+					{
+						DFPRoom cpy = room.copy();
+						cpy.faction = faction.name;
+						validRooms.add( cpy );
+					}
+				}
+
+				rooms.add( validRooms.random() );
 			}
 		}
 
@@ -552,7 +599,7 @@ public class DungeonFileParser
 		Element symbolsElement = xmlElement.getChildByName( "Symbols" );
 		for ( int i = 0; i < symbolsElement.getChildCount(); i++ )
 		{
-			Symbol symbol = Symbol.parse( symbolsElement.getChild( i ), sharedSymbolMap, null );
+			Symbol symbol = Symbol.parse( symbolsElement.getChild( i ) );
 			sharedSymbolMap.put( symbol.character, symbol );
 		}
 
@@ -560,8 +607,8 @@ public class DungeonFileParser
 		{
 			String key = el.getAttribute( "Key", "all" ).toLowerCase();
 
-			DFPRoom prevRoom = DFPRoom.parse( el.getChildByName( "Prev" ), sharedSymbolMap );
-			DFPRoom thisRoom = DFPRoom.parse( el.getChildByName( "This" ), sharedSymbolMap );
+			DFPRoom prevRoom = DFPRoom.parse( el.getChildByName( "Prev" ) );
+			DFPRoom thisRoom = DFPRoom.parse( el.getChildByName( "This" ) );
 
 			entranceRooms.put( key, new DFPRoom[]{ prevRoom, thisRoom } );
 		}
@@ -571,7 +618,7 @@ public class DungeonFileParser
 		{
 			for ( int i = 0; i < roomsElement.getChildCount(); i++ )
 			{
-				DFPRoom room = DFPRoom.parse( roomsElement.getChild( i ), sharedSymbolMap );
+				DFPRoom room = DFPRoom.parse( roomsElement.getChild( i ) );
 				rooms.add( room );
 			}
 		}

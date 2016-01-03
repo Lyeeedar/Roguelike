@@ -17,6 +17,7 @@ public final class Symbol implements PathfindingTile
 {
 	public Room containingRoom;
 
+	public Character extendsSymbol;
 	public char character;
 
 	public Element tileData;
@@ -38,6 +39,7 @@ public final class Symbol implements PathfindingTile
 	public Symbol copy()
 	{
 		Symbol s = new Symbol();
+		s.extendsSymbol = extendsSymbol;
 		s.character = character;
 		s.tileData = tileData;
 		s.environmentData = environmentData;
@@ -101,26 +103,15 @@ public final class Symbol implements PathfindingTile
 		return data;
 	}
 
-	public static Symbol parse( Element xml, HashMap<Character, Symbol> sharedSymbolMap, HashMap<Character, Symbol> localSymbolMap )
+	public static Symbol parse( Element xml )
 	{
 		Symbol symbol = new Symbol();
 
 		// load the base symbol
-		if ( xml.getAttribute( "Extends", null ) != null )
+		String extendsString = xml.getAttribute( "Extends", null );
+		if (extendsString != null)
 		{
-			char extendsSymbol = xml.getAttribute( "Extends" ).charAt( 0 );
-
-			Symbol rs = localSymbolMap != null ? localSymbolMap.get( extendsSymbol ) : null;
-			if ( rs == null )
-			{
-				rs = sharedSymbolMap.get( extendsSymbol );
-			}
-
-			symbol.character = rs.character;
-			symbol.tileData = rs.tileData;
-			symbol.environmentData = rs.environmentData;
-			symbol.entityData = rs.entityData;
-			symbol.metaValue = rs.metaValue;
+			symbol.extendsSymbol = extendsString.charAt( 0 );
 		}
 
 		// fill in the new values
@@ -144,6 +135,36 @@ public final class Symbol implements PathfindingTile
 		symbol.metaValue = xml.get( "MetaValue", symbol.metaValue );
 
 		return symbol;
+	}
+
+	public void resolveExtends( HashMap<Character, Symbol> symbolMap )
+	{
+		if ( extendsSymbol != null )
+		{
+			Symbol otherSymbol = symbolMap.get( extendsSymbol );
+			if (otherSymbol == null)
+			{
+				if (otherSymbol == null)
+				{
+					throw new RuntimeException("Attempted to use undefined symbol: " + extendsSymbol);
+				}
+			}
+
+			extendsSymbol = null;
+
+			otherSymbol.resolveExtends( symbolMap );
+
+			if (tileData == null) { tileData = otherSymbol.tileData; }
+
+			if (tileData == null)
+			{
+				throw new RuntimeException( "Failed to get tiledata for symbol: " + character );
+			}
+
+			if (environmentData == null) { environmentData = otherSymbol.environmentData; }
+			if (entityData == null) { entityData = otherSymbol.entityData; }
+			if (metaValue == null) { metaValue = otherSymbol.metaValue; }
+		}
 	}
 
 	public boolean isPassable( EnumBitflag<Passability> travelType )

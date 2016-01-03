@@ -282,12 +282,9 @@ public final class Room
 		EnumBitflag<Direction> solid = new EnumBitflag<Direction>();
 		for ( Direction dir : Direction.values() )
 		{
-			if ( !Global.CanMoveDiagonal )
+			if (!Global.CanMoveDiagonal && !dir.isCardinal())
 			{
-				if ( !dir.isCardinal() )
-				{
-					solid.setBit( dir );
-				}
+				continue;
 			}
 
 			int x1 = x + dir.getX();
@@ -306,8 +303,8 @@ public final class Room
 		// Vertical path
 		if ( !solid.contains( Direction.NORTH ) && !solid.contains( Direction.SOUTH ) )
 		{
-			boolean side1 = solid.contains( Direction.EAST ) || solid.contains( Direction.NORTHEAST ) || solid.contains( Direction.SOUTHEAST );
-			boolean side2 = solid.contains( Direction.WEST ) || solid.contains( Direction.NORTHWEST ) || solid.contains( Direction.SOUTHWEST );
+			boolean side1 = solid.contains( Direction.EAST ) || ( Global.CanMoveDiagonal && ( solid.contains( Direction.NORTHEAST ) || solid.contains( Direction.SOUTHEAST ) ) );
+			boolean side2 = solid.contains( Direction.WEST ) || ( Global.CanMoveDiagonal && ( solid.contains( Direction.NORTHWEST ) || solid.contains( Direction.SOUTHWEST ) ) );
 
 			if ( side1 && side2 ) { return true; }
 		}
@@ -315,8 +312,8 @@ public final class Room
 		// Horizontal path
 		if ( !solid.contains( Direction.EAST ) && !solid.contains( Direction.WEST ) )
 		{
-			boolean side1 = solid.contains( Direction.NORTH ) || solid.contains( Direction.NORTHEAST ) || solid.contains( Direction.NORTHWEST );
-			boolean side2 = solid.contains( Direction.SOUTH ) || solid.contains( Direction.SOUTHEAST ) || solid.contains( Direction.SOUTHWEST );
+			boolean side1 = solid.contains( Direction.NORTH ) || ( Global.CanMoveDiagonal && ( solid.contains( Direction.NORTHEAST ) || solid.contains( Direction.NORTHWEST ) ) );
+			boolean side2 = solid.contains( Direction.SOUTH ) || ( Global.CanMoveDiagonal && ( solid.contains( Direction.SOUTHEAST ) || solid.contains( Direction.SOUTHWEST ) ) );
 
 			if ( side1 && side2 ) { return true; }
 		}

@@ -18,6 +18,9 @@ public class FactionParser
 		FURTHEST, WALL, CENTRE, ANY
 	}
 
+	public String name;
+
+	public Array<DungeonFileParser.DFPRoom> rooms = new Array<DungeonFileParser.DFPRoom>(  );
 	public Array<Creature> creatures = new Array<Creature>();
 	public Array<String> bosses = new Array<String>();
 	public Array<String> minibosses = new Array<String>(  );
@@ -74,6 +77,8 @@ public class FactionParser
 
 	private void internalLoad( String faction, String path )
 	{
+		name = faction;
+
 		XmlReader xml = new XmlReader();
 		Element xmlElement = null;
 
@@ -126,6 +131,72 @@ public class FactionParser
 				Element miniBossElement = miniBossesElement.getChild( i );
 
 				minibosses.add( path + "/" + miniBossElement.getName() );
+			}
+		}
+
+		Element roomsElement = xmlElement.getChildByName( "Rooms" );
+		if (roomsElement != null)
+		{
+			for (int i = 0; i < roomsElement.getChildCount(); i++)
+			{
+				Element roomElement = roomsElement.getChild( i );
+
+				DungeonFileParser.DFPRoom room = DungeonFileParser.DFPRoom.parse( roomElement );
+
+				// Fill in full creature paths
+				for ( Symbol s : room.symbolMap.values() )
+				{
+					if (s.entityData != null)
+					{
+						// Attempt to find the creature
+						String creaturePath = path + "/" + s.entityData;
+
+						boolean found = false;
+
+						if (!found)
+						{
+							for (Creature c : creatures)
+							{
+								if (c.entityName.equals( creaturePath ))
+								{
+									found = true;
+									break;
+								}
+							}
+						}
+
+						if (!found)
+						{
+							for (String c : minibosses)
+							{
+								if (c.equals( creaturePath ))
+								{
+									found = true;
+									break;
+								}
+							}
+						}
+
+						if (!found)
+						{
+							for (String c : bosses)
+							{
+								if (c.equals( creaturePath ))
+								{
+									found = true;
+									break;
+								}
+							}
+						}
+
+						if (found)
+						{
+							s.entityData = creaturePath;
+						}
+					}
+				}
+
+				rooms.add(room);
 			}
 		}
 	}

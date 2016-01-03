@@ -1237,10 +1237,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			}
 		}
 
-		String majorFactionName = dfp.getMajorFaction( ran );
-
-		FactionParser majorFaction = FactionParser.load( majorFactionName );
-		if ( majorFaction == null ) { return; }
+		Array<FactionParser> unplacedMinorFactions = new Array<FactionParser>( minorFactions );
 
 		factions.put( majorFaction, new Point( largest.x + largest.width / 2, largest.y + largest.height / 2 ) );
 
@@ -1272,12 +1269,33 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			}
 			else if ( !room.faction.equalsIgnoreCase( "none" ) )
 			{
-				int influence = ran.nextInt( 50 ) + 30;
+				FactionParser fp = null;
 
-				FactionParser fp = FactionParser.load( room.faction );
-
-				if ( fp != null )
+				if (room.faction.equals( majorFaction.name ))
 				{
+					fp = majorFaction;
+				}
+				else
+				{
+					for (FactionParser minor : minorFactions)
+					{
+						if ( minor.name.equals( room.faction ) )
+						{
+							fp = minor;
+							unplacedMinorFactions.removeValue( minor, true );
+							break;
+						}
+					}
+				}
+
+				if (fp == null)
+				{
+					fp = FactionParser.load( room.faction );
+				}
+
+				if ( fp != null && fp != majorFaction )
+				{
+					int influence = ran.nextInt( 50 ) + 30;
 					room.addFeatures( ran, dfp, fp, influence, false );
 
 					factions.put( fp, new Point( room.x + room.width / 2, room.y + room.height / 2 ) );
@@ -1291,44 +1309,39 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 		}
 		sortedRooms.sort();
 
-		float depthScale = ( saveLevel.depth - 1 ) / (float) 5;
+		while (unplacedMinorFactions.size > 0)
+		{
+			Pair pair = sortedRooms.removeIndex( sortedRooms.size - 1 );
 
-		int numMinor = (int) MathUtils.lerp( sortedRooms.size / 2.0f, sortedRooms.size / 4.0f, depthScale );
+			int influence = ran.nextInt( 80 ) + 10;
+
+			FactionParser fp = unplacedMinorFactions.removeIndex( 0 );
+
+			pair.room.addFeatures( ran, dfp, fp, influence, false );
+
+			factions.put( fp, new Point( pair.room.x + pair.room.width / 2, pair.room.y + pair.room.height / 2 ) );
+		}
 
 		// Add features
-		boolean spawnMiniboss = true;
+		boolean spawnMiniboss = !saveLevel.isBossLevel;
 		for ( int i = 0; i < sortedRooms.size; i++ )
 		{
 			Pair pair = sortedRooms.get( i );
 
-			if ( i < sortedRooms.size - numMinor )
+			int influence = pair.dist;
+			if ( influence > 0 )
 			{
-				int influence = pair.dist;
-				if ( influence > 0 )
-				{
-					float fract = influence / (float) ( width + height );
+				float fract = influence / (float) ( width + height );
 
-					fract /= 5;
-					fract = ( depthScale ) + fract;
-
-					influence = (int) ( fract * 100 );
-				}
-
-				influence = 100 - influence;
-
-				pair.room.addFeatures( ran, dfp, majorFaction, influence, spawnMiniboss );
-				spawnMiniboss = false;
+				influence = (int) ( fract * 100 );
 			}
-			else
-			{
-				int influence = ran.nextInt( 80 ) + 10;
 
-				FactionParser fp = FactionParser.load( dfp.getMinorFaction( ran ) );
+			influence = 100 - influence;
 
-				pair.room.addFeatures( ran, dfp, fp, influence, false );
+			System.out.println(influence);
 
-				factions.put( fp, new Point( pair.room.x + pair.room.width / 2, pair.room.y + pair.room.height / 2 ) );
-			}
+			pair.room.addFeatures( ran, dfp, majorFaction, influence, spawnMiniboss );
+			spawnMiniboss = false;
 		}
 	}
 

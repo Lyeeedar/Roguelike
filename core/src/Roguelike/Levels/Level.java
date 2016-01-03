@@ -106,6 +106,11 @@ public class Level
 		{
 			GameTile tile = getGameTile( tilePos );
 
+			if (!tile.visible)
+			{
+				continue;
+			}
+
 			float dst = 1 - Vector2.dst2( l.lx, l.ly, tile.x, tile.y ) / ( l.actualIntensity * l.actualIntensity );
 			if ( dst < 0 )
 			{

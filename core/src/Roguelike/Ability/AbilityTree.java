@@ -186,7 +186,7 @@ public class AbilityTree
 
 			current.setTree( this );
 
-			expToNextLevel = xml.getIntAttribute("BaseExp", 1);
+			expToNextLevel = xml.getIntAttribute("BaseExp", expToNextLevel);
 
 			if (xml.getChildCount() > 0)
 			{

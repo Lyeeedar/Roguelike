@@ -32,40 +32,77 @@ public abstract class AbstractDungeonGenerator
 
 	protected Array<Room> placedRooms = new Array<Room>();
 
+	protected FactionParser majorFaction;
+	protected Array<FactionParser> minorFactions = new Array<FactionParser>();
+
 	protected Level level;
 	protected Random ran;
 	protected int width;
 	protected int height;
 
+	protected static final boolean DEBUG_OUTPUT = true;
+
+	// ----------------------------------------------------------------------
 	public abstract void setup( SaveLevel level, DungeonFileParser dfp );
 
+	// ----------------------------------------------------------------------
 	public abstract boolean generate();
 
-	protected boolean DEBUG_OUTPUT = true;
-
+	// ----------------------------------------------------------------------
 	public Level getLevel()
 	{
 		return level;
 	}
 
 	// ----------------------------------------------------------------------
-	protected void selectRooms()
+	protected void selectFactions()
 	{
-		for ( DFPRoom r : dfp.getRooms( saveLevel.depth, ran, saveLevel.depth == 5 ) )
+		String majorFactionName = dfp.getMajorFaction( ran );
+
+		majorFaction = FactionParser.load( majorFactionName );
+
+		int numMinor = ran.nextInt( 2 ) + 1; // 1 - 3 minor
+
+		for (int i = 0; i < numMinor; i++)
 		{
-			if ( r.isTransition )
+			String minorFactionName = dfp.getMinorFaction( ran );
+
+			boolean added = false;
+
+			if ( majorFactionName.equals( minorFactionName ) )
 			{
-				if ( !saveLevel.created && saveLevel.depth != 5 )
+				added = true;
+			}
+
+			if (!added)
+			{
+				for ( FactionParser fp : minorFactions )
 				{
-					additionalRooms.add( r );
+					if ( fp.name.equals( majorFactionName ) )
+					{
+						added = true;
+						break;
+					}
 				}
 			}
-			else
+
+			if (!added)
 			{
-				Room room = new Room();
-				r.fillRoom( room, ran, dfp );
-				requiredRooms.add( room );
+				minorFactions.add( FactionParser.load( minorFactionName ) );
 			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	protected void selectRooms()
+	{
+		selectFactions();
+
+		for ( DFPRoom r : dfp.getRooms( saveLevel.depth, ran, saveLevel.isBossLevel, majorFaction, minorFactions ) )
+		{
+			Room room = new Room();
+			r.fillRoom( room, ran, dfp );
+			requiredRooms.add( room );
 		}
 
 		additionalRooms.addAll( saveLevel.requiredRooms );
@@ -207,7 +244,7 @@ public abstract class AbstractDungeonGenerator
 	// ----------------------------------------------------------------------
 	protected Level createLevel( Symbol[][] symbolGrid, Symbol outerWall )
 	{
-		FactionParser fp = FactionParser.load( dfp.getMajorFaction( ran ) );
+		FactionParser fp = majorFaction;
 
 		if ( DEBUG_OUTPUT )
 		{
@@ -374,7 +411,7 @@ public abstract class AbstractDungeonGenerator
 
 					if ( symbol.entityData.equals( "Boss" ) )
 					{
-						e = GameEntity.load( fp.bosses.get( ran.nextInt( fp.bosses.size ) ) );
+						e = GameEntity.load( fp.bosses.random() );
 					}
 					else if ( Global.isNumber( symbol.entityData ) )
 					{

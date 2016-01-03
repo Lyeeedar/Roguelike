@@ -52,6 +52,12 @@ public class LevelManager
 		SaveLevel level = new SaveLevel( current.levelName, depth, current.getExtraRooms( prev.levelName, depth, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
 		current.currentLevel = level;
 
+		if (depth == current.maxDepth)
+		{
+			// spawn boss
+			current.currentLevel.isBossLevel = true;
+		}
+
 		LoadingScreen.Instance.set( level, Global.CurrentLevel.player, "PlayerSpawn", null );
 		RoguelikeGame.Instance.switchScreen( RoguelikeGame.ScreenEnum.LOADING );
 	}

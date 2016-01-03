@@ -18,6 +18,7 @@ public final class SaveLevel extends SaveableObject<Level>
 	public long seed;
 	public String UID;
 	public boolean created = false;
+	public boolean isBossLevel = false;
 
 	public Array<DFPRoom> requiredRooms = new Array<DFPRoom>();
 
