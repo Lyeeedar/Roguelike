@@ -30,21 +30,24 @@ public class EntityStatusRenderer
 
 		drawHpBar( val, extraVal, batch, x, by, width, height, heightScale, colour );
 
-		int statusTileSize = Math.min( width / 3, 32 );
-		int sx = x;
-		int sy = y + (int)barheight + 16;
-
-		for ( StatusEffect status : entity.statusEffects )
+		if ( entity instanceof GameEntity )
 		{
-			status.icon.render( batch, sx, sy, statusTileSize, statusTileSize );
-			font.draw( batch, "" + status.duration, sx, sy );
+			int statusTileSize = Math.min( width / 3, 32 );
+			int sx = x;
+			int sy = y + (int)barheight + 16;
 
-			sx += statusTileSize;
-
-			if ( sx >= x + width )
+			for ( StatusEffect status : entity.statusEffects )
 			{
-				sx = x;
-				sy += statusTileSize;
+				status.icon.render( batch, sx, sy, statusTileSize, statusTileSize );
+				font.draw( batch, "" + status.duration, sx, sy );
+
+				sx += statusTileSize;
+
+				if ( sx >= x + width )
+				{
+					sx = x;
+					sy += statusTileSize;
+				}
 			}
 		}
 	}

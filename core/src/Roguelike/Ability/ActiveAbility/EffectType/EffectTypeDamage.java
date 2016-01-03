@@ -41,7 +41,7 @@ public class EffectTypeDamage extends AbstractEffectType
 	@Override
 	public void parse( Element xml )
 	{
-		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
+		reliesOn = xml.getAttribute( "ReliesOn", "" ).toLowerCase().split( "," );
 
 		for ( int i = 0; i < xml.getChildCount(); i++ )
 		{
@@ -112,9 +112,9 @@ public class EffectTypeDamage extends AbstractEffectType
 
 		for ( String name : reliesOn )
 		{
-			if ( !variableMap.containsKey( name.toLowerCase() ) )
+			if ( !variableMap.containsKey( name ) )
 			{
-				variableMap.put( name.toLowerCase(), 0 );
+				variableMap.put( name, 0 );
 			}
 		}
 

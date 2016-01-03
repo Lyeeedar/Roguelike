@@ -593,13 +593,21 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							Field field = gtile.fields.get( layer );
 							if ( field != null )
 							{
+								Sprite sprite = field.sprite;
+
+								if ( field.tilingSprite != null )
+								{
+									Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, field.tilingSprite.name);
+									sprite = field.tilingSprite.getSprite( directionBitflag );
+								}
+
 								if ( field.layer == FieldLayer.GROUND )
 								{
-									queueSprite( field.sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.GROUNDFIELD );
+									queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.GROUNDFIELD );
 								}
 								else
 								{
-									queueSprite( field.sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.OVERHEADFIELD );
+									queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.OVERHEADFIELD );
 								}
 							}
 						}

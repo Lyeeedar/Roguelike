@@ -446,7 +446,10 @@ public class DungeonFileParser
 					}
 				}
 
-				rooms.add( validRooms.get( ran.nextInt( validRooms.size ) ) );
+				if (validRooms.size > 0)
+				{
+					rooms.add( validRooms.get( ran.nextInt( validRooms.size ) ) );
+				}
 			}
 		}
 

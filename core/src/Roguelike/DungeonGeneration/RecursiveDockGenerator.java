@@ -1309,7 +1309,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 		}
 		sortedRooms.sort();
 
-		while (unplacedMinorFactions.size > 0)
+		while (unplacedMinorFactions.size > 0 && sortedRooms.size > 0)
 		{
 			Pair pair = sortedRooms.removeIndex( sortedRooms.size - 1 );
 

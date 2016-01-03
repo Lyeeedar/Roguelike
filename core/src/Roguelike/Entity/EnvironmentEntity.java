@@ -51,12 +51,12 @@ public class EnvironmentEntity extends Entity
 	{
 		if ( onTurnAction != null )
 		{
-			onTurnAction.update( this, cost );
+			onTurnAction.update( this, 1 );
 		}
 
 		for ( GameEventHandler h : getAllHandlers() )
 		{
-			h.onTurn( this, cost );
+			h.onTurn( this, 1 );
 		}
 
 		Iterator<StatusEffect> itr = statusEffects.iterator();
@@ -67,6 +67,7 @@ public class EnvironmentEntity extends Entity
 			if ( se.duration <= 0 )
 			{
 				itr.remove();
+				isVariableMapDirty = true;
 			}
 		}
 
@@ -74,7 +75,7 @@ public class EnvironmentEntity extends Entity
 
 		if ( popupDuration > 0 )
 		{
-			popupDuration -= cost;
+			popupDuration -= 1;
 		}
 	}
 

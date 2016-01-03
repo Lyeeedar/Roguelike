@@ -118,7 +118,7 @@ public class ImageUtils
 	{
 		Pixmap pixmap = new Pixmap( image.getWidth(), image.getHeight(), Format.RGBA8888 );
 
-		pixmap.setColor( 0, 0, 0, 0 );
+		pixmap.setColor( 1, 1, 1, 0 );
 		pixmap.fill();
 
 		Color cb = new Color();

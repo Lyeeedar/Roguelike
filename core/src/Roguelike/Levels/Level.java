@@ -553,6 +553,22 @@ public class Level
 
 				if (!matchFound)
 				{
+					if (otile.hasFields)
+					{
+						for (FieldLayer layer : FieldLayer.values())
+						{
+							Field field = otile.fields.get( layer );
+							if (field != null && field.tilingSprite != null && field.tilingSprite.name.equals( name ))
+							{
+								matchFound = true;
+								break;
+							}
+						}
+					}
+				}
+
+				if (!matchFound)
+				{
 					bitflag.setBit( dir );
 				}
 			}
@@ -649,7 +665,7 @@ public class Level
 			for ( FieldLayer layer : FieldLayer.values() )
 			{
 				Field field = tile.fields.get( layer );
-				if ( field != null )
+				if ( field != null && field.sprite != null )
 				{
 					field.sprite.update( delta );
 				}
@@ -705,8 +721,6 @@ public class Level
 
 			Global.AUT += actionCost;
 			Global.DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( Global.AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
-
-			// Global.abilityPool.update( actionCost );
 
 			player.update( actionCost );
 

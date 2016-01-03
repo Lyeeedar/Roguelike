@@ -69,9 +69,10 @@ public class GameEntity extends Entity
 
 		for ( GameEventHandler h : getAllHandlers() )
 		{
-			h.onTurn( this, cost );
+			h.onTurn( this, 1 );
 		}
 
+		boolean removedStatusEffect = false;
 		Iterator<StatusEffect> itr = statusEffects.iterator();
 		while ( itr.hasNext() )
 		{
@@ -81,19 +82,23 @@ public class GameEntity extends Entity
 			{
 				se.onExpire( this );
 				itr.remove();
+				isVariableMapDirty = true;
 			}
 		}
 
-		stacks = stackStatusEffects();
+		if (removedStatusEffect)
+		{
+			stacks = stackStatusEffects();
+		}
 
 		if ( popupDuration > 0 )
 		{
-			popupDuration -= cost;
+			popupDuration -= 1;
 		}
 
 		if ( dialogue != null && dialogue.exclamationManager != null )
 		{
-			dialogue.exclamationManager.update( cost );
+			dialogue.exclamationManager.update( 1 );
 		}
 	}
 

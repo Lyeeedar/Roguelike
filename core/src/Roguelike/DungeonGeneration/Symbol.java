@@ -28,6 +28,8 @@ public final class Symbol implements PathfindingTile
 
 	public String entityData;
 
+	public Element fieldData;
+
 	public String metaValue;
 
 	// ----------------------------------------------------------------------
@@ -44,6 +46,7 @@ public final class Symbol implements PathfindingTile
 		s.tileData = tileData;
 		s.environmentData = environmentData;
 		s.environmentEntityData = environmentEntityData != null ? (HashMap<String, Object>) environmentEntityData.clone() : null;
+		s.fieldData = fieldData;
 		s.attachLocation = attachLocation;
 		s.entityData = entityData;
 		s.metaValue = metaValue;
@@ -117,19 +120,24 @@ public final class Symbol implements PathfindingTile
 		// fill in the new values
 		symbol.character = xml.get( "Char", "" + symbol.character ).charAt( 0 );
 
-		if ( xml.getChildByName( "TileData" ) != null )
+		Element tileDataElement = xml.getChildByName( "TileData" );
+		if ( tileDataElement != null )
 		{
-			symbol.tileData = xml.getChildByName( "TileData" );
+			symbol.tileData = tileDataElement;
 		}
 
-		if ( xml.getChildByName( "EnvironmentData" ) != null )
+		Element enviromentDataElement = xml.getChildByName( "EnvironmentData" );
+		if ( enviromentDataElement != null )
 		{
-			symbol.environmentData = xml.getChildByName( "EnvironmentData" );
+			symbol.environmentData = enviromentDataElement;
 		}
 
-		if ( xml.getChildByName( "EntityData" ) != null )
+		symbol.entityData = xml.get( "EntityData", symbol.entityData );
+
+		Element fieldElement = xml.getChildByName( "FieldData" );
+		if ( fieldElement != null )
 		{
-			symbol.entityData = xml.get( "EntityData" );
+			symbol.fieldData = fieldElement;
 		}
 
 		symbol.metaValue = xml.get( "MetaValue", symbol.metaValue );

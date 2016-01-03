@@ -25,6 +25,7 @@ public final class StatusEffect extends GameEventHandler
 	private String description;
 
 	public boolean persistUntilProcessed = false;
+	public boolean stackable = true;
 
 	public Sprite icon;
 	public int duration;
@@ -116,6 +117,7 @@ public final class StatusEffect extends GameEventHandler
 		icon = xmlElement.getChildByName( "Icon" ) != null ? AssetManager.loadSprite( xmlElement.getChildByName( "Icon" ) ) : icon;
 		duration = xmlElement.getInt( "Duration", duration );
 		persistUntilProcessed = xmlElement.getBoolean( "PersistUntilProcessed", persistUntilProcessed );
+		stackable = xmlElement.getBoolean( "Stackable", stackable );
 		if ( persistUntilProcessed )
 		{
 			duration = 1;

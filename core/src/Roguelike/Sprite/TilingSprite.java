@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 import java.util.HashMap;
+import java.util.Map;
 
 // Naming priority: NSEW
 public class TilingSprite
@@ -49,6 +50,24 @@ public class TilingSprite
 	public boolean hasAllElements;
 
 	public Sprite overhangSprite;
+
+	public TilingSprite copy()
+	{
+		TilingSprite copy = new TilingSprite();
+		copy.name = name;
+		copy.texName = texName;
+		copy.maskName = maskName;
+		copy.spriteBase = spriteBase;
+		copy.hasAllElements = hasAllElements;
+		copy.overhangSprite = overhangSprite;
+
+		for (Map.Entry<Integer, Sprite> pair : sprites.entrySet())
+		{
+			copy.sprites.put( pair.getKey(), pair.getValue().copy() );
+		}
+
+		return copy;
+	}
 
 	public void parse( Element xml )
 	{

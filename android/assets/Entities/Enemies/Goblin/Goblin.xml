@@ -114,16 +114,6 @@
             </Rows>
         </BossRoom>
 
-        <Test>
-            <Rows>
-                <Row>.....</Row>
-                <Row>.w.w.</Row>
-                <Row>..#..</Row>
-                <Row>.w.w.</Row>
-                <Row>.....</Row>
-            </Rows>
-        </Test>
-
     </Rooms>
 
 	<Creatures>

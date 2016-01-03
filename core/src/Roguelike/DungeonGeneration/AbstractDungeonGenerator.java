@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+import Roguelike.Fields.Field;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
@@ -61,7 +62,7 @@ public abstract class AbstractDungeonGenerator
 
 		majorFaction = FactionParser.load( majorFactionName );
 
-		int numMinor = ran.nextInt( 2 ) + 1; // 1 - 3 minor
+		int numMinor = 2;//ran.nextInt( 2 ) + 1; // 1 - 3 minor
 
 		for (int i = 0; i < numMinor; i++)
 		{
@@ -78,7 +79,7 @@ public abstract class AbstractDungeonGenerator
 			{
 				for ( FactionParser fp : minorFactions )
 				{
-					if ( fp.name.equals( majorFactionName ) )
+					if ( fp.name.equals( minorFactionName ) )
 					{
 						added = true;
 						break;
@@ -402,6 +403,14 @@ public abstract class AbstractDungeonGenerator
 
 						newTile.addEnvironmentEntity( entity );
 					}
+				}
+
+				if ( !saveLevel.created && symbol.fieldData != null )
+				{
+					GameTile newTile = actualTiles[x][y];
+					Field field = Field.load( symbol.fieldData.getText() );
+					field.stacks = symbol.fieldData.getIntAttribute( "Stacks", 1 );
+					newTile.addField( field );
 				}
 
 				if ( !saveLevel.created && symbol.hasGameEntity() )

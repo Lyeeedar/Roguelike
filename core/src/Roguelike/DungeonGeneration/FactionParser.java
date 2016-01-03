@@ -244,6 +244,7 @@ public class FactionParser
 	{
 		public Element tileData;
 		public Element environmentData;
+		public Element fieldData;
 
 		public int minRange;
 		public int maxRange;
@@ -265,6 +266,7 @@ public class FactionParser
 			feature.maxCoverage = xml.getInt( "MaxCoverage", Integer.MAX_VALUE );
 			feature.tileData = xml.getChildByName( "TileData" );
 			feature.environmentData = xml.getChildByName( "EnvironmentData" );
+			feature.fieldData = xml.getChildByName( "FieldData" );
 			feature.type = FeaturePlacementType.valueOf( xml.get( "Placement" ).toUpperCase() );
 
 			return feature;
@@ -276,6 +278,7 @@ public class FactionParser
 			symbol.character = 'F';
 			symbol.tileData = tileData != null ? tileData : current.tileData;
 			symbol.environmentData = environmentData != null ? environmentData : current.environmentData;
+			symbol.fieldData = fieldData != null ? fieldData : current.fieldData;
 
 			return symbol;
 		}

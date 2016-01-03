@@ -42,7 +42,7 @@ public class StatusOnTurnEffect extends AbstractOnTurnEffect
 	@Override
 	public void process( Field field, Entity entity, float cost )
 	{
-		HashMap<String, Integer> variableMap = new HashMap<String, Integer>();
+		HashMap<String, Integer> variableMap = entity.getVariableMap();
 		for ( String name : reliesOn )
 		{
 			if ( !variableMap.containsKey( name.toLowerCase() ) )

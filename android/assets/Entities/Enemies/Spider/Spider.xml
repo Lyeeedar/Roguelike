@@ -1,81 +1,52 @@
 <Faction>
 	<Name>Spider</Name>
-	
-	<Features>
-	
-		<Feature>
-			<Name>Spiderweb</Name>
-			<Placement>Wall</Placement>
-			<EnvironmentData>
-				<Passable>false</Passable>
-				<Opaque>false</Opaque>
-				<Sprite>
-					<Name>Oryx/uf_split/uf_terrain/web_5</Name>
-					<DrawActualSize>true</DrawActualSize>
-				</Sprite>
-				
-				<Statistics>
-					<MaxHP>200</MaxHP>
-				</Statistics>
-			</EnvironmentData>
-			<Coverage>50</Coverage>
 
-		</Feature>
-		
+	<Features>
+
 		<Feature>
 			<Name>Spiderweb</Name>
 			<Placement>Any</Placement>
-			<EnvironmentData>
-				<Passable>false</Passable>
-				<Opaque>false</Opaque>
-				<Sprite>
-					<Name>spider/spiderweb</Name>
-				</Sprite>
-				
-				<Statistics>
-					<MaxHP>200</MaxHP>
-				</Statistics>
-			</EnvironmentData>
-			<Coverage>5</Coverage>
+			<FieldData>Web</FieldData>
+			<Coverage>80</Coverage>
 		</Feature>
-		
+
 		<Feature>
 			<Name>Cocoon</Name>
 			<Placement>Any</Placement>
-			<Coverage>10</Coverage>
-			
+			<Coverage>5</Coverage>
+
 			<EnvironmentData>
 				<Sprite>
 					<Name>spider/cocoon</Name>
 				</Sprite>
 				<Passable>false</Passable>
 				<Opaque>false</Opaque>
-				
+
 				<Statistics>
-					<MaxHP>200</MaxHP>
+					<Constitution>10</Constitution>
 				</Statistics>
-				
+
 				<Inventory>
-				    
+
 				    <Item DropChance="rnd(4)<1">
 				        <Type>Material</Type>
 					    <Name>Rusted Iron</Name>
 					    <MaterialType>Ingot</MaterialType>
-					    <Elements>
-					        <Metal>50+rnd(50)</Metal>
-					        <Wood>50+rnd(50)</Wood>
-					    </Elements>
 				    </Item>
-				    
+
 				</Inventory>
 			</EnvironmentData>
 		</Feature>
-		
+
 	</Features>
-	
+
 	<Creatures>
 	    <SmallSpider></SmallSpider>
 	    <GiantSpider></GiantSpider>
 	</Creatures>
+
+    <MiniBosses>
+        <GiantSpider></GiantSpider>
+    </MiniBosses>
 
 </Faction>

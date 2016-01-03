@@ -321,7 +321,21 @@ public abstract class Entity
 	{
 		if ( !canTakeDamage ) { return; }
 
+		if (!se.stackable)
+		{
+			for (StatusEffect ose : statusEffects)
+			{
+				if (ose.name.equals( se.name ))
+				{
+					ose.duration = Math.max( ose.duration, se.duration );
+					return;
+				}
+			}
+		}
+
 		statusEffects.add( se );
+
+		stacks = stackStatusEffects();
 
 		isVariableMapDirty = true;
 	}
@@ -330,6 +344,8 @@ public abstract class Entity
 	public void removeStatusEffect( StatusEffect se )
 	{
 		statusEffects.removeValue( se, true );
+
+		stacks = stackStatusEffects();
 
 		isVariableMapDirty = true;
 	}
@@ -347,6 +363,8 @@ public abstract class Entity
 				break;
 			}
 		}
+
+		stacks = stackStatusEffects();
 	}
 
 	// ----------------------------------------------------------------------

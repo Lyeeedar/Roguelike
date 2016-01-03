@@ -1,0 +1,27 @@
+<Field Extends="Solid">
+    <FieldName>Web</FieldName>
+    <Tags>Flammable</Tags>
+    <Sprite>
+        <Name>Masks/web</Name>
+    </Sprite>
+    <TilingSprite>
+        <Name>Web</Name>
+        <Mask>Masks/web</Mask>
+        <Sprite>
+            <Name>Masks/web_Center</Name>
+        </Sprite>
+    </TilingSprite>
+    <OnTurn>
+        <Status>
+            <Name>Webbed</Name>
+            <Description>Webs restrict your moveability</Description>
+            <Duration>2</Duration>
+            <Stackable>false</Stackable>
+            <Events>
+                <Constant>
+                    <Speed>-2</Speed>
+                </Constant>
+            </Events>
+        </Status>
+    </OnTurn>
+</Field>

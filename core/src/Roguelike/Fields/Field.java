@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import Roguelike.AssetManager;
+import Roguelike.Global;
 import Roguelike.Global.Passability;
 import Roguelike.Entity.Entity;
 import Roguelike.Fields.DurationStyle.AbstractDurationStyle;
@@ -14,6 +15,7 @@ import Roguelike.Fields.SpreadStyle.AbstractSpreadStyle;
 import Roguelike.GameEvent.IGameObject;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.TilingSprite;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
@@ -64,6 +66,7 @@ public class Field implements IGameObject
 	public Light light;
 
 	public Sprite sprite;
+	public TilingSprite tilingSprite;
 	public FieldLayer layer = FieldLayer.GROUND;
 	public int stacks = 1;
 
@@ -232,6 +235,7 @@ public class Field implements IGameObject
 		field.fieldName = fieldName;
 		field.tags = tags;
 		field.sprite = sprite.copy();
+		field.tilingSprite = tilingSprite;
 		field.layer = layer;
 		field.stacks = stacks;
 		field.light = light != null ? light.copyNoFlag() : null;
@@ -290,7 +294,17 @@ public class Field implements IGameObject
 
 		fieldName = xml.get( "FieldName", fieldName );
 
-		sprite = xml.getChildByName( "Sprite" ) != null ? AssetManager.loadSprite( xml.getChildByName( "Sprite" ) ) : sprite;
+		Element spriteElement = xml.getChildByName( "Sprite" );
+		if (spriteElement != null)
+		{
+			sprite = AssetManager.loadSprite( spriteElement );
+		}
+
+		Element tilingSpriteElement = xml.getChildByName( "TilingSprite" );
+		if (tilingSpriteElement != null)
+		{
+			tilingSprite = TilingSprite.load( tilingSpriteElement );
+		}
 
 		Element lightElement = xml.getChildByName( "Light" );
 		if ( lightElement != null )
@@ -389,6 +403,11 @@ public class Field implements IGameObject
 	@Override
 	public Sprite getIcon()
 	{
-		return sprite;
+		if (sprite != null)
+		{
+			return sprite;
+		}
+
+		return tilingSprite.getSprite( new EnumBitflag<Global.Direction>(  ) );
 	}
 }
