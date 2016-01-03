@@ -60,7 +60,7 @@ public class AbilityTree
 		public IAbility current;
 
 		public int level = 1;
-		public int expToNextLevel = 1;
+		public int expToNextLevel = 100;
 		public int exp;
 
 		public boolean needsLevelAnim;
@@ -91,7 +91,7 @@ public class AbilityTree
 			{
 				level++;
 				exp -= expToNextLevel;
-				//expToNextLevel *= 1.5f;
+				expToNextLevel *= 1.3f;
 				needsLevelAnim = true;
 			}
 		}

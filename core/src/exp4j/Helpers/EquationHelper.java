@@ -3,6 +3,7 @@ package exp4j.Helpers;
 import java.util.HashMap;
 import java.util.Random;
 
+import exp4j.Functions.ChanceFunction;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
@@ -46,6 +47,7 @@ public class EquationHelper
 		ExpressionBuilder expB = new ExpressionBuilder( eqn );
 		BooleanOperators.applyOperators( expB );
 		expB.function( new RandomFunction() );
+		expB.function( new ChanceFunction() );
 		MathUtilFunctions.applyFunctions( expB );
 
 		return expB;
@@ -56,6 +58,7 @@ public class EquationHelper
 		ExpressionBuilder expB = new ExpressionBuilder( eqn );
 		BooleanOperators.applyOperators( expB );
 		expB.function( new RandomFunction( ran ) );
+		expB.function( new ChanceFunction( ran ) );
 		MathUtilFunctions.applyFunctions( expB );
 
 		return expB;

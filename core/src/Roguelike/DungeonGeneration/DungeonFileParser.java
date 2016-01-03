@@ -340,10 +340,7 @@ public class DungeonFileParser
 	public HashMap<Character, Symbol> sharedSymbolMap = new HashMap<Character, Symbol>();
 
 	// ----------------------------------------------------------------------
-	public Array<DFPRoom> requiredRooms = new Array<DFPRoom>();
-
-	// ----------------------------------------------------------------------
-	public Array<DFPRoom> optionalRooms = new Array<DFPRoom>();
+	public Array<DFPRoom> rooms = new Array<DFPRoom>();
 
 	// ----------------------------------------------------------------------
 	public Array<Faction> majorFactions = new Array<Faction>();
@@ -393,28 +390,11 @@ public class DungeonFileParser
 	}
 
 	// ----------------------------------------------------------------------
-	public Array<DFPRoom> getRequiredRooms( int depth, Random ran, boolean isBoss )
+	public Array<DFPRoom> getRooms( int depth, Random ran, boolean isBoss )
 	{
 		Array<DFPRoom> rooms = new Array<DFPRoom>();
 
-		for ( DFPRoom room : requiredRooms )
-		{
-			int count = room.processCondition( depth, ran, isBoss );
-			for ( int i = 0; i < count; i++ )
-			{
-				rooms.add( room.copy() );
-			}
-		}
-
-		return rooms;
-	}
-
-	// ----------------------------------------------------------------------
-	public Array<DFPRoom> getOptionalRooms( int depth, Random ran, boolean isBoss )
-	{
-		Array<DFPRoom> rooms = new Array<DFPRoom>();
-
-		for ( DFPRoom room : optionalRooms )
+		for ( DFPRoom room : rooms )
 		{
 			int count = room.processCondition( depth, ran, isBoss );
 			for ( int i = 0; i < count; i++ )
@@ -586,23 +566,13 @@ public class DungeonFileParser
 			entranceRooms.put( key, new DFPRoom[]{ prevRoom, thisRoom } );
 		}
 
-		Element requiredElement = xmlElement.getChildByName( "Required" );
-		if ( requiredElement != null )
+		Element roomsElement = xmlElement.getChildByName( "Rooms" );
+		if ( roomsElement != null )
 		{
-			for ( int i = 0; i < requiredElement.getChildCount(); i++ )
+			for ( int i = 0; i < roomsElement.getChildCount(); i++ )
 			{
-				DFPRoom room = DFPRoom.parse( requiredElement.getChild( i ), sharedSymbolMap );
-				requiredRooms.add( room );
-			}
-		}
-
-		Element optionalElement = xmlElement.getChildByName( "Optional" );
-		if ( optionalElement != null )
-		{
-			for ( int i = 0; i < optionalElement.getChildCount(); i++ )
-			{
-				DFPRoom room = DFPRoom.parse( optionalElement.getChild( i ), sharedSymbolMap );
-				optionalRooms.add( room );
+				DFPRoom room = DFPRoom.parse( roomsElement.getChild( i ), sharedSymbolMap );
+				rooms.add( room );
 			}
 		}
 

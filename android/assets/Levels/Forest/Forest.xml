@@ -46,7 +46,7 @@
 		<Red>0.05</Red>
 		<Green>0.02</Green>
 		<Blue>0.1</Blue>
-		<Alpha>1</Alpha>
+		<Alpha>0.8</Alpha>
 	</Ambient>
 
 	<Sound>
@@ -274,7 +274,7 @@
 
 	</Symbols>
 
-	<Required>
+	<Rooms>
 
 		<BossRoom Condition="Boss">
 
@@ -308,14 +308,14 @@
 		    </Rows>
 		</BossRoom>
 
-	</Required>
-
-	<Optional>
-
-		<Hut>
+		<Hut Condition="chance(1, 5)">
 			<Rows>Levels/Forest/hut</Rows>
 		</Hut>
 
-	</Optional>
+        <Filler Condition="rnd(4)">
+            <Generator>Polygon</Generator>
+        </Filler>
+
+    </Rooms>
 
 </Level>

@@ -51,24 +51,7 @@ public abstract class AbstractDungeonGenerator
 	// ----------------------------------------------------------------------
 	protected void selectRooms()
 	{
-		for ( DFPRoom r : dfp.getRequiredRooms( saveLevel.depth, ran, saveLevel.depth == 5 ) )
-		{
-			if ( r.isTransition )
-			{
-				if ( !saveLevel.created && saveLevel.depth != 5 )
-				{
-					additionalRooms.add( r );
-				}
-			}
-			else
-			{
-				Room room = new Room();
-				r.fillRoom( room, ran, dfp );
-				requiredRooms.add( room );
-			}
-		}
-
-		for ( DFPRoom r : dfp.getOptionalRooms( saveLevel.depth, ran, saveLevel.depth == 5 ) )
+		for ( DFPRoom r : dfp.getRooms( saveLevel.depth, ran, saveLevel.depth == 5 ) )
 		{
 			if ( r.isTransition )
 			{

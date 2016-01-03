@@ -59,9 +59,10 @@
             <Red>0.6</Red>
             <Green>0.5</Green>
             <Blue>0.4</Blue>
+            <Alpha>0.7</Alpha>
         </Colour>
 
-        <Intensity>5</Intensity>
+        <Intensity>4</Intensity>
     </Light>
 
 </Entity>

@@ -55,6 +55,29 @@
 			<Coverage>1</Coverage>
 		</Feature>
 
+        <Feature>
+            <Name>Torch</Name>
+            <Placement>Wall</Placement>
+            <EnvironmentData>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/torch1</Name>
+                </Sprite>
+                <Passable>false</Passable>
+                <Opaque>false</Opaque>
+                <Light>
+                    <Colour>
+                        <Red>1</Red>
+                        <Green>0.95</Green>
+                        <Blue>0.75</Blue>
+                    </Colour>
+                    <Intensity>5</Intensity>
+                    <Flicker>2</Flicker>
+                    <FlickerPeriod>0.5</FlickerPeriod>
+                </Light>
+            </EnvironmentData>
+            <Coverage>4</Coverage>
+        </Feature>
+
 	</Features>
 
 	<Creatures>
