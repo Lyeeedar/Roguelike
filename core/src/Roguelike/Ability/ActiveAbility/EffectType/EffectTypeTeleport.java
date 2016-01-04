@@ -1,5 +1,6 @@
 package Roguelike.Ability.ActiveAbility.EffectType;
 
+import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
@@ -42,7 +43,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 	private int distance = 1;
 
 	@Override
-	public void update( ActiveAbility aa, float time, GameTile tile )
+	public void update( ActiveAbility aa, float time, GameTile tile, GameEntity entity, EnvironmentEntity envEntity )
 	{
 		GameTile destination = null;
 		GameEntity entityToMove = null;
@@ -54,7 +55,7 @@ public class EffectTypeTeleport extends AbstractEffectType
 		}
 		else if ( toMove == ToMove.TARGET )
 		{
-			entityToMove = tile.entity;
+			entityToMove = entity;
 			destination = getDestination( tile, aa.source, entityToMove );
 		}
 

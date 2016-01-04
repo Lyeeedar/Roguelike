@@ -3,6 +3,8 @@ package Roguelike.Ability.ActiveAbility.EffectType;
 import java.util.HashMap;
 
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
+import Roguelike.Entity.EnvironmentEntity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.Array;
@@ -12,7 +14,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 public abstract class AbstractEffectType
 {
-	public abstract void update( ActiveAbility aa, float time, GameTile tile );
+	public abstract void update( ActiveAbility aa, float time, GameTile tile, GameEntity entity, EnvironmentEntity envEntity );
 
 	public abstract void parse( Element xml );
 

@@ -440,11 +440,24 @@ public class ActiveAbility implements IAbility, IGameObject
 				}
 			}
 
+			HashSet<Entity> hitEntities = new HashSet<Entity>(  );
+
 			for ( GameTile tile : AffectedTiles )
 			{
 				for ( AbstractEffectType effect : effectTypes )
 				{
-					effect.update( this, 1, tile );
+					effect.update( this, 1, tile,
+								   !hitEntities.contains( tile.entity ) ? tile.entity : null,
+								   !hitEntities.contains( tile.environmentEntity ) ? tile.environmentEntity : null );
+
+					if (tile.entity != null)
+					{
+						hitEntities.add( tile.entity );
+					}
+					if (tile.environmentEntity != null)
+					{
+						hitEntities.add( tile.environmentEntity );
+					}
 				}
 
 				if ( getHitSprite() != null && ( aoe == 0 || !singleSprite ) )

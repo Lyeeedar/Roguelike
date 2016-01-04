@@ -2,6 +2,8 @@ package Roguelike.Ability.ActiveAbility.EffectType;
 
 import java.util.HashMap;
 
+import Roguelike.Entity.EnvironmentEntity;
+import Roguelike.Entity.GameEntity;
 import com.badlogic.gdx.utils.Array;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -27,16 +29,16 @@ public class EffectTypeHeal extends AbstractEffectType
 	}
 
 	@Override
-	public void update( ActiveAbility aa, float time, GameTile tile )
+	public void update( ActiveAbility aa, float time, GameTile tile, GameEntity entity, EnvironmentEntity envEntity )
 	{
-		if ( tile.entity != null )
+		if ( entity != null )
 		{
-			applyToEntity( tile.entity, aa );
+			applyToEntity( entity, aa );
 		}
 
-		if ( tile.environmentEntity != null )
+		if ( envEntity != null )
 		{
-			applyToEntity( tile.environmentEntity, aa );
+			applyToEntity( envEntity, aa );
 		}
 	}
 

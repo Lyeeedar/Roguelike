@@ -2,6 +2,8 @@ package Roguelike.Ability.ActiveAbility.EffectType;
 
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
+import Roguelike.Entity.EnvironmentEntity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.GameEvent.Damage.StatusEvent;
 import Roguelike.Global;
@@ -43,16 +45,16 @@ public class EffectTypeStatus extends AbstractEffectType
 	}
 
 	@Override
-	public void update( ActiveAbility aa, float time, GameTile tile )
+	public void update( ActiveAbility aa, float time, GameTile tile, GameEntity entity, EnvironmentEntity envEntity )
 	{
-		if ( tile.entity != null )
+		if ( entity != null )
 		{
-			handle( aa, tile.entity );
+			handle( aa, entity );
 		}
 
-		if ( tile.environmentEntity != null )
+		if ( envEntity != null )
 		{
-			handle( aa, tile.environmentEntity );
+			handle( aa, envEntity );
 		}
 	}
 

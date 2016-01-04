@@ -1,5 +1,6 @@
 package Roguelike.Entity.Tasks;
 
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class TaskAttack extends AbstractTask
@@ -314,16 +316,26 @@ public class TaskAttack extends AbstractTask
 		Point minPoint = Global.PointPool.obtain().set( Integer.MAX_VALUE, Integer.MAX_VALUE );
 		Point maxPoint = Global.PointPool.obtain().set( 0, 0 );
 
+		HashSet<Entity> hitEntities = new HashSet<Entity>(  );
+
 		// Do the attack
 		for ( GameTile tile : attackedTiles )
 		{
 			if ( tile.entity != null && !tile.entity.isAllies( entity ) )
 			{
-				entity.attack( tile.entity, dir );
+				if (!hitEntities.contains( tile.entity ))
+				{
+					entity.attack( tile.entity, dir );
+					hitEntities.add( tile.entity );
+				}
 			}
 			else if ( tile.environmentEntity != null && !tile.environmentEntity.passableBy.intersect( entity.getTravelType() ) )
 			{
-				entity.attack( tile.environmentEntity, dir );
+				if (!hitEntities.contains( tile.environmentEntity ))
+				{
+					entity.attack( tile.environmentEntity, dir );
+					hitEntities.add( tile.environmentEntity );
+				}
 			}
 
 			if ( weapon == null || weapon.wepDef == null || weapon.wepDef.hitType != Item.WeaponDefinition.HitType.ALL )

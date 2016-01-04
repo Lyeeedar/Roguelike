@@ -1,5 +1,7 @@
 package Roguelike.Ability.ActiveAbility.EffectType;
 
+import Roguelike.Entity.EnvironmentEntity;
+import Roguelike.Entity.GameEntity;
 import com.badlogic.gdx.utils.Array;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -40,7 +42,7 @@ public class EffectTypeField extends AbstractEffectType
 	}
 
 	@Override
-	public void update( ActiveAbility aa, float time, GameTile tile )
+	public void update( ActiveAbility aa, float time, GameTile tile, GameEntity entity, EnvironmentEntity envEntity )
 	{
 		HashMap<String, Integer> variableMap = aa.getVariableMap();
 

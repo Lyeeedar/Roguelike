@@ -2,6 +2,8 @@ package Roguelike.Ability.ActiveAbility.EffectType;
 
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
+import Roguelike.Entity.EnvironmentEntity;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Global;
 import Roguelike.Global.Statistic;
 import Roguelike.Tiles.GameTile;
@@ -20,20 +22,20 @@ public class EffectTypeDamage extends AbstractEffectType
 	private String[] reliesOn;
 
 	@Override
-	public void update( ActiveAbility aa, float time, GameTile tile )
+	public void update( ActiveAbility aa, float time, GameTile tile, GameEntity entity, EnvironmentEntity envEntity )
 	{
-		if ( tile.entity != null || tile.environmentEntity != null )
+		if ( entity != null || envEntity != null )
 		{
 			HashMap<String, Integer> variableMap = calculateVariableMap( aa );
 
-			if ( tile.entity != null )
+			if ( entity != null )
 			{
-				applyToEntity( tile.entity, aa, variableMap );
+				applyToEntity( entity, aa, variableMap );
 			}
 
-			if ( tile.environmentEntity != null )
+			if ( envEntity != null )
 			{
-				applyToEntity( tile.environmentEntity, aa, variableMap );
+				applyToEntity( envEntity, aa, variableMap );
 			}
 		}
 	}

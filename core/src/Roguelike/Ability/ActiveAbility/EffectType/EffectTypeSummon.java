@@ -2,6 +2,7 @@ package Roguelike.Ability.ActiveAbility.EffectType;
 
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
+import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Global;
 import Roguelike.StatusEffect.StatusEffect;
@@ -24,7 +25,7 @@ public class EffectTypeSummon extends AbstractEffectType
 	String countEqn;
 
 	@Override
-	public void update( ActiveAbility aa, float time, GameTile tile )
+	public void update( ActiveAbility aa, float time, GameTile tile, GameEntity gentity, EnvironmentEntity envEntity )
 	{
 		HashMap<String, Integer> variableMap = aa.getVariableMap();
 
