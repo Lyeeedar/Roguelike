@@ -182,13 +182,17 @@ public class GameEntity extends Entity
 				else
 				{
 					IAbility ability = null;
-					if ( abilityElement.getName() == "Active" )
+					if ( abilityElement.getName().equalsIgnoreCase( "Active" ) )
 					{
 						ability = ActiveAbility.load( abilityElement );
 					}
-					else
+					else if  ( abilityElement.getName().equalsIgnoreCase( "Passive" ) )
 					{
 						ability = PassiveAbility.load( abilityElement );
+					}
+					else
+					{
+						throw new RuntimeException( "Invalid ability type '" + abilityElement.getName() + "'" );
 					}
 
 					tree = new AbilityTree( ability );

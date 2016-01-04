@@ -18,60 +18,62 @@ public class BehaviourTree
 		this.root = root;
 		root.Data = new HashMap<String, Object>();
 	}
-	
+
 	//####################################################################//
 	//region Public Methods
-	
+
 	//----------------------------------------------------------------------
 	public void setData(String key, Object value)
 	{
 		root.setData(key, value);
 	}
-	
+
 	//----------------------------------------------------------------------
 	public void update(GameEntity entity)
 	{
+		root.setData( "This", entity );
+		root.setData( "this", entity );
 		root.evaluate(entity);
 	}
-	
+
 	//----------------------------------------------------------------------
 	public static BehaviourTree load(FileHandle file)
 	{
 		XmlReader xml = new XmlReader();
 		Element xmlElement = null;
-		
+
 		try
 		{
 			xmlElement = xml.parse(file);
-		} 
+		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
-		
+
 		BehaviourTreeNode node = null;
 
 		try
-		{			
+		{
 			Class<BehaviourTreeNode> c = BehaviourTreeNode.ClassMap.get(xmlElement.getName().toUpperCase());
 			node = (BehaviourTreeNode)ClassReflection.newInstance(c);
 
 			node.Data = new HashMap<String, Object>();
-			
+
 			node.parse(xmlElement);
-		} 
+		}
 		catch (ReflectionException e) { e.printStackTrace(); }
-		
+
 		return new BehaviourTree(node);
 	}
-	
+
 	//endregion Public Methods
 	//####################################################################//
 	//region Data
-	
+
 	//----------------------------------------------------------------------
 	private BehaviourTreeNode root;
-	
+
 	//----------------------------------------------------------------------
 	public enum BehaviourTreeState
 	{
@@ -79,7 +81,7 @@ public class BehaviourTree
 		SUCCEEDED,
 		RUNNING
 	}
-	
+
 	//endregion Data
 	//####################################################################//
 }

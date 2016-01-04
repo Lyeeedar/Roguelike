@@ -2,7 +2,28 @@
 	<Any>
 		<Sequence>
 			<GetAllAbilities Key="Abilities" ></GetAllAbilities>
-			<PickRandom InputKey="Abilities" OutputKey="Ability"></PickRandom>
+			<CategoriseAbilities Key="Abilities" ></CategoriseAbilities>
+
+            <Priority>
+
+                <CheckValue Condition="HealAbilities && HP < MaxHP*0.75" ReliesOn="HealAbilities">
+                    <Sequence>
+                        <PickRandom InputKey="HealAbilities" OutputKey="Ability"></PickRandom>
+                        <ConvertTo InputKey="This" OutputKey="Pos" Type="Position"></ConvertTo>
+                    </Sequence>
+                </CheckValue>
+
+                <PickRandom InputKey="DamageAbilities" OutputKey="Ability"></PickRandom>
+
+                <Sequence>
+                    <CheckValue Key="Enemy"></CheckValue>
+                    <PickRandom InputKey="MiscCombatAbilities" OutputKey="Ability"></PickRandom>
+                    <ConvertTo InputKey="Enemy" OutputKey="Pos" Type="Position"></ConvertTo>
+                </Sequence>
+
+            </Priority>
+
+
 			<UseAbility Key="Ability" Target="Pos"></UseAbility>
 			<ClearValue Key="Pos"></ClearValue>
 			<ClearValue Key="Ability"></ClearValue>

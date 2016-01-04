@@ -14,41 +14,42 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public class ActionCategoriseAbilities extends AbstractAction
 {
 	String abilitiesKey;
-	String targetKey;
 
 	@Override
 	public BehaviourTreeState evaluate(GameEntity entity)
 	{
 		Array<ActiveAbility> abilities = (Array<ActiveAbility>)getData(abilitiesKey, null);
-		
+
 		if (abilities == null || abilities.size == 0)
 		{
 			State = BehaviourTreeState.FAILED;
 			return State;
 		}
-		
+
 		Array<ActiveAbility> healList = new Array<ActiveAbility>();
 		Array<ActiveAbility> damageList = new Array<ActiveAbility>();
-		Array<ActiveAbility> statusList = new Array<ActiveAbility>();
-		
+		Array<ActiveAbility> miscCombatList = new Array<ActiveAbility>();
+
 		for (ActiveAbility aa : abilities)
 		{
 			boolean isHeal = false;
 			boolean isDamage = false;
-			boolean isStatus = false;
-			
+
 			for (AbstractEffectType effect : aa.effectTypes)
 			{
 				if (effect instanceof EffectTypeHeal) { isHeal = true; }
 				else if (effect instanceof EffectTypeDamage) { isDamage = true; }
-				else if (effect instanceof EffectTypeStatus) { isStatus = true; }
 			}
-			
+
 			if (isHeal) { healList.add(aa); }
 			if (isDamage) { damageList.add(aa); }
-			if (isStatus) { statusList.add(aa); }
+			if (!isHeal && !isDamage) { miscCombatList.add(aa); }
 		}
-		
+
+		if (healList.size > 0) { setData( "HealAbilities", healList ); } else { setData( "HealAbilities", null ); }
+		if (damageList.size > 0) { setData( "DamageAbilities", damageList ); } else { setData( "DamageAbilities", null ); }
+		if (miscCombatList.size > 0) { setData( "MiscCombatAbilities", miscCombatList ); } else { setData( "MiscCombatAbilities", null ); }
+
 		State = BehaviourTreeState.SUCCEEDED;
 		return State;
 	}
@@ -62,6 +63,5 @@ public class ActionCategoriseAbilities extends AbstractAction
 	public void parse(Element xmlElement)
 	{
 		abilitiesKey = xmlElement.getAttribute("Key");
-		targetKey = xmlElement.getAttribute("Target");
 	}
 }

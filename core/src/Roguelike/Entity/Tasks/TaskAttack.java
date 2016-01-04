@@ -45,39 +45,79 @@ public class TaskAttack extends AbstractTask
 		Array<GameTile> tiles = new Array<GameTile>(  );
 
 		Item weapon = attacker.getInventory().getEquip( EquipmentSlot.WEAPON );
-		if (weapon != null && weapon.wepDef != null)
+
+		int xstep = 0;
+		int ystep = 0;
+
+		int sx = 0;
+		int sy = 0;
+
+		if ( dir == Direction.NORTH )
 		{
-			GameTile attackerTile = attacker.tile[0][0];
+			sx = 0;
+			sy = attacker.size - 1;
 
-			Matrix3 mat = new Matrix3(  );
-			mat.setToRotation( dir.getAngle() );
-			Vector3 vec = new Vector3();
+			xstep = 1;
+			ystep = 0;
+		}
+		else if ( dir == Direction.SOUTH )
+		{
+			sx = 0;
+			sy = 0;
 
-			for (Point point : weapon.wepDef.hitPoints)
+			xstep = 1;
+			ystep = 0;
+		}
+		else if ( dir == Direction.EAST )
+		{
+			sx = attacker.size - 1;
+			sy = 0;
+
+			xstep = 0;
+			ystep = 1;
+		}
+		else if ( dir == Direction.WEST )
+		{
+			sx = 0;
+			sy = 0;
+
+			xstep = 0;
+			ystep = 1;
+		}
+
+		for (int i = 0; i < attacker.size; i++)
+		{
+			GameTile attackerTile = attacker.tile[sx + xstep * i][sy + ystep * i];
+
+			if (weapon != null && weapon.wepDef != null)
 			{
-				vec.set( point.x, point.y, 0 );
-				vec.mul( mat );
+				Matrix3 mat = new Matrix3(  );
+				mat.setToRotation( dir.getAngle() );
+				Vector3 vec = new Vector3();
 
-				int dx = Math.round( vec.x );
-				int dy = Math.round( vec.y );
-
-				GameTile tile = attackerTile.level.getGameTile( attackerTile.x + dx, attackerTile.y + dy );
-
-				if (tile != null)
+				for (Point point : weapon.wepDef.hitPoints)
 				{
-					tiles.add( tile );
+					vec.set( point.x, point.y, 0 );
+					vec.mul( mat );
+
+					int dx = Math.round( vec.x );
+					int dy = Math.round( vec.y );
+
+					GameTile tile = attackerTile.level.getGameTile( attackerTile.x + dx, attackerTile.y + dy );
+
+					if (tile != null)
+					{
+						tiles.add( tile );
+					}
 				}
 			}
-		}
-		else
-		{
-
-			// TODO: attacks for large creatures
-			GameTile attackerTile = attacker.tile[0][0];
-			tiles.add( attackerTile.level.getGameTile( attackerTile.x + dir.getX(), attackerTile.y + dir.getY() ) );
+			else
+			{
+				tiles.add( attackerTile.level.getGameTile( attackerTile.x + dir.getX(), attackerTile.y + dir.getY() ) );
+			}
 		}
 
-		// restrict by visibility
+		// restrict by visibility and remove duplicates
 		Array<Point> visibleTiles = attacker.visibilityCache.getCurrentShadowCast();
 
 		Iterator<GameTile> itr = tiles.iterator();
@@ -87,11 +127,23 @@ public class TaskAttack extends AbstractTask
 
 			boolean matchFound = false;
 
+			// Remove not visible
 			for (Point point : visibleTiles)
 			{
 				if (point.x == tile.x && point.y == tile.y)
 				{
 					matchFound = true;
+					break;
+				}
+			}
+
+			// Remove duplicates
+			for (int i = 0; i < tiles.size; i++)
+			{
+				GameTile otile = tiles.get( i );
+				if (otile != tile && otile.x == tile.x && otile.y == tile.y)
+				{
+					matchFound = false;
 					break;
 				}
 			}

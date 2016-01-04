@@ -57,6 +57,14 @@ public class ConditionalCheckValue extends AbstractConditional
 			variableMap.put( key.toLowerCase(), keyVal );
 		}
 
+		for (String s : reliesOn)
+		{
+			if (!variableMap.containsKey( s ))
+			{
+				variableMap.put( s, 0 );
+			}
+		}
+
 		int conditionVal = EquationHelper.evaluate( condition, variableMap );
 
 		State = conditionVal == 1 ? succeed : fail;
@@ -80,6 +88,8 @@ public class ConditionalCheckValue extends AbstractConditional
 
 		this.condition = xml.getAttribute("Condition", null);
 		if (this.condition != null) { this.condition = this.condition.toLowerCase(); }
+
+		reliesOn = xml.getAttribute( "ReliesOn", "" ).toLowerCase().split( "," );
 	}
 
 	//endregion Public Methods
@@ -91,6 +101,9 @@ public class ConditionalCheckValue extends AbstractConditional
 
 	//----------------------------------------------------------------------
 	public String condition;
+
+	//----------------------------------------------------------------------
+	public String[] reliesOn;
 
 	//----------------------------------------------------------------------
 	public BehaviourTreeState succeed;

@@ -1,7 +1,7 @@
 <Recipe>
-    <Name>Greaves</Name>
-    <Description>Protective greaves</Description>
-    <Slot>Legs</Slot>
+    <Name>Helm</Name>
+    <Description>Protective helmet</Description>
+    <Slot>Head</Slot>
     <Category>Armour</Category>
 
     <Events>

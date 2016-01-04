@@ -41,6 +41,7 @@
 	</Features>
 
 	<Creatures>
+        <Spiderling></Spiderling>
 	    <SmallSpider></SmallSpider>
 	    <GiantSpider></GiantSpider>
 	</Creatures>
@@ -48,5 +49,34 @@
     <MiniBosses>
         <GiantSpider></GiantSpider>
     </MiniBosses>
+
+    <Bosses>
+        <Broodmother />
+    </Bosses>
+
+    <Rooms>
+
+        <BossTest>
+
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>B</Char>
+                    <EntityData>Broodmother</EntityData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>.......</Row>
+                <Row>.......</Row>
+                <Row>.......</Row>
+                <Row>...B...</Row>
+                <Row>.......</Row>
+                <Row>.......</Row>
+                <Row>.......</Row>
+            </Rows>
+
+        </BossTest>
+
+    </Rooms>
 
 </Faction>

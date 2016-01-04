@@ -1,0 +1,14 @@
+<Recipe>
+    <Name>Cap</Name>
+    <Description>Protective cap</Description>
+    <Slot>Head</Slot>
+    <Category>Armour</Category>
+
+    <Events>
+        <Constant>
+            <Defense>3 + 1.3 * quality</Defense>
+            <Perception>quality/3</Perception>
+            <Speed>quality/5</Speed>
+        </Constant>
+    </Events>
+</Recipe>

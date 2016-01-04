@@ -115,7 +115,7 @@ public class TilingSprite
 
 	private static TextureRegion getMaskedSprite( String baseName, String maskBaseName, Array<String> masks )
 	{
-		// If this is the center then just return the original texture
+		// If no masks then just return the original texture
 		if ( masks.size == 0)
 		{
 			return AssetManager.loadTextureRegion( "Sprites/" + baseName + ".png" );
@@ -138,7 +138,7 @@ public class TilingSprite
 			return tex;
 		}
 
-		// If we havent been given a mask, then just return the original texture
+		// If we havent been given a valid mask, then just return the original texture
 		if (maskBaseName == null)
 		{
 			return AssetManager.loadTextureRegion( "Sprites/" + baseName + ".png" );
@@ -149,6 +149,11 @@ public class TilingSprite
 		for (String maskSuffix : masks)
 		{
 			Texture maskTex = AssetManager.loadTexture( "Sprites/" + maskBaseName + "_" + maskSuffix + ".png" );
+
+			if (maskTex == null)
+			{
+				maskTex = AssetManager.loadTexture( "Sprites/" + maskBaseName + "_C.png" );
+			}
 
 			if (maskTex == null)
 			{
@@ -166,6 +171,11 @@ public class TilingSprite
 	public Array<String> getMasks( EnumBitflag<Global.Direction> emptyDirections )
 	{
 		Array<String> masks = new Array<String>();
+
+		if (emptyDirections.getBitFlag() == 0)
+		{
+			masks.add("C");
+		}
 
 		if (emptyDirections.contains( Global.Direction.NORTH ))
 		{

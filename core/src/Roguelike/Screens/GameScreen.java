@@ -891,7 +891,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				colour = Color.CYAN;
 			}
 
-			EntityStatusRenderer.draw( e, batch, cx, cy, Global.TileSize, Global.TileSize, 1.0f / 12.0f, colour );
+			EntityStatusRenderer.draw( e, batch, cx, cy, Global.TileSize * e.size, Global.TileSize, 1.0f / 12.0f, colour );
 		}
 	}
 

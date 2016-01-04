@@ -2,23 +2,9 @@ package Roguelike.Entity.AI.BehaviourTree;
 
 import java.util.HashMap;
 
+import Roguelike.Entity.AI.BehaviourTree.Actions.*;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionAttack;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionClearValue;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionConvertTo;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionExclaim;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionGetAllAbilities;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionGetAllVisible;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionMoveTo;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionMoveToAttack;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionPickClosest;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionPickRandom;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionProcessInput;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionRest;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionSetValue;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionUseAbility;
-import Roguelike.Entity.AI.BehaviourTree.Actions.ActionWait;
 import Roguelike.Entity.AI.BehaviourTree.Conditionals.ConditionalCheckValue;
 import Roguelike.Entity.AI.BehaviourTree.Decorators.DecoratorDataScope;
 import Roguelike.Entity.AI.BehaviourTree.Decorators.DecoratorImport;
@@ -94,6 +80,7 @@ public abstract class BehaviourTreeNode
 		ClassMap.put( "EXCLAIM", ActionExclaim.class );
 		ClassMap.put( "GETALLVISIBLE", ActionGetAllVisible.class );
 		ClassMap.put( "GETALLABILITIES", ActionGetAllAbilities.class );
+		ClassMap.put( "CATEGORISEABILITIES", ActionCategoriseAbilities.class );
 		ClassMap.put( "MOVETO", ActionMoveTo.class );
 		ClassMap.put( "MOVETOATTACK", ActionMoveToAttack.class );
 		ClassMap.put( "PICKCLOSEST", ActionPickClosest.class );

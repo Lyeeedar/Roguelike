@@ -1,0 +1,7 @@
+<Entity Extends="Enemies/Spider/SpiderBase">
+
+    <Sprite>
+        <Name>Oryx/uf_split/uf_heroes/spider_brown</Name>
+    </Sprite>
+
+</Entity>
