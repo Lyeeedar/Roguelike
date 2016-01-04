@@ -5,20 +5,25 @@
 		<Name>Oryx/uf_split/uf_heroes/flies</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-	
+
 	<AI>basicMonster</AI>
-	
+
 	<Factions>
 		<Faction>Fly</Faction>
 	</Factions>
-	
-	<Statistics>
-		<MaxHP>50</MaxHP>
-		<Range>1</<Range>
-		
-		<Base_Atk>10</Base_Atk>
-		<Base_Def>25</Base_Def>
-		<Levitate>1</Levitate>
-	</Statistics>
-	
+
+    <Statistics>
+
+        <Attack>15</Attack>
+        <Defense>8</Defense>
+
+        <Constitution>5</Constitution>
+        <Perception>7</Perception>
+        <Strength>5</Strength>
+        <Willpower>5</Willpower>
+        <Intelligence>5</Intelligence>
+        <Speed>6</Speed>
+
+    </Statistics>
+
 </Entity>

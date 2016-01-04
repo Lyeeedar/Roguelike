@@ -137,6 +137,7 @@
 		</Major>
 		<Minor>
 			<Spider>1</Spider>
+            <Toad>3</Toad>
 		</Minor>
 	</Factions>
 
@@ -276,9 +277,8 @@
 
 	<Rooms>
 
-		<Hut Condition="chance(1, 5)">
-			<Rows>Levels/Forest/hut</Rows>
-		</Hut>
+        <Filler Condition="1 + rnd(2)" >
+        </Filler>
 
     </Rooms>
 

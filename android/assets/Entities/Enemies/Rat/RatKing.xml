@@ -3,26 +3,17 @@
 		<Name>Oryx/Custom/heroes/rat_king</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-	
+
 	<Dialogue>Dialogue/RatKing</Dialogue>
-			
+
 	<IsBoss>true</IsBoss>
 
-	<Statistics>
-		<MaxHP>130</MaxHP>
-		<Range>5</<Range>
-		
-		<Base_Atk>16</Base_Atk>
-		<Base_Def>15</Base_Def>
-		
-	</Statistics>
-	
-		<Inventory>
-		    
+    <Inventory>
+
 		    <Item>
-		        
+
 		        <Name>Rat Kings Crown</Name>
-		        <Description>The golden crown of the king of the giant rats. On close inspection it turns out to be a thinly gilded iron helm.</Description>
+		        <Description>The golden crown of the king of the giant rats. On close inspection it turns out to be a thinly gilded wooden helm.</Description>
 		        <Slot>Head</Slot>
 				<Category>Armour</Category>
 				<Icon>
@@ -30,11 +21,11 @@
 				</Icon>
 				<Events>
 					<Constant>
-						<Base_Def>5</Base_Def>
+						<Defense>5</Defense>
 					</Constant>
 				</Events>
 		    </Item>
-		    
+
 		</Inventory>
-	
+
 </Entity>

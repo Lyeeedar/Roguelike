@@ -139,8 +139,8 @@ public class DungeonFileParser
 
 		public String spawnEquation;
 
-		public int width;
-		public int height;
+		public String width;
+		public String height;
 		public HashMap<Character, Symbol> symbolMap = new HashMap<Character, Symbol>();
 		public char[][] roomDef;
 		public String faction;
@@ -168,19 +168,24 @@ public class DungeonFileParser
 				if ( rowsElement.getChildCount() > 0 )
 				{
 					// Rows defined here
-					room.height = rowsElement.getChildCount();
-					for ( int i = 0; i < room.height; i++ )
+					int width = 0;
+					int height = rowsElement.getChildCount();
+
+					for ( int i = 0; i < height; i++ )
 					{
-						if ( rowsElement.getChild( i ).getText().length() > room.width )
+						if ( rowsElement.getChild( i ).getText().length() > width )
 						{
-							room.width = rowsElement.getChild( i ).getText().length();
+							width = rowsElement.getChild( i ).getText().length();
 						}
 					}
 
-					room.roomDef = new char[room.width][room.height];
-					for ( int x = 0; x < room.width; x++ )
+					room.height = "" + height;
+					room.width = "" + width;
+
+					room.roomDef = new char[width][height];
+					for ( int x = 0; x < width; x++ )
 					{
-						for ( int y = 0; y < room.height; y++ )
+						for ( int y = 0; y < height; y++ )
 						{
 							room.roomDef[x][y] = rowsElement.getChild( y ).getText().charAt( x );
 						}
@@ -194,20 +199,25 @@ public class DungeonFileParser
 					String content = handle.readString();
 
 					String[] lines = content.split( System.getProperty( "line.separator" ) );
-					room.width = lines.length;
+
+					int height = 0;
+					int width = lines.length;
 
 					String[][] rows = new String[lines.length][];
 					for ( int i = 0; i < lines.length; i++ )
 					{
 						rows[i] = lines[i].split( " " );
 
-						room.height = rows[i].length;
+						height = rows[i].length;
 					}
 
-					room.roomDef = new char[room.width][room.height];
-					for ( int x = 0; x < room.width; x++ )
+					room.width = "" + width;
+					room.height = "" + height;
+
+					room.roomDef = new char[width][height];
+					for ( int x = 0; x < width; x++ )
 					{
-						for ( int y = 0; y < room.height; y++ )
+						for ( int y = 0; y < height; y++ )
 						{
 							room.roomDef[x][y] = rows[x][y].charAt( 0 );
 						}
@@ -216,11 +226,15 @@ public class DungeonFileParser
 			}
 			else
 			{
-				Element generatorElement = xml.getChildByName( "Generator" ).getChild( 0 );
-				room.generator = AbstractRoomGenerator.load( generatorElement );
+				Element generatorElement = xml.getChildByName( "Generator" );
+				if (generatorElement != null)
+				{
+					generatorElement = generatorElement.getChild( 0 );
+					room.generator = AbstractRoomGenerator.load( generatorElement );
+				}
 
-				room.width = xml.getInt( "Width" );
-				room.height = xml.getInt( "Height" );
+				room.width = xml.get( "Width", "rnd(6)+4" );
+				room.height = xml.get( "Height", "rnd(6)+4" );
 			}
 
 			Element symbolsElement = xml.getChildByName( "Symbols" );
@@ -323,9 +337,9 @@ public class DungeonFileParser
 			}
 
 			room.roomData = this;
-			room.width = width;
-			room.height = height;
-			room.roomContents = new Symbol[width][height];
+			room.width = EquationHelper.evaluate( width, Global.Statistic.emptyMap, ran );
+			room.height = EquationHelper.evaluate( height, Global.Statistic.emptyMap, ran );;
+			room.roomContents = new Symbol[room.width][room.height];
 			room.faction = faction;
 
 			if ( generator != null )
@@ -333,13 +347,28 @@ public class DungeonFileParser
 				Symbol floor = getSymbol( '.' );
 				Symbol wall = getSymbol( '#' );
 
+				floor.resolveExtends( dfp.sharedSymbolMap );
+				wall.resolveExtends( dfp.sharedSymbolMap );
+
+				room.generateRoomContents( ran, dfp, floor, wall, generator );
+			}
+			else if ( roomDef == null )
+			{
+				Symbol floor = getSymbol( '.' );
+				Symbol wall = getSymbol( '#' );
+
+				floor.resolveExtends( dfp.sharedSymbolMap );
+				wall.resolveExtends( dfp.sharedSymbolMap );
+
+				AbstractRoomGenerator generator = dfp.getRoomGenerator( ran );
+
 				room.generateRoomContents( ran, dfp, floor, wall, generator );
 			}
 			else
 			{
-				for ( int x = 0; x < width; x++ )
+				for ( int x = 0; x < room.width; x++ )
 				{
-					for ( int y = 0; y < height; y++ )
+					for ( int y = 0; y < room.height; y++ )
 					{
 						room.roomContents[x][y] = getSymbol( roomDef[x][y] );
 					}
@@ -407,14 +436,14 @@ public class DungeonFileParser
 	// ----------------------------------------------------------------------
 	public Array<DFPRoom> getRooms( int depth, Random ran, boolean isBoss, FactionParser majorFaction, Array<FactionParser> minorFactions )
 	{
-		Array<DFPRoom> rooms = new Array<DFPRoom>();
+		Array<DFPRoom> outRooms = new Array<DFPRoom>();
 
 		for ( DFPRoom room : rooms )
 		{
 			int count = room.processCondition( depth, ran, isBoss );
 			for ( int i = 0; i < count; i++ )
 			{
-				rooms.add( room.copy() );
+				outRooms.add( room.copy() );
 			}
 		}
 
@@ -425,7 +454,7 @@ public class DungeonFileParser
 			{
 				DFPRoom cpy = room.copy();
 				cpy.faction = majorFaction.name;
-				rooms.add( cpy );
+				outRooms.add( cpy );
 			}
 		}
 
@@ -448,12 +477,12 @@ public class DungeonFileParser
 
 				if (validRooms.size > 0)
 				{
-					rooms.add( validRooms.get( ran.nextInt( validRooms.size ) ) );
+					outRooms.add( validRooms.get( ran.nextInt( validRooms.size ) ) );
 				}
 			}
 		}
 
-		return rooms;
+		return outRooms;
 	}
 
 	// ----------------------------------------------------------------------

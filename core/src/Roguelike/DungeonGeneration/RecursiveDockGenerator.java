@@ -206,6 +206,12 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 	// ----------------------------------------------------------------------
 	protected void fillGridBase()
 	{
+		Symbol floor = dfp.sharedSymbolMap.get( '.' );
+		Symbol wall = dfp.sharedSymbolMap.get( '#' );
+
+		floor.resolveExtends( dfp.sharedSymbolMap );
+		wall.resolveExtends( dfp.sharedSymbolMap );
+
 		this.tiles = new GenerationTile[width][height];
 		for ( int x = 0; x < width; x++ )
 		{
@@ -231,7 +237,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					tiles[x][y].passable = true;
 				}
 
-				tiles[x][y].symbol = dfp.sharedSymbolMap.get( '#' );
+				tiles[x][y].symbol = wall;
 			}
 		}
 
@@ -245,9 +251,6 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					symbolGrid[x][y] = tiles[x][y].symbol;
 				}
 			}
-
-			Symbol floor = dfp.sharedSymbolMap.get( '.' );
-			Symbol wall = dfp.sharedSymbolMap.get( '#' );
 
 			dfp.preprocessor.generator.process( symbolGrid, floor, wall, ran, dfp );
 
@@ -779,6 +782,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					if ( t.symbol.character == '#' )
 					{
 						t.symbol = dfp.sharedSymbolMap.get( '.' );
+						t.symbol.resolveExtends( dfp.sharedSymbolMap );
 					}
 
 					// Wipe out all features not placed by this path
@@ -1046,6 +1050,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 	protected void identifyAndFillEmptySpaces()
 	{
 		Symbol wall = dfp.sharedSymbolMap.get( '#' );
+		wall.resolveExtends( dfp.sharedSymbolMap );
 
 		for ( int x = 0; x < width; x++ )
 		{
@@ -1106,6 +1111,8 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 								}
 							}
 						}
+
+						room.resolveExtends(dfp);
 
 						// Identify doors
 						room.findDoors( ran, dfp );
@@ -1259,13 +1266,18 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			}
 		}
 
+		Array<Pair> unassignedRooms = new Array<Pair>(  );
+
 		Array<Pair> sortedRooms = new Array<Pair>();
 		for ( Room room : placedRooms )
 		{
 			if ( room.faction == null )
 			{
 				int dist = Math.abs( room.x - largest.x ) + Math.abs( room.y - largest.y );
-				sortedRooms.add( new Pair( dist, room ) );
+
+				Pair pair = new Pair( dist, room );
+				sortedRooms.add( pair );
+				unassignedRooms.add( pair );
 			}
 			else if ( !room.faction.equalsIgnoreCase( "none" ) )
 			{
@@ -1309,9 +1321,10 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 		}
 		sortedRooms.sort();
 
-		while (unplacedMinorFactions.size > 0 && sortedRooms.size > 0)
+		while (unplacedMinorFactions.size > 0 && unassignedRooms.size > 0)
 		{
-			Pair pair = sortedRooms.removeIndex( sortedRooms.size - 1 );
+			Pair pair = unassignedRooms.removeIndex( unassignedRooms.size - 1 );
+			sortedRooms.removeValue( pair, true );
 
 			int influence = ran.nextInt( 80 ) + 10;
 
@@ -1320,6 +1333,14 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			pair.room.addFeatures( ran, dfp, fp, influence, false );
 
 			factions.put( fp, new Point( pair.room.x + pair.room.width / 2, pair.room.y + pair.room.height / 2 ) );
+		}
+
+		for (FactionParser fp : unplacedMinorFactions)
+		{
+			int x = ran.nextInt( width );
+			int y = ran.nextInt( height );
+
+			factions.put( fp, new Point( x, y ) );
 		}
 
 		// Add features

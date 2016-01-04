@@ -56,7 +56,7 @@
 
     <Rooms>
 
-        <BossTest>
+        <Boss_Broodmother Condition="Boss">
 
             <Symbols>
                 <Symbol Extends=".">
@@ -75,7 +75,7 @@
                 <Row>.......</Row>
             </Rows>
 
-        </BossTest>
+        </Boss_Broodmother>
 
     </Rooms>
 

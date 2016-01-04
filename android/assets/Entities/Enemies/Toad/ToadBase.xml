@@ -1,24 +1,25 @@
 <Entity>
-	<AI>basicMonster</AI>
-	
-	<Factions>
-		<Faction>Toad</Faction>
-	</Factions>
-	
-	<Inventory>
-	    
-	    <Hide DropChance="rnd(10)<1">
-	        
-	        <Category>Material</Category>
-		    <Name>Toad Skin</Name>
-		    <Type>Leather</Type>
-		    <Elements>
-		        <Base>20</Base>
-		        <Water>30</Water>
-		    </Elements>
-	        
-	    </Hide>
-	    
-	</Inventory>
-	
+
+    <Name>Toad</Name>
+
+    <AI>basicMonster</AI>
+
+    <Factions>
+        <Faction>Toad</Faction>
+    </Factions>
+
+    <Statistics>
+
+        <Attack>15</Attack>
+        <Defense>8</Defense>
+
+        <Constitution>5</Constitution>
+        <Perception>7</Perception>
+        <Strength>5</Strength>
+        <Willpower>5</Willpower>
+        <Intelligence>5</Intelligence>
+        <Speed>6</Speed>
+
+    </Statistics>
+
 </Entity>

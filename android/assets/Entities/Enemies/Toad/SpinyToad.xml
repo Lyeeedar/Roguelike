@@ -4,46 +4,21 @@
 		<Name>Oryx/uf_split/uf_heroes/toad_horned</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-	
-	<ActiveAbilities>
-		<Leap>
+
+	<Abilities>
+		<Active>
 			<Cooldown>20</Cooldown>
 			<Range>3</Range>
-			<Targeting><Entity Type="Enemy"/></Targeting>
-			<Movement><Smite/></Movement>
+			<HitType><Enemy/></HitType>
 			<Effect>
 				<Damage>
-					<Atk>Atk*0.8</Atk>
+					<Attack>120</Attack>
 				</Damage>
 				<Teleport>
 					<Style>Leap</Style>
 				</Teleport>
 			</Effect>
-		</Leap>
-	</ActiveAbilities>
-	
-	<Inventory>
-	    
-	    <Spine DropChance="rnd(10)<1">
-	        
-	        <Category>Material</Category>
-		    <Name>Toad Spine</Name>
-		    <Type>Spine</Type>
-		    <Elements>
-		        <Base>20</Base>
-		        <Water>40</Water>
-		    </Elements>
-	        
-	    </Spine>
-	    
-	</Inventory>
-	
-	<Statistics>
-		<MaxHP>75</MaxHP>
-		<Range>5</<Range>
-		
-		<Base_Atk>20</Base_Atk>
-		<Base_Def>20</Base_Def>
-	</Statistics>
-	
+		</Active>
+	</Abilities>
+
 </Entity>

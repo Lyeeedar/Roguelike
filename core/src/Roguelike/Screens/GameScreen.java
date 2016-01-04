@@ -2021,6 +2021,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void addTouchAction( float x, float y )
 	{
+		if (skin == null)
+		{
+			return;
+		}
+
 		Widget widget = new Label("O", skin);//new SpriteWidget( AssetManager.loadSprite( "Oryx/uf_split/uf_interface/uf_interface_460" ), 32, 32 );
 		//widget.setScale( 0.1f );
 		widget.addAction( new SequenceAction( Actions.delay( 2 ), Actions.removeActor() ) );

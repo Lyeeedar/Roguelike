@@ -4,13 +4,4 @@
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
 
-	<Statistics>
-		<MaxHP>50</MaxHP>
-		<Range>5</<Range>
-		
-		<Base_Atk>12</Base_Atk>
-		<Base_Def>10</Base_Def>
-		
-	</Statistics>
-	
 </Entity>

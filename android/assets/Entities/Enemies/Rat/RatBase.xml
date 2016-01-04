@@ -1,41 +1,51 @@
 <Entity>
-		
-	<AI>basicMonster</AI>
-	
-	<Factions>
-		<Faction>Rat</Faction>
-	</Factions>
-	
+
+    <Name>Rat</Name>
+
+    <AI>basicMonster</AI>
+
+    <Factions>
+        <Faction>Rat</Faction>
+    </Factions>
+
+    <Statistics>
+
+        <Attack>15</Attack>
+        <Defense>8</Defense>
+
+        <Constitution>5</Constitution>
+        <Perception>7</Perception>
+        <Strength>5</Strength>
+        <Willpower>5</Willpower>
+        <Intelligence>5</Intelligence>
+        <Speed>6</Speed>
+
+    </Statistics>
+
 	<Inventory>
-	    
+
 	    <Item DropChance="rnd(6)<=1">
 		    <Category>Material</Category>
 		    <Name>Rat Hide</Name>
 		    <Description>A piece of hide taken from a giant rat. Furry and tough.</Description>
 		    <CanStack>true</CanStack>
 		    <Type>Hide</Type>
-		    <Elements>
-		        <Base>10</Base>
-		    </Elements>
 		    <Icon>
 		        <Name>Oryx/Custom/items/ratskin</Name>
 		    </Icon>
 		</Item>
-		
+
 	     <Item DropChance="rnd(6)<=1">
 		    <Category>Material</Category>
 		    <Name>Rat Tail</Name>
 		    <Description>The tail of a giant rat.</Description>
 		    <CanStack>true</CanStack>
 		    <Type>Tail</Type>
-		    <Elements>
-		        <Base>10</Base>
-		    </Elements>
 		    <Icon>
 		        <Name>Oryx/Custom/items/rattail</Name>
 		    </Icon>
 		</Item>
-		
+
 	</Inventory>
-	
+
 </Entity>

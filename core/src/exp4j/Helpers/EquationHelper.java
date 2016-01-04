@@ -3,6 +3,7 @@ package exp4j.Helpers;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.badlogic.gdx.math.MathUtils;
 import exp4j.Functions.ChanceFunction;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -44,13 +45,7 @@ public class EquationHelper
 
 	public static ExpressionBuilder createEquationBuilder( String eqn )
 	{
-		ExpressionBuilder expB = new ExpressionBuilder( eqn );
-		BooleanOperators.applyOperators( expB );
-		expB.function( new RandomFunction() );
-		expB.function( new ChanceFunction() );
-		MathUtilFunctions.applyFunctions( expB );
-
-		return expB;
+		return createEquationBuilder( eqn, MathUtils.random );
 	}
 
 	public static ExpressionBuilder createEquationBuilder( String eqn, Random ran )
@@ -66,13 +61,18 @@ public class EquationHelper
 
 	public static int evaluate( String eqn, HashMap<String, Integer> variableMap )
 	{
+		return evaluate( eqn, variableMap, MathUtils.random );
+	}
+
+	public static int evaluate( String eqn, HashMap<String, Integer> variableMap, Random ran )
+	{
 		if ( Global.isNumber( eqn ) )
 		{
 			return Integer.parseInt( eqn );
 		}
 		else
 		{
-			ExpressionBuilder expB = createEquationBuilder( eqn );
+			ExpressionBuilder expB = createEquationBuilder( eqn, ran );
 			setVariableNames( expB, variableMap, "" );
 			Expression exp = tryBuild( expB );
 

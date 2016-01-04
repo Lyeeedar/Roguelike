@@ -1,7 +1,9 @@
 <Forest MaxDepth="2">
-    <Sewer MaxDepth="4">
+    <RatCellar MaxDepth="4">
+        <Sewer MaxDepth="2">
 
-    </Sewer>
+        </Sewer>
+    </RatCellar>
 
     <!--<Branches>-->
         <!--<RatCellar SpawnDepth="3" SpawnChance="0.5" MaxDepth="3">-->

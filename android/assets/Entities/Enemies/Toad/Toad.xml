@@ -1,8 +1,8 @@
 <Faction>
 	<Name>Toad</Name>
-	
+
 	<Features>
-	
+
 		<Feature>
 			<Name>Pool</Name>
 			<Placement>Centre</Placement>
@@ -15,31 +15,31 @@
 			</TileData>
 			<Coverage>90</Coverage>
 		</Feature>
-		
+
 		<Feature>
 			<Name>FlyEgg</Name>
 			<Placement>Any</Placement>
 			<Coverage>10</Coverage>
-			
+
 			<EnvironmentData>
 				<Sprite>
 					<Name>mushroom/spawner</Name>
 				</Sprite>
 				<Passable>false</Passable>
 				<Type>Spawner</Type>
-				<MaxAlive>3</MaxAlive>
+				<MaxAlive>1</MaxAlive>
 				<Entity>Enemies/Toad/Fly</Entity>
 				<Delay>25</Delay>
 				<Spawn>OnTurn</Spawn>
-				
+
 				<Statistics>
-					<MaxHP>200</MaxHP>
+					<Constitution>5</Constitution>
 				</Statistics>
 			</EnvironmentData>
 		</Feature>
-		
+
 	</Features>
-	
+
 	<Creatures>
 	    <GiantToad></GiantToad>
 	    <SpittingToad></SpittingToad>

@@ -271,9 +271,24 @@ public final class Room
 		Symbol floor = roomData != null ? roomData.getSymbol( '.' ) : dfp.sharedSymbolMap.get( '.' );
 		Symbol wall = roomData != null ? roomData.getSymbol( '#' ) : dfp.sharedSymbolMap.get( '#' );
 
+		floor.resolveExtends( dfp.sharedSymbolMap );
+		wall.resolveExtends( dfp.sharedSymbolMap );
+
 		AbstractRoomGenerator generator = dfp.getRoomGenerator( ran );
 
 		generateRoomContents( ran, dfp, floor, wall, generator );
+	}
+
+	// ----------------------------------------------------------------------
+	public void resolveExtends( DungeonFileParser dfp )
+	{
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				roomContents[x][y].resolveExtends( dfp.sharedSymbolMap );
+			}
+		}
 	}
 
 	// ----------------------------------------------------------------------

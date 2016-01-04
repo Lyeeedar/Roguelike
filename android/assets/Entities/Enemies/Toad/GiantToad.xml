@@ -4,32 +4,22 @@
 		<Name>Oryx/uf_split/uf_heroes/toad_green</Name>
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
-		
-	<ActiveAbilities>
-		<Pull>
+
+	<Abilities>
+		<Active>
 			<Cooldown>20</Cooldown>
 			<Range>3</Range>
-			<Targeting><Entity Type="Enemy"/></Targeting>
-			<Movement><Smite/></Movement>
+			<HitType><Enemy/></HitType>
 			<Effect>
 				<Damage>
-					<Atk>Atk*0.7</Atk>
+					<Attack>120</Attack>
 				</Damage>
 				<Teleport>
 					<Move>Target</Move>
 					<Style>Leap</Style>
 				</Teleport>
 			</Effect>
-		</Pull>
-	</ActiveAbilities>
-	
-	<Statistics>
-		<MaxHP>60</MaxHP>
-		<Range>5</<Range>
-		
-		<Base_Atk>20</Base_Atk>
-		<Base_Def>20</Base_Def>
-		
-	</Statistics>
-	
+		</Active>
+	</Abilities>
+
 </Entity>

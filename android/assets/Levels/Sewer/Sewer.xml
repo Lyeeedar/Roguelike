@@ -1,37 +1,6 @@
 <Level>
 
-    <Entrance Key="Forest">
-        <Prev>
-            <Symbols>
-                <Symbol Extends=",">
-                    <Char>v</Char>
-                    <EnvironmentData>
-                        <Type>Transition</Type>
-                        <Destination>Sewer</Destination>
-                    </EnvironmentData>
-                </Symbol>
-            </Symbols>
 
-            <Rows>Levels/Forest/village</Rows>
-        </Prev>
-        <This>
-            <Faction>none</Faction>
-
-            <Symbols>
-                <Symbol Extends=".">
-                    <Char>S</Char>
-                    <MetaValue>PlayerSpawn</MetaValue>
-                </Symbol>
-            </Symbols>
-
-            <Rows>
-                <Row>####</Row>
-                <Row>#.S#</Row>
-                <Row>#..#</Row>
-                <Row>....</Row>
-            </Rows>
-        </This>
-    </Entrance>
 
     <Entrance>
         <Prev>

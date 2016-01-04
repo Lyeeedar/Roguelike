@@ -7,6 +7,8 @@
 
     <Size>2</Size>
 
+    <IsBoss>true</IsBoss>
+
     <Abilities>
 
         <Active>
@@ -19,7 +21,7 @@
 
             <Effect>
 
-                <Summon Count="rnd(2)+1" Duration="100" >Enemies/Spider/Spiderling</Summon>
+                <Summon Count="rnd(2)+1" Duration="15" >Enemies/Spider/Spiderling</Summon>
 
             </Effect>
 

@@ -1,7 +1,7 @@
 <Faction>
-    
+
     <Features>
-        
+
         <Feature>
 			<Name>Barrel</Name>
 			<Placement>Wall</Placement>
@@ -12,15 +12,15 @@
 					<Name>Oryx/uf_split/uf_terrain/barrel</Name>
 					<DrawActualSize>true</DrawActualSize>
 				</Sprite>
-				
+
 				<Statistics>
-					<MaxHP>200</MaxHP>
+					<Constitution>5</Constitution>
 				</Statistics>
 			</EnvironmentData>
 			<Coverage>30</Coverage>
 
 		</Feature>
-		
+
         <Feature>
 			<Name>Crate</Name>
 			<Placement>Wall</Placement>
@@ -31,28 +31,74 @@
 					<Name>Oryx/uf_split/uf_terrain/crate</Name>
 					<DrawActualSize>true</DrawActualSize>
 				</Sprite>
-				
+
 				<Statistics>
-					<MaxHP>200</MaxHP>
+                    <Constitution>5</Constitution>
 				</Statistics>
 			</EnvironmentData>
 			<Coverage>30</Coverage>
 
 		</Feature>
-        
+
     </Features>
-    
+
     <Creatures>
-        
+
         <SmallRat></SmallRat>
         <GiantRat></GiantRat>
-        
+
     </Creatures>
-    
+
     <Bosses>
-	    
+
 	    <RatKing></RatKing>
-	    
+
 	</Bosses>
-    
+
+    <Rooms>
+
+        <BossRoom Condition="Boss">
+
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>B</Char>
+                    <EntityData>RatKing</EntityData>
+                </Symbol>
+
+                <Symbol Extends=".">
+                    <Char>r</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/floor_set_grey_7</Name>
+                        </Sprite>
+
+                        <Passable>true</Passable>
+                        <Opaque>false</Opaque>
+
+                        <Type>Spawner</Type>
+                        <Entity>Enemies/Rat/SmallRat</Entity>
+                        <Spawn>OnHear</Spawn>
+                        <NumToSpawn>2</NumToSpawn>
+                        <Delay>2</Delay>
+
+                        <CanTakeDamage>false</CanTakeDamage>
+                    </EnvironmentData>
+                </Symbol>
+
+            </Symbols>
+
+            <Rows>
+                <Row>........</Row>
+                <Row>........</Row>
+                <Row>.r......</Row>
+                <Row>........</Row>
+                <Row>........</Row>
+                <Row>...B.r..</Row>
+                <Row>..r.....</Row>
+                <Row>........</Row>
+            </Rows>
+        </BossRoom>
+
+    </Rooms>
+
 </Faction>

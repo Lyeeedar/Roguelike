@@ -341,16 +341,6 @@ public abstract class Entity
 	}
 
 	// ----------------------------------------------------------------------
-	public void removeStatusEffect( StatusEffect se )
-	{
-		statusEffects.removeValue( se, true );
-
-		stacks = stackStatusEffects();
-
-		isVariableMapDirty = true;
-	}
-
-	// ----------------------------------------------------------------------
 	public void removeStatusEffect( String se )
 	{
 		for ( int i = 0; i < statusEffects.size; i++ )

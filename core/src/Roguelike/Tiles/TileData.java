@@ -113,6 +113,11 @@ public class TileData
 			}
 		}
 
+		if ( data.spriteGroups.size == 0 )
+		{
+			throw new RuntimeException( "Failed to find any sprite groups!" );
+		}
+
 		Element ambientShadowElement = xml.getChildByName( "AmbientShadow" );
 		if ( ambientShadowElement != null )
 		{

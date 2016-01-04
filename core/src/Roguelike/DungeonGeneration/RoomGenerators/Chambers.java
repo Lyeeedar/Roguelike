@@ -43,7 +43,7 @@ public class Chambers extends AbstractRoomGenerator
 		public boolean splitVertically;
 
 		private static final int minSize = 5;
-		private static final int maxSize = 20;
+		private static final int maxSize = 12;
 
 		public void partition( Random ran )
 		{
@@ -225,7 +225,12 @@ public class Chambers extends AbstractRoomGenerator
 		while ( true )
 		{
 			BSPTree tree = new BSPTree( 0, 0, grid.length - 1, grid[0].length - 1 );
-			tree.partition( ran );
+
+			if (tree.child1 == null)
+			{
+				tree.partition( ran );
+			}
+
 			outGrid = new int[grid.length][grid[0].length];
 			tree.dig( outGrid, ran );
 
