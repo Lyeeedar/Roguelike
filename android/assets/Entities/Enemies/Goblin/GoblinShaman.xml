@@ -11,23 +11,11 @@
             <Name>Heal</Name>
 			<Cooldown>35</Cooldown>
 			<Range>3</Range>
-			<Targeting><Entity Type="Ally"/></Targeting>
-			<Movement><Smite /></Movement>
+			<HitType><Ally/></HitType>
 			<Effect>
 				<Heal>20</Heal>
 			</Effect>
         </Active>
-
-		<Active>
-			<Name>Backup</Name>
-			<Cooldown>50</Cooldown>
-			<Range>3</Range>
-			<Targeting><Tile Type="Empty"/></Targeting>
-			<Movement><Smite /></Movement>
-			<Effect>
-				<Summon>Enemies/Goblin/GoblinGrunt</Summon>
-			</Effect>
-		</Active>
 
     </Abilities>
 

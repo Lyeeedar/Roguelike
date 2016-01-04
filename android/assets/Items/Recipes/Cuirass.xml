@@ -7,8 +7,8 @@
     <Events>
         <Constant>
             <Defense>7 + 4 * quality</Defense>
-            <Strength>quality/2</Strength>
-            <Constitution>quality/2</Constitution>
+            <Strength>1 + quality/2</Strength>
+            <Constitution>1 + quality/2</Constitution>
         </Constant>
     </Events>
 </Recipe>

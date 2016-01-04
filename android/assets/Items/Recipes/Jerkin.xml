@@ -7,8 +7,8 @@
     <Events>
         <Constant>
             <Defense>5 + 3 * quality</Defense>
-            <Perception>quality/2</Perception>
-            <Speed>quality/3</Speed>
+            <Perception>1 + quality/2</Perception>
+            <Speed>1 + quality/3</Speed>
         </Constant>
     </Events>
 </Recipe>

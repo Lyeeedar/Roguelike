@@ -38,7 +38,7 @@
 
 	<Effect>
 		<Damage>
-            <Attack>200 + 10 * level</Attack>
+            <Attack>200 + 6 * level</Attack>
             <Constitution>1</Constitution>
 		</Damage>
 	</Effect>

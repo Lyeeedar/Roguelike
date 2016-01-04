@@ -186,10 +186,35 @@ public final class Item extends GameEventHandler
 		table.add( descLabel ).expand().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 		table.row();
 
-		table.add( new Label( "", skin ) );
+		table.add( new Seperator( skin, false ) ).expandX().fillX();
 		table.row();
 
-		Array<String> lines = toString( entity.getVariableMap(), false );
+		for (Statistic stat : Statistic.values())
+		{
+			int val = getStatistic( entity.getVariableMap(), stat );
+			int otherVal = other != null ? other.getStatistic( entity.getVariableMap(), stat ) : 0;
+
+			if (val > 0 || val != otherVal)
+			{
+				String value = ""+val;
+
+				if (val < otherVal)
+				{
+					value = value + "  [RED]" + (val - otherVal) + "[]";
+				}
+				else if (val > otherVal)
+				{
+					value = value + "  [GREEN]+" + (val - otherVal) + "[]";
+				}
+
+				Label statLabel = new Label( Global.capitalizeString( stat.toString() ) + ": " + value, skin );
+				statLabel.setWrap( true );
+				table.add( statLabel ).expandX().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
+				table.row();
+			}
+		}
+
+		Array<String> lines = toString( entity.getVariableMap(), true );
 		for (String line : lines)
 		{
 			if (line.equals( "---" ))
@@ -263,17 +288,27 @@ public final class Item extends GameEventHandler
 		for (Statistic stat : Statistic.values())
 		{
 			int val = getStatistic( entity.getVariableMap(), stat );
+			int otherVal = other != null ? other.getStatistic( entity.getVariableMap(), stat ) : 0;
 
 			if ( stat == Statistic.ATTACK || stat == Statistic.DEFENSE )
 			{
 				continue;
 			}
 
-			if (val > 0)
+			if (val > 0 || val != otherVal)
 			{
-				Global.ScaleLevel scale = Global.ScaleLevel.values()[ val - 1 ];
+				String scale = val > 0 ? Global.ScaleLevel.values()[ val - 1 ].toString() : "--";
 
-				Label statLabel = new Label( Global.capitalizeString( stat.toString() ) + ": " + scale.toString(), skin );
+				if (val < otherVal)
+				{
+					scale = "[RED]" + scale + "[]";
+				}
+				else if (val > otherVal)
+				{
+					scale = "[GREEN]" + scale + "[]";
+				}
+
+				Label statLabel = new Label( Global.capitalizeString( stat.toString() ) + ": " + scale, skin );
 				statLabel.setWrap( true );
 				table.add( statLabel ).expandX().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 				table.row();

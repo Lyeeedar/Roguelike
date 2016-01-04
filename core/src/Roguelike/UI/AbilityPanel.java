@@ -117,7 +117,7 @@ public class AbilityPanel extends TilePanel
 
 					if (GameScreen.Instance.preparedAbility == aa)
 					{
-						GameScreen.Instance.prepareAbility(null);
+						GameScreen.Instance.prepareAbility( null );
 					}
 					else if ( aa.isAvailable() )
 					{

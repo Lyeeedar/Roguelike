@@ -1,6 +1,7 @@
 package Roguelike.Items;
 
 import Roguelike.Ability.AbilityTree;
+import Roguelike.Sprite.Sprite;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -22,25 +23,23 @@ public class TreasureGenerator
 
 		for (String type : types)
 		{
-			int choice = MathUtils.random.nextInt( 5 );
-
-			if ( type.equals( "currency" ) || ( type.equals( "random" ) && choice == 0 ) )
+			if ( type.equals( "currency" ) )
 			{
 				items.addAll( TreasureGenerator.generateCurrency( quality, MathUtils.random ) );
 			}
-			else if ( type.equals( "ability" ) || ( type.equals( "random" ) && choice == 1 ) )
+			else if ( type.equals( "ability" ) )
 			{
 				items.addAll( TreasureGenerator.generateAbility( quality, MathUtils.random ) );
 			}
-			else if ( type.equals( "armour" ) || ( type.equals( "random" ) && choice == 2 ) )
+			else if ( type.equals( "armour" ) )
 			{
 				items.addAll( TreasureGenerator.generateArmour( quality, MathUtils.random ) );
 			}
-			else if ( type.equals( "weapon" ) || ( type.equals( "random" ) && choice == 3 ) )
+			else if ( type.equals( "weapon" ) )
 			{
 				items.addAll( TreasureGenerator.generateWeapon( quality, MathUtils.random ) );
 			}
-			else if ( type.equals( "item" ) || ( type.equals( "random" ) && choice == 4 ) )
+			else if ( type.equals( "item" ) )
 			{
 				if ( ran.nextBoolean() )
 				{
@@ -51,6 +50,42 @@ public class TreasureGenerator
 					items.addAll( TreasureGenerator.generateWeapon( quality, MathUtils.random ) );
 				}
 			}
+			else if ( type.equals( "random" ) )
+			{
+				items.addAll( TreasureGenerator.generateRandom( quality, MathUtils.random ) );
+			}
+		}
+
+		return items;
+	}
+
+	public static Array<Item> generateRandom( int quality, Random ran )
+	{
+		Array<Item> items = new Array<Item>(  );
+
+		// Chances,
+		// Currency 3
+		// Weapon 2
+		// Armour 2
+		// Ability 1
+
+		int chance = ran.nextInt( 8 );
+
+		if ( chance < 3 )
+		{
+			items.addAll( TreasureGenerator.generateCurrency( quality, ran ) );
+		}
+		else if ( chance < 5 )
+		{
+			items.addAll( TreasureGenerator.generateArmour( quality, ran ) );
+		}
+		else if ( chance < 7 )
+		{
+			items.addAll( TreasureGenerator.generateWeapon( quality, ran ) );
+		}
+		else
+		{
+			items.addAll( TreasureGenerator.generateAbility( quality, ran ) );
 		}
 
 		return items;
@@ -62,25 +97,23 @@ public class TreasureGenerator
 
 		int val = ran.nextInt(100) * quality;
 
-		while (val >= 100)
-		{
-			Item item = Item.load( "Treasure/GoldCoin" );
-			items.add(item);
-			val -= 100;
-		}
+		int i = treasureTable.items.size - 1;
 
-		while (val >= 10)
+		while ( i >= 0 )
 		{
-			Item item = Item.load( "Treasure/SilverCoin" );
-			items.add(item);
-			val -= 10;
-		}
+			TreasureTable.TreasureItem treasure = treasureTable.items.get( i );
 
-		while (val >= 1)
-		{
-			Item item = Item.load( "Treasure/CopperCoin" );
-			items.add(item);
-			val -= 1;
+			if ( val >= treasure.value )
+			{
+				val -= treasure.value;
+
+				Item item = Item.load( "Treasure/" + treasure.fileName );
+				items.add(item);
+			}
+			else
+			{
+				i--;
+			}
 		}
 
 		return items;
@@ -182,25 +215,108 @@ public class TreasureGenerator
 	}
 
 
-
+	public static final TreasureTable treasureTable = new TreasureTable( "Items/Treasure/TreasureTable.xml" );
 	private static final QualityMap abilityList = new QualityMap( "Abilities/AbilityList.xml" );
 	private static final QualityMap modifierList = new QualityMap( "Items/Modifiers/ModifierList.xml" );
 	private static final HashMap<String, QualityMap> materialLists = new HashMap<String, QualityMap>(  );
-	private static final RecipeList recipeList = new RecipeList();
+	private static final RecipeList recipeList = new RecipeList( "Items/Recipes/Recipes.xml" );
 
-	private static class RecipeList
+	public static class TreasureTable
 	{
-		public Array<RecipeData> armourRecipes = new Array<RecipeData>(  );
-		public Array<RecipeData> weaponRecipes = new Array<RecipeData>(  );
+		public static class TreasureItem
+		{
+			public final String fileName;
+			public final String itemName;
+			public final int value;
 
-		public RecipeList()
+			public TreasureItem( String name, int value )
+			{
+				this.fileName = name;
+				this.value = value;
+
+				Item item = Item.load( "Treasure/" + fileName );
+				itemName = item.name;
+			}
+		}
+
+		public Array<TreasureItem> items = new Array<TreasureItem>(  );
+
+		public TreasureTable( String path )
 		{
 			XmlReader reader = new XmlReader();
 			XmlReader.Element xml = null;
 
 			try
 			{
-				xml = reader.parse( Gdx.files.internal( "Items/Recipes/Recipes.xml" ) );
+				xml = reader.parse( Gdx.files.internal( path ) );
+			}
+			catch ( IOException e )
+			{
+				e.printStackTrace();
+			}
+
+			for ( int i = 0; i < xml.getChildCount(); i++ )
+			{
+				XmlReader.Element itemElement = xml.getChild( i );
+
+				items.add( new TreasureItem( itemElement.getName(), Integer.parseInt( itemElement.getText() ) ) );
+			}
+		}
+
+		public int getValueForCurrency( Item item )
+		{
+			int value = -1;
+
+			for ( TreasureItem ti : items )
+			{
+				if ( ti.itemName.equals( item.name ) )
+				{
+					value = ti.value;
+					break;
+				}
+			}
+
+			return value;
+		}
+
+		public Sprite getCurrencySprite( Array<Item> items )
+		{
+			Sprite sprite = null;
+			int bestValue = 0;
+
+			for ( Item item : items )
+			{
+				int value = getValueForCurrency( item );
+
+				if ( value == -1 )
+				{
+					return null;
+				}
+
+				if ( value > bestValue )
+				{
+					bestValue = value;
+					sprite = item.getIcon();
+				}
+			}
+
+			return sprite;
+		}
+	}
+
+	private static class RecipeList
+	{
+		public Array<RecipeData> armourRecipes = new Array<RecipeData>(  );
+		public Array<RecipeData> weaponRecipes = new Array<RecipeData>(  );
+
+		public RecipeList( String path )
+		{
+			XmlReader reader = new XmlReader();
+			XmlReader.Element xml = null;
+
+			try
+			{
+				xml = reader.parse( Gdx.files.internal( path ) );
 			}
 			catch ( IOException e )
 			{

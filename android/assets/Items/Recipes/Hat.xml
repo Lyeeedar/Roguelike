@@ -7,8 +7,8 @@
     <Events>
         <Constant>
             <Defense>2 + quality</Defense>
-            <Intelligence>quality/3</Intelligence>
-            <Willpower>quality/3</Willpower>
+            <Intelligence>1 + quality/3</Intelligence>
+            <Willpower>1 + quality/3</Willpower>
         </Constant>
     </Events>
 </Recipe>

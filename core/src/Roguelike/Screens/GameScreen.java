@@ -16,6 +16,7 @@ import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
 import Roguelike.Items.Item;
+import Roguelike.Items.TreasureGenerator;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
@@ -724,7 +725,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							}
 							else
 							{
-								queueSprite( bag, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.ITEM );
+								Sprite sprite = TreasureGenerator.treasureTable.getCurrencySprite( gtile.items );
+								if ( sprite == null ) { sprite = bag; }
+								queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.ITEM );
 
 								for ( Item item : gtile.items )
 								{
@@ -1458,10 +1461,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						if ( preparedAbility.isTargetValid( tile, abilityTiles ) )
 						{
 							Global.CurrentLevel.player.tasks.add( new TaskUseAbility( Global.PointPool.obtain().set( x, y ), preparedAbility ) );
+							preparedAbility = null;
 						}
 					}
 				}
-				preparedAbility = null;
 			}
 			else
 			{

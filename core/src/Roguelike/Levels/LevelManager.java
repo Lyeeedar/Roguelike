@@ -18,6 +18,8 @@ import java.util.Random;
  */
 public class LevelManager
 {
+	public int totalDepth = 0;
+
 	public LevelData root;
 	public LevelData current;
 
@@ -60,6 +62,8 @@ public class LevelManager
 
 		LoadingScreen.Instance.set( level, Global.CurrentLevel.player, "PlayerSpawn", null );
 		RoguelikeGame.Instance.switchScreen( RoguelikeGame.ScreenEnum.LOADING );
+
+		totalDepth++;
 	}
 
 	public LevelData getLevel( String name )

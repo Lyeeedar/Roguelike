@@ -8,6 +8,7 @@ import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
+import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.Fields.Field;
 import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.GameEvent.GameEventHandler;
@@ -19,6 +20,7 @@ import Roguelike.Items.Inventory;
 import Roguelike.Items.Item;
 import Roguelike.Items.TreasureGenerator;
 import Roguelike.Lights.Light;
+import Roguelike.Pathfinding.Pathfinder;
 import Roguelike.Pathfinding.ShadowCastCache;
 import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.RoguelikeGame;
@@ -239,9 +241,15 @@ public class Level
 
 				if ( e.canTakeDamage && e != player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
+					int quality = Math.max( 1, Global.LevelManager.totalDepth / 3 + Math.max( 0, (int)MathUtils.random.nextGaussian() * 2 ) );
+
 					if ( e.isBoss )
 					{
-						e.inventory.m_items.addAll( TreasureGenerator.generateLoot( 1, "random", MathUtils.random ) );
+						e.inventory.m_items.addAll( TreasureGenerator.generateLoot( quality + 1, "random", MathUtils.random ) );
+					}
+					else if ( e.essence > 0 && MathUtils.random( 4 ) == 0 )
+					{
+						e.inventory.m_items.addAll( TreasureGenerator.generateLoot( quality, "random", MathUtils.random ) );
 					}
 
 					dropItems( e.getInventory(), e.tile[0][0], e.essence, e );
@@ -294,7 +302,7 @@ public class Level
 		ShadowCaster sc = new ShadowCaster( Grid, 3, ItemDropPassability, obj );
 		sc.ComputeFOV( source.x, source.y, possibleTiles );
 
-		// remove nonpassable tiles
+		// remove non-reachable tiles
 		Iterator<Point> itr = possibleTiles.iterator();
 		while ( itr.hasNext() )
 		{
@@ -306,6 +314,16 @@ public class Level
 			{
 				itr.remove();
 				Global.PointPool.free( pos );
+				continue;
+			}
+
+			Pathfinder pathfinder = new Pathfinder( Grid, source.x, source.y, pos.x, pos.y, Global.CanMoveDiagonal, 1, null );
+
+			if ( pathfinder.getPath( ItemDropPassability ) == null )
+			{
+				itr.remove();
+				Global.PointPool.free( pos );
+				continue;
 			}
 		}
 
@@ -779,7 +797,7 @@ public class Level
 				}
 			}
 
-			if ( player.tile[0][0].items.size > 0 )
+			if ( task instanceof TaskMove && player.tile[0][0].items.size > 0 )
 			{
 				for ( Item item : player.tile[0][0].items )
 				{

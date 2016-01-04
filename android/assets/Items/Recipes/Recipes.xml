@@ -1,12 +1,15 @@
 <Recipes>
 
     <Armours>
+        <Helm>Metal</Helm>
         <Cuirass>Metal</Cuirass>
         <Greaves>Metal</Greaves>
 
+        <Cap>Leather</Cap>
         <Jerkin>Leather</Jerkin>
         <Boots>Leather</Boots>
 
+        <Hat>Cloth</Hat>
         <Shirt>Cloth</Shirt>
         <Trousers>Cloth</Trousers>
     </Armours>

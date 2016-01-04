@@ -8,6 +8,8 @@
 
 	<AI>basicMonster</AI>
 
+    <Essence>0</Essence>
+
 	<Factions>
 		<Faction>Fly</Faction>
 	</Factions>
