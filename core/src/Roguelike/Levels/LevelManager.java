@@ -73,17 +73,28 @@ public class LevelManager
 			return current;
 		}
 
+		LevelData nextLevel = null;
 		if (current.nextLevel.levelName.equals( name ))
 		{
-			return current.nextLevel;
+			nextLevel = current.nextLevel;
 		}
 
 		for (BranchData branch : current.branches)
 		{
 			if (branch.level.levelName.equals( name ))
 			{
-				return branch.level;
+				nextLevel = branch.level;
 			}
+		}
+
+		if ( nextLevel != null )
+		{
+			if ( nextLevel.levelName.equals( "GoTo" ) )
+			{
+				nextLevel = root.getLabelledLevel( nextLevel.label );
+			}
+
+			return nextLevel;
 		}
 
 		throw new RuntimeException( "Cant find level with name '" + name + "' connected to level '" + current.levelName + "'" );
@@ -93,6 +104,7 @@ public class LevelManager
 	{
 		public String levelName;
 		public int maxDepth;
+		public String label;
 
 		public SaveLevel currentLevel;
 
@@ -158,6 +170,7 @@ public class LevelManager
 		{
 			levelName = xml.getName();
 			maxDepth = xml.getIntAttribute( "MaxDepth", 3 );
+			label = xml.getAttribute( "Label", null );
 
 			if (xml.getChildCount() > 0)
 			{
@@ -183,6 +196,34 @@ public class LevelManager
 					branches.add(branch);
 				}
 			}
+		}
+
+		public LevelData getLabelledLevel( String labelString )
+		{
+			if ( !levelName.equals( "GoTo" ) && label != null && label.equals( labelString ) )
+			{
+				return this;
+			}
+
+			if ( nextLevel != null )
+			{
+				LevelData found = nextLevel.getLabelledLevel( labelString );
+				if ( found != null )
+				{
+					return found;
+				}
+			}
+
+			for ( BranchData branch : branches )
+			{
+				LevelData found = branch.level.getLabelledLevel( labelString );
+				if ( found != null )
+				{
+					return found;
+				}
+			}
+
+			return null;
 		}
 	}
 

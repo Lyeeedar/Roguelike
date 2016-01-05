@@ -1,13 +1,25 @@
 <Forest MaxDepth="2">
-    <RatCellar MaxDepth="4">
-        <Sewer MaxDepth="2">
+    <EnchantedForest MaxDepth="2">
+        <Caves Label="Caves" MaxDepth="3">
+            <UndergroundLake Label="Lake" MaxDepth="1">
 
-        </Sewer>
-    </RatCellar>
+            </UndergroundLake>
+        </Caves>
 
-    <!--<Branches>-->
-        <!--<RatCellar SpawnDepth="3" SpawnChance="0.5" MaxDepth="3">-->
+        <Branches>
+            <SpiderCave SpawnDepth="1" SpawnChance="0.3" MaxDepth="2">
+                <GoTo Label="Caves"></GoTo>
+            </SpiderCave>
+        </Branches>
 
-        <!--</RatCellar>-->
-    <!--</Branches>-->
+    </EnchantedForest>
+
+    <Branches>
+        <RatCellar SpawnDepth="2" SpawnChance="0.5" MaxDepth="3">
+            <Sewer MaxDepth="2">
+                <GoTo Label="Lake"></GoTo>
+            </Sewer>
+        </RatCellar>
+    </Branches>
+
 </Forest>
