@@ -128,12 +128,12 @@ public class DungeonFileParser
 	public static final class DFPRoom
 	{
 		// ----------------------------------------------------------------------
-		public enum Orientation
+		public enum Placement
 		{
-			EDGE, CENTRE, RANDOM, ROTATED, FIXED
+			NORTH, SOUTH, EAST, WEST, CENTRE
 		}
 
-		public Orientation orientation;
+		public Placement placement;
 
 		public boolean isTransition;
 
@@ -159,7 +159,7 @@ public class DungeonFileParser
 
 			room.faction = xml.get( "Faction", null );
 
-			room.orientation = Orientation.valueOf( xml.get( "Orientation", "Random" ).toUpperCase() );
+			room.placement = Placement.valueOf( xml.get( "Placement", "Centre" ).toUpperCase() );
 
 			Element rowsElement = xml.getChildByName( "Rows" );
 
@@ -275,7 +275,7 @@ public class DungeonFileParser
 		{
 			DFPRoom room = new DFPRoom();
 
-			room.orientation = orientation;
+			room.placement = placement;
 			room.isTransition = isTransition;
 			room.spawnEquation = spawnEquation;
 			room.width = width;
@@ -656,7 +656,7 @@ public class DungeonFileParser
 		}
 
 		Element ae = xmlElement.getChildByName( "Ambient" );
-		ambient = new Color( ae.getFloat( "Red" ), ae.getFloat( "Blue" ), ae.getFloat( "Green" ), ae.getFloat( "Alpha" ) );
+		ambient = new Color( ae.getFloat( "Red", 1 ), ae.getFloat( "Blue", 1 ), ae.getFloat( "Green", 1 ), ae.getFloat( "Alpha", 1 ) );
 		affectedByDayNight = ae.getBoolean( "AffectedByDayNight", false );
 
 		Element soundElement = xmlElement.getChildByName( "Sound" );

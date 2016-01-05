@@ -226,8 +226,8 @@ public abstract class AbstractDungeonGenerator
 		if ( maxy == -1 ) { return grid; }
 
 		// minimise room
-		int newwidth = maxx - minx;
-		int newheight = maxy - miny;
+		int newwidth = Math.min( width, maxx - minx );
+		int newheight = Math.min( height, maxy - miny );
 
 		Symbol[][] newgrid = new Symbol[newwidth][newheight];
 
@@ -242,6 +242,19 @@ public abstract class AbstractDungeonGenerator
 		return newgrid;
 	}
 
+	protected void DEBUG_printGrid( Symbol[][] symbolGrid )
+	{
+		for ( int y = height - 1; y >= 0; y-- )
+		{
+			for ( int x = 0; x < width; x++ )
+			{
+				System.out.print( symbolGrid[x][y].character );
+			}
+			System.out.print( "\n" );
+		}
+		System.out.println( "\n" );
+	}
+
 	// ----------------------------------------------------------------------
 	protected Level createLevel( Symbol[][] symbolGrid, Symbol outerWall )
 	{
@@ -249,15 +262,7 @@ public abstract class AbstractDungeonGenerator
 
 		if ( DEBUG_OUTPUT )
 		{
-			for ( int x = 0; x < width; x++ )
-			{
-				for ( int y = 0; y < height; y++ )
-				{
-					System.out.print( symbolGrid[x][y].character );
-				}
-				System.out.print( "\n" );
-			}
-			System.out.println( "\n" );
+			DEBUG_printGrid( symbolGrid );
 		}
 
 		// minimise
@@ -267,15 +272,7 @@ public abstract class AbstractDungeonGenerator
 
 		if ( DEBUG_OUTPUT )
 		{
-			for ( int x = 0; x < width; x++ )
-			{
-				for ( int y = 0; y < height; y++ )
-				{
-					System.out.print( symbolGrid[x][y].character );
-				}
-				System.out.print( "\n" );
-			}
-			System.out.println( "\n" );
+			DEBUG_printGrid( symbolGrid );
 		}
 
 		GameTile[][] actualTiles = new GameTile[width][height];

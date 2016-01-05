@@ -1,10 +1,6 @@
 package Roguelike.DungeonGeneration;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import PaulChew.Pnt;
 import PaulChew.Triangle;
@@ -14,7 +10,6 @@ import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.DungeonGeneration.DungeonFileParser.CorridorFeature.PlacementMode;
 import Roguelike.DungeonGeneration.DungeonFileParser.CorridorStyle.PathStyle;
-import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom.Orientation;
 import Roguelike.DungeonGeneration.Room.RoomDoor;
 import Roguelike.Pathfinding.AStarPathfind;
 import Roguelike.Pathfinding.PathfindingTile;
@@ -59,9 +54,13 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			placedRooms.clear();
 
 			toBePlaced.addAll( requiredRooms );
+			for ( Room room : toBePlaced )
+			{
+				room.revertChanges( ran, dfp );
+			}
 
 			fillGridBase();
-			partition( minPadding, minPadding, width - minPadding * 2, height - minPadding * 2 );
+			partition( );
 
 			if ( toBePlaced.size == 0 )
 			{
@@ -276,7 +275,279 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 	}
 
 	// ----------------------------------------------------------------------
-	protected void partition( int x, int y, int width, int height )
+	protected void partition()
+	{
+		int bx = 0;
+		int by = 0;
+		int bwidth = width;
+		int bheight = height;
+
+		// First place the rooms with a Placement
+		Array<Room> northRooms = new Array<Room>(  );
+		Array<Room> southRooms = new Array<Room>(  );
+		Array<Room> eastRooms = new Array<Room>(  );
+		Array<Room> westRooms = new Array<Room>(  );
+
+		Iterator<Room> itr = toBePlaced.iterator();
+		while ( itr.hasNext() )
+		{
+			Room room = itr.next();
+			if ( room.roomData.placement != DungeonFileParser.DFPRoom.Placement.CENTRE )
+			{
+				if ( room.roomData.placement == DungeonFileParser.DFPRoom.Placement.NORTH )
+				{
+					northRooms.add( room );
+					room.flipVertical();
+				}
+				else if ( room.roomData.placement == DungeonFileParser.DFPRoom.Placement.SOUTH )
+				{
+					southRooms.add( room );
+					room.flipVertical();
+				}
+				else if ( room.roomData.placement == DungeonFileParser.DFPRoom.Placement.EAST )
+				{
+					eastRooms.add( room );
+				}
+				else if ( room.roomData.placement == DungeonFileParser.DFPRoom.Placement.WEST )
+				{
+					westRooms.add( room );
+				}
+
+				itr.remove();
+			}
+		}
+
+		// Place north
+		if (northRooms.size > 0)
+		{
+			int totalSize = 0;
+			for ( Room room : northRooms )
+			{
+				if ( room.height + minPadding > bheight )
+				{
+					// Not enough space
+					return;
+				}
+
+				totalSize += room.width;
+			}
+
+			if (totalSize > bwidth)
+			{
+				// Not enough space
+				return;
+			}
+
+			int spacing = (int)Math.floor( (float)(bwidth - totalSize) / ((float)northRooms.size + 1) );
+
+			int maxheight = 0;
+
+			int cx = ran.nextInt(spacing * 2);
+			int extra = spacing * 2 - cx;
+			for ( Room room : northRooms )
+			{
+				room.x = cx;
+				room.y = by + bheight - room.height;
+
+				if (room.height > maxheight)
+				{
+					maxheight = room.height;
+				}
+
+				placedRooms.add( room );
+
+				int offset = ran.nextInt(spacing + extra);
+				extra = (spacing + extra ) - offset;
+
+				cx += room.width + offset;
+			}
+
+			bheight -= maxheight;
+		}
+
+		// Place south
+		if (southRooms.size > 0)
+		{
+			int totalSize = 0;
+			for ( Room room : southRooms )
+			{
+				if ( room.height + minPadding > bheight )
+				{
+					// Not enough space
+					return;
+				}
+
+				totalSize += room.width;
+			}
+
+			if (totalSize > bwidth)
+			{
+				// Not enough space
+				return;
+			}
+
+			int spacing = (int)Math.floor( (float)(bwidth - totalSize) / ((float)southRooms.size + 1) );
+
+			int maxheight = 0;
+
+			int cx = ran.nextInt(spacing * 2);
+			int extra = spacing * 2 - cx;
+			for ( Room room : southRooms )
+			{
+				room.x = cx;
+				room.y = by;
+
+				if (room.height > maxheight)
+				{
+					maxheight = room.height;
+				}
+
+				placedRooms.add( room );
+
+				int offset = ran.nextInt(spacing + extra);
+				extra = (spacing + extra ) - offset;
+
+				cx += room.width + offset;
+			}
+
+			bheight -= maxheight;
+			by += maxheight;
+		}
+
+		// Place east
+		if (eastRooms.size > 0)
+		{
+			int totalSize = 0;
+			for ( Room room : eastRooms )
+			{
+				if ( room.width + minPadding > bwidth )
+				{
+					// Not enough space
+					return;
+				}
+
+				totalSize += room.height;
+			}
+
+			if (totalSize > bheight)
+			{
+				// Not enough space
+				return;
+			}
+
+			int spacing = (int)Math.floor( (float)(bheight - totalSize) / ((float)eastRooms.size + 1) );
+
+			int maxwidth = 0;
+
+			int cy = ran.nextInt(spacing * 2);
+			int extra = spacing * 2 - cy;
+			for ( Room room : eastRooms )
+			{
+				room.x = bx + bwidth - room.width;
+				room.y = cy;
+
+				if (room.width > maxwidth)
+				{
+					maxwidth = room.width;
+				}
+
+				placedRooms.add( room );
+
+				int offset = ran.nextInt(spacing + extra);
+				extra = (spacing + extra ) - offset;
+
+				cy += room.height + offset;
+			}
+
+			bwidth -= maxwidth;
+		}
+
+		// Place west
+		if (westRooms.size > 0)
+		{
+			int totalSize = 0;
+			for ( Room room : westRooms )
+			{
+				if ( room.width + minPadding > bwidth )
+				{
+					// Not enough space
+					return;
+				}
+
+				totalSize += room.height;
+			}
+
+			if (totalSize > bheight)
+			{
+				// Not enough space
+				return;
+			}
+
+			int spacing = (int)Math.floor( (float)(bheight - totalSize) / ((float)westRooms.size + 1) );
+
+			int maxwidth = 0;
+
+			int cy = ran.nextInt(spacing * 2);
+			int extra = spacing * 2 - cy;
+			for ( Room room : westRooms )
+			{
+				room.x = bx;
+				room.y = cy;
+
+				if (room.width > maxwidth)
+				{
+					maxwidth = room.width;
+				}
+
+				placedRooms.add( room );
+
+				int offset = ran.nextInt(spacing + extra);
+				extra = (spacing + extra ) - offset;
+
+				cy += room.height + offset;
+			}
+
+			bwidth -= maxwidth;
+			bx += maxwidth;
+		}
+
+		if (DEBUG_OUTPUT)
+		{
+			markRooms();
+			Symbol[][] symbolGrid = new Symbol[ width ][ height ];
+			for ( int x = 0; x < width; x++ )
+			{
+				for ( int y = 0; y < height; y++ )
+				{
+					symbolGrid[ x ][ y ] = tiles[ x ][ y ].symbol;
+				}
+			}
+			DEBUG_printGrid( symbolGrid );
+		}
+
+		// Then partition the rest
+		if ( bwidth >= paddedMinRoom && bheight >= paddedMinRoom )
+		{
+			partitionRecursive( bx + minPadding, by + minPadding, bwidth - minPadding2, bheight - minPadding2 );
+		}
+
+		if (DEBUG_OUTPUT)
+		{
+			markRooms();
+			Symbol[][] symbolGrid = new Symbol[ width ][ height ];
+			for ( int x = 0; x < width; x++ )
+			{
+				for ( int y = 0; y < height; y++ )
+				{
+					symbolGrid[ x ][ y ] = tiles[ x ][ y ].symbol;
+				}
+			}
+			DEBUG_printGrid( symbolGrid );
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	protected void partitionRecursive( int x, int y, int width, int height )
 	{
 		int padX = Math.min( ran.nextInt( maxPadding - minPadding ) + minPadding, ( width - minRoomSize ) / 2 );
 		int padY = Math.min( ran.nextInt( maxPadding - minPadding ) + minPadding, ( height - minRoomSize ) / 2 );
@@ -308,130 +579,36 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 				boolean flipVert = false;
 				boolean flipHori = false;
 
-				if ( testRoom.roomData.orientation == Orientation.RANDOM )
+				boolean fitsVertical = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
+				boolean fitsHorizontal = testRoom.height + padX2 <= width && testRoom.width + padY2 <= height;
+
+				if ( fitsVertical || fitsHorizontal )
 				{
-					boolean fitsVertical = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
-					boolean fitsHorizontal = testRoom.height + padX2 <= width && testRoom.width + padY2 <= height;
+					fits = true;
 
-					if ( fitsVertical || fitsHorizontal )
+					// randomly flip
+					if ( ran.nextBoolean() )
 					{
-						fits = true;
+						flipVert = true;
+					}
 
-						// randomly flip
+					if ( ran.nextBoolean() )
+					{
+						flipHori = true;
+					}
+
+					// if it fits on both directions, randomly pick one
+					if ( fitsVertical && fitsHorizontal )
+					{
 						if ( ran.nextBoolean() )
-						{
-							flipVert = true;
-						}
-
-						if ( ran.nextBoolean() )
-						{
-							flipHori = true;
-						}
-
-						// if it fits on both directions, randomly pick one
-						if ( fitsVertical && fitsHorizontal )
-						{
-							if ( ran.nextBoolean() )
-							{
-								rotate = true;
-							}
-						}
-						else if ( fitsHorizontal )
 						{
 							rotate = true;
 						}
 					}
-				}
-				else if ( testRoom.roomData.orientation == Orientation.CENTRE )
-				{
-					int l = x + padX;
-					int r = this.width - ( x + testRoom.width + padX );
-					int b = y + padY;
-					int t = this.height - ( y + testRoom.height + padY );
-
-					if ( b <= l && b <= r && b <= t )
-					{
-						// Closest to bottom
-						// This is the default
-					}
-					else if ( t <= l && t <= r && t <= b )
-					{
-						// Closest to top
-						flipVert = true;
-					}
-					else if ( l <= r && l <= b && l <= t )
-					{
-						// Closest to Left
-						rotate = true;
-					}
-					else if ( r <= l && r <= b && r <= t )
-					{
-						// Closest to right
-						rotate = true;
-						flipVert = true;
-					}
-
-					if ( rotate )
-					{
-						fits = testRoom.height + padX2 <= width && testRoom.width + padY2 <= height;
-					}
-					else
-					{
-						fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
-					}
-				}
-				else if ( testRoom.roomData.orientation == Orientation.EDGE )
-				{
-					int l = x + padX;
-					int r = this.width - ( x + testRoom.width + padX );
-					int b = y + padY;
-					int t = this.height - ( y + testRoom.height + padY );
-
-					if ( t <= l && t <= r && t <= b )
-					{
-						// Closest to top
-						// This is the default orientation
-					}
-					else if ( l <= r && l <= b && l <= t )
-					{
-						// Closest to Left
-						rotate = true;
-						flipVert = true;
-					}
-					else if ( r <= l && r <= b && r <= t )
-					{
-						// Closest to right
-						rotate = true;
-					}
-					else if ( b <= l && b <= r && b <= t )
-					{
-						// Closest to bottom
-						flipVert = true;
-					}
-
-					if ( rotate )
-					{
-						fits = testRoom.height + padX2 <= width && testRoom.width + padY2 <= height;
-					}
-					else
-					{
-						fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
-					}
-				}
-				else if ( testRoom.roomData.orientation == Orientation.ROTATED )
-				{
-					fits = testRoom.height + padX2 <= width && testRoom.width + padY2 <= height;
-
-					if ( fits )
+					else if ( fitsHorizontal )
 					{
 						rotate = true;
-						flipVert = true;
 					}
-				}
-				else
-					// if ( testRoom.roomData.orientation == Orientation.FIXED )
-				{
-					fits = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
 				}
 
 				// If it fits then place the room and rotate/flip as neccesary
@@ -534,7 +711,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 				if ( nwidth >= paddedMinRoom && nheight >= paddedMinRoom )
 				{
-					partition( nx, ny, nwidth, nheight );
+					partitionRecursive( nx, ny, nwidth, nheight );
 				}
 			}
 
@@ -546,7 +723,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 				if ( nwidth >= paddedMinRoom && nheight >= paddedMinRoom )
 				{
-					partition( nx, ny, nwidth, nheight );
+					partitionRecursive( nx, ny, nwidth, nheight );
 				}
 			}
 		}
@@ -562,7 +739,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 				if ( nwidth >= paddedMinRoom && nheight >= paddedMinRoom )
 				{
-					partition( nx, ny, nwidth, nheight );
+					partitionRecursive( nx, ny, nwidth, nheight );
 				}
 			}
 
@@ -574,7 +751,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 				if ( nwidth >= paddedMinRoom && nheight >= paddedMinRoom )
 				{
-					partition( nx, ny, nwidth, nheight );
+					partitionRecursive( nx, ny, nwidth, nheight );
 				}
 			}
 		}
@@ -590,7 +767,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 				if ( nwidth >= paddedMinRoom && nheight >= paddedMinRoom )
 				{
-					partition( nx, ny, nwidth, nheight );
+					partitionRecursive( nx, ny, nwidth, nheight );
 				}
 			}
 
@@ -602,7 +779,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 				if ( nwidth >= paddedMinRoom && nheight >= paddedMinRoom )
 				{
-					partition( nx, ny, nwidth, nheight );
+					partitionRecursive( nx, ny, nwidth, nheight );
 				}
 			}
 		}
@@ -618,7 +795,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 				if ( nwidth >= paddedMinRoom && nheight >= paddedMinRoom )
 				{
-					partition( nx, ny, nwidth, nheight );
+					partitionRecursive( nx, ny, nwidth, nheight );
 				}
 			}
 
@@ -630,7 +807,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 				if ( nwidth >= paddedMinRoom && nheight >= paddedMinRoom )
 				{
-					partition( nx, ny, nwidth, nheight );
+					partitionRecursive( nx, ny, nwidth, nheight );
 				}
 			}
 		}
@@ -657,8 +834,11 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					y -= dfp.corridorStyle.width - 1;
 				}
 
-				Pnt p = new Pnt( x, y );
-				roomPnts.add( p );
+				if (x >= 1 && y >= 1 && x < width-1 && y < height-1)
+				{
+					Pnt p = new Pnt( x, y );
+					roomPnts.add( p );
+				}
 			}
 		}
 
@@ -751,8 +931,20 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			AStarPathfind pathFind = new AStarPathfind( tiles, x1, y1, x2, y2, false, true, dfp.corridorStyle.width, GeneratorPassability, null );
 			Array<Point> path = pathFind.getPath();
 
-			carveCorridor( path );
+			if (path == null)
+			{
+				Symbol[][] symbolGrid = new Symbol[width][height];
+				for ( int x = 0; x < width; x++ )
+				{
+					for ( int y = 0; y < height; y++ )
+					{
+						symbolGrid[x][y] = tiles[x][y].symbol;
+					}
+				}
+				DEBUG_printGrid( symbolGrid );
+			}
 
+			carveCorridor( path );
 			Global.PointPool.freeAll( path );
 		}
 	}
@@ -1379,6 +1571,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 	private int minPadding = 1;
 	private int maxPadding = 3;
+	private int minPadding2 = minPadding * 2;
 
 	private int minRoomSize = 7;
 	private int maxRoomSize = 25;

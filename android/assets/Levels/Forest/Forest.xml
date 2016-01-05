@@ -4,6 +4,8 @@
         <Prev>
             <Faction>none</Faction>
 
+            <Placement>North</Placement>
+
             <Symbols>
                 <Symbol Extends=".">
                     <Char>v</Char>
@@ -15,11 +17,8 @@
             </Symbols>
 
             <Rows>
-                <Row>#####</Row>
-                <Row>##.##</Row>
-                <Row>#.v.#</Row>
-                <Row>#..##</Row>
-                <Row>.....</Row>
+                <Row>#v#</Row>
+                <Row>#.#</Row>
             </Rows>
         </Prev>
         <This>
@@ -32,21 +31,19 @@
                 </Symbol>
             </Symbols>
 
+            <Placement>South</Placement>
+
             <Rows>
-                <Row>#####</Row>
-                <Row>##.##</Row>
-                <Row>#.S.#</Row>
-                <Row>#..##</Row>
-                <Row>.....</Row>
+                <Row>#.#</Row>
+                <Row>#S#</Row>
             </Rows>
         </This>
     </Entrance>
 
 	<Ambient>
-		<Red>0.05</Red>
-		<Green>0.02</Green>
-		<Blue>0.1</Blue>
-		<Alpha>0.8</Alpha>
+		<Red>0.54</Red>
+		<Green>0.51</Green>
+		<Blue>0.5</Blue>
 	</Ambient>
 
 	<Sound>

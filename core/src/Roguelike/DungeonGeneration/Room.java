@@ -50,6 +50,15 @@ public final class Room
 	// ----------------------------------------------------------------------
 	private String comparisonString;
 
+	// ----------------------------------------------------------------------
+	public void revertChanges( Random ran, DungeonFileParser dfp )
+	{
+		roomData.fillRoom( this, ran, dfp );
+		comparisonString = null;
+		doors.clear();
+	}
+
+	// ----------------------------------------------------------------------
 	public String comparisonString()
 	{
 		if ( comparisonString == null )

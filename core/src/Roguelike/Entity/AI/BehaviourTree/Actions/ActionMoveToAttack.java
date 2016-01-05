@@ -83,7 +83,7 @@ public class ActionMoveToAttack extends AbstractAction
 				Point newPos = Global.PointPool.obtain().set( target.x + dir.getX(), target.y + dir.getY() );
 				GameTile tile = entity.tile[0][0].level.getGameTile( newPos );
 
-				if ( !tile.getPassable( WeaponPassability, entity ) )
+				if ( tile == null || !tile.getPassable( WeaponPassability, entity ) )
 				{
 					break;
 				}

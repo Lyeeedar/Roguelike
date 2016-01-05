@@ -3,7 +3,6 @@ package Roguelike.Save;
 import Roguelike.Ability.AbilityTree;
 import Roguelike.AssetManager;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
-import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom.Orientation;
 import Roguelike.DungeonGeneration.Room;
 import Roguelike.DungeonGeneration.Room.RoomDoor;
 import Roguelike.DungeonGeneration.Symbol;
@@ -315,7 +314,7 @@ public final class SaveFile
 		kryo.register( Symbol[][].class );
 		kryo.register( Room.class );
 		kryo.register( RoomDoor.class );
-		kryo.register( Orientation.class );
+		kryo.register( DFPRoom.Placement.class );
 		kryo.register( AnimationState.class );
 		kryo.register( AnimationMode.class );
 		kryo.register( LevelManager.class );
