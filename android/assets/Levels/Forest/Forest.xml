@@ -12,6 +12,10 @@
                     <EnvironmentData>
                         <Type>Transition</Type>
                         <Destination>Forest</Destination>
+                        <Passable>false</Passable>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/TransitionOut</Name>
+                        </Sprite>
                     </EnvironmentData>
                 </Symbol>
             </Symbols>
@@ -28,6 +32,12 @@
                 <Symbol Extends=".">
                     <Char>S</Char>
                     <MetaValue>PlayerSpawn</MetaValue>
+                    <EnvironmentData>
+                        <Passable>false</Passable>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/TransitionIn</Name>
+                        </Sprite>
+                    </EnvironmentData>
                 </Symbol>
             </Symbols>
 

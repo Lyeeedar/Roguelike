@@ -62,7 +62,7 @@ public class ActionMoveTo extends AbstractAction
 		// if moving towards path to the object
 		if ( towards )
 		{
-			if ( path.size - 1 <= dst )
+			if ( path.size - 1 <= dst || ( offset[0] == 0 && offset[1] == 0 ) )
 			{
 				Global.PointPool.freeAll( path );
 				State = BehaviourTreeState.SUCCEEDED;
@@ -74,7 +74,7 @@ public class ActionMoveTo extends AbstractAction
 		// if moving away then just run directly away
 		else
 		{
-			if ( path.size - 1 >= dst )
+			if ( path.size - 1 >= dst || ( offset[0] == 0 && offset[1] == 0 ) )
 			{
 				Global.PointPool.freeAll( path );
 				State = BehaviourTreeState.SUCCEEDED;

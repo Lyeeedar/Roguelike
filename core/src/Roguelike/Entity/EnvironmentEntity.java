@@ -206,8 +206,23 @@ public class EnvironmentEntity extends Entity
 
 		final EnvironmentEntity entity = new EnvironmentEntity();
 		entity.size = data.getInt( "Size", 1 );
-		entity.passableBy = Passability.parse( "true" );
-		entity.passableBy.setBit( Passability.LIGHT );
+
+		entity.passableBy = Passability.parse( data.get( "Passable", "true" ) );
+
+		if ( data.get( "Opaque", null ) != null )
+		{
+			boolean opaque = data.getBoolean( "Opaque", false );
+
+			if ( opaque )
+			{
+				entity.passableBy.clearBit( Passability.LIGHT );
+			}
+			else
+			{
+				entity.passableBy.setBit( Passability.LIGHT );
+			}
+		}
+
 		entity.sprite = stairs;
 		entity.canTakeDamage = false;
 		entity.actions.add( action );
