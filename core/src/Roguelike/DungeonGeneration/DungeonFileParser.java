@@ -421,6 +421,10 @@ public class DungeonFileParser
 	public RoomGenerator preprocessor;
 
 	// ----------------------------------------------------------------------
+	public int minWidth;
+	public int minHeight;
+
+	// ----------------------------------------------------------------------
 	public HashMap<String, DFPRoom[]> entranceRooms = new HashMap<String, DFPRoom[]>(  );
 
 	// ----------------------------------------------------------------------
@@ -659,6 +663,9 @@ public class DungeonFileParser
 			}
 		}
 
+		minWidth = xmlElement.getInt( "MinWidth", 10 );
+		minHeight = xmlElement.getInt( "MinHeight", 10 );
+
 		Element ae = xmlElement.getChildByName( "Ambient" );
 		ambient = new Color( ae.getFloat( "Red", 1 ), ae.getFloat( "Blue", 1 ), ae.getFloat( "Green", 1 ), ae.getFloat( "Alpha", 1 ) );
 		affectedByDayNight = ae.getBoolean( "AffectedByDayNight", false );
@@ -666,9 +673,13 @@ public class DungeonFileParser
 		Element soundElement = xmlElement.getChildByName( "Sound" );
 		BGM = soundElement.get( "BGM" );
 
-		for ( Element ambientSound : soundElement.getChildByName( "Ambient" ).getChildrenByName( "Sound" ) )
+		Element ambientElement = soundElement.getChildByName( "Ambient" );
+		if (ambientElement != null)
 		{
-			ambientSounds.add( RepeatingSoundEffect.parse( ambientSound ) );
+			for ( Element ambientSound : ambientElement.getChildrenByName( "Sound" ) )
+			{
+				ambientSounds.add( RepeatingSoundEffect.parse( ambientSound ) );
+			}
 		}
 	}
 

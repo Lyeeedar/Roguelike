@@ -57,8 +57,13 @@
                     <MetaValue>PlayerSpawn</MetaValue>
                 </Symbol>
             </Symbols>
+
+            <Placement>South</Placement>
+
             <Rows>
-                <Row>S</Row>
+                <Row>...</Row>
+                <Row>.S.</Row>
+                <Row>...</Row>
             </Rows>
         </This>
     </Entrance>
@@ -71,12 +76,20 @@
                     <EnvironmentData>
                         <Type>Transition</Type>
                         <Destination>SpiderCave</Destination>
+                        <Passable>false</Passable>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/spiderEntrance</Name>
+                        </Sprite>
                     </EnvironmentData>
                 </Symbol>
             </Symbols>
 
+            <Placement>North</Placement>
+            <LockRotation>true</LockRotation>
+
             <Rows>
                 <Row>v</Row>
+                <Row>.</Row>
             </Rows>
         </Prev>
         <This>
@@ -88,8 +101,13 @@
                     <MetaValue>PlayerSpawn</MetaValue>
                 </Symbol>
             </Symbols>
+
+            <Placement>South</Placement>
+
             <Rows>
-                <Row>S</Row>
+                <Row>...</Row>
+                <Row>.S.</Row>
+                <Row>...</Row>
             </Rows>
         </This>
     </Entrance>
@@ -102,21 +120,15 @@
 
     <Sound>
         <BGM>Heroic Age</BGM>
-        <Ambient>
-            <Sound>
-                <Name>groan</Name>
-                <Type>Interval</Type>
-                <RepeatMin>10</RepeatMin>
-                <RepeatMax>30</RepeatMax>
-            </Sound>
-        </Ambient>
     </Sound>
 
     <RoomGenerators>
-        <CellularAutomata><Weight>1</Weight></CellularAutomata>
         <Starburst><Weight>1</Weight></Starburst>
         <Polygon><Weight>1</Weight></Polygon>
     </RoomGenerators>
+
+    <MinWidth>20</MinWidth>
+    <MinHeight>20</MinHeight>
 
     <Preprocessor>
         <Burrow></Burrow>
@@ -182,5 +194,9 @@
         </Symbol>
 
     </Symbols>
+
+    <Rooms>
+        <Padding Condition="2 + rnd(2)"></Padding>
+    </Rooms>
 
 </Level>

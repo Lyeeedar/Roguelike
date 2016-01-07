@@ -644,7 +644,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							}
 						}
 
-						if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.CONSTITUTION ) * 10 || entity.stacks.size > 0 )
+						if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.CONSTITUTION ) * 10 )
 						{
 							hasStatus.add( entity );
 						}

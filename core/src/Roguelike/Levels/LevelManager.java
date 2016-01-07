@@ -37,7 +37,7 @@ public class LevelManager
 			e.printStackTrace();
 		}
 
-		root = new LevelData();
+		root = new LevelData( this );
 		root.parse( xml );
 
 		current = root;
@@ -111,6 +111,13 @@ public class LevelManager
 		public LevelData nextLevel;
 		public Array<BranchData> branches = new Array<BranchData>(  );
 
+		public LevelManager root;
+
+		public LevelData( LevelManager root )
+		{
+			this.root = root;
+		}
+
 		public Array<DungeonFileParser.DFPRoom> getExtraRooms( String prevLevel, int depth, Random ran )
 		{
 			Array<DungeonFileParser.DFPRoom> rooms = new Array<DungeonFileParser.DFPRoom>(  );
@@ -128,11 +135,11 @@ public class LevelManager
 			// If depth == levelDepth, getEntranceRoom of nextLevel
 			if (depth == maxDepth)
 			{
-				rooms.add(nextLevel.getEntranceRoom(levelName));
+				rooms.add( nextLevel.getEntranceRoom( levelName ) );
 			}
 			else
 			{
-				rooms.add(getEntranceRoom( levelName ));
+				rooms.add( getEntranceRoom( levelName ) );
 			}
 
 			// For each branch check if should spawn, if so get entrance room of those
@@ -142,7 +149,7 @@ public class LevelManager
 				{
 					if (ran.nextFloat() <= branch.chance)
 					{
-						rooms.add(branch.level.getEntranceRoom(levelName));
+						rooms.add( branch.level.getEntranceRoom( levelName ) );
 					}
 				}
 			}
@@ -153,8 +160,14 @@ public class LevelManager
 
 		public DungeonFileParser.DFPRoom getEntranceRoom(String prevLevel)
 		{
+			String name = levelName;
+			if ( name.equals( "GoTo" ) )
+			{
+				name = root.root.getLabelledLevel( label ).levelName;
+			}
+
 			// Pull entrance room from level xml
-			DungeonFileParser dfp = DungeonFileParser.load( levelName + "/" + levelName );
+			DungeonFileParser dfp = DungeonFileParser.load( name + "/" + name );
 
 			if (dfp.entranceRooms.containsKey( prevLevel.toLowerCase() ))
 			{
@@ -174,7 +187,7 @@ public class LevelManager
 
 			if (xml.getChildCount() > 0)
 			{
-				nextLevel = new LevelData();
+				nextLevel = new LevelData( root );
 				nextLevel.parse( xml.getChild( 0 ) );
 			}
 
@@ -185,7 +198,7 @@ public class LevelManager
 				{
 					XmlReader.Element branchElement = branchesElement.getChild( i );
 
-					LevelData branchLevel = new LevelData();
+					LevelData branchLevel = new LevelData( root );
 					branchLevel.parse( branchElement );
 
 					BranchData branch = new BranchData();

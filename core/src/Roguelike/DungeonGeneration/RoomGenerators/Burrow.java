@@ -101,9 +101,6 @@ public class Burrow extends AbstractRoomGenerator
 
 	private Point placeNewSeed( Symbol[][] grid, Symbol floor, Symbol wall, Random ran )
 	{
-		Global.PointPool.freeAll( tempArray );
-		tempArray.clear();
-
 		int width = grid.length;
 		int height = grid[0].length;
 
@@ -124,6 +121,7 @@ public class Burrow extends AbstractRoomGenerator
 		grid[chosen.x][chosen.y] = floor;
 
 		Global.PointPool.freeAll( tempArray );
+		tempArray.clear();
 
 		return chosen;
 	}
@@ -145,6 +143,7 @@ public class Burrow extends AbstractRoomGenerator
 			Point seed = placeNewSeed( grid, floor, wall, ran );
 			placedCount++;
 			addNeighboursToCellStore( grid, wall, seed, cellStore );
+			Global.PointPool.free(seed);
 		}
 
 		// place tiles
@@ -155,6 +154,7 @@ public class Burrow extends AbstractRoomGenerator
 				Point seed = placeNewSeed( grid, floor, wall, ran );
 				placedCount++;
 				addNeighboursToCellStore( grid, wall, seed, cellStore );
+				Global.PointPool.free(seed);
 			}
 			else
 			{
@@ -164,6 +164,7 @@ public class Burrow extends AbstractRoomGenerator
 					grid[p.x][p.y] = floor;
 					placedCount++;
 					addNeighboursToCellStore( grid, wall, p, cellStore );
+					Global.PointPool.free(p);
 				}
 			}
 		}
