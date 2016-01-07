@@ -140,7 +140,7 @@ public class LevelManager
 			{
 				if (depth == branch.depth)
 				{
-					if (ran.nextFloat() >= branch.chance)
+					if (ran.nextFloat() <= branch.chance)
 					{
 						rooms.add(branch.level.getEntranceRoom(levelName));
 					}
@@ -154,7 +154,7 @@ public class LevelManager
 		public DungeonFileParser.DFPRoom getEntranceRoom(String prevLevel)
 		{
 			// Pull entrance room from level xml
-			DungeonFileParser dfp =DungeonFileParser.load( levelName + "/" + levelName );
+			DungeonFileParser dfp = DungeonFileParser.load( levelName + "/" + levelName );
 
 			if (dfp.entranceRooms.containsKey( prevLevel.toLowerCase() ))
 			{

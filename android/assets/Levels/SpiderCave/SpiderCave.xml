@@ -4,7 +4,7 @@
         <Prev>
             <Symbols>
                 <Symbol>
-                    <Char>#</Char>
+                    <Char>c</Char>
                     <TileData>
                         <Opaque>true</Opaque>
                         <Passable>false</Passable>
@@ -24,11 +24,12 @@
 
                     </TileData>
                 </Symbol>
-                <Symbol>
+                <Symbol Extends=".">
                     <Char>v</Char>
                     <EnvironmentData>
                         <Type>Transition</Type>
                         <Destination>SpiderCave</Destination>
+                        <Passable>false</Passable>
                         <Sprite>
                             <Name>Oryx/Custom/terrain/spiderEntrance</Name>
                         </Sprite>
@@ -39,10 +40,12 @@
             <LockRotation>true</LockRotation>
 
             <Rows>
-                <Row>..###..</Row>
-                <Row>.#####.</Row>
-                <Row>#######</Row>
-                <Row>.##v##.</Row>
+                <Row>..ccc..</Row>
+                <Row>.ccccc.</Row>
+                <Row>ccccccc</Row>
+                <Row>.ccvcc.</Row>
+                <Row>..c.c..</Row>
+                <Row>.......</Row>
             </Rows>
         </Prev>
         <This>
@@ -98,7 +101,7 @@
     </Ambient>
 
     <Sound>
-        <BGM>Disturbed</BGM>
+        <BGM>Heroic Age</BGM>
         <Ambient>
             <Sound>
                 <Name>groan</Name>

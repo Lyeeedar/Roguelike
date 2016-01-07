@@ -75,7 +75,7 @@ public class Burrow extends AbstractRoomGenerator
 		}
 
 		int index = ran.nextInt( range );
-		Point p = cellStore.removeIndex( cellStore.size - index );
+		Point p = cellStore.removeIndex( cellStore.size - index - 1 );
 
 		return p;
 	}
@@ -86,6 +86,11 @@ public class Burrow extends AbstractRoomGenerator
 		{
 			int nx = point.x + dir.getX();
 			int ny = point.y + dir.getY();
+
+			if ( nx < 0 || ny < 0 || nx >= grid.length || ny >= grid[0].length )
+			{
+				continue;
+			}
 
 			if ( grid[nx][ny] == wall )
 			{
@@ -108,9 +113,7 @@ public class Burrow extends AbstractRoomGenerator
 			{
 				if ( grid[x][y] == wall )
 				{
-					Point pos = Global.PointPool.obtain();
-					pos.x = x;
-					pos.y = y;
+					Point pos = Global.PointPool.obtain().set( x, y );
 
 					tempArray.add( pos );
 				}

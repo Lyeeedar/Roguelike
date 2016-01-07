@@ -177,6 +177,11 @@ public final class Symbol implements PathfindingTile
 
 	public boolean isPassable( EnumBitflag<Passability> travelType )
 	{
+		if (tileData == null)
+		{
+			throw new RuntimeException( "No tiledata parsed for '"+character+"' extends '"+extendsSymbol+"'" );
+		}
+
 		if ( processedTileData != tileData.hashCode() )
 		{
 			getTileData();

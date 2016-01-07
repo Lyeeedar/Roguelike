@@ -623,25 +623,28 @@ public final class Room
 				AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], Global.CanMoveDiagonal, false, 1, GeneratorPassability, null );
 				Array<Point> path = pathfind.getPath();
 
-				for ( Point point : path )
+				if (path != null)
 				{
-					Symbol s = roomContents[point.x][point.y];
-
-					if ( !s.isPassable( GeneratorPassability ) )
+					for ( Point point : path )
 					{
-						roomContents[point.x][point.y].tileData = roomCopy[point.x][point.y].tileData;
+						Symbol s = roomContents[point.x][point.y];
+
+						if ( !s.isPassable( GeneratorPassability ) )
+						{
+							roomContents[point.x][point.y].tileData = roomCopy[point.x][point.y].tileData;
+						}
+
+						if ( s.hasEnvironmentEntity()
+							 && !s.environmentData.get( "Type", "" ).equals( "Door" )
+							 && !s.getEnvironmentEntityPassable( GeneratorPassability ) )
+						{
+							roomContents[point.x][point.y].environmentData = roomCopy[point.x][point.y].environmentData;
+							roomContents[point.x][point.y].environmentEntityData = null;
+						}
 					}
 
-					if ( s.hasEnvironmentEntity()
-							&& !s.environmentData.get( "Type", "" ).equals( "Door" )
-							&& !s.getEnvironmentEntityPassable( GeneratorPassability ) )
-					{
-						roomContents[point.x][point.y].environmentData = roomCopy[point.x][point.y].environmentData;
-						roomContents[point.x][point.y].environmentEntityData = null;
-					}
+					Global.PointPool.freeAll( path );
 				}
-
-				Global.PointPool.freeAll( path );
 			}
 		}
 
