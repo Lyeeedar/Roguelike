@@ -147,6 +147,8 @@ public class DungeonFileParser
 		public AbstractRoomGenerator generator;
 		public String placementHint;
 
+		public boolean lockRotation = false;
+
 		private boolean symbolsResolved = false;
 
 		public static DFPRoom parse( Element xml )
@@ -160,6 +162,8 @@ public class DungeonFileParser
 			room.faction = xml.get( "Faction", null );
 
 			room.placement = Placement.valueOf( xml.get( "Placement", "Centre" ).toUpperCase() );
+
+			room.lockRotation = xml.getBoolean( "LockRotation", false );
 
 			Element rowsElement = xml.getChildByName( "Rows" );
 

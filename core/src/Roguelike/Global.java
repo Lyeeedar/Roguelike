@@ -260,7 +260,8 @@ public class Global
 	{
 		if ( atk <= 0 ) { return; }
 
-		int damage = atk - def;
+		int minAtk = (int)( (float)atk * 0.25f );
+		int damage = Math.max( atk - def, minAtk );
 
 		if ( damage <= 0 )
 		{

@@ -3,6 +3,7 @@ package Roguelike.Tiles;
 import Roguelike.AssetManager;
 import Roguelike.Global.Passability;
 import Roguelike.Lights.AmbientShadow;
+import Roguelike.Lights.Light;
 import Roguelike.Sprite.TilingSprite;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Util.EnumBitflag;
@@ -30,7 +31,7 @@ public class TileData
 
 	public TileData( EnumBitflag<Passability> passableBy, Sprite... sprites )
 	{
-		SpriteGroup group = new SpriteGroup( sprites, null );
+		SpriteGroup group = new SpriteGroup( sprites, null, null );
 
 		this.passableBy = passableBy;
 	}
@@ -54,9 +55,16 @@ public class TileData
 				tilingSprite = TilingSprite.load( raisedSpriteElement );
 			}
 
+			Light light = null;
+			Element lightElement = xml.getChildByName( "Light" );
+			if ( lightElement != null )
+			{
+				light = Roguelike.Lights.Light.load( lightElement );
+			}
+
 			if (sprites.size > 0 || tilingSprite != null)
 			{
-				SpriteGroup group = new SpriteGroup( sprites, tilingSprite );
+				SpriteGroup group = new SpriteGroup( sprites, tilingSprite, light );
 				data.spriteGroups.add( group );
 			}
 
@@ -82,7 +90,14 @@ public class TileData
 					tilingSprite = TilingSprite.load( raisedSpriteElement );
 				}
 
-				SpriteGroup group = new SpriteGroup( sprites, tilingSprite );
+				Light light = null;
+				Element lightElement = el.getChildByName( "Light" );
+				if ( lightElement != null )
+				{
+					light = Roguelike.Lights.Light.load( lightElement );
+				}
+
+				SpriteGroup group = new SpriteGroup( sprites, tilingSprite, light );
 				group.chance = el.getFloatAttribute( "Chance", -1 );
 
 				data.spriteGroups.add( group );
@@ -150,18 +165,21 @@ public class TileData
 	{
 		public Array<Sprite> sprites;
 		public TilingSprite tilingSprite;
+		public Light light;
 		public float chance = -1;
 
-		public SpriteGroup(Array<Sprite> sprites, TilingSprite tilingSprite)
+		public SpriteGroup(Array<Sprite> sprites, TilingSprite tilingSprite, Light light)
 		{
 			this.sprites = sprites;
 			this.tilingSprite = tilingSprite;
+			this.light = light;
 		}
 
-		public SpriteGroup(Sprite[] sprites, TilingSprite tilingSprite)
+		public SpriteGroup(Sprite[] sprites, TilingSprite tilingSprite, Light light)
 		{
 			this.sprites = new Array<Sprite>( sprites );
 			this.tilingSprite = tilingSprite;
+			this.light = light;
 		}
 	}
 }

@@ -1,0 +1,276 @@
+<Level>
+
+    <Entrance>
+        <Prev>
+            <Faction>none</Faction>
+
+            <Placement>North</Placement>
+
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>v</Char>
+                    <EnvironmentData>
+                        <Type>Transition</Type>
+                        <Destination>EnchantedForest</Destination>
+                        <Passable>false</Passable>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/TransitionOut</Name>
+                        </Sprite>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>#v#</Row>
+                <Row>#.#</Row>
+            </Rows>
+        </Prev>
+        <This>
+            <Faction>none</Faction>
+
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>S</Char>
+                    <MetaValue>PlayerSpawn</MetaValue>
+                    <EnvironmentData>
+                        <Passable>false</Passable>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/TransitionIn</Name>
+                        </Sprite>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <Placement>South</Placement>
+
+            <Rows>
+                <Row>#.#</Row>
+                <Row>#S#</Row>
+            </Rows>
+        </This>
+    </Entrance>
+
+    <Ambient>
+        <Red>0.04</Red>
+        <Green>0.1</Green>
+        <Blue>0.1</Blue>
+    </Ambient>
+
+    <Sound>
+        <BGM>Heroic Age</BGM>
+        <Ambient>
+
+        </Ambient>
+    </Sound>
+
+    <RoomGenerators>
+        <CellularAutomata><Weight>1</Weight></CellularAutomata>
+        <Starburst><Weight>1</Weight></Starburst>
+        <Polygon><Weight>1</Weight></Polygon>
+    </RoomGenerators>
+
+    <CorridorStyle>
+        <PathStyle>Wandering</PathStyle>
+        <Width>1</Width>
+
+        <CentralConstant>
+            <TileData>
+                <Passable>true</Passable>
+                <Opaque>false</Opaque>
+
+                <Group>
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <TilingSprite>
+                        <Name>Path</Name>
+                        <Mask>Masks/path</Mask>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_1</Name>
+                        </Sprite>
+                    </TilingSprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <TilingSprite>
+                        <Name>Path</Name>
+                        <Mask>Masks/path</Mask>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_2</Name>
+                        </Sprite>
+                    </TilingSprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <TilingSprite>
+                        <Name>Path</Name>
+                        <Mask>Masks/path</Mask>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_3</Name>
+                        </Sprite>
+                    </TilingSprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <TilingSprite>
+                        <Name>Path</Name>
+                        <Mask>Masks/path</Mask>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_4</Name>
+                        </Sprite>
+                    </TilingSprite>
+                </Group>
+
+
+            </TileData>
+        </CentralConstant>
+    </CorridorStyle>
+
+    <Preprocessor>
+        <Random></Random>
+    </Preprocessor>
+
+    <Factions>
+        <Major>
+            <Goblin>1</Goblin>
+        </Major>
+        <Minor>
+            <Spider>1</Spider>
+            <Toad>3</Toad>
+        </Minor>
+    </Factions>
+
+    <Symbols>
+
+        <Symbol>
+            <Char>.</Char>
+            <TileData>
+                <Opaque>false</Opaque>
+                <Passable>true</Passable>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_2</Name>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_3</Name>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_4</Name>
+                    </Sprite>
+                </Group>
+
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                </Sprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>#</Char>
+            <TileData>
+                <Opaque>true</Opaque>
+                <Passable>false</Passable>
+
+                <Group Chance="0.35">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <Sprite>
+                        <Name>Oryx/Custom/terrain/tree1</Name>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.65">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <Sprite>
+                        <Name>Oryx/Custom/terrain/treeglowing</Name>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+                    <Light>
+                        <Colour>
+                            <RGB>255,255,153</RGB>
+                            <Alpha>0.2</Alpha>
+                        </Colour>
+                        <Intensity>2</Intensity>
+                    </Light>
+                </Group>
+
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>w</Char>
+            <TileData>
+                <Opaque>true</Opaque>
+                <Passable>false</Passable>
+                <TilingSprite>
+                    <Name>Wall</Name>
+                    <Top>
+                        <Name>Oryx/uf_split/uf_terrain/wall_stone_7</Name>
+                    </Top>
+                    <Front>
+                        <Name>Oryx/uf_split/uf_terrain/wall_stone_14</Name>
+                    </Front>
+                    <Overhang>
+                        <Name>Oryx/uf_split/uf_terrain/wall_stone_1</Name>
+                    </Overhang>
+                </TilingSprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>,</Char>
+            <TileData>
+                <Opaque>false</Opaque>
+                <Passable>true</Passable>
+                <CanFeature>false</CanFeature>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/floor_crusted_grey_1</Name>
+                </Sprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol Extends=",">
+            <Char>+</Char>
+            <EnvironmentData>
+                <Type>Door</Type>
+            </EnvironmentData>
+        </Symbol>
+
+        <Symbol Extends=",">
+            <Char>t</Char>
+            <EnvironmentData>
+                <Type>Treasure</Type>
+                <Treasure>random</Treasure>
+            </EnvironmentData>
+        </Symbol>
+
+    </Symbols>
+
+    <Rooms>
+
+        <Filler Condition="1 + rnd(2)" >
+        </Filler>
+
+    </Rooms>
+
+</Level>

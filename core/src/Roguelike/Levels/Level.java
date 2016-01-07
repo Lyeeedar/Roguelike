@@ -137,6 +137,16 @@ public class Level
 		int px = player.tile[0][0].x;
 		int py = player.tile[0][0].y;
 
+		if ( tile.lightObj != null )
+		{
+			if ( checkLightCloseEnough( lx, ly, (int) tile.lightObj.baseIntensity, px, py, viewRange ) )
+			{
+				tile.lightObj.lx = lx;
+				tile.lightObj.ly = ly;
+				output.add( tile.lightObj );
+			}
+		}
+
 		if ( tile.hasFields )
 		{
 			for ( FieldLayer layer : FieldLayer.values() )

@@ -53,6 +53,7 @@ public abstract class AbstractRoomGenerator
 		ClassMap.put( "FRACTAL", Fractal.class );
 		ClassMap.put( "OVERLAPPINGRECTS", OverlappingRects.class );
 		ClassMap.put( "POLYGON", Polygon.class );
+		ClassMap.put( "BURROW", Burrow.class );
 		ClassMap.put( "STARBURST", Starburst.class );
 		ClassMap.put( "RANDOM", RandomPlace.class );
 	}

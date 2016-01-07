@@ -1,13 +1,9 @@
 <Level>
 
-
-
     <Entrance>
         <Prev>
-            <Faction>none</Faction>
-
             <Symbols>
-                <Symbol Extends=".">
+                <Symbol Extends=",">
                     <Char>v</Char>
                     <EnvironmentData>
                         <Type>Transition</Type>
@@ -17,9 +13,8 @@
             </Symbols>
 
             <Rows>
-                <Row>####</Row>
-                <Row>#.v#</Row>
-                <Row>#..#</Row>
+                <Row>....</Row>
+                <Row>..v.</Row>
                 <Row>....</Row>
             </Rows>
         </Prev>
@@ -32,11 +27,9 @@
                     <MetaValue>PlayerSpawn</MetaValue>
                 </Symbol>
             </Symbols>
-
             <Rows>
-                <Row>####</Row>
-                <Row>#.S#</Row>
-                <Row>#..#</Row>
+                <Row>....</Row>
+                <Row>..S.</Row>
                 <Row>....</Row>
             </Rows>
         </This>
@@ -63,8 +56,9 @@
 
 	<RoomGenerators>
 	    <OverlappingRects>
-	        <Weight>1</Weight>
+	        <Weight>6</Weight>
 	    </OverlappingRects>
+        <Chambers><Weight>1</Weight></Chambers>
 	</RoomGenerators>
 
 	<CorridorStyle>
@@ -77,7 +71,7 @@
 				<Passable>Levitate</Passable>
 				<Opaque>false</Opaque>
 				<Sprite>
-					<Name>dc-dngn/water/dngn_shallow_water</Name>
+					<Name>Oryx/uf_split/uf_terrain/water_blue</Name>
 				</Sprite>
 			</TileData>
 	    </CentralConstant>
@@ -89,7 +83,7 @@
 				<Opaque>false</Opaque>
 				<Passable>true</Passable>
 				<Sprite>
-					<Name>dc-dngn/floor/mesh0</Name>
+					<Name>Oryx/uf_split/uf_terrain/floor_wood_4</Name>
 				</Sprite>
 			</TileData>
 	    </CentralRecurring>
@@ -102,7 +96,7 @@
 	            <AttachToWall>true</AttachToWall>
 	            <OverHead>true</OverHead>
 				<Sprite>
-					<Name>torch</Name>
+					<Name>Oryx/uf_split/uf_terrain/torch1</Name>
 				</Sprite>
 				<Passable>true</Passable>
 				<Light>
@@ -138,20 +132,48 @@
 			<TileData>
 				<Opaque>false</Opaque>
 				<Passable>true</Passable>
-				<Sprite>
-					<Name>dc-dngn/floor/floor_vines0</Name>
-				</Sprite>
+
+                <Group Chance="0.75">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/wall_dungeon_7</Name>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.1">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/wall_dungeon_8</Name>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/wall_dungeon_10</Name>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/wall_dungeon_11</Name>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/wall_dungeon_12</Name>
+                    </Sprite>
+                </Group>
+
 			</TileData>
 		</Symbol>
 
 		<Symbol>
 			<Char>,</Char>
 			<TileData>
-				<Opaque>false</Opaque>
-				<Passable>true</Passable>
-				<Sprite>
-					<Name>dc-dngn/water/dngn_shallow_water_disturbance</Name>
-				</Sprite>
+                <Passable>Levitate</Passable>
+                <Opaque>false</Opaque>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/water_blue</Name>
+                </Sprite>
 			</TileData>
 		</Symbol>
 
@@ -160,31 +182,29 @@
 			<TileData>
 				<Opaque>true</Opaque>
 				<Passable>false</Passable>
-				<Sprite>
-					<Name>dc-dngn/wall/brick_dark0</Name>
-				</Sprite>
+                <TilingSprite>
+                    <Name>Wall</Name>
+                    <Top>
+                        <Name>Oryx/uf_split/uf_terrain/wall_stone_7</Name>
+                    </Top>
+                    <Front>
+                        <Name>Oryx/uf_split/uf_terrain/wall_stone_14</Name>
+                    </Front>
+                    <Overhang>
+                        <Name>Oryx/uf_split/uf_terrain/wall_stone_1</Name>
+                    </Overhang>
+                </TilingSprite>
 			</TileData>
 		</Symbol>
 
 		<Symbol>
 			<Char>w</Char>
 			<TileData>
-				<Opaque>false</Opaque>
-				<Passable>true</Passable>
-				<Sprite>
-					<Name>dc-dngn/floor/mesh0</Name>
-				</Sprite>
-			</TileData>
-		</Symbol>
-
-		<Symbol>
-			<Char>p</Char>
-			<TileData>
-				<Opaque>false</Opaque>
-				<Passable>true</Passable>
-				<Sprite>
-					<Name>dc-dngn/water/dngn_shallow_water_disturbance</Name>
-				</Sprite>
+                <Opaque>false</Opaque>
+                <Passable>true</Passable>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/floor_wood_4</Name>
+                </Sprite>
 			</TileData>
 		</Symbol>
 
@@ -196,104 +216,5 @@
 		</Symbol>
 
 	</Symbols>
-
-	<Required>
-
-	    <PlayerSpawn>
-			<Faction>none</Faction>
-
-			<Symbols>
-				<Symbol Extends=".">
-					<Char>S</Char>
-					<MetaValue>PlayerSpawn</MetaValue>
-				</Symbol>
-			</Symbols>
-
-			<Rows>
-				<Row>#####</Row>
-				<Row>#...#</Row>
-				<Row>#.S.#</Row>
-				<Row>#...#</Row>
-				<Row>#...#</Row>
-			</Rows>
-
-		</PlayerSpawn>
-
-		<Transition>
-			<Symbols>
-
-				<Symbol Extends=".">
-					<Char>v</Char>
-					<EnvironmentData>
-						<Type>Transition</Type>
-						<Destination>Sewer</Destination>
-
-						<ExitRoom>
-							<Symbols>
-								<Symbol Extends=".">
-									<Char>^</Char>
-									<EnvironmentData>
-										<Type>Transition</Type>
-										<Destination>this</Destination>
-									</EnvironmentData>
-								</Symbol>
-							</Symbols>
-
-							<Rows>
-								<Row>#####</Row>
-								<Row>#...#</Row>
-								<Row>#.^.#</Row>
-								<Row>#...#</Row>
-								<Row>#...#</Row>
-							</Rows>
-						</ExitRoom>
-					</EnvironmentData>
-				</Symbol>
-			</Symbols>
-
-			<Rows>
-				<Row>#####</Row>
-				<Row>#.v.#</Row>
-				<Row>#...#</Row>
-				<Row>#...#</Row>
-			</Rows>
-
-		</Transition>
-
-		<Chambers>
-		    <Width>20</Width>
-		    <Height>20</Height>
-		    <Generator>
-		        <Fractal>
-		            <Features>
-		                <Feature>
-			        	    <Min>0</Min>
-			        	    <Max>0.1</Max>
-			        	    <TileData>
-								<Passable>Levitate</Passable>
-								<Opaque>false</Opaque>
-								<Sprite>
-									<Name>dc-dngn/water/dngn_deep_water</Name>
-								</Sprite>
-							</TileData>
-			        	</Feature>
-		                <Feature>
-			        	    <Min>0.1</Min>
-			        	    <Max>0.3</Max>
-			        	    <TileData>
-								<Passable>true</Passable>
-								<Opaque>false</Opaque>
-								<Sprite>
-									<Name>dc-dngn/water/dngn_shallow_water</Name>
-								</Sprite>
-							</TileData>
-			        	</Feature>
-		            </Features>
-		        </Fractal>
-		    </Generator>
-		</Chambers>
-
-	</Required>
-
 
 </Level>

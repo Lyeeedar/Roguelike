@@ -76,7 +76,7 @@ public class SaveAbilityTree extends SaveableObject<AbilityTree>
 			stage.expToNextLevel = expToNextLevel;
 			stage.current.setCooldown( cooldown );
 
-			AbilityTree.AbilityStage currentStage = stage.current.getName().equals( currentName ) ? stage : null;
+			AbilityTree.AbilityStage currentStage = stage.current.getName() == currentName || stage.current.getName().equals( currentName ) ? stage : null;
 			if (stage.branch1 != null)
 			{
 				AbilityTree.AbilityStage temp = branch1.writeData( stage.branch1, currentName );

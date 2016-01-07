@@ -64,8 +64,9 @@
 	</Sound>
 
 	<RoomGenerators>
-	    <CellularAutomata><Weight>3</Weight></CellularAutomata>
+	    <CellularAutomata><Weight>1</Weight></CellularAutomata>
 	    <Starburst><Weight>1</Weight></Starburst>
+        <Polygon><Weight>1</Weight></Polygon>
 	</RoomGenerators>
 
 	<CorridorStyle>

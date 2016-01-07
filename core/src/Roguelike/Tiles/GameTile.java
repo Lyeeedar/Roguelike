@@ -50,6 +50,7 @@ public class GameTile implements PathfindingTile
 	public EnumBitflag<Global.Direction> unseenBitflag = new EnumBitflag<Global.Direction>(  );
 
 	public TileData.SpriteGroup spriteGroup;
+	public Light lightObj;
 
 	public float ranVal;
 
@@ -78,6 +79,7 @@ public class GameTile implements PathfindingTile
 		{
 			spriteGroup = tileData.spriteGroups.first();
 		}
+		lightObj = spriteGroup.light;
 
 		light = new Color( Color.WHITE );
 	}

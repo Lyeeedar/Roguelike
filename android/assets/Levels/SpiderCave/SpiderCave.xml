@@ -1,0 +1,183 @@
+<Level>
+
+    <Entrance>
+        <Prev>
+            <Symbols>
+                <Symbol>
+                    <Char>#</Char>
+                    <TileData>
+                        <Opaque>true</Opaque>
+                        <Passable>false</Passable>
+
+                        <TilingSprite>
+                            <Name>Wall</Name>
+                            <Top>
+                                <Name>Oryx/uf_split/uf_terrain/wall_cave_7</Name>
+                            </Top>
+                            <Front>
+                                <Name>Oryx/uf_split/uf_terrain/wall_cave_14</Name>
+                            </Front>
+                            <Overhang>
+                                <Name>Oryx/uf_split/uf_terrain/wall_cave_1</Name>
+                            </Overhang>
+                        </TilingSprite>
+
+                    </TileData>
+                </Symbol>
+                <Symbol>
+                    <Char>v</Char>
+                    <EnvironmentData>
+                        <Type>Transition</Type>
+                        <Destination>SpiderCave</Destination>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/spiderEntrance</Name>
+                        </Sprite>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <LockRotation>true</LockRotation>
+
+            <Rows>
+                <Row>..###..</Row>
+                <Row>.#####.</Row>
+                <Row>#######</Row>
+                <Row>.##v##.</Row>
+            </Rows>
+        </Prev>
+        <This>
+            <Faction>none</Faction>
+
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>S</Char>
+                    <MetaValue>PlayerSpawn</MetaValue>
+                </Symbol>
+            </Symbols>
+            <Rows>
+                <Row>S</Row>
+            </Rows>
+        </This>
+    </Entrance>
+
+    <Entrance Key="SpiderCave">
+        <Prev>
+            <Symbols>
+                <Symbol Extends=",">
+                    <Char>v</Char>
+                    <EnvironmentData>
+                        <Type>Transition</Type>
+                        <Destination>SpiderCave</Destination>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>v</Row>
+            </Rows>
+        </Prev>
+        <This>
+            <Faction>none</Faction>
+
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>S</Char>
+                    <MetaValue>PlayerSpawn</MetaValue>
+                </Symbol>
+            </Symbols>
+            <Rows>
+                <Row>S</Row>
+            </Rows>
+        </This>
+    </Entrance>
+
+    <Ambient>
+        <Red>0.04</Red>
+        <Green>0.1</Green>
+        <Blue>0.1</Blue>
+    </Ambient>
+
+    <Sound>
+        <BGM>Disturbed</BGM>
+        <Ambient>
+            <Sound>
+                <Name>groan</Name>
+                <Type>Interval</Type>
+                <RepeatMin>10</RepeatMin>
+                <RepeatMax>30</RepeatMax>
+            </Sound>
+        </Ambient>
+    </Sound>
+
+    <RoomGenerators>
+        <CellularAutomata><Weight>1</Weight></CellularAutomata>
+        <Starburst><Weight>1</Weight></Starburst>
+        <Polygon><Weight>1</Weight></Polygon>
+    </RoomGenerators>
+
+    <Preprocessor>
+        <Burrow></Burrow>
+    </Preprocessor>
+
+    <Factions>
+        <Major>
+            <Spider>1</Spider>
+        </Major>
+        <Minor>
+            <Goblin>1</Goblin>
+        </Minor>
+    </Factions>
+
+    <Symbols>
+
+        <Symbol>
+            <Char>.</Char>
+            <TileData>
+                <Opaque>false</Opaque>
+                <Passable>true</Passable>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/ground_crusted_1</Name>
+                </Sprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>#</Char>
+            <TileData>
+                <Opaque>true</Opaque>
+                <Passable>false</Passable>
+
+                <TilingSprite>
+                    <Name>Wall</Name>
+                    <Top>
+                        <Name>Oryx/uf_split/uf_terrain/wall_cave_7</Name>
+                    </Top>
+                    <Front>
+                        <Name>Oryx/uf_split/uf_terrain/wall_cave_14</Name>
+                    </Front>
+                    <Overhang>
+                        <Name>Oryx/uf_split/uf_terrain/wall_cave_1</Name>
+                    </Overhang>
+                </TilingSprite>
+
+            </TileData>
+        </Symbol>
+
+        <Symbol Extends="#">
+            <Char>w</Char>
+        </Symbol>
+
+        <Symbol Extends=".">
+            <Char>,</Char>
+        </Symbol>
+
+        <Symbol Extends=",">
+            <Char>+</Char>
+            <EnvironmentData>
+                <Type>Door</Type>
+            </EnvironmentData>
+        </Symbol>
+
+    </Symbols>
+
+</Level>

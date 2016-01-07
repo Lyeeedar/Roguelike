@@ -582,32 +582,48 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 				boolean fitsVertical = testRoom.width + padX2 <= width && testRoom.height + padY2 <= height;
 				boolean fitsHorizontal = testRoom.height + padX2 <= width && testRoom.width + padY2 <= height;
 
-				if ( fitsVertical || fitsHorizontal )
+				if ( testRoom.roomData.lockRotation )
 				{
-					fits = true;
-
-					// randomly flip
-					if ( ran.nextBoolean() )
+					if ( fitsVertical )
 					{
+						fits = true;
 						flipVert = true;
-					}
 
-					if ( ran.nextBoolean() )
-					{
-						flipHori = true;
-					}
-
-					// if it fits on both directions, randomly pick one
-					if ( fitsVertical && fitsHorizontal )
-					{
 						if ( ran.nextBoolean() )
+						{
+							flipHori = true;
+						}
+					}
+				}
+				else
+				{
+					if ( fitsVertical || fitsHorizontal )
+					{
+						fits = true;
+
+						// randomly flip
+						if ( ran.nextBoolean() )
+						{
+							flipVert = true;
+						}
+
+						if ( ran.nextBoolean() )
+						{
+							flipHori = true;
+						}
+
+						// if it fits on both directions, randomly pick one
+						if ( fitsVertical && fitsHorizontal )
+						{
+							if ( ran.nextBoolean() )
+							{
+								rotate = true;
+							}
+						}
+						else if ( fitsHorizontal )
 						{
 							rotate = true;
 						}
-					}
-					else if ( fitsHorizontal )
-					{
-						rotate = true;
 					}
 				}
 
