@@ -113,6 +113,8 @@ public class LevelManager
 
 		public LevelManager root;
 
+		public LevelData() {}
+
 		public LevelData( LevelManager root )
 		{
 			this.root = root;

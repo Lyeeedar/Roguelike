@@ -3,4 +3,23 @@
         <Name>Oryx/uf_split/uf_heroes/slime_purple</Name>
         <DrawActualSize>true</DrawActualSize>
     </Sprite>
+    <Light>
+        <Colour><RGB>255,0,255</RGB><Alpha>0.5</Alpha></Colour>
+        <Intensity>3</Intensity>
+    </Light>
+    <Abilities>
+        <Acive>
+            <Cooldown>20</Cooldown>
+            <Effects>
+                <Field Stacks="rnd(2)+1">PoisonLiquid</Field>
+            </Effects>
+        </Acive>
+        <Passive>
+            <Events>
+                <OnDeath>
+                    <Field Stacks="rnd(3)+3">PoisonLiquid</Field>
+                </OnDeath>
+            </Events>
+        </Passive>
+    </Abilities>
 </Entity>

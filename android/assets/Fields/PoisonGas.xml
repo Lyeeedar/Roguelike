@@ -1,13 +1,11 @@
 <Field Extends="Gas">
     <FieldName>PoisonGas</FieldName>
-    <Tags>Poison</Tags>
+    <Tags>Flammable,Poison,Explosive</Tags>
     <Sprite>
         <Name>effect/cloud_grey_smoke</Name>
         <Colour><RGB>0,255,100</RGB></Colour>
     </Sprite>
     <OnTurn>
-        <Damage>
-            <Wood_Atk>Stacks*15</Wood_Atk>
-        </Damage>
+        <Damage>Stacks*5</Damage>
     </OnTurn>
 </Field>

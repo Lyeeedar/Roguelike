@@ -665,7 +665,7 @@ public final class Room
 
 			if (spawnMiniBoss)
 			{
-				if ( spawnList.size > 0 )
+				if ( spawnList.size > 0 && faction.minibosses.size > 0 )
 				{
 					String entityName = faction.minibosses.get( ran.nextInt( faction.minibosses.size ) );
 

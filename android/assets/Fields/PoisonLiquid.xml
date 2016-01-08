@@ -1,0 +1,25 @@
+<Field Extends="Liquid">
+    <FieldName>PoisonLiquid</FieldName>
+    <Tags>Poison,Flammable,Explosive</Tags>
+    <Sprite>
+        <Name>Oryx/uf_split/uf_terrain/water_bubbling</Name>
+        <Colour><RGB>255,0,0</RGB></Colour>
+    </Sprite>
+    <Duration>
+        <Fade>
+            <Rate>10</Rate>
+            <ResetOnStacks>true</ResetOnStacks>
+        </Fade>
+    </Duration>
+    <OnTurn>
+        <Damage>stacks*5</Damage>
+    </OnTurn>
+    <Interactions>
+        <Hot>
+            <Spawn>
+                <Field>PoisonGas</Field>
+                <Stacks>max3(SrcStacks, DstStacks, 1)</Stacks>
+            </Spawn>
+        </Hot>
+    </Interactions>
+</Field>

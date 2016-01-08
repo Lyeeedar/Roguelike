@@ -1,11 +1,11 @@
 <Entity>
 
-    <Name>Wisp</Name>
+    <Name>Bat</Name>
 
     <AI>basicMonster</AI>
 
     <Factions>
-        <Faction>Wisp</Faction>
+        <Faction>Bat</Faction>
     </Factions>
 
     <Statistics>
@@ -21,10 +21,5 @@
         <Speed>6</Speed>
 
     </Statistics>
-
-    <Light>
-        <Colour><RGB>255,255,255</RGB><Alpha>0.5</Alpha></Colour>
-        <Intensity>3</Intensity>
-    </Light>
 
 </Entity>

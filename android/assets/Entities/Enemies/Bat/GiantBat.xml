@@ -1,0 +1,6 @@
+<Entity Extends="Enemies/Bat/BatBase">
+    <Sprite>
+        <Name>Oryx/uf_split/uf_heroes/bat_giant</Name>
+        <DrawActualSize>true</DrawActualSize>
+    </Sprite>
+</Entity>
