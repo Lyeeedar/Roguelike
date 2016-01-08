@@ -1,0 +1,9 @@
+<Faction>
+    <Name>Slime</Name>
+
+    <Creatures>
+        <GreenSlime></GreenSlime>
+        <PurpleSlime></PurpleSlime>
+        <RedSlime></RedSlime>
+    </Creatures>
+</Faction>

@@ -1,0 +1,6 @@
+<Entity Extends="Enemies/Wisp/WispBase">
+    <Sprite>
+        <Name>Oryx/uf_split/uf_heroes/wisp_ancient</Name>
+        <DrawActualSize>true</DrawActualSize>
+    </Sprite>
+</Entity>

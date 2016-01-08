@@ -141,11 +141,11 @@
 
     <Factions>
         <Major>
-            <Goblin>1</Goblin>
+            <Slime>1</Slime>
         </Major>
         <Minor>
             <Spider>1</Spider>
-            <Toad>3</Toad>
+            <Wisp>3</Wisp>
         </Minor>
     </Factions>
 

@@ -100,6 +100,8 @@ public abstract class Entity
 			inventory.load( inventoryElement );
 		}
 
+		immune = xml.get( "Immune", "" ).toLowerCase().split( "," );
+
 		canTakeDamage = xml.getBoolean( "CanTakeDamage", canTakeDamage );
 
 		UID = getClass().getSimpleName() + " " + name + ": ID " + hashCode();
@@ -317,9 +319,24 @@ public abstract class Entity
 	}
 
 	// ----------------------------------------------------------------------
+	public boolean isImmune( String name )
+	{
+		for ( String s : immune )
+		{
+			if ( s.equals( name ) )
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// ----------------------------------------------------------------------
 	public void addStatusEffect( StatusEffect se )
 	{
 		if ( !canTakeDamage ) { return; }
+		if ( isImmune( se.getName().toLowerCase() ) ) { return; }
 
 		if (!se.stackable)
 		{
@@ -393,6 +410,7 @@ public abstract class Entity
 	public boolean hasDamage = false;
 
 	// ----------------------------------------------------------------------
+	public String[] immune;
 	public FastEnumMap<Statistic, Integer> statistics = Statistic.getStatisticsBlock();
 	public Array<StatusEffect> statusEffects = new Array<StatusEffect>( false, 16 );
 	public Array<StatusEffectStack> stacks = new Array<StatusEffectStack>();

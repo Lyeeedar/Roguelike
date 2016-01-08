@@ -1,0 +1,8 @@
+<Faction>
+    <Name>Wisp</Name>
+
+    <Creatures>
+        <WispSmall></WispSmall>
+        <WispAncient></WispAncient>
+    </Creatures>
+</Faction>

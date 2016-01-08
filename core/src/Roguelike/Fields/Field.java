@@ -110,6 +110,11 @@ public class Field implements IGameObject
 
 	public void processOnTurnEffectsForEntity( Entity entity, float cost )
 	{
+		if ( entity.isImmune( fieldName.toLowerCase() ) )
+		{
+			return;
+		}
+
 		for ( AbstractOnTurnEffect effect : onTurnEffects )
 		{
 			effect.process( this, entity, cost );

@@ -1,0 +1,6 @@
+<Entity Extends="Enemies/Slime/SlimeBase">
+    <Sprite>
+        <Name>Oryx/uf_split/uf_heroes/slime_green</Name>
+        <DrawActualSize>true</DrawActualSize>
+    </Sprite>
+</Entity>
