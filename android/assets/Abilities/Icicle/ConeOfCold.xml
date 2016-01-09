@@ -31,6 +31,7 @@
             <Willpower>1</Willpower>
 		</Damage>
 		<Status Stacks="level/2">Chilled</Status>
+        <FieldInteraction>Cold</FieldInteraction>
 	</Effect>
 
 </Active>

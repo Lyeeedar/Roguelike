@@ -211,7 +211,7 @@ public class Field implements IGameObject
 		}
 	}
 
-	private AbstractFieldInteractionType getInteraction( HashMap<String, AbstractFieldInteractionType> interactions, Field field )
+	public AbstractFieldInteractionType getInteraction( HashMap<String, AbstractFieldInteractionType> interactions, Field field )
 	{
 		if ( interactions.containsKey( field.fieldName ) ) { return interactions.get( field.fieldName ); }
 		for ( String tag : field.tags )

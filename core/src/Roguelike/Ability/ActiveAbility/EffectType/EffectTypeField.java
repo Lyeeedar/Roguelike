@@ -27,7 +27,7 @@ public class EffectTypeField extends AbstractEffectType
 	@Override
 	public void parse( Element xml )
 	{
-		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
+		reliesOn = xml.getAttribute( "ReliesOn", "" ).toLowerCase().split( "," );
 		condition = xml.getAttribute( "Condition", null );
 		if ( condition != null )
 		{

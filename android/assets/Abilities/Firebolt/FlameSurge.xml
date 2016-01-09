@@ -33,6 +33,7 @@
             <Attack>150 + 5 * level</Attack>
             <Willpower>1</Willpower>
         </Damage>
+        <FieldInteraction>Hot</FieldInteraction>
 	</Effect>
 
 </Active>

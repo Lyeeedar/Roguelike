@@ -287,7 +287,15 @@ public class AssetManager
 			sound = SoundInstance.load( soundElement );
 		}
 
-		Sprite sprite = loadSprite( xml.get( "Name" ), xml.getFloat( "UpdateRate", 0 ), colour, AnimationMode.valueOf( xml.get( "AnimationMode", "Texture" ).toUpperCase() ), sound, xml.getBoolean( "DrawActualSize", false ) );
+		Sprite sprite = loadSprite(
+				xml.get( "Name" ),
+				xml.getFloat( "UpdateRate", 0 ),
+				colour,
+				AnimationMode.valueOf( xml.get( "AnimationMode", "Texture" ).toUpperCase() ),
+				sound,
+				xml.getBoolean( "DrawActualSize", false ) );
+
+		sprite.repeatDelay = xml.getFloat( "RepeatDelay", 0 );
 
 		Element animationElement = xml.getChildByName( "Animation" );
 		if ( animationElement != null )
@@ -354,6 +362,8 @@ public class AssetManager
 									mode,
 									sound,
 									xml.getBoolean( "DrawActualSize", false ) );
+
+		sprite.repeatDelay = xml.getFloat( "RepeatDelay", 0 );
 
 		Element animationElement = xml.getChildByName( "Animation" );
 		if ( animationElement != null )

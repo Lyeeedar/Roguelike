@@ -34,6 +34,7 @@
                 <OnTask><Cancel /></OnTask>
             </Events>
 		</Status>
+        <FieldInteraction>Cold</FieldInteraction>
 	</Effect>
 
 </Active>

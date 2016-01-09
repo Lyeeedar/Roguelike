@@ -24,6 +24,9 @@ public final class Sprite
 
 	public float renderDelay = -1;
 
+	public float repeatDelay = 0;
+	public float repeatAccumulator;
+
 	public float animationDelay;
 	public float animationAccumulator;
 
@@ -71,30 +74,39 @@ public final class Sprite
 			if ( renderDelay > 0 ) { return false; }
 		}
 
-		boolean looped = false;
-		animationAccumulator += delta;
-
-		while ( animationAccumulator >= animationDelay )
+		if (repeatAccumulator > 0)
 		{
-			animationAccumulator -= animationDelay;
+			repeatAccumulator -= delta;
+		}
 
-			if ( animationState.mode == AnimationMode.TEXTURE )
+		boolean looped = false;
+		if (repeatAccumulator <= 0)
+		{
+			animationAccumulator += delta;
+
+			while ( animationAccumulator >= animationDelay )
 			{
-				animationState.texIndex++;
-				if ( animationState.texIndex >= textures.size )
+				animationAccumulator -= animationDelay;
+
+				if ( animationState.mode == AnimationMode.TEXTURE )
 				{
-					animationState.texIndex = 0;
+					animationState.texIndex++;
+					if ( animationState.texIndex >= textures.size )
+					{
+						animationState.texIndex = 0;
+						looped = true;
+						repeatAccumulator = repeatDelay;
+					}
+				}
+				else if ( animationState.mode == AnimationMode.SHRINK )
+				{
+					animationState.isShrunk = !animationState.isShrunk;
+					looped = animationState.isShrunk;
+				}
+				else if ( animationState.mode == AnimationMode.SINE )
+				{
 					looped = true;
 				}
-			}
-			else if ( animationState.mode == AnimationMode.SHRINK )
-			{
-				animationState.isShrunk = !animationState.isShrunk;
-				looped = animationState.isShrunk;
-			}
-			else if ( animationState.mode == AnimationMode.SINE )
-			{
-				looped = true;
 			}
 		}
 
