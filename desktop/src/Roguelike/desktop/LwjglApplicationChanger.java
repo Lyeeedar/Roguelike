@@ -68,7 +68,16 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 		Global.FPS = pref.getInteger( "fps" );
 		Global.AnimationSpeed = 1.0f / pref.getFloat( "animspeed" );
 
-		Gdx.graphics.setDisplayMode( width, height, fullscreen );
+		if (fullscreen)
+		{
+			DisplayMode mode = Gdx.graphics.getDisplayMode();
+			Gdx.graphics.setFullscreenMode( mode );
+		}
+		else
+		{
+			Gdx.graphics.setWindowedMode( width, height );
+		}
+
 		Gdx.graphics.setVSync( pref.getBoolean( "vSync" ) );
 	}
 
@@ -125,7 +134,7 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 	@Override
 	public void setToNativeResolution( Preferences prefs )
 	{
-		DisplayMode dm = Gdx.graphics.getDesktopDisplayMode();
+		DisplayMode dm = Gdx.graphics.getDisplayMode();
 
 		prefs.putInteger( "resolutionX", dm.width );
 		prefs.putInteger( "resolutionY", dm.height );

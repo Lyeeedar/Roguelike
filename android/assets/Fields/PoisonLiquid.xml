@@ -1,9 +1,9 @@
 <Field Extends="Liquid">
     <FieldName>PoisonLiquid</FieldName>
-    <Tags>Poison,Flammable,Explosive</Tags>
+    <Tags>Wet,Poison,Flammable,Explosive</Tags>
     <Sprite>
         <Name>Oryx/uf_split/uf_terrain/water_bubbling</Name>
-        <Colour><RGB>255,0,0</RGB></Colour>
+        <Colour><RGB>255,100,255</RGB></Colour>
     </Sprite>
     <Duration>
         <Fade>

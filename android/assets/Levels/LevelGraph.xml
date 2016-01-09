@@ -1,14 +1,14 @@
 <Forest MaxDepth="2">
     <EnchantedForest MaxDepth="2">
-        <Caves Label="Caves" MaxDepth="3">
+        <Cave Label="Cave" MaxDepth="3">
             <UndergroundLake Label="Lake" MaxDepth="1">
 
             </UndergroundLake>
-        </Caves>
+        </Cave>
 
         <Branches>
             <SpiderCave SpawnDepth="1" SpawnChance="0.3" MaxDepth="2">
-                <GoTo Label="Caves"></GoTo>
+                <GoTo Label="Cave"></GoTo>
             </SpiderCave>
         </Branches>
 

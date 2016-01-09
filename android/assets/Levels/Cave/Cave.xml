@@ -31,7 +31,7 @@
                         <Destination>Cave</Destination>
                         <Passable>false</Passable>
                         <Sprite>
-                            <Name>Oryx/Custom/terrain/spiderEntrance</Name>
+                            <Name>Oryx/Custom/terrain/caveEntrance</Name>
                         </Sprite>
                     </EnvironmentData>
                 </Symbol>

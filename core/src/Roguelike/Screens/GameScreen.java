@@ -2024,7 +2024,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void addTouchAction( float x, float y )
 	{
-		if (skin == null)
+		/*if (skin == null)
 		{
 			return;
 		}
@@ -2035,7 +2035,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		widget.setPosition( x - widget.getWidth()/2, y - widget.getHeight()/2 );
 		stage.addActor( widget );
-		widget.setVisible( true );
+		widget.setVisible( true );*/
 	}
 
 	// ----------------------------------------------------------------------

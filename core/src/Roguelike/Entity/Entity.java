@@ -321,6 +321,8 @@ public abstract class Entity
 	// ----------------------------------------------------------------------
 	public boolean isImmune( String name )
 	{
+		if ( immune == null ) { return false; }
+
 		for ( String s : immune )
 		{
 			if ( s.equals( name ) )

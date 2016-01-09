@@ -8,12 +8,14 @@
         <Intensity>3</Intensity>
     </Light>
     <Abilities>
-        <Acive>
+        <Active>
             <Cooldown>20</Cooldown>
+            <Range>2</Range>
+            <HitType><Enemy/></HitType>
             <Effects>
                 <Field Stacks="rnd(2)+1">PoisonLiquid</Field>
             </Effects>
-        </Acive>
+        </Active>
         <Passive>
             <Events>
                 <OnDeath>
