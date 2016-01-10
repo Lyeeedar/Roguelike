@@ -17,6 +17,7 @@ import Roguelike.Sprite.TilingSprite;
 import Roguelike.Sprite.Sprite;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
+import Roguelike.UI.Message;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
 
@@ -410,6 +411,11 @@ public abstract class Entity
 	public int damageAccumulator = 0;
 	public int healingAccumulator = 0;
 	public boolean hasDamage = false;
+
+	// ----------------------------------------------------------------------
+	public Array<Message> pendingMessages = new Array<Message>(  );
+	public float messageAccumulator = 0;
+	public static final float MESSAGE_DELAY = 0.4f;
 
 	// ----------------------------------------------------------------------
 	public String[] immune;

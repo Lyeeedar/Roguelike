@@ -88,6 +88,13 @@ public class ActiveAbility implements IAbility, IGameObject
 
 	// ----------------------------------------------------------------------
 	@Override
+	public int getLevel()
+	{
+		return tree.level;
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
 	public void setTree(AbilityTree.AbilityStage tree )
 	{
 		this.tree = tree;

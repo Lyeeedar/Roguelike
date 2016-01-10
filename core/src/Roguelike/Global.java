@@ -260,8 +260,22 @@ public class Global
 	{
 		if ( atk <= 0 ) { return; }
 
-		int minAtk = (int)( (float)atk * 0.25f );
-		int damage = Math.max( atk - def, minAtk );
+		int damage = 0;
+		if (atk <= def)
+		{
+			float scale = (def - atk) / 10.0f + 1;
+			float multiplier = 2.0f * scale;
+
+			damage = (int)Math.ceil((float)atk / multiplier);
+		}
+		else if (atk > def)
+		{
+			int diff = atk - def;
+			float baseDam = (float)Math.ceil(atk / 2.0f);
+
+			float alpha = MathUtils.clamp( (float)diff / (float)atk, 0, 1 );
+			damage = (int)MathUtils.lerp( baseDam, (float)atk, alpha );
+		}
 
 		if ( damage <= 0 )
 		{

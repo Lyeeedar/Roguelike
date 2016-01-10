@@ -34,6 +34,7 @@ import Roguelike.Sprite.SpriteAnimation.MoveAnimation.MoveEquation;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
+import Roguelike.UI.Message;
 import Roguelike.Util.EnumBitflag;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
@@ -234,13 +235,15 @@ public class Level
 				{
 					if ( e.canTakeDamage && e.hasDamage )
 					{
-						GameScreen.Instance.addActorDamageAction( e );
+						e.pendingMessages.add( new Message( "-"+e.damageAccumulator, Color.RED ) );
+						e.damageAccumulator = 0;
 						e.hasDamage = false;
 					}
 
 					if ( e.canTakeDamage && e.healingAccumulator > 0 )
 					{
-						GameScreen.Instance.addActorHealingAction( e );
+						e.pendingMessages.add( new Message( "+"+e.healingAccumulator, Color.GREEN ) );
+						e.healingAccumulator = 0;
 					}
 				}
 				else
@@ -283,7 +286,9 @@ public class Level
 			{
 				if ( e.canTakeDamage && e.damageAccumulator > 0 && tile.visible )
 				{
-					GameScreen.Instance.addActorDamageAction( e );
+					e.pendingMessages.add( new Message( "-"+e.damageAccumulator, Color.RED ) );
+					e.damageAccumulator = 0;
+					e.hasDamage = false;
 				}
 
 				if ( e.canTakeDamage && e.HP <= 0 && !hasActiveEffects( e ) )
@@ -619,11 +624,31 @@ public class Level
 						tile.entity.popupAccumulator -= 0.03f;
 
 						tile.entity.displayedPopup = tile.entity.popup.substring( 0, tile.entity.displayedPopup.length() + 1 );
-
-						char letter = tile.entity.displayedPopup.charAt( tile.entity.displayedPopup.length() - 1 );
 					}
 				}
 			}
+
+			GameScreen.Instance.processMessageQueue( tile.entity, delta );
+		}
+
+		if ( tile.environmentEntity != null && tile.environmentEntity.tile[0][0] == tile )
+		{
+			if ( tile.environmentEntity.popup != null )
+			{
+				if ( tile.environmentEntity.displayedPopup.length() < tile.environmentEntity.popup.length() )
+				{
+					tile.environmentEntity.popupAccumulator += delta;
+
+					while ( tile.environmentEntity.popupAccumulator >= 0 && tile.environmentEntity.displayedPopup.length() < tile.environmentEntity.popup.length() )
+					{
+						tile.environmentEntity.popupAccumulator -= 0.03f;
+
+						tile.environmentEntity.displayedPopup = tile.environmentEntity.popup.substring( 0, tile.environmentEntity.displayedPopup.length() + 1 );
+					}
+				}
+			}
+
+			GameScreen.Instance.processMessageQueue( tile.environmentEntity, delta );
 		}
 	}
 
@@ -788,7 +813,7 @@ public class Level
 
 						if ( type == GameTile.OrbType.EXPERIENCE )
 						{
-							GameScreen.Instance.addActorExperienceAction( player, val );
+							player.pendingMessages.add( new Message( "+" + val + " xp", Color.YELLOW ) );
 							for (AbilityTree tree : player.slottedAbilities)
 							{
 								if (tree != null)

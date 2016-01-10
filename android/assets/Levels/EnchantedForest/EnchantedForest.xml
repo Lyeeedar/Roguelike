@@ -51,9 +51,9 @@
     </Entrance>
 
     <Ambient>
-        <Red>0.04</Red>
-        <Green>0.1</Green>
-        <Blue>0.1</Blue>
+        <Red>0.02</Red>
+        <Green>0.05</Green>
+        <Blue>0.05</Blue>
     </Ambient>
 
     <Sound>
@@ -187,7 +187,7 @@
                 <Opaque>true</Opaque>
                 <Passable>false</Passable>
 
-                <Group Chance="0.35">
+                <Group Chance="0.65">
                     <Sprite>
                         <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
                     </Sprite>
@@ -197,7 +197,7 @@
                     </Sprite>
                 </Group>
 
-                <Group Chance="0.65">
+                <Group Chance="0.35">
                     <Sprite>
                         <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
                     </Sprite>
@@ -208,9 +208,9 @@
                     <Light>
                         <Colour>
                             <RGB>255,255,153</RGB>
-                            <Alpha>0.2</Alpha>
+                            <Alpha>0.4</Alpha>
                         </Colour>
-                        <Intensity>2</Intensity>
+                        <Intensity>3</Intensity>
                     </Light>
                 </Group>
 

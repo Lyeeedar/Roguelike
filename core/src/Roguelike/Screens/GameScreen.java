@@ -1196,7 +1196,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				if ( item.ability.current.current instanceof ActiveAbility )
 				{
-					( (ActiveAbility) item.ability.current.current ).setCaster( Global.CurrentLevel.player );
+					item.ability.current.current.setCaster( Global.CurrentLevel.player );
 				}
 
 				// Is ability
@@ -1238,9 +1238,26 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			}
 			else
 			{
-				addActorItemPickupAction( Global.CurrentLevel.player, item );
+				Global.CurrentLevel.player.pendingMessages.add( new Message( "Picked up " + item.name + " (x" + item.count + ")", Color.ORANGE ) );
 				Global.CurrentLevel.player.getInventory().addItem( item );
 			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	public void processMessageQueue( Entity entity, float delta )
+	{
+		if ( entity.messageAccumulator > 0 )
+		{
+			entity.messageAccumulator -= delta;
+		}
+
+		if ( entity.messageAccumulator <= 0 && entity.pendingMessages.size > 0 )
+		{
+			Message message = entity.pendingMessages.pop();
+			entity.messageAccumulator = Entity.MESSAGE_DELAY;
+
+			message.add( stage, skin, entity );
 		}
 	}
 
@@ -2007,39 +2024,24 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
-	public void addAbilityAvailabilityAction( Sprite sprite )
-	{
-		Table table = new Table();
-		table.add( new SpriteWidget( sprite, 32, 32 ) ).size( Global.TileSize / 2 );
-		table.addAction( new SequenceAction( Actions.moveTo( Global.Resolution[ 0 ] / 2 + Global.TileSize / 2, Global.Resolution[ 1 ]
-																											   / 2
-																											   + Global.TileSize
-																											   + Global.TileSize
-																												 / 2, 1 ), Actions.removeActor() ) );
-		table.setPosition( Global.Resolution[ 0 ] / 2 + Global.TileSize / 2, Global.Resolution[ 1 ] / 2 + Global.TileSize );
-		stage.addActor( table );
-		table.setVisible( true );
-	}
-
-	// ----------------------------------------------------------------------
 	public void addTouchAction( float x, float y )
 	{
-		/*if (skin == null)
+		if (skin == null)
 		{
 			return;
 		}
 
-		Widget widget = new Label("O", skin);//new SpriteWidget( AssetManager.loadSprite( "Oryx/uf_split/uf_interface/uf_interface_460" ), 32, 32 );
-		//widget.setScale( 0.1f );
+		Widget widget = new Label("O", skin);
+		widget.setColor( 0, 0, 0, 0 );
 		widget.addAction( new SequenceAction( Actions.delay( 2 ), Actions.removeActor() ) );
 
 		widget.setPosition( x - widget.getWidth()/2, y - widget.getHeight()/2 );
 		stage.addActor( widget );
-		widget.setVisible( true );*/
+		widget.setVisible( true );
 	}
 
 	// ----------------------------------------------------------------------
-	public void addActorDamageAction( Entity entity )
+	public void addSkillLevelUpAction2( Entity entity, IAbility ability )
 	{
 		int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
 		int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
@@ -2050,15 +2052,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		int cx = x * Global.TileSize + offsetx;
 		int cy = y * Global.TileSize + offsety;
 
-		Label label = new Label( "-" + entity.damageAccumulator, skin );
-		label.setColor( Color.RED );
+		Label label = new Label( ability.getName() + " levelled up! (Level " + ability.getLevel() + ")", skin );
+		label.setColor( Color.YELLOW );
 
 		label.addAction( new SequenceAction( Actions.moveTo( cx, cy + Global.TileSize / 2 + Global.TileSize / 2, 0.5f ), Actions.removeActor() ) );
 		label.setPosition( cx, cy + Global.TileSize / 2 );
 		stage.addActor( label );
 		label.setVisible( true );
-
-		entity.damageAccumulator = 0;
 	}
 
 	// ----------------------------------------------------------------------
@@ -2073,72 +2073,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		stage.addActor( table );
 		table.setVisible( true );
 	}
-
-	// ----------------------------------------------------------------------
-	public void addActorExperienceAction( Entity entity, int essence )
-	{
-		int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
-		int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
-
-		int x = entity.tile[ 0 ][ 0 ].x;
-		int y = entity.tile[ 0 ][ 0 ].y;
-
-		int cx = x * Global.TileSize + offsetx;
-		int cy = y * Global.TileSize + offsety;
-
-		Label label = new Label( "+" + essence + " exp", skin );
-		label.setColor( Color.YELLOW );
-
-		label.addAction( new SequenceAction( Actions.moveTo( cx, cy + Global.TileSize / 2 + Global.TileSize / 2, 0.5f ), Actions.removeActor() ) );
-		label.setPosition( cx, cy + Global.TileSize / 2 );
-		stage.addActor( label );
-		label.setVisible( true );
-	}
-
-	// ----------------------------------------------------------------------
-	public void addActorItemPickupAction( Entity entity, Item item )
-	{
-		int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
-		int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
-
-		int x = entity.tile[ 0 ][ 0 ].x;
-		int y = entity.tile[ 0 ][ 0 ].y;
-
-		int cx = x * Global.TileSize + offsetx;
-		int cy = y * Global.TileSize + offsety;
-
-		Label label = new Label( "Picked up " + item.name + " (x" + item.count + ")", skin );
-		label.setColor( Color.ORANGE );
-
-		label.addAction( new SequenceAction( Actions.moveTo( cx, cy + Global.TileSize / 2 + Global.TileSize / 2, 0.5f ), Actions.removeActor() ) );
-		label.setPosition( cx, cy + Global.TileSize / 2 );
-		stage.addActor( label );
-		label.setVisible( true );
-	}
-
-	// ----------------------------------------------------------------------
-	public void addActorHealingAction( Entity entity )
-	{
-		int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
-		int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
-
-		int x = entity.tile[ 0 ][ 0 ].x;
-		int y = entity.tile[ 0 ][ 0 ].y;
-
-		int cx = x * Global.TileSize + offsetx;
-		int cy = y * Global.TileSize + offsety;
-
-		Label label = new Label( "+" + entity.healingAccumulator, skin );
-		label.setColor( Color.GREEN );
-
-		label.addAction( new SequenceAction( Actions.moveTo( cx, cy + Global.TileSize / 2 + Global.TileSize / 2, 0.5f ), Actions.removeActor() ) );
-		label.setPosition( cx, cy + Global.TileSize / 2 );
-		stage.addActor( label );
-		label.setVisible( true );
-
-		entity.healingAccumulator = 0;
-	}
-
 	// ----------------------------------------------------------------------
 	public void addFullScreenMessage( String message )
 	{

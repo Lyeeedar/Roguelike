@@ -954,7 +954,17 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 				{
 					for ( int y = 0; y < height; y++ )
 					{
-						symbolGrid[x][y] = tiles[x][y].symbol;
+						symbolGrid[x][y] = tiles[x][y].symbol.copy();
+
+						if (x == x1 && y == y1)
+						{
+							symbolGrid[x][y].character = '-';
+						}
+
+						if (x == x2 && y == y2)
+						{
+							symbolGrid[x][y].character = '=';
+						}
 					}
 				}
 				DEBUG_printGrid( symbolGrid );
@@ -1405,7 +1415,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					int nx = x + dir.getX();
 					int ny = y + dir.getY();
 
-					if ( isEmpty( tiles[nx][ny] ) )
+					if ( isEmpty( x, y, dir ) )
 					{
 						// check neighbours
 
@@ -1422,7 +1432,15 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 	// ----------------------------------------------------------------------
 	protected boolean isEmpty( int x, int y, Direction dir )
 	{
-		GenerationTile tile = tiles[x + dir.getX()][y + dir.getY()];
+		int nx = x + dir.getX();
+		int ny = y + dir.getY();
+
+		if (nx < 0 || ny < 0 || nx >= tiles.length || ny >= tiles[0].length)
+		{
+			return false;
+		}
+
+		GenerationTile tile = tiles[nx][ny];
 		return !tile.isCorridor && !tile.isRoom && !tile.isEmptySpace && tile.symbol.character != '#';
 	}
 

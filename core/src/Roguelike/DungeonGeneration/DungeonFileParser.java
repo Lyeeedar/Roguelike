@@ -342,7 +342,7 @@ public class DungeonFileParser
 
 			room.roomData = this;
 			room.width = EquationHelper.evaluate( width, Global.Statistic.emptyMap, ran );
-			room.height = EquationHelper.evaluate( height, Global.Statistic.emptyMap, ran );;
+			room.height = EquationHelper.evaluate( height, Global.Statistic.emptyMap, ran );
 			room.roomContents = new Symbol[room.width][room.height];
 			room.faction = faction;
 

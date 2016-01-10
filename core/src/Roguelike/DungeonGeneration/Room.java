@@ -128,6 +128,14 @@ public final class Room
 	// ----------------------------------------------------------------------
 	public void generateRoomContents( Random ran, DungeonFileParser dfp, Symbol floor, Symbol wall, AbstractRoomGenerator generator )
 	{
+		if ( width < dfp.corridorStyle.width+2 && height < dfp.corridorStyle.width+2 )
+		{
+			throw new RuntimeException( "Room too small to attach a corridor to!" );
+		}
+
+		Symbol[][] best = null;
+		int bestFill = 0;
+
 		roomContents = new Symbol[width][height];
 
 		for ( int i = 0; i < 20; i++ )
@@ -147,8 +155,7 @@ public final class Room
 				}
 			}
 
-			int count = 0;
-			// Ensure solid outer wall and count floor
+			// Ensure solid outer wall
 			for ( int x = 0; x < width; x++ )
 			{
 				for ( int y = 0; y < height; y++ )
@@ -162,29 +169,36 @@ public final class Room
 					{
 						roomContents[x][y] = wall;
 					}
-
-					if ( roomContents[x][y] == floor )
-					{
-						count++;
-					}
 				}
 			}
 
-			if ( count > ( width * height ) / 4 )
+			// minimise room size
+			Symbol[][] newRoomContents = RecursiveDockGenerator.minimiseGrid( roomContents, wall );
+			int nwidth = newRoomContents.length;
+			int nheight = newRoomContents[0].length;
+
+			if (nwidth*nheight > bestFill)
+			{
+				bestFill = nwidth*nheight;
+				best = newRoomContents;
+			}
+
+			if ( nwidth < dfp.corridorStyle.width+2 && nheight < dfp.corridorStyle.width+2 )
+			{
+				continue;
+			}
+			else if ( nwidth*nheight > ( width * height ) / 2 )
 			{
 				break;
 			}
-			else
-			{
-				// System.out.println("Not enough room tiles filled ("+count+" / "
-				// + (width*height) + ").");
-			}
 		}
 
-		// minimise room size
-		roomContents = RecursiveDockGenerator.minimiseGrid( roomContents, wall );
+		roomContents = best;
 		width = roomContents.length;
 		height = roomContents[0].length;
+
+		boolean canAttachCorridorVertically = width >= dfp.corridorStyle.width + 2;
+		boolean canAttachCorridorHorizontally = height >= dfp.corridorStyle.width + 2;
 
 		// Place corridor connections
 		// Sides
@@ -192,10 +206,14 @@ public final class Room
 		// 0 2
 		// 3
 
-		int numDoors = (int) ( Math.max( 0, ran.nextGaussian() ) * 3 ) + 1;
+		int numDoors = (int) ( Math.max( 0, ran.nextFloat() ) * 3 ) + 1;
 		for ( int i = 0; i < numDoors; i++ )
 		{
-			int doorSide = ran.nextInt( 4 );
+			int doorSide = 0;
+
+			if (canAttachCorridorHorizontally && canAttachCorridorVertically) { doorSide = ran.nextInt( 4 ); }
+			else if (canAttachCorridorHorizontally) { doorSide = ran.nextBoolean() ? 0 : 2; }
+			else if (canAttachCorridorVertically) { doorSide = ran.nextBoolean() ? 1 : 3; }
 
 			int x = 0;
 			int y = 0;

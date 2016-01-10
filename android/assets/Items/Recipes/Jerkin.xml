@@ -6,7 +6,7 @@
 
     <Events>
         <Constant>
-            <Defense>5 + 3 * quality</Defense>
+            <Defense>5 + 3.5 * quality</Defense>
             <Perception>1 + quality/2</Perception>
             <Speed>1 + quality/3</Speed>
         </Constant>

@@ -35,6 +35,13 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 
 	// ----------------------------------------------------------------------
 	@Override
+	public int getLevel()
+	{
+		return tree.level;
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
 	public void setTree(AbilityTree.AbilityStage tree )
 	{
 		this.tree = tree;

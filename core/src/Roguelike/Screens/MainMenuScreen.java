@@ -65,7 +65,7 @@ public class MainMenuScreen implements Screen
 		}
 		catch (Exception e)
 		{
-
+			e.printStackTrace();
 		}
 
 		if (hasFile)

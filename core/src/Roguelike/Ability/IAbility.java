@@ -21,6 +21,8 @@ public interface IAbility
 
 	void setCooldown( int val );
 
+	int getLevel();
+
 	Table createTable( Skin skin, Entity entity );
 
 	Sprite getIcon();
