@@ -314,32 +314,17 @@ public class Level
 	private void dropItems( Inventory inventory, GameTile source, int essence, Object obj )
 	{
 		Array<Point> possibleTiles = new Array<Point>();
-		ShadowCaster sc = new ShadowCaster( Grid, 3, ItemDropPassability, obj );
-		sc.ComputeFOV( source.x, source.y, possibleTiles );
-
-		// remove non-reachable tiles
-		Iterator<Point> itr = possibleTiles.iterator();
-		while ( itr.hasNext() )
+		for (Direction dir : Direction.values())
 		{
-			Point pos = itr.next();
-
-			GameTile tile = getGameTile( pos );
-
-			if ( !tile.getPassable( ItemDropPassability, obj ) )
+			if ( Global.CanMoveDiagonal || dir.isCardinal() )
 			{
-				itr.remove();
-				Global.PointPool.free( pos );
-				continue;
-			}
-
-			Pathfinder pathfinder = new Pathfinder( Grid, source.x, source.y, pos.x, pos.y, Global.CanMoveDiagonal, 1, null );
-			Array<Point> path = pathfinder.getPath( ItemDropPassability );
-
-			if ( path == null || path.size > 4 )
-			{
-				itr.remove();
-				Global.PointPool.free( pos );
-				continue;
+				int nx = source.x + dir.getX();
+				int ny = source.y + dir.getY();
+				GameTile tile = getGameTile( nx, ny );
+				if ( tile != null && tile.getPassable( ItemDropPassability, obj ) )
+				{
+					possibleTiles.add( Global.PointPool.obtain().set( nx, ny ) );
+				}
 			}
 		}
 
@@ -353,11 +338,17 @@ public class Level
 			{
 				Global.LevelManager.hpDropCounter = 0;
 				int amount = Math.max( 10, (player.getStatistic( Statistic.CONSTITUTION ) * 10) / 5 );
-				delay = dropOrbs( amount, delay, GameTile.OrbType.HEALTH, source, possibleTiles );
+				delay += dropOrbs( amount, delay, GameTile.OrbType.HEALTH, source, possibleTiles );
 			}
 			else
 			{
 				Global.LevelManager.hpDropCounter++;
+			}
+
+			if ( obj instanceof GameEntity && ((GameEntity)obj).isBoss )
+			{
+				int amount = Math.max( 10, (player.getStatistic( Statistic.CONSTITUTION ) * 10) / 3 );
+				delay += dropOrbs( amount, delay, GameTile.OrbType.HEALTH, source, possibleTiles );
 			}
 		}
 
@@ -372,11 +363,11 @@ public class Level
 
 				int[] diff = tile.getPosDiff( source );
 
-				MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
-				anim.leapHeight = 6;
+				MoveAnimation anim = new MoveAnimation( 0.3f, diff, MoveEquation.LEAP );
+				anim.leapHeight = 3;
 				i.getIcon().spriteAnimation = anim;
 				i.getIcon().renderDelay = delay;
-				delay += 0.02f;
+				delay += 0.015f;
 			}
 		}
 

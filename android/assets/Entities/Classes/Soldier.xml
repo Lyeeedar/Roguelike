@@ -10,9 +10,6 @@
 	<CanSwap>true</CanSwap>
 
     <Abilities>
-
-		<Summon>AnimalCompanion</Summon>
-
 		<PowerAttack>PowerAttack</PowerAttack>
     </Abilities>
 
@@ -43,7 +40,7 @@
                 <Material>Copper</Material>
 		    </Body>
 
-		     <Leg>
+            <Leg>
                  <Recipe>Greaves</Recipe>
                  <Material>Copper</Material>
 		    </Leg>

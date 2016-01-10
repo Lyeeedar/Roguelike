@@ -69,17 +69,17 @@ public class TreasureGenerator
 		// Armour 2
 		// Ability 1
 
-		int chance = ran.nextInt( 8 );
+		int chance = ran.nextInt( 7 );
 
-		if ( chance < 3 )
+		if ( chance < 2 )
 		{
 			items.addAll( TreasureGenerator.generateCurrency( quality, ran ) );
 		}
-		else if ( chance < 5 )
+		else if ( chance < 2 )
 		{
 			items.addAll( TreasureGenerator.generateArmour( quality, ran ) );
 		}
-		else if ( chance < 7 )
+		else if ( chance < 2 )
 		{
 			items.addAll( TreasureGenerator.generateWeapon( quality, ran ) );
 		}
