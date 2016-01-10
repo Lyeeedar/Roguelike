@@ -18,6 +18,11 @@ public class TaskUseAbility extends AbstractTask
 	@Override
 	public void processTask( GameEntity obj )
 	{
+		if ( !ability.isAvailable() )
+		{
+			return;
+		}
+
 		ability.cooldownAccumulator = ability.cooldown;
 
 		ActiveAbility aa = ability.copy();

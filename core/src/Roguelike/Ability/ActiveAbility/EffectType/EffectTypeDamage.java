@@ -80,6 +80,12 @@ public class EffectTypeDamage extends AbstractEffectType
 
 		lines.add( "Weapon Damage: " + variableMap.get( Statistic.ATTACK.toString().toLowerCase() ) + "%" );
 
+		int pen = variableMap.get( Statistic.PENETRATION.toString().toLowerCase() );
+		if (  pen > 0 )
+		{
+			lines.add( "Weapon Penetration: " + pen );
+		}
+
 		lines.add( "---" );
 
 		lines.add( "Scales By:" );
@@ -105,7 +111,9 @@ public class EffectTypeDamage extends AbstractEffectType
 		damage /= 100.0f;
 		damage *= aa.getCaster().getVariable( Statistic.ATTACK );
 
-		Global.calculateDamage( aa.getCaster(), target, (int)damage, target.getVariable( Statistic.DEFENSE ), true );
+		int pen = variableMap.get( Statistic.PENETRATION.toString().toLowerCase() );
+
+		Global.calculateDamage( aa.getCaster(), target, (int)damage, target.getVariable( Statistic.DEFENSE ), pen, true );
 	}
 
 	private HashMap<String, Integer> calculateVariableMap( ActiveAbility aa )

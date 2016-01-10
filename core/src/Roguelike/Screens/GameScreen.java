@@ -602,13 +602,17 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 									sprite = field.tilingSprite.getSprite( directionBitflag );
 								}
 
-								if ( field.layer == FieldLayer.GROUND )
+								int count = (int)Math.ceil(field.stacks / 4.0f);
+								for (int i = 0; i < count; i++)
 								{
-									queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.GROUNDFIELD );
-								}
-								else
-								{
-									queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.OVERHEADFIELD );
+									if ( field.layer == FieldLayer.GROUND )
+									{
+										queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.GROUNDFIELD );
+									}
+									else
+									{
+										queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, RenderLayer.OVERHEADFIELD );
+									}
 								}
 							}
 						}
@@ -1475,7 +1479,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height )
 					{
 						GameTile tile = Global.CurrentLevel.getGameTile( x, y );
-						if ( preparedAbility.isTargetValid( tile, abilityTiles ) )
+						if ( preparedAbility.isTargetValid( tile, abilityTiles ) && Global.CurrentLevel.player.tasks.size == 0 )
 						{
 							Global.CurrentLevel.player.tasks.add( new TaskUseAbility( Global.PointPool.obtain().set( x, y ), preparedAbility ) );
 							preparedAbility = null;

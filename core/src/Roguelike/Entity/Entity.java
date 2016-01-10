@@ -101,7 +101,11 @@ public abstract class Entity
 			inventory.load( inventoryElement );
 		}
 
-		immune = xml.get( "Immune", "" ).toLowerCase().split( "," );
+		Element immuneElement = xml.getChildByName( "Immune" );
+		if ( immuneElement != null )
+		{
+			immune = immuneElement.getText().toLowerCase().split( "," );
+		}
 
 		canTakeDamage = xml.getBoolean( "CanTakeDamage", canTakeDamage );
 
@@ -326,7 +330,7 @@ public abstract class Entity
 
 		for ( String s : immune )
 		{
-			if ( s.equals( name ) )
+			if ( s.equalsIgnoreCase( name ) )
 			{
 				return true;
 			}

@@ -5,4 +5,10 @@
         <DrawActualSize>true</DrawActualSize>
     </Sprite>
 
+    <Statistics>
+        <Attack>val+5</Attack>
+        <Defense>val+5</Defense>
+        <Constitution>val+3</Constitution>
+    </Statistics>
+
 </Entity>

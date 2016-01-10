@@ -18,6 +18,8 @@ import java.util.Random;
  */
 public class LevelManager
 {
+	public int hpDropCounter = 0;
+
 	public int totalDepth = 0;
 
 	public LevelData root;

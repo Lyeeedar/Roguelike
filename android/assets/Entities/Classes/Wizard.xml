@@ -20,13 +20,11 @@
     </Sprite>
 
     <Statistics>
-        <Defense>1</Defense>
-
-        <Constitution>13</Constitution>
+        <Constitution>10</Constitution>
         <Perception>10</Perception>
         <Strength>10</Strength>
-        <Intelligence>10</Intelligence>
-        <Willpower>10</Willpower>
+        <Intelligence>12</Intelligence>
+        <Willpower>12</Willpower>
         <Speed>10</Speed>
     </Statistics>
 
@@ -53,12 +51,13 @@
 
     <Light>
         <Colour>
-            <Red>0.6</Red>
-            <Green>0.5</Green>
-            <Blue>0.4</Blue>
+            <Red>1</Red>
+            <Green>1</Green>
+            <Blue>1</Blue>
+            <Alpha>0.5</Alpha>
         </Colour>
 
-        <Intensity>5</Intensity>
+        <Intensity>4</Intensity>
     </Light>
 
 </Entity>

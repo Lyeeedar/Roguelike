@@ -57,7 +57,7 @@ public class DamageOnDeathEffect extends AbstractOnDeathEffect
 
 		int raw = EquationHelper.evaluate( eqn, variableMap );
 
-		Global.calculateDamage( entity, entity, raw, entity.getVariable( Statistic.DEFENSE ), true );
+		Global.calculateDamage( entity, entity, raw, entity.getVariable( Statistic.DEFENSE ), 0, true );
 	}
 
 	@Override

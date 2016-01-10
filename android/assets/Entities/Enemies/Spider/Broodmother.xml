@@ -54,4 +54,10 @@
 
     </Abilities>
 
+    <Statistics>
+        <Attack>val+10</Attack>
+        <Defense>val+10</Defense>
+        <Constitution>val+10</Constitution>
+    </Statistics>
+
 </Entity>

@@ -9,8 +9,8 @@
 
 	<Statistics>
 
-		<Attack>val+3</Attack>
-		<Defense>val+6</Defense>
+		<Attack>val+5</Attack>
+		<Defense>val+7</Defense>
 
 		<Constitution>val+3</Constitution>
         <Speed>val-1</Speed>

@@ -8,24 +8,10 @@
 
 	<IsBoss>true</IsBoss>
 
-    <Inventory>
-
-		    <Item>
-
-		        <Name>Rat Kings Crown</Name>
-		        <Description>The golden crown of the king of the giant rats. On close inspection it turns out to be a thinly gilded wooden helm.</Description>
-		        <Slot>Head</Slot>
-				<Category>Armour</Category>
-				<Icon>
-				    <Name>Oryx/uf_split/uf_items/armor_gold_helm</Name>
-				</Icon>
-				<Events>
-					<Constant>
-						<Defense>5</Defense>
-					</Constant>
-				</Events>
-		    </Item>
-
-		</Inventory>
+    <Statistics>
+        <Attack>val+5</Attack>
+        <Defense>val+10</Defense>
+        <Constitution>val+4</Constitution>
+    </Statistics>
 
 </Entity>

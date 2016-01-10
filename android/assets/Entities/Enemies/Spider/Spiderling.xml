@@ -4,4 +4,8 @@
         <Name>Oryx/uf_split/uf_heroes/spider_brown</Name>
     </Sprite>
 
+    <Statistics>
+        <Speed>val+2</Speed>
+    </Statistics>
+
 </Entity>

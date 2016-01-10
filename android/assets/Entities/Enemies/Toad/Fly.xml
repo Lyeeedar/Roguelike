@@ -16,15 +16,15 @@
 
     <Statistics>
 
-        <Attack>15</Attack>
-        <Defense>8</Defense>
+        <Attack>5</Attack>
+        <Defense>0</Defense>
 
-        <Constitution>5</Constitution>
-        <Perception>7</Perception>
+        <Constitution>3</Constitution>
+        <Perception>5</Perception>
         <Strength>5</Strength>
         <Willpower>5</Willpower>
         <Intelligence>5</Intelligence>
-        <Speed>6</Speed>
+        <Speed>10</Speed>
 
     </Statistics>
 

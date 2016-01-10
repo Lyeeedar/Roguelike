@@ -47,7 +47,7 @@ public class GameEntity extends Entity
 	// ----------------------------------------------------------------------
 	public void attack( Entity other, Direction dir )
 	{
-		Global.calculateDamage( this, other, getVariable( Statistic.ATTACK ), other.getVariable( Statistic.DEFENSE ), true );
+		Global.calculateDamage( this, other, getVariable( Statistic.ATTACK ), other.getVariable( Statistic.DEFENSE ), getVariable( Statistic.PENETRATION ), true );
 	}
 
 	// ----------------------------------------------------------------------

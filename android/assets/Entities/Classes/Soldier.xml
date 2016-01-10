@@ -6,7 +6,6 @@
 	</Factions>
 
 	<AI>player</AI>
-	<Essence>400</Essence>
 
 	<CanSwap>true</CanSwap>
 

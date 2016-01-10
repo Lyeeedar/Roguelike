@@ -21,11 +21,16 @@
 
 	<Inventory>
 		<Equipment>
-			<Wand DropChance="rnd(5)<=1">
-			    <Recipe>Wand</Recipe>
-				<Material>Iron</Material>
-			</Wand>
+            <Wand Drop="false">
+                <Slot>Weapon</Slot>
+                <Type>Wand</Type>
+            </Wand>
 		</Equipment>
+
+        <Item DropChance="rnd(5)<=1">
+            <Recipe>Wand</Recipe>
+            <Material>Copper</Material>
+        </Item>
 	</Inventory>
 
 	<Statistics>

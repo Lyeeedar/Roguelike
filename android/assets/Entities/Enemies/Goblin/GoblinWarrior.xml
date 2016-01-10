@@ -7,8 +7,8 @@
 
 	<Statistics>
 
-		<Attack>val+3</Attack>
-		<Defense>+5</Defense>
+		<Attack>val+2</Attack>
+		<Defense>val+5</Defense>
 
 	</Statistics>
 

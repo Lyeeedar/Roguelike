@@ -7,39 +7,12 @@
 
 	<IsBoss>true</IsBoss>
 
-	<ActiveAbilities>
-
-	    <Enrage>
-	        <Cooldown>15</Cooldown>
-			<Range>1</Range>
-			<HitSprite>
-			    <Name>AbilitySprites/Shout/Shout</Name>
-			    <UpdateRate>0.1</UpdateRate>
-			    <Colour><RGB>178,34,34</RGB></Colour>
-			    <Sound><Name>roar</Name></Sound>
-			</HitSprite>
-
-			<Targeting><Self></Self></Targeting>
-			<Movement><Smite></Smite></Movement>
-
-			<Effect>
-				<Status ReliesOn="Bloodlust">
-					<Attacker>Bloodlust</Attacker>
-					<Stacks>5</Stacks>
-				</Status>
-			</Effect>
-
-	    </Enrage>
-
-	</ActiveAbilities>
-
 	<Statistics>
 
-		<Attack>val+6</Attack>
-		<Defense>val+6</Defense>
+		<Attack>val+10</Attack>
+		<Defense>val+10</Defense>
 
 		<Constitution>val+5</Constitution>
-        <Speed>val+1</Speed>
 
 	</Statistics>
 

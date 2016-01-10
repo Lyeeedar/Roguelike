@@ -1,30 +1,30 @@
-<Entity>	
+<Entity>
 	<Dialogue>Dialogue/Goblin</Dialogue>
 
 	<AI>basicMonster</AI>
-	
+
 	<Factions>
 		<Faction>Goblin</Faction>
 	</Factions>
 
 	<Statistics>
 
-		<Attack>15</Attack>
+		<Attack>8</Attack>
 		<Defense>8</Defense>
 
-		<Constitution>5</Constitution>
+		<Constitution>6</Constitution>
 		<Perception>7</Perception>
 		<Strength>5</Strength>
 		<Willpower>5</Willpower>
 		<Intelligence>5</Intelligence>
-		<Speed>6</Speed>
+		<Speed>10</Speed>
 
 	</Statistics>
 
 	<Inventory>
-	    
+
 	    <Hide DropChance="rnd(10)<1">
-	        
+
 	        <Category>Material</Category>
 		    <Name>Goblin Skin</Name>
 		    <Description>Leathery green skin stripped from a goblins back.</Description>
@@ -32,11 +32,11 @@
 		    <Elements>
 		        <Base>20</Base>
 		    </Elements>
-	        
+
 	    </Hide>
-	    
+
 	    <Tooth DropChance="rnd(6)<1">
-	        
+
 	        <Category>Material</Category>
 		    <Name>Goblin Tooth</Name>
 		    <Description>This small gemlike tooth is pulled from the mouth of a goblin. Their gemlike sheen make them desirable for some jewelers.</Description>
@@ -45,9 +45,9 @@
 		    <Elements>
 		        <Base>10</Base>
 		    </Elements>
-	        
+
 	    </Tooth>
-	    
+
 	</Inventory>
-	
+
 </Entity>

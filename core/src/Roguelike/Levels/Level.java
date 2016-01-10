@@ -260,7 +260,7 @@ public class Level
 					{
 						e.inventory.m_items.addAll( TreasureGenerator.generateLoot( quality + 1, "random", MathUtils.random ) );
 					}
-					else if ( e.essence > 0 && MathUtils.random( 4 ) == 0 )
+					else if ( e.essence > 0 && MathUtils.random( 3 ) == 0 )
 					{
 						e.inventory.m_items.addAll( TreasureGenerator.generateLoot( quality, "random", MathUtils.random ) );
 					}
@@ -333,8 +333,9 @@ public class Level
 			}
 
 			Pathfinder pathfinder = new Pathfinder( Grid, source.x, source.y, pos.x, pos.y, Global.CanMoveDiagonal, 1, null );
+			Array<Point> path = pathfinder.getPath( ItemDropPassability );
 
-			if ( pathfinder.getPath( ItemDropPassability ) == null )
+			if ( path == null || path.size > 4 )
 			{
 				itr.remove();
 				Global.PointPool.free( pos );
@@ -348,10 +349,15 @@ public class Level
 		{
 			delay = dropOrbs( essence, delay, GameTile.OrbType.EXPERIENCE, source, possibleTiles );
 
-			if ( MathUtils.random( 5 ) == 0 )
+			if ( MathUtils.random( 4 ) <= Global.LevelManager.hpDropCounter )
 			{
+				Global.LevelManager.hpDropCounter = 0;
 				int amount = Math.max( 10, (player.getStatistic( Statistic.CONSTITUTION ) * 10) / 5 );
 				delay = dropOrbs( amount, delay, GameTile.OrbType.HEALTH, source, possibleTiles );
+			}
+			else
+			{
+				Global.LevelManager.hpDropCounter++;
 			}
 		}
 
@@ -359,7 +365,7 @@ public class Level
 		{
 			if ( i.canDrop && i.shouldDrop() )
 			{
-				Point target = possibleTiles.random();
+				Point target = possibleTiles.size > 0 ? possibleTiles.random() : Global.PointPool.obtain().set( source );
 				GameTile tile = getGameTile( target );
 
 				tile.items.add( i );

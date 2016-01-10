@@ -40,7 +40,7 @@ public class DamageOnTurnEffect extends AbstractOnTurnEffect
 
 		int raw = EquationHelper.evaluate( eqn, variableMap );
 
-		Global.calculateDamage( entity, entity, raw, 0, false );
+		Global.calculateDamage( entity, entity, raw, entity.getVariable( Statistic.DEFENSE ), 0, false );
 	}
 
 	@Override

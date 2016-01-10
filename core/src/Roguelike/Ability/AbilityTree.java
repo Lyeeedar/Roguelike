@@ -91,7 +91,7 @@ public class AbilityTree
 			{
 				level++;
 				exp -= expToNextLevel;
-				expToNextLevel *= 1.3f;
+				expToNextLevel *= 1.2f;
 				needsLevelAnim = true;
 			}
 		}
@@ -124,6 +124,7 @@ public class AbilityTree
 					GameScreen.Instance.lockContextMenu = false;
 					GameScreen.Instance.clearContextMenu();
 					tree.current = branch1;
+					tree.current.expToNextLevel = expToNextLevel;
 				}
 			} );
 
@@ -143,6 +144,7 @@ public class AbilityTree
 					GameScreen.Instance.lockContextMenu = false;
 					GameScreen.Instance.clearContextMenu();
 					tree.current = branch2;
+					tree.current.expToNextLevel = expToNextLevel;
 				}
 			} );
 

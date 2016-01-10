@@ -256,26 +256,14 @@ public class Global
 	}
 
 	// ----------------------------------------------------------------------
-	public static void calculateDamage( Entity attacker, Entity defender, int atk, int def, boolean doEvents )
+	public static void calculateDamage( Entity attacker, Entity defender, int atk, int def, int pen, boolean doEvents )
 	{
 		if ( atk <= 0 ) { return; }
 
-		int damage = 0;
-		if (atk <= def)
-		{
-			float scale = (def - atk) / 10.0f + 1;
-			float multiplier = 2.0f * scale;
+		int applicableDef = Math.max( 0, def - pen );
 
-			damage = (int)Math.ceil((float)atk / multiplier);
-		}
-		else if (atk > def)
-		{
-			int diff = atk - def;
-			float baseDam = (float)Math.ceil(atk / 2.0f);
-
-			float alpha = MathUtils.clamp( (float)diff / (float)atk, 0, 1 );
-			damage = (int)MathUtils.lerp( baseDam, (float)atk, alpha );
-		}
+		float reduction = applicableDef / 100.0f;
+		int damage = atk - (int)Math.ceil((float)atk * reduction);
 
 		if ( damage <= 0 )
 		{
@@ -801,6 +789,7 @@ public class Global
 		// Base stats
 		ATTACK, // Base Damage
 		DEFENSE, // Defense
+		PENETRATION, // Penetration
 
 		// Modifier stats
 		STRENGTH, // Melee dam
@@ -868,6 +857,7 @@ public class Global
 
 				Statistic stat = Statistic.valueOf( el.getName().toUpperCase() );
 				String eqn = el.getText().toLowerCase();
+
 				int newVal = values.get( stat );
 
 				if ( Global.isNumber( eqn ) )
