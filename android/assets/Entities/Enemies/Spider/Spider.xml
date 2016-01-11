@@ -7,7 +7,7 @@
 			<Name>Spiderweb</Name>
 			<Placement>Any</Placement>
 			<FieldData>Web</FieldData>
-			<Coverage>80</Coverage>
+			<Coverage Min="60" >80</Coverage>
 		</Feature>
 
 		<Feature>

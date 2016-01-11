@@ -13,7 +13,7 @@
 					<Name>dc-dngn/water/dngn_shallow_water</Name>
 				</Sprite>
 			</TileData>
-			<Coverage>90</Coverage>
+			<Coverage Min="70" >90</Coverage>
 		</Feature>
 
 		<Feature>

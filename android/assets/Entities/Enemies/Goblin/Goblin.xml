@@ -31,30 +31,6 @@
 			<Coverage>3</Coverage>
 		</Feature>
 
-		<Feature>
-			<Name>Tent</Name>
-			<Placement>Centre</Placement>
-			<EnvironmentData>
-			    <Sprite>
-			        <Name>LevelDetail/GoblinTent</Name>
-			    </Sprite>
-
-				<Size>2</Size>
-
-			    <Passable>false</Passable>
-			    <Opaque>false</Opaque>
-
-			    <Type>Spawner</Type>
-			    <Entity>Enemies/Goblin/GoblinGrunt</Entity>
-			    <Spawn>OnHear</Spawn>
-			    <NumToSpawn>1</NumToSpawn>
-			    <Delay>2</Delay>
-			</EnvironmentData>
-
-			<RangeMin>80</RangeMin>
-			<Coverage>1</Coverage>
-		</Feature>
-
         <Feature>
             <Name>Torch</Name>
             <Placement>Wall</Placement>
@@ -92,14 +68,12 @@
             </Symbols>
 
             <Rows>
-                <Row>.........</Row>
-                <Row>.........</Row>
-                <Row>.........</Row>
-                <Row>.....B...</Row>
-                <Row>.........</Row>
-                <Row>.........</Row>
-                <Row>.........</Row>
-                <Row>.........</Row>
+                <Row>.......</Row>
+                <Row>.......</Row>
+                <Row>.....B.</Row>
+                <Row>.......</Row>
+                <Row>.......</Row>
+                <Row>.......</Row>
             </Rows>
         </BossRoom>
 

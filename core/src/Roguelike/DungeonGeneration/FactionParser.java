@@ -251,8 +251,8 @@ public class FactionParser
 
 		public int coverage;
 
-		public int minCoverage;
-		public int maxCoverage;
+		public int minCoverage = 0;
+		public int maxCoverage = Integer.MAX_VALUE;
 
 		public FeaturePlacementType type;
 
@@ -261,9 +261,19 @@ public class FactionParser
 			Feature feature = new Feature();
 			feature.minRange = xml.getInt( "RangeMin", 0 );
 			feature.maxRange = xml.getInt( "RangeMax", 100 );
-			feature.coverage = xml.getInt( "Coverage", 50 );
-			feature.minCoverage = xml.getInt( "MinCoverage", 0 );
-			feature.maxCoverage = xml.getInt( "MaxCoverage", Integer.MAX_VALUE );
+
+			Element coverageElement = xml.getChildByName( "Coverage" );
+			if ( coverageElement != null )
+			{
+				feature.coverage = Integer.parseInt( coverageElement.getText() );
+				feature.minCoverage = coverageElement.getIntAttribute( "Min", feature.minCoverage );
+				feature.maxCoverage = coverageElement.getIntAttribute( "Max", feature.maxCoverage );
+			}
+			else
+			{
+				feature.coverage = 50;
+			}
+
 			feature.tileData = xml.getChildByName( "TileData" );
 			feature.environmentData = xml.getChildByName( "EnvironmentData" );
 			feature.fieldData = xml.getChildByName( "FieldData" );

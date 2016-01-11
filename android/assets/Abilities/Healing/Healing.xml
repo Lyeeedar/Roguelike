@@ -3,7 +3,7 @@
 	<Name>Healing</Name>
 	<Description>Knit your wounds.</Description>
 
-	<Cooldown>20</Cooldown>
+	<Cooldown>40</Cooldown>
 	<Range>1</Range>
 
 	<Icon>

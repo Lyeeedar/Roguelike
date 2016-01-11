@@ -31,6 +31,9 @@ public final class Room
 	public DFPRoom roomData;
 
 	// ----------------------------------------------------------------------
+	public boolean fromEmptySpace = false;
+
+	// ----------------------------------------------------------------------
 	public int width;
 	public int height;
 
@@ -324,11 +327,6 @@ public final class Room
 		EnumBitflag<Direction> solid = new EnumBitflag<Direction>();
 		for ( Direction dir : Direction.values() )
 		{
-			if (!Global.CanMoveDiagonal && !dir.isCardinal())
-			{
-				continue;
-			}
-
 			int x1 = x + dir.getX();
 			int y1 = y + dir.getY();
 
@@ -345,8 +343,8 @@ public final class Room
 		// Vertical path
 		if ( !solid.contains( Direction.NORTH ) && !solid.contains( Direction.SOUTH ) )
 		{
-			boolean side1 = solid.contains( Direction.EAST ) || ( Global.CanMoveDiagonal && ( solid.contains( Direction.NORTHEAST ) || solid.contains( Direction.SOUTHEAST ) ) );
-			boolean side2 = solid.contains( Direction.WEST ) || ( Global.CanMoveDiagonal && ( solid.contains( Direction.NORTHWEST ) || solid.contains( Direction.SOUTHWEST ) ) );
+			boolean side1 = solid.contains( Direction.EAST ) || ( solid.contains( Direction.NORTHEAST ) || solid.contains( Direction.SOUTHEAST ) );
+			boolean side2 = solid.contains( Direction.WEST ) || ( solid.contains( Direction.NORTHWEST ) || solid.contains( Direction.SOUTHWEST ) );
 
 			if ( side1 && side2 ) { return true; }
 		}
@@ -354,8 +352,8 @@ public final class Room
 		// Horizontal path
 		if ( !solid.contains( Direction.EAST ) && !solid.contains( Direction.WEST ) )
 		{
-			boolean side1 = solid.contains( Direction.NORTH ) || ( Global.CanMoveDiagonal && ( solid.contains( Direction.NORTHEAST ) || solid.contains( Direction.NORTHWEST ) ) );
-			boolean side2 = solid.contains( Direction.SOUTH ) || ( Global.CanMoveDiagonal && ( solid.contains( Direction.SOUTHEAST ) || solid.contains( Direction.SOUTHWEST ) ) );
+			boolean side1 = solid.contains( Direction.NORTH ) || ( solid.contains( Direction.NORTHEAST ) || solid.contains( Direction.NORTHWEST ) );
+			boolean side2 = solid.contains( Direction.SOUTH ) || ( solid.contains( Direction.SOUTHEAST ) || solid.contains( Direction.SOUTHWEST ) );
 
 			if ( side1 && side2 ) { return true; }
 		}
@@ -378,18 +376,20 @@ public final class Room
 		}
 
 		// build the any list
-		Array<int[]> validList = new Array<int[]>();
+		Array<Point> validList = new Array<Point>();
+		Array<Point> fullList = new Array<Point>();
 		for ( int x = 1; x < width - 1; x++ )
 		{
 			for ( int y = 1; y < height - 1; y++ )
 			{
 				if ( roomContents[x][y] != null && roomContents[x][y].isPassable( GeneratorPassability ) )
 				{
-					int[] pos = { x, y };
+					Point point = Global.PointPool.obtain().set( x, y );
+					fullList.add( point );
 
 					if ( !isPosEnclosed( x, y ) )
 					{
-						validList.add( pos );
+						validList.add( point );
 					}
 				}
 			}
@@ -411,10 +411,10 @@ public final class Room
 
 				// Build list
 				PriorityQueue<FeatureTile> furthestList = new PriorityQueue<FeatureTile>();
-				for ( int[] tile : validList )
+				for ( Point tile : validList )
 				{
-					int x = tile[0];
-					int y = tile[1];
+					int x = tile.x;
+					int y = tile.y;
 
 					if ( roomContents[x][y].getTileData().canFeature
 							&& roomContents[x][y].isPassable( GeneratorPassability )
@@ -436,9 +436,9 @@ public final class Room
 				// Place the features
 				for ( int i = 0; i < numTilesToPlace; i++ )
 				{
-					int[] pos = furthestList.poll().pos;
+					Point pos = furthestList.poll().pos;
 
-					roomContents[pos[0]][pos[1]] = f.getAsSymbol( roomContents[pos[0]][pos[1]] );
+					roomContents[pos.x][pos.y] = f.getAsSymbol( roomContents[pos.x][pos.y] );
 
 					if ( furthestList.size() == 0 )
 					{
@@ -460,11 +460,11 @@ public final class Room
 				}
 
 				// Build list
-				Array<int[]> wallList = new Array<int[]>();
-				for ( int[] tile : validList )
+				Array<Point> wallList = new Array<Point>();
+				for ( Point tile : validList )
 				{
-					int x = tile[0];
-					int y = tile[1];
+					int x = tile.x;
+					int y = tile.y;
 
 					if ( roomContents[x][y].getTileData().canFeature
 							&& roomContents[x][y].isPassable( GeneratorPassability )
@@ -502,9 +502,9 @@ public final class Room
 
 				for ( int i = 0; i < numTilesToPlace; i++ )
 				{
-					int[] pos = wallList.removeIndex( ran.nextInt( wallList.size ) );
+					Point pos = wallList.removeIndex( ran.nextInt( wallList.size ) );
 
-					roomContents[pos[0]][pos[1]] = f.getAsSymbol( roomContents[pos[0]][pos[1]] );
+					roomContents[pos.x][pos.y] = f.getAsSymbol( roomContents[pos.x][pos.y] );
 
 					if ( wallList.size == 0 )
 					{
@@ -526,11 +526,11 @@ public final class Room
 				}
 
 				// Build list
-				Array<int[]> centreList = new Array<int[]>();
-				for ( int[] tile : validList )
+				Array<Point> centreList = new Array<Point>();
+				for ( Point tile : validList )
 				{
-					int x = tile[0];
-					int y = tile[1];
+					int x = tile.x;
+					int y = tile.y;
 
 					if ( roomContents[x][y].getTileData().canFeature
 							&& roomContents[x][y].isPassable( GeneratorPassability )
@@ -568,9 +568,9 @@ public final class Room
 
 				for ( int i = 0; i < numTilesToPlace; i++ )
 				{
-					int[] pos = centreList.removeIndex( ran.nextInt( centreList.size ) );
+					Point pos = centreList.removeIndex( ran.nextInt( centreList.size ) );
 
-					roomContents[pos[0]][pos[1]] = f.getAsSymbol( roomContents[pos[0]][pos[1]] );
+					roomContents[pos.x][pos.y] = f.getAsSymbol( roomContents[pos.x][pos.y] );
 
 					if ( centreList.size == 0 )
 					{
@@ -591,11 +591,11 @@ public final class Room
 					continue;
 				}
 
-				Array<int[]> anyList = new Array<int[]>();
-				for ( int[] tile : validList )
+				Array<Point> anyList = new Array<Point>();
+				for ( Point tile : validList )
 				{
-					int x = tile[0];
-					int y = tile[1];
+					int x = tile.x;
+					int y = tile.y;
 
 					if ( roomContents[x][y].getTileData().canFeature
 							&& roomContents[x][y].isPassable( GeneratorPassability )
@@ -614,9 +614,9 @@ public final class Room
 
 				for ( int i = 0; i < numTilesToPlace; i++ )
 				{
-					int[] pos = anyList.removeIndex( ran.nextInt( anyList.size ) );
+					Point pos = anyList.removeIndex( ran.nextInt( anyList.size ) );
 
-					roomContents[pos[0]][pos[1]] = f.getAsSymbol( roomContents[pos[0]][pos[1]] );
+					roomContents[pos.x][pos.y] = f.getAsSymbol( roomContents[pos.x][pos.y] );
 
 					if ( anyList.size == 0 )
 					{
@@ -638,7 +638,7 @@ public final class Room
 					continue;
 				}
 
-				AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos[0], door.pos[1], otherDoor.pos[0], otherDoor.pos[1], Global.CanMoveDiagonal, false, 1, GeneratorPassability, null );
+				AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos.x, door.pos.y, otherDoor.pos.x, otherDoor.pos.y, Global.CanMoveDiagonal, false, 1, GeneratorPassability, null );
 				Array<Point> path = pathfind.getPath();
 
 				if (path != null)
@@ -669,11 +669,11 @@ public final class Room
 		// Do spawn
 		{
 			// get valid spawn tiles
-			Array<int[]> spawnList = new Array<int[]>();
-			for ( int[] tile : validList )
+			Array<Point> spawnList = new Array<Point>();
+			for ( Point tile : fullList )
 			{
-				int x = tile[0];
-				int y = tile[1];
+				int x = tile.x;
+				int y = tile.y;
 
 				if ( roomContents[x][y].getTileData().canSpawn && roomContents[x][y].isPassable( GeneratorPassability ) && !roomContents[x][y].hasGameEntity() )
 				{
@@ -687,10 +687,10 @@ public final class Room
 				{
 					String entityName = faction.minibosses.get( ran.nextInt( faction.minibosses.size ) );
 
-					int[] pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
+					Point pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
 
-					roomContents[pos[0]][pos[1]] = roomContents[pos[0]][pos[1]].copy();
-					roomContents[pos[0]][pos[1]].entityData = entityName;
+					roomContents[pos.x][pos.y] = roomContents[pos.x][pos.y].copy();
+					roomContents[pos.x][pos.y].entityData = entityName;
 				}
 			}
 
@@ -706,15 +706,18 @@ public final class Room
 			{
 				if ( spawnList.size == 0 )
 				{
-					break;
+					throw new RuntimeException( "Ran out of space to place things!" );
+					//break;
 				}
 
-				int[] pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
+				Point pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
 
-				roomContents[pos[0]][pos[1]] = roomContents[pos[0]][pos[1]].copy();
-				roomContents[pos[0]][pos[1]].entityData = creature.entityName;
+				roomContents[pos.x][pos.y] = roomContents[pos.x][pos.y].copy();
+				roomContents[pos.x][pos.y].entityData = creature.entityName;
 			}
 		}
+
+		Global.PointPool.freeAll( fullList );
 	}
 
 	// ----------------------------------------------------------------------
@@ -726,19 +729,19 @@ public final class Room
 
 			if ( dir == Direction.WEST )
 			{
-				doors.add( new RoomDoor( Direction.WEST, new int[] { 0, pos + offset } ) );
+				doors.add( new RoomDoor( Direction.WEST, new Point( 0, pos + offset ) ) );
 			}
 			else if ( dir == Direction.EAST )
 			{
-				doors.add( new RoomDoor( Direction.EAST, new int[] { width - 1, pos + offset } ) );
+				doors.add( new RoomDoor( Direction.EAST, new Point( width - 1, pos + offset ) ) );
 			}
 			else if ( dir == Direction.NORTH )
 			{
-				doors.add( new RoomDoor( Direction.NORTH, new int[] { pos + offset, 0 } ) );
+				doors.add( new RoomDoor( Direction.NORTH, new Point( pos + offset, 0 ) ) );
 			}
 			else if ( dir == Direction.SOUTH )
 			{
-				doors.add( new RoomDoor( Direction.SOUTH, new int[] { pos + offset, height - 1 } ) );
+				doors.add( new RoomDoor( Direction.SOUTH, new Point( pos + offset, height - 1 ) ) );
 			}
 		}
 	}
@@ -823,17 +826,17 @@ public final class Room
 	// ----------------------------------------------------------------------
 	private class FeatureTile implements Comparable<FeatureTile>
 	{
-		public int[] pos;
+		public Point pos;
 		public int dist;
 
-		public FeatureTile( int[] pos, Array<RoomDoor> doors )
+		public FeatureTile( Point pos, Array<RoomDoor> doors )
 		{
 			this.pos = pos;
 
 			int d = 0;
 			for ( RoomDoor door : doors )
 			{
-				d += Math.abs( pos[0] - door.pos[0] ) + Math.abs( pos[1] - door.pos[1] );
+				d += Math.abs( pos.x - door.pos.x ) + Math.abs( pos.y - door.pos.y );
 			}
 
 			d /= doors.size;
@@ -853,14 +856,14 @@ public final class Room
 	public static final class RoomDoor
 	{
 		public Direction side;
-		public int[] pos;
+		public Point pos;
 
 		public RoomDoor()
 		{
 
 		}
 
-		public RoomDoor( Direction side, int[] pos )
+		public RoomDoor( Direction side, Point pos )
 		{
 			this.side = side;
 			this.pos = pos;

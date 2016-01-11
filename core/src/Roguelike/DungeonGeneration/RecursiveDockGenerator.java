@@ -90,9 +90,16 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			markRooms();
 
 			generationIndex++;
-			generationText = "Connecting Rooms";
+			generationText = "Filling empty space";
 		}
 		else if ( generationIndex == 4 )
+		{
+			identifyAndFillEmptySpaces();
+
+			generationIndex++;
+			generationText = "Connecting Rooms";
+		}
+		else if ( generationIndex == 5 )
 		{
 			connectRooms();
 
@@ -115,42 +122,19 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 				}
 			}
 		}
-		else if ( generationIndex == 5 )
+		else if ( generationIndex == 6 )
 		{
 			placeFactions();
 
 			generationIndex++;
 			generationText = "Marking Rooms Again?";
 		}
-		else if ( generationIndex == 6 )
+		else if ( generationIndex == 7 )
 		{
 			markRooms();
 
 			generationIndex++;
-			generationText = "Filling empty spaces";
-		}
-		else if ( generationIndex == 7 )
-		{
-			identifyAndFillEmptySpaces();
-
-			generationIndex++;
-			generationText = "Creating Level";
-
-			if ( DEBUG_OUTPUT )
-			{
-				Symbol[][] symbolGrid = new Symbol[width][height];
-				for ( int x = 0; x < width; x++ )
-				{
-					for ( int y = 0; y < height; y++ )
-					{
-						symbolGrid[x][y] = tiles[x][y].symbol;
-					}
-				}
-				if ( !Global.ANDROID )
-				{
-					ImageUtils.writeSymbolGridToFile( symbolGrid, "afterFeatures.png", DEBUG_SIZE );
-				}
-			}
+			generationText = "Building level";
 		}
 		else if ( generationIndex == 8 )
 		{
@@ -838,8 +822,8 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 		{
 			for ( RoomDoor door : room.doors )
 			{
-				int x = door.pos[0] + room.x;
-				int y = door.pos[1] + room.y;
+				int x = door.pos.x + room.x;
+				int y = door.pos.y + room.y;
 
 				if ( door.side == Direction.WEST )
 				{
@@ -1254,11 +1238,19 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 				{
 					GenerationTile tile = tiles[room.x + x][room.y + y];
 					Symbol symbol = room.roomContents[x][y];
-					symbol.containingRoom = room;
 
-					tile.passable = symbol.isPassable( GeneratorPassability );
-					tile.symbol = symbol;
-					tile.isRoom = true;
+					if ( room.fromEmptySpace && symbol.character == '#' )
+					{
+						// Skip placing
+					}
+					else
+					{
+						symbol.containingRoom = room;
+
+						tile.passable = symbol.isPassable( GeneratorPassability );
+						tile.symbol = symbol;
+						tile.isRoom = true;
+					}
 				}
 			}
 		}
@@ -1310,8 +1302,10 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							}
 						}
 
-						room.width = ( maxx - minx ) + 1;
-						room.height = ( maxy - miny ) + 1;
+						room.x = minx;
+						room.y = miny;
+						room.width = ( maxx - minx );
+						room.height = ( maxy - miny );
 
 						// Copy contents into room
 						room.roomContents = new Symbol[room.width][room.height];
@@ -1335,47 +1329,9 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 						// Identify doors
 						room.findDoors( ran, dfp );
 
-						// Find closest faction
-						FactionParser closestFaction = null;
-						int dist = Integer.MAX_VALUE;
+						room.fromEmptySpace = true;
 
-						for ( Map.Entry<FactionParser, Point> faction : factions.entrySet() )
-						{
-							int tempdist = Math.abs( room.x - faction.getValue().x ) + Math.abs( room.y - faction.getValue().y );
-							if ( tempdist < dist )
-							{
-								dist = tempdist;
-								closestFaction = faction.getKey();
-							}
-						}
-
-						int influence = dist;
-						if ( influence > 0 )
-						{
-							float fract = influence / (float) ( width + height );
-							influence = (int) ( fract * 100 );
-						}
-
-						influence = 100 - influence;
-
-						room.addFeatures( ran, dfp, closestFaction, influence, false );
-
-						// Copy placed features back into map
-						for ( int rx = 0; rx < room.width; rx++ )
-						{
-							for ( int ry = 0; ry < room.height; ry++ )
-							{
-								if ( output.contains( tiles[minx + rx][miny + ry] ) )
-								{
-									if ( tiles[minx + rx][miny + ry].symbol != room.roomContents[rx][ry] )
-									{
-										room.roomContents[rx][ry].character = 'E';
-									}
-
-									tiles[minx + rx][miny + ry].symbol = room.roomContents[rx][ry];
-								}
-							}
-						}
+						placedRooms.add( room );
 					}
 
 					// Mark the area as empty space to indicate we already
@@ -1441,7 +1397,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 		}
 
 		GenerationTile tile = tiles[nx][ny];
-		return !tile.isCorridor && !tile.isRoom && !tile.isEmptySpace && tile.symbol.character != '#';
+		return isEmpty( tile );
 	}
 
 	// ----------------------------------------------------------------------
