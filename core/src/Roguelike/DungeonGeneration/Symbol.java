@@ -18,7 +18,7 @@ public final class Symbol implements PathfindingTile
 	public Room containingRoom;
 
 	public Character extendsSymbol;
-	public char character;
+	public char character = 'U';
 
 	public Element tileData;
 
@@ -86,7 +86,7 @@ public final class Symbol implements PathfindingTile
 
 	public boolean getEnvironmentEntityPassable( EnumBitflag<Passability> travelType )
 	{
-		if ( environmentData != null ) { return Passability.parse( environmentData.get( "Passable", "true" ) ).intersect( travelType ); }
+		if ( environmentData != null ) { return Passability.parse( environmentData.get( "Passable") ).intersect( travelType ); }
 
 		return true;
 	}

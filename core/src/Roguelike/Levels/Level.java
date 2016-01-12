@@ -260,7 +260,7 @@ public class Level
 					{
 						e.inventory.m_items.addAll( TreasureGenerator.generateLoot( quality + 1, "random", MathUtils.random ) );
 					}
-					else if ( e.essence > 0 && MathUtils.random( 3 ) == 0 )
+					else if ( e.essence > 0 && MathUtils.random( 4 ) == 0 )
 					{
 						e.inventory.m_items.addAll( TreasureGenerator.generateLoot( quality, "random", MathUtils.random ) );
 					}
@@ -441,14 +441,24 @@ public class Level
 			tile.spriteEffects.clear();
 		}
 
-		if ( tile.environmentEntity != null && tile.environmentEntity.sprite != null )
+		if ( tile.environmentEntity != null)
 		{
-			tile.environmentEntity.sprite.spriteAnimation = null;
+			tile.environmentEntity.pendingMessages.clear();
+			tile.environmentEntity.extraUIHP = 0;
+			if (tile.environmentEntity.sprite != null)
+			{
+				tile.environmentEntity.sprite.spriteAnimation = null;
+			}
 		}
 
-		if ( tile.entity != null && tile.entity.sprite != null )
+		if ( tile.entity != null )
 		{
-			tile.entity.sprite.spriteAnimation = null;
+			tile.entity.extraUIHP = 0;
+			tile.entity.pendingMessages.clear();
+			if ( tile.entity.sprite != null )
+			{
+				tile.entity.sprite.spriteAnimation = null;
+			}
 		}
 
 		if ( tile.items.size > 0 )

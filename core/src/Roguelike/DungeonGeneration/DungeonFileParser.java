@@ -74,8 +74,7 @@ public class DungeonFileParser
 			BOTH, TOP, BOTTOM, ALTERNATE
 		}
 
-		public Element tileData;
-		public Element environmentData;
+		public Symbol symbol;
 
 		public int interval;
 
@@ -87,20 +86,22 @@ public class DungeonFileParser
 
 			feature.interval = xml.getInt( "Interval", 0 );
 			feature.placementMode = PlacementMode.valueOf( xml.get( "PlacementMode", "Both" ).toUpperCase() );
-			feature.tileData = xml.getChildByName( "TileData" );
-			feature.environmentData = xml.getChildByName( "EnvironmentData" );
+
+			feature.symbol = Symbol.parse( xml );
 
 			return feature;
 		}
 
-		public Symbol getAsSymbol( Symbol current )
+		public Symbol getAsSymbol( Symbol current, DungeonFileParser dfp )
 		{
-			Symbol symbol = current.copy();
-			symbol.character = 'F';
-			symbol.tileData = tileData != null ? tileData : current.tileData;
-			symbol.environmentData = environmentData != null ? environmentData : current.environmentData;
+			symbol.resolveExtends( dfp.sharedSymbolMap );
 
-			return symbol;
+			Symbol nsymbol = current.copy();
+			nsymbol.character = 'C';
+			nsymbol.tileData = symbol.tileData != null ? symbol.tileData : current.tileData;
+			nsymbol.environmentData = symbol.environmentData != null ? symbol.environmentData : current.environmentData;
+
+			return nsymbol;
 		}
 	}
 

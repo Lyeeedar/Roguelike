@@ -1008,7 +1008,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			if ( dfp.corridorStyle.centralConstant != null )
 			{
 				t = tiles[pos.x + width / 2][pos.y + width / 2];
-				t.symbol = dfp.corridorStyle.centralConstant.getAsSymbol( t.symbol );
+				t.symbol = dfp.corridorStyle.centralConstant.getAsSymbol( t.symbol, dfp );
 				t.placerHashCode = path.hashCode();
 			}
 
@@ -1019,7 +1019,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 				if ( centralCount == dfp.corridorStyle.centralRecurring.interval )
 				{
 					t = tiles[pos.x + width / 2][pos.y + width / 2];
-					t.symbol = dfp.corridorStyle.centralRecurring.getAsSymbol( t.symbol );
+					t.symbol = dfp.corridorStyle.centralRecurring.getAsSymbol( t.symbol, dfp );
 					t.placerHashCode = path.hashCode();
 
 					centralCount = 0;
@@ -1047,7 +1047,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							if ( placeTop && isEmpty( tiles[pos.x + width / 2][pos.y - 1] ) )
 							{
 								t = tiles[pos.x + width / 2][pos.y - 1];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
 								t.symbol.attachLocation = Direction.NORTH;
 								t.placerHashCode = path.hashCode();
 							}
@@ -1055,7 +1055,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							if ( placeBottom && isEmpty( tiles[pos.x + width / 2][pos.y + width] ) )
 							{
 								t = tiles[pos.x + width / 2][pos.y + width];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
 								t.symbol.attachLocation = Direction.SOUTH;
 								t.placerHashCode = path.hashCode();
 							}
@@ -1065,7 +1065,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							if ( placeTop && tiles[pos.x + width / 2][pos.y - 1].symbol.character == '#' )
 							{
 								t = tiles[pos.x + width / 2][pos.y];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
 								t.symbol.attachLocation = Direction.NORTH;
 								t.placerHashCode = path.hashCode();
 							}
@@ -1073,7 +1073,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							if ( placeBottom && tiles[pos.x + width / 2][pos.y + width].symbol.character == '#' )
 							{
 								t = tiles[pos.x + width / 2][pos.y + width - 1];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
 								t.symbol.attachLocation = Direction.SOUTH;
 								t.placerHashCode = path.hashCode();
 							}
@@ -1086,7 +1086,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							if ( placeTop && isEmpty( tiles[pos.x - 1][pos.y + width / 2] ) )
 							{
 								t = tiles[pos.x - 1][pos.y + width / 2];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
 								t.symbol.attachLocation = Direction.EAST;
 								t.placerHashCode = path.hashCode();
 							}
@@ -1094,7 +1094,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							if ( placeBottom && isEmpty( tiles[pos.x + width][pos.y + width / 2] ) )
 							{
 								t = tiles[pos.x + width][pos.y + width / 2];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
 								t.symbol.attachLocation = Direction.WEST;
 								t.placerHashCode = path.hashCode();
 							}
@@ -1104,7 +1104,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							if ( placeTop && tiles[pos.x - 1][pos.y + width / 2].symbol.character == '#' )
 							{
 								t = tiles[pos.x][pos.y + width / 2];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
 								t.symbol.attachLocation = Direction.EAST;
 								t.placerHashCode = path.hashCode();
 							}
@@ -1112,7 +1112,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							if ( placeBottom && tiles[pos.x + width][pos.y + width / 2].symbol.character == '#' )
 							{
 								t = tiles[pos.x + width - 1][pos.y + width / 2];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol );
+								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
 								t.symbol.attachLocation = Direction.WEST;
 								t.placerHashCode = path.hashCode();
 							}
@@ -1271,7 +1271,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					HashSet<GenerationTile> output = new HashSet<GenerationTile>();
 					floodFillEmptySpace( x, y, output );
 
-					if ( output.size() > 4 )
+					if ( output.size() > 8 )
 					{
 						// convert into a room
 						Room room = new Room();
@@ -1315,7 +1315,8 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							{
 								if ( output.contains( tiles[minx + rx][miny + ry] ) )
 								{
-									room.roomContents[rx][ry] = tiles[minx + rx][miny + ry].symbol;
+									room.roomContents[rx][ry] = dfp.getSymbol( ',' );
+											//tiles[minx + rx][miny + ry].symbol;
 								}
 								else
 								{
@@ -1329,7 +1330,11 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 						// Identify doors
 						room.findDoors( ran, dfp );
 
+						//room.enclose( dfp );
+
 						room.fromEmptySpace = true;
+
+						room.print();
 
 						placedRooms.add( room );
 					}
@@ -1346,16 +1351,17 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 	}
 
 	// ----------------------------------------------------------------------
-	protected void floodFillEmptySpace( int x, int y, HashSet<GenerationTile> output )
+	protected void floodFillEmptySpace( int sx, int sy, HashSet<GenerationTile> output )
 	{
-		Array<int[]> toBeProcessed = new Array<int[]>();
-		toBeProcessed.add( new int[] { x, y } );
+		Array<Point> toBeProcessed = new Array<Point>();
+		toBeProcessed.add( Global.PointPool.obtain().set( sx, sy ) );
 
 		while ( toBeProcessed.size > 0 )
 		{
-			int[] point = toBeProcessed.pop();
-			x = point[0];
-			y = point[1];
+			Point point = toBeProcessed.pop();
+			int x = point.x;
+			int y = point.y;
+			Global.PointPool.free( point );
 
 			if ( output.contains( tiles[x][y] ) )
 			{
@@ -1371,14 +1377,15 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					int nx = x + dir.getX();
 					int ny = y + dir.getY();
 
-					if ( isEmpty( x, y, dir ) )
+					if (nx < 0 || ny < 0 || nx >= tiles.length || ny >= tiles[0].length)
 					{
-						// check neighbours
+						continue;
+					}
 
-						if ( isEmpty( nx, ny, dir.getClockwise() ) || isEmpty( nx, ny, dir.getAnticlockwise() ) )
-						{
-							toBeProcessed.add( new int[] { nx, ny } );
-						}
+					GenerationTile tile = tiles[nx][ny];
+					if ( isEmpty( tile ) )
+					{
+						toBeProcessed.add( Global.PointPool.obtain().set( nx, ny ) );
 					}
 				}
 			}
@@ -1386,24 +1393,9 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 	}
 
 	// ----------------------------------------------------------------------
-	protected boolean isEmpty( int x, int y, Direction dir )
-	{
-		int nx = x + dir.getX();
-		int ny = y + dir.getY();
-
-		if (nx < 0 || ny < 0 || nx >= tiles.length || ny >= tiles[0].length)
-		{
-			return false;
-		}
-
-		GenerationTile tile = tiles[nx][ny];
-		return isEmpty( tile );
-	}
-
-	// ----------------------------------------------------------------------
 	protected boolean isEmpty( GenerationTile tile )
 	{
-		return !tile.isCorridor && !tile.isRoom && !tile.isEmptySpace && tile.symbol.character != '#';
+		return !tile.isCorridor && !tile.isRoom && !tile.isEmptySpace && tile.symbol.character == '.';
 	}
 
 	// ----------------------------------------------------------------------

@@ -69,23 +69,46 @@ public class TreasureGenerator
 		// Armour 2
 		// Ability 1
 
-		int chance = ran.nextInt( 7 );
+		int[] chances = {
+			3, // currency
+			3, // armour
+			3, // weapons
+			1 // abilities
+		};
 
-		if ( chance < 2 )
+		int count = 0;
+		for (int i : chances)
+		{
+			count += chances[i];
+		}
+
+		int chance = ran.nextInt( count );
+
+		if ( chance < chances[0] )
 		{
 			items.addAll( TreasureGenerator.generateCurrency( quality, ran ) );
+			return items;
 		}
-		else if ( chance < 2 )
+		chance -= chances[0];
+
+		if ( chance < chances[1] )
 		{
 			items.addAll( TreasureGenerator.generateArmour( quality, ran ) );
+			return items;
 		}
-		else if ( chance < 2 )
+		chance -= chances[1];
+
+		if ( chance < chances[2] )
 		{
 			items.addAll( TreasureGenerator.generateWeapon( quality, ran ) );
+			return items;
 		}
-		else
+		chance -= chances[2];
+
+		if ( chance < chances[3] )
 		{
 			items.addAll( TreasureGenerator.generateAbility( quality, ran ) );
+			return items;
 		}
 
 		return items;

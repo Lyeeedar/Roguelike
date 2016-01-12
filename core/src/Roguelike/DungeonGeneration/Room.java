@@ -129,6 +129,65 @@ public final class Room
 	}
 
 	// ----------------------------------------------------------------------
+	public void enclose( DungeonFileParser dfp )
+	{
+		Symbol wall = dfp.getSymbol( '#' );
+		wall.resolveExtends( dfp.sharedSymbolMap );
+
+		// Ensure solid outer wall
+		for ( int x = 0; x < width; x++ )
+		{
+			for ( int y = 0; y < height; y++ )
+			{
+				if ( x == 0 || x == width - 1 || y == 0 || y == height - 1 )
+				{
+					if ( isPosDoor( x, y) )
+					{
+
+					}
+					else
+					{
+						roomContents[x][y] = wall;
+					}
+				}
+
+				if ( roomContents[x][y] == null )
+				{
+					roomContents[x][y] = wall;
+				}
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	public boolean isPosDoor(int x, int y)
+	{
+		for (RoomDoor door : doors)
+		{
+			if (door.pos.x == x && door.pos.y == y)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// ----------------------------------------------------------------------
+	public void print()
+	{
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				System.out.print(roomContents[x][y].character);
+			}
+			System.out.print('\n');
+		}
+		System.out.print('\n');
+	}
+
+	// ----------------------------------------------------------------------
 	public void generateRoomContents( Random ran, DungeonFileParser dfp, Symbol floor, Symbol wall, AbstractRoomGenerator generator )
 	{
 		if ( width < dfp.corridorStyle.width+2 && height < dfp.corridorStyle.width+2 )
@@ -330,7 +389,7 @@ public final class Room
 			int x1 = x + dir.getX();
 			int y1 = y + dir.getY();
 
-			boolean collide = x1 < 0 || y1 < 0 || x1 == width || y1 == height || !roomContents[x1][y1].isPassable( GeneratorPassability );
+			boolean collide = x1 >= 0 && y1 >= 0 && x1 < width && y1 < height && !roomContents[x1][y1].isPassable( GeneratorPassability );
 
 			if ( collide )
 			{
@@ -378,16 +437,16 @@ public final class Room
 		// build the any list
 		Array<Point> validList = new Array<Point>();
 		Array<Point> fullList = new Array<Point>();
-		for ( int x = 1; x < width - 1; x++ )
+		for ( int x = 0; x < width; x++ )
 		{
-			for ( int y = 1; y < height - 1; y++ )
+			for ( int y = 0; y < height; y++ )
 			{
 				if ( roomContents[x][y] != null && roomContents[x][y].isPassable( GeneratorPassability ) )
 				{
 					Point point = Global.PointPool.obtain().set( x, y );
 					fullList.add( point );
 
-					if ( !isPosEnclosed( x, y ) )
+					if (  x >= 1 && x < width - 1 && y >= 1 && y < height - 1 && !isPosEnclosed( x, y ) )
 					{
 						validList.add( point );
 					}
@@ -630,35 +689,48 @@ public final class Room
 		for ( int i = 0; i < doors.size; i++ )
 		{
 			RoomDoor door = doors.get( i );
-			for ( int ii = 0; ii < doors.size; ii++ )
+			roomContents[door.pos.x][door.pos.y] = dfp.getSymbol( '+' );
+			roomContents[door.pos.x][door.pos.y].resolveExtends( dfp.sharedSymbolMap );
+
+			for ( int ii = i+1; ii < doors.size; ii++ )
 			{
 				RoomDoor otherDoor = doors.get( ii );
-				if ( door == otherDoor )
-				{
-					continue;
-				}
 
 				AStarPathfind pathfind = new AStarPathfind( roomContents, door.pos.x, door.pos.y, otherDoor.pos.x, otherDoor.pos.y, Global.CanMoveDiagonal, false, 1, GeneratorPassability, null );
 				Array<Point> path = pathfind.getPath();
 
-				if (path != null)
+				if (path == null)
+				{
+					print();
+
+					throw new RuntimeException( "argh!" );
+				}
+
+				//if (path != null)
 				{
 					for ( Point point : path )
 					{
 						Symbol s = roomContents[point.x][point.y];
 
+						if (dfp.corridorStyle != null && dfp.corridorStyle.width == 1)
+						{
+							s = dfp.corridorStyle.centralConstant.getAsSymbol( s, dfp );
+						}
+
 						if ( !s.isPassable( GeneratorPassability ) )
 						{
-							roomContents[point.x][point.y].tileData = roomCopy[point.x][point.y].tileData;
+							//s.tileData = roomCopy[point.x][point.y].tileData;
 						}
 
 						if ( s.hasEnvironmentEntity()
 							 && !s.environmentData.get( "Type", "" ).equals( "Door" )
 							 && !s.getEnvironmentEntityPassable( GeneratorPassability ) )
 						{
-							roomContents[point.x][point.y].environmentData = roomCopy[point.x][point.y].environmentData;
-							roomContents[point.x][point.y].environmentEntityData = null;
+							s.environmentData = roomCopy[point.x][point.y].environmentData;
+							s.environmentEntityData = null;
 						}
+
+						roomContents[point.x][point.y] = s;
 					}
 
 					Global.PointPool.freeAll( path );
@@ -752,7 +824,7 @@ public final class Room
 		int range = ( dir == Direction.WEST || dir == Direction.EAST ) ? height : width;
 
 		int blockStart = -1;
-		for ( int pos = 0; pos < range; pos++ )
+		for ( int pos = 1; pos < range - 1; pos++ )
 		{
 			int x = 0;
 			int y = 0;
@@ -816,6 +888,7 @@ public final class Room
 		// Side 2
 		processSide( Direction.EAST, ran, dfp );
 
+		// Side 1
 		// Side 1
 		processSide( Direction.NORTH, ran, dfp );
 

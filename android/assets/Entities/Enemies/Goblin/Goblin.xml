@@ -14,7 +14,7 @@
 			    <Opaque>false</Opaque>
 			</EnvironmentData>
 
-			<Coverage>2</Coverage>
+			<Coverage>1</Coverage>
 		</Feature>
 
 		<Feature>
@@ -28,7 +28,7 @@
 			    <Opaque>false</Opaque>
 			</EnvironmentData>
 
-			<Coverage>3</Coverage>
+			<Coverage>1</Coverage>
 		</Feature>
 
         <Feature>
@@ -51,7 +51,7 @@
                     <FlickerPeriod>0.5</FlickerPeriod>
                 </Light>
             </EnvironmentData>
-            <Coverage>4</Coverage>
+            <Coverage>1</Coverage>
         </Feature>
 
 	</Features>

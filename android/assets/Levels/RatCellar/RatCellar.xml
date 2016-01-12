@@ -25,10 +25,7 @@
             </Symbols>
 
             <Rows>
-                <Row>####</Row>
-                <Row>#.S#</Row>
-                <Row>#..#</Row>
-                <Row>....</Row>
+                <Row>S</Row>
             </Rows>
         </This>
     </Entrance>

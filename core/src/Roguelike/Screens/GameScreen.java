@@ -1347,7 +1347,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		else if ( keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
 		{
 			int i = keycode - Keys.NUM_1;
-			AbilityTree a = Global.CurrentLevel.player.slottedAbilities.get( i );
+			AbilityTree a = Global.CurrentLevel.player.slottedAbilities.size > i ? Global.CurrentLevel.player.slottedAbilities.get( i ) : null;
 			if ( a != null && a.current.current instanceof ActiveAbility && ( (ActiveAbility) a.current.current ).isAvailable() )
 			{
 				prepareAbility( (ActiveAbility) a.current.current );
