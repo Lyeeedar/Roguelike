@@ -1390,6 +1390,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 						room.fromEmptySpace = true;
 
+						System.out.println("Free Space:");
 						room.print();
 
 						placedRooms.add( room );

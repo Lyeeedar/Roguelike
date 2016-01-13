@@ -260,7 +260,10 @@ public final class Room
 		width = roomContents.length;
 		height = roomContents[0].length;
 
-		carveDoors( dfp, ran, floor, generator.ensuresConnectivity );
+		carveDoors( dfp, ran, floor, !generator.ensuresConnectivity );
+
+		System.out.println("Generate:");
+		print();
 	}
 
 	// ----------------------------------------------------------------------
@@ -725,8 +728,7 @@ public final class Room
 						{
 							s = dfp.corridorStyle.centralConstant.getAsSymbol( s, dfp );
 						}
-
-						if ( !s.isPassable( GeneratorPassability ) )
+						else if ( !s.isPassable( GeneratorPassability ) )
 						{
 							s.tileData = roomCopy[point.x][point.y].tileData;
 						}
@@ -759,7 +761,7 @@ public final class Room
 				if ( roomContents[x][y].getTileData().canSpawn &&
 					 roomContents[x][y].isPassable( GeneratorPassability ) &&
 					 !roomContents[x][y].hasGameEntity() &&
-					 !roomContents[x][y].getEnvironmentEntityPassable( GeneratorPassability ) )
+					 roomContents[x][y].getEnvironmentEntityPassable( GeneratorPassability ) )
 				{
 					spawnList.add( tile );
 				}
@@ -790,8 +792,7 @@ public final class Room
 			{
 				if ( spawnList.size == 0 )
 				{
-					throw new RuntimeException( "Ran out of space to place things!" );
-					//break;
+					break;
 				}
 
 				Point pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
