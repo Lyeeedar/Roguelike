@@ -1384,6 +1384,12 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							Symbol floor = dfp.getSymbol( '.' );
 							floor.resolveExtends( dfp.sharedSymbolMap );
 							room.carveDoors( dfp, ran, floor, true );
+							room.findDoors( ran, dfp );
+						}
+
+						if (room.doors.size == 0)
+						{
+							throw new RuntimeException( "No doors wat" );
 						}
 
 						//room.enclose( dfp );

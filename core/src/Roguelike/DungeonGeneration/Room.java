@@ -176,16 +176,23 @@ public final class Room
 	// ----------------------------------------------------------------------
 	public void print()
 	{
+		System.out.println(this.toString());
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public String toString()
+	{
+		String s = "";
 		for (int y = 0; y < height; y++)
 		{
-
 			for (int x = 0; x < width; x++)
 			{
-				System.out.print(roomContents[x][y].character);
+				s += roomContents[x][y].character;
 			}
-			System.out.print('\n');
+			s += '\n';
 		}
-		System.out.print('\n');
+		return s;
 	}
 
 	// ----------------------------------------------------------------------
@@ -453,7 +460,7 @@ public final class Room
 		{
 			for ( int y = 0; y < height; y++ )
 			{
-				if ( roomContents[x][y] != null && roomContents[x][y].isPassable( GeneratorPassability ) )
+				if ( roomContents[x][y] != null && roomContents[x][y].isPassable( GeneratorPassability ) && roomContents[x][y].getEnvironmentEntityPassable( GeneratorPassability ) )
 				{
 					if (  x > 0 && x < width - 1 && y > 0 && y < height - 1 )
 					{
@@ -738,7 +745,7 @@ public final class Room
 							 && !s.getEnvironmentEntityPassable( GeneratorPassability ) )
 						{
 							s.environmentData = roomCopy[point.x][point.y].environmentData;
-							s.environmentEntityData = null;
+							s.environmentEntityData = roomCopy[point.x][point.y].environmentEntityData;
 						}
 
 						roomContents[point.x][point.y] = s;
@@ -753,6 +760,7 @@ public final class Room
 		{
 			// get valid spawn tiles
 			Array<Point> spawnList = new Array<Point>();
+			Array<Point> blockedList = new Array<Point>(  );
 			for ( Point tile : fullList )
 			{
 				int x = tile.x;
@@ -760,10 +768,16 @@ public final class Room
 
 				if ( roomContents[x][y].getTileData().canSpawn &&
 					 roomContents[x][y].isPassable( GeneratorPassability ) &&
-					 !roomContents[x][y].hasGameEntity() &&
-					 roomContents[x][y].getEnvironmentEntityPassable( GeneratorPassability ) )
+					 !roomContents[x][y].hasGameEntity())
 				{
-					spawnList.add( tile );
+					if ( roomContents[x][y].getEnvironmentEntityPassable( GeneratorPassability ) )
+					{
+						spawnList.add( tile );
+					}
+					else
+					{
+						blockedList.add( tile );
+					}
 				}
 			}
 
@@ -792,13 +806,25 @@ public final class Room
 			{
 				if ( spawnList.size == 0 )
 				{
-					break;
+					if ( blockedList.size == 0 )
+					{
+						break;
+					}
+					else
+					{
+						Point p = blockedList.removeIndex( 0 );
+						roomContents[p.x][p.y].environmentEntityData = roomCopy[p.x][p.y].environmentEntityData;
+						roomContents[p.x][p.y].environmentData = roomCopy[p.x][p.y].environmentData;
+
+						spawnList.add( p );
+					}
 				}
 
 				Point pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
 
 				roomContents[pos.x][pos.y] = roomContents[pos.x][pos.y].copy();
 				roomContents[pos.x][pos.y].entityData = creature.entityName;
+				roomContents[pos.x][pos.y].character = 'E';
 			}
 		}
 
