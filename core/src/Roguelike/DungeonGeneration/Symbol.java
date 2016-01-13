@@ -86,7 +86,7 @@ public final class Symbol implements PathfindingTile
 
 	public boolean getEnvironmentEntityPassable( EnumBitflag<Passability> travelType )
 	{
-		if ( environmentData != null ) { return Passability.parse( environmentData.get( "Passable") ).intersect( travelType ); }
+		if ( environmentData != null ) { return Passability.parse( environmentData.get( "Passable", "false" ) ).intersect( travelType ); }
 
 		return true;
 	}

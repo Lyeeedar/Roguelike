@@ -253,6 +253,14 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 				for ( int y = 0; y < height; y++ )
 				{
 					tiles[x][y].symbol = symbolGrid[x][y];
+
+					if (dfp.preprocessor.generator.ensuresConnectivity)
+					{
+						if (tiles[x][y].symbol.character == '#')
+						{
+							tiles[x][y].passable = false;
+						}
+					}
 				}
 			}
 		}
@@ -1243,13 +1251,17 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					{
 						// Skip placing
 					}
+					else if ( room.fromEmptySpace && symbol.character == '.' )
+					{
+						// skip also
+					}
 					else
 					{
 						symbol.containingRoom = room;
 
 						tile.passable = symbol.isPassable( GeneratorPassability );
 						tile.symbol = symbol;
-						tile.isRoom = true;
+						tile.isRoom = !room.fromEmptySpace;
 					}
 				}
 			}
@@ -1302,6 +1314,11 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							}
 						}
 
+						minx--;
+						miny--;
+						maxx += 2;
+						maxy += 2;
+
 						room.x = minx;
 						room.y = miny;
 						room.width = ( maxx - minx );
@@ -1313,14 +1330,46 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 						{
 							for ( int ry = 0; ry < room.height; ry++ )
 							{
-								if ( output.contains( tiles[minx + rx][miny + ry] ) )
+								GenerationTile tile = tiles[minx + rx][miny + ry];
+
+								if (rx == 0)
 								{
-									room.roomContents[rx][ry] = dfp.getSymbol( ',' );
-											//tiles[minx + rx][miny + ry].symbol;
+									room.roomContents[rx][ry] =
+											tile.getPassable( GeneratorPassability, null ) &&
+											output.contains( tiles[minx + 1][miny + ry] ) ?
+											tile.symbol : wall;
+								}
+								else if (ry == 0)
+								{
+									room.roomContents[rx][ry] =
+											tile.getPassable( GeneratorPassability, null ) &&
+											output.contains( tiles[minx + rx][miny + 1] ) ?
+											tile.symbol : wall;
+								}
+								else if (rx == width - 1)
+								{
+									room.roomContents[rx][ry] =
+											tile.getPassable( GeneratorPassability, null ) &&
+											output.contains( tiles[minx + (width - 2)][miny + ry] ) ?
+											tile.symbol : wall;
+								}
+								else if (ry == height - 1)
+								{
+									room.roomContents[rx][ry] =
+											tile.getPassable( GeneratorPassability, null ) &&
+											output.contains( tiles[minx + rx][miny + (height - 2)] ) ?
+											tile.symbol : wall;
 								}
 								else
 								{
-									room.roomContents[rx][ry] = wall;
+									if ( output.contains( tile ) )
+									{
+										room.roomContents[rx][ry] = tile.symbol;
+									}
+									else
+									{
+										room.roomContents[rx][ry] = wall;
+									}
 								}
 							}
 						}
@@ -1329,6 +1378,13 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 						// Identify doors
 						room.findDoors( ran, dfp );
+
+						if (room.doors.size == 0)
+						{
+							Symbol floor = dfp.getSymbol( '.' );
+							floor.resolveExtends( dfp.sharedSymbolMap );
+							room.carveDoors( dfp, ran, floor, true );
+						}
 
 						//room.enclose( dfp );
 
@@ -1374,22 +1430,44 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			{
 				if ( dir.isCardinal() )
 				{
-					int nx = x + dir.getX();
-					int ny = y + dir.getY();
-
-					if (nx < 0 || ny < 0 || nx >= tiles.length || ny >= tiles[0].length)
+					if ( isEmpty( x, y, dir ) )
 					{
-						continue;
-					}
+						int nx = x + dir.getX();
+						int ny = y + dir.getY();
 
-					GenerationTile tile = tiles[nx][ny];
-					if ( isEmpty( tile ) )
-					{
-						toBeProcessed.add( Global.PointPool.obtain().set( nx, ny ) );
+						boolean found = false;
+						if ( dir == Direction.NORTH || dir == Direction.SOUTH )
+						{
+							found = isEmpty( nx, ny, Direction.EAST ) || isEmpty( nx, ny, Direction.WEST );
+						}
+						else
+						{
+							found = isEmpty( nx, ny, Direction.NORTH ) || isEmpty( nx, ny, Direction.SOUTH );
+						}
+
+						if (found)
+						{
+							toBeProcessed.add( Global.PointPool.obtain().set( nx, ny ) );
+						}
 					}
 				}
 			}
 		}
+	}
+
+	// ---------------------------------------------------------------------
+	protected boolean isEmpty( int x, int y, Direction dir )
+	{
+		int nx = x + dir.getX();
+		int ny = y + dir.getY();
+
+		if (nx < 0 || ny < 0 || nx >= tiles.length || ny >= tiles[0].length)
+		{
+			return false;
+		}
+
+		GenerationTile tile = tiles[nx][ny];
+		return isEmpty( tile );
 	}
 
 	// ----------------------------------------------------------------------

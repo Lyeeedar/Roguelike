@@ -176,9 +176,10 @@ public final class Room
 	// ----------------------------------------------------------------------
 	public void print()
 	{
-		for (int x = 0; x < width; x++)
+		for (int y = 0; y < height; y++)
 		{
-			for (int y = 0; y < height; y++)
+
+			for (int x = 0; x < width; x++)
 			{
 				System.out.print(roomContents[x][y].character);
 			}
@@ -259,6 +260,12 @@ public final class Room
 		width = roomContents.length;
 		height = roomContents[0].length;
 
+		carveDoors( dfp, ran, floor, generator.ensuresConnectivity );
+	}
+
+	// ----------------------------------------------------------------------
+	public void carveDoors(DungeonFileParser dfp, Random ran, Symbol floor, boolean digToCenter)
+	{
 		boolean canAttachCorridorVertically = width >= dfp.corridorStyle.width + 2;
 		boolean canAttachCorridorHorizontally = height >= dfp.corridorStyle.width + 2;
 
@@ -344,7 +351,7 @@ public final class Room
 					}
 				}
 
-				if ( generator.ensuresConnectivity && done )
+				if ( !digToCenter && done )
 				{
 					break;
 				}
@@ -434,6 +441,8 @@ public final class Room
 			}
 		}
 
+		print();
+
 		// build the any list
 		Array<Point> validList = new Array<Point>();
 		Array<Point> fullList = new Array<Point>();
@@ -443,12 +452,14 @@ public final class Room
 			{
 				if ( roomContents[x][y] != null && roomContents[x][y].isPassable( GeneratorPassability ) )
 				{
-					Point point = Global.PointPool.obtain().set( x, y );
-					fullList.add( point );
-
-					if (  x >= 1 && x < width - 1 && y >= 1 && y < height - 1 && !isPosEnclosed( x, y ) )
+					if (  x > 0 && x < width - 1 && y > 0 && y < height - 1 )
 					{
-						validList.add( point );
+						Point point = Global.PointPool.obtain().set( x, y );
+						if (!isPosEnclosed( x, y ))
+						{
+							validList.add( point );
+						}
+						fullList.add( point );
 					}
 				}
 			}
@@ -689,8 +700,6 @@ public final class Room
 		for ( int i = 0; i < doors.size; i++ )
 		{
 			RoomDoor door = doors.get( i );
-			roomContents[door.pos.x][door.pos.y] = dfp.getSymbol( '+' );
-			roomContents[door.pos.x][door.pos.y].resolveExtends( dfp.sharedSymbolMap );
 
 			for ( int ii = i+1; ii < doors.size; ii++ )
 			{
@@ -712,14 +721,14 @@ public final class Room
 					{
 						Symbol s = roomContents[point.x][point.y];
 
-						if (dfp.corridorStyle != null && dfp.corridorStyle.width == 1)
+						if ( dfp.corridorStyle != null && dfp.corridorStyle.width == 1 && dfp.corridorStyle.centralConstant != null )
 						{
 							s = dfp.corridorStyle.centralConstant.getAsSymbol( s, dfp );
 						}
 
 						if ( !s.isPassable( GeneratorPassability ) )
 						{
-							//s.tileData = roomCopy[point.x][point.y].tileData;
+							s.tileData = roomCopy[point.x][point.y].tileData;
 						}
 
 						if ( s.hasEnvironmentEntity()
@@ -747,7 +756,10 @@ public final class Room
 				int x = tile.x;
 				int y = tile.y;
 
-				if ( roomContents[x][y].getTileData().canSpawn && roomContents[x][y].isPassable( GeneratorPassability ) && !roomContents[x][y].hasGameEntity() )
+				if ( roomContents[x][y].getTileData().canSpawn &&
+					 roomContents[x][y].isPassable( GeneratorPassability ) &&
+					 !roomContents[x][y].hasGameEntity() &&
+					 !roomContents[x][y].getEnvironmentEntityPassable( GeneratorPassability ) )
 				{
 					spawnList.add( tile );
 				}
@@ -788,6 +800,8 @@ public final class Room
 				roomContents[pos.x][pos.y].entityData = creature.entityName;
 			}
 		}
+
+		print();
 
 		Global.PointPool.freeAll( fullList );
 	}
