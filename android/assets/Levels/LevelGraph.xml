@@ -1,4 +1,4 @@
-<Forest MaxDepth="2">
+<Forest MaxDepth="2" Title="Melet Woods" Description="A dense forest stretches out before you, filled to the brim with vicious creatures spawned from the horrific plane of life. Raucous cries of goblins filter through the leaves, putting you on guard.">
     <EnchantedForest MaxDepth="2">
         <Cave Label="Cave" MaxDepth="3">
             <UndergroundLake Label="Lake" MaxDepth="1">

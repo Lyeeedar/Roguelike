@@ -17,6 +17,7 @@ import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
 import Roguelike.Items.Item;
 import Roguelike.Items.TreasureGenerator;
+import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
@@ -332,7 +333,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		Gdx.gl.glClearColor( 0, 0, 0, 1 );
 		Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 
-		if ( examineMode )
+		if ( examineMode || lockContextMenu )
 		{
 			batch.setShader( GrayscaleShader.Instance );
 		}
@@ -354,7 +355,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		flush( batch );
 
-		if ( examineMode )
+		if ( examineMode || lockContextMenu )
 		{
 			batch.setShader( null );
 		}
@@ -716,7 +717,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 								height = tileSize3;
 							}
 
-							if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.CONSTITUTION ) * 10 || entity.stacks.size > 0 )
+							if ( entity.canTakeDamage && entity.HP < entity.getVariable( Statistic.CONSTITUTION ) * 10 || entity.stacks.size > 0 )
 							{
 								hasStatus.add( entity );
 							}
@@ -1498,26 +1499,19 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			}
 			else
 			{
-				if ( button == Buttons.RIGHT )
+				if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height && Global.CurrentLevel.getGameTile( x, y ).seen )
 				{
-					rightClick( screenX, screenY );
+					Global.CurrentLevel.player.AI.setData( "ClickPos", Global.PointPool.obtain().set( x, y ) );
 				}
 				else
 				{
-					if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height && Global.CurrentLevel.getGameTile( x, y ).seen )
-					{
-						Global.CurrentLevel.player.AI.setData( "ClickPos", Global.PointPool.obtain().set( x, y ) );
-					}
-					else
-					{
-						x = MathUtils.clamp( x, -1, 1 );
-						y = MathUtils.clamp( y, -1, 1 );
+					x = MathUtils.clamp( x, -1, 1 );
+					y = MathUtils.clamp( y, -1, 1 );
 
-						x += Global.CurrentLevel.player.tile[ 0 ][ 0 ].x;
-						y += Global.CurrentLevel.player.tile[ 0 ][ 0 ].y;
+					x += Global.CurrentLevel.player.tile[ 0 ][ 0 ].x;
+					y += Global.CurrentLevel.player.tile[ 0 ][ 0 ].y;
 
-						Global.CurrentLevel.player.AI.setData( "ClickPos", Global.PointPool.obtain().set( x, y ) );
-					}
+					Global.CurrentLevel.player.AI.setData( "ClickPos", Global.PointPool.obtain().set( x, y ) );
 				}
 			}
 		}
@@ -1694,179 +1688,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
-	public void rightClick( float screenX, float screenY )
-	{
-		if ( Global.CurrentDialogue != null )
-		{
-			// Global.CurrentDialogue.advance();
-		}
-		else
-		{
-			Vector3 mousePos = camera.unproject( new Vector3( screenX, screenY, 0 ) );
-
-			int mousePosX = (int) mousePos.x;
-			int mousePosY = (int) mousePos.y;
-
-			int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
-			int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
-
-			int x = ( mousePosX - offsetx ) / Global.TileSize;
-			int y = ( mousePosY - offsety ) / Global.TileSize;
-
-			GameTile tile = null;
-			if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height )
-			{
-				tile = Global.CurrentLevel.getGameTile( x, y );
-			}
-
-			createContextMenu( mousePosX, mousePosY, tile );
-		}
-	}
-
-	// ----------------------------------------------------------------------
-	private void createContextMenu( int screenX, int screenY, GameTile tile )
-	{
-		Array<ActiveAbility> available = new Array<ActiveAbility>();
-
-		for ( int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++ )
-		{
-			AbilityTree a = Global.CurrentLevel.player.slottedAbilities.get( i );
-			if ( a != null && a.current.current instanceof ActiveAbility && ( (ActiveAbility) a.current.current ).isAvailable() )
-			{
-				available.add( (ActiveAbility) a.current.current );
-			}
-		}
-
-		boolean entityWithinRange = false;
-		if ( tile != null && tile.environmentEntity != null )
-		{
-			entityWithinRange = Math.abs( Global.CurrentLevel.player.tile[ 0 ][ 0 ].x - tile.x ) <= 1
-								&& Math.abs( Global.CurrentLevel.player.tile[ 0 ][ 0 ].y - tile.y ) <= 1;
-		}
-
-		Table table = new Table();
-
-		if ( available.size > 0 || entityWithinRange )
-		{
-			if ( tile != null && tile.environmentEntity != null )
-			{
-				final EnvironmentEntity entity = tile.environmentEntity;
-
-				boolean hadAction = false;
-				for ( final ActivationAction aa : entity.actions )
-				{
-					if ( !aa.visible )
-					{
-						continue;
-					}
-
-					Table row = new Table();
-
-					TextButton button = new TextButton( aa.name, skin );
-					row.add( button ).expand().fill();
-
-					row.addListener( new InputListener()
-					{
-
-						@Override
-						public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-						{
-							return true;
-						}
-
-						@Override
-						public void touchUp( InputEvent event, float x, float y, int pointer, int button )
-						{
-							clearContextMenu();
-							aa.activate( entity );
-							Global.CurrentLevel.player.tasks.add( new TaskWait() );
-						}
-					} );
-
-					table.add( row ).width( Value.percentWidth( 1, table ) );
-					table.row();
-
-					hadAction = true;
-				}
-
-				if ( hadAction )
-				{
-					table.add( new Seperator( skin, false ) ).expandX().fillX().pad( 10 );
-					table.row();
-				}
-			}
-
-			boolean hadAbility = false;
-			for ( final ActiveAbility aa : available )
-			{
-				Table row = new Table();
-
-				row.add( new SpriteWidget( aa.Icon, 32, 32 ) );
-
-				TextButton button = new TextButton( aa.getName(), skin );
-				row.add( button ).expand().fill();
-
-				row.addListener( new InputListener()
-				{
-					@Override
-					public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-					{
-						return true;
-					}
-
-					@Override
-					public void touchUp( InputEvent event, float x, float y, int pointer, int button )
-					{
-						clearContextMenu();
-						prepareAbility( aa );
-					}
-				} );
-
-				table.add( row ).width( Value.percentWidth( 1, table ) );
-				table.row();
-
-				hadAbility = true;
-			}
-
-			if ( hadAbility )
-			{
-				table.add( new Seperator( skin, false ) ).expandX().fillX().pad( 10 );
-				table.row();
-			}
-		}
-
-		{
-			Table row = new Table();
-
-			TextButton button = new TextButton( "Rest a while", skin );
-			row.add( button ).expand().fill();
-
-			row.addListener( new InputListener()
-			{
-				@Override
-				public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-				{
-					return true;
-				}
-
-				@Override
-				public void touchUp( InputEvent event, float x, float y, int pointer, int button )
-				{
-					clearContextMenu();
-					Global.CurrentLevel.player.AI.setData( "Rest", true );
-				}
-			} );
-
-			table.add( row ).width( Value.percentWidth( 1, table ) );
-			table.row();
-		}
-
-		table.pack();
-
-		displayContextMenu( table, false );
-	}
-
-	// ----------------------------------------------------------------------
 	public void clearContextMenu()
 	{
 		if ( lockContextMenu ) { return; }
@@ -1929,8 +1750,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean longPress( float x, float y )
 	{
-		rightClick( x, y );
-
 		longPressed = true;
 		return true;
 	}
@@ -2037,6 +1856,100 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
+	public void displayGameOverMessage()
+	{
+		Table table = new Table();
+
+		Label titleLabel = new Label( "Game Over", skin, "title" );
+		table.add( titleLabel ).expandX().fillX();
+		table.row();
+
+		Label messageLabel = new Label("You've kicked the bucket." +
+									   " Shuffled off the mortal coil." +
+									   " Became permanently deceased." +
+									   " Bit the dust." +
+									   " Met your maker." +
+									   " Unfortunately perished." +
+									   " Your adventure has gone completely belly up.\n\n" +
+									   "Your body is left where it dropped, slowly rotting away, providing a nice pile of loot for the next adventurer to stumble this way.\n\n" +
+									   "Oh well, better luck in your next life.", skin);
+		messageLabel.setWrap( true );
+		table.add( messageLabel ).expand().fill().left().top();
+		table.row();
+
+		table.add( new Seperator(skin, false) ).expandX().fillX();
+		table.row();
+
+		TextButton button = new TextButton( "Main Menu", skin );
+		button.addListener( new InputListener()
+		{
+
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				lockContextMenu = false;
+				clearContextMenu();
+
+				RoguelikeGame.Instance.switchScreen( ScreenEnum.MAINMENU );
+			}
+		} );
+		table.add( button ).expandX().center();
+
+		displayContextMenu( table, true );
+	}
+
+	// ----------------------------------------------------------------------
+	public void displayLevelEntryMessage(String title, String message)
+	{
+		if ( !created )
+		{
+			create();
+			created = true;
+		}
+
+		Table table = new Table();
+
+		Label titleLabel = new Label( title, skin, "title" );
+		table.add( titleLabel ).expandX().fillX();
+		table.row();
+
+		Label messageLabel = new Label(message, skin);
+		messageLabel.setWrap( true );
+		table.add( messageLabel ).expand().fill().left().top();
+		table.row();
+
+		table.add( new Seperator(skin, false) ).expandX().fillX();
+		table.row();
+
+		TextButton button = new TextButton( "Continue", skin );
+		button.addListener( new InputListener()
+		{
+
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				lockContextMenu = false;
+				clearContextMenu();
+			}
+		} );
+		table.add( button ).expandX().center();
+
+		displayContextMenu( table, true );
+	}
+
+	// ----------------------------------------------------------------------
 	public void addTouchAction( float x, float y )
 	{
 		if (skin == null)
@@ -2051,27 +1964,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		widget.setPosition( x - widget.getWidth()/2, y - widget.getHeight()/2 );
 		stage.addActor( widget );
 		widget.setVisible( true );
-	}
-
-	// ----------------------------------------------------------------------
-	public void addSkillLevelUpAction2( Entity entity, IAbility ability )
-	{
-		int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
-		int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
-
-		int x = entity.tile[ 0 ][ 0 ].x;
-		int y = entity.tile[ 0 ][ 0 ].y;
-
-		int cx = x * Global.TileSize + offsetx;
-		int cy = y * Global.TileSize + offsety;
-
-		Label label = new Label( ability.getName() + " levelled up! (Level " + ability.getLevel() + ")", skin );
-		label.setColor( Color.YELLOW );
-
-		label.addAction( new SequenceAction( Actions.moveTo( cx, cy + Global.TileSize / 2 + Global.TileSize / 2, 0.5f ), Actions.removeActor() ) );
-		label.setPosition( cx, cy + Global.TileSize / 2 );
-		stage.addActor( label );
-		label.setVisible( true );
 	}
 
 	// ----------------------------------------------------------------------

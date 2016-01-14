@@ -5,6 +5,7 @@ import Roguelike.Entity.EnvironmentEntity.ActivationAction;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskWait;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 
@@ -24,7 +25,7 @@ public class ActionProcessInput extends AbstractAction
 		{
 			setData( "ClickPos", null );
 		}
-		else
+		else if ( !GameScreen.Instance.lockContextMenu )
 		{
 			boolean up = Gdx.input.isKeyPressed( Keys.UP );
 			boolean down = Gdx.input.isKeyPressed( Keys.DOWN );

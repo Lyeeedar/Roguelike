@@ -4,6 +4,7 @@ import Roguelike.DungeonGeneration.DungeonFileParser;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.Save.SaveLevel;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Screens.LoadingScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
@@ -61,6 +62,10 @@ public class LevelManager
 			// spawn boss
 			current.currentLevel.isBossLevel = true;
 		}
+		else if (depth == 0)
+		{
+			GameScreen.Instance.displayLevelEntryMessage( current.levelTitle, current.levelDescription );
+		}
 
 		LoadingScreen.Instance.set( level, Global.CurrentLevel.player, "PlayerSpawn", null );
 		RoguelikeGame.Instance.switchScreen( RoguelikeGame.ScreenEnum.LOADING );
@@ -114,6 +119,9 @@ public class LevelManager
 		public Array<BranchData> branches = new Array<BranchData>(  );
 
 		public LevelManager root;
+
+		public String levelTitle;
+		public String levelDescription;
 
 		public LevelData() {}
 
@@ -188,6 +196,9 @@ public class LevelManager
 			levelName = xml.getName();
 			maxDepth = xml.getIntAttribute( "MaxDepth", 3 );
 			label = xml.getAttribute( "Label", null );
+
+			levelTitle = xml.getAttribute( "Title", levelName );
+			levelDescription = xml.getAttribute( "Description", "PHILIP YOU SHOULD FILL THIS IN" );
 
 			if (xml.getChildCount() > 0)
 			{

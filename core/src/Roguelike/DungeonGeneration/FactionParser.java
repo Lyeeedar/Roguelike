@@ -251,8 +251,8 @@ public class FactionParser
 
 		public int coverage;
 
-		public int minCoverage = 0;
-		public int maxCoverage = Integer.MAX_VALUE;
+		public float minCoverage = 0;
+		public float maxCoverage = 100;
 
 		public FeaturePlacementType type;
 
@@ -266,8 +266,8 @@ public class FactionParser
 			if ( coverageElement != null )
 			{
 				feature.coverage = Integer.parseInt( coverageElement.getText() );
-				feature.minCoverage = coverageElement.getIntAttribute( "Min", feature.minCoverage );
-				feature.maxCoverage = coverageElement.getIntAttribute( "Max", feature.maxCoverage );
+				feature.minCoverage = coverageElement.getFloatAttribute( "Min", feature.minCoverage );
+				feature.maxCoverage = coverageElement.getFloatAttribute( "Max", feature.maxCoverage );
 			}
 			else
 			{
@@ -297,9 +297,9 @@ public class FactionParser
 		{
 			float currentInfluence = (float) ( influence - minRange ) / (float) ( maxRange - minRange );
 			float currentCoverage = ( coverage * currentInfluence ) / 100;
-			int numTilesToPlace = (int) Math.ceil( numValidTiles * currentCoverage );
+			currentCoverage = MathUtils.clamp( currentCoverage, minCoverage, maxCoverage );
 
-			numTilesToPlace = MathUtils.clamp( numTilesToPlace, minCoverage, maxCoverage );
+			int numTilesToPlace = (int) Math.floor( numValidTiles * currentCoverage );
 
 			return numTilesToPlace;
 		}

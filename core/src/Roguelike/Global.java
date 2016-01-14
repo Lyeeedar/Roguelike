@@ -11,6 +11,7 @@ import Roguelike.Lights.Light;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Save.SaveFile;
 import Roguelike.Save.SaveLevel;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Screens.LoadingScreen;
 import Roguelike.Sound.Mixer;
 import Roguelike.Sound.RepeatingSoundEffect;
@@ -166,6 +167,8 @@ public class Global
 
 		SaveLevel firstLevel = new SaveLevel( LevelManager.current.levelName, 0, LevelManager.current.getExtraRooms( "NewGame", 0, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
 		LevelManager.current.currentLevel = firstLevel;
+
+		GameScreen.Instance.displayLevelEntryMessage( LevelManager.current.levelTitle, LevelManager.current.levelDescription );
 
 		LoadingScreen.Instance.set( firstLevel, player, "PlayerSpawn", null );
 		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );

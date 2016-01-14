@@ -270,7 +270,7 @@ public class Level
 				}
 				else if ( e == player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
-					RoguelikeGame.Instance.switchScreen( ScreenEnum.GAMEOVER );
+					GameScreen.Instance.displayGameOverMessage();
 				}
 
 				if ( e.popupDuration <= 0 && e.popup != null && e.popup.length() == e.displayedPopup.length() && e.popupFade <= 0 )
@@ -364,7 +364,7 @@ public class Level
 				int[] diff = tile.getPosDiff( source );
 
 				MoveAnimation anim = new MoveAnimation( 0.3f, diff, MoveEquation.LEAP );
-				anim.leapHeight = 3;
+				anim.leapHeight = 2;
 				i.getIcon().spriteAnimation = anim;
 				i.getIcon().renderDelay = delay;
 				delay += 0.015f;
@@ -397,7 +397,7 @@ public class Level
 
 					Sprite sprite = AssetManager.loadSprite( type.spriteName );
 					MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
-					anim.leapHeight = 6;
+					anim.leapHeight = 2;
 					sprite.spriteAnimation = anim;
 					sprite.renderDelay = delay;
 					delay += 0.02f;
