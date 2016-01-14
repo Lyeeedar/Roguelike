@@ -1,9 +1,0 @@
-<Item>
-    <Name>Rawhide</Name>
-    <Description>A piece of uncured hide</Description>
-    <Icon>
-        <Name>Oryx/uf_split/uf_items/coin_copper</Name>
-    </Icon>
-    <Category>Material</Category>
-    <Quality>1</Quality>
-</Item>

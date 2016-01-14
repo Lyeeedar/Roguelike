@@ -1,0 +1,15 @@
+<Passive>
+    <Name>Bloodrager</Name>
+    <Description>Your attacks have a chance to kindle the bloodthirst within you.</Description>
+    <Icon>
+        <Name>Abilities/Swordmaster/CriticalStrikes</Name>
+        <Colour><RGB>220,220,220</RGB></Colour>
+    </Icon>
+
+    <Events>
+        <OnDealDamage>
+            <Status Condition="rnd(1) < 0.1 * (level / 2)" Stacks="1+rnd(level/5)">Bloodthirst</Status>
+        </OnDealDamage>
+    </Events>
+
+</Passive>

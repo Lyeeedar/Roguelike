@@ -32,17 +32,20 @@
 
 		    <Weapon>
 		        <Recipe>sword</Recipe>
-                <Material>Copper</Material>
+                <Material>Metal</Material>
+                <Quality>1</Quality>
 		    </Weapon>
 
 		    <Body>
                 <Recipe>Cuirass</Recipe>
-                <Material>Copper</Material>
+                <Material>Metal</Material>
+                <Quality>1</Quality>
 		    </Body>
 
             <Leg>
                  <Recipe>Greaves</Recipe>
-                 <Material>Copper</Material>
+                <Material>Metal</Material>
+                <Quality>1</Quality>
 		    </Leg>
 
 		</Equipment>

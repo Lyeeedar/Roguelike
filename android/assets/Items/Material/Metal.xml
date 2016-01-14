@@ -5,4 +5,16 @@
     <Quality2>
         <Iron/>
     </Quality2>
+    <Quality3>
+        <Steel/>
+    </Quality3>
+    <Quality4>
+        <Starion/>
+    </Quality4>
+    <Quality5>
+        <Ferrusite/>
+    </Quality5>
+    <Quality6>
+        <Silverium/>
+    </Quality6>
 </Materials>

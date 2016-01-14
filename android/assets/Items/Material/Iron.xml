@@ -1,9 +1,0 @@
-<Item>
-    <Name>Iron</Name>
-    <Description>A hunk of iron</Description>
-    <Icon>
-        <Name>Oryx/uf_split/uf_items/coin_silver</Name>
-    </Icon>
-    <Category>Material</Category>
-    <Quality>2</Quality>
-</Item>

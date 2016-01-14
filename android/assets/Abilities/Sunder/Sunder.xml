@@ -1,0 +1,26 @@
+<Active>
+
+    <Name>Sunder</Name>
+    <Description>Break through your opponents defenses with a powerful strike.</Description>
+
+    <Cooldown>15</Cooldown>
+    <Range>1</Range>
+
+    <Icon>
+        <Name>Abilities/Ravager/PowerStrike</Name>
+        <Colour><RGB>220,220,220</RGB></Colour>
+    </Icon>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>140 + level * 2.5</Attack>
+            <Penetration>2.5 * level</Penetration>
+            <Strength>1</Strength>
+        </Damage>
+    </Effect>
+
+</Active>

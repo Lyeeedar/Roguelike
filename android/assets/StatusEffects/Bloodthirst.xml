@@ -1,0 +1,16 @@
+<StatusEffect>
+    <Name>Bloodthirst</Name>
+    <Description>Bloodthirst thrums in your veins, causing you to strike harder.</Description>
+    <Duration>5</Duration>
+
+    <Icon>
+        <Name>Skills/SpikeTrap</Name>
+    </Icon>
+
+    <Events>
+        <Constant>
+            <Attack>3</Attack>
+        </Constant>
+    </Events>
+
+</StatusEffect>

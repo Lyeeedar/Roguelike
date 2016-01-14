@@ -1,9 +1,24 @@
 
 <Materials>
     <Quality1>
-        <Rawhide/>
+        <Ragged/>
     </Quality1>
     <Quality2>
-        <CuredLeather/>
+        <Fur/>
     </Quality2>
+    <Quality3>
+        <Cured/>
+    </Quality3>
+    <Quality4>
+        <Studded/>
+    </Quality4>
+    <Quality5>
+        <Chain/>
+    </Quality5>
+    <Quality5>
+        <Mithril/>
+    </Quality5>
+    <Quality6>
+        <Lightril/>
+    </Quality6>
 </Materials>

@@ -1,15 +1,17 @@
 <Data>
     <Quality1>
         <Firebolt></Firebolt>
+        <LightningBolt></LightningBolt>
         <MagicArrow></MagicArrow>
         <PowerAttack></PowerAttack>
-        <BloodShot></BloodShot>
+        <Sunder></Sunder>
     </Quality1>
     <Quality2>
         <Aegis></Aegis>
         <Healing></Healing>
         <Icicle></Icicle>
-        <LightningBolt></LightningBolt>
+        <BloodShot></BloodShot>
+        <Rend></Rend>
     </Quality2>
     <Quality3>
         <AortalBlockage></AortalBlockage>

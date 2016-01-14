@@ -144,30 +144,19 @@ public class TreasureGenerator
 
 	public static Array<Item> generateAbility( int quality, Random ran )
 	{
-		quality = quality - 1;
-
 		Array<Item> items = new Array<Item>(  );
 
-		Item item = null;
+		int maxQuality = Math.min( quality, abilityList.qualityData.size );
+		int chosenQuality = ran.nextInt( maxQuality );
 
-		while (item == null)
-		{
-			if (quality < abilityList.qualityData.size)
-			{
-				int numChoices = abilityList.qualityData.get( quality ).size;
-				int choice = ran.nextInt( numChoices );
-				String chosen = abilityList.qualityData.get( quality ).get( choice );
+		int numChoices = abilityList.qualityData.get( chosenQuality ).size;
+		int choice = ran.nextInt( numChoices );
+		String chosen = abilityList.qualityData.get( chosenQuality ).get( choice );
 
-				AbilityTree tree = new AbilityTree( chosen );
+		AbilityTree tree = new AbilityTree( chosen );
 
-				item = new Item();
-				item.ability = tree;
-			}
-			else
-			{
-				quality--;
-			}
-		}
+		Item item = new Item();
+		item.ability = tree;
 
 		items.add(item);
 
@@ -199,7 +188,31 @@ public class TreasureGenerator
 	public static Item itemFromRecipe( RecipeData recipe, int quality, Random ran )
 	{
 		String materialType = recipe.acceptedMaterials[ ran.nextInt( recipe.acceptedMaterials.length ) ];
+		Item materialItem = getMaterial( materialType, quality, ran );
 
+		Item item = Recipe.createRecipe( recipe.recipeName, materialItem );
+
+		int numModifiers = ran.nextInt( Math.max( 1, quality / 2 ) );
+		int maxModifierQuality = Math.min( quality, modifierList.qualityData.size );
+
+		while (numModifiers > 0)
+		{
+			int chosenQuality = ran.nextInt( maxModifierQuality );
+
+			int numChoices = modifierList.qualityData.get( chosenQuality ).size;
+			int choice = ran.nextInt( numChoices );
+			String modifier = modifierList.qualityData.get( chosenQuality ).get( choice );
+
+			Recipe.applyModifer( item, modifier, Math.max( 1, quality - chosenQuality), ran.nextBoolean() );
+
+			numModifiers--;
+		}
+
+		return item;
+	}
+
+	public static Item getMaterial( String materialType, int quality, Random ran )
+	{
 		QualityMap materialMap = materialLists.get( materialType );
 		if (materialMap == null)
 		{
@@ -216,27 +229,20 @@ public class TreasureGenerator
 			material = materialMap.qualityData.get( materialQuality - 1 ).get( choice );
 		}
 
-		Item item = Recipe.createRecipe( recipe.recipeName, Item.load( "Material/" + material ) );
-
-		int numModifiers = ran.nextInt( Math.max( 1, quality / 2 ) );
-		int maxModifierQuality = Math.min( quality, modifierList.qualityData.size );
-
-		while (numModifiers > 0)
+		Item materialItem = null;
+		if ( Gdx.files.internal( "Items/Material/"+material+".xml" ).exists() )
 		{
-			int chosenQuality = ran.nextInt( maxModifierQuality );
-
-			int numChoices = modifierList.qualityData.get( chosenQuality ).size;
-			int choice = ran.nextInt( numChoices );
-			String modifier = modifierList.qualityData.get( chosenQuality ).get( choice );
-
-			Recipe.applyModifer( item, modifier, quality, ran.nextBoolean() );
-
-			numModifiers--;
+			materialItem = Item.load( "Material/" + material );
+		}
+		else
+		{
+			materialItem = new Item();
+			materialItem.name = material;
+			materialItem.quality = materialQuality;
 		}
 
-		return item;
+		return materialItem;
 	}
-
 
 	public static final TreasureTable treasureTable = new TreasureTable( "Items/Treasure/TreasureTable.xml" );
 	private static final QualityMap abilityList = new QualityMap( "Abilities/AbilityList.xml" );

@@ -718,7 +718,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 								height = tileSize3;
 							}
 
-							if ( entity.canTakeDamage && ( entity.HP < entity.getVariable( Statistic.CONSTITUTION ) * 10 || entity.stacks.size > 0 ) )
+							//if ( entity.canTakeDamage && ( entity.HP < entity.getVariable( Statistic.CONSTITUTION ) * 10 || entity.stacks.size > 0 ) )
+							if ( gtile.visible )
 							{
 								hasStatus.add( entity );
 							}
@@ -1928,7 +1929,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		Label messageLabel = new Label(message, skin);
 		messageLabel.setWrap( true );
-		table.add( messageLabel ).expand().fill().left().top();
+
+		ScrollPane scroll = new ScrollPane( messageLabel );
+		scroll.setScrollingDisabled( true, false );
+
+		table.add( scroll ).expand().fill().left().top();
 		table.row();
 
 		table.add( new Seperator(skin, false) ).expandX().fillX();

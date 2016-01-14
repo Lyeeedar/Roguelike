@@ -7,7 +7,7 @@
             <Placement>North</Placement>
 
             <Symbols>
-                <Symbol Extends=".">
+                <Symbol Extends="p">
                     <Char>v</Char>
                     <EnvironmentData>
                         <Type>Transition</Type>
@@ -22,14 +22,14 @@
 
             <Rows>
                 <Row>#v#</Row>
-                <Row>#.#</Row>
+                <Row>#p#</Row>
             </Rows>
         </Prev>
         <This>
             <Faction>none</Faction>
 
             <Symbols>
-                <Symbol Extends=".">
+                <Symbol Extends="p">
                     <Char>S</Char>
                     <MetaValue>PlayerSpawn</MetaValue>
                     <EnvironmentData>
@@ -44,7 +44,7 @@
             <Placement>South</Placement>
 
             <Rows>
-                <Row>#.#</Row>
+                <Row>#p#</Row>
                 <Row>#S#</Row>
             </Rows>
         </This>
@@ -73,65 +73,7 @@
         <PathStyle>Wandering</PathStyle>
         <Width>1</Width>
 
-        <CentralConstant>
-            <TileData>
-                <Passable>true</Passable>
-                <Opaque>false</Opaque>
-
-                <Group>
-                    <Sprite>
-                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
-                    </Sprite>
-                    <TilingSprite>
-                        <Name>Path</Name>
-                        <Mask>Masks/path</Mask>
-                        <Sprite>
-                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_1</Name>
-                        </Sprite>
-                    </TilingSprite>
-                </Group>
-
-                <Group Chance="0.05">
-                    <Sprite>
-                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
-                    </Sprite>
-                    <TilingSprite>
-                        <Name>Path</Name>
-                        <Mask>Masks/path</Mask>
-                        <Sprite>
-                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_2</Name>
-                        </Sprite>
-                    </TilingSprite>
-                </Group>
-
-                <Group Chance="0.05">
-                    <Sprite>
-                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
-                    </Sprite>
-                    <TilingSprite>
-                        <Name>Path</Name>
-                        <Mask>Masks/path</Mask>
-                        <Sprite>
-                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_3</Name>
-                        </Sprite>
-                    </TilingSprite>
-                </Group>
-
-                <Group Chance="0.05">
-                    <Sprite>
-                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
-                    </Sprite>
-                    <TilingSprite>
-                        <Name>Path</Name>
-                        <Mask>Masks/path</Mask>
-                        <Sprite>
-                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_4</Name>
-                        </Sprite>
-                    </TilingSprite>
-                </Group>
-
-
-            </TileData>
+        <CentralConstant Extends="p">
         </CentralConstant>
     </CorridorStyle>
 
@@ -262,6 +204,68 @@
                 <Type>Treasure</Type>
                 <Treasure>random</Treasure>
             </EnvironmentData>
+        </Symbol>
+
+        <Symbol>
+            <Char>p</Char>
+            <TileData>
+                <Passable>true</Passable>
+                <Opaque>false</Opaque>
+
+                <Group>
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <TilingSprite>
+                        <Name>Path</Name>
+                        <Mask>Masks/path</Mask>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_1</Name>
+                        </Sprite>
+                    </TilingSprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <TilingSprite>
+                        <Name>Path</Name>
+                        <Mask>Masks/path</Mask>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_2</Name>
+                        </Sprite>
+                    </TilingSprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <TilingSprite>
+                        <Name>Path</Name>
+                        <Mask>Masks/path</Mask>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_3</Name>
+                        </Sprite>
+                    </TilingSprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <TilingSprite>
+                        <Name>Path</Name>
+                        <Mask>Masks/path</Mask>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_4</Name>
+                        </Sprite>
+                    </TilingSprite>
+                </Group>
+
+
+            </TileData>
         </Symbol>
 
     </Symbols>

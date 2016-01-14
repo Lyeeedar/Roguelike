@@ -1,0 +1,26 @@
+<Active>
+
+    <Name>Rend</Name>
+    <Description>Smash your opponent and gain bloodthirst, making your attacks more vicious.</Description>
+
+    <Cooldown>15</Cooldown>
+    <Range>1</Range>
+
+    <Icon>
+        <Name>Abilities/Ravager/PowerStrike</Name>
+        <Colour><RGB>220,220,220</RGB></Colour>
+    </Icon>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>150 + level * 3</Attack>
+            <Strength>1</Strength>
+        </Damage>
+        <Status Self="true" Stacks="level/2">Bloodthirst</Status>
+    </Effect>
+
+</Active>

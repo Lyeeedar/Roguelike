@@ -334,9 +334,9 @@ public class Level
 		{
 			delay = dropOrbs( essence, delay, GameTile.OrbType.EXPERIENCE, source, possibleTiles );
 
-			if ( MathUtils.random( 4 ) <= Global.LevelManager.hpDropCounter )
+			if ( MathUtils.random( 6 ) <= Global.LevelManager.hpDropCounter )
 			{
-				Global.LevelManager.hpDropCounter = 0;
+				Global.LevelManager.hpDropCounter -= 5;
 				int amount = Math.max( 10, (player.getStatistic( Statistic.CONSTITUTION ) * 10) / 5 );
 				delay += dropOrbs( amount, delay, GameTile.OrbType.HEALTH, source, possibleTiles );
 			}

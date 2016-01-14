@@ -27,10 +27,6 @@
             </Wand>
 		</Equipment>
 
-        <Item DropChance="rnd(5)<=1">
-            <Recipe>Wand</Recipe>
-            <Material>Copper</Material>
-        </Item>
 	</Inventory>
 
 	<Statistics>

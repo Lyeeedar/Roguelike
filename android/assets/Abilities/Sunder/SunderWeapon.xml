@@ -1,0 +1,34 @@
+<Active>
+
+    <Name>Sunder Weapon</Name>
+    <Description>Break through your opponents defenses with a powerful strike, weakening their attacks.</Description>
+
+    <Cooldown>15</Cooldown>
+    <Range>1</Range>
+
+    <Icon>
+        <Name>Abilities/Ravager/PowerStrike</Name>
+        <Colour><RGB>220,220,220</RGB></Colour>
+    </Icon>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>175 + level * 2.5</Attack>
+            <Penetration>25</Penetration>
+            <Strength>1</Strength>
+        </Damage>
+        <Status>
+            <Duration>5</Duration>
+            <Events>
+                <Constant>
+                    <Attack>-level</Attack>
+                </Constant>
+            </Events>
+        </Status>
+    </Effect>
+
+</Active>

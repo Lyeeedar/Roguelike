@@ -33,17 +33,20 @@
 
             <Wand>
                 <Recipe>Wand</Recipe>
-                <Material>Copper</Material>
+                <Material>Metal</Material>
+                <Quality>1</Quality>
             </Wand>
 
             <Top>
                 <Recipe>Shirt</Recipe>
-                <Material>RoughCotton</Material>
+                <Material>Cloth</Material>
+                <Quality>1</Quality>
             </Top>
 
             <Legs>
                 <Recipe>Trousers</Recipe>
-                <Material>RoughCotton</Material>
+                <Material>Cloth</Material>
+                <Quality>1</Quality>
             </Legs>
 
         </Equipment>

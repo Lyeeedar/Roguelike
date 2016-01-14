@@ -1,8 +1,20 @@
 <Materials>
     <Quality1>
-        <RoughCotton/>
+        <Ruffi/>
     </Quality1>
     <Quality2>
-        <RefinedCotton/>
+        <Fethe/>
     </Quality2>
+    <Quality3>
+        <Silk/>
+    </Quality3>
+    <Quality4>
+        <Nospethe/>
+    </Quality4>
+    <Quality5>
+        <Pufflet/>
+    </Quality5>
+    <Quality6>
+        <Coatu/>
+    </Quality6>
 </Materials>

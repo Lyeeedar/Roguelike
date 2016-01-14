@@ -1,0 +1,26 @@
+<Active>
+
+    <Name>Reave</Name>
+    <Description>Pour your bloodthirst into a strike that rips apart your target.</Description>
+
+    <Cooldown>15</Cooldown>
+    <Range>1</Range>
+
+    <Icon>
+        <Name>Abilities/Ravager/PowerStrike</Name>
+        <Colour><RGB>220,220,220</RGB></Colour>
+    </Icon>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>200 + level * 3</Attack>
+            <Strength>1</Strength>
+        </Damage>
+        <Status Self="true" Stacks="level/1.5">Bloodthirst</Status>
+    </Effect>
+
+</Active>

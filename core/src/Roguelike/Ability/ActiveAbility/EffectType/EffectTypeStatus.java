@@ -24,6 +24,8 @@ public class EffectTypeStatus extends AbstractEffectType
 	public Element statusData;
 	public String stacksEqn;
 
+	public boolean self = false;
+
 	private String[] reliesOn;
 
 	@Override
@@ -36,6 +38,7 @@ public class EffectTypeStatus extends AbstractEffectType
 			condition = condition.toLowerCase();
 		}
 		statusData = xml;
+		self = xml.getBooleanAttribute( "Self", false );
 
 		stacksEqn = xml.getAttribute( "Stacks", null );
 		if ( stacksEqn != null )
@@ -47,14 +50,21 @@ public class EffectTypeStatus extends AbstractEffectType
 	@Override
 	public void update( ActiveAbility aa, float time, GameTile tile, GameEntity entity, EnvironmentEntity envEntity )
 	{
-		if ( entity != null )
+		if ( self )
 		{
-			handle( aa, entity );
+			handle( aa, aa.getCaster() );
 		}
-
-		if ( envEntity != null )
+		else
 		{
-			handle( aa, envEntity );
+			if ( entity != null )
+			{
+				handle( aa, entity );
+			}
+
+			if ( envEntity != null )
+			{
+				handle( aa, envEntity );
+			}
 		}
 	}
 
@@ -98,6 +108,7 @@ public class EffectTypeStatus extends AbstractEffectType
 		e.statusData = statusData;
 		e.stacksEqn = stacksEqn;
 		e.reliesOn = reliesOn;
+		e.self = self;
 		return e;
 	}
 

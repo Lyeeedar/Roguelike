@@ -17,6 +17,7 @@ import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Tiles.Point;
 import Roguelike.UI.Seperator;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -77,9 +78,10 @@ public final class Item extends GameEventHandler
 		if ( xml.getChildByName( "Recipe" ) != null )
 		{
 			String recipe = Global.capitalizeString( xml.getChildByName( "Recipe" ).getText() );
-			String material = xml.getChildByName( "Material" ).getText();
+			String material = xml.get( "Material" );
+			int quality = xml.getInt( "Quality" );
 
-			Item materialItem = Item.load( "Material/"+material );
+			Item materialItem = TreasureGenerator.getMaterial( material, quality, MathUtils.random );
 
 			item = Recipe.createRecipe( recipe, materialItem );
 
@@ -200,11 +202,11 @@ public final class Item extends GameEventHandler
 
 				if (val < otherVal)
 				{
-					value = value + "  [RED]" + (val - otherVal) + "[]";
+					value = value + "[RED] " + (val - otherVal) + "[]";
 				}
 				else if (val > otherVal)
 				{
-					value = value + "  [GREEN]+" + (val - otherVal) + "[]";
+					value = value + "[GREEN] +" + (val - otherVal) + "[]";
 				}
 
 				Label statLabel = new Label( Global.capitalizeString( stat.toString() ) + ": " + value, skin );
@@ -268,11 +270,11 @@ public final class Item extends GameEventHandler
 
 			if ( diff > 0 )
 			{
-				damText += "   [GREEN]+" + diff;
+				damText += "[GREEN] +" + diff;
 			}
 			else
 			{
-				damText += "   [RED]" + diff;
+				damText += "[RED] " + diff;
 			}
 		}
 
@@ -301,11 +303,11 @@ public final class Item extends GameEventHandler
 
 				if (val < otherVal)
 				{
-					scale = "[RED]" + scale + "[]";
+					scale = "[RED] " + scale + "[]";
 				}
 				else if (val > otherVal)
 				{
-					scale = "[GREEN]" + scale + "[]";
+					scale = "[GREEN] " + scale + "[]";
 				}
 
 				Label statLabel = new Label( Global.capitalizeString( stat.toString() ) + ": " + scale, skin );
