@@ -50,6 +50,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -668,7 +669,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							}
 						}
 
-						if ( entity.canTakeDamage && entity.HP < entity.statistics.get( Statistic.CONSTITUTION ) * 10 )
+						if ( entity.canTakeDamage && entity.HP < entity.getVariable( Statistic.CONSTITUTION ) * 10 )
 						{
 							hasStatus.add( entity );
 						}
@@ -717,7 +718,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 								height = tileSize3;
 							}
 
-							if ( entity.canTakeDamage && entity.HP < entity.getVariable( Statistic.CONSTITUTION ) * 10 || entity.stacks.size > 0 )
+							if ( entity.canTakeDamage && ( entity.HP < entity.getVariable( Statistic.CONSTITUTION ) * 10 || entity.stacks.size > 0 ) )
 							{
 								hasStatus.add( entity );
 							}
@@ -1850,6 +1851,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		contextMenu.show( 50, 64 + 50, lock );
 		lockContextMenu = lock;
+
+		contextMenu.addAction(
+				new ParallelAction(
+						new SequenceAction( Actions.alpha( 0 ), Actions.fadeIn( 0.5f ) ),
+						new SequenceAction( Actions.scaleTo( 0, 0 ), Actions.scaleTo( 1, 1, 0.5f ) )
+				) );
 
 		contextMenu.setWidth( Global.Resolution[ 0 ] - 120 );
 		contextMenu.setHeight( Global.Resolution[ 1 ] - 64 - 100 );

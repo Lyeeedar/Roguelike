@@ -363,8 +363,8 @@ public class Level
 
 				int[] diff = tile.getPosDiff( source );
 
-				MoveAnimation anim = new MoveAnimation( 0.3f, diff, MoveEquation.LEAP );
-				anim.leapHeight = 2;
+				MoveAnimation anim = new MoveAnimation( 0.2f, diff, MoveEquation.LEAP );
+				anim.leapHeight = 3;
 				i.getIcon().spriteAnimation = anim;
 				i.getIcon().renderDelay = delay;
 				delay += 0.015f;
@@ -396,8 +396,8 @@ public class Level
 					int[] diff = tile.getPosDiff( source );
 
 					Sprite sprite = AssetManager.loadSprite( type.spriteName );
-					MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
-					anim.leapHeight = 2;
+					MoveAnimation anim = new MoveAnimation( 0.2f, diff, MoveEquation.LEAP );
+					anim.leapHeight = 3;
 					sprite.spriteAnimation = anim;
 					sprite.renderDelay = delay;
 					delay += 0.02f;
@@ -417,8 +417,8 @@ public class Level
 				int[] diff = new int[] { 0, 0 };
 
 				Sprite sprite = AssetManager.loadSprite( type.spriteName );
-				MoveAnimation anim = new MoveAnimation( 0.4f, diff, MoveEquation.LEAP );
-				anim.leapHeight = 6;
+				MoveAnimation anim = new MoveAnimation( 0.2f, diff, MoveEquation.LEAP );
+				anim.leapHeight = 3;
 				sprite.spriteAnimation = anim;
 				sprite.renderDelay = delay;
 				delay += 0.02f;
