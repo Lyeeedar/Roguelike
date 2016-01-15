@@ -1,12 +1,15 @@
 <Modifiers>
     <Quality1>
-        <BonusStrength></BonusStrength>
-        <BonusPerception></BonusPerception>
-        <BonusIntelligence></BonusIntelligence>
-        <BonusWillpower></BonusWillpower>
+        <BonusStrength/>
+        <BonusPerception/>
+        <BonusIntelligence/>
+        <BonusWillpower/>
     </Quality1>
     <Quality2>
-        <BonusConstitution></BonusConstitution>
-        <BonusSpeed></BonusSpeed>
+        <BonusConstitution/>
+        <BonusSpeed/>
     </Quality2>
+    <Quality3>
+        <Slime/>
+    </Quality3>
 </Modifiers>

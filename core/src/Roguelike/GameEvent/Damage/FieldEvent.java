@@ -23,6 +23,13 @@ public final class FieldEvent extends AbstractOnDamageEvent
 	private String[] reliesOn;
 
 	@Override
+	public void applyQuality( int quality )
+	{
+		condition.replace( "quality", ""+quality );
+		stacksEqn.replace( "quality", ""+quality );
+	}
+
+	@Override
 	public boolean handle( Entity entity, DamageObject obj, IGameObject parent )
 	{
 		HashMap<String, Integer> variableMap = entity.getVariableMap();

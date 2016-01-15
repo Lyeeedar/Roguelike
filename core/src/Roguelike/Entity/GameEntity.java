@@ -72,24 +72,7 @@ public class GameEntity extends Entity
 			h.onTurn( this, 1 );
 		}
 
-		boolean removedStatusEffect = false;
-		Iterator<StatusEffect> itr = statusEffects.iterator();
-		while ( itr.hasNext() )
-		{
-			StatusEffect se = itr.next();
-
-			if ( se.duration <= 0 )
-			{
-				se.onExpire( this );
-				itr.remove();
-				isVariableMapDirty = true;
-			}
-		}
-
-		if (removedStatusEffect)
-		{
-			stacks = stackStatusEffects();
-		}
+		processStatuses();
 
 		if ( popupDuration > 0 )
 		{
@@ -121,8 +104,9 @@ public class GameEntity extends Entity
 			}
 		}
 
-		for ( StatusEffect se : statusEffects )
+		for ( int i = 0; i < statusEffects.size; i++ )
 		{
+			StatusEffect se = statusEffects.get( i );
 			val += se.getStatistic( variableMap, stat );
 		}
 
@@ -226,8 +210,9 @@ public class GameEntity extends Entity
 			}
 		}
 
-		for ( StatusEffect se : statusEffects )
+		for ( int i = 0; i < statusEffects.size; i++ )
 		{
+			StatusEffect se = statusEffects.get( i );
 			handlers.add( se );
 		}
 

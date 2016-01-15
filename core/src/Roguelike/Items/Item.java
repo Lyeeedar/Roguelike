@@ -210,7 +210,6 @@ public final class Item extends GameEventHandler
 				}
 
 				Label statLabel = new Label( Global.capitalizeString( stat.toString() ) + ": " + value, skin );
-				statLabel.setWrap( true );
 				table.add( statLabel ).expandX().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 				table.row();
 			}
@@ -311,7 +310,6 @@ public final class Item extends GameEventHandler
 				}
 
 				Label statLabel = new Label( Global.capitalizeString( stat.toString() ) + ": " + scale, skin );
-				statLabel.setWrap( true );
 				table.add( statLabel ).expandX().left().width( com.badlogic.gdx.scenes.scene2d.ui.Value.percentWidth( 1, table ) );
 				table.row();
 			}

@@ -3,6 +3,7 @@ package Roguelike.GameEvent;
 import java.util.HashMap;
 
 import Roguelike.GameEvent.OnExpire.AbstractOnExpireEvent;
+import Roguelike.Global;
 import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.Tasks.AbstractTask;
@@ -311,6 +312,31 @@ public abstract class GameEventHandler implements IGameObject
 	public void processed()
 	{
 
+	}
+
+	// ----------------------------------------------------------------------
+	public void applyQuality( int quality )
+	{
+		HashMap<String, Integer> variables = new HashMap<String, Integer>(  );
+		variables.put( "quality", quality );
+
+		for ( Global.Statistic stat : Global.Statistic.values() )
+		{
+			if ( constantEvent.equations.containsKey( stat ) )
+			{
+				constantEvent.putStatistic( stat, ""+constantEvent.getStatistic( variables, stat ) );
+			}
+		}
+
+		for ( AbstractOnDamageEvent event : onDealDamageEvents )
+		{
+			event.applyQuality( quality );
+		}
+
+		for (AbstractOnDamageEvent event : onReceiveDamageEvents )
+		{
+			event.applyQuality( quality );
+		}
 	}
 
 	// ----------------------------------------------------------------------

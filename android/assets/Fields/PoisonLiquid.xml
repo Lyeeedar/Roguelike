@@ -5,6 +5,14 @@
         <Name>Oryx/uf_split/uf_terrain/water_bubbling</Name>
         <Colour><RGB>255,100,255</RGB></Colour>
     </Sprite>
+    <Light>
+        <Colour>
+            <RGB>255,100,255</RGB>
+            <Alpha>0.5</Alpha>
+        </Colour>
+
+        <Intensity>2</Intensity>
+    </Light>
     <Duration>
         <Fade>
             <Rate>10</Rate>
@@ -12,7 +20,10 @@
         </Fade>
     </Duration>
     <OnTurn>
-        <Damage>stacks*5</Damage>
+        <Damage>15</Damage>
+        <Status>
+            <Name>Poisoned</Name>
+        </Status>
     </OnTurn>
     <Interactions>
         <Hot>

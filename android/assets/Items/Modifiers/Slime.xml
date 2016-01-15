@@ -1,0 +1,19 @@
+<Recipe>
+
+    <Names>
+        <Sticky></Sticky>
+        <Slimy></Slimy>
+        <Gooey></Gooey>
+        <Oozing></Oozing>
+        <Sludged></Sludged>
+        <Unstable></Unstable>
+        <Explosive></Explosive>
+    </Names>
+
+    <Events>
+        <OnDealDamage>
+            <Status Condition="chance(quality, 5)" Stacks="quality/5">Slime</Status>
+        </OnDealDamage>
+    </Events>
+
+</Recipe>

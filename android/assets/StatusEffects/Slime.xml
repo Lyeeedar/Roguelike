@@ -1,0 +1,34 @@
+<StatusEffect>
+    <Name>Slime</Name>
+    <Description>Explosive slime. It's gunna blow!</Description>
+    <Duration>3</Duration>
+
+    <Icon>
+        <Name>Skills/Burning</Name>
+    </Icon>
+
+    <Events>
+        <OnExpire>
+            <Ability>
+                <AOE>1</AOE>
+                <HitType><Ally/></HitType>
+                <HitSprite>
+                    <SingleSprite>true</SingleSprite>
+                    <Name>AbilitySprites/Explosion/Explosion</Name>
+                    <UpdateRate>0.05</UpdateRate>
+                </HitSprite>
+                <Light>
+                    <Colour>
+                        <RGB>255,255,100</RGB>
+                    </Colour>
+                    <Intensity>3</Intensity>
+                </Light>
+                <Effect>
+                    <Damage DirectDamage="true"><Attack>25</Attack></Damage>
+                    <FieldInteraction>Hot</FieldInteraction>
+                </Effect>
+            </Ability>
+        </OnExpire>
+    </Events>
+
+</StatusEffect>

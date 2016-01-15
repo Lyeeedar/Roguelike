@@ -41,6 +41,7 @@ public abstract class AbstractOnExpireEvent
 	public static final HashMap<String, Class> ClassMap = new HashMap<String, Class>();
 	static
 	{
+		ClassMap.put( "ABILITY", AbilityOnExpireEvent.class );
 		ClassMap.put( "KILL", KillOnExpireEvent.class );
 	}
 }

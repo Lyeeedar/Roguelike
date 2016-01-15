@@ -1,6 +1,7 @@
 package Roguelike.Entity;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
@@ -345,23 +346,63 @@ public abstract class Entity
 		if ( !canTakeDamage ) { return; }
 		if ( isImmune( se.getName().toLowerCase() ) ) { return; }
 
-		if (!se.stackable)
+		pendingStatusEffects.add( se );
+	}
+
+	// ----------------------------------------------------------------------
+	public void processStatuses()
+	{
+		processPendingStatuses();
+
+		boolean removedStatusEffect = false;
+		Iterator<StatusEffect> itr = statusEffects.iterator();
+		while ( itr.hasNext() )
 		{
-			for (StatusEffect ose : statusEffects)
+			StatusEffect se = itr.next();
+
+			if ( se.duration <= 0 )
 			{
-				if (ose.name.equals( se.name ))
-				{
-					ose.duration = Math.max( ose.duration, se.duration );
-					return;
-				}
+				se.onExpire( this );
+				itr.remove();
+				isVariableMapDirty = true;
 			}
 		}
 
-		statusEffects.add( se );
+		if (removedStatusEffect)
+		{
+			stacks = stackStatusEffects();
+		}
 
-		stacks = stackStatusEffects();
+		processPendingStatuses();
+	}
 
-		isVariableMapDirty = true;
+	// ----------------------------------------------------------------------
+	public void processPendingStatuses()
+	{
+		if (pendingStatusEffects.size > 0)
+		{
+			for (StatusEffect se : pendingStatusEffects)
+			{
+				if (!se.stackable)
+				{
+					for (StatusEffect ose : statusEffects)
+					{
+						if (ose.name.equals( se.name ))
+						{
+							ose.duration = Math.max( ose.duration, se.duration );
+							return;
+						}
+					}
+				}
+
+				statusEffects.add( se );
+			}
+
+			stacks = stackStatusEffects();
+			isVariableMapDirty = true;
+
+			pendingStatusEffects.clear();
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -425,6 +466,7 @@ public abstract class Entity
 	public String[] immune;
 	public FastEnumMap<Statistic, Integer> statistics = Statistic.getStatisticsBlock();
 	public Array<StatusEffect> statusEffects = new Array<StatusEffect>( false, 16 );
+	public Array<StatusEffect> pendingStatusEffects = new Array<StatusEffect>(  );
 	public Array<StatusEffectStack> stacks = new Array<StatusEffectStack>();
 	public Inventory inventory = new Inventory();
 

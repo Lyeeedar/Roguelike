@@ -16,6 +16,8 @@ public abstract class AbstractOnDamageEvent
 
 	public abstract void parse( Element xml );
 
+	public abstract void applyQuality( int quality );
+
 	public abstract Array<String> toString( HashMap<String, Integer> variableMap, IGameObject parent );
 
 	public static AbstractOnDamageEvent load( Element xml )

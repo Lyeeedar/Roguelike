@@ -1,31 +1,25 @@
-package Roguelike.GameEvent.Damage;
+package Roguelike.GameEvent.OnDeath;
 
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.Entity.Entity;
-import Roguelike.GameEvent.IGameObject;
+import Roguelike.Global;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import exp4j.Helpers.EquationHelper;
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
 
 import java.util.HashMap;
 
 /**
- * Created by Philip on 21-Dec-15.
+ * Created by Philip on 15-Jan-16.
  */
-public final class BlockEvent extends AbstractOnDamageEvent
+public class AbilityOnDeathEvent extends AbstractOnDeathEvent
 {
 	private String condition;
 	private String[] reliesOn;
+	private ActiveAbility ability;
 
 	@Override
-	public void applyQuality( int quality )
-	{
-		condition.replace( "quality", ""+quality );
-	}
-
-	@Override
-	public boolean handle( Entity entity, DamageObject obj, IGameObject parent )
+	public boolean handle( Entity entity, Entity killer )
 	{
 		HashMap<String, Integer> variableMap = entity.getVariableMap();
 		for ( String name : reliesOn )
@@ -35,7 +29,6 @@ public final class BlockEvent extends AbstractOnDamageEvent
 				variableMap.put( name.toLowerCase(), 0 );
 			}
 		}
-		variableMap.put( "damage", obj.damage );
 
 		if ( condition != null )
 		{
@@ -43,7 +36,21 @@ public final class BlockEvent extends AbstractOnDamageEvent
 			if ( conditionVal == 0 ) { return false; }
 		}
 
-		obj.damage = 0;
+		ActiveAbility aa = ability.copy();
+
+		aa.setCaster( entity );
+		aa.setVariableMap( Global.Statistic.emptyMap );
+
+		aa.source = entity.tile[0][0];
+
+		aa.lockTarget( entity.tile[0][0] );
+
+		boolean finished = aa.update();
+
+		if ( !finished )
+		{
+			entity.tile[0][0].level.addActiveAbility( aa );
+		}
 
 		return true;
 	}
@@ -51,22 +58,24 @@ public final class BlockEvent extends AbstractOnDamageEvent
 	@Override
 	public void parse( XmlReader.Element xml )
 	{
-		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
 		condition = xml.getAttribute( "Condition", null );
 		if ( condition != null )
 		{
 			condition = condition.toLowerCase();
 		}
+		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
+
+		ability = ActiveAbility.load( xml );
 	}
 
 	@Override
-	public Array<String> toString( HashMap<String, Integer> variableMap, IGameObject parent )
+	public Array<String> toString( HashMap<String, Integer> variableMap )
 	{
 		Array<String> lines = new Array<String>();
 
-		String line = "Blocks damage";
-		lines.add( line );
+		lines.add( "Ability" );
 
 		return lines;
 	}
+
 }

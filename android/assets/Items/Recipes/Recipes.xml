@@ -16,10 +16,10 @@
 
     <Weapons>
         <Sword>Metal</Sword>
-        <Spear>Metal</Spear>
+        <Spear>Metal,Wood</Spear>
         <Axe>Metal</Axe>
-        <Bow>Metal</Bow>
-        <Wand>Metal</Wand>
+        <Bow>Wood</Bow>
+        <Wand>Wood,Metal</Wand>
     </Weapons>
 
 </Recipes>

@@ -59,19 +59,7 @@ public class EnvironmentEntity extends Entity
 			h.onTurn( this, 1 );
 		}
 
-		Iterator<StatusEffect> itr = statusEffects.iterator();
-		while ( itr.hasNext() )
-		{
-			StatusEffect se = itr.next();
-
-			if ( se.duration <= 0 )
-			{
-				itr.remove();
-				isVariableMapDirty = true;
-			}
-		}
-
-		stacks = stackStatusEffects();
+		processStatuses();
 
 		if ( popupDuration > 0 )
 		{

@@ -19,7 +19,7 @@ public class Recipe
 		Item item = Item.load( "Recipes/"+recipe );
 		item.quality = material.quality;
 
-		applyQuality( item, material.quality );
+		item.applyQuality( material.quality );
 
 		combineItems( item, material );
 
@@ -83,7 +83,7 @@ public class Recipe
 	{
 		Item item = Item.load( "Modifiers/"+modifier );
 
-		applyQuality( item, quality );
+		item.applyQuality( quality );
 
 		XmlReader reader = new XmlReader();
 		XmlReader.Element xml = null;
@@ -108,19 +108,5 @@ public class Recipe
 		item.name = name;
 
 		return item;
-	}
-
-	public static void applyQuality( Item item, int quality )
-	{
-		HashMap<String, Integer> variables = new HashMap<String, Integer>(  );
-		variables.put( "quality", quality );
-
-		for ( Global.Statistic stat : Global.Statistic.values() )
-		{
-			if ( item.constantEvent.equations.containsKey( stat ) )
-			{
-				item.constantEvent.putStatistic( stat, ""+item.constantEvent.getStatistic( variables, stat ) );
-			}
-		}
 	}
 }

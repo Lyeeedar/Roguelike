@@ -12,14 +12,14 @@
             <Cooldown>20</Cooldown>
             <Range>2</Range>
             <HitType><Enemy/></HitType>
-            <Effects>
-                <Field Stacks="rnd(2)+1">PoisonLiquid</Field>
-            </Effects>
+            <Effect>
+                <Field Stacks="rnd(3)+3">PoisonLiquid</Field>
+            </Effect>
         </Active>
         <Passive>
             <Events>
                 <OnDeath>
-                    <Field Stacks="rnd(3)+3">PoisonLiquid</Field>
+                    <Field Stacks="rnd(5)+5">PoisonLiquid</Field>
                 </OnDeath>
             </Events>
         </Passive>

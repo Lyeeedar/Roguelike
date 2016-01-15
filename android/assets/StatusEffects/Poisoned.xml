@@ -1,0 +1,16 @@
+<StatusEffect>
+    <Name>Poisoned</Name>
+    <Description>Deadly poison courses through your veins.</Description>
+    <Duration>5</Duration>
+
+    <Icon>
+        <Name>Skills/Burning</Name>
+    </Icon>
+
+    <Events>
+        <OnTurn>
+            <DOT>5</DOT>
+        </OnTurn>
+    </Events>
+
+</StatusEffect>

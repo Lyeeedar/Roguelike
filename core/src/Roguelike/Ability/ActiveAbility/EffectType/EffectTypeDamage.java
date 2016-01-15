@@ -18,6 +18,7 @@ import java.util.HashMap;
 
 public class EffectTypeDamage extends AbstractEffectType
 {
+	private boolean directDamage = false;
 	private FastEnumMap<Statistic, String> equations = new FastEnumMap<Statistic, String>( Statistic.class );
 	private String[] reliesOn;
 
@@ -44,6 +45,7 @@ public class EffectTypeDamage extends AbstractEffectType
 	public void parse( Element xml )
 	{
 		reliesOn = xml.getAttribute( "ReliesOn", "" ).toLowerCase().split( "," );
+		directDamage = xml.getBooleanAttribute( "DirectDamage", false );
 
 		for ( int i = 0; i < xml.getChildCount(); i++ )
 		{
@@ -58,6 +60,7 @@ public class EffectTypeDamage extends AbstractEffectType
 	public AbstractEffectType copy()
 	{
 		EffectTypeDamage e = new EffectTypeDamage();
+		e.directDamage = directDamage;
 		e.equations = equations;
 		e.reliesOn = reliesOn;
 		return e;
@@ -108,8 +111,12 @@ public class EffectTypeDamage extends AbstractEffectType
 	private void applyToEntity( Entity target, ActiveAbility aa, HashMap<String, Integer> variableMap )
 	{
 		float damage = Global.calculateScaledAttack( variableMap, aa.getVariableMap() );
-		damage /= 100.0f;
-		damage *= aa.getCaster().getVariable( Statistic.ATTACK );
+
+		if (!directDamage)
+		{
+			damage /= 100.0f;
+			damage *= aa.getCaster().getVariable( Statistic.ATTACK );
+		}
 
 		int pen = variableMap.get( Statistic.PENETRATION.toString().toLowerCase() );
 

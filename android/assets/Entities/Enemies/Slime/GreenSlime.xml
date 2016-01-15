@@ -8,4 +8,16 @@
         <Colour><RGB>0,255,0</RGB><Alpha>0.5</Alpha></Colour>
         <Intensity>3</Intensity>
     </Light>
+
+    <Abilities>
+
+        <Passive>
+            <Events>
+                <OnDealDamage>
+                    <Status Condition="chance(1, 3)">Slime</Status>
+                </OnDealDamage>
+            </Events>
+        </Passive>
+
+    </Abilities>
 </Entity>

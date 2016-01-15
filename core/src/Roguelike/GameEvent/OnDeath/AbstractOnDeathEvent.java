@@ -39,6 +39,7 @@ public abstract class AbstractOnDeathEvent
 	public static final HashMap<String, Class> ClassMap = new HashMap<String, Class>();
 	static
 	{
+		ClassMap.put( "ABILITY", AbstractOnDeathEvent.class );
 		ClassMap.put( "FIELD", FieldOnDeathEvent.class );
 		ClassMap.put( "HEAL", HealOnDeathEvent.class );
 	}

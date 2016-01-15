@@ -8,8 +8,10 @@ import Roguelike.DungeonGeneration.Room.RoomDoor;
 import Roguelike.DungeonGeneration.Symbol;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.GameEvent.Damage.*;
+import Roguelike.GameEvent.OnDeath.AbstractOnDeathEvent;
 import Roguelike.GameEvent.OnDeath.FieldOnDeathEvent;
 import Roguelike.GameEvent.OnDeath.HealOnDeathEvent;
+import Roguelike.GameEvent.OnExpire.AbilityOnExpireEvent;
 import Roguelike.GameEvent.OnExpire.KillOnExpireEvent;
 import Roguelike.GameEvent.OnTask.CancelTaskEvent;
 import Roguelike.GameEvent.OnTask.CostTaskEvent;
@@ -346,6 +348,7 @@ public final class SaveFile
 		kryo.register( BlockEvent.class );
 		kryo.register( FieldOnDeathEvent.class );
 		kryo.register( HealOnDeathEvent.class );
+		kryo.register( AbstractOnDeathEvent.class );
 		kryo.register( CancelTaskEvent.class );
 		kryo.register( CostTaskEvent.class );
 		kryo.register( DamageTaskEvent.class );
@@ -353,5 +356,6 @@ public final class SaveFile
 		kryo.register( DamageOverTimeEvent.class );
 		kryo.register( HealOverTimeEvent.class );
 		kryo.register( KillOnExpireEvent.class );
+		kryo.register( AbilityOnExpireEvent.class );
 	}
 }
