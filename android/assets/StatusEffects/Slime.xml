@@ -15,7 +15,7 @@
                 <HitType><Ally/></HitType>
                 <HitSprite>
                     <SingleSprite>true</SingleSprite>
-                    <Name>AbilitySprites/Explosion/Explosion</Name>
+                    <Name>EffectSprites/Explosion/Explosion</Name>
                     <UpdateRate>0.05</UpdateRate>
                 </HitSprite>
                 <Light>

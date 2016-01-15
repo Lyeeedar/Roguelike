@@ -99,17 +99,11 @@ public class AssetManager
 
 	private static PixmapPacker packer;
 	private static final TextureAtlas atlas = new TextureAtlas();
+	private static final TextureAtlas prepackedAtlas = new TextureAtlas( Gdx.files.internal( "Atlases/SpriteAtlas.atlas" ) );
 
 	private static void setupPacker()
 	{
-		IntBuffer intBuffer = BufferUtils.newIntBuffer( 16 );
-		Gdx.gl20.glGetIntegerv( GL20.GL_MAX_TEXTURE_SIZE, intBuffer );
-
-		int size = intBuffer.get();
-
-		size = Math.min( Global.ANDROID ? 1024 : 4096, size );
-
-		packer = new PixmapPacker( size, size, Format.RGBA8888, 2, true );
+		packer = new PixmapPacker( 1024, 1024, Format.RGBA8888, 2, true );
 	}
 
 	private static HashMap<String, TextureRegion> loadedTextureRegions = new HashMap<String, TextureRegion>();
@@ -117,6 +111,14 @@ public class AssetManager
 	public static TextureRegion loadTextureRegion( String path )
 	{
 		if ( loadedTextureRegions.containsKey( path ) ) { return loadedTextureRegions.get( path ); }
+
+		TextureAtlas.AtlasRegion region = prepackedAtlas.findRegion( path );
+		if ( region != null )
+		{
+			TextureRegion textureRegion = new TextureRegion( region );
+			loadedTextureRegions.put( path, textureRegion );
+			return textureRegion;
+		}
 
 		FileHandle file = Gdx.files.internal( path );
 		if ( !file.exists() )

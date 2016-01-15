@@ -12,6 +12,11 @@
             <Cooldown>20</Cooldown>
             <Range>2</Range>
             <HitType><Enemy/></HitType>
+            <HitSprite>
+                <Name>EffectSprites/Splatter/Splatter</Name>
+                <Colour><RGB>255,0,255</RGB><Alpha>0.5</Alpha></Colour>
+                <UpdateRate>0.1</UpdateRate>
+            </HitSprite>
             <Effect>
                 <Field Stacks="rnd(3)+3">PoisonLiquid</Field>
             </Effect>
