@@ -4,7 +4,8 @@
     <Duration>3</Duration>
 
     <Icon>
-        <Name>Skills/Burning</Name>
+        <Name>Icons/Slime</Name>
+        <Colour><RGB>140,255,150</RGB></Colour>
     </Icon>
 
     <Events>

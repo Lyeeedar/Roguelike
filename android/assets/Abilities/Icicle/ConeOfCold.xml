@@ -8,12 +8,12 @@
 	<Range>1</Range>
 
 	<Icon>
-		<Name>Abilities/WinterMagus/ConeOfCold</Name>
+		<Name>Icons/ConeOfCold</Name>
 		<Colour><RGB>240,255,255</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-		<Name>AbilitySprites/IceBurst/IceBurst</Name>
+		<Name>EffectSprites/IceBurst/IceBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
 	</HitSprite>
 

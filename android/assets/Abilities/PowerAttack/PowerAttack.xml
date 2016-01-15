@@ -7,7 +7,7 @@
     <Range>1</Range>
 
     <Icon>
-        <Name>Abilities/Ravager/PowerStrike</Name>
+        <Name>Icons/PowerAttack</Name>
         <Colour><RGB>220,220,220</RGB></Colour>
     </Icon>
 

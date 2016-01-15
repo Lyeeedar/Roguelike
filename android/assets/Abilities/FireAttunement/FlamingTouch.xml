@@ -2,7 +2,7 @@
 	<Name>Flaming Touch</Name>
 	<Description>Your attacks can ignite your foes.</Description>
 	<Icon>
-		<Name>Abilities/Pyromaniac/UnreliableFlames</Name>
+		<Name>Icons/UnreliableFlames</Name>
 		<Colour><RGB>255,165,0</RGB></Colour>
 	</Icon>
 

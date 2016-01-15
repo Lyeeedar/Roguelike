@@ -4,7 +4,8 @@
 	<Duration>5</Duration>
 
 	<Icon>
-		<Name>Skills/SpikeTrap</Name>
+		<Name>Icons/OpenVein</Name>
+        <Colour><RGB>255,100,80</RGB></Colour>
 	</Icon>
 
 	<Events>

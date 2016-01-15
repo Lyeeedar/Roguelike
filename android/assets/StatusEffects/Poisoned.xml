@@ -4,7 +4,8 @@
     <Duration>5</Duration>
 
     <Icon>
-        <Name>Skills/Burning</Name>
+        <Name>Icons/BloodTurbulence</Name>
+        <Colour><RGB>255,100,255</RGB></Colour>
     </Icon>
 
     <Events>

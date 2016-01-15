@@ -8,7 +8,7 @@
     <Cone>1</Cone>
 
 	<Icon>
-		<Name>Abilities/Lancer/JumpStrike</Name>
+		<Name>Icons/JumpStrike</Name>
 		<Colour><RGB>220,220,220</RGB></Colour>
 	</Icon>
 

@@ -7,12 +7,12 @@
 	<Range>1</Range>
 
 	<Icon>
-		<Name>Abilities/Protection/Aegis</Name>
+		<Name>Icons/Aegis</Name>
 		<Colour><RGB>210,247,247</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-		<Name>AbilitySprites/Aegis/Aegis</Name>
+		<Name>EffectSprites/Aegis/Aegis</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Colour><RGB>210,247,247</RGB></Colour>
 	</HitSprite>

@@ -7,7 +7,7 @@
 	<Range>1</Range>
 
 	<Icon>
-		<Name>Abilities/Electron/StaticCharge</Name>
+		<Name>Icons/StaticCharge</Name>
 		<Colour><RGB>248,255,43</RGB></Colour>
 	</Icon>
 

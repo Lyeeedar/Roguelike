@@ -7,23 +7,18 @@
 	<Range>4</Range>
 
 	<Icon>
-		<Name>Abilities/BloodMagic/BloodBullet</Name>
+		<Name>Icons/BloodBullet</Name>
 		<Colour><RGB>153,0,0</RGB></Colour>
 	</Icon>
 
-	<UseSprite>
-	    <Name>dc-misc/demon_pentagram</Name>
-	    <UpdateRate>0.1</UpdateRate>
-	</UseSprite>
-
 	<HitSprite>
-		<Name>AbilitySprites/Splatter/Splatter</Name>
+		<Name>EffectSprites/Splatter/Splatter</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Colour><RGB>153,0,0</RGB></Colour>
 	</HitSprite>
 
 	<MovementSprite>
-		<Name>bolt</Name>
+		<Name>EffectSprites/Bolt/Bolt</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Colour><RGB>153,0,0</RGB></Colour>
 	</MovementSprite>

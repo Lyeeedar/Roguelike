@@ -2,8 +2,8 @@
 	<Name>Deadly Critical Strikes</Name>
 	<Description>You have a chance to hit a weakpoint for extra damage.</Description>
 	<Icon>
-		<Name>Abilities/Swordmaster/CriticalStrikes</Name>
-		<Colour><RGB>220,220,220</RGB></Colour>
+		<Name>Icons/CriticalStrikes</Name>
+		<Colour><RGB>225,220,225</RGB></Colour>
 	</Icon>
 
 	<Events>

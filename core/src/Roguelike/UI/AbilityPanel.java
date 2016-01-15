@@ -191,7 +191,7 @@ public class AbilityPanel extends TilePanel
 
 			if (tree.current.needsLevelAnim)
 			{
-				Sprite sprite = AssetManager.loadSprite( "AbilitySprites/Heal/Heal", 0.1f );
+				Sprite sprite = AssetManager.loadSprite( "EffectSprites/Heal/Heal", 0.1f );
 
 				GameScreen.Instance.addSpriteAction( sprite, x+width/2, y+height/2, width, height );
 				Global.CurrentLevel.player.pendingMessages.add( new Message( tree.current.current.getName() + " levelled up! (Level " + tree.current.current.getLevel() + ")", Color.GOLD ) );

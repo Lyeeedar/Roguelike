@@ -7,8 +7,8 @@
 	<Range>1</Range>
 
 	<Icon>
-		<Name>Abilities/Pyromaniac/BurningBlades</Name>
-		<Colour><RGB>255,165,0</RGB></Colour>
+		<Name>Icons/BurningBlades</Name>
+		<Colour><RGB>255,185,50</RGB></Colour>
 	</Icon>
 
 	<HitType>

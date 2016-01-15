@@ -9,12 +9,12 @@
 	<AOE>1</AOE>
 
 	<Icon>
-		<Name>Abilities/WinterMagus/ArcticSurge</Name>
+		<Name>Icons/ArcticSurge</Name>
 		<Colour><RGB>240,255,255</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-		<Name>AbilitySprites/IceBurst/IceBurst</Name>
+		<Name>EffectSprites/IceBurst/IceBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
 	</HitSprite>
 

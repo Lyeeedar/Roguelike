@@ -7,20 +7,17 @@
     <Range>3</Range>
 
     <Icon>
-        <Name>Abilities/Pyromaniac/Flamestrike</Name>
+        <Name>Icons/Firebolt</Name>
         <Colour><RGB>255,165,0</RGB></Colour>
     </Icon>
 
     <HitSprite>
-        <Name>AbilitySprites/FireBurst/FireBurst</Name>
+        <Name>EffectSprites/FireBurst/FireBurst</Name>
         <UpdateRate>0.1</UpdateRate>
-        <Sound>
-            <Name>fire_torch_pass_by_large_heavy_with_crackle_2</Name>
-        </Sound>
     </HitSprite>
 
     <MovementSprite>
-        <Name>AbilitySprites/FireBoltMove/FireBoltMove</Name>
+        <Name>EffectSprites/FireBoltMove/FireBoltMove</Name>
         <UpdateRate>0.1</UpdateRate>
     </MovementSprite>
 

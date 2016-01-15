@@ -7,7 +7,7 @@
 	<Range>3</Range>
 
 	<Icon>
-		<Name>Abilities/Lancer/PiercingStrike</Name>
+		<Name>Icons/PiercingStrike</Name>
 		<Colour><RGB>220,220,220</RGB></Colour>
 	</Icon>
 

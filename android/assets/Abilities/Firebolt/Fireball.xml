@@ -9,20 +9,17 @@
 	<ScreenShake>10</ScreenShake>
 
 	<Icon>
-		<Name>Abilities/Pyromaniac/Fireball</Name>
+		<Name>Icons/Fireball</Name>
 		<Colour><RGB>255,165,0</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-		<Name>AbilitySprites/FireBurst/FireBurst</Name>
+		<Name>EffectSprites/FireBurst/FireBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
-		<Sound>
-		    <Name>explosion_with_reverse_intro</Name>
-		</Sound>
 	</HitSprite>
 
 	<MovementSprite>
-		<Name>AbilitySprites/FireBoltMove/FireBoltMove</Name>
+		<Name>EffectSprites/FireBoltMove/FireBoltMove</Name>
 		<UpdateRate>0.1</UpdateRate>
 	</MovementSprite>
 

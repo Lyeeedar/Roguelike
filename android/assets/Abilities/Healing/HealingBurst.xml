@@ -7,12 +7,12 @@
 	<Range>1</Range>
 
 	<Icon>
-		<Name>Abilities/Life/HealingBurst</Name>
+		<Name>Icons/HealingBurst</Name>
 		<Colour><RGB>175,255,47</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-	    <Name>AbilitySprites/Heal/Heal</Name>
+	    <Name>EffectSprites/Heal/Heal</Name>
 	    <UpdateRate>0.1</UpdateRate>
 	    <Colour><RGB>175,255,47</RGB></Colour>
 	    <Sound><Name>whoosh</Name></Sound>

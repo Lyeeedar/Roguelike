@@ -7,12 +7,17 @@
 	<Range>4</Range>
 
 	<Icon>
-		<Name>Abilities/WinterMagus/Icicle</Name>
+		<Name>Icons/Icicle</Name>
 		<Colour><RGB>240,255,255</RGB></Colour>
 	</Icon>
 
+    <HitSprite>
+        <Name>EffectSprites/IceBurst/IceBurst</Name>
+        <UpdateRate>0.1</UpdateRate>
+    </HitSprite>
+
 	<MovementSprite>
-		<Name>AbilitySprites/IceShard/IceShard</Name>
+		<Name>EffectSprites/IceShard/IceShard</Name>
 		<UpdateRate>0.1</UpdateRate>
 	</MovementSprite>
 

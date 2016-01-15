@@ -8,17 +8,17 @@
 	<ScreenShake>10</ScreenShake>
 
 	<Icon>
-		<Name>Abilities/Electron/Megawatt</Name>
+		<Name>Icons/Megawatt</Name>
 		<Colour><RGB>248,255,43</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-		<Name>AbilitySprites/LightningBurst/LightningBurst</Name>
+		<Name>EffectSprites/LightningBurst/LightningBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
 	</HitSprite>
 
 	<MovementSprite>
-		<Name>AbilitySprites/LightningBoltMove/LightningBolt</Name>
+		<Name>EffectSprites/LightningBoltMove/LightningBolt</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Animation>
 		    <Stretch>

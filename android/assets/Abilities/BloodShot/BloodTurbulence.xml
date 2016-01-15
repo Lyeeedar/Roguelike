@@ -8,12 +8,12 @@
 	<AOE>1</AOE>
 
 	<Icon>
-		<Name>Abilities/BloodMagic/BloodTurbulence</Name>
+		<Name>Icons/BloodTurbulence</Name>
 		<Colour><RGB>153,0,0</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-		<Name>AbilitySprites/Splatter/Splatter</Name>
+		<Name>EffectSprites/Splatter/Splatter</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Colour><RGB>153,0,0</RGB></Colour>
 	</HitSprite>

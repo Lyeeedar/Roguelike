@@ -9,12 +9,12 @@
 	<ScreenShake>20</ScreenShake>
 
 	<Icon>
-		<Name>Abilities/Electron/ThunderStrike</Name>
+		<Name>Icons/ThunderStrike</Name>
 		<Colour><RGB>248,255,43</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-		<Name>AbilitySprites/LightningBoltMove/LightningBolt</Name>
+		<Name>EffectSprites/LightningBoltMove/LightningBolt</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Animation>
 		    <Stretch>

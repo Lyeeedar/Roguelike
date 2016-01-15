@@ -7,12 +7,12 @@
 	<Range>3</Range>
 
 	<Icon>
-		<Name>Abilities/Electron/LightningBolt</Name>
+		<Name>Icons/LightningBolt</Name>
 		<Colour><RGB>248,255,43</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-		<Name>AbilitySprites/LightningBurst/LightningBurst</Name>
+		<Name>EffectSprites/LightningBurst/LightningBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Sound>
 		    <Name>electricity_high_voltage_spark</Name>
@@ -20,7 +20,7 @@
 	</HitSprite>
 
 	<MovementSprite>
-		<Name>AbilitySprites/LightningBoltMove/LightningBolt</Name>
+		<Name>EffectSprites/LightningBoltMove/LightningBolt</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Animation>
 		    <Stretch>

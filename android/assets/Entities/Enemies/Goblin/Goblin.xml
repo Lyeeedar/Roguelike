@@ -8,7 +8,7 @@
 			<Placement>Any</Placement>
 			<EnvironmentData>
 			    <Sprite>
-			        <Name>LevelDetail/HeadOnSpike</Name>
+			        <Name>Oryx/Custom/terrain/HeadOnSpike</Name>
 			    </Sprite>
 			    <Passable>false</Passable>
 			    <Opaque>false</Opaque>
@@ -22,7 +22,7 @@
 			<Placement>Wall</Placement>
 			<EnvironmentData>
 			    <Sprite>
-			        <Name>LevelDetail/Rubbish</Name>
+			        <Name>Oryx/Custom/terrain/Rubbish</Name>
 			    </Sprite>
 			    <Passable>false</Passable>
 			    <Opaque>false</Opaque>

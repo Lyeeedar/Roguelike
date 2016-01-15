@@ -8,12 +8,12 @@
 	<Range>4</Range>
 
 	<Icon>
-		<Name>Abilities/Electron/Conductivity</Name>
+		<Name>Icons/Conductivity</Name>
 		<Colour><RGB>248,255,43</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-		<Name>AbilitySprites/LightningBurst/LightningBurst</Name>
+		<Name>EffectSprites/LightningBurst/LightningBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Colour><RGB>220,200,250</RGB></Colour>
 	</HitSprite>

@@ -2,8 +2,8 @@
     <Name>Bloodrager</Name>
     <Description>Your attacks have a chance to kindle the bloodthirst within you.</Description>
     <Icon>
-        <Name>Abilities/Swordmaster/CriticalStrikes</Name>
-        <Colour><RGB>220,220,220</RGB></Colour>
+        <Name>Icons/CriticalStrikes</Name>
+        <Colour><RGB>220,120,120</RGB></Colour>
     </Icon>
 
     <Events>

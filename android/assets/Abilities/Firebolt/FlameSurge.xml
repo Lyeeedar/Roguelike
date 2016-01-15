@@ -8,16 +8,13 @@
 	<Range>1</Range>
 
 	<Icon>
-		<Name>Abilities/Pyromaniac/StickyFlames</Name>
+		<Name>Icons/FlameSurge</Name>
 		<Colour><RGB>255,165,0</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-		<Name>AbilitySprites/FireBurst/FireBurst</Name>
+		<Name>EffectSprites/FireBurst/FireBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
-		<Sound>
-		    <Name>fire_torch_pass_by_large_heavy_with_crackle_2</Name>
-		</Sound>
 	</HitSprite>
 
 	<Targeting>

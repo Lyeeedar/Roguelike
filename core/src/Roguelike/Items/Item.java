@@ -397,85 +397,6 @@ public final class Item extends GameEventHandler
 		{
 			icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/armor_chain_leg" );
 		}
-		else if ( category == ItemCategory.MATERIAL )
-		{
-			if ( type.equals( "fabric" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Fabric" );
-			}
-			else if ( type.equals( "hide" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Hide" );
-			}
-			else if ( type.equals( "leather" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Leather" );
-			}
-			else if ( type.equals( "ore" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Ore" );
-			}
-			else if ( type.equals( "ingot" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Ingot" );
-			}
-			else if ( type.equals( "log" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Log" );
-			}
-			else if ( type.equals( "plank" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Plank" );
-			}
-			else if ( type.equals( "bone" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Bone" );
-			}
-			else if ( type.equals( "claw" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Claw" );
-			}
-			else if ( type.equals( "fang" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Fang" );
-			}
-			else if ( type.equals( "spine" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Spine" );
-			}
-			else if ( type.equals( "scale" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Scale" );
-			}
-			else if ( type.equals( "feather" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Feather" );
-			}
-			else if ( type.equals( "shell" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Shell" );
-			}
-			else if ( type.equals( "vial" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Vial" );
-			}
-			else if ( type.equals( "sac" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Sac" );
-			}
-			else if ( type.equals( "powder" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Powder" );
-			}
-			else if ( type.equals( "crystal" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Crystal" );
-			}
-			else if ( type.equals( "gem" ) )
-			{
-				icon = AssetManager.loadSprite( "GUI/Gem" );
-			}
-		}
 		else if ( ability != null )
 		{
 			icon = ability.current.current.getIcon();
@@ -592,30 +513,30 @@ public final class Item extends GameEventHandler
 
 		if ( type.equals( "sword" ) )
 		{
-			return AssetManager.loadSprite( "slash/slash", 0.1f );
+			return AssetManager.loadSprite( "EffectSprites/Slash/Slash", 0.1f );
 		}
 		else if ( type.equals( "spear" ) )
 		{
-			return AssetManager.loadSprite( "thrust/thrust", 0.1f );
+			return AssetManager.loadSprite( "EffectSprites/Thrust/Thrust", 0.1f );
 		}
 		else if ( type.equals( "axe" ) )
 		{
-			return AssetManager.loadSprite( "slash/slash", 0.1f );
+			return AssetManager.loadSprite( "EffectSprites/Slash/Slash", 0.1f );
 		}
 		else if ( type.equals( "bow" ) )
 		{
-			Sprite sprite = AssetManager.loadSprite( "arrow", 0.1f );
+			Sprite sprite = AssetManager.loadSprite( "EffectSprites/Arrow/Arrow", 0.1f );
 			sprite.spriteAnimation = new MoveAnimation(  );
 			return sprite;
 		}
 		else if ( type.equals( "wand" ) )
 		{
-			Sprite sprite = AssetManager.loadSprite( "bolt", 0.1f );
+			Sprite sprite = AssetManager.loadSprite( "EffectSprites/Bolt/Bolt", 0.1f );
 			sprite.spriteAnimation = new MoveAnimation(  );
 			return sprite;
 		}
 
-		return AssetManager.loadSprite( "strike/strike", 0.1f );
+		return AssetManager.loadSprite( "EffectSprites/Strike/Strike", 0.1f );
 	}
 
 	// ----------------------------------------------------------------------

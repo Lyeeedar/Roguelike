@@ -2,7 +2,7 @@
     <FieldName>PoisonGas</FieldName>
     <Tags>Flammable,Poison,Explosive</Tags>
     <Sprite>
-        <Name>effect/cloud_grey_smoke</Name>
+        <Name>EffectSprites/Fire/Fire</Name>
         <Colour><RGB>0,255,100</RGB></Colour>
     </Sprite>
     <OnTurn>

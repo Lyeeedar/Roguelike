@@ -7,12 +7,12 @@
 	<Range>4</Range>
 
 	<Icon>
-		<Name>Abilities/BloodMagic/OpenVein</Name>
+		<Name>Icons/OpenVein</Name>
 		<Colour><RGB>153,0,0</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-		<Name>AbilitySprites/Splatter/Splatter</Name>
+		<Name>EffectSprites/Splatter/Splatter</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Colour><RGB>153,0,0</RGB></Colour>
 	</HitSprite>

@@ -10,7 +10,7 @@
 				<Passable>Levitate</Passable>
 				<Opaque>false</Opaque>
 				<Sprite>
-					<Name>dc-dngn/water/dngn_shallow_water</Name>
+					<Name>Oryx/uf_split/uf_terrain/water_teal</Name>
 				</Sprite>
 			</TileData>
 			<Coverage Min="60" >75</Coverage>
@@ -23,7 +23,7 @@
 
 			<EnvironmentData>
 				<Sprite>
-					<Name>mushroom/spawner</Name>
+					<Name>Oryx/Custom/terrain/spawner</Name>
 				</Sprite>
 				<Passable>false</Passable>
 				<Type>Spawner</Type>

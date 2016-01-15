@@ -7,15 +7,14 @@
 	<Range>1</Range>
 
 	<Icon>
-		<Name>Abilities/Swordmaster/Flurry</Name>
-		<Colour><RGB>220,220,220</RGB></Colour>
+		<Name>Icons/Flurry</Name>
+		<Colour><RGB>205,200,205</RGB></Colour>
 	</Icon>
 
 	<HitSprite>
-	    <Name>AbilitySprites/Shout/Shout</Name>
+	    <Name>EffectSprites/Shout/Shout</Name>
 	    <UpdateRate>0.1</UpdateRate>
-	    <Colour><RGB>178,34,34</RGB></Colour>
-	    <Sound><Name>roar</Name></Sound>
+	    <Colour><RGB>205,200,205</RGB></Colour>
 	</HitSprite>
 
 	<Cost>

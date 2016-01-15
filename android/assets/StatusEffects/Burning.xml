@@ -4,7 +4,8 @@
 	<Duration>5</Duration>
 
 	<Icon>
-		<Name>Skills/Burning</Name>
+		<Name>Icons/UnreliableFlames</Name>
+        <Colour><RGB>255,165,0</RGB></Colour>
 	</Icon>
 
 	<Events>
