@@ -31,11 +31,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
@@ -463,6 +462,12 @@ public class Global
 				new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/Eye.png" ) ) );
 		skin.add( "examine", examineButton );
 
+		Button.ButtonStyle menuButton = new Button.ButtonStyle(  );
+		menuButton.up = new LayeredDrawable(
+				new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) ),
+				new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/All.png" ) ) );
+		skin.add( "menu", menuButton );
+
 		Seperator.SeperatorStyle horiSeperatorStyle = new Seperator.SeperatorStyle(  );
 		horiSeperatorStyle.vertical = false;
 		horiSeperatorStyle.thickness = 6;
@@ -474,6 +479,23 @@ public class Global
 		vertSeperatorStyle.thickness = 6;
 		vertSeperatorStyle.background = new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/SeperatorVertical.png" ) );
 		skin.add( "vertical", vertSeperatorStyle );
+
+		ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle(  );
+		skin.add( "default", scrollPaneStyle );
+
+		List.ListStyle listStyle = new List.ListStyle(  );
+		listStyle.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Tooltip.png" ), 21, 21, 21, 21 ) );
+		listStyle.font = skin.getFont( "default" );
+		listStyle.selection = skin.newDrawable( "white", Color.LIGHT_GRAY );
+		skin.add( "default", listStyle );
+
+		SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle(  );
+		selectBoxStyle.fontColor = Color.WHITE;
+		selectBoxStyle.font = skin.getFont( "default" );
+		selectBoxStyle.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TextField.png" ), 6, 6, 6, 6 ) );
+		selectBoxStyle.scrollStyle = scrollPaneStyle;
+		selectBoxStyle.listStyle = listStyle;
+		skin.add( "default", selectBoxStyle );
 
 		return skin;
 	}

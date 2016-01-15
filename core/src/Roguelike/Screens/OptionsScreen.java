@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
+import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
 
 import com.badlogic.gdx.Gdx;
@@ -39,8 +40,6 @@ public class OptionsScreen implements Screen, InputProcessor
 
 	public void create()
 	{
-		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 15 );
-
 		skin = Global.loadSkin();
 
 		stage = new Stage( new ScreenViewport() );
@@ -128,6 +127,12 @@ public class OptionsScreen implements Screen, InputProcessor
 			@Override
 			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
 			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
 
 				String selectedResolution = resolutions.getSelected();
 
@@ -170,24 +175,20 @@ public class OptionsScreen implements Screen, InputProcessor
 
 				Global.ApplicationChanger.updateApplication( prefs );
 
-				return false;
 			}
 		} );
-		TextButton restore = new TextButton( "Restore", skin );
-		restore.addListener( new InputListener()
-		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				createVideo();
-				return false;
-			}
-		} );
+
 		TextButton defaults = new TextButton( "Defaults", skin );
 		defaults.addListener( new InputListener()
 		{
 			@Override
 			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 			{
 
 				prefs.putInteger( "resolutionX", 800 );
@@ -204,16 +205,36 @@ public class OptionsScreen implements Screen, InputProcessor
 				Global.ApplicationChanger.updateApplication( prefs );
 
 				createVideo();
-
-				return false;
 			}
 		} );
+
+		TextButton backButton = new TextButton( "Back", skin );
+		backButton.addListener( new InputListener()
+		{
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				RoguelikeGame.Instance.switchScreen( screen );
+			}
+		});
 
 		TextButton nativeRes = new TextButton( "Use Native Resolution", skin );
 		nativeRes.addListener( new InputListener()
 		{
 			@Override
 			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 			{
 				prefs.putBoolean( "fullscreen", windowMode.getSelected().equals( "Fullscreen" ) );
 				prefs.putBoolean( "borderless", windowMode.getSelected().equals( "Borderless Window" ) );
@@ -245,7 +266,6 @@ public class OptionsScreen implements Screen, InputProcessor
 
 				Global.ApplicationChanger.setToNativeResolution( prefs );
 				createVideo();
-				return false;
 			}
 		} );
 
@@ -265,9 +285,14 @@ public class OptionsScreen implements Screen, InputProcessor
 		options.add( msaaLabel );
 		options.add( msaa );
 		options.row();
-		options.add( apply );
-		options.add( restore );
-		options.add( defaults );
+
+		Table adTable = new Table(  );
+		adTable.add( defaults );
+		adTable.add( apply );
+
+		options.add( backButton ).left();
+		options.add( adTable ).right();
+
 	}
 
 	@Override
@@ -301,7 +326,7 @@ public class OptionsScreen implements Screen, InputProcessor
 	{
 		stage.act();
 
-		Gdx.gl.glClearColor( 0, 0, 0, 1 );
+		Gdx.gl.glClearColor( 0.3f, 0.3f, 0.3f, 1 );
 		Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 
 		stage.draw();
@@ -402,8 +427,6 @@ public class OptionsScreen implements Screen, InputProcessor
 	Skin skin;
 
 	SpriteBatch batch;
-
-	Texture background;
 
 	public InputMultiplexer inputMultiplexer;
 

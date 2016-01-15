@@ -107,6 +107,25 @@ public class MainMenuScreen implements Screen
 		buttonTable.add( ngbutton ).expandX().fillX();
 		buttonTable.row();
 
+		TextButton optionButton = new TextButton( "Options", skin, "big" );
+		optionButton.addListener( new InputListener()
+		{
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				OptionsScreen.Instance.screen = ScreenEnum.MAINMENU;
+				RoguelikeGame.Instance.switchScreen( ScreenEnum.OPTIONS );
+			}
+		});
+		buttonTable.add( optionButton ).expandX().fillX();
+		buttonTable.row();
+
 		TextButton qbutton = new TextButton( "Quit", skin, "big" );
 		qbutton.addListener( new InputListener()
 		{

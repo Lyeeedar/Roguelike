@@ -4,6 +4,7 @@ import Roguelike.Ability.AbilityTree;
 import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Items.Item;
+import Roguelike.RoguelikeGame;
 import Roguelike.Sprite.Sprite;
 import Roguelike.UI.ClassList;
 import Roguelike.UI.ClassList.ClassDesc;
@@ -102,12 +103,29 @@ public class CharacterCreationScreen implements Screen
 			}
 		} );
 
+		TextButton mainMenubutton = new TextButton( "Main Menu", skin, "big" );
+		mainMenubutton.addListener( new InputListener()
+		{
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				RoguelikeGame.Instance.switchScreen( RoguelikeGame.ScreenEnum.MAINMENU );
+			}
+		} );
+
 		table.add( optionsTable ).pad( 10 ).expandX().fillX();
 		table.row();
 
 		table.add( classTable ).pad( 10 ).expand().fill();
 		table.row();
 
+		table.add( mainMenubutton ).expandX().width( 200 ).pad( 10 ).left();
 		table.add( ngbutton ).expandX().width( 200 ).pad( 10 ).right();
 		table.row();
 

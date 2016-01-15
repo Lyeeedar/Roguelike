@@ -237,6 +237,25 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		sheathButton.setPosition( Global.Resolution[0] - sheathButton.getWidth() - 20, 20 );
 		stage.addActor( sheathButton );
 
+		menuButton = new Button( skin, "menu" );
+		menuButton.addListener( new InputListener()
+		{
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				displayGameMenu();
+			}
+		} );
+
+		menuButton.setPosition( Global.Resolution[0] - menuButton.getWidth() - 20, Global.Resolution[1] - 20 - menuButton.getHeight() );
+		stage.addActor( menuButton );
+
 		relayoutUI();
 	}
 
@@ -252,6 +271,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		equipmentPanel.setY( 10 + abilityPanel.getHeight() );
 		equipmentPanel.setWidth( equipmentPanel.getMinWidth() );
 		equipmentPanel.setHeight( equipmentPanel.getMinHeight() );
+
+		sheathButton.setPosition( Global.Resolution[0] - sheathButton.getWidth() - 20, 20 );
+		menuButton.setPosition( Global.Resolution[0] - menuButton.getWidth() - 20, Global.Resolution[1] - 20 - menuButton.getHeight() );
 
 		if (contextMenu != null)
 		{
@@ -408,8 +430,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			dragDropPayload.sprite.render( batch, (int) dragDropPayload.x, (int) dragDropPayload.y, 32, 32 );
 		}
 
-		font.draw( batch, "FPS: " + fps, Global.Resolution[ 0 ] - 100, Global.Resolution[ 1 ] - 20 );
-		font.draw( batch, "Frametime: " + storedFrametime, Global.Resolution[ 0 ] - 200, Global.Resolution[ 1 ] - 40 );
+		font.draw( batch, "FPS: " + fps, 20, Global.Resolution[ 1 ] - 20 );
 
 		batch.end();
 
@@ -1382,8 +1403,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 		else if ( keycode == Keys.ESCAPE )
 		{
-			OptionsScreen.Instance.screen = ScreenEnum.GAME;
-			Global.Game.switchScreen( ScreenEnum.OPTIONS );
+			displayGameMenu();
 		}
 
 		return false;
@@ -1913,6 +1933,73 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
+	public void displayGameMenu()
+	{
+		Table table = new Table();
+
+		TextButton resumeButton = new TextButton( "Resume", skin );
+		resumeButton.addListener( new InputListener()
+		{
+
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				lockContextMenu = false;
+				clearContextMenu();
+			}
+		} );
+		table.add( resumeButton ).expandX().width( 200 ).center();
+		table.row();
+
+		TextButton optionsButton = new TextButton( "Options", skin );
+		optionsButton.addListener( new InputListener()
+		{
+
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				OptionsScreen.Instance.screen = ScreenEnum.GAME;
+				RoguelikeGame.Instance.switchScreen( ScreenEnum.OPTIONS );
+			}
+		} );
+		table.add( optionsButton ).expandX().width( 200 ).center();
+		table.row();
+
+		TextButton mainmenuButton = new TextButton( "Main Menu", skin );
+		mainmenuButton.addListener( new InputListener()
+		{
+
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				RoguelikeGame.Instance.switchScreen( ScreenEnum.MAINMENU );
+			}
+		} );
+		table.add( mainmenuButton ).expandX().width( 200 ).center();
+		table.row();
+
+		displayContextMenu( table, true );
+	}
+
+	// ----------------------------------------------------------------------
 	public void displayLevelEntryMessage(String title, String message)
 	{
 		if ( !created )
@@ -2097,6 +2184,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private EquipmentPanel equipmentPanel;
 	private Skin skin;
 	private Button sheathButton;
+	private Button menuButton;
 
 	// ----------------------------------------------------------------------
 	private long diff, start = System.currentTimeMillis();
