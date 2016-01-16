@@ -533,7 +533,7 @@ public class Level
 	}
 
 	// ----------------------------------------------------------------------
-	private void updateSeenBitflag(int x, int y)
+	public void updateSeenBitflag(int x, int y)
 	{
 		for (Direction dir : Direction.values())
 		{
@@ -547,7 +547,7 @@ public class Level
 	}
 
 	// ----------------------------------------------------------------------
-	private void updateUnseenBitflag(int x, int y)
+	public void updateUnseenBitflag(int x, int y)
 	{
 		for (Direction dir : Direction.values())
 		{
@@ -766,6 +766,13 @@ public class Level
 
 		if ( player.tasks.size > 0 )
 		{
+			saveCounter++;
+			if (saveCounter == 50)
+			{
+				Global.save();
+				saveCounter = 0;
+			}
+
 			AbstractTask task = player.tasks.removeIndex( 0 );
 			for ( GameEventHandler handler : player.getAllHandlers() )
 			{
@@ -1392,6 +1399,8 @@ public class Level
 	// endregion Misc
 	// ####################################################################//
 	// region Data
+
+	private int saveCounter = 0;
 
 	private Array<ActiveAbility> NewActiveAbilities = new Array<ActiveAbility>( false, 16 );
 

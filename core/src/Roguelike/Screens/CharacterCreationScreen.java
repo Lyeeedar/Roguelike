@@ -2,6 +2,7 @@ package Roguelike.Screens;
 
 import Roguelike.Ability.AbilityTree;
 import Roguelike.AssetManager;
+import Roguelike.Entity.GameEntity;
 import Roguelike.Global;
 import Roguelike.Items.Item;
 import Roguelike.RoguelikeGame;
@@ -9,6 +10,7 @@ import Roguelike.Sprite.Sprite;
 import Roguelike.UI.ClassList;
 import Roguelike.UI.ClassList.ClassDesc;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -61,6 +65,13 @@ public class CharacterCreationScreen implements Screen
 		optionsTable.background( new NinePatchDrawable( background ) );
 
 		male = new CheckBox( "Male", skin );
+		male.addListener( new ChangeListener() {
+			@Override
+			public void changed( ChangeEvent event, Actor actor )
+			{
+				classList.male = male.isChecked();
+			}
+		} );
 		female = new CheckBox( "Female", skin );
 
 		ButtonGroup<Button> group = new ButtonGroup<Button>();
@@ -76,7 +87,7 @@ public class CharacterCreationScreen implements Screen
 
 		optionsTable.add( genderTable );
 
-		Table classTable = new Table();
+		final Table classTable = new Table();
 		classTable.defaults().uniformY().space( 10 );
 
 		// classTable.debug();
@@ -98,7 +109,9 @@ public class CharacterCreationScreen implements Screen
 			@Override
 			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 			{
-				Global.newGame( classList.chosen.entity );
+				GameEntity entity = male.isChecked() ? classList.chosen.male : classList.chosen.female;
+
+				Global.newGame( entity );
 				Global.GlobalNames.put( "class", classList.chosen.name );
 			}
 		} );
@@ -185,7 +198,9 @@ public class CharacterCreationScreen implements Screen
 		selectedClass.add( new Label( "Starting Abilities:", skin ) ).expandX().left().top();
 		selectedClass.row();
 
-		for (AbilityTree tree : lastSelected.entity.slottedAbilities)
+		GameEntity entity = male.isChecked() ? lastSelected.male : lastSelected.female;
+
+		for (AbilityTree tree : entity.slottedAbilities)
 		{
 			if (tree != null)
 			{
@@ -197,7 +212,7 @@ public class CharacterCreationScreen implements Screen
 		selectedClass.add( new Label( "Starting Inventory:", skin ) ).expandX().left().top();
 		selectedClass.row();
 
-		for ( Item item : lastSelected.entity.getInventory().m_items )
+		for ( Item item : entity.getInventory().m_items )
 		{
 			selectedClass.add( new Label( item.name, skin ) ).expandX().left().padLeft( 30 ).top();
 			selectedClass.row();

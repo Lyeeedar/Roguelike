@@ -10,10 +10,13 @@ import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.Point;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader;
 
 public final class SaveGameEntity extends SaveableObject<GameEntity>
 {
 	public String fileName;
+	public Array<XmlReader.Element> xmlData;
+
 	public int hp;
 	public int essence;
 	public Point pos = new Point();
@@ -30,6 +33,8 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 	public void store( GameEntity obj )
 	{
 		fileName = obj.fileName;
+		xmlData = obj.xmlData;
+
 		hp = obj.HP;
 		essence = obj.essence;
 		pos.set( obj.tile[0][0].x, obj.tile[0][0].y );
@@ -65,7 +70,7 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 	@Override
 	public GameEntity create()
 	{
-		GameEntity entity = GameEntity.load( fileName );
+		GameEntity entity = fileName != null ? GameEntity.load( fileName ) : GameEntity.load( xmlData );
 
 		entity.essence = essence;
 		entity.HP = hp;

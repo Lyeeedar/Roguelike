@@ -28,6 +28,8 @@ public final class SaveLevel extends SaveableObject<Level>
 	public Array<SaveField> fields = new Array<SaveField>();
 	public Array<SaveOrb> orbs = new Array<SaveOrb>();
 
+	public boolean[][] seenState;
+
 	public SaveLevel()
 	{
 
@@ -127,6 +129,15 @@ public final class SaveLevel extends SaveableObject<Level>
 				environmentEntities.add( saveObj );
 			}
 		}
+
+		seenState = new boolean[obj.Grid.length][obj.Grid[0].length];
+		for ( int x = 0; x < seenState.length; x++ )
+		{
+			for ( int y = 0; y < seenState[0].length; y++ )
+			{
+				seenState[x][y] = obj.Grid[x][y].seen;
+			}
+		}
 	}
 
 	@Override
@@ -172,6 +183,26 @@ public final class SaveLevel extends SaveableObject<Level>
 		{
 			GameTile tile = level.getGameTile( orb.pos );
 			tile.orbs = orb.orbs.copy();
+		}
+
+		if (seenState != null)
+		{
+			for ( int x = 0; x < seenState.length; x++ )
+			{
+				for ( int y = 0; y < seenState[0].length; y++ )
+				{
+					level.Grid[x][y].seen = seenState[x][y];
+				}
+			}
+
+			for ( int x = 0; x < seenState.length; x++ )
+			{
+				for ( int y = 0; y < seenState[ 0 ].length; y++ )
+				{
+					level.updateSeenBitflag( x, y );
+					level.updateUnseenBitflag( x, y );
+				}
+			}
 		}
 	}
 

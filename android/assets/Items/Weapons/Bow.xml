@@ -2,6 +2,12 @@
 
     <HitType>Closest(1)</HitType>
 
+    <HitSprite>
+        <Name>EffectSprites/Arrow/Arrow</Name>
+        <Animation><Move/></Animation>
+        <UpdateRate>0.1</UpdateRate>
+    </HitSprite>
+
     <HitPattern>
         <Line>...#####...</Line>
         <Line>...#####...</Line>

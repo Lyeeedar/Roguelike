@@ -3,13 +3,122 @@
     <Class>
         <Name>Soldier</Name>
         <Description>A physical fighter proficient in all manner of weaponry</Description>
-        <EntityPath>Classes/Soldier</EntityPath>
+        <Male>
+            <Sprite>
+                <Name>Oryx/uf_split/uf_heroes/knight</Name>
+                <DrawActualSize>true</DrawActualSize>
+            </Sprite>
+        </Male>
+        <Female>
+            <Sprite>
+                <Name>Oryx/Custom/heroes/knight</Name>
+                <DrawActualSize>true</DrawActualSize>
+            </Sprite>
+        </Female>
+        <Both>
+            <Statistics>
+                <Strength>val+2</Strength>
+                <Constitution>val+2</Constitution>
+            </Statistics>
+            <Inventory>
+                <Equipment>
+                    <Weapon>
+                        <Recipe>sword</Recipe>
+                        <Material>Metal</Material>
+                        <Quality>1</Quality>
+                    </Weapon>
+                    <Body>
+                        <Recipe>Cuirass</Recipe>
+                        <Material>Metal</Material>
+                        <Quality>1</Quality>
+                    </Body>
+                    <Leg>
+                        <Recipe>Greaves</Recipe>
+                        <Material>Metal</Material>
+                        <Quality>1</Quality>
+                    </Leg>
+                </Equipment>
+            </Inventory>
+            <Abilities>
+                <PowerAttack>PowerAttack</PowerAttack>
+            </Abilities>
+        </Both>
     </Class>
 
     <Class>
         <Name>Wizard</Name>
         <Description>A magical master proficient in slinging spells</Description>
-        <EntityPath>Classes/Wizard</EntityPath>
+        <Male>
+            <Sprite>
+                <Name>Oryx/uf_split/uf_heroes/wizard</Name>
+                <DrawActualSize>true</DrawActualSize>
+            </Sprite>
+        </Male>
+        <Female>
+            <Sprite>
+                <Name>Oryx/uf_split/uf_heroes/witch</Name>
+                <DrawActualSize>true</DrawActualSize>
+            </Sprite>
+        </Female>
+        <Both>
+            <Statistics>
+                <Willpower>val+2</Willpower>
+            </Statistics>
+            <Inventory>
+                <Equipment>
+                    <Wand>
+                        <Recipe>Wand</Recipe>
+                        <Material>Metal</Material>
+                        <Quality>1</Quality>
+                    </Wand>
+                    <Top>
+                        <Recipe>Shirt</Recipe>
+                        <Material>Cloth</Material>
+                        <Quality>1</Quality>
+                    </Top>
+                    <Legs>
+                        <Recipe>Trousers</Recipe>
+                        <Material>Cloth</Material>
+                        <Quality>1</Quality>
+                    </Legs>
+                </Equipment>
+            </Inventory>
+            <Abilities>
+                <MagicArrow>MagicArrow</MagicArrow>
+            </Abilities>
+        </Both>
     </Class>
+
+    <EntityTemplate>
+        <Name>Player</Name>
+
+        <Factions>
+            <Faction>Player</Faction>
+        </Factions>
+
+        <AI>player</AI>
+
+        <CanSwap>true</CanSwap>
+
+        <Statistics>
+            <Constitution>10</Constitution>
+            <Perception>10</Perception>
+            <Strength>10</Strength>
+            <Intelligence>10</Intelligence>
+            <Willpower>10</Willpower>
+            <Speed>10</Speed>
+        </Statistics>
+
+        <Light>
+            <Colour>
+                <Red>1</Red>
+                <Green>1</Green>
+                <Blue>1</Blue>
+                <Alpha>0.5</Alpha>
+            </Colour>
+
+            <Intensity>4</Intensity>
+        </Light>
+    </EntityTemplate>
 
 </Classes>

@@ -1939,6 +1939,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void displayGameMenu()
 	{
+		Global.save();
+
 		Table table = new Table();
 		table.defaults().pad( 10 );
 

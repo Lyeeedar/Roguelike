@@ -129,6 +129,12 @@ public class GameEntity extends Entity
 			e.printStackTrace();
 		}
 
+		internalLoad( xmlElement );
+	}
+
+	// ----------------------------------------------------------------------
+	protected void internalLoad( Element xmlElement )
+	{
 		String extendsElement = xmlElement.getAttribute( "Extends", null );
 		if ( extendsElement != null )
 		{
@@ -324,6 +330,27 @@ public class GameEntity extends Entity
 	}
 
 	// ----------------------------------------------------------------------
+	public static GameEntity load( Array<Element> xml )
+	{
+		GameEntity e = new GameEntity();
+		e.xmlData = xml;
+
+		for ( Element el : xml )
+		{
+			e.internalLoad( el );
+		}
+
+		e.HP = e.getStatistic( Statistic.CONSTITUTION ) * 10;
+
+		e.statistics.put( Statistic.WALK, 1 );
+
+		e.isVariableMapDirty = true;
+		e.recalculateMaps();
+
+		return e;
+	}
+
+	// ----------------------------------------------------------------------
 	public EnumBitflag<Passability> getTravelType()
 	{
 		recalculateMaps();
@@ -337,6 +364,7 @@ public class GameEntity extends Entity
 	// ----------------------------------------------------------------------
 	public boolean seen = false;
 	public String fileName;
+	public Array<Element> xmlData;
 
 	// ----------------------------------------------------------------------
 	public Array<AbilityTree> slottedAbilities = new Array<AbilityTree>();

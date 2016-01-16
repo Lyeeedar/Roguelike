@@ -29,6 +29,8 @@ public class ClassList extends TilePanel
 	public Array<ClassDesc> classes = new Array<ClassDesc>();
 	public ClassDesc chosen;
 
+	public boolean male = true;
+
 	public void reparse()
 	{
 		classes.clear();
@@ -49,29 +51,17 @@ public class ClassList extends TilePanel
 			e.printStackTrace();
 		}
 
+		Element template = xml.getChildByName( "EntityTemplate" );
+
 		for ( Element classElement : xml.getChildrenByName( "Class" ) )
 		{
 			ClassDesc desc = new ClassDesc();
-			desc.parse( classElement );
+			desc.parse( classElement, template );
 
 			classes.add( desc );
 		}
 
 		chosen = classes.get( 0 );
-	}
-
-	public static class ClassDesc
-	{
-		public String name;
-		public String description;
-		public GameEntity entity;
-
-		public void parse( Element xml )
-		{
-			name = xml.get( "Name" );
-			description = xml.get( "Description" );
-			entity = GameEntity.load( xml.get( "EntityPath" ) );
-		}
 	}
 
 	@Override
@@ -136,6 +126,45 @@ public class ClassList extends TilePanel
 		batch.setColor( Color.WHITE );
 
 		ClassDesc desc = (ClassDesc) data;
-		desc.entity.sprite.render( batch, x, y, width, height );
+
+		if (male)
+		{
+			desc.male.sprite.render( batch, x, y, width, height );
+		}
+		else
+		{
+			desc.female.sprite.render( batch, x, y, width, height );
+		}
+	}
+
+	public static class ClassDesc
+	{
+		public String name;
+		public String description;
+		public GameEntity female;
+		public GameEntity male;
+
+		public void parse( Element xml, Element entityTemplate )
+		{
+			name = xml.get( "Name" );
+			description = xml.get( "Description" );
+
+			Element maleElement = xml.getChildByName( "Male" );
+			Element femaleElement = xml.getChildByName( "Female" );
+			Element bothElement = xml.getChildByName( "Both" );
+
+			Array<Element> maleData = new Array<Element>(  );
+			maleData.add( entityTemplate );
+			maleData.add( bothElement );
+			maleData.add( maleElement );
+
+			Array<Element> femaleData = new Array<Element>(  );
+			femaleData.add( entityTemplate );
+			femaleData.add( bothElement );
+			femaleData.add( femaleElement );
+
+			male = GameEntity.load( maleData );
+			female = GameEntity.load( femaleData );
+		}
 	}
 }

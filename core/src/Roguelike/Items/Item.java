@@ -511,29 +511,9 @@ public final class Item extends GameEventHandler
 	{
 		if ( hitEffect != null ) { return hitEffect; }
 
-		if ( type.equals( "sword" ) )
+		if ( wepDef != null && wepDef.hitSprite != null )
 		{
-			return AssetManager.loadSprite( "EffectSprites/Slash/Slash", 0.1f );
-		}
-		else if ( type.equals( "spear" ) )
-		{
-			return AssetManager.loadSprite( "EffectSprites/Thrust/Thrust", 0.1f );
-		}
-		else if ( type.equals( "axe" ) )
-		{
-			return AssetManager.loadSprite( "EffectSprites/Slash/Slash", 0.1f );
-		}
-		else if ( type.equals( "bow" ) )
-		{
-			Sprite sprite = AssetManager.loadSprite( "EffectSprites/Arrow/Arrow", 0.1f );
-			sprite.spriteAnimation = new MoveAnimation(  );
-			return sprite;
-		}
-		else if ( type.equals( "wand" ) )
-		{
-			Sprite sprite = AssetManager.loadSprite( "EffectSprites/Bolt/Bolt", 0.1f );
-			sprite.spriteAnimation = new MoveAnimation(  );
-			return sprite;
+			return wepDef.hitSprite;
 		}
 
 		return AssetManager.loadSprite( "EffectSprites/Strike/Strike", 0.1f );
@@ -608,6 +588,7 @@ public final class Item extends GameEventHandler
 
 		public HitType hitType;
 		public String hitData;
+		public Sprite hitSprite;
 
 		public Array<Point> hitPoints = new Array<Point>(  );
 
@@ -627,6 +608,12 @@ public final class Item extends GameEventHandler
 			catch ( IOException e )
 			{
 				e.printStackTrace();
+			}
+
+			Element spriteElement = xml.getChildByName( "HitSprite" );
+			if ( spriteElement != null )
+			{
+				wepDef.hitSprite = AssetManager.loadSprite( spriteElement );
 			}
 
 			String[] hitTypeData = xml.get( "HitType" ).split( "[\\(\\)]" );

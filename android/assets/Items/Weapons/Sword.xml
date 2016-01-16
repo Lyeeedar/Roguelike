@@ -2,6 +2,11 @@
 
     <HitType>Closest(1)</HitType>
 
+    <HitSprite>
+        <Name>EffectSprites/Slash/Slash</Name>
+        <UpdateRate>0.1</UpdateRate>
+    </HitSprite>
+
     <HitPattern>
         <Line>#</Line>
         <Line>x</Line>
