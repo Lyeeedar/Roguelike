@@ -11,7 +11,6 @@
         <Constant>
             <Attack>7 + 3.5 * quality</Attack>
             <Willpower>ceil(quality / 4)</Willpower>
-            <Intelligence>ceil(quality / 4)</Intelligence>
         </Constant>
     </Events>
 </Recipe>

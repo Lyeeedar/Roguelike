@@ -36,7 +36,7 @@
         </Status>
 		<Damage>
             <Attack>150 + 5 * level</Attack>
-            <Intelligence>1</Intelligence>
+            <Willpower>1</Willpower>
 		</Damage>
 	</Effect>
 

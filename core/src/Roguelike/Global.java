@@ -818,9 +818,8 @@ public class Global
 
 		// Modifier stats
 		STRENGTH, // Melee dam
-		PERCEPTION, // Sight range + rangee dam
-		INTELLIGENCE, // Elemental Dam
-		WILLPOWER, // Meta dam
+		PERCEPTION, // Sight range + range dam
+		WILLPOWER, // magic dam
 		CONSTITUTION, // Health + Blood dam
 		SPEED; // Speed
 
@@ -831,7 +830,6 @@ public class Global
 		public static Statistic[] ModifierValues = {
 			Statistic.STRENGTH,
 			Statistic.PERCEPTION,
-			Statistic.INTELLIGENCE,
 			Statistic.WILLPOWER,
 			Statistic.CONSTITUTION,
 			Statistic.SPEED };

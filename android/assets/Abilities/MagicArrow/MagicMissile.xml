@@ -29,7 +29,7 @@
 	<Effect>
 		<Damage>
             <Attack>150 + 10 * level</Attack>
-            <Intelligence>1</Intelligence>
+            <Willpower>1</Willpower>
 		</Damage>
 	</Effect>
 
