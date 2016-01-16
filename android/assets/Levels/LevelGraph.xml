@@ -1,9 +1,9 @@
 <Forest MaxDepth="2" Title="Melet Woods" Description="A dense forest stretches out before you, filled to the brim with vicious creatures spawned from the horrific plane of life. Raucous cries of goblins filter through the leaves, putting you on guard.">
     <EnchantedForest MaxDepth="2" Title="Heart of the Forest" Description="Glowing trees denote the enchanted heart of the forest, casting sharp shadows along the leafy ground. The very air thrums with the barely contained energies infused into area. Theorised to be a leaking of power from the plane of life, the distorting magic has morphed the creatures here into strange and dangerous forms.">
         <Cave Label="Cave" MaxDepth="3" Title="Melet Mountain" Description="At the centre of the forest rises a lone mountain, its grey rock faces a stark contrast against the sea of green below. Beneath the mountain is where the tear to the plane of life is said to have been ripped open, and therefore that is where you need to go. The interior is cold and dark, infested with the abominations spewed out by the ever mutating life plane.">
-            <UndergroundLake Label="Lake" MaxDepth="1">
+            <Lake Label="Lake" MaxDepth="1">
 
-            </UndergroundLake>
+            </Lake>
         </Cave>
 
         <Branches>

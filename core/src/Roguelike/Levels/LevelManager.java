@@ -21,7 +21,7 @@ public class LevelManager
 {
 	public int hpDropCounter = 0;
 
-	public int totalDepth = 0;
+	public int totalDepth = 1;
 
 	public LevelData root;
 	public LevelData current;
@@ -51,7 +51,7 @@ public class LevelManager
 		LevelData prev = current;
 		current = getLevel( name );
 
-		int depth = prev.levelName.equals( name ) ? prev.currentLevel.depth + 1 : 0;
+		int depth = prev.levelName.equals( name ) ? prev.currentLevel.depth + 1 : 1;
 		prev.currentLevel = null;
 
 		SaveLevel level = new SaveLevel( current.levelName, depth, current.getExtraRooms( prev.levelName, depth, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
@@ -62,7 +62,7 @@ public class LevelManager
 			// spawn boss
 			current.currentLevel.isBossLevel = true;
 		}
-		else if (depth == 0)
+		else if (depth == 1)
 		{
 			GameScreen.Instance.displayLevelEntryMessage( current.levelTitle, current.levelDescription );
 		}

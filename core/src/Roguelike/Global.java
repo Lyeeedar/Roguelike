@@ -58,7 +58,7 @@ public class Global
 	public static final boolean CanMoveDiagonal = false;
 
 	// ----------------------------------------------------------------------
-	public static final int NUM_ABILITY_SLOTS = 8;
+	public static final int NUM_ABILITY_SLOTS = 5;
 
 	// ----------------------------------------------------------------------
 	public static RoguelikeGame Game;

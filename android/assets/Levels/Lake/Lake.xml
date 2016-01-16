@@ -1,138 +1,174 @@
 <Level>
-	<Ambient>
-		<Red>0.5</Red>
-		<Green>0.75</Green>
-		<Blue>0.3</Blue>
-		<Alpha>1</Alpha>
-	</Ambient>
 
-	<Symbols>
-	
-		<Symbol>
-			<Char>.</Char>
-			<TileData>
-				<Opaque>false</Opaque>
-				<Passable>true</Passable>
-				<Sprite>
-					<Name>dc-dngn/water/dngn_shallow_water</Name>
-				</Sprite>
-			</TileData>
-		</Symbol>
-		
-		<Symbol>
-			<Char>#</Char>
-			<TileData>
-				<Opaque>false</Opaque>
-				<Passable>false</Passable>
-				<Sprite>
-					<Name>dc-dngn/water/dngn_deep_water</Name>
-				</Sprite>
-			</TileData>
-		</Symbol>
-						
-		<Symbol Extends=".">
-			<Char>0</Char>
-			<EntityData>Enemies/Dog/nibbler</EntityData>
-		</Symbol>
-		
-		<Symbol Extends=".">
-			<Char>1</Char>
-			<EntityData>Enemies/Dog/crunch</EntityData>
-		</Symbol>
-		
-		<Symbol Extends=".">
-			<Char>2</Char>
-			<EntityData>Enemies/Dog/ghost</EntityData>
-		</Symbol>
-		
-		<Symbol Extends=".">
-			<Char>3</Char>
-			<EntityData>Enemies/Dog/churchill</EntityData>
-		</Symbol>
-		
-		<Symbol Extends=".">
-			<Char>4</Char>
-			<EntityData>Enemies/Dog/cerberus</EntityData>
-		</Symbol>
-		
-		<Symbol>
-			<Char>w</Char>
-			<TileData>
-				<Opaque>false</Opaque>
-				<Passable>true</Passable>
-				<Sprite>
-					<Name>dc-dngn/floor/mesh0</Name>
-				</Sprite>
-			</TileData>
-		</Symbol>
-		
-		<Symbol Extends=".">
-			<Char>+</Char>
-			<EnvironmentData>
-				<Type>Door</Type>
-			</EnvironmentData>
-		</Symbol>
-		
-	</Symbols>
-	
-	<Required>
-		<Transition>
-			<Symbols>
-			
-				<Symbol Extends=".">
-					<Char>v</Char>
-					<EnvironmentData>
-						<Type>Transition</Type>
-						<Destination>Lake</Destination>
-						
-						<ExitRoom>
-							<Symbols>
-								<Symbol Extends=".">
-									<Char>^</Char>
-									<EnvironmentData>
-										<Type>Transition</Type>
-										<Destination>this</Destination>
-									</EnvironmentData>
-								</Symbol>
-							</Symbols>
-						
-							<Rows>
-								<Row>#####</Row>
-								<Row>#...#</Row>
-								<Row>#.^.#</Row>
-								<Row>#...#</Row>
-								<Row>##.##</Row>
-							</Rows>
-						</ExitRoom>
-					</EnvironmentData>
-				</Symbol>
-			</Symbols>
-				
-			<Rows>Levels/Forest/village</Rows>
+    <Entrance>
+        <Prev>
+            <Symbols>
+                <Symbol Extends=",">
+                    <Char>v</Char>
+                    <EnvironmentData>
+                        <Type>Transition</Type>
+                        <Destination>Lake</Destination>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
 
-		</Transition>
-		
-		<BossRoom>
-			<Symbols>
-				
-				<Symbol>
-					<Char>-</Char>
-					<TileData>
-						<Opaque>false</Opaque>
-						<Passable>false</Passable>
-						<Sprite>
-							<Name>dc-dngn/dngn_unseen</Name>
-						</Sprite>
-					</TileData>
-				</Symbol>
+            <Rows>
+                <Row>...</Row>
+                <Row>.v.</Row>
+                <Row>...</Row>
+            </Rows>
+        </Prev>
+        <This>
+            <Faction>none</Faction>
 
-				
-			</Symbols>
-		
-			<Rows>Levels/Sewer/pit</Rows>
-		</BossRoom>
-		
-	</Required>
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>S</Char>
+                    <MetaValue>PlayerSpawn</MetaValue>
+                </Symbol>
+            </Symbols>
+            <Rows>
+                <Row>...</Row>
+                <Row>.S.</Row>
+                <Row>...</Row>
+            </Rows>
+        </This>
+    </Entrance>
 
-	
+    <Ambient>
+        <Red>0.5</Red>
+        <Green>0.75</Green>
+        <Blue>0.3</Blue>
+        <Alpha>0.4</Alpha>
+    </Ambient>
+
+    <Sound>
+        <BGM>Heroic Age</BGM>
+    </Sound>
+
+    <Background>
+        <Name>Oryx/uf_split/uf_terrain/water_blue</Name>
+    </Background>
+
+    <RoomGenerators>
+        <Starburst><Weight>1</Weight></Starburst>
+    </RoomGenerators>
+
+    <CorridorStyle>
+        <PathStyle>Straight</PathStyle>
+
+        <CentralConstant Extends="p">
+
+        </CentralConstant>
+
+    </CorridorStyle>
+
+    <Factions>
+        <Major>
+            <Slime>1</Slime>
+            <Spider>1</Spider>
+        </Major>
+        <Minor>
+            <Toad>1</Toad>
+            <Slime>1</Slime>
+            <Spider>1</Spider>
+        </Minor>
+    </Factions>
+
+    <Symbols>
+
+        <Symbol>
+            <Char>.</Char>
+            <TileData>
+                <Opaque>false</Opaque>
+                <Passable>true</Passable>
+
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/floor_extra_5</Name>
+                </Sprite>
+
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>#</Char>
+            <TileData>
+                <Passable>Levitate</Passable>
+                <Opaque>false</Opaque>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/water_blue</Name>
+                </Sprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>w</Char>
+            <TileData>
+                <Opaque>true</Opaque>
+                <Passable>false</Passable>
+                <TilingSprite>
+                    <Name>Wall</Name>
+                    <Top>
+                        <Name>Oryx/uf_split/uf_terrain/wall_stone_7</Name>
+                    </Top>
+                    <Front>
+                        <Name>Oryx/uf_split/uf_terrain/wall_stone_14</Name>
+                    </Front>
+                    <Overhang>
+                        <Name>Oryx/uf_split/uf_terrain/wall_stone_1</Name>
+                    </Overhang>
+                </TilingSprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>,</Char>
+            <TileData>
+                <Opaque>false</Opaque>
+                <Passable>true</Passable>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/floor_set_blue_6</Name>
+                </Sprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>p</Char>
+            <TileData>
+                <Opaque>false</Opaque>
+                <Passable>true</Passable>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/floor_wood_4</Name>
+                </Sprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol Extends=".">
+            <Char>+</Char>
+            <EnvironmentData>
+                <Type>Door</Type>
+            </EnvironmentData>
+        </Symbol>
+
+    </Symbols>
+
+    <Rooms>
+        <Pillar Condition="4">
+            <Rows>
+                <Row>###p####</Row>
+                <Row>#,,p,,,#</Row>
+                <Row>#,,ww,,#</Row>
+                <Row>ppwwww,#</Row>
+                <Row>#,wwwwpp</Row>
+                <Row>#,,ww,,#</Row>
+                <Row>#,,,p,,#</Row>
+                <Row>####p###</Row>
+            </Rows>
+        </Pillar>
+        <Filler Condition="3+rnd(2)">
+            <Width>rnd(4)+3</Width>
+            <Height>rnd(4)+3</Height>
+        </Filler>
+    </Rooms>
+
 </Level>

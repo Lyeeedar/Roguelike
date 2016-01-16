@@ -93,6 +93,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		Gdx.input.setInputProcessor( inputMultiplexer );
 
 		resize( Global.ScreenSize[ 0 ], Global.ScreenSize[ 1 ] );
+
+		relayoutUI();
 	}
 
 	// ----------------------------------------------------------------------
@@ -486,6 +488,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public void resume()
 	{
+		relayoutUI();
 	}
 
 	// ----------------------------------------------------------------------
@@ -1121,7 +1124,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private void queueSprite( Sprite sprite, Color colour, int x, int y, int width, int height, int offsetx, int offsety, RenderLayer layer )
 	{
-		queueSprite( sprite, colour, x, y, width, height, offsetx, offsety, layer, 0 );
+		queueSprite( sprite, colour, x, y, width, height, offsetx, offsety, layer, queuedSprites.size() );
 	}
 
 	// ----------------------------------------------------------------------

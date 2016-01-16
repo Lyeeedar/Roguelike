@@ -722,7 +722,7 @@ public final class Room
 				{
 					print();
 
-					throw new RuntimeException( "argh!" );
+					continue;
 				}
 
 				//if (path != null)

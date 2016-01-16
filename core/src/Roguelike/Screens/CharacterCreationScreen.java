@@ -53,7 +53,7 @@ public class CharacterCreationScreen implements Screen
 
 		classList = new ClassList( skin, stage, tileBackground, tileBorder );
 
-		Table table = new Table();
+
 		// table.debug();
 
 		Table optionsTable = new Table();
@@ -119,10 +119,12 @@ public class CharacterCreationScreen implements Screen
 			}
 		} );
 
-		table.add( optionsTable ).pad( 10 ).expandX().fillX();
+		Table table = new Table();
+
+		table.add( optionsTable ).colspan( 2 ).pad( 10 ).expandX().fillX();
 		table.row();
 
-		table.add( classTable ).pad( 10 ).expand().fill();
+		table.add( classTable ).colspan( 2 ).pad( 10 ).expand().fill();
 		table.row();
 
 		table.add( mainMenubutton ).expandX().width( 200 ).pad( 10 ).left();

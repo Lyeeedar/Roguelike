@@ -571,19 +571,16 @@ public final class Item extends GameEventHandler
 	// ----------------------------------------------------------------------
 	public enum EquipmentSlot
 	{
+		// Weapons
+		WEAPON,
+
 		// Armour
 		HEAD,
 		BODY,
 		LEGS,
 
 		// Jewelry
-		FETISH,
-		TOTEM,
-		RING,
-		RUNE,
-
-		// Weapons
-		WEAPON
+		RUNE
 	}
 
 	// ----------------------------------------------------------------------
