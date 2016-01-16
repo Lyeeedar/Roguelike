@@ -3,6 +3,7 @@ package Roguelike.Ability.ActiveAbility.EffectType;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Fields.FieldInteractionTypes.AbstractFieldInteractionType;
+import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.utils.Array;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -79,25 +80,55 @@ public class EffectTypeFieldInteraction extends AbstractEffectType
 			test.tags = tags;
 			test.stacks = stacks;
 
+			FastEnumMap<Field.FieldLayer, Field> fieldStore = new FastEnumMap<Field.FieldLayer, Field>( Field.FieldLayer.class );
+
 			for ( Field.FieldLayer layer : Field.FieldLayer.values() )
 			{
-				Field field = tile.fields.get( layer );
-				if (field != null)
+				Field tileField = tile.fields.get( layer );
+
+				if ( tileField != null )
 				{
-					AbstractFieldInteractionType interaction = field.getInteraction( field.fieldInteractions, test );
+					// First check for interaction on self
+					Field srcField = tileField;
+					Field dstField = test;
+					AbstractFieldInteractionType interaction = Field.getInteraction( srcField.fieldInteractions, dstField );
 
 					if ( interaction != null )
 					{
-						Field output = interaction.process( field, test );
+						if ( !fieldStore.containsKey( layer ) )
+						{
+							fieldStore.put( layer, null );
+						}
 
-						if ( field == null )
+						tile.fields.put( layer, null );
+
+						Field field = interaction.process( srcField, dstField );
+
+						if ( field != null )
 						{
-							tile.clearField( layer );
+							fieldStore.put( field.layer, field );
 						}
-						else
-						{
-							tile.addField( output );
-						}
+					}
+					else
+					{
+						fieldStore.put( tileField.layer, tileField );
+					}
+				}
+			}
+
+			for ( Field.FieldLayer layer : Field.FieldLayer.values() )
+			{
+				if ( fieldStore.containsKey( layer ) )
+				{
+					Field field = fieldStore.get( layer );
+
+					if ( field == null )
+					{
+						tile.clearField( layer );
+					}
+					else
+					{
+						tile.addField( field );
 					}
 				}
 			}

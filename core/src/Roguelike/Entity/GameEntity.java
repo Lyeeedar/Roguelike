@@ -36,7 +36,7 @@ public class GameEntity extends Entity
 	// region Constructor
 
 	// ----------------------------------------------------------------------
-	private GameEntity()
+	public GameEntity()
 	{
 	}
 
@@ -282,14 +282,8 @@ public class GameEntity extends Entity
 	// ----------------------------------------------------------------------
 	public float getActionDelay()
 	{
-		float speed = getStatistic( Statistic.SPEED ) / 10.0f;
-
-		if (speed == 0)
-		{
-			speed = 0.1f;
-		}
-
-		return 1.0f / speed;
+		float speed = getStatistic( Statistic.SPEED ) / 10.0f - 1;
+		return (float)Math.pow( 0.75, speed );
 	}
 
 	// ----------------------------------------------------------------------

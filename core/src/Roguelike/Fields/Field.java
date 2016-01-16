@@ -169,8 +169,14 @@ public class Field implements IGameObject
 							fieldStore.put( layer, null );
 						}
 
+						tile.fields.put( layer, null );
+
 						Field field = interaction.process( srcField, dstField );
-						fieldStore.put( field.layer, field );
+
+						if ( field != null )
+						{
+							fieldStore.put( field.layer, field );
+						}
 					}
 					else
 					{
@@ -211,7 +217,7 @@ public class Field implements IGameObject
 		}
 	}
 
-	public AbstractFieldInteractionType getInteraction( HashMap<String, AbstractFieldInteractionType> interactions, Field field )
+	public static AbstractFieldInteractionType getInteraction( HashMap<String, AbstractFieldInteractionType> interactions, Field field )
 	{
 		if ( interactions.containsKey( field.fieldName ) ) { return interactions.get( field.fieldName ); }
 		for ( String tag : field.tags )

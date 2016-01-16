@@ -274,8 +274,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		equipmentPanel.setWidth( equipmentPanel.getMinWidth() );
 		equipmentPanel.setHeight( equipmentPanel.getMinHeight() );
 
-		sheathButton.setPosition( Global.Resolution[0] - sheathButton.getWidth() - 20, 20 );
-		menuButton.setPosition( Global.Resolution[0] - menuButton.getWidth() - 20, Global.Resolution[1] - 20 - menuButton.getHeight() );
+		sheathButton.setPosition( stage.getWidth() - sheathButton.getWidth() - 20, 20 );
+		menuButton.setPosition( stage.getWidth() - menuButton.getWidth() - 20, stage.getHeight() - 20 - menuButton.getHeight() );
 
 		if (contextMenu != null)
 		{
@@ -304,7 +304,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			fpsAccumulator = 0;
 		}
 
-		if ( !examineMode )
+		if ( !examineMode && !lockContextMenu )
 		{
 			Global.CurrentLevel.update( delta );
 			processPickupQueue();
@@ -1872,8 +1872,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.add( content ).expand().fill();
 
 		contextMenu = new Tooltip( table, skin, stage );
+		contextMenu.setWidth( stage.getWidth() - 120 );
+		contextMenu.setHeight( stage.getHeight() - 96 - 50 );
 
-		contextMenu.show( 50, 64 + 50, lock );
+		contextMenu.show( 50, 96 + 25, lock );
 		lockContextMenu = lock;
 
 		contextMenu.addAction(
@@ -1881,9 +1883,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						new SequenceAction( Actions.alpha( 0 ), Actions.fadeIn( 0.5f ) ),
 						new SequenceAction( Actions.scaleTo( 0, 0 ), Actions.scaleTo( 1, 1, 0.5f ) )
 				) );
-
-		contextMenu.setWidth( Global.Resolution[ 0 ] - 120 );
-		contextMenu.setHeight( Global.Resolution[ 1 ] - 64 - 100 );
 	}
 
 	// ----------------------------------------------------------------------
@@ -1904,8 +1903,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 									   " Your adventure has gone completely belly up.\n\n" +
 									   "Your body is left where it dropped, slowly rotting away, providing a nice pile of loot for the next adventurer to stumble this way.\n\n" +
 									   "Oh well, better luck in your next life.", skin);
+
+		ScrollPane scrollPane = new ScrollPane( messageLabel );
 		messageLabel.setWrap( true );
-		table.add( messageLabel ).expand().fill().left().top();
+		table.add( scrollPane ).expand().fill();
 		table.row();
 
 		table.add( new Seperator(skin, false) ).expandX().fillX();
@@ -1939,6 +1940,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public void displayGameMenu()
 	{
 		Table table = new Table();
+		table.defaults().pad( 10 );
 
 		TextButton resumeButton = new TextButton( "Resume", skin );
 		resumeButton.addListener( new InputListener()

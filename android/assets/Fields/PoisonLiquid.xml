@@ -27,10 +27,26 @@
     </OnTurn>
     <Interactions>
         <Hot>
-            <Spawn>
-                <Field>PoisonGas</Field>
-                <Stacks>max3(SrcStacks, DstStacks, 1)</Stacks>
-            </Spawn>
+            <Ability>
+                <ScreenShake>5</ScreenShake>
+                <AOE>1</AOE>
+                <HitType><Any/></HitType>
+                <HitSprite>
+                    <SingleSprite>true</SingleSprite>
+                    <Name>EffectSprites/Explosion/Explosion</Name>
+                    <UpdateRate>0.05</UpdateRate>
+                </HitSprite>
+                <Light>
+                    <Colour>
+                        <RGB>255,255,100</RGB>
+                    </Colour>
+                    <Intensity>3</Intensity>
+                </Light>
+                <Effect>
+                    <Damage DirectDamage="true"><Attack>25</Attack></Damage>
+                    <FieldInteraction>Hot</FieldInteraction>
+                </Effect>
+            </Ability>
         </Hot>
     </Interactions>
 </Field>

@@ -1,9 +1,18 @@
 <Data>
-    <Exclamations> 
-        <SeeEnemy Cooldown="10">
-	        <Exclamation>
+    <Exclamations>
+        <SeeEnemy Cooldown="15">
+	        <Exclamation Condition="chance(1, 4)">
 	            <Text>Gorash!</Text>
 	        </Exclamation>
+            <Exclamation Condition="chance(1, 4)">
+                <Text>Giflar!</Text>
+            </Exclamation>
+            <Exclamation Condition="chance(1, 4)">
+                <Text>Gor bah!</Text>
+            </Exclamation>
+            <Exclamation Condition="chance(1, 4)">
+                <Text>Teshla Gor!</Text>
+            </Exclamation>
 	    </SeeEnemy>
     </Exclamations>
 </Data>

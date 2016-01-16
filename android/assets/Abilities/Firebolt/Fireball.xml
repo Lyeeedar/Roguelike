@@ -29,7 +29,7 @@
 	</Light>
 
     <HitType>
-        <Enemy></Enemy>
+        <Any></Any>
     </HitType>
 
     <Effect>

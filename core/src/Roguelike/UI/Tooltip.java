@@ -57,14 +57,23 @@ public class Tooltip extends Table
 		Vector2 tmp = new Vector2( x, y );
 		tmp.add( 10, 10 );
 
+		if ( getWidth() > getStage().getWidth() - 10 )
+		{
+			setWidth( getStage().getWidth() - 10 );
+		}
+
+		if ( getHeight() > getStage().getHeight() - 10 )
+		{
+			setHeight( getStage().getHeight() - 10 );
+		}
+
 		// Fit within stage
 
 		if ( tmp.x < 5 )
 		{
 			tmp.x = 5;
 		}
-
-		if ( tmp.x + getWidth() > getStage().getWidth() - 5 )
+		else if ( tmp.x + getWidth() > getStage().getWidth() - 5 )
 		{
 			tmp.x = getStage().getWidth() - getWidth() - 5;
 		}
@@ -73,8 +82,7 @@ public class Tooltip extends Table
 		{
 			tmp.y = 5;
 		}
-
-		if ( tmp.y + getHeight() > getStage().getHeight() - 5 )
+		else if ( tmp.y + getHeight() > getStage().getHeight() - 5 )
 		{
 			tmp.y = getStage().getHeight() - getHeight() - 5;
 		}

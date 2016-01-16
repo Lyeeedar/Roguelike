@@ -11,6 +11,7 @@
         <Passive>
             <OnDeath>
                 <Ability>
+                    <ScreenShake>5</ScreenShake>
                     <AOE>1</AOE>
                     <HitType><Any/></HitType>
                     <HitSprite>

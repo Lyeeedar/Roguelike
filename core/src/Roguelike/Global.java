@@ -164,7 +164,7 @@ public class Global
 
 		GlobalNames.put( "player", "You" );
 
-		SaveLevel firstLevel = new SaveLevel( LevelManager.current.levelName, 0, LevelManager.current.getExtraRooms( "NewGame", 0, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
+		SaveLevel firstLevel = new SaveLevel( LevelManager.current.levelName, 1, LevelManager.current.getExtraRooms( "NewGame", 1, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
 		LevelManager.current.currentLevel = firstLevel;
 
 		GameScreen.Instance.displayLevelEntryMessage( LevelManager.current.levelTitle, LevelManager.current.levelDescription );
