@@ -42,11 +42,6 @@ public class AssetManager
 
 		if ( loadedFonts.containsKey( key ) ) { return loadedFonts.get( key ); }
 
-		if ( packer == null )
-		{
-			setupPacker();
-		}
-
 		FreeTypeFontGenerator fgenerator = new FreeTypeFontGenerator( Gdx.files.internal( name ) );
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = size;
@@ -54,7 +49,6 @@ public class AssetManager
 		parameter.kerning = true;
 		parameter.borderColor = borderColour;
 		parameter.borderStraight = true;
-		parameter.packer = packer;
 		parameter.color = colour;
 
 		if ( shadow )
@@ -97,21 +91,7 @@ public class AssetManager
 		return sound;
 	}
 
-	private static PixmapPacker packer;
-	private static final TextureAtlas atlas = new TextureAtlas();
 	private static final TextureAtlas prepackedAtlas = new TextureAtlas( Gdx.files.internal( "Atlases/SpriteAtlas.atlas" ) );
-
-	private static void setupPacker()
-	{
-		IntBuffer intBuffer = BufferUtils.newIntBuffer( 16 );
-		Gdx.gl20.glGetIntegerv( GL20.GL_MAX_TEXTURE_SIZE, intBuffer );
-
-		int size = intBuffer.get();
-
-		size = Math.min( 4096, size );
-
-		packer = new PixmapPacker( size, size, Format.RGBA8888, 2, true );
-	}
 
 	private static HashMap<String, TextureRegion> loadedTextureRegions = new HashMap<String, TextureRegion>();
 
@@ -120,7 +100,7 @@ public class AssetManager
 		if ( loadedTextureRegions.containsKey( path ) ) { return loadedTextureRegions.get( path ); }
 
 		String atlasName = path;
-		atlasName = atlasName.replace( "Sprites/", "" );
+		atlasName = atlasName.replaceFirst( "Sprites/", "" );
 		atlasName = atlasName.replace( ".png", "" );
 
 		TextureAtlas.AtlasRegion region = prepackedAtlas.findRegion( atlasName );
@@ -130,36 +110,12 @@ public class AssetManager
 			loadedTextureRegions.put( path, textureRegion );
 			return textureRegion;
 		}
-
-		FileHandle file = Gdx.files.internal( path );
-		if ( !file.exists() )
+		else
 		{
 			loadedTextureRegions.put( path, null );
 			return null;
 		}
-
-		Pixmap pixmap = new Pixmap( file );
-
-		return packPixmap(path, pixmap);
 	}
-
-	public static TextureRegion packPixmap( String key, Pixmap pixmap )
-	{
-		if ( packer == null )
-		{
-			setupPacker();
-		}
-
-		packer.pack( key, pixmap );
-		packer.updateTextureAtlas( atlas, TextureFilter.Nearest, TextureFilter.MipMapNearestNearest, true );
-		pixmap.dispose();
-
-		TextureRegion region = atlas.findRegion( key );
-		loadedTextureRegions.put( key, region );
-
-		return region;
-	}
-
 
 	private static HashMap<String, Texture> loadedTextures = new HashMap<String, Texture>();
 

@@ -4,6 +4,10 @@
     <Slot>Body</Slot>
     <Category>Armour</Category>
 
+    <Icon>
+        <Name>Oryx/uf_split/uf_items/armor_chain_chest</Name>
+    </Icon>
+
     <Events>
         <Constant>
             <Defense>5 + 3.5 * quality</Defense>

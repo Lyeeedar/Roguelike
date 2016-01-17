@@ -359,48 +359,7 @@ public final class Item extends GameEventHandler
 	public Sprite getIcon()
 	{
 		if ( icon != null ) { return icon; }
-
-		EquipmentSlot slot = getMainSlot();
-
-		if ( slot == EquipmentSlot.WEAPON )
-		{
-			if ( type.equals( "sword" ) )
-			{
-				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/weapon_sword" );
-			}
-			else if ( type.equals( "spear" ) )
-			{
-				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/weapon_spear" );
-			}
-			else if ( type.equals( "axe" ) )
-			{
-				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/weapon_handaxe" );
-			}
-			else if ( type.equals( "bow" ) )
-			{
-				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/weapon_longbow" );
-			}
-			else if ( type.equals( "wand" ) )
-			{
-				icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/weapon_staff_jeweled" );
-			}
-		}
-		else if ( slot == EquipmentSlot.HEAD )
-		{
-			icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/armor_chain_helm" );
-		}
-		else if ( slot == EquipmentSlot.BODY )
-		{
-			icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/armor_chain_chest" );
-		}
-		else if ( slot == EquipmentSlot.LEGS )
-		{
-			icon = AssetManager.loadSprite( "Oryx/uf_split/uf_items/armor_chain_leg" );
-		}
-		else if ( ability != null )
-		{
-			icon = ability.current.current.getIcon();
-		}
+		if ( ability != null) { return ability.current.current.getIcon(); }
 
 		if ( icon == null )
 		{

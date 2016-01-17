@@ -7,6 +7,10 @@
     <Category>Weapon</Category>
     <Type>Wand</Type>
 
+    <Icon>
+        <Name>Oryx/uf_split/uf_items/weapon_staff_jeweled</Name>
+    </Icon>
+
     <Events>
         <Constant>
             <Attack>7 + 3.5 * quality</Attack>

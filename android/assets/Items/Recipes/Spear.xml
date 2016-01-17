@@ -7,6 +7,10 @@
     <Category>Weapon</Category>
     <Type>Spear</Type>
 
+    <Icon>
+        <Name>Oryx/uf_split/uf_items/weapon_spear</Name>
+    </Icon>
+
     <Events>
         <Constant>
             <Attack>9 + 4.3 * quality</Attack>

@@ -70,7 +70,7 @@ public class TreasureGenerator
 		// Ability 1
 
 		int[] chances = {
-			3, // currency
+			1, // currency
 			3, // armour
 			3, // weapons
 			1 // abilities

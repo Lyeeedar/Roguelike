@@ -4,6 +4,10 @@
     <Slot>Legs</Slot>
     <Category>Armour</Category>
 
+    <Icon>
+        <Name>Oryx/uf_split/uf_items/armor_chain_leg</Name>
+    </Icon>
+
     <Events>
         <Constant>
             <Defense>2 + quality</Defense>

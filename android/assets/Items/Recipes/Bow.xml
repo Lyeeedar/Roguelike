@@ -7,6 +7,10 @@
     <Category>Weapon</Category>
     <Type>Bow</Type>
 
+    <Icon>
+        <Name>Oryx/uf_split/uf_items/weapon_longbow</Name>
+    </Icon>
+
     <Events>
         <Constant>
             <Attack>8 + 4 * quality</Attack>

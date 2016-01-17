@@ -7,6 +7,10 @@
     <Category>Weapon</Category>
     <Type>Sword</Type>
 
+    <Icon>
+        <Name>Oryx/uf_split/uf_items/weapon_sword</Name>
+    </Icon>
+
     <Events>
         <Constant>
             <Attack>10 + 5 * quality</Attack>

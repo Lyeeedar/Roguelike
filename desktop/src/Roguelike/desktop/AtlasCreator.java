@@ -7,6 +7,7 @@ import Roguelike.Util.ImageUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
@@ -35,8 +36,9 @@ public class AtlasCreator
 
 		TexturePacker.Settings settings = new TexturePacker.Settings();
 		settings.combineSubdirectories = true;
-		settings.duplicatePadding = true;
 		settings.useIndexes = false;
+		settings.filterMin = Texture.TextureFilter.MipMapLinearLinear;
+		settings.filterMag = Texture.TextureFilter.MipMapLinearLinear;
 
 		packer = new TexturePacker( new File("Sprites"), settings );
 
@@ -44,6 +46,16 @@ public class AtlasCreator
 
 		// pack fog
 		processTilingSprite( "Masks/fog", "Masks/fog" );
+
+		// pack default strike
+		processSprite( "EffectSprites/Strike/Strike" );
+
+		// pack default stuff
+		processSprite( "white" );
+		processSprite( "blank" );
+		processSprite( "Oryx/uf_split/uf_items/satchel" );
+		processSprite( "Oryx/uf_split/uf_items/crystal_sun" );
+		processSprite( "Oryx/uf_split/uf_items/crystal_blood" );
 
 		// pack GUI
 		File guiDir = new File( "Sprites/GUI" );
@@ -301,6 +313,11 @@ public class AtlasCreator
 	{
 		String name = spriteElement.get( "Name" );
 
+		return processSprite( name );
+	}
+
+	private boolean processSprite( String name )
+	{
 		int foundCount = 0;
 
 		// Try 0 indexed sprite

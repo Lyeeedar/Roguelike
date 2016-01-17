@@ -3,6 +3,10 @@
 	<Name>Axe</Name>
     <Description>Choppy chop</Description>
 
+    <Icon>
+        <Name>Oryx/uf_split/uf_items/weapon_handaxe</Name>
+    </Icon>
+
     <Slot>Weapon</Slot>
     <Category>Weapon</Category>
     <Type>Axe</Type>
