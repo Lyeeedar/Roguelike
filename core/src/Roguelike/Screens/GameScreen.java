@@ -17,6 +17,7 @@ import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
 import Roguelike.Items.Item;
 import Roguelike.Items.TreasureGenerator;
+import Roguelike.Levels.Level;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Sprite.Sprite;
@@ -306,7 +307,32 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		if ( !examineMode && !lockContextMenu )
 		{
-			Global.CurrentLevel.update( delta );
+			Level level = Global.CurrentLevel;
+
+			if (!level.isInTurn() && level.canStartTurn())
+			{
+				level.startTurn();
+			}
+
+			if (level.isInTurn())
+			{
+				// advance whilst time allows it
+				long milliDelta = lastSleep;
+				long currentTime = System.currentTimeMillis();
+				while (true)
+				{
+					level.doTurnWork();
+					long diff = System.currentTimeMillis() - currentTime;
+					milliDelta -= diff;
+
+					if (milliDelta <= 0 || !level.isInTurn())
+					{
+						break;
+					}
+				}
+			}
+
+			level.advance( delta );
 			processPickupQueue();
 
 			sheathButton.setChecked( Global.CurrentLevel.player.weaponSheathed );
@@ -612,7 +638,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 						if ( ogtile.getTilingSprite().overhangSprite != null
 							 && oprevTile != null
-							 && ( oprevTile.getTilingSprite() == null || !oprevTile.getTilingSprite().name.equals( gtile.getTilingSprite().name ) ) )
+							 && ( oprevTile.getTilingSprite() == null || oprevTile.getTilingSprite().id != gtile.getTilingSprite().id ) )
 						{
 							queueSprite( ogtile.getTilingSprite().overhangSprite, notVisibleCol, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.OVERHEAD );
 						}
@@ -620,7 +646,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 					if ( gtile.getTilingSprite() != null )
 					{
-						Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().name);
+						Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().id);
 						Sprite sprite = gtile.getTilingSprite().getSprite( directionBitflag );
 
 						Color col = gtile.light;
@@ -643,7 +669,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 								if ( field.tilingSprite != null )
 								{
-									Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, field.tilingSprite.name);
+									Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, field.tilingSprite.id);
 									sprite = field.tilingSprite.getSprite( directionBitflag );
 								}
 
@@ -677,7 +703,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 						if ( entity.tilingSprite != null )
 						{
-							Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, entity.tilingSprite.name);
+							Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, entity.tilingSprite.id);
 							sprite = entity.tilingSprite.getSprite( directionBitflag );
 						}
 
@@ -729,7 +755,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 							if ( entity.tilingSprite != null )
 							{
-								Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().name);
+								Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().id);
 								sprite = gtile.getTilingSprite().getSprite( directionBitflag );
 							}
 
@@ -817,14 +843,14 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				if (gtile == null)
 				{
-					Global.CurrentLevel.buildTilingBitflag( directionBitflag, x, y, "seen" );
+					Global.CurrentLevel.buildTilingBitflag( directionBitflag, x, y, Level.SEENID );
 					//if (directionBitflag.getBitFlag() != 0)
 					{
 						Sprite sprite = fogSprite.getSprite( directionBitflag );
 						queueSprite( sprite, seenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.SEENFOG );
 					}
 
-					Global.CurrentLevel.buildTilingBitflag( directionBitflag, x, y, "unseen" );
+					Global.CurrentLevel.buildTilingBitflag( directionBitflag, x, y, Level.UNSEENID );
 					//if (directionBitflag.getBitFlag() != 0)
 					{
 						Sprite sprite = fogSprite.getSprite( directionBitflag );
@@ -1842,11 +1868,14 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			diff = System.currentTimeMillis() - start;
 			long targetDelay = 1000 / fps;
-			if ( diff < targetDelay )
+
+			lastSleep = targetDelay - diff;
+
+			if ( lastSleep > 0 )
 			{
 				try
 				{
-					Thread.sleep( targetDelay - diff );
+					Thread.sleep( lastSleep );
 				}
 				catch ( InterruptedException e )
 				{
@@ -2128,6 +2157,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private static final float ScreenShakeSpeed = 0.02f;
 
 	// ----------------------------------------------------------------------
+	private long lastSleep;
+
+	// ----------------------------------------------------------------------
 	public static GameScreen Instance;
 	private final GlyphLayout layout = new GlyphLayout();
 	private final Color temp = new Color();
@@ -2163,7 +2195,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private Array<Entity> entitiesWithSpeech = new Array<Entity>();
 
 	// ----------------------------------------------------------------------
-	private Pool<RenderSprite> renderSpritePool = Pools.get( RenderSprite.class );
+	private Pool<RenderSprite> renderSpritePool = Pools.get( RenderSprite.class, Integer.MAX_VALUE );
 
 	// ----------------------------------------------------------------------
 	private Sprite border;
@@ -2232,6 +2264,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		public int sx;
 		public int sy;
+
+		public RenderSprite()
+		{
+
+		}
 
 		public RenderSprite set( Sprite sprite, Color colour, int x, int y, int width, int height, int offsetx, int offsety, RenderLayer layer, int index )
 		{

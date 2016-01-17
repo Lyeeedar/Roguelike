@@ -148,7 +148,7 @@ public class Level
 			}
 		}
 
-		if ( tile.hasFields )
+		if ( tile.hasFieldLight )
 		{
 			for ( FieldLayer layer : FieldLayer.values() )
 			{
@@ -541,7 +541,7 @@ public class Level
 
 			if (tile != null)
 			{
-				buildTilingBitflag( tile.seenBitflag, tile.x, tile.y, "seen" );
+				buildTilingBitflag( tile.seenBitflag, tile.x, tile.y, SEENID );
 			}
 		}
 	}
@@ -555,13 +555,13 @@ public class Level
 
 			if (tile != null)
 			{
-				buildTilingBitflag( tile.unseenBitflag, tile.x, tile.y, "unseen" );
+				buildTilingBitflag( tile.unseenBitflag, tile.x, tile.y, UNSEENID );
 			}
 		}
 	}
 
 	// ----------------------------------------------------------------------
-	public void buildTilingBitflag(EnumBitflag<Direction> bitflag, int x, int y, String name)
+	public void buildTilingBitflag(EnumBitflag<Direction> bitflag, int x, int y, long id)
 	{
 		// Build bitflag of surrounding tiles
 		bitflag.clear();
@@ -574,19 +574,19 @@ public class Level
 				// Attempt to find match
 				boolean matchFound = false;
 
-				if (otile.spriteGroup.tilingSprite != null && otile.spriteGroup.tilingSprite.name.equals( name ))
+				if (otile.spriteGroup.tilingSprite != null && otile.spriteGroup.tilingSprite.id == id)
 				{
 					matchFound = true;
 				}
-				else if (otile.environmentEntity != null && otile.environmentEntity.tilingSprite != null && otile.environmentEntity.tilingSprite.name.equals( name ))
+				else if (otile.environmentEntity != null && otile.environmentEntity.tilingSprite != null && otile.environmentEntity.tilingSprite.id == id)
 				{
 					matchFound = true;
 				}
-				else if (!otile.seen && name.equals( "unseen" ))
+				else if (!otile.seen && id == UNSEENID)
 				{
 					matchFound = true;
 				}
-				else if (!otile.visible && name.equals( "seen" ))
+				else if (!otile.visible && id == SEENID)
 				{
 					matchFound = true;
 				}
@@ -598,7 +598,7 @@ public class Level
 						for (FieldLayer layer : FieldLayer.values())
 						{
 							Field field = otile.fields.get( layer );
-							if (field != null && field.tilingSprite != null && field.tilingSprite.name.equals( name ))
+							if (field != null && field.tilingSprite != null && field.tilingSprite.id == id)
 							{
 								matchFound = true;
 								break;
@@ -757,15 +757,202 @@ public class Level
 
 	private void processPlayer()
 	{
-		player.updateShadowCast();
-
-		if ( player.tasks.size == 0 )
+		AbstractTask task = player.tasks.removeIndex( 0 );
+		for ( GameEventHandler handler : player.getAllHandlers() )
 		{
-			player.AI.update( player );
+			handler.onTask( player, task );
 		}
 
-		if ( player.tasks.size > 0 )
+		if ( !task.cancel )
 		{
+			task.processTask( player );
+		}
+
+		float actionCost = task.cost * player.getActionDelay();
+
+		Global.AUT += actionCost;
+		Global.DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( Global.AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
+
+		player.update( actionCost );
+
+		// Advance all entity accumulators and build list
+		getAllEntitiesToBeProcessed( actionCost );
+
+		tempEnvironmentEntityList.clear();
+		getAllEnvironmentEntities( tempEnvironmentEntityList );
+		for ( EnvironmentEntity ee : tempEnvironmentEntityList )
+		{
+			ee.update( actionCost );
+		}
+
+		tempFieldList.clear();
+		getAllFields( tempFieldList );
+		for ( Field f : tempFieldList )
+		{
+			if ( f.tile == null )
+			{
+				continue;
+			}
+
+			f.update( actionCost );
+			if ( f.stacks < 1 )
+			{
+				f.tile.fields.put( f.layer, null );
+				f.tile = null;
+			}
+		}
+
+		if ( player.tile[ 0 ][ 0 ].orbs.size > 0 )
+		{
+			for ( GameTile.OrbType type : GameTile.OrbType.values() )
+			{
+				if ( player.tile[ 0 ][ 0 ].orbs.containsKey( type ) )
+				{
+					int val = player.tile[ 0 ][ 0 ].orbs.get( type );
+
+					if ( type == GameTile.OrbType.EXPERIENCE )
+					{
+						player.pendingMessages.add( new Message( "+" + val + " xp", Color.YELLOW ) );
+						for (AbilityTree tree : player.slottedAbilities)
+						{
+							if (tree != null)
+							{
+								tree.current.gainExp( val );
+							}
+						}
+					}
+					else if ( type == GameTile.OrbType.HEALTH )
+					{
+						player.applyHealing( val );
+					}
+
+					player.tile[ 0 ][ 0 ].orbs.remove( type );
+				}
+			}
+		}
+
+		if ( task instanceof TaskMove && player.tile[0][0].items.size > 0 )
+		{
+			for ( Item item : player.tile[0][0].items )
+			{
+				GameScreen.Instance.pickupQueue.add( item );
+			}
+
+			player.tile[0][0].items.clear();
+		}
+
+		player.tile[0][0].processFieldEffectsForEntity( player, actionCost );
+
+		// check if enemy visible
+		if ( enemyVisible() )
+		{
+			// Clear pending moves
+			player.AI.setData( "Pos", null );
+			player.AI.setData( "Rest", null );
+		}
+
+		if ( player.sprite.spriteAnimation instanceof BumpAnimation )
+		{
+			player.AI.setData( "Pos", null );
+			player.AI.setData( "Rest", null );
+		}
+	}
+
+	public boolean isInTurn()
+	{
+		return turnCount >= 0 && turnCount < 100;
+	}
+
+	public boolean canStartTurn()
+	{
+		return !hasActiveEffects() && Global.CurrentDialogue == null && updateAccumulator >= updateDeltaStep;
+	}
+
+	public void startTurn()
+	{
+		turnCount = 0;
+	}
+
+	public void doTurnWork()
+	{
+		if (turnCount == -1)
+		{
+			turnCount = 0;
+		}
+		else if (turnCount == 0)
+		{
+			player.AI.update( player );
+
+			if ( player.tasks.size > 0 )
+			{
+				turnCount = 1;
+			}
+		}
+		else if (turnCount == 1)
+		{
+			processPlayer();
+			player.updateShadowCast();
+			turnCount = 2;
+		}
+		else if (turnCount == 2)
+		{
+			if ( toBeProcessedList.size > 0 )
+			{
+				GameEntity e = toBeProcessedList.get( 0 );
+				boolean complete = processEntityTurn( e );
+
+				if (complete)
+				{
+					toBeProcessedList.removeIndex( 0 );
+				}
+			}
+
+			if ( ActiveAbilities.size > 0 )
+			{
+				Iterator<ActiveAbility> itr = ActiveAbilities.iterator();
+				while ( itr.hasNext() )
+				{
+					ActiveAbility aa = itr.next();
+					boolean finished = aa.update();
+
+					if ( finished )
+					{
+						itr.remove();
+					}
+				}
+			}
+
+			if ( NewActiveAbilities.size > 0 )
+			{
+				ActiveAbilities.addAll( NewActiveAbilities, 0, NewActiveAbilities.size );
+				NewActiveAbilities.clear();
+			}
+
+			if (toBeProcessedList.size == 0 && !hasAbilitiesToUpdate())
+			{
+				if (player.tasks.size > 0)
+				{
+					turnCount = 1;
+				}
+				else
+				{
+					turnCount = 3;
+				}
+			}
+		}
+		else if (turnCount == 3)
+		{
+			for ( AbilityTree a : player.slottedAbilities )
+			{
+				if ( a != null && a.current.current instanceof ActiveAbility )
+				{
+					ActiveAbility aa = (ActiveAbility) a.current.current;
+
+					aa.source = player.tile[0][0];
+					aa.hasValidTargets = aa.getValidTargets().size > 0;
+				}
+			}
+
 			saveCounter++;
 			if (saveCounter == 50)
 			{
@@ -773,236 +960,54 @@ public class Level
 				saveCounter = 0;
 			}
 
-			AbstractTask task = player.tasks.removeIndex( 0 );
-			for ( GameEventHandler handler : player.getAllHandlers() )
-			{
-				handler.onTask( player, task );
-			}
-
-			if ( !task.cancel )
-			{
-				task.processTask( player );
-			}
-
-			float actionCost = task.cost * player.getActionDelay();
-
-			Global.AUT += actionCost;
-			Global.DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( Global.AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
-
-			player.update( actionCost );
-
-			getAllEntitiesToBeProcessed( actionCost );
-
-			tempEnvironmentEntityList.clear();
-			getAllEnvironmentEntities( tempEnvironmentEntityList );
-			for ( EnvironmentEntity ee : tempEnvironmentEntityList )
-			{
-				ee.update( actionCost );
-			}
-
-			tempFieldList.clear();
-			getAllFields( tempFieldList );
-			for ( Field f : tempFieldList )
-			{
-				if ( f.tile == null )
-				{
-					continue;
-				}
-
-				f.update( actionCost );
-				if ( f.stacks < 1 )
-				{
-					f.tile.fields.put( f.layer, null );
-					f.tile = null;
-				}
-			}
-
-			if ( player.tile[ 0 ][ 0 ].orbs.size > 0 )
-			{
-				for ( GameTile.OrbType type : GameTile.OrbType.values() )
-				{
-					if ( player.tile[ 0 ][ 0 ].orbs.containsKey( type ) )
-					{
-						int val = player.tile[ 0 ][ 0 ].orbs.get( type );
-
-						if ( type == GameTile.OrbType.EXPERIENCE )
-						{
-							player.pendingMessages.add( new Message( "+" + val + " xp", Color.YELLOW ) );
-							for (AbilityTree tree : player.slottedAbilities)
-							{
-								if (tree != null)
-								{
-									tree.current.gainExp( val );
-								}
-							}
-						}
-						else if ( type == GameTile.OrbType.HEALTH )
-						{
-							player.applyHealing( val );
-						}
-
-						player.tile[ 0 ][ 0 ].orbs.remove( type );
-					}
-				}
-			}
-
-			if ( task instanceof TaskMove && player.tile[0][0].items.size > 0 )
-			{
-				for ( Item item : player.tile[0][0].items )
-				{
-					GameScreen.Instance.pickupQueue.add( item );
-				}
-
-				player.tile[0][0].items.clear();
-			}
-
-			player.tile[0][0].processFieldEffectsForEntity( player, actionCost );
-
-			// check if enemy visible
-			if ( enemyVisible() )
-			{
-				// Clear pending moves
-				player.AI.setData( "Pos", null );
-				player.AI.setData( "Rest", null );
-			}
-
-			if ( player.sprite.spriteAnimation instanceof BumpAnimation )
-			{
-				player.AI.setData( "Pos", null );
-				player.AI.setData( "Rest", null );
-			}
+			turnCount = 100;
 		}
 	}
 
-	private void processVisibleList()
+	private boolean processEntityTurn( GameEntity e )
 	{
-		Iterator<GameEntity> itr = visibleList.iterator();
-		while ( itr.hasNext() )
+		if ( e.HP <= 0 )
 		{
-			GameEntity e = itr.next();
+			return true;
+		}
 
-			if ( e.HP <= 0 )
+		e.updateShadowCast();
+
+		// If entity can take action
+		if ( e.actionDelayAccumulator > 0 )
+		{
+			// If no tasks queued, process the ai
+			if ( e.tasks.size == 0 )
 			{
-				itr.remove();
-				continue;
+				e.AI.update( e );
 			}
 
-			e.updateShadowCast();
-
-			// If entity can take action
-			if ( e.actionDelayAccumulator > 0 )
+			// If a task is queued, process it
+			if ( e.tasks.size > 0 )
 			{
-				// If no tasks queued, process the ai
-				if ( e.tasks.size == 0 )
+				AbstractTask task = e.tasks.removeIndex( 0 );
+				for ( GameEventHandler handler : e.getAllHandlers() )
 				{
-					e.AI.update( e );
+					handler.onTask( e, task );
 				}
 
-				// If a task is queued, process it
-				if ( e.tasks.size > 0 )
+				if ( !task.cancel )
 				{
-					AbstractTask task = e.tasks.removeIndex( 0 );
-					for ( GameEventHandler handler : e.getAllHandlers() )
-					{
-						handler.onTask( e, task );
-					}
-
-					if ( !task.cancel )
-					{
-						task.processTask( e );
-					}
-
-					float actionCost = task.cost * e.getActionDelay();
-					e.actionDelayAccumulator -= actionCost * e.getActionDelay();
-
-					e.tile[0][0].processFieldEffectsForEntity( e, actionCost );
+					task.processTask( e );
 				}
-				else
-				{
-					e.actionDelayAccumulator -= e.getActionDelay();
-				}
+
+				float actionCost = task.cost * e.getActionDelay();
+				e.actionDelayAccumulator -= actionCost * e.getActionDelay();
+
+				e.tile[0][0].processFieldEffectsForEntity( e, actionCost );
 			}
-
-			if ( e.actionDelayAccumulator <= 0 )
+			else
 			{
-				itr.remove();
-			}
-			else if ( !e.tile[0][0].visible )
-			{
-				// If entity is now invisible, submit to the invisible list to
-				// be processed
-				itr.remove();
-				invisibleList.add( e );
+				e.actionDelayAccumulator -= e.getActionDelay();
 			}
 		}
-	}
 
-	private void processInvisibleList()
-	{
-		while ( invisibleList.size > 0 )
-		{
-			Iterator<GameEntity> itr = invisibleList.iterator();
-
-			// Repeat full pass through list
-			while ( itr.hasNext() )
-			{
-				GameEntity e = itr.next();
-
-				if ( e.HP <= 0 )
-				{
-					itr.remove();
-					continue;
-				}
-
-				e.updateShadowCast();
-
-				// If entity can take action
-				if ( e.actionDelayAccumulator > 0 )
-				{
-					// If no tasks queued, process the ai
-					if ( e.tasks.size == 0 )
-					{
-						e.AI.update( e );
-					}
-
-					// If a task is queued, process it
-					if ( e.tasks.size > 0 )
-					{
-						AbstractTask task = e.tasks.removeIndex( 0 );
-						for ( GameEventHandler handler : e.getAllHandlers() )
-						{
-							handler.onTask( e, task );
-						}
-
-						if ( !task.cancel )
-						{
-							task.processTask( e );
-						}
-
-						float actionCost = task.cost * e.getActionDelay();
-						e.actionDelayAccumulator -= actionCost * e.getActionDelay();
-
-						e.tile[0][0].processFieldEffectsForEntity( e, actionCost );
-					}
-					else
-					{
-						e.actionDelayAccumulator -= e.getActionDelay();
-					}
-				}
-
-				if ( e.actionDelayAccumulator <= 0 )
-				{
-					itr.remove();
-				}
-				else if ( e.tile[0][0].visible )
-				{
-					// If entity is now visible, submit to the visible list to
-					// be processed
-					itr.remove();
-					visibleList.add( e );
-				}
-			}
-		}
+		return e.actionDelayAccumulator <= 0;
 	}
 
 	// endregion Process
@@ -1015,7 +1020,6 @@ public class Level
 		{
 			for ( int y = 0; y < height; y++ )
 			{
-				boolean visible = Grid[x][y].visible;
 				GameEntity e = Grid[x][y].entity;
 				if ( e != null && e != player && e.tile[0][0] == Grid[x][y] )
 				{
@@ -1035,16 +1039,9 @@ public class Level
 
 					e.update( cost );
 
-					if ( e.actionDelayAccumulator > 0 )
+					if ( e.actionDelayAccumulator > 0 || e.tasks.size > 0 )
 					{
-						if ( visible )
-						{
-							visibleList.add( e );
-						}
-						else
-						{
-							invisibleList.add( e );
-						}
+						toBeProcessedList.add( e );
 					}
 				}
 			}
@@ -1265,70 +1262,11 @@ public class Level
 		NewActiveAbilities.add( aa );
 	}
 
-	public void update( float delta )
+	public void advance( float delta )
 	{
 		updateAccumulator += delta;
 
-		if ( !hasActiveEffects() && Global.CurrentDialogue == null )
-		{
-			// Do player move and fill lists
-			if ( visibleList.size == 0 && invisibleList.size == 0 && updateAccumulator >= updateDeltaStep && !hasAbilitiesToUpdate() )
-			{
-				processPlayer();
-
-				updateAccumulator = 0;
-
-				inTurn = true;
-			}
-
-			if ( visibleList.size > 0 || invisibleList.size > 0 )
-			{
-				// process invisible until empty
-				processInvisibleList();
-
-				// process visible
-				processVisibleList();
-			}
-			else if ( inTurn )
-			{
-				// Global.save();
-
-				for ( AbilityTree a : player.slottedAbilities )
-				{
-					if ( a != null && a.current.current instanceof ActiveAbility )
-					{
-						ActiveAbility aa = (ActiveAbility) a.current.current;
-
-						aa.source = player.tile[0][0];
-						aa.hasValidTargets = aa.getValidTargets().size > 0;
-					}
-				}
-
-				inTurn = false;
-			}
-
-			if ( ActiveAbilities.size > 0 )
-			{
-				Iterator<ActiveAbility> itr = ActiveAbilities.iterator();
-				while ( itr.hasNext() )
-				{
-					ActiveAbility aa = itr.next();
-					boolean finished = aa.update();
-
-					if ( finished )
-					{
-						itr.remove();
-					}
-				}
-			}
-
-			if ( NewActiveAbilities.size > 0 )
-			{
-				ActiveAbilities.addAll( NewActiveAbilities, 0, NewActiveAbilities.size );
-				NewActiveAbilities.clear();
-			}
-		}
-
+		player.updateShadowCast();
 		updateVisibleTiles();
 		lightList.clear();
 
@@ -1400,13 +1338,16 @@ public class Level
 	// ####################################################################//
 	// region Data
 
+	public static final long SEENID = "seen".hashCode();
+	public static final long UNSEENID = "unseen".hashCode();
+
 	private int saveCounter = 0;
+	private int turnCount = -1;
 
 	private Array<ActiveAbility> NewActiveAbilities = new Array<ActiveAbility>( false, 16 );
 
 	public boolean affectedByDayNight = false;
-	private Array<GameEntity> visibleList = new Array<GameEntity>( false, 16 );
-	private Array<GameEntity> invisibleList = new Array<GameEntity>( false, 16 );
+	private Array<GameEntity> toBeProcessedList = new Array<GameEntity>( false, 16 );
 	private Array<Light> lightList = new Array<Light>( false, 16 );
 	private Array<EnvironmentEntity> tempEnvironmentEntityList = new Array<EnvironmentEntity>( false, 16 );
 	private Array<Field> tempFieldList = new Array<Field>( false, 16 );

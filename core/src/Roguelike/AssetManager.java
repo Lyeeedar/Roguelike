@@ -112,7 +112,11 @@ public class AssetManager
 	{
 		if ( loadedTextureRegions.containsKey( path ) ) { return loadedTextureRegions.get( path ); }
 
-		TextureAtlas.AtlasRegion region = prepackedAtlas.findRegion( path );
+		String atlasName = path;
+		atlasName = atlasName.replace( "Sprites/", "" );
+		atlasName = atlasName.replace( ".png", "" );
+
+		TextureAtlas.AtlasRegion region = prepackedAtlas.findRegion( atlasName );
 		if ( region != null )
 		{
 			TextureRegion textureRegion = new TextureRegion( region );

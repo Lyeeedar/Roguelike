@@ -37,6 +37,7 @@ public class GameTile implements PathfindingTile
 	public EnvironmentEntity environmentEntity;
 	public FastEnumMap<FieldLayer, Field> fields = new FastEnumMap<FieldLayer, Field>( FieldLayer.class );
 	public boolean hasFields;
+	public boolean hasFieldLight;
 	public Level level;
 	public Array<SpriteEffect> spriteEffects = new Array<SpriteEffect>();
 	public Array<Item> items = new Array<Item>( false, 16 );
@@ -132,6 +133,7 @@ public class GameTile implements PathfindingTile
 		field.tile = this;
 
 		hasFields = fields.size > 0;
+		updateFieldLightFlag();
 	}
 
 	public final void clearField( FieldLayer layer )
@@ -147,6 +149,25 @@ public class GameTile implements PathfindingTile
 			fields.remove( layer );
 
 			hasFields = fields.size > 0;
+			updateFieldLightFlag();
+		}
+	}
+
+	public final void updateFieldLightFlag()
+	{
+		hasFieldLight = false;
+
+		if (hasFields)
+		{
+			for (FieldLayer layer : FieldLayer.values())
+			{
+				Field field = fields.get( layer );
+				if (field != null && field.light != null)
+				{
+					hasFieldLight = true;
+					break;
+				}
+			}
 		}
 	}
 

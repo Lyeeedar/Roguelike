@@ -42,7 +42,7 @@ public class TilingSprite
 
 	public HashMap<Integer, Sprite> sprites = new HashMap<Integer, Sprite>(  );
 
-	public String name;
+	public long id;
 	public String texName;
 	public String maskName;
 	public Element spriteBase = new Element( "Sprite", null );
@@ -54,7 +54,7 @@ public class TilingSprite
 	public TilingSprite copy()
 	{
 		TilingSprite copy = new TilingSprite();
-		copy.name = name;
+		copy.id = id;
 		copy.texName = texName;
 		copy.maskName = maskName;
 		copy.spriteBase = spriteBase;
@@ -95,7 +95,7 @@ public class TilingSprite
 
 	public void load( String name, String texName, String maskName, Element spriteElement, Element overhangElement )
 	{
-		this.name = name;
+		this.id = name.toLowerCase().hashCode();
 		this.texName = texName;
 		this.maskName = maskName;
 		this.spriteBase = spriteElement;

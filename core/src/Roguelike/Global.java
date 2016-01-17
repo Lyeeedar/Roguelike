@@ -115,9 +115,9 @@ public class Global
 	public static float DayNightFactor = 1;
 
 	// ----------------------------------------------------------------------
-	public static Pool<Point> PointPool = Pools.get( Point.class );
-	public static Pool<Light> LightPool = Pools.get( Light.class );
-	public static Pool<LightData> LightDataPool = Pools.get( LightData.class );
+	public static Pool<Point> PointPool = Pools.get( Point.class, Integer.MAX_VALUE );
+	public static Pool<Light> LightPool = Pools.get( Light.class, Integer.MAX_VALUE );
+	public static Pool<LightData> LightDataPool = Pools.get( LightData.class, Integer.MAX_VALUE );
 
 	// ----------------------------------------------------------------------
 	static
