@@ -17,7 +17,7 @@
 
 			<EnvironmentData>
 				<Sprite>
-					<Name>spider/cocoon</Name>
+					<Name>Oryx/Custom/terrain/cocoon</Name>
 				</Sprite>
 				<Passable>false</Passable>
 				<Opaque>false</Opaque>

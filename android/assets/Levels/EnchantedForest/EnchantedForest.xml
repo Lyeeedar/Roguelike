@@ -225,46 +225,6 @@
                     </TilingSprite>
                 </Group>
 
-                <Group Chance="0.05">
-                    <Sprite>
-                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
-                    </Sprite>
-                    <TilingSprite>
-                        <Name>Path</Name>
-                        <Mask>Masks/path</Mask>
-                        <Sprite>
-                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_2</Name>
-                        </Sprite>
-                    </TilingSprite>
-                </Group>
-
-                <Group Chance="0.05">
-                    <Sprite>
-                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
-                    </Sprite>
-                    <TilingSprite>
-                        <Name>Path</Name>
-                        <Mask>Masks/path</Mask>
-                        <Sprite>
-                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_3</Name>
-                        </Sprite>
-                    </TilingSprite>
-                </Group>
-
-                <Group Chance="0.05">
-                    <Sprite>
-                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
-                    </Sprite>
-                    <TilingSprite>
-                        <Name>Path</Name>
-                        <Mask>Masks/path</Mask>
-                        <Sprite>
-                            <Name>Oryx/uf_split/uf_terrain/ground_dirt_brown_4</Name>
-                        </Sprite>
-                    </TilingSprite>
-                </Group>
-
-
             </TileData>
         </Symbol>
 

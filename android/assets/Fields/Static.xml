@@ -2,7 +2,7 @@
     <FieldName>Static</FieldName>
     <Tags>Electricity</Tags>
     <Sprite>
-        <Name>spells/air/chain_lightning</Name>
+        <Name>EffectSprites/LightningBoltMove/LightningBolt</Name>
     </Sprite>
     <Duration>
         <Single />
@@ -15,10 +15,10 @@
             <Fire_Atk>20</Fire_Atk>
             <Air_Atk>20</Air_Atk>
         </Damage>
-         <Sprite>
-         	<Name>AbilitySprites/LightningBurst/LightningBurst</Name>
+        <Sprite>
+         	<Name>EffectSprites/LightningBurst/LightningBurst</Name>
          	<UpdateRate>0.2</UpdateRate>
-         </Sprite>
+        </Sprite>
     </OnDeath>
     <Interactions>
         <Wet>

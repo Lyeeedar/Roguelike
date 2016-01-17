@@ -35,7 +35,7 @@ public class MainMenuScreen implements Screen
 		stage = new Stage( new ScreenViewport() );
 		batch = new SpriteBatch();
 
-		background = AssetManager.loadTexture( "Sprites/GUI/Title.png" );
+		background = AssetManager.loadTexture( "Sprites/Title/Title.png" );
 
 		createUI();
 	}
@@ -48,7 +48,7 @@ public class MainMenuScreen implements Screen
 		// Label title = new Label( "Chronicles of Aether", skin );
 		// table.add( title ).expandY().top().padTop( 100 );
 		// table.row();
-		Image image = new Image( AssetManager.loadTextureRegion( "Sprites/GUI/Title.png" ) );
+		Image image = new Image( AssetManager.loadTextureRegion( "Sprites/Title/Title.png" ) );
 		table.add( image ).expandX().fillX();
 		table.row();
 

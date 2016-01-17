@@ -383,6 +383,7 @@ public abstract class Entity
 		{
 			for (StatusEffect se : pendingStatusEffects)
 			{
+				boolean needsAdding = true;
 				if (!se.stackable)
 				{
 					for (StatusEffect ose : statusEffects)
@@ -390,12 +391,16 @@ public abstract class Entity
 						if (ose.name.equals( se.name ))
 						{
 							ose.duration = Math.max( ose.duration, se.duration );
-							return;
+							needsAdding = false;
+							break;
 						}
 					}
 				}
 
-				statusEffects.add( se );
+				if ( needsAdding )
+				{
+					statusEffects.add( se );
+				}
 			}
 
 			stacks = stackStatusEffects();

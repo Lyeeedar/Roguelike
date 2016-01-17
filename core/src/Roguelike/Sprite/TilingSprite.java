@@ -9,10 +9,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.XmlReader.Element;
-
-import java.util.HashMap;
-import java.util.Map;
 
 // Naming priority: NSEW
 public class TilingSprite
@@ -40,7 +38,7 @@ public class TilingSprite
 		load( name, texture, mask, spriteBase, null );
 	}
 
-	public HashMap<Integer, Sprite> sprites = new HashMap<Integer, Sprite>(  );
+	public IntMap<Sprite> sprites = new IntMap<Sprite>(  );
 
 	public long id;
 	public String texName;
@@ -61,9 +59,9 @@ public class TilingSprite
 		copy.hasAllElements = hasAllElements;
 		copy.overhangSprite = overhangSprite;
 
-		for (Map.Entry<Integer, Sprite> pair : sprites.entrySet())
+		for (IntMap.Entry<Sprite> pair : sprites.entries())
 		{
-			copy.sprites.put( pair.getKey(), pair.getValue().copy() );
+			copy.sprites.put( pair.key, pair.value.copy() );
 		}
 
 		return copy;
@@ -138,37 +136,39 @@ public class TilingSprite
 			return tex;
 		}
 
-		// If we havent been given a valid mask, then just return the original texture
-		if (maskBaseName == null)
-		{
-			return AssetManager.loadTextureRegion( "Sprites/" + baseName + ".png" );
-		}
+		throw new RuntimeException( "No masked sprite packed for file: " + maskedName );
 
-		Pixmap base = ImageUtils.textureToPixmap( AssetManager.loadTexture( "Sprites/" + baseName + ".png" ) );
-		Pixmap merged = base;
-		for (String maskSuffix : masks)
-		{
-			Texture maskTex = AssetManager.loadTexture( "Sprites/" + maskBaseName + "_" + maskSuffix + ".png" );
-
-			if (maskTex == null)
-			{
-				maskTex = AssetManager.loadTexture( "Sprites/" + maskBaseName + "_C.png" );
-			}
-
-			if (maskTex == null)
-			{
-				continue;
-			}
-
-			Pixmap maskedTex = ImageUtils.maskPixmap( merged, ImageUtils.textureToPixmap( maskTex ) );
-			if (merged != base) { merged.dispose(); }
-			merged = maskedTex;
-		}
-
-		return AssetManager.packPixmap( "Sprites/" + maskedName + ".png", merged );
+//		// If we havent been given a valid mask, then just return the original texture
+//		if (maskBaseName == null)
+//		{
+//			return AssetManager.loadTextureRegion( "Sprites/" + baseName + ".png" );
+//		}
+//
+//		Pixmap base = ImageUtils.textureToPixmap( AssetManager.loadTexture( "Sprites/" + baseName + ".png" ) );
+//		Pixmap merged = base;
+//		for (String maskSuffix : masks)
+//		{
+//			Texture maskTex = AssetManager.loadTexture( "Sprites/" + maskBaseName + "_" + maskSuffix + ".png" );
+//
+//			if (maskTex == null)
+//			{
+//				maskTex = AssetManager.loadTexture( "Sprites/" + maskBaseName + "_C.png" );
+//			}
+//
+//			if (maskTex == null)
+//			{
+//				continue;
+//			}
+//
+//			Pixmap maskedTex = ImageUtils.maskPixmap( merged, ImageUtils.textureToPixmap( maskTex ) );
+//			if (merged != base) { merged.dispose(); }
+//			merged = maskedTex;
+//		}
+//
+//		return AssetManager.packPixmap( "Sprites/" + maskedName + ".png", merged );
 	}
 
-	public Array<String> getMasks( EnumBitflag<Global.Direction> emptyDirections )
+	public static Array<String> getMasks( EnumBitflag<Global.Direction> emptyDirections )
 	{
 		Array<String> masks = new Array<String>();
 

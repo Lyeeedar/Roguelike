@@ -1,6 +1,6 @@
 <Field Extends="Gas">
     <FieldName>Steam</FieldName>
     <Sprite>
-        <Name>effect/cloud_grey_smoke</Name>
+        <Name>Oryx/Custom/terrain/cloud</Name>
     </Sprite>
 </Field>

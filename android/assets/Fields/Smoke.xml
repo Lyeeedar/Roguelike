@@ -1,6 +1,7 @@
 <Field Extends="Gas">
     <FieldName>Smoke</FieldName>
     <Sprite>
-        <Name>effect/cloud_black_smoke</Name>
+        <Name>Oryx/Custom/terrain/cloud</Name>
+        <Colour><RGB>100,100,100</RGB></Colour>
     </Sprite>
 </Field>

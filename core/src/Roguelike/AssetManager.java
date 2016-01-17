@@ -103,7 +103,14 @@ public class AssetManager
 
 	private static void setupPacker()
 	{
-		packer = new PixmapPacker( 1024, 1024, Format.RGBA8888, 2, true );
+		IntBuffer intBuffer = BufferUtils.newIntBuffer( 16 );
+		Gdx.gl20.glGetIntegerv( GL20.GL_MAX_TEXTURE_SIZE, intBuffer );
+
+		int size = intBuffer.get();
+
+		size = Math.min( 4096, size );
+
+		packer = new PixmapPacker( size, size, Format.RGBA8888, 2, true );
 	}
 
 	private static HashMap<String, TextureRegion> loadedTextureRegions = new HashMap<String, TextureRegion>();

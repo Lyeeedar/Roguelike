@@ -19,6 +19,7 @@ import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.BinaryHeap;
 
 public class AStarPathfind
 {
@@ -45,7 +46,7 @@ public class AStarPathfind
 
 	public boolean debug = false;
 
-	private PriorityQueue<Node> openList = new PriorityQueue<Node>();
+	private BinaryHeap<Node> openList = new BinaryHeap<Node>();
 
 	public AStarPathfind( PathfindingTile[][] grid, int startx, int starty, int endx, int endy, boolean canMoveDiagonal, boolean findOptimal, int actorSize, EnumBitflag<Passability> travelType, Object self )
 	{
@@ -70,7 +71,7 @@ public class AStarPathfind
 
 	private void path()
 	{
-		Node current = openList.poll();
+		Node current = openList.pop();
 
 		currentx = current.x;
 		currenty = current.y;
@@ -131,7 +132,7 @@ public class AStarPathfind
 			node = new Node( x, y );
 			node.cost = cost;
 			node.parent = parent;
-			openList.add( node );
+			openList.add( node, node.cost );
 
 			nodes[x][y] = node;
 		}
@@ -145,8 +146,7 @@ public class AStarPathfind
 				node.cost = cost;
 				node.parent = parent;
 
-				openList.remove( node );
-				openList.add( node );
+				openList.setValue( node, node.cost );
 			}
 		}
 
@@ -173,7 +173,7 @@ public class AStarPathfind
 
 		addNodeToOpenList( startx, starty, null );
 
-		while ( ( findOptimal || !isEnd( currentx, currenty ) ) && openList.size() > 0 )
+		while ( ( findOptimal || !isEnd( currentx, currenty ) ) && openList.size > 0 )
 		{
 			path();
 		}
@@ -203,7 +203,7 @@ public class AStarPathfind
 		}
 	}
 
-	private class Node implements Comparable<Node>
+	private class Node extends BinaryHeap.Node
 	{
 		public int x;
 		public int y;
@@ -214,14 +214,10 @@ public class AStarPathfind
 
 		public Node( int x, int y )
 		{
+			super(0);
+
 			this.x = x;
 			this.y = y;
-		}
-
-		@Override
-		public int compareTo( Node arg0 )
-		{
-			return Integer.compare( cost, arg0.cost );
 		}
 
 		@Override

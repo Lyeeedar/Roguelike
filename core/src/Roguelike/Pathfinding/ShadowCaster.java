@@ -20,12 +20,14 @@ import Roguelike.Util.EnumBitflag;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntSet;
+import com.badlogic.gdx.utils.ObjectSet;
 
 public class ShadowCaster
 {
 	private final EnumBitflag<Passability> ShadowPassability = new EnumBitflag<Passability>( Passability.LIGHT, Passability.ENTITY );
 
-	private final HashSet<String> tileLookup = new HashSet<String>();
+	private final IntSet tileLookup = new IntSet();
 
 	private final int range;
 	private final PathfindingTile[][] grid;
@@ -167,11 +169,11 @@ public class ShadowCaster
 					continue;
 				}
 
-				String s = translated.x + "," + translated.y;
-				if ( !tileLookup.contains( s ) )
+				int tileVal = translated.y * grid.length + translated.x;
+				if ( !tileLookup.contains( tileVal ) )
 				{
 					output.add( translated );
-					tileLookup.add( s );
+					tileLookup.add( tileVal );
 				}
 				else
 				{

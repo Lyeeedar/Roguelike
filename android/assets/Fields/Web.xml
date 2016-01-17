@@ -14,7 +14,7 @@
     <OnTurn>
         <Status>
             <Name>Webbed</Name>
-            <Description>Webs restrict your moveability</Description>
+            <Description>Webs restrict your mobility</Description>
             <Duration>2</Duration>
             <Stackable>false</Stackable>
             <Events>

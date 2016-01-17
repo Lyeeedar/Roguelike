@@ -2,7 +2,7 @@
     <FieldName>Water</FieldName>
     <Tags>Wet</Tags>
     <Sprite>
-        <Name>dc-dngn/water/dngn_shoals_shallow_water</Name>
+        <Name>Oryx/uf_split/uf_terrain/water_blue</Name>
     </Sprite>
     <Duration>
         <Fade>
@@ -15,7 +15,7 @@
             <Spawn>
                 <Field>Steam</Field>
                 <Stacks>max3(SrcStacks, DstStacks, 1)</Stacks>
-            </Spawn>         
+            </Spawn>
         </Hot>
         <Cold>
             <Spawn>

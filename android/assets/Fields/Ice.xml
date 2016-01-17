@@ -2,14 +2,14 @@
     <FieldName>Ice</FieldName>
     <Tags>Cold</Tags>
     <Sprite>
-        <Name>dc-dngn/wall/marble_wall5</Name>
+        <Name>Oryx/uf_split/uf_terrain/water_lava</Name>
     </Sprite>
     <Interactions>
         <Hot>
             <Spawn>
                 <Field>Water</Field>
                 <Stacks>SrcStacks</Stacks>
-            </Spawn>         
+            </Spawn>
         </Hot>
     </Interactions>
 </Field>
