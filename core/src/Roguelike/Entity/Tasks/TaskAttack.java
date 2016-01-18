@@ -16,6 +16,7 @@ import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
@@ -40,6 +41,128 @@ public class TaskAttack extends AbstractTask
 		}
 
 		this.dir = dir;
+	}
+
+	public static Array<Point> buildAllDirectionHitTiles( GameEntity entity )
+	{
+		Array<Point> points = new Array<Point>(  );
+
+		Item weapon = entity.getInventory().getEquip( EquipmentSlot.WEAPON );
+
+		for ( Direction dir : Direction.values() )
+		{
+			if ( Global.CanMoveDiagonal || dir.isCardinal() )
+			{
+				int xstep = 0;
+				int ystep = 0;
+
+				int sx = 0;
+				int sy = 0;
+
+				if ( dir == Direction.NORTH )
+				{
+					sx = 0;
+					sy = entity.size - 1;
+
+					xstep = 1;
+					ystep = 0;
+				}
+				else if ( dir == Direction.SOUTH )
+				{
+					sx = 0;
+					sy = 0;
+
+					xstep = 1;
+					ystep = 0;
+				}
+				else if ( dir == Direction.EAST )
+				{
+					sx = entity.size - 1;
+					sy = 0;
+
+					xstep = 0;
+					ystep = 1;
+				}
+				else if ( dir == Direction.WEST )
+				{
+					sx = 0;
+					sy = 0;
+
+					xstep = 0;
+					ystep = 1;
+				}
+
+				for (int i = 0; i < entity.size; i++)
+				{
+					GameTile attackerTile = entity.tile[sx + xstep * i][sy + ystep * i];
+
+					if (weapon != null && weapon.wepDef != null)
+					{
+						Matrix3 mat = new Matrix3(  );
+						mat.setToRotation( dir.getAngle() );
+						Vector3 vec = new Vector3();
+
+						for (Point point : weapon.wepDef.hitPoints)
+						{
+							vec.set( point.x, point.y, 0 );
+							vec.mul( mat );
+
+							int dx = Math.round( vec.x );
+							int dy = Math.round( vec.y );
+
+							Point pos = Global.PointPool.obtain().set( attackerTile.x + dx, attackerTile.y + dy );
+							points.add( pos );
+						}
+					}
+					else
+					{
+						Point pos = Global.PointPool.obtain().set( attackerTile.x + dir.getX(), attackerTile.y + dir.getY() );
+						points.add( pos );
+					}
+				}
+			}
+		}
+
+		// restrict by visibility and remove duplicates
+		Array<Point> visibleTiles = entity.visibilityCache.getCurrentShadowCast();
+
+		Iterator<Point> itr = points.iterator();
+		while (itr.hasNext())
+		{
+			Point pos = itr.next();
+
+			boolean matchFound = false;
+
+			// Remove not visible
+			for (Point point : visibleTiles)
+			{
+				if (point.x == pos.x && point.y == pos.y)
+				{
+					matchFound = true;
+					break;
+				}
+			}
+
+			// Remove duplicates
+			for (int i = 0; i < points.size; i++)
+			{
+				Point opos = points.get( i );
+				if (opos != pos && opos.x == pos.x && opos.y == pos.y)
+				{
+					matchFound = false;
+					break;
+				}
+			}
+
+			if (!matchFound)
+			{
+				itr.remove();
+
+				Global.PointPool.free( pos );
+			}
+		}
+
+		return points;
 	}
 
 	public Array<GameTile> buildHitTileArray( GameEntity attacker, Direction dir )

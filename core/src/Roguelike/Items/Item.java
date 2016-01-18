@@ -479,35 +479,6 @@ public final class Item extends GameEventHandler
 	}
 
 	// ----------------------------------------------------------------------
-	public SoundInstance getWeaponSound()
-	{
-		if ( hitEffect != null && hitEffect.sound != null ) { return hitEffect.sound; }
-
-		if ( type.equals( "sword" ) )
-		{
-			return new SoundInstance( AssetManager.loadSound( "knife_stab" ) );
-		}
-		else if ( type.equals( "spear" ) )
-		{
-			return new SoundInstance( AssetManager.loadSound( "knife_stab" ) );
-		}
-		else if ( type.equals( "axe" ) )
-		{
-			return new SoundInstance( AssetManager.loadSound( "knife_stab" ) );
-		}
-		else if ( type.equals( "bow" ) )
-		{
-			return new SoundInstance( AssetManager.loadSound( "arrow_approaching_and_hitting_target" ) );
-		}
-		else if ( type.equals( "wand" ) )
-		{
-			return new SoundInstance( AssetManager.loadSound( "arrow_approaching_and_hitting_target" ) );
-		}
-
-		return new SoundInstance( AssetManager.loadSound( "knife_stab" ) );
-	}
-
-	// ----------------------------------------------------------------------
 	public enum EquipmentSlot
 	{
 		// Weapons

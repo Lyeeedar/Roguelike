@@ -1,8 +1,10 @@
 package Roguelike.UI;
 
 import Roguelike.AssetManager;
+import Roguelike.Entity.Tasks.TaskAttack;
 import Roguelike.Global;
 import Roguelike.Items.Item;
+import Roguelike.Screens.GameScreen;
 import Roguelike.Sprite.Sprite;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -63,7 +65,15 @@ public class EquipmentPanel extends TilePanel
 	@Override
 	public void handleDataClicked( final Object data, InputEvent event, float x, float y )
 	{
-		// show toolip + drop button
+		if ( data instanceof Item )
+		{
+			Item item = (Item)data;
+
+			if ( item.getMainSlot() == Item.EquipmentSlot.WEAPON )
+			{
+				GameScreen.Instance.weaponTiles = TaskAttack.buildAllDirectionHitTiles( Global.CurrentLevel.player );
+			}
+		}
 	}
 
 	@Override

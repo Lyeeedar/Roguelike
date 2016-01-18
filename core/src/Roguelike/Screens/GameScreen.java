@@ -314,6 +314,16 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 			}
 
+			if ( weaponTiles != null )
+			{
+				batch.setColor( 0.8f, 0.3f, 0.5f, 0.5f );
+
+				for ( Point tile : weaponTiles )
+				{
+					batch.draw( white, tile.x * Global.TileSize + offsetx, tile.y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
+				}
+			}
+
 			// if ( Global.ANDROID )
 			// {
 			// EntityStatusRenderer.draw( Global.CurrentLevel.player, batch,
@@ -1244,6 +1254,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean keyDown( int keycode )
 	{
+		if ( weaponTiles != null )
+		{
+			Global.PointPool.freeAll( weaponTiles );
+			weaponTiles.clear();
+			weaponTiles = null;
+		}
+
 		if ( Global.CurrentDialogue != null )
 		{
 			if ( Global.CurrentDialogue.currentInput != null && keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
@@ -1399,6 +1416,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			Tooltip.openTooltip.setVisible( false );
 			Tooltip.openTooltip.remove();
 			Tooltip.openTooltip = null;
+		}
+
+		if ( weaponTiles != null )
+		{
+			Global.PointPool.freeAll( weaponTiles );
+			weaponTiles.clear();
+			weaponTiles = null;
 		}
 
 		if (Global.ANDROID && examineMode)
@@ -2105,6 +2129,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public ActiveAbility preparedAbility;
 	public AbilityTree abilityToEquip;
 	private Array<Point> abilityTiles;
+	public Array<Point> weaponTiles;
 	private Color tempColour = new Color();
 	//private Tooltip tooltip;
 
