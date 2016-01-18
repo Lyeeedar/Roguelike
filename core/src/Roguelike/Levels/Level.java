@@ -347,7 +347,7 @@ public class Level
 
 			if ( obj instanceof GameEntity && ((GameEntity)obj).isBoss )
 			{
-				int amount = Math.max( 10, (player.getStatistic( Statistic.CONSTITUTION ) * 10) / 3 );
+				int amount = Math.max( 10, (player.getStatistic( Statistic.CONSTITUTION ) * 10) );
 				delay += dropOrbs( amount, delay, GameTile.OrbType.HEALTH, source, possibleTiles );
 			}
 		}
@@ -768,6 +768,17 @@ public class Level
 			task.processTask( player );
 		}
 
+		if ( !(task instanceof TaskMove ) )
+		{
+			for (int x = 0; x < player.size; x++)
+			{
+				for (int y = 0; y < player.size; y++)
+				{
+					player.tile[x][y].prevEntity = player;
+				}
+			}
+		}
+
 		float actionCost = task.cost * player.getActionDelay();
 
 		Global.AUT += actionCost;
@@ -994,6 +1005,17 @@ public class Level
 				if ( !task.cancel )
 				{
 					task.processTask( e );
+				}
+
+				if ( !(task instanceof TaskMove ) )
+				{
+					for (int x = 0; x < e.size; x++)
+					{
+						for (int y = 0; y < e.size; y++)
+						{
+							e.tile[x][y].prevEntity = e;
+						}
+					}
 				}
 
 				float actionCost = task.cost * e.getActionDelay();

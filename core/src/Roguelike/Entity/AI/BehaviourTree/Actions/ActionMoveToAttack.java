@@ -46,50 +46,48 @@ public class ActionMoveToAttack extends AbstractAction
 		{
 			for (Direction dir : Direction.values())
 			{
-				// For each direction, find the attack points
-
-				Matrix3 mat = new Matrix3();
-				mat.setToRotation( dir.getAngle() );
-
-				Vector3 vec = new Vector3();
-
-				for (Point p : weapon.wepDef.hitPoints)
+				if ( ( Global.CanMoveDiagonal || dir.isCardinal() ) && dir != Direction.CENTER  )
 				{
-					vec.set(p.x, p.y, 0);
-					vec.mul( mat );
+					// For each direction, find the attack points
 
-					int dx = Math.round( vec.x );
-					int dy = Math.round( vec.y );
+					Matrix3 mat = new Matrix3();
+					mat.setToRotation( dir.getAngle() );
 
-					Point newPos = Global.PointPool.obtain().set( target.x - dx, target.y - dy );
-					GameTile tile = entity.tile[0][0].level.getGameTile( newPos );
+					Vector3 vec = new Vector3();
 
-					if ( tile != null && tile.getPassable( entity.getTravelType(), entity ) )
+					for (Point p : weapon.wepDef.hitPoints)
 					{
-						possibleTiles.add( newPos );
+						vec.set(p.x, p.y, 0);
+						vec.mul( mat );
+
+						int dx = Math.round( vec.x );
+						int dy = Math.round( vec.y );
+
+						Point newPos = Global.PointPool.obtain().set( target.x - dx, target.y - dy );
+						GameTile tile = entity.tile[0][0].level.getGameTile( newPos );
+
+						if ( tile != null && tile.entity == null && tile.getPassable( entity.getTravelType(), entity ) )
+						{
+							possibleTiles.add( newPos );
+						}
 					}
 				}
+
 			}
 		}
 		else
 		{
 			for ( Direction dir : Direction.values() )
 			{
-				if ( dir == Direction.CENTER )
+				if ( ( Global.CanMoveDiagonal || dir.isCardinal() ) && dir != Direction.CENTER  )
 				{
-					continue;
-				}
+					Point newPos = Global.PointPool.obtain().set( target.x + dir.getX(), target.y + dir.getY() );
+					GameTile tile = entity.tile[0][0].level.getGameTile( newPos );
 
-				Point newPos = Global.PointPool.obtain().set( target.x + dir.getX(), target.y + dir.getY() );
-				GameTile tile = entity.tile[0][0].level.getGameTile( newPos );
-
-				if ( tile == null || !tile.getPassable( WeaponPassability, entity ) )
-				{
-					break;
-				}
-				if ( tile.getPassable( entity.getTravelType(), entity ) )
-				{
-					possibleTiles.add( newPos );
+					if ( tile != null && tile.entity == null && tile.getPassable( entity.getTravelType(), entity ) )
+					{
+						possibleTiles.add( newPos );
+					}
 				}
 			}
 		}
@@ -149,7 +147,7 @@ public class ActionMoveToAttack extends AbstractAction
 			Pathfinder pathFinder = new Pathfinder( entity.tile[0][0].level.getGrid(), entity.tile[0][0].x, entity.tile[0][0].y, pos.x, pos.y, Global.CanMoveDiagonal, entity.size, entity );
 			Array<Point> path = pathFinder.getPath( entity.getTravelType() );
 
-			if ( path.size > 1 && path.size < bestDist )
+			if ( path.size > 1 && path.size < bestDist && path.size < 20 )
 			{
 				if ( entity.tile[0][0].level.getGameTile( path.get( 1 ) ).getPassable( entity.getTravelType(), entity ) )
 				{

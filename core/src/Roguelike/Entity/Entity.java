@@ -93,7 +93,7 @@ public abstract class Entity
 			HP = getStatistic( Statistic.CONSTITUTION ) * 10;
 
 			statistics.put( Statistic.WALK, 1 );
-			statistics.put( Statistic.ENTITY, 1 );
+			//statistics.put( Statistic.ENTITY, 1 );
 		}
 
 		Element inventoryElement = xml.getChildByName( "Inventory" );

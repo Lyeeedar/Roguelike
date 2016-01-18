@@ -46,7 +46,9 @@ public abstract class TilePanel extends Widget
 
 	public boolean canBeExamined = true;
 
-	protected NinePatch tilePanelBackground;
+	protected NinePatch tilePanelBackgroundH;
+	protected NinePatch tilePanelBackgroundV;
+	protected boolean drawHorizontalBackground = true;
 
 	protected Sprite tileBackground;
 	protected Sprite tileBorder;
@@ -69,7 +71,8 @@ public abstract class TilePanel extends Widget
 		this.tileSize = tileSize;
 		this.expandVertically = expandVertically;
 
-		this.tilePanelBackground = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Tooltip.png" ), 21, 21, 21, 21 );
+		this.tilePanelBackgroundH = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/PanelHorizontal.png" ), 21, 21, 21, 21 );
+		this.tilePanelBackgroundV = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/PanelVertical.png" ), 21, 21, 21, 21 );
 
 		TilePanelListener listener = new TilePanelListener();
 
@@ -145,7 +148,15 @@ public abstract class TilePanel extends Widget
 		int width = viewWidth * ( tileSize + padding ) + padding;
 
 		batch.setColor( Color.WHITE );
-		tilePanelBackground.draw( batch, getX(), getY() + getHeight() - height, width, height );
+
+		if (drawHorizontalBackground)
+		{
+			tilePanelBackgroundH.draw( batch, getX(), getY() + getHeight() - height, width, height );
+		}
+		else
+		{
+			tilePanelBackgroundV.draw( batch, getX(), getY() + getHeight() - height, width, height );
+		}
 
 		int xOffset = (int) getX() + padding;
 		int top = (int) ( getY() - padding + getHeight() ) - tileSize;

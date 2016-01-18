@@ -783,14 +783,36 @@ public final class Room
 
 			if (spawnMiniBoss)
 			{
-				if ( spawnList.size > 0 && faction.minibosses.size > 0 )
+				if ( spawnList.size == 0 )
 				{
-					String entityName = faction.minibosses.get( ran.nextInt( faction.minibosses.size ) );
+					if ( blockedList.size > 0 )
+					{
+						Point p = blockedList.removeIndex( 0 );
+						roomContents[p.x][p.y].environmentEntityData = roomCopy[p.x][p.y].environmentEntityData;
+						roomContents[p.x][p.y].environmentData = roomCopy[p.x][p.y].environmentData;
+
+						spawnList.add( p );
+					}
+				}
+
+				if ( spawnList.size > 0 )
+				{
+					String entityName = null;
+
+					if ( faction.minibosses.size > 0 )
+					{
+						faction.minibosses.get( ran.nextInt( faction.minibosses.size ) );
+					}
+					else
+					{
+						entityName = faction.creatures.get( faction.creatures.size - 1 ).entityName;
+					}
 
 					Point pos = spawnList.removeIndex( ran.nextInt( spawnList.size ) );
 
 					roomContents[pos.x][pos.y] = roomContents[pos.x][pos.y].copy();
 					roomContents[pos.x][pos.y].entityData = entityName;
+					roomContents[pos.x][pos.y].isBoss = true;
 				}
 			}
 

@@ -1820,10 +1820,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.add( content ).expand().fill();
 
 		contextMenu = new Tooltip( table, skin, stage );
-		contextMenu.setWidth( stage.getWidth() - 120 );
-		contextMenu.setHeight( stage.getHeight() - 96 - 50 );
+		contextMenu.setWidth( stage.getWidth() - ( abilityPanel.getWidth() + equipmentPanel.getWidth() + 40 ) );
+		contextMenu.setHeight( stage.getHeight() - ( buttonsPanel.getHeight() + 40 ) );
 
-		contextMenu.show( 50, 96 + 25, lock );
+		contextMenu.show( stage.getWidth() / 2 - contextMenu.getWidth() / 2 - 10, stage.getHeight() / 2 - contextMenu.getHeight() / 2 - 30, lock );
 		lockContextMenu = lock;
 
 		contextMenu.addAction(

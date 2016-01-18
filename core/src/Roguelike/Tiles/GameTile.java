@@ -34,6 +34,7 @@ public class GameTile implements PathfindingTile
 	public Color ambientColour = new Color();
 	public Color light = new Color();
 	public GameEntity entity;
+	public GameEntity prevEntity;
 	public EnvironmentEntity environmentEntity;
 	public FastEnumMap<FieldLayer, Field> fields = new FastEnumMap<FieldLayer, Field>( FieldLayer.class );
 	public boolean hasFields;
@@ -83,6 +84,16 @@ public class GameTile implements PathfindingTile
 		lightObj = spriteGroup.light;
 
 		light = new Color( Color.WHITE );
+	}
+
+	public boolean hasEntityStayedOnTile()
+	{
+		if (prevEntity != entity)
+		{
+			prevEntity = null;
+		}
+
+		return prevEntity != null;
 	}
 
 	public Array<Sprite> getSprites()
@@ -235,7 +246,25 @@ public class GameTile implements PathfindingTile
 
 		if ( !passable ) { return false; }
 
-		return entity == null || entity == self || travelType.contains( Passability.ENTITY );
+		if ( entity == null || entity == self || travelType.contains( Passability.ENTITY ) )
+		{
+			return true;
+		}
+
+		if ( entity != null && self instanceof GameEntity )
+		{
+			GameEntity selfEntity = (GameEntity)self;
+			if ( !selfEntity.isAllies( entity ) )
+			{
+				return true;
+			}
+			else if ( hasEntityStayedOnTile() )
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override

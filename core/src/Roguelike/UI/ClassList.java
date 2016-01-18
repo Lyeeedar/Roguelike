@@ -23,6 +23,8 @@ public class ClassList extends TilePanel
 	{
 		super( skin, stage, tileBackground, tileBorder, 1, 1, 64, true );
 
+		drawHorizontalBackground = false;
+
 		parse( "Classes/ClassList.xml" );
 	}
 

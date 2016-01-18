@@ -27,6 +27,7 @@ public final class Symbol implements PathfindingTile
 	public Direction attachLocation;
 
 	public String entityData;
+	public boolean isBoss;
 
 	public Element fieldData;
 
@@ -49,6 +50,7 @@ public final class Symbol implements PathfindingTile
 		s.fieldData = fieldData;
 		s.attachLocation = attachLocation;
 		s.entityData = entityData;
+		s.isBoss = isBoss;
 		s.metaValue = metaValue;
 
 		return s;

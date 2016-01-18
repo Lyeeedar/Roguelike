@@ -25,6 +25,7 @@ public class EquipmentPanel extends TilePanel
 	{
 		super( skin, stage, AssetManager.loadSprite( "GUI/TileBackground" ), AssetManager.loadSprite( "GUI/TileBorder" ), 1, Item.EquipmentSlot.values().length, 48, false );
 
+		drawHorizontalBackground = false;
 		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
 		padding = 10;
 

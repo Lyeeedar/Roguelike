@@ -35,6 +35,7 @@ public class AbilityPanel extends TilePanel
 	{
 		super( skin, stage, AssetManager.loadSprite( "GUI/TileBackground" ), AssetManager.loadSprite( "GUI/TileBorder" ), 1, Global.NUM_ABILITY_SLOTS, 48, false );
 
+		drawHorizontalBackground = false;
 		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
 		padding = 10;
 
