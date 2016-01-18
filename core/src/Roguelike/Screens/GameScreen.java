@@ -122,8 +122,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		InputProcessor inputProcessorOne = this;
 		InputProcessor inputProcessorTwo = stage;
 
-		inputMultiplexer.addProcessor( gestureDetector );
 		inputMultiplexer.addProcessor( inputProcessorTwo );
+		inputMultiplexer.addProcessor( gestureDetector );
 		inputMultiplexer.addProcessor( inputProcessorOne );
 	}
 
@@ -238,6 +238,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		stage.addActor( sheathButton );
 
 		menuButton = new Button( skin, "menu" );
+		menuButton.setWidth( 48 );
+		menuButton.setHeight( 48 );
 		menuButton.addListener( new InputListener()
 		{
 			@Override
@@ -262,18 +264,18 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void relayoutUI()
 	{
-		abilityPanel.setX( stage.getWidth() / 2 - abilityPanel.getMinWidth() / 2 );
-		abilityPanel.setY( 5 );
+		abilityPanel.setX( 5 );
+		abilityPanel.setY( stage.getHeight() / 2 - abilityPanel.getHeight() / 2 );
 		abilityPanel.setWidth( abilityPanel.getMinWidth() );
 		abilityPanel.setHeight( abilityPanel.getMinHeight() );
 
-		equipmentPanel.setX( stage.getWidth() / 2 - abilityPanel.getMinWidth() / 2 );
-		equipmentPanel.setY( 10 + abilityPanel.getHeight() );
+		equipmentPanel.setX( stage.getWidth() - equipmentPanel.getWidth() - 5 );
+		equipmentPanel.setY( stage.getHeight() / 2 - abilityPanel.getHeight() / 2 );
 		equipmentPanel.setWidth( equipmentPanel.getMinWidth() );
 		equipmentPanel.setHeight( equipmentPanel.getMinHeight() );
 
 		sheathButton.setPosition( stage.getWidth() - sheathButton.getWidth() - 20, 20 );
-		menuButton.setPosition( stage.getWidth() - menuButton.getWidth() - 20, stage.getHeight() - 20 - menuButton.getHeight() );
+		menuButton.setPosition( 5, stage.getHeight() - 5 - menuButton.getHeight() );
 
 		if (contextMenu != null)
 		{
@@ -1242,10 +1244,30 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					}
 				} );
 
+				TextButton sellButton = new TextButton( "Sell", skin );
+				sellButton.addListener( new InputListener()
+				{
+
+					@Override
+					public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+					{
+						return true;
+					}
+
+					@Override
+					public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+					{
+						lockContextMenu = false;
+						clearContextMenu();
+					}
+				} );
+
 				Table buttons = new Table();
+				buttons.defaults().pad( 10 );
 
 				buttons.add( equipButton );
 				buttons.add( dropButton );
+				buttons.add( sellButton );
 
 				table.add( buttons );
 
@@ -1267,6 +1289,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				table.row();
 
 				table.add( new Seperator( skin, false ) ).expandX().fillX().pad( 10 );
+				table.row();
+
+				table.add( new Label( "Pick a slot to equip into", skin ) ).expandX().center();
+				table.row();
+				table.add( new Label( "Or", skin ) ).expandX().center();
 				table.row();
 
 				TextButton dropButton = new TextButton( "Drop", skin );
@@ -1451,6 +1478,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean touchDown( int screenX, int screenY, int pointer, int button )
 	{
+		if ( equipmentPanel.isPointInThis( screenX, screenY ) || abilityPanel.isPointInThis( screenX, screenY ) )
+		{
+			return false;
+		}
+
 		addTouchAction( screenX, Global.ScreenSize[1] - screenY );
 
 		if ( Tooltip.openTooltip != null )
@@ -1468,6 +1500,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean touchUp( int screenX, int screenY, int pointer, int button )
 	{
+		if ( equipmentPanel.isPointInThis( screenX, screenY ) || abilityPanel.isPointInThis( screenX, screenY ) )
+		{
+			return false;
+		}
+
 		if ( longPressed || dragged ) { return false; }
 
 		if ( Tooltip.openTooltip != null )

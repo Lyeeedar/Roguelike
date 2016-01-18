@@ -23,10 +23,10 @@ public class EquipmentPanel extends TilePanel
 
 	public EquipmentPanel( Skin skin, Stage stage )
 	{
-		super( skin, stage, AssetManager.loadSprite( "GUI/TileBackground" ), AssetManager.loadSprite( "GUI/TileBorder" ), Item.EquipmentSlot.values().length, 1, 48, false );
+		super( skin, stage, AssetManager.loadSprite( "GUI/TileBackground" ), AssetManager.loadSprite( "GUI/TileBorder" ), 1, Item.EquipmentSlot.values().length, 48, false );
 
 		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
-		padding = 3;
+		padding = 10;
 
 		this.white = AssetManager.loadTextureRegion( "Sprites/white.png" );
 	}

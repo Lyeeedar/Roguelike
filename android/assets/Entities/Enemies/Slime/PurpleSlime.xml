@@ -1,6 +1,7 @@
 <Entity Extends="Enemies/Slime/SlimeBase">
     <Sprite>
-        <Name>Oryx/uf_split/uf_heroes/slime_purple</Name>
+        <Name>Oryx/Custom/heroes/slime</Name>
+        <Colour><RGB>255,50,255</RGB></Colour>
         <DrawActualSize>true</DrawActualSize>
     </Sprite>
     <Light>

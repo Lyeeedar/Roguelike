@@ -33,10 +33,10 @@ public class AbilityPanel extends TilePanel
 
 	public AbilityPanel( Skin skin, Stage stage )
 	{
-		super( skin, stage, AssetManager.loadSprite( "GUI/TileBackground" ), AssetManager.loadSprite( "GUI/TileBorder" ), Global.NUM_ABILITY_SLOTS, 1, 48, false );
+		super( skin, stage, AssetManager.loadSprite( "GUI/TileBackground" ), AssetManager.loadSprite( "GUI/TileBorder" ), 1, Global.NUM_ABILITY_SLOTS, 48, false );
 
 		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
-		padding = 3;
+		padding = 10;
 
 		this.white = AssetManager.loadTextureRegion( "Sprites/white.png" );
 		passiveTileBorder = AssetManager.loadTextureRegion( "Sprites/GUI/PassiveTileBorder.png" );
@@ -165,14 +165,19 @@ public class AbilityPanel extends TilePanel
 
 			if ( !aa.isAvailable() )
 			{
-				String text = "" + (int) Math.ceil( aa.cooldownAccumulator );
-				layout.setText( font, text );
-
-				batch.setColor( 0.4f, 0.4f, 0.4f, 0.4f );
+				batch.setColor( 0.1f, 0.1f, 0.1f, 0.75f );
 				batch.draw( white, x, y, width, height );
 				batch.setColor( Color.WHITE );
 
-				font.draw( batch, text, x + width / 2 - layout.width / 2, y + height / 2 + layout.height / 2 );
+				int cooldown = (int) Math.ceil( aa.cooldownAccumulator );
+
+				if (cooldown > 0)
+				{
+					String text = "" + cooldown;
+					layout.setText( font, text );
+
+					font.draw( batch, text, x + width / 2 - layout.width / 2, y + height / 2 + layout.height / 2 );
+				}
 			}
 		}
 	}

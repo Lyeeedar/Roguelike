@@ -67,14 +67,9 @@ public abstract class TilePanel extends Widget
 		this.tileSize = tileSize;
 		this.expandVertically = expandVertically;
 
-		this.tilePanelBackground = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TilePanel.png" ), 12, 12, 12, 12 );
+		this.tilePanelBackground = new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Tooltip.png" ), 21, 21, 21, 21 );
 
 		TilePanelListener listener = new TilePanelListener();
-
-		if ( GameScreen.Instance.inputMultiplexer != null )
-		{
-			GameScreen.Instance.inputMultiplexer.addProcessor( new GestureDetector( listener ) );
-		}
 
 		this.addListener( listener );
 		this.setWidth( getPrefWidth() );
@@ -96,6 +91,16 @@ public abstract class TilePanel extends Widget
 
 	public abstract void onDrawItemForeground( Object data, Batch batch, int x, int y, int width, int height );
 
+	public boolean isPointInThis( int x, int y )
+	{
+		y = (int)getStage().getHeight() - y;
+		if ( x > getX() && x < getX() + getWidth() && y > getY() && y < getY() + getHeight() )
+		{
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public void invalidate()
 	{
@@ -103,20 +108,20 @@ public abstract class TilePanel extends Widget
 
 		if ( expandVertically )
 		{
-			viewHeight = (int) ( ( getHeight() - padding * 2 ) / tileSize );
+			viewHeight = (int) ( ( getHeight() - padding ) / ( tileSize + padding ) );
 		}
 	}
 
 	@Override
 	public float getMinWidth()
 	{
-		return tileSize * targetWidth + padding * 2;
+		return ( tileSize + padding ) * targetWidth + padding;
 	}
 
 	@Override
 	public float getMinHeight()
 	{
-		return tileSize * targetHeight + padding * 2;
+		return ( tileSize + padding ) * targetHeight + padding;
 	}
 
 	private void validateScroll()
@@ -134,10 +139,11 @@ public abstract class TilePanel extends Widget
 		populateTileData();
 		validateScroll();
 
-		int height = viewHeight * tileSize + padding * 2;
+		int height = viewHeight * ( tileSize + padding ) + padding;
+		int width = viewWidth * ( tileSize + padding ) + padding;
 
 		batch.setColor( Color.WHITE );
-		tilePanelBackground.draw( batch, getX(), getY() + getHeight() - height, viewWidth * tileSize + padding * 2, height );
+		tilePanelBackground.draw( batch, getX(), getY() + getHeight() - height, width, height );
 
 		int xOffset = (int) getX() + padding;
 		int top = (int) ( getY() - padding + getHeight() ) - tileSize;
@@ -152,13 +158,8 @@ public abstract class TilePanel extends Widget
 			{
 				if ( tileBackground != null )
 				{
-					tileBackground.render( batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
+					tileBackground.render( batch, x * ( tileSize + padding ) + xOffset, top - y * ( tileSize + padding ), tileSize, tileSize );
 				}
-				// if ( tileBorder != null )
-				// {
-				// tileBorder.render( batch, x * tileSize + xOffset, top - y *
-				// tileSize, tileSize, tileSize );
-				// }
 			}
 		}
 
@@ -185,24 +186,24 @@ public abstract class TilePanel extends Widget
 			batch.setColor( itemColour );
 			if ( tileBackground != null )
 			{
-				tileBackground.render( batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
+				tileBackground.render( batch, x * ( tileSize + padding ) + xOffset, top - y * ( tileSize + padding ), tileSize, tileSize );
 			}
-			onDrawItemBackground( item, batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
+			onDrawItemBackground( item, batch, x * ( tileSize + padding ) + xOffset, top - y * ( tileSize + padding ), tileSize, tileSize );
 
 			batch.setColor( Color.WHITE );
 			Sprite sprite = getSpriteForData( item );
 			if ( sprite != null )
 			{
-				sprite.render( batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
+				sprite.render( batch, x * ( tileSize + padding ) + xOffset, top - y * ( tileSize + padding ), tileSize, tileSize );
 			}
-			onDrawItem( item, batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
+			onDrawItem( item, batch, x * ( tileSize + padding ) + xOffset, top - y * ( tileSize + padding ), tileSize, tileSize );
 
 			batch.setColor( itemColour );
 			if ( tileBorder != null && item != null )
 			{
-				tileBorder.render( batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
+				tileBorder.render( batch, x * ( tileSize + padding ) + xOffset, top - y * ( tileSize + padding ), tileSize, tileSize );
 			}
-			onDrawItemForeground( item, batch, x * tileSize + xOffset, top - y * tileSize, tileSize, tileSize );
+			onDrawItemForeground( item, batch, x * ( tileSize + padding ) + xOffset, top - y * ( tileSize + padding ), tileSize, tileSize );
 
 			x++;
 			if ( x == viewWidth )
@@ -217,7 +218,7 @@ public abstract class TilePanel extends Widget
 		}
 	}
 
-	public class TilePanelListener extends InputListener implements GestureListener
+	public class TilePanelListener extends InputListener
 	{
 		boolean longPressed = false;
 
@@ -234,10 +235,15 @@ public abstract class TilePanel extends Widget
 
 			y = getHeight() - y;
 
-			int xIndex = (int) ( ( x - padding ) / tileSize );
-			int yIndex = (int) ( ( y - padding ) / tileSize );
+			int xIndex = (int) ( ( x - padding ) / ( tileSize + padding ) );
+			int yIndex = (int) ( ( y - padding ) / ( tileSize + padding ) );
 
 			if ( xIndex >= viewWidth || yIndex >= viewHeight ) { return null; }
+
+			int xpos = (int) ( x - ( tileSize + padding ) * xIndex );
+			int ypos = (int) ( y - ( tileSize + padding ) * yIndex );
+
+			if ( xpos > tileSize + padding || ypos > tileSize + padding ) { return null; }
 
 			xIndex += scrollX;
 			yIndex += scrollY;
@@ -245,30 +251,6 @@ public abstract class TilePanel extends Widget
 			int index = yIndex * viewWidth + xIndex;
 			if ( index >= tileData.size || index < 0 ) { return null; }
 			return tileData.get( index );
-		}
-
-		private boolean getMouseOverUI( float x, float y )
-		{
-			if ( x < padding || y < padding || x > getWidth() - padding || y > getHeight() - padding )
-			{
-				return false;
-			}
-			else
-			{
-				y = getHeight() - y;
-
-				int xIndex = (int) ( ( x - padding ) / tileSize );
-				int yIndex = (int) ( ( y - padding ) / tileSize );
-
-				if ( xIndex < viewWidth && yIndex < viewHeight )
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
 		}
 
 		@Override
@@ -304,22 +286,16 @@ public abstract class TilePanel extends Widget
 		@Override
 		public boolean scrolled( InputEvent event, float x, float y, int amount )
 		{
-			boolean mouseOverUI = getMouseOverUI( x, y );
-
-			if ( mouseOverUI )
+			if ( dataWidth > viewWidth )
 			{
-				if ( dataWidth > viewWidth )
-				{
-					scrollX += amount;
-				}
-				else
-				{
-					scrollY += amount;
-				}
+				scrollX += amount;
+			}
+			else
+			{
+				scrollY += amount;
 			}
 
-			GameScreen.Instance.mouseOverUI = mouseOverUI;
-			return mouseOverUI;
+			return true;
 		}
 
 		@Override
@@ -347,15 +323,9 @@ public abstract class TilePanel extends Widget
 
 			mouseOver = item;
 
-			boolean mouseOverUI = getMouseOverUI( x, y );
-			GameScreen.Instance.mouseOverUI = mouseOverUI;
+			stage.setScrollFocus( thisRef );
 
-			if ( mouseOverUI )
-			{
-				stage.setScrollFocus( thisRef );
-			}
-
-			return mouseOverUI;
+			return true;
 		}
 
 		@Override
@@ -371,14 +341,11 @@ public abstract class TilePanel extends Widget
 			GameScreen.Instance.clearContextMenu();
 			GameScreen.Instance.addTouchAction( event.getStageX(), event.getStageY() );
 
-			boolean mouseOverUI = getMouseOverUI( x, y );
-			GameScreen.Instance.mouseOverUI = mouseOverUI;
-
 			dragged = false;
 			dragX = x;
 			dragY = y;
 
-			return mouseOverUI;
+			return true;
 		}
 
 		@Override
@@ -412,24 +379,13 @@ public abstract class TilePanel extends Widget
 				}
 			}
 
-			boolean mouseOverUI = getMouseOverUI( x, y );
-			GameScreen.Instance.mouseOverUI = mouseOverUI;
-
-			// return mouseOverUI;
-
 			dragged = false;
 		}
 
 		@Override
 		public void enter( InputEvent event, float x, float y, int pointer, Actor toActor )
 		{
-			boolean mouseOverUI = getMouseOverUI( x, y );
-			GameScreen.Instance.mouseOverUI = mouseOverUI;
-
-			if ( mouseOverUI )
-			{
-				stage.setScrollFocus( thisRef );
-			}
+			stage.setScrollFocus( thisRef );
 		}
 
 		@Override
@@ -446,77 +402,6 @@ public abstract class TilePanel extends Widget
 			}
 
 			GameScreen.Instance.mouseOverUI = false;
-		}
-
-		@Override
-		public boolean touchDown( float x, float y, int pointer, int button )
-		{
-			longPressed = false;
-			return false;
-		}
-
-		@Override
-		public boolean tap( float x, float y, int count, int button )
-		{
-			return false;
-		}
-
-		@Override
-		public boolean longPress( float x, float y )
-		{
-			longPressed = true;
-
-			if ( Tooltip.openTooltip != null )
-			{
-				Tooltip.openTooltip.setVisible( false );
-				Tooltip.openTooltip.remove();
-				Tooltip.openTooltip = null;
-			}
-
-			Object item = pointToItem( x, y );
-
-			if ( item != null )
-			{
-				Table table = getToolTipForData( item );
-
-				if ( table != null )
-				{
-					Tooltip tooltip = new Tooltip( table, skin, stage );
-					tooltip.show( x, y, false );
-				}
-			}
-
-			return true;
-		}
-
-		@Override
-		public boolean fling( float velocityX, float velocityY, int button )
-		{
-			return false;
-		}
-
-		@Override
-		public boolean pan( float x, float y, float deltaX, float deltaY )
-		{
-			return false;
-		}
-
-		@Override
-		public boolean panStop( float x, float y, int pointer, int button )
-		{
-			return false;
-		}
-
-		@Override
-		public boolean zoom( float initialDistance, float distance )
-		{
-			return false;
-		}
-
-		@Override
-		public boolean pinch( Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2 )
-		{
-			return false;
 		}
 	}
 }

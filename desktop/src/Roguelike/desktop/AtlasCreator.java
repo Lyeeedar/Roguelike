@@ -36,6 +36,9 @@ public class AtlasCreator
 
 		TexturePacker.Settings settings = new TexturePacker.Settings();
 		settings.combineSubdirectories = true;
+		settings.duplicatePadding = true;
+		settings.paddingX = 2;
+		settings.paddingY = 2;
 		settings.useIndexes = false;
 		settings.filterMin = Texture.TextureFilter.MipMapLinearLinear;
 		settings.filterMag = Texture.TextureFilter.MipMapLinearLinear;
@@ -56,6 +59,12 @@ public class AtlasCreator
 		processSprite( "Oryx/uf_split/uf_items/satchel" );
 		processSprite( "Oryx/uf_split/uf_items/crystal_sun" );
 		processSprite( "Oryx/uf_split/uf_items/crystal_blood" );
+		processSprite( "Oryx/uf_split/uf_items/chest_gold" );
+		processSprite( "Oryx/uf_split/uf_terrain/floor_set_grey_9" );
+		processSprite( "Oryx/Custom/terrain/door_wood_h_closed" );
+		processSprite( "Oryx/Custom/terrain/door_wood_h_open" );
+		processSprite( "Oryx/Custom/terrain/door_wood_v_closed" );
+		processSprite( "Oryx/Custom/terrain/door_wood_v_open" );
 
 		// pack GUI
 		File guiDir = new File( "Sprites/GUI" );
