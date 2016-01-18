@@ -44,6 +44,8 @@ public abstract class TilePanel extends Widget
 
 	public int padding = 10;
 
+	public boolean canBeExamined = true;
+
 	protected NinePatch tilePanelBackground;
 
 	protected Sprite tileBackground;
@@ -363,7 +365,7 @@ public abstract class TilePanel extends Widget
 
 			if ( !longPressed && !dragged && item != null )
 			{
-				if (GameScreen.Instance.examineMode)
+				if ( canBeExamined && GameScreen.Instance.examineMode )
 				{
 					Table table = getToolTipForData( item );
 

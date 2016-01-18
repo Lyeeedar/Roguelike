@@ -138,125 +138,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		abilityPanel = new AbilityPanel( skin, stage );
 		equipmentPanel = new EquipmentPanel( skin, stage );
+		buttonsPanel = new ButtonsPanel( skin, stage );
 
 		stage.addActor( abilityPanel );
 		stage.addActor( equipmentPanel );
 		stage.addActor( abilityPanel );
-
-		if (Global.ANDROID)
-		{
-			Button examineButton = new Button( skin, "examine" );
-			examineButton.addListener( new InputListener()
-			{
-				@Override
-				public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-				{
-					return true;
-				}
-
-				@Override
-				public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-				{
-					examineMode = !examineMode;
-				}
-			} );
-
-
-			examineButton.setPosition( 20, 20 );
-			stage.addActor( examineButton );
-		}
-
-		sheathButton = new Button( skin, "sheath" );
-		sheathButton.addListener( new ChangeListener()
-		{
-			@Override
-			public void changed( ChangeEvent event, Actor actor )
-			{
-				if (!examineMode)
-				{
-					Global.CurrentLevel.player.weaponSheathed = sheathButton.isChecked();
-				}
-				else
-				{
-					sheathButton.setChecked( Global.CurrentLevel.player.weaponSheathed );
-				}
-			}
-		} );
-		sheathButton.addListener( new InputListener()
-		{
-			private Tooltip tooltip;
-
-			@Override
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-			{
-				return mouseMoved( event, x, y );
-			}
-
-			@Override
-			public boolean mouseMoved(InputEvent event, float x, float y)
-			{
-				if (!Global.ANDROID || examineMode)
-				{
-					String text = "";
-
-					if ( sheathButton.isChecked() )
-					{
-						text = "Enable auto-attack";
-					}
-					else
-					{
-						text = "Disable auto-attack";
-					}
-
-					Label label = new Label( text, skin );
-					Table table = new Table();
-					table.add( label ).expand().fill();
-
-					tooltip = new Tooltip( table, skin, stage );
-					tooltip.show( event, x, y, false );
-
-					return true;
-				}
-
-				return false;
-			}
-
-			@Override
-			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor)
-			{
-				if (!Global.ANDROID)
-				{
-					tooltip.setVisible(false);
-					tooltip.remove();
-					tooltip.openTooltip = null;
-				}
-			}
-
-		} );
-
-		sheathButton.setPosition( Global.Resolution[0] - sheathButton.getWidth() - 20, 20 );
-		stage.addActor( sheathButton );
-
-		menuButton = new Button( skin, "menu" );
-		menuButton.setWidth( 48 );
-		menuButton.setHeight( 48 );
-		menuButton.addListener( new InputListener()
-		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
-			{
-				displayGameMenu();
-			}
-		} );
-
-		menuButton.setPosition( Global.Resolution[0] - menuButton.getWidth() - 20, Global.Resolution[1] - 20 - menuButton.getHeight() );
-		stage.addActor( menuButton );
+		stage.addActor( buttonsPanel );
 
 		relayoutUI();
 	}
@@ -274,8 +161,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		equipmentPanel.setWidth( equipmentPanel.getMinWidth() );
 		equipmentPanel.setHeight( equipmentPanel.getMinHeight() );
 
-		sheathButton.setPosition( stage.getWidth() - sheathButton.getWidth() - 20, 20 );
-		menuButton.setPosition( 5, stage.getHeight() - 5 - menuButton.getHeight() );
+		buttonsPanel.setX( stage.getWidth() / 2 - buttonsPanel.getWidth() / 2 );
+		buttonsPanel.setY( stage.getHeight() - buttonsPanel.getHeight() - 5 );
+		buttonsPanel.setWidth( buttonsPanel.getMinWidth() );
+		buttonsPanel.setHeight( buttonsPanel.getMinHeight() );
 
 		if (contextMenu != null)
 		{
@@ -333,8 +222,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 			level.advance( delta );
 			processPickupQueue();
-
-			sheathButton.setChecked( Global.CurrentLevel.player.weaponSheathed );
 
 			if (contextMenu == null)
 			{
@@ -1478,7 +1365,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean touchDown( int screenX, int screenY, int pointer, int button )
 	{
-		if ( equipmentPanel.isPointInThis( screenX, screenY ) || abilityPanel.isPointInThis( screenX, screenY ) )
+		if ( equipmentPanel.isPointInThis( screenX, screenY ) || abilityPanel.isPointInThis( screenX, screenY ) || buttonsPanel.isPointInThis( screenX, screenY ) )
 		{
 			return false;
 		}
@@ -1500,7 +1387,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean touchUp( int screenX, int screenY, int pointer, int button )
 	{
-		if ( equipmentPanel.isPointInThis( screenX, screenY ) || abilityPanel.isPointInThis( screenX, screenY ) )
+		if ( equipmentPanel.isPointInThis( screenX, screenY ) || abilityPanel.isPointInThis( screenX, screenY ) || buttonsPanel.isPointInThis( screenX, screenY ) )
 		{
 			return false;
 		}
@@ -2253,9 +2140,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private AbilityPanel abilityPanel;
 	private EquipmentPanel equipmentPanel;
+	private ButtonsPanel buttonsPanel;
 	private Skin skin;
-	private Button sheathButton;
-	private Button menuButton;
 
 	// ----------------------------------------------------------------------
 	private long diff, start = System.currentTimeMillis();
