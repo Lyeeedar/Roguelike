@@ -228,7 +228,7 @@ public class AssetManager
 	public static Sprite loadSprite( Element xml )
 	{
 		Element colourElement = xml.getChildByName( "Colour" );
-		Color colour = Color.WHITE;
+		Color colour = new Color(Color.WHITE);
 		if ( colourElement != null )
 		{
 			colour = new Color();

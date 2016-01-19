@@ -1,6 +1,6 @@
 <Materials>
     <Quality1>
-        <Copper/>
+        <Copper RGB="184,115,51"/>
     </Quality1>
     <Quality2>
         <Iron/>

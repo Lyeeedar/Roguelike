@@ -3,6 +3,7 @@ package Roguelike.Items;
 import Roguelike.Ability.AbilityTree;
 import Roguelike.Sprite.Sprite;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
@@ -70,7 +71,7 @@ public class TreasureGenerator
 		// Ability 1
 
 		int[] chances = {
-			1, // currency
+			0, // currency
 			3, // armour
 			3, // weapons
 			1 // abilities
@@ -151,7 +152,7 @@ public class TreasureGenerator
 
 		int numChoices = abilityList.qualityData.get( chosenQuality ).size;
 		int choice = ran.nextInt( numChoices );
-		String chosen = abilityList.qualityData.get( chosenQuality ).get( choice );
+		String chosen = abilityList.qualityData.get( chosenQuality ).get( choice ).name;
 
 		AbilityTree tree = new AbilityTree( chosen );
 
@@ -192,6 +193,8 @@ public class TreasureGenerator
 
 		Item item = Recipe.createRecipe( recipe.recipeName, materialItem );
 
+		item.getIcon().colour.mul( materialItem.getIcon().colour );
+
 		int numModifiers = ran.nextInt( Math.max( 1, quality / 2 ) );
 		int maxModifierQuality = Math.min( quality, modifierList.qualityData.size );
 
@@ -201,7 +204,7 @@ public class TreasureGenerator
 
 			int numChoices = modifierList.qualityData.get( chosenQuality ).size;
 			int choice = ran.nextInt( numChoices );
-			String modifier = modifierList.qualityData.get( chosenQuality ).get( choice );
+			String modifier = modifierList.qualityData.get( chosenQuality ).get( choice ).name;
 
 			Recipe.applyModifer( item, modifier, Math.max( 1, quality - chosenQuality), ran.nextBoolean() );
 
@@ -223,10 +226,13 @@ public class TreasureGenerator
 		int materialQuality = Math.min( quality, materialMap.qualityData.size );
 
 		String material = null;
+		String colour = null;
 		{
 			int numChoices = materialMap.qualityData.get( materialQuality - 1 ).size;
 			int choice = ran.nextInt( numChoices );
-			material = materialMap.qualityData.get( materialQuality - 1 ).get( choice );
+			QualityData qdata = materialMap.qualityData.get( materialQuality - 1 ).get( choice );
+			material = qdata.name;
+			colour = qdata.colour;
 		}
 
 		Item materialItem = null;
@@ -239,6 +245,19 @@ public class TreasureGenerator
 			materialItem = new Item();
 			materialItem.name = material;
 			materialItem.quality = materialQuality;
+		}
+
+		if ( colour != null )
+		{
+			Color col = new Color();
+
+			String[] cols = colour.split( "," );
+			col.r = Float.parseFloat( cols[0] ) / 255.0f;
+			col.g = Float.parseFloat( cols[1] ) / 255.0f;
+			col.b = Float.parseFloat( cols[2] ) / 255.0f;
+			col.a = 1;
+
+			materialItem.getIcon().colour = col;
 		}
 
 		return materialItem;
@@ -384,7 +403,7 @@ public class TreasureGenerator
 
 	private static class QualityMap
 	{
-		public Array<Array<String>> qualityData = new Array<Array<String>>(  );
+		public Array<Array<QualityData>> qualityData = new Array<Array<QualityData>>(  );
 
 		public QualityMap( String file )
 		{
@@ -404,15 +423,30 @@ public class TreasureGenerator
 			{
 				XmlReader.Element qualityElement = xml.getChild( i );
 
-				Array<String> qualityLevel = new Array<String>(  );
+				Array<QualityData> qualityLevel = new Array<QualityData>(  );
 
 				for (int ii = 0; ii < qualityElement.getChildCount(); ii++)
 				{
-					qualityLevel.add( qualityElement.getChild( ii ).getName() );
+					XmlReader.Element qEl = qualityElement.getChild( ii );
+					String name = qEl.getName();
+					String colour = qEl.getAttribute( "RGB", null );
+					qualityLevel.add( new QualityData( name, colour ) );
 				}
 
 				qualityData.add( qualityLevel );
 			}
+		}
+	}
+
+	private static class QualityData
+	{
+		public String name;
+		public String colour;
+
+		public QualityData( String name, String colour )
+		{
+			this.name = name;
+			this.colour = colour;
 		}
 	}
 }

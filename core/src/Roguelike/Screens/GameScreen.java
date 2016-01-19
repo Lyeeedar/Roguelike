@@ -1863,8 +1863,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			return;
 		}
 
+		ScrollPane scroll = new ScrollPane( content );
+		scroll.setScrollingDisabled( true, false );
+
 		Table table = new Table(  );
-		table.add( content ).expand().fill();
+		table.add( scroll ).expand().fill();
 
 		contextMenu = new Tooltip( table, skin, stage );
 		contextMenu.setWidth( stage.getWidth() - ( abilityPanel.getWidth() + equipmentPanel.getWidth() + 40 ) );
@@ -2019,10 +2022,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		Label messageLabel = new Label(message, skin);
 		messageLabel.setWrap( true );
 
-		ScrollPane scroll = new ScrollPane( messageLabel );
-		scroll.setScrollingDisabled( true, false );
-
-		table.add( scroll ).expand().fill().left().top();
+		table.add( messageLabel ).expand().fill().left().top();
 		table.row();
 
 		table.add( new Seperator(skin, false) ).expandX().fillX();

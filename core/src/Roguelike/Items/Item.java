@@ -84,6 +84,7 @@ public final class Item extends GameEventHandler
 			Item materialItem = TreasureGenerator.getMaterial( material, quality, MathUtils.random );
 
 			item = Recipe.createRecipe( recipe, materialItem );
+			item.getIcon().colour.mul( materialItem.getIcon().colour );
 
 			Element prefixElement = xml.getChildByName( "Prefix" );
 			if ( prefixElement != null )
