@@ -1,20 +1,20 @@
 <Materials>
     <Quality1>
-        <Copper RGB="184,115,51"/>
+        <Copper RGB="194,125,51"/>
     </Quality1>
     <Quality2>
-        <Iron/>
+        <Iron RGB="140,130,130"/>
     </Quality2>
     <Quality3>
-        <Steel/>
+        <Steel RGB="200,200,205"/>
     </Quality3>
     <Quality4>
-        <Starion/>
+        <Starion RGB="70,50,75"/>
     </Quality4>
     <Quality5>
-        <Ferrusite/>
+        <Ferrusite RGB="160,100,80"/>
     </Quality5>
     <Quality6>
-        <Silverium/>
+        <Silverium RGB="210,215,210"/>
     </Quality6>
 </Materials>

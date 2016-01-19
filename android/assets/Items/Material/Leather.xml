@@ -1,24 +1,24 @@
 
 <Materials>
     <Quality1>
-        <Ragged/>
+        <Ragged RGB="102,51,0"/>
     </Quality1>
     <Quality2>
-        <Fur/>
+        <Fur RGB="209,185,204"/>
     </Quality2>
     <Quality3>
-        <Cured/>
+        <Cured RGB="255,178,102"/>
     </Quality3>
     <Quality4>
-        <Studded/>
+        <Studded RGB="168,159,125"/>
     </Quality4>
     <Quality5>
-        <Chain/>
+        <Chain RGB="192,192,192"/>
     </Quality5>
     <Quality5>
-        <Mithril/>
+        <Mithril RGB="220,230,222"/>
     </Quality5>
     <Quality6>
-        <Lightril/>
+        <Lightril RGB="210,210,230"/>
     </Quality6>
 </Materials>

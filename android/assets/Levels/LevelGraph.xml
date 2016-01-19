@@ -1,13 +1,13 @@
-<Forest MaxDepth="2" Title="Melet Woods" Description="A dense forest stretches out before you, filled to the brim with vicious creatures spawned from the horrific plane of life. Raucous cries of goblins filter through the leaves, putting you on guard.">
-    <EnchantedForest MaxDepth="2" Title="Heart of the Forest" Description="Glowing trees denote the enchanted heart of the forest, casting sharp shadows along the leafy ground. The very air thrums with the barely contained energies infused into area. Theorised to be a leaking of power from the plane of life, the distorting magic has morphed the creatures here into strange and dangerous forms.">
+<Forest MaxDepth="6" Title="Melet Woods" Description="A dense forest stretches out before you, filled to the brim with vicious creatures spawned from the horrific plane of life. Raucous cries of goblins filter through the leaves, putting you on guard.">
+    <EnchantedForest MaxDepth="4" Title="Heart of the Forest" Description="Glowing trees denote the enchanted heart of the forest, casting sharp shadows along the leafy ground. The very air thrums with the barely contained energies infused into area. Theorised to be a leaking of power from the plane of life, the distorting magic has morphed the creatures here into strange and dangerous forms.">
         <Cave Label="Cave" MaxDepth="3" Title="Melet Mountain" Description="At the centre of the forest rises a lone mountain, its grey rock faces a stark contrast against the sea of green below. Beneath the mountain is where the tear to the plane of life is said to have been ripped open, and therefore that is where you need to go. The interior is cold and dark, infested with the abominations spewed out by the ever mutating life plane.">
-            <Lake Label="Lake" MaxDepth="1">
+            <Lake Label="Lake" MaxDepth="100" Title="Forgotten Reservoir" Description="Deep in the heart of Melet mountain stretches a long forgotten reservoir. A vast cavern stretches away into the blackness to either side of the stairs that brought you down, the only indication that this is truely underground are the huge pillars that reach up from the surface back to the ceiling from whence you came. The light from your torch barely penetrates the waters murky depths, revealing only how little you know of what lies down beneath the frail walkways that crisscross the deathly still surface.">
 
             </Lake>
         </Cave>
 
         <Branches>
-            <SpiderCave SpawnDepth="1" SpawnChance="0.3" MaxDepth="2" Title="Ominous Cave" Description="Faint dripping sounds mingle with the skittering of chitin on stone, filtering softly to your ears through the darkness. Thick webs coat the walls and your hands as you push into the cave. A faint breeze wafts up from the depths and out of the cave entrance behind you, enticing you deeper into the blackness.">
+            <SpiderCave SpawnDepth="3" SpawnChance="0.5" MaxDepth="3" Title="Ominous Cave" Description="Faint dripping sounds mingle with the skittering of chitin on stone, filtering softly to your ears through the darkness. Thick webs coat the walls and your hands as you push into the cave. A faint breeze wafts up from the depths and out of the cave entrance behind you, enticing you deeper into the blackness.">
                 <GoTo Label="Lake"></GoTo>
             </SpiderCave>
         </Branches>
@@ -15,8 +15,8 @@
     </EnchantedForest>
 
     <Branches>
-        <RatCellar SpawnDepth="2" SpawnChance="0.5" MaxDepth="3" Title="Abandoned Cellar" Description="Beneath the remains of a once prosperous village sits a dark cellar, packed tight with boxes and barrels. There is no sign of the people who once lived here, the only life being the faint moving at the edge of your vision. The stink of animal droppings mingles with the smell of wet fur, wafting together through the damp air.">
-            <Sewer MaxDepth="2" Title="Ancient Sewer" Description="A further remenant of an advanced civilisation, the remains of a sewage system extend out before you. The bricks lining the water channels are slippery and coated in a slimy growth of mosses, interspersed with small bridges crossing the rushing water. In the distance the deep roar of falling water echoes up the corridors to your ears, hiding the sound of any creatures you know must make their homes here.">
+        <RatCellar SpawnDepth="4" SpawnChance="0.8" MaxDepth="3" Title="Abandoned Cellar" Description="Beneath the remains of a once prosperous village sits a dark cellar, packed tight with boxes and barrels. There is no sign of the people who once lived here, the only life being the faint moving at the edge of your vision. The stink of animal droppings mingles with the smell of wet fur, wafting together through the damp air.">
+            <Sewer MaxDepth="4" Title="Ancient Sewer" Description="A further remenant of an advanced civilisation, the remains of a sewage system extend out before you. The bricks lining the water channels are slippery and coated in a slimy growth of mosses, interspersed with small bridges crossing the rushing water. In the distance the deep roar of falling water echoes up the corridors to your ears, hiding the sound of any creatures you know must make their homes here.">
                 <GoTo Label="Lake"></GoTo>
             </Sewer>
         </RatCellar>

@@ -1,20 +1,20 @@
 <Materials>
     <Quality1>
-        <Telphy/>
+        <Telphy RGB="117,94,56"/>
     </Quality1>
     <Quality2>
-        <Leacum/>
+        <Leacum RGB="100,117,56"/>
     </Quality2>
     <Quality3>
-        <Oryx/>
+        <Oryx RGB="64,59,63"/>
     </Quality3>
     <Quality4>
-        <Pinte/>
+        <Pinte RGB="164,161,126"/>
     </Quality4>
     <Quality5>
-        <Cejar/>
+        <Cejar RGB="164,137,126"/>
     </Quality5>
     <Quality6>
-        <Malpe/>
+        <Malpe RGB="121,74,74"/>
     </Quality6>
 </Materials>

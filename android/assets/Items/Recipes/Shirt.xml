@@ -5,7 +5,7 @@
     <Category>Armour</Category>
 
     <Icon>
-        <Name>Oryx/uf_split/uf_items/armor_cloth_chest</Name>
+        <Name>Oryx/Custom/items/shirt</Name>
     </Icon>
 
     <Events>

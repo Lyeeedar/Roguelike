@@ -1,20 +1,20 @@
 <Materials>
     <Quality1>
-        <Ruffi/>
+        <Ruffi RGB="255,229,204"/>
     </Quality1>
     <Quality2>
-        <Fethe/>
+        <Fethe RGB="204,255,204"/>
     </Quality2>
     <Quality3>
-        <Silk/>
+        <Silk RGB="224,224,224"/>
     </Quality3>
     <Quality4>
-        <Nospethe/>
+        <Nospethe RGB="32,32,40"/>
     </Quality4>
     <Quality5>
-        <Pufflet/>
+        <Pufflet RGB="255,204,204"/>
     </Quality5>
     <Quality6>
-        <Coatu/>
+        <Coatu RGB="102,255,178"/>
     </Quality6>
 </Materials>

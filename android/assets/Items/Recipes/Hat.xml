@@ -5,7 +5,7 @@
     <Category>Armour</Category>
 
     <Icon>
-        <Name>Oryx/uf_split/uf_items/armor_cloth_helm</Name>
+        <Name>Oryx/Custom/items/hat</Name>
     </Icon>
 
     <Events>
