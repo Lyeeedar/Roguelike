@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
 
 public abstract class TilePanel extends Widget
 {
@@ -98,11 +99,15 @@ public abstract class TilePanel extends Widget
 
 	public boolean isPointInThis( int x, int y )
 	{
-		y = (int)getStage().getHeight() - y;
-		if ( x > getX() && x < getX() + getWidth() && y > getY() && y < getY() + getHeight() )
+		Vector2 vec2 = Pools.obtain(Vector2.class).set( x, y );
+		vec2 = this.screenToLocalCoordinates( vec2 );
+
+		if ( vec2.x >= 0 && vec2.y >= 0 && vec2.x <= getWidth() && vec2.y <= getHeight() )
 		{
+			Pools.free( vec2 );
 			return true;
 		}
+		Pools.free( vec2 );
 		return false;
 	}
 

@@ -61,6 +61,9 @@ public class Global
 	public static final int NUM_ABILITY_SLOTS = 5;
 
 	// ----------------------------------------------------------------------
+	public static boolean MovementTypePathfind = false;
+
+	// ----------------------------------------------------------------------
 	public static RoguelikeGame Game;
 
 	// ----------------------------------------------------------------------

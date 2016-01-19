@@ -9,8 +9,10 @@ import Roguelike.Screens.GameScreen;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionProcessInput extends AbstractAction
@@ -24,6 +26,61 @@ public class ActionProcessInput extends AbstractAction
 		if ( targetPos != null )
 		{
 			setData( "ClickPos", null );
+		}
+		else if ( ! Global.MovementTypePathfind && GameScreen.Instance.preparedAbility == null )
+		{
+			if ( Gdx.input.isTouched( 0 ) && ! Gdx.input.isTouched( 1 ) )
+			{
+				int touchX = Gdx.input.getX();
+				int touchY = Gdx.input.getY();
+
+				if ( !GameScreen.Instance.pointOverUI( touchX, touchY ) )
+				{
+					Vector3 mousePos = GameScreen.Instance.camera.unproject( new Vector3( touchX, touchY, 0 ) );
+
+					int mousePosX = (int) mousePos.x;
+					int mousePosY = (int) mousePos.y;
+
+					int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
+					int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
+
+					int x = ( mousePosX - offsetx ) / Global.TileSize;
+					int y = ( mousePosY - offsety ) / Global.TileSize;
+
+					int dx = x - Global.CurrentLevel.player.tile[0][0].x;
+					int dy = y - Global.CurrentLevel.player.tile[0][0].y;
+
+					if ( dx == 0 && dy == 0 )
+					{
+						if ( Gdx.input.justTouched() )
+						{
+							targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x, entity.tile[0][0].y );
+						}
+					}
+					else if ( Math.abs( dx ) > Math.abs( dy ) )
+					{
+						if ( dx < 0 )
+						{
+							targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x - 1, entity.tile[0][0].y );
+						}
+						else
+						{
+							targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x + 1, entity.tile[0][0].y );
+						}
+					}
+					else
+					{
+						if ( dy < 0 )
+						{
+							targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x, entity.tile[0][0].y - 1 );
+						}
+						else
+						{
+							targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x, entity.tile[0][0].y + 1 );
+						}
+					}
+				}
+			}
 		}
 		else if ( !GameScreen.Instance.lockContextMenu )
 		{

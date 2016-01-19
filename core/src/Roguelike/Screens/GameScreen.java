@@ -1382,7 +1382,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean touchDown( int screenX, int screenY, int pointer, int button )
 	{
-		if ( equipmentPanel.isPointInThis( screenX, screenY ) || abilityPanel.isPointInThis( screenX, screenY ) || buttonsPanel.isPointInThis( screenX, screenY ) )
+		if ( pointOverUI( screenX, screenY ) )
 		{
 			return false;
 		}
@@ -1404,7 +1404,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean touchUp( int screenX, int screenY, int pointer, int button )
 	{
-		if ( equipmentPanel.isPointInThis( screenX, screenY ) || abilityPanel.isPointInThis( screenX, screenY ) || buttonsPanel.isPointInThis( screenX, screenY ) )
+		if ( pointOverUI( screenX, screenY ) )
 		{
 			return false;
 		}
@@ -1491,7 +1491,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					}
 				}
 			}
-			else
+			else if ( Global.MovementTypePathfind )
 			{
 				if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height && Global.CurrentLevel.getGameTile( x, y ).seen )
 				{
@@ -1773,18 +1773,31 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean zoom( float initialDistance, float distance )
 	{
-		distance = initialDistance - distance;
+		float dist = initialDistance - distance;
 
-		float amount = distance - lastZoom;
-		lastZoom = distance;
+		float amount = dist - lastZoom;
+		lastZoom = dist;
 
-		Global.TileSize -= amount / 10.0f;
+		int change = (int)Math.ceil( ( amount * (float)Global.TileSize ) / 500.0f );
+		if ( change == 0 )
+		{
+			if ( amount < 0 )
+			{
+				change = -1;
+			}
+			else
+			{
+				change = 1;
+			}
+		}
+
+		Global.TileSize -= change;
 		if ( Global.TileSize < 2 )
 		{
 			Global.TileSize = 2;
 		}
 
-		return false;
+		return true;
 	}
 
 	// ----------------------------------------------------------------------
@@ -1831,6 +1844,16 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// endregion Private Methods
 	// ####################################################################//
 	// region Public Methods
+
+	// ----------------------------------------------------------------------
+	public boolean pointOverUI( int x, int y )
+	{
+		if ( equipmentPanel.isPointInThis( x, y ) || abilityPanel.isPointInThis( x, y ) || buttonsPanel.isPointInThis( x, y ) )
+		{
+			return true;
+		}
+		return false;
+	}
 
 	// ----------------------------------------------------------------------
 	public void displayContextMenu(Table content, boolean lock)
