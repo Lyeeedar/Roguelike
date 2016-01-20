@@ -172,16 +172,19 @@ public final class Item extends GameEventHandler
 	private Table createArmourTable( Item other, GameEntity entity, Skin skin )
 	{
 		Table table = new Table();
+		
+		Table titleRow = new Table();
 
-		table.add( new Label( name, skin, "title" ) ).expandX().left();
+		titleRow.add( new Label( name, skin, "title" ) ).expandX().left();
 
 		if ( type != null && type.length() > 0 )
 		{
 			Label label = new Label( type, skin );
 			label.setFontScale( 0.7f );
-			table.add( label ).expandX().right();
+			titleRow.add( label ).expandX().right();
 		}
 
+		table.add( titleRow ).expandX().fillX();
 		table.row();
 
 		Label descLabel = new Label( description, skin );
@@ -242,14 +245,18 @@ public final class Item extends GameEventHandler
 	{
 		Table table = new Table();
 
-		table.add( new Label( name, skin, "title" ) ).expandX().left();
+		Table titleRow = new Table();
 
+		titleRow.add( new Label( name, skin, "title" ) ).expandX().left();
+
+		if ( type != null && type.length() > 0 )
 		{
 			Label label = new Label( type, skin );
 			label.setFontScale( 0.7f );
-			table.add( label ).expandX().right();
+			titleRow.add( label ).expandX().right();
 		}
 
+		table.add( titleRow ).expandX().fillX();
 		table.row();
 
 		Label descLabel = new Label( description, skin );
