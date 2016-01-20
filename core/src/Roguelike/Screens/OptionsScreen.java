@@ -94,7 +94,7 @@ public class OptionsScreen implements Screen, InputProcessor
 		Label resolutionLabel = new Label( "Resolution:", skin );
 		final SelectBox<String> resolutions = new SelectBox<String>( skin );
 		resolutions.setItems( Global.ApplicationChanger.getSupportedDisplayModes() );
-		resolutions.setSelected( prefs.getString( "resolutionX" ) + "x" + prefs.getString( "resolutionY" ) );
+		resolutions.setSelected( prefs.getInteger( "resolutionX" ) + "x" + prefs.getInteger( "resolutionY" ) );
 
 		Label windowLabel = new Label( "Window Mode:", skin );
 		final SelectBox<String> windowMode = new SelectBox<String>( skin );
@@ -114,12 +114,12 @@ public class OptionsScreen implements Screen, InputProcessor
 
 		Label fpsLabel = new Label( "Frames per second:", skin );
 		final SelectBox<String> fps = new SelectBox<String>( skin );
-		fps.setItems( new String[] { "VSync", "30", "60", "120" } );
-		if ( prefs.getBoolean( "vSync" ) )
-		{
-			fps.setSelected( "VSync" );
-		}
-		else
+		fps.setItems( new String[] { "30", "60", "120" } );
+//		if ( prefs.getBoolean( "vSync" ) )
+//		{
+//			fps.setSelected( "VSync" );
+//		}
+//		else
 		{
 			fps.setSelected( "" + prefs.getInteger( "fps" ) );
 		}
@@ -275,18 +275,28 @@ public class OptionsScreen implements Screen, InputProcessor
 		table.add( resolutionLabel ).expandX().left();
 		table.add( resolutions ).expandX().fillX();
 		table.row();
-		table.add( windowLabel ).expandX().left();
-		table.add( windowMode ).expandX().fillX();
-		table.row();
+
+		if (!Global.ANDROID)
+		{
+			table.add( windowLabel ).expandX().left();
+			table.add( windowMode ).expandX().fillX();
+			table.row();
+		}
+
+
 		table.add( fpsLabel ).expandX().left();
 		table.add( fps ).expandX().fillX();
 		table.row();
 		table.add( animLabel ).expandX().left();
 		table.add( animspeed ).expandX().fillX();
 		table.row();
-		table.add( msaaLabel ).expandX().left();
-		table.add( msaa ).expandX().fillX();
-		table.row();
+
+		if (!Global.ANDROID)
+		{
+			table.add( msaaLabel ).expandX().left();
+			table.add( msaa ).expandX().fillX();
+			table.row();
+		}
 
 		ScrollPane scrollPane = new ScrollPane( table, skin );
 		scrollPane.setScrollingDisabled( true, false );

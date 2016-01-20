@@ -16,12 +16,11 @@ public class AndroidLauncher extends AndroidApplication
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.disableAudio = false;
 
-		Global.TargetResolution[0] = 480;
-		Global.TargetResolution[1] = 360;
-		Global.FPS = 30;
-
 		Global.ANDROID = true;
 
 		initialize( new RoguelikeGame(), config );
+
+		Global.ApplicationChanger = new AndroidApplicationChanger();
+		Global.ApplicationChanger.updateApplication( Global.ApplicationChanger.prefs );
 	}
 }

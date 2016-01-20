@@ -30,7 +30,7 @@ public class ButtonsPanel extends TilePanel
 
 		canBeExamined = false;
 
-		optionsSprite = AssetManager.loadSprite( "GUI/All" );
+		optionsSprite = AssetManager.loadSprite( "GUI/Cog" );
 		lookOffSprite = AssetManager.loadSprite( "GUI/QuestionMark" );
 		lookOnSprite = AssetManager.loadSprite( "GUI/Eye" );
 		autoAttackOffSprite = AssetManager.loadSprite( "GUI/Sheathed" );

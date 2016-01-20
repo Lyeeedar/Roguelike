@@ -486,7 +486,7 @@ public class Global
 		Button.ButtonStyle menuButton = new Button.ButtonStyle(  );
 		menuButton.up = new LayeredDrawable(
 				new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) ),
-				new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/All.png" ) ) );
+				new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/Cog.png" ) ) );
 		skin.add( "menu", menuButton );
 
 		Seperator.SeperatorStyle horiSeperatorStyle = new Seperator.SeperatorStyle(  );
