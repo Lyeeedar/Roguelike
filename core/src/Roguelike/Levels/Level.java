@@ -1301,7 +1301,7 @@ public class Level
 
 		for (GameEntity ge : temp)
 		{
-			if (ge.sprite.sound != null)
+			if (ge.HP > 0 && ge.sprite.sound != null)
 			{
 				if (Vector2.dst2( ge.tile[0][0].x, ge.tile[0][0].y, player.tile[0][0].x, player.tile[0][0].y ) < 100)
 				{
