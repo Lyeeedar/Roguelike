@@ -1,5 +1,6 @@
 package Roguelike.Sound;
 
+import java.io.IOException;
 import java.util.HashSet;
 
 import Roguelike.AssetManager;
@@ -10,9 +11,12 @@ import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class SoundInstance
@@ -21,8 +25,8 @@ public class SoundInstance
 
 	public Sound sound;
 
-	public float minPitch = 0.8f;
-	public float maxPitch = 1.2f;
+	public float minPitch = 0.7f;
+	public float maxPitch = 1.5f;
 	public float volume = 0.5f;
 
 	public int range = 10;
@@ -46,9 +50,9 @@ public class SoundInstance
 	{
 		SoundInstance sound = new SoundInstance();
 		sound.sound = AssetManager.loadSound( xml.get( "Name" ) );
-		sound.range = xml.getInt( "Range", 10 );
-		sound.falloffMin = xml.getInt( "FalloffMin", 5 );
-		sound.volume = xml.getFloat( "Volume", 0.5f );
+		sound.range = xml.getInt( "Range", sound.range );
+		sound.falloffMin = xml.getInt( "FalloffMin", sound.falloffMin );
+		sound.volume = xml.getFloat( "Volume", sound.volume );
 
 		sound.minPitch = xml.getFloat( "Pitch", sound.minPitch );
 		sound.minPitch = xml.getFloat( "Pitch", sound.maxPitch );
@@ -147,6 +151,45 @@ public class SoundInstance
 			}
 
 			sound.play( vol, minPitch + MathUtils.random() * ( maxPitch - minPitch ), 0 );
+		}
+	}
+
+	private static final ObjectMap<String, Element> soundMap = new ObjectMap<String, Element>(  );
+	private static boolean loaded = false;
+	public static SoundInstance getSound( String name )
+	{
+		if ( !loaded )
+		{
+			loaded = true;
+
+			XmlReader reader = new XmlReader();
+			Element xml = null;
+
+			try
+			{
+				xml = reader.parse( Gdx.files.internal( "Sound/SoundMap.xml" ) );
+			}
+			catch ( IOException e )
+			{
+				e.printStackTrace();
+			}
+
+			for ( int i = 0; i < xml.getChildCount(); i++ )
+			{
+				Element el = xml.getChild( i );
+				soundMap.put( el.getName(), el );
+			}
+		}
+
+		if ( soundMap.containsKey( name ) )
+		{
+			return SoundInstance.load( soundMap.get( name ) );
+		}
+		else
+		{
+			SoundInstance sound = new SoundInstance(  );
+			sound.sound = AssetManager.loadSound( name );
+			return sound;
 		}
 	}
 }

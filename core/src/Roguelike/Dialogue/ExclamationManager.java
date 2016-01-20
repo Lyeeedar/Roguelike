@@ -2,6 +2,7 @@ package Roguelike.Dialogue;
 
 import java.util.HashMap;
 
+import com.badlogic.gdx.audio.Sound;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
@@ -199,12 +200,23 @@ public class ExclamationManager
 				{
 					entity.setPopupText( Global.expandNames( wrapper.text ), 2 );
 
-					if ( wrapper.sound != null )
+					SoundInstance sound = wrapper.sound;
+					if ( sound == null )
 					{
-						wrapper.sound.shoutFaction = entity.factions;
-						wrapper.sound.key = key;
-						wrapper.sound.value = value;
-						wrapper.sound.play( entity.tile[0][0] );
+						sound = entity.sprite.sound;
+					}
+
+					if ( sound != null )
+					{
+						sound.shoutFaction = entity.factions;
+						sound.key = key;
+						sound.value = value;
+
+						sound.play( entity.tile[0][0] );
+
+						sound.shoutFaction = null;
+						sound.key = null;
+						sound.value = null;
 					}
 
 					break;

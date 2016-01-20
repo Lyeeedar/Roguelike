@@ -4,6 +4,7 @@
 	<Sprite>
 		<Name>Oryx/uf_split/uf_heroes/flies</Name>
 		<DrawActualSize>true</DrawActualSize>
+        <Sound><Name>fly1</Name></Sound>
 	</Sprite>
 
 	<AI>basicMonster</AI>

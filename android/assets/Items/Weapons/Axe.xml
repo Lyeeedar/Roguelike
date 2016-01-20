@@ -5,6 +5,7 @@
     <HitSprite>
         <Name>EffectSprites/Slash/Slash</Name>
         <UpdateRate>0.1</UpdateRate>
+        <Sound><Name>Rend</Name></Sound>
     </HitSprite>
 
     <HitPattern>

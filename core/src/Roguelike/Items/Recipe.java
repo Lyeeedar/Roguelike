@@ -40,7 +40,7 @@ public class Recipe
 		}
 		else
 		{
-			item.name += " of the " + item.name;
+			item.name += " of the " + modifier.name;
 		}
 	}
 

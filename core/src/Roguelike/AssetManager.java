@@ -152,6 +152,11 @@ public class AssetManager
 		return loadSprite( name, updateTime, Color.WHITE, AnimationMode.TEXTURE, null, false );
 	}
 
+	public static Sprite loadSprite( String name, float updateTime, String sound )
+	{
+		return loadSprite( name, updateTime, Color.WHITE, AnimationMode.TEXTURE, SoundInstance.getSound( sound ), false );
+	}
+
 	public static Sprite loadSprite( String name, float updateTime, Color colour, AnimationMode mode, SoundInstance sound, boolean drawActualSize )
 	{
 		Array<TextureRegion> textures = new Array<TextureRegion>( false, 1, TextureRegion.class );

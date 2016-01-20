@@ -15,6 +15,7 @@
 	<HitSprite>
 		<Name>EffectSprites/FireBurst/FireBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
+        <Sound><Name>Fireburst</Name></Sound>
 	</HitSprite>
 
 	<Targeting>

@@ -2,6 +2,7 @@
 	<Sprite>
 		<Name>Oryx/Custom/heroes/rat_king</Name>
 		<DrawActualSize>true</DrawActualSize>
+        <Sound><Name>rat1</Name></Sound>
 	</Sprite>
 
 	<Dialogue>Dialogue/RatKing</Dialogue>

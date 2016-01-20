@@ -119,6 +119,8 @@ public class ActionProcessInput extends AbstractAction
 
 		if ( targetPos != null )
 		{
+			boolean isWait = targetPos.x == entity.tile[0][0].x && targetPos.y == entity.tile[0][0].y;
+
 			Point oldPos = (Point) getData( "Pos", null );
 			if ( oldPos != null )
 			{
@@ -132,41 +134,52 @@ public class ActionProcessInput extends AbstractAction
 
 			if ( tile != null )
 			{
-				if ( tile.environmentEntity != null
-						&& !tile.environmentEntity.canTakeDamage
-						&& !tile.environmentEntity.passableBy.intersect( Global.CurrentLevel.player.getTravelType() ) )
+				if (isWait)
 				{
-					for ( ActivationAction action : tile.environmentEntity.actions )
+					if ( tile.environmentEntity != null )
 					{
-						if ( action.visible )
+						for ( ActivationAction action : tile.environmentEntity.actions )
 						{
-							entityWithinRange = Math.abs( Global.CurrentLevel.player.tile[0][0].x - tile.x ) <= 1
-									&& Math.abs( Global.CurrentLevel.player.tile[0][0].y - tile.y ) <= 1;
-							break;
+							if ( action.visible )
+							{
+								entityWithinRange = true;
+								break;
+							}
 						}
 					}
 				}
-				else if ( tile.entity != null )
+				else
 				{
-					if (!tile.entity.isAllies( entity ))
+					if ( tile.environmentEntity != null
+						 && !tile.environmentEntity.canTakeDamage
+						 && !tile.environmentEntity.passableBy.intersect( Global.CurrentLevel.player.getTravelType() ) )
 					{
-						entity.weaponSheathed = false;
+						for ( ActivationAction action : tile.environmentEntity.actions )
+						{
+							if ( action.visible )
+							{
+								entityWithinRange = Math.abs( Global.CurrentLevel.player.tile[0][0].x - tile.x ) <= 1
+													&& Math.abs( Global.CurrentLevel.player.tile[0][0].y - tile.y ) <= 1;
+								break;
+							}
+						}
 					}
-					else if ( tile.entity.dialogue != null )
+					else if ( tile.entity != null )
 					{
-						dialogueWithinRange = Math.abs( Global.CurrentLevel.player.tile[0][0].x - tile.x ) <= 1
-													  && Math.abs( Global.CurrentLevel.player.tile[0][0].y - tile.y ) <= 1;
+						if (!tile.entity.isAllies( entity ))
+						{
+							entity.weaponSheathed = false;
+						}
+						else if ( tile.entity.dialogue != null )
+						{
+							dialogueWithinRange = Math.abs( Global.CurrentLevel.player.tile[0][0].x - tile.x ) <= 1
+												  && Math.abs( Global.CurrentLevel.player.tile[0][0].y - tile.y ) <= 1;
+						}
 					}
 				}
 			}
 
-			if ( targetPos.x == entity.tile[0][0].x && targetPos.y == entity.tile[0][0].y )
-			{
-				entity.tasks.add( new TaskWait() );
-
-				setData( "Pos", null );
-			}
-			else if ( entityWithinRange )
+			if ( entityWithinRange )
 			{
 				for ( ActivationAction action : tile.environmentEntity.actions )
 				{
@@ -177,6 +190,12 @@ public class ActionProcessInput extends AbstractAction
 						break;
 					}
 				}
+			}
+			else if ( isWait )
+			{
+				entity.tasks.add( new TaskWait() );
+
+				setData( "Pos", null );
 			}
 			else if ( dialogueWithinRange )
 			{

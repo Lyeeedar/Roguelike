@@ -14,6 +14,7 @@
     <HitSprite>
         <Name>EffectSprites/IceBurst/IceBurst</Name>
         <UpdateRate>0.1</UpdateRate>
+        <Sound><Name>Icicle</Name></Sound>
     </HitSprite>
 
 	<MovementSprite>

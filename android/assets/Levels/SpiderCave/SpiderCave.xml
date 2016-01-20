@@ -119,7 +119,14 @@
     </Ambient>
 
     <Sound>
-        <BGM>Heroic Age</BGM>
+        <BGM>Satiate</BGM>
+        <Ambient>
+            <Sound><Name>spooky1</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky2</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky5</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky8</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>slime1</Name></Sound>
+        </Ambient>
     </Sound>
 
     <RoomGenerators>

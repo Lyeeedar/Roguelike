@@ -6,6 +6,12 @@
 	<Cooldown>20</Cooldown>
 	<Range>1</Range>
 
+    <HitSprite>
+        <Name>EffectSprites/FireBurst/FireBurst</Name>
+        <UpdateRate>0.1</UpdateRate>
+        <Sound><Name>FireAttunement</Name></Sound>
+    </HitSprite>
+
 	<Icon>
 		<Name>Icons/BurningBlades</Name>
 		<Colour><RGB>255,165,0</RGB></Colour>

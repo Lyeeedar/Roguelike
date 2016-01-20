@@ -6,6 +6,13 @@
 	<Cooldown>20</Cooldown>
 	<Range>1</Range>
 
+    <HitSprite>
+        <Name>EffectSprites/LightningBurst/LightningBurst</Name>
+        <UpdateRate>0.1</UpdateRate>
+        <Colour><RGB>220,200,250</RGB></Colour>
+        <Sound><Name>StaticCharge</Name></Sound>
+    </HitSprite>
+
 	<Icon>
 		<Name>Icons/StaticCharge</Name>
 		<Colour><RGB>255,255,103</RGB></Colour>

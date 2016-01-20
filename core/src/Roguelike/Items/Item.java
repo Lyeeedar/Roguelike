@@ -476,7 +476,7 @@ public final class Item extends GameEventHandler
 			return wepDef.hitSprite;
 		}
 
-		return AssetManager.loadSprite( "EffectSprites/Strike/Strike", 0.1f );
+		return AssetManager.loadSprite( "EffectSprites/Strike/Strike", 0.1f, "Hit" );
 	}
 
 	// ----------------------------------------------------------------------

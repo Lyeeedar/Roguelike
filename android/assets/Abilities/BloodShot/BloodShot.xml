@@ -15,6 +15,7 @@
 		<Name>EffectSprites/Splatter/Splatter</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Colour><RGB>153,0,0</RGB></Colour>
+        <Sound><Name>Bloodshot</Name></Sound>
 	</HitSprite>
 
 	<MovementSprite>

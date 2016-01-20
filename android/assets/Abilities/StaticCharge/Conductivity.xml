@@ -16,6 +16,7 @@
 		<Name>EffectSprites/LightningBurst/LightningBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Colour><RGB>220,200,250</RGB></Colour>
+        <Sound><Name>Conductivity</Name></Sound>
 	</HitSprite>
 
     <HitType>

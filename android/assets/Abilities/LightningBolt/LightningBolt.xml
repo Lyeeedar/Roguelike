@@ -14,9 +14,7 @@
 	<HitSprite>
 		<Name>EffectSprites/LightningBurst/LightningBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
-		<Sound>
-		    <Name>electricity_high_voltage_spark</Name>
-		</Sound>
+		<Sound><Name>Megawatt</Name></Sound>
 	</HitSprite>
 
 	<MovementSprite>

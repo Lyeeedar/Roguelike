@@ -69,10 +69,13 @@
 	</Ambient>
 
 	<Sound>
-	    <BGM>Heroic Age</BGM>
-	    <Ambient>
-
-	    </Ambient>
+	    <BGM>Echoes of Time</BGM>
+        <Ambient>
+            <Sound><Name>rat1</Name></Sound>
+            <Sound><Name>slime1</Name></Sound>
+            <Sound><Name>spooky6</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky3</Name><Repeat>100</Repeat></Sound>
+        </Ambient>
 	</Sound>
 
 	<Preprocessor>

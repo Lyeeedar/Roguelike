@@ -57,9 +57,10 @@
 	</Ambient>
 
 	<Sound>
-	    <BGM>Heroic Age</BGM>
+	    <BGM>Serpentine Trek</BGM>
 	    <Ambient>
-
+            <Sound><Name>birdsong1</Name></Sound>
+            <Sound><Name>birdsong2</Name></Sound>
 	    </Ambient>
 	</Sound>
 

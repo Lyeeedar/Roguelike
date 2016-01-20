@@ -2,5 +2,6 @@
     <Sprite>
         <Name>Oryx/uf_split/uf_heroes/bat</Name>
         <DrawActualSize>true</DrawActualSize>
+        <Sound><Name>bat1</Name></Sound>
     </Sprite>
 </Entity>

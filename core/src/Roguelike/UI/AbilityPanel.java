@@ -8,6 +8,7 @@ import Roguelike.AssetManager;
 import Roguelike.Global;
 import Roguelike.Items.Item;
 import Roguelike.Screens.GameScreen;
+import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Input.Buttons;
@@ -202,9 +203,13 @@ public class AbilityPanel extends TilePanel
 				GameScreen.Instance.addSpriteAction( sprite, x+width/2, y+height/2, width, height );
 				Global.CurrentLevel.player.pendingMessages.add( new Message( tree.current.current.getName() + " levelled up! (Level " + tree.current.current.getLevel() + ")", Color.GOLD ) );
 
+				levelUpSound.play( Global.CurrentLevel.player.tile[0][0] );
+
 				tree.current.needsLevelAnim = false;
 			}
 		}
 	}
+
+	public static final SoundInstance levelUpSound = SoundInstance.getSound( "LevelUp" );
 
 }

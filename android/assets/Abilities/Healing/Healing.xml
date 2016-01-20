@@ -15,7 +15,7 @@
 	    <Name>EffectSprites/Heal/Heal</Name>
 	    <UpdateRate>0.1</UpdateRate>
 	    <Colour><RGB>175,255,47</RGB></Colour>
-	    <Sound><Name>whoosh</Name></Sound>
+	    <Sound><Name>Healing</Name></Sound>
 	</HitSprite>
 
 	<HitType>

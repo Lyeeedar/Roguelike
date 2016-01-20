@@ -3,6 +3,7 @@
 	<Sprite>
 		<Name>Oryx/uf_split/uf_heroes/toad_horned</Name>
 		<DrawActualSize>true</DrawActualSize>
+        <Sound><Name>frog1</Name></Sound>
 	</Sprite>
 
 	<Abilities>

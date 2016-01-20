@@ -3,6 +3,7 @@
     <Sprite>
         <Name>Oryx/uf_split/uf_heroes/spider_brown_giant</Name>
         <DrawActualSize>true</DrawActualSize>
+        <Sound><Name>slime1</Name></Sound>
     </Sprite>
 
     <Size>2</Size>

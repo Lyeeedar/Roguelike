@@ -197,7 +197,7 @@ public class Global
 		}
 		else
 		{
-			BGM = new Mixer( level.bgmName, 0.1f );
+			BGM = new Mixer( level.bgmName, 1f );
 		}
 
 		if ( player != null )

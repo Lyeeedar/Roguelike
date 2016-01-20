@@ -3,6 +3,7 @@
         <Name>Oryx/Custom/heroes/slime</Name>
         <Colour><RGB>255,50,50</RGB></Colour>
         <DrawActualSize>true</DrawActualSize>
+        <Sound><Name>slime2</Name></Sound>
     </Sprite>
     <Light>
         <Colour><RGB>255,0,0</RGB><Alpha>0.5</Alpha></Colour>

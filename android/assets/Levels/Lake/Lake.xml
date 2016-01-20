@@ -43,7 +43,15 @@
     </Ambient>
 
     <Sound>
-        <BGM>Heroic Age</BGM>
+        <BGM>Decisions</BGM>
+        <Ambient>
+            <Sound><Name>spooky2</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky3</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky6</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky8</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>water1</Name></Sound>
+            <Sound><Name>thump1</Name></Sound>
+        </Ambient>
     </Sound>
 
     <Background>

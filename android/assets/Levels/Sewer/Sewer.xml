@@ -47,7 +47,14 @@
 	</Ambient>
 
 	<Sound>
-	    <BGM>Heroic Age</BGM>
+	    <BGM>Anguish</BGM>
+        <Ambient>
+            <Sound><Name>spooky1</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky4</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky7</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky8</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>water1</Name></Sound>
+        </Ambient>
 	</Sound>
 
 	<RoomGenerators>

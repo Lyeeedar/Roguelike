@@ -27,6 +27,7 @@ import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.RepeatingSoundEffect;
+import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteAnimation.BumpAnimation;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
@@ -264,6 +265,8 @@ public class Level
 					{
 						e.inventory.m_items.addAll( TreasureGenerator.generateLoot( quality, "random", MathUtils.random ) );
 					}
+
+					entityDeathSound.play( e.tile[0][0] );
 
 					dropItems( e.getInventory(), e.tile[0][0], e.essence, e );
 					e.removeFromTile();
@@ -831,10 +834,13 @@ public class Level
 								tree.current.gainExp( val );
 							}
 						}
+						pickupXPSound.play( player.tile[ 0 ][ 0 ] );
 					}
 					else if ( type == GameTile.OrbType.HEALTH )
 					{
 						player.applyHealing( val );
+
+						pickupHPSound.play( player.tile[ 0 ][ 0 ] );
 					}
 
 					player.tile[ 0 ][ 0 ].orbs.remove( type );
@@ -848,6 +854,8 @@ public class Level
 			{
 				GameScreen.Instance.pickupQueue.add( item );
 			}
+
+			pickupItemSound.play( player.tile[ 0 ][ 0 ] );
 
 			player.tile[0][0].items.clear();
 		}
@@ -1284,9 +1292,41 @@ public class Level
 		NewActiveAbilities.add( aa );
 	}
 
+	public void playEntitySound()
+	{
+		Array<GameEntity> validEntities = new Array<GameEntity>(  );
+
+		Array<GameEntity> temp = new Array<GameEntity>(  );
+		getAllEntities( temp );
+
+		for (GameEntity ge : temp)
+		{
+			if (ge.sprite.sound != null)
+			{
+				if (Vector2.dst2( ge.tile[0][0].x, ge.tile[0][0].y, player.tile[0][0].x, player.tile[0][0].y ) < 100)
+				{
+					validEntities.add( ge );
+				}
+			}
+		}
+
+		if (validEntities.size > 0)
+		{
+			GameEntity chosen = validEntities.random();
+			chosen.sprite.sound.play( chosen.tile[0][0] );
+		}
+	}
+
 	public void advance( float delta )
 	{
 		updateAccumulator += delta;
+		enemySoundAccumulator += delta;
+
+		if (enemySoundAccumulator > 10)
+		{
+			playEntitySound();
+			enemySoundAccumulator -= 10 + MathUtils.random() * 10;
+		}
 
 		player.updateShadowCast();
 		updateVisibleTiles();
@@ -1404,6 +1444,13 @@ public class Level
 	public GameTile[][] Grid;
 	public int width;
 	public int height;
+
+	public float enemySoundAccumulator;
+
+	public static final SoundInstance pickupXPSound = SoundInstance.getSound( "PickupXP" );
+	public static final SoundInstance pickupHPSound = SoundInstance.getSound( "PickupHP" );
+	public static final SoundInstance pickupItemSound = SoundInstance.getSound( "PickupItem" );
+	public static final SoundInstance entityDeathSound = SoundInstance.getSound( "EntityDeath" );
 
 	// endregion Data
 	// ####################################################################//

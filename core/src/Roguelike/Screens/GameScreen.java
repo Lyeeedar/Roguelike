@@ -20,6 +20,7 @@ import Roguelike.Items.TreasureGenerator;
 import Roguelike.Levels.Level;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
+import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Sprite.SpriteAnimation.StretchAnimation;
@@ -192,6 +193,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			fps = (int) ( 1.0f / frametime );
 			fpsAccumulator = 0;
 		}
+
+		Global.BGM.update( delta );
 
 		if ( !examineMode && !lockContextMenu )
 		{
@@ -1706,6 +1709,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				abilityTiles = null;
 			}
 
+			unprepareAbilitySound.play( Global.CurrentLevel.player.tile[0][0] );
+
 			return;
 		}
 
@@ -1717,6 +1722,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			Global.PointPool.freeAll( abilityTiles );
 		}
 		abilityTiles = preparedAbility.getValidTargets();
+
+		prepareAbilitySound.play( Global.CurrentLevel.player.tile[0][0] );
 	}
 
 	// ----------------------------------------------------------------------
@@ -2210,6 +2217,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private int fps;
 	private float storedFrametime;
 	private float fpsAccumulator;
+
+	// ----------------------------------------------------------------------
+	private static final SoundInstance prepareAbilitySound =  SoundInstance.getSound( "PrepareAbility" );
+	private static final SoundInstance unprepareAbilitySound =  SoundInstance.getSound( "UnprepareAbility" );
 
 	private final EnumBitflag<Direction> directionBitflag = new EnumBitflag<Direction>( );
 

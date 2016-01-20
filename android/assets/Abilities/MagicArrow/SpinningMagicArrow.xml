@@ -14,6 +14,7 @@
     <HitSprite>
         <Name>EffectSprites/Shout/Shout</Name>
         <UpdateRate>0.1</UpdateRate>
+        <Sound><Name>MagicArrow</Name></Sound>
     </HitSprite>
 
 	<MovementSprite>

@@ -6,6 +6,7 @@
         <Name>EffectSprites/Arrow/Arrow</Name>
         <Animation><Move/></Animation>
         <UpdateRate>0.1</UpdateRate>
+        <Sound><Name>Arrow</Name></Sound>
     </HitSprite>
 
     <HitPattern>

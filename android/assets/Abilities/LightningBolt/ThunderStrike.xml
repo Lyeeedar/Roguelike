@@ -21,6 +21,7 @@
 		        <Equation>ReverseExtend</Equation>
 		    </Stretch>
 		</Animation>
+        <Sound><Name>Conductivity</Name></Sound>
 	</HitSprite>
 
 	<Light>

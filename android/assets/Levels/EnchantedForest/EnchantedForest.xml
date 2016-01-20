@@ -57,9 +57,11 @@
     </Ambient>
 
     <Sound>
-        <BGM>Heroic Age</BGM>
+        <BGM>Metaphysik</BGM>
         <Ambient>
-
+            <Sound><Name>chirp1</Name></Sound>
+            <Sound><Name>chirp2</Name></Sound>
+            <Sound><Name>wolf1</Name><Repeat>100</Repeat></Sound>
         </Ambient>
     </Sound>
 

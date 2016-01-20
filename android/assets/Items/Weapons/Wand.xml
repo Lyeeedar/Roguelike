@@ -6,6 +6,7 @@
         <Name>EffectSprites/Bolt/Bolt</Name>
         <Animation><Move/></Animation>
         <UpdateRate>0.1</UpdateRate>
+        <Sound><Name>Wand</Name><Volume>0.3</Volume></Sound>
     </HitSprite>
 
     <HitPattern>

@@ -1,0 +1,31 @@
+<Sounds>
+
+    <PickupXP>
+        <Name>PickupXP</Name>
+    </PickupXP>
+
+    <PickupHP>
+        <Name>PickupHP</Name>
+    </PickupHP>
+
+    <PickupItem>
+        <Name>PickupItem</Name>
+    </PickupItem>
+
+    <PrepareAbility>
+        <Name>PrepareAbility</Name>
+    </PrepareAbility>
+
+    <UnprepareAbility>
+        <Name>UnprepareAbility</Name>
+    </UnprepareAbility>
+
+    <LevelUp>
+        <Name>LevelUp</Name>
+    </LevelUp>
+
+    <EntityDeath>
+        <Name>EntityDeath</Name>
+    </EntityDeath>
+
+</Sounds>

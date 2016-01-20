@@ -3,6 +3,7 @@
 	<Sprite>
 		<Name>Oryx/uf_split/uf_heroes/goblin_shaman</Name>
 		<DrawActualSize>true</DrawActualSize>
+        <Sound><Name>goblin1</Name></Sound>
 	</Sprite>
 
     <Abilities>

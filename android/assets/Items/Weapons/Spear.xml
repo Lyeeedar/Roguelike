@@ -5,6 +5,7 @@
     <HitSprite>
         <Name>EffectSprites/Thrust/Thrust</Name>
         <UpdateRate>0.1</UpdateRate>
+        <Sound><Name>PowerAttack</Name></Sound>
     </HitSprite>
 
     <HitPattern>

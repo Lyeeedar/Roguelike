@@ -15,6 +15,7 @@
 		<Name>EffectSprites/Aegis/Aegis</Name>
 		<UpdateRate>0.1</UpdateRate>
 		<Colour><RGB>210,247,247</RGB></Colour>
+        <Sound><Name>Aegis</Name></Sound>
 	</HitSprite>
 
     <HitType>

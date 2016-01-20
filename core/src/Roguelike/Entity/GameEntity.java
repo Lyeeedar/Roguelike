@@ -370,7 +370,7 @@ public class GameEntity extends Entity
 	public Array<AbilityTree> slottedAbilities = new Array<AbilityTree>();
 
 	// ----------------------------------------------------------------------
-	public Sprite defaultHitEffect = AssetManager.loadSprite( "EffectSprites/Strike/Strike", 0.1f );
+	public Sprite defaultHitEffect = AssetManager.loadSprite( "EffectSprites/Strike/Strike", 0.1f, "Hit" );
 
 	// ----------------------------------------------------------------------
 	public Array<AbstractTask> tasks = new Array<AbstractTask>();

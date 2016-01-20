@@ -2,6 +2,7 @@
 	<Sprite>
 		<Name>Oryx/uf_split/uf_heroes/rat_giant</Name>
 		<DrawActualSize>true</DrawActualSize>
+        <Sound><Name>rat1</Name></Sound>
 	</Sprite>
 
     <Statistics>

@@ -15,6 +15,7 @@
 	<HitSprite>
 		<Name>EffectSprites/LightningBurst/LightningBurst</Name>
 		<UpdateRate>0.1</UpdateRate>
+        <Sound><Name>Megawatt</Name></Sound>
 	</HitSprite>
 
 	<MovementSprite>
