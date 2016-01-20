@@ -64,6 +64,11 @@ public class Global
 	public static boolean MovementTypePathfind = false;
 
 	// ----------------------------------------------------------------------
+	public static float MusicVolume = 1;
+	public static float AmbientVolume = 1;
+	public static float EffectVolume = 1;
+
+	// ----------------------------------------------------------------------
 	public static RoguelikeGame Game;
 
 	// ----------------------------------------------------------------------
@@ -127,6 +132,19 @@ public class Global
 	{
 		Colors.put( "Name", Color.GREEN );
 		Colors.put( "Place", Color.CYAN );
+	}
+
+	// ----------------------------------------------------------------------
+	public static void updateVolume()
+	{
+		if (BGM != null) { BGM.updateVolume(); }
+		if (CurrentLevel != null)
+		{
+			for (RepeatingSoundEffect rse : CurrentLevel.ambientSounds)
+			{
+				rse.updateVolume();
+			}
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -484,6 +502,8 @@ public class Global
 		skin.add( "vertical", vertSeperatorStyle );
 
 		ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle(  );
+		scrollPaneStyle.vScroll = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TextField.png" ), 6, 6, 6, 6 ) );
+		scrollPaneStyle.vScrollKnob = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) );
 		skin.add( "default", scrollPaneStyle );
 
 		List.ListStyle listStyle = new List.ListStyle(  );
@@ -499,6 +519,11 @@ public class Global
 		selectBoxStyle.scrollStyle = scrollPaneStyle;
 		selectBoxStyle.listStyle = listStyle;
 		skin.add( "default", selectBoxStyle );
+
+		Slider.SliderStyle sliderStyle = new Slider.SliderStyle(  );
+		sliderStyle.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TextField.png" ), 6, 6, 6, 6 ) );
+		sliderStyle.knob = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) );
+		skin.add( "default-horizontal", sliderStyle );
 
 		return skin;
 	}

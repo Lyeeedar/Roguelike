@@ -138,7 +138,7 @@ public class SoundInstance
 		// calculate sound play volume
 		if ( playerDist <= range && sound != null )
 		{
-			float vol = volume;
+			float vol = volume * Global.EffectVolume;
 
 			if ( playerDist > falloffMin )
 			{

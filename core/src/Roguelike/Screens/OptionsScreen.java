@@ -7,6 +7,7 @@ import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
 
+import Roguelike.UI.Seperator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
@@ -22,11 +23,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class OptionsScreen implements Screen, InputProcessor
@@ -65,18 +62,41 @@ public class OptionsScreen implements Screen, InputProcessor
 		inputMultiplexer.addProcessor( inputProcessorOne );
 	}
 
-	public void createVideo()
+	public void createOptions()
 	{
 		final Preferences prefs = Global.ApplicationChanger.prefs;
 
 		options.clear();
 
-		Label resolutionLabel = new Label( "Resolution ", skin );
+		Label gameTitle = new Label("Game", skin, "title");
+		Label movementLabel = new Label("Movement Type:", skin);
+		final SelectBox<String> movementtype = new SelectBox<String>( skin );
+		movementtype.setItems( "Direction", "Pathfind" );
+		if (Global.MovementTypePathfind) { movementtype.setSelectedIndex( 1 ); }
+		else { movementtype.setSelectedIndex( 0 ); }
+
+		Label audioTitle = new Label("Audio", skin, "title");
+
+		Label musicLabel = new Label("Music Volume", skin);
+		final Slider musicSlider = new Slider( 0, 100, 1, false, skin );
+		musicSlider.setValue( Global.MusicVolume * 100 );
+
+		Label ambientLabel = new Label("Ambient Volume", skin);
+		final Slider ambientSlider = new Slider( 0, 100, 1, false, skin );
+		ambientSlider.setValue( Global.AmbientVolume * 100 );
+
+		Label effectLabel = new Label("Effect Volume", skin);
+		final Slider effectSlider = new Slider( 0, 100, 1, false, skin );
+		effectSlider.setValue( Global.EffectVolume * 100 );
+
+		Label videoTitle = new Label( "Video", skin, "title" );
+
+		Label resolutionLabel = new Label( "Resolution:", skin );
 		final SelectBox<String> resolutions = new SelectBox<String>( skin );
 		resolutions.setItems( Global.ApplicationChanger.getSupportedDisplayModes() );
 		resolutions.setSelected( prefs.getString( "resolutionX" ) + "x" + prefs.getString( "resolutionY" ) );
 
-		Label windowLabel = new Label( "Window Mode ", skin );
+		Label windowLabel = new Label( "Window Mode:", skin );
 		final SelectBox<String> windowMode = new SelectBox<String>( skin );
 		windowMode.setItems( new String[] { "Window", "Borderless Window", "Fullscreen" } );
 		if ( prefs.getBoolean( "fullscreen" ) )
@@ -92,7 +112,7 @@ public class OptionsScreen implements Screen, InputProcessor
 			windowMode.setSelected( "Window" );
 		}
 
-		Label fpsLabel = new Label( "Frames per second ", skin );
+		Label fpsLabel = new Label( "Frames per second:", skin );
 		final SelectBox<String> fps = new SelectBox<String>( skin );
 		fps.setItems( new String[] { "VSync", "30", "60", "120" } );
 		if ( prefs.getBoolean( "vSync" ) )
@@ -104,7 +124,7 @@ public class OptionsScreen implements Screen, InputProcessor
 			fps.setSelected( "" + prefs.getInteger( "fps" ) );
 		}
 
-		Label animLabel = new Label( "Animation Speed", skin );
+		Label animLabel = new Label( "Animation Speed:", skin );
 		final SelectBox<String> animspeed = new SelectBox<String>( skin );
 		animspeed.setItems( new String[] { "None", "0.25x", "0.5x", "0.75x", "1x", "2x", "4x", "8x" } );
 		if ( prefs.getFloat( "animspeed" ) == 0 )
@@ -116,7 +136,7 @@ public class OptionsScreen implements Screen, InputProcessor
 			animspeed.setSelected( new DecimalFormat( "#.##" ).format( prefs.getFloat( "animspeed" ) ) + "x" );
 		}
 
-		Label msaaLabel = new Label( "MSAA Samples", skin );
+		Label msaaLabel = new Label( "MSAA Samples:", skin );
 		final SelectBox<Integer> msaa = new SelectBox<Integer>( skin );
 		msaa.setItems( new Integer[] { 0, 2, 4, 8, 16, 32 } );
 		msaa.setSelected( prefs.getInteger( "msaa" ) );
@@ -133,6 +153,11 @@ public class OptionsScreen implements Screen, InputProcessor
 			@Override
 			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 			{
+				prefs.putBoolean( "pathfindMovement", movementtype.getSelectedIndex() == 1 );
+
+				prefs.putFloat( "musicVolume", musicSlider.getValue() / 100.0f );
+				prefs.putFloat( "ambientVolume", ambientSlider.getValue() / 100.0f );
+				prefs.putFloat( "effectVolume", effectSlider.getValue() / 100.0f );
 
 				String selectedResolution = resolutions.getSelected();
 
@@ -190,21 +215,13 @@ public class OptionsScreen implements Screen, InputProcessor
 			@Override
 			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 			{
-
-				prefs.putInteger( "resolutionX", 800 );
-				prefs.putInteger( "resolutionY", 600 );
-				prefs.putBoolean( "fullscreen", false );
-				prefs.putBoolean( "borderless", false );
-				prefs.putBoolean( "vSync", true );
-				prefs.putInteger( "fps", 0 );
-				prefs.putInteger( "msaa", 16 );
-				prefs.putFloat( "animspeed", 1 );
+				Global.ApplicationChanger.setDefaultPrefs( prefs );
 
 				prefs.flush();
 
 				Global.ApplicationChanger.updateApplication( prefs );
 
-				createVideo();
+				createOptions();
 			}
 		} );
 
@@ -224,74 +241,70 @@ public class OptionsScreen implements Screen, InputProcessor
 			}
 		});
 
-		TextButton nativeRes = new TextButton( "Use Native Resolution", skin );
-		nativeRes.addListener( new InputListener()
-		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
+		Table table = new Table();
 
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
-			{
-				prefs.putBoolean( "fullscreen", windowMode.getSelected().equals( "Fullscreen" ) );
-				prefs.putBoolean( "borderless", windowMode.getSelected().equals( "Borderless Window" ) );
+		table.add( gameTitle ).expandX().left().padTop( 20 );
+		table.row();
+		table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
+		table.row();
+		table.add( movementLabel ).expandX().left();
+		table.add( movementtype ).expandX().fillX();
+		table.row();
 
-				if ( fps.getSelected().equals( "VSync" ) )
-				{
-					prefs.putBoolean( "vSync", true );
-					prefs.putInteger( "fps", 0 );
-				}
-				else
-				{
-					prefs.putBoolean( "vSync", false );
-					prefs.putInteger( "fps", Integer.parseInt( fps.getSelected() ) );
-				}
+		table.add( audioTitle ).expandX().left().padTop( 20 );
+		table.row();
+		table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
+		table.row();
+		table.add( musicLabel ).expandX().left();
+		table.row();
+		table.add( musicSlider ).colspan( 2 ).expandX().fillX();
+		table.row();
+		table.add( ambientLabel ).expandX().left();
+		table.row();
+		table.add( ambientSlider ).colspan( 2 ).expandX().fillX();
+		table.row();
+		table.add( effectLabel ).expandX().left();
+		table.row();
+		table.add( effectSlider ).colspan( 2 ).expandX().fillX();
+		table.row();
 
-				if ( animspeed.getSelected().equals( "None" ) )
-				{
-					prefs.putFloat( "animspeed", 0 );
-				}
-				else
-				{
-					String s = animspeed.getSelected();
-					float val = Float.parseFloat( s.substring( 0, s.length() - 1 ) );
+		table.add( videoTitle ).expandX().left().padTop( 20 );
+		table.row();
+		table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
+		table.row();
+		table.add( resolutionLabel ).expandX().left();
+		table.add( resolutions ).expandX().fillX();
+		table.row();
+		table.add( windowLabel ).expandX().left();
+		table.add( windowMode ).expandX().fillX();
+		table.row();
+		table.add( fpsLabel ).expandX().left();
+		table.add( fps ).expandX().fillX();
+		table.row();
+		table.add( animLabel ).expandX().left();
+		table.add( animspeed ).expandX().fillX();
+		table.row();
+		table.add( msaaLabel ).expandX().left();
+		table.add( msaa ).expandX().fillX();
+		table.row();
 
-					prefs.putFloat( "animspeed", val );
-				}
+		ScrollPane scrollPane = new ScrollPane( table, skin );
+		scrollPane.setScrollingDisabled( true, false );
+		scrollPane.setVariableSizeKnobs( true );
+		scrollPane.setFadeScrollBars( false );
+		scrollPane.setScrollbarsOnTop( false );
+		scrollPane.setForceScroll( false, true );
+		scrollPane.setFlickScroll( false );
 
-				prefs.putInteger( "msaa", msaa.getSelected() );
-
-				Global.ApplicationChanger.setToNativeResolution( prefs );
-				createVideo();
-			}
-		} );
-
-		options.add( resolutionLabel );
-		options.add( resolutions );
-		options.add( nativeRes );
-		options.row();
-		options.add( windowLabel );
-		options.add( windowMode );
-		options.row();
-		options.add( fpsLabel );
-		options.add( fps );
-		options.row();
-		options.add( animLabel );
-		options.add( animspeed );
-		options.row();
-		options.add( msaaLabel );
-		options.add( msaa );
+		options.add( scrollPane ).colspan( 2 ).expand().fill();
 		options.row();
 
 		Table adTable = new Table(  );
 		adTable.add( defaults );
 		adTable.add( apply );
 
-		options.add( backButton ).left();
-		options.add( adTable ).right();
+		options.add( backButton ).left().pad( 10 );
+		options.add( adTable ).right().pad( 10 );
 
 	}
 
@@ -304,7 +317,7 @@ public class OptionsScreen implements Screen, InputProcessor
 			created = true;
 		}
 
-		createVideo();
+		createOptions();
 
 		Gdx.input.setInputProcessor( inputMultiplexer );
 

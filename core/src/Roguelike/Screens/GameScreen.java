@@ -288,9 +288,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		renderBackground( offsetx, offsety );
 
 		renderVisibleTiles( offsetx, offsety, tileSize3 );
-		if ( Global.CurrentDialogue == null )
+		if ( !Global.ANDROID && Global.CurrentDialogue == null && Global.MovementTypePathfind )
 		{
-		//	renderCursor( offsetx, offsety, mousex, mousey, delta );
+			renderCursor( offsetx, offsety, mousex, mousey, delta );
 		}
 		renderActiveAbilities( offsetx, offsety );
 		renderSpriteEffects( offsetx, offsety, tileSize3 );
@@ -799,7 +799,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private void renderCursor( int offsetx, int offsety, int mousex, int mousey, float delta )
 	{
-		if ( !mouseOverUI && !Global.ANDROID )
+		if ( !mouseOverUI )
 		{
 			Color colour = Color.GREEN;
 

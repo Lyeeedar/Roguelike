@@ -2,6 +2,7 @@ package Roguelike.Sound;
 
 import Roguelike.AssetManager;
 
+import Roguelike.Global;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -36,7 +37,7 @@ public class RepeatingSoundEffect
 		{
 			if (!isPlaying)
 			{
-				soundID = sound.loop(volume);
+				soundID = sound.loop(volume * Global.AmbientVolume);
 			}
 		}
 		else
@@ -45,12 +46,20 @@ public class RepeatingSoundEffect
 
 			if (timeAccumulator >= nextRepeat)
 			{
-				soundID = sound.play(volume, minPitch+MathUtils.random()*(maxPitch-minPitch), 0);
+				soundID = sound.play( volume * Global.AmbientVolume, minPitch + MathUtils.random() * ( maxPitch - minPitch), 0);
 				isPlaying = true;
 
 				nextRepeat = repeatMin + MathUtils.random() * (repeatMax - repeatMin);
 				timeAccumulator = 0;
 			}
+		}
+	}
+
+	public void updateVolume()
+	{
+		if (isPlaying)
+		{
+			sound.setVolume( soundID, volume * Global.AmbientVolume );
 		}
 	}
 

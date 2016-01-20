@@ -13,18 +13,30 @@ public abstract class AbstractApplicationChanger
 		this.prefs = prefs;
 		if ( !prefs.getBoolean( "created" ) )
 		{
+			setDefaultPrefs( prefs );
 			prefs.putBoolean( "created", true );
 			prefs.putString( "window-name", "Chronicles Of Aether" );
-			prefs.putInteger( "resolutionX", 800 );
-			prefs.putInteger( "resolutionY", 600 );
-			prefs.putBoolean( "fullscreen", false );
-			prefs.putBoolean( "borderless", false );
-			prefs.putBoolean( "vSync", true );
-			prefs.putInteger( "fps", 0 );
-			prefs.putFloat( "animspeed", 1 );
-			prefs.putInteger( "msaa", 16 );
+
 			prefs.flush();
 		}
+	}
+
+	public void setDefaultPrefs( Preferences prefs )
+	{
+		prefs.putBoolean( "pathfindMovement", false );
+
+		prefs.putFloat( "musicVolume", 1 );
+		prefs.putFloat( "ambientVolume", 1 );
+		prefs.putFloat( "effectVolume", 1 );
+
+		prefs.putInteger( "resolutionX", 800 );
+		prefs.putInteger( "resolutionY", 600 );
+		prefs.putBoolean( "fullscreen", false );
+		prefs.putBoolean( "borderless", false );
+		prefs.putBoolean( "vSync", true );
+		prefs.putInteger( "fps", 0 );
+		prefs.putFloat( "animspeed", 1 );
+		prefs.putInteger( "msaa", 16 );
 	}
 
 	public void createApplication()

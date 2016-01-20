@@ -51,6 +51,12 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 		Global.FPS = pref.getInteger( "fps" );
 		Global.AnimationSpeed = 1.0f / pref.getFloat( "animspeed" );
 
+		Global.MovementTypePathfind = pref.getBoolean( "pathfindMovement" );
+		Global.MusicVolume = pref.getFloat( "musicVolume" );
+		Global.AmbientVolume = pref.getFloat( "ambientVolume" );
+		Global.EffectVolume = pref.getFloat( "effectVolume" );
+		Global.updateVolume();
+
 		return new LwjglApplication( game, cfg );
 	}
 
@@ -68,6 +74,12 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 		Global.FPS = pref.getInteger( "fps" );
 		Global.AnimationSpeed = 1.0f / pref.getFloat( "animspeed" );
 
+		Global.MovementTypePathfind = pref.getBoolean( "pathfindMovement" );
+		Global.MusicVolume = pref.getFloat( "musicVolume" );
+		Global.AmbientVolume = pref.getFloat( "ambientVolume" );
+		Global.EffectVolume = pref.getFloat( "effectVolume" );
+		Global.updateVolume();
+
 		if (fullscreen)
 		{
 			DisplayMode mode = Gdx.graphics.getDisplayMode();
@@ -78,7 +90,7 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 			Gdx.graphics.setWindowedMode( width, height );
 		}
 
-		Gdx.graphics.setVSync( pref.getBoolean( "vSync" ) );
+		//Gdx.graphics.setVSync( pref.getBoolean( "vSync" ) );
 	}
 
 	@Override

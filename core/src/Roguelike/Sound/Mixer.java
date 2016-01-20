@@ -1,5 +1,6 @@
 package Roguelike.Sound;
 
+import Roguelike.Global;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 
@@ -22,7 +23,7 @@ public class Mixer
 		music = Gdx.audio.newMusic(Gdx.files.internal("Music/"+musicName+".mp3"));
 		music.play();
 		music.setLooping(true);
-		music.setVolume(volume);
+		music.setVolume( volume * Global.MusicVolume);
 	}
 
 	public void mix(String mixName, float time)
@@ -45,9 +46,11 @@ public class Mixer
 		{
 			time += delta;
 
-			float vol = volume * (time / mixTime);
+			float actualVolume = volume * Global.MusicVolume;
+
+			float vol = actualVolume * (time / mixTime);
 			mix.setVolume(vol);
-			music.setVolume(volume-vol);
+			music.setVolume(actualVolume-vol);
 
 			if (time >= mixTime)
 			{
@@ -56,8 +59,16 @@ public class Mixer
 				music.dispose();
 				music = mix;
 				mix = null;
-				music.setVolume(volume);
+				music.setVolume(actualVolume);
 			}
+		}
+	}
+
+	public void updateVolume()
+	{
+		if (mix == null)
+		{
+			music.setVolume( volume * Global.MusicVolume );
 		}
 	}
 }

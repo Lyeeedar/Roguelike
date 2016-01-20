@@ -13,6 +13,11 @@ public class Seperator extends Widget
 {
 	private SeperatorStyle style;
 
+	public Seperator( Skin skin )
+	{
+		this(skin, false);
+	}
+
 	public Seperator( Skin skin, boolean vertical )
 	{
 		style = skin.get(vertical ? "vertical" : "horizontal", SeperatorStyle.class);
