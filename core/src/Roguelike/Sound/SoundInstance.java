@@ -24,6 +24,7 @@ public class SoundInstance
 	private static final EnumBitflag<Passability> SoundPassability = new EnumBitflag<Passability>( new Passability[] { Passability.LEVITATE, Passability.ENTITY } );
 
 	public Sound sound;
+	public String name;
 
 	public float minPitch = 0.7f;
 	public float maxPitch = 1.5f;
@@ -49,7 +50,8 @@ public class SoundInstance
 	public static SoundInstance load( Element xml )
 	{
 		SoundInstance sound = new SoundInstance();
-		sound.sound = AssetManager.loadSound( xml.get( "Name" ) );
+		sound.name = xml.get( "Name" );
+		sound.sound = AssetManager.loadSound( sound.name );
 		sound.range = xml.getInt( "Range", sound.range );
 		sound.falloffMin = xml.getInt( "FalloffMin", sound.falloffMin );
 		sound.volume = xml.getFloat( "Volume", sound.volume );
@@ -83,7 +85,7 @@ public class SoundInstance
 
 						if ( t.entity != null )
 						{
-							AStarPathfind astar = new AStarPathfind( tile.level.getGrid(), tile.x, tile.y, x, y, true, false, 1, SoundPassability, null );
+							AStarPathfind astar = new AStarPathfind( tile.level.getGrid(), tile.x, tile.y, x, y, Global.CanMoveDiagonal, false, 1, SoundPassability, null );
 							Array<Point> path = astar.getPath();
 
 							if ( path != null && path.size < maxAudibleDist )
@@ -129,7 +131,7 @@ public class SoundInstance
 		}
 		else
 		{
-			AStarPathfind astar = new AStarPathfind( tile.level.getGrid(), tile.x, tile.y, tile.level.player.tile[0][0].x, tile.level.player.tile[0][0].y, true, false, 1, SoundPassability, null );
+			AStarPathfind astar = new AStarPathfind( tile.level.getGrid(), tile.x, tile.y, tile.level.player.tile[0][0].x, tile.level.player.tile[0][0].y, Global.CanMoveDiagonal, false, 1, SoundPassability, null );
 			Array<Point> path = astar.getPath();
 
 			if ( path != null )
@@ -140,7 +142,7 @@ public class SoundInstance
 		}
 
 		// calculate sound play volume
-		if ( playerDist < range && sound != null )
+		if ( playerDist <= range && sound != null )
 		{
 			float vol = volume;
 
@@ -150,7 +152,10 @@ public class SoundInstance
 				vol *= alpha;
 			}
 
-			sound.play( vol, minPitch + MathUtils.random() * ( maxPitch - minPitch ), 0 );
+			float xdiff = tile.x - tile.level.player.tile[0][0].x;
+			xdiff /= range;
+
+			sound.play( vol, minPitch + MathUtils.random() * ( maxPitch - minPitch ), xdiff );
 		}
 	}
 
@@ -188,6 +193,7 @@ public class SoundInstance
 		else
 		{
 			SoundInstance sound = new SoundInstance(  );
+			sound.name = name;
 			sound.sound = AssetManager.loadSound( name );
 			return sound;
 		}

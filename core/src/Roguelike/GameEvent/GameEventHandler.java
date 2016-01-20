@@ -320,11 +320,14 @@ public abstract class GameEventHandler implements IGameObject
 		HashMap<String, Integer> variables = new HashMap<String, Integer>(  );
 		variables.put( "quality", quality );
 
-		for ( Global.Statistic stat : Global.Statistic.values() )
+		if (constantEvent != null && constantEvent.equations != null)
 		{
-			if ( constantEvent.equations.containsKey( stat ) )
+			for ( Global.Statistic stat : Global.Statistic.values() )
 			{
-				constantEvent.putStatistic( stat, ""+constantEvent.getStatistic( variables, stat ) );
+				if ( constantEvent.equations.containsKey( stat ) )
+				{
+					constantEvent.putStatistic( stat, ""+constantEvent.getStatistic( variables, stat ) );
+				}
 			}
 		}
 

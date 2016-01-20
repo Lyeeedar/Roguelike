@@ -30,6 +30,7 @@ import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.ShadowCastCache;
 import Roguelike.Save.SaveLevel.SaveLevelItem;
 import Roguelike.Save.SaveLevel.SaveOrb;
+import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationMode;
 import Roguelike.Sprite.Sprite.AnimationState;
@@ -51,6 +52,7 @@ import kryo.FastEnumMapSerializer;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -231,8 +233,9 @@ public final class SaveFile
 				AnimationMode mode = AnimationMode.values()[ modeVal ];
 				float[] scale = input.readFloats( 2 );
 				boolean drawActualSize = input.readBoolean();
+				SoundInstance sound = kryo.readObjectOrNull( input, SoundInstance.class );
 
-				Sprite sprite = AssetManager.loadSprite( fileName, animDelay, color, mode, null, drawActualSize );
+				Sprite sprite = AssetManager.loadSprite( fileName, animDelay, color, mode, sound, drawActualSize );
 				sprite.baseScale = scale;
 				return sprite;
 			}
@@ -246,6 +249,41 @@ public final class SaveFile
 				output.writeInt( sprite.animationState.mode.ordinal() );
 				output.writeFloats( sprite.baseScale );
 				output.writeBoolean( sprite.drawActualSize );
+				kryo.writeObjectOrNull( output, sprite.sound, SoundInstance.class );
+			}
+		} );
+
+		kryo.register( SoundInstance.class, new Serializer<SoundInstance>()
+		{
+			@Override
+			public SoundInstance read( Kryo kryo, Input input, Class<SoundInstance> type )
+			{
+				SoundInstance sound = new SoundInstance(  );
+
+				sound.name = input.readString();
+				sound.sound = AssetManager.loadSound( sound.name );
+
+				sound.minPitch = input.readFloat();
+				sound.maxPitch = input.readFloat();
+				sound.volume = input.readFloat();
+
+				sound.range = input.readInt();
+				sound.falloffMin = input.readInt();
+
+				return sound;
+			}
+
+			@Override
+			public void write( Kryo kryo, Output output, SoundInstance sound )
+			{
+				output.writeString( sound.name );
+
+				output.writeFloat( sound.minPitch );
+				output.writeFloat( sound.maxPitch );
+				output.writeFloat( sound.volume );
+
+				output.writeInt( sound.range );
+				output.writeInt( sound.falloffMin );
 			}
 		} );
 

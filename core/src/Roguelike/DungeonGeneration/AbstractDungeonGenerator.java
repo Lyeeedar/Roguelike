@@ -157,7 +157,7 @@ public abstract class AbstractDungeonGenerator
 				break;
 			}
 		}
-		if ( minx == -1 ) { return grid; }
+		if ( minx == -1 || maxx >= grid.length ) { return grid; }
 
 		// find min y
 		complete = false;
@@ -179,7 +179,7 @@ public abstract class AbstractDungeonGenerator
 				break;
 			}
 		}
-		if ( miny == -1 ) { return grid; }
+		if ( miny == -1 || miny >= grid[0].length ) { return grid; }
 
 		// find max x
 		complete = false;
@@ -201,7 +201,7 @@ public abstract class AbstractDungeonGenerator
 				break;
 			}
 		}
-		if ( maxx == -1 ) { return grid; }
+		if ( maxx == -1 || maxx >= grid.length ) { return grid; }
 
 		// find max y
 		complete = false;
@@ -223,7 +223,7 @@ public abstract class AbstractDungeonGenerator
 				break;
 			}
 		}
-		if ( maxy == -1 ) { return grid; }
+		if ( maxy == -1 || miny >= grid[0].length ) { return grid; }
 
 		// minimise room
 		int newwidth = Math.min( width, maxx - minx );
