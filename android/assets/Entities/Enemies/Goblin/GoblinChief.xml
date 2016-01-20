@@ -7,6 +7,25 @@
 	</Sprite>
 
 	<IsBoss>true</IsBoss>
+	
+	<Abilities>
+		<Active>
+			<Cooldown>15</Cooldown>
+			<HitType><Ally/></HitType>
+			<Range>1</Range>
+			<AOE>5</AOE>
+			<HitSprite>
+				<Name>EffectSprites/Shout/Shout</Name>
+				<UpdateRate>0.1</UpdateRate>
+				<Colour><RGB>255,0,0</RGB></Colour>
+				<Sound><Name>goblin1</Name><Text>Kassam!</Text></Sound>
+			</HitSprite>
+			<Effect>
+				<Heal>20</Heal>
+				<Status>Bloodthirst</Status>
+			</Effect>
+		</Active>
+	</Abilities>
 
 	<Statistics>
 
