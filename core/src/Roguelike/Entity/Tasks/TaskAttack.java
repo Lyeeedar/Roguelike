@@ -368,23 +368,23 @@ public class TaskAttack extends AbstractTask
 		{
 			int num = weapon.wepDef.hitData != null ? Integer.parseInt( weapon.wepDef.hitData ) : 1;
 
-			Array<GameTile> validTiles = new Array<GameTile>(  );
+			Array<GameTile> validEntityTiles = new Array<GameTile>(  );
+			Array<GameTile> validEnvironmentTiles = new Array<GameTile>(  );
 
 			// Get tiles valid to hit
 			for ( GameTile tile : hitTiles )
 			{
 				if ( tile.entity != null && !tile.entity.isAllies( entity ) )
 				{
-					validTiles.add( tile );
+					validEntityTiles.add( tile );
 				}
 				else if ( tile.environmentEntity != null && tile.environmentEntity.canTakeDamage )
 				{
-					validTiles.add( tile );
+					validEnvironmentTiles.add( tile );
 				}
 			}
-
-			// sort by distance
-			validTiles.sort( new Comparator<GameTile>()
+			
+			Comparator<GameTile> comp = new Comparator<GameTile>()
 			{
 				@Override
 				public int compare( GameTile o1, GameTile o2 )
@@ -394,35 +394,55 @@ public class TaskAttack extends AbstractTask
 
 					return dist1 - dist2;
 				}
-			} );
+			};
 
-			for (int i = 0; i < num; i++)
+			// sort by distance
+			validEntityTiles.sort( comp );
+			validEnvironmentTiles.sort( comp );
+
+			for ( int i = 0; i < num; i++ )
 			{
-				attackedTiles.add( validTiles.get( i ) );
+				attackedTiles.add( validEntityTiles.get( i ) );
+			}
+			
+			for ( int i = 0; i < num - validEntityTiles.size; i++ )
+			{
+				attackedTiles.add( validEnvironmentTiles.get( i ) );
 			}
 		}
 		else if (weapon.wepDef.hitType == Item.WeaponDefinition.HitType.RANDOM)
 		{
 			int num = weapon.wepDef.hitData != null ? Integer.parseInt( weapon.wepDef.hitData ) : 1;
 
-			Array<GameTile> validTiles = new Array<GameTile>(  );
+			Array<GameTile> validEntityTiles = new Array<GameTile>(  );
+			Array<GameTile> validEnvironmentTiles = new Array<GameTile>(  );
 
 			// Get tiles valid to hit
 			for ( GameTile tile : hitTiles )
 			{
 				if ( tile.entity != null && !tile.entity.isAllies( entity ) )
 				{
-					validTiles.add( tile );
+					validEntityTiles.add( tile );
 				}
 				else if ( tile.environmentEntity != null && tile.environmentEntity.canTakeDamage )
 				{
-					validTiles.add( tile );
+					validEnvironmentTiles.add( tile );
 				}
 			}
 
-			for (int i = 0; i < num; i++)
+			if (validEntityTiles.size > 0)
 			{
-				attackedTiles.add( validTiles.random() );
+				for (int i = 0; i < num; i++)
+				{
+					attackedTiles.add( validEntityTiles.random() );
+				}
+			}
+			else
+			{
+				for (int i = 0; i < num; i++)
+				{
+					attackedTiles.add( validEnvironmentTiles.random() );
+				}
 			}
 		}
 
