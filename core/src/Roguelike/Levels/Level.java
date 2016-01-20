@@ -477,6 +477,7 @@ public class Level
 	// ####################################################################//
 	// region Update
 
+	// ----------------------------------------------------------------------
 	public void updateVisibleTiles()
 	{
 		if ( !isVisionRestricted )
@@ -738,11 +739,29 @@ public class Level
 		if ( tile.environmentEntity != null && tile.environmentEntity.tile[0][0] == tile && tile.environmentEntity.sprite != null )
 		{
 			tile.environmentEntity.sprite.update( delta );
+
+			if (tile.environmentEntity.replacementSprite != null)
+			{
+				tile.environmentEntity.replacementSprite.update( delta );
+			}
+			for (Sprite s : tile.environmentEntity.additionalSprites)
+			{
+				s.update( delta );
+			}
 		}
 
 		if ( tile.entity != null && tile.entity.tile[0][0] == tile && tile.entity.sprite != null )
 		{
 			tile.entity.sprite.update( delta );
+
+			if (tile.entity.replacementSprite != null)
+			{
+				tile.entity.replacementSprite.update( delta );
+			}
+			for (Sprite s : tile.entity.additionalSprites)
+			{
+				s.update( delta );
+			}
 		}
 
 		if ( tile.items.size > 0 )

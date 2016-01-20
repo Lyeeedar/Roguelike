@@ -134,8 +134,11 @@ public class AtlasCreator
 
 		spriteElements.addAll( xml.getChildrenByNameRecursively( "Sprite" ) );
 		spriteElements.addAll( xml.getChildrenByNameRecursively( "Icon" ) );
+		spriteElements.addAll( xml.getChildrenByNameRecursively( "UseSprite" ) );
 		spriteElements.addAll( xml.getChildrenByNameRecursively( "HitSprite" ) );
 		spriteElements.addAll( xml.getChildrenByNameRecursively( "MovementSprite" ) );
+		spriteElements.addAll( xml.getChildrenByNameRecursively( "ReplacementSprite" ) );
+		spriteElements.addAll( xml.getChildrenByNameRecursively( "AdditionalSprite" ) );
 
 		for ( XmlReader.Element el : spriteElements )
 		{

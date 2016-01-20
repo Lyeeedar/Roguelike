@@ -5,6 +5,7 @@
         <DrawActualSize>true</DrawActualSize>
         <Sound><Name>slime2</Name></Sound>
     </Sprite>
+    <Immune>PoisonLiquid</Immune>
     <Light>
         <Colour><RGB>255,0,255</RGB><Alpha>0.5</Alpha></Colour>
         <Intensity>3</Intensity>

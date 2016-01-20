@@ -290,7 +290,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		renderVisibleTiles( offsetx, offsety, tileSize3 );
 		if ( Global.CurrentDialogue == null )
 		{
-			renderCursor( offsetx, offsety, mousex, mousey, delta );
+		//	renderCursor( offsetx, offsety, mousex, mousey, delta );
 		}
 		renderActiveAbilities( offsetx, offsety );
 		renderSpriteEffects( offsetx, offsety, tileSize3 );
@@ -602,7 +602,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 						Sprite sprite = entity.sprite;
 
-						if ( entity.tilingSprite != null )
+						if ( entity.replacementSprite != null )
+						{
+							sprite = entity.replacementSprite;
+						}
+						else if ( entity.tilingSprite != null )
 						{
 							Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, entity.tilingSprite.id);
 							sprite = entity.tilingSprite.getSprite( directionBitflag );
@@ -628,10 +632,20 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						if ( entity.overHead )
 						{
 							queueSprite( sprite, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OVERHEAD, 2 );
+
+							for (Sprite s : entity.additionalSprites)
+							{
+								queueSprite( s, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OVERHEAD, 3 );
+							}
 						}
 						else
 						{
 							queueSprite( sprite, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OBJECT, 2 );
+
+							for (Sprite s : entity.additionalSprites)
+							{
+								queueSprite( s, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OBJECT, 3 );
+							}
 						}
 
 						if ( entity.tile[ 0 ][ 0 ].visible && entity.popup != null )
@@ -654,7 +668,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 							Sprite sprite = entity.sprite;
 
-							if ( entity.tilingSprite != null )
+							if ( entity.replacementSprite != null )
+							{
+								sprite = entity.replacementSprite;
+							}
+							else if ( entity.tilingSprite != null )
 							{
 								Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().id);
 								sprite = gtile.getTilingSprite().getSprite( directionBitflag );
@@ -669,13 +687,17 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 								height = tileSize3;
 							}
 
-							//if ( entity.canTakeDamage && ( entity.HP < entity.getVariable( Statistic.CONSTITUTION ) * 10 || entity.stacks.size > 0 ) )
 							if ( gtile.visible )
 							{
 								hasStatus.add( entity );
 							}
 
-							queueSprite( sprite, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OBJECT, 3 );
+							queueSprite( sprite, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OBJECT, 4 );
+
+							for (Sprite s : entity.additionalSprites)
+							{
+								queueSprite( s, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OBJECT, 5 );
+							}
 
 							if ( entity.tile[ 0 ][ 0 ].visible && entity.popup != null )
 							{

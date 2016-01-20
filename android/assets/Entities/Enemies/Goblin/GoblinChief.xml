@@ -7,7 +7,7 @@
 	</Sprite>
 
 	<IsBoss>true</IsBoss>
-	
+
 	<Abilities>
 		<Active>
 			<Cooldown>15</Cooldown>
@@ -32,7 +32,7 @@
 		<Attack>val+10</Attack>
 		<Defense>val+10</Defense>
 
-		<Constitution>val+5</Constitution>
+		<Constitution>val+10</Constitution>
 
 	</Statistics>
 

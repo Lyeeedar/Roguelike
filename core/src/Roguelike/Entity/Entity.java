@@ -374,6 +374,21 @@ public abstract class Entity
 		}
 
 		processPendingStatuses();
+
+		replacementSprite = null;
+		additionalSprites.clear();
+
+		for (StatusEffect se : statusEffects)
+		{
+			if (se.replacementSprite != null)
+			{
+				replacementSprite = se.replacementSprite;
+			}
+			if (se.additionalSprite != null)
+			{
+				additionalSprites.add( se.additionalSprite );
+			}
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -445,6 +460,10 @@ public abstract class Entity
 	{
 		visibilityCache.getShadowCast( tile[0][0].level.Grid, tile[0][0].x, tile[0][0].y, getStatistic( Statistic.PERCEPTION ), this );
 	}
+
+	// ----------------------------------------------------------------------
+	public Sprite replacementSprite;
+	public Array<Sprite> additionalSprites = new Array<Sprite>(  );
 
 	// ----------------------------------------------------------------------
 	public boolean weaponSheathed = false;

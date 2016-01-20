@@ -2,6 +2,7 @@ package Roguelike.GameEvent;
 
 import java.util.HashMap;
 
+import Roguelike.AssetManager;
 import Roguelike.GameEvent.OnExpire.AbstractOnExpireEvent;
 import Roguelike.Global;
 import Roguelike.Global.Statistic;
@@ -17,6 +18,7 @@ import Roguelike.GameEvent.Damage.DamageObject;
 import Roguelike.GameEvent.OnDeath.AbstractOnDeathEvent;
 import Roguelike.GameEvent.OnTask.AbstractOnTaskEvent;
 import Roguelike.GameEvent.OnTurn.AbstractOnTurnEvent;
+import Roguelike.Sprite.Sprite;
 import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.utils.Array;
@@ -35,6 +37,9 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnTaskEvent> onUseAbilityEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnDeathEvent> onDeathEvents = new Array<AbstractOnDeathEvent>();
 	public Array<AbstractOnExpireEvent> onExpireEvents = new Array<AbstractOnExpireEvent>();
+
+	public Sprite replacementSprite;
+	public Sprite additionalSprite;
 
 	public Array<Object[]> extraData = new Array<Object[]>();
 
@@ -449,6 +454,18 @@ public abstract class GameEventHandler implements IGameObject
 				Element onExpireElement = onExpireElements.getChild( i );
 				onExpireEvents.add( AbstractOnExpireEvent.load( onExpireElement ) );
 			}
+		}
+
+		Element replacementSpriteElement = xml.getChildByName( "ReplacementSprite" );
+		if (replacementSpriteElement != null)
+		{
+			replacementSprite = AssetManager.loadSprite( replacementSpriteElement );
+		}
+
+		Element additionalSpriteElement = xml.getChildByName( "AdditionalSprite" );
+		if (additionalSpriteElement != null)
+		{
+			additionalSprite = AssetManager.loadSprite( additionalSpriteElement );
 		}
 	}
 

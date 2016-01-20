@@ -44,10 +44,23 @@
             <Effect>
 
                 <Damage>
-                    <Attack>50</Attack>
+                    <Attack>15</Attack>
                 </Damage>
 
                 <Field Condition="chance(2,3)">Web</Field>
+
+                <Status>
+                    <Name>Cocooned</Name>
+                    <Description>You are trapped!</Description>
+                    <PersistUntilProcessed>true</PersistUntilProcessed>
+                    <Icon><Name>Oryx/Custom/terrain/cocoon</Name></Icon>
+                    <Events>
+                        <OnMove><Cancel/></OnMove>
+                        <AdditionalSprite>
+                            <Name>Oryx/Custom/terrain/cocoon</Name>
+                        </AdditionalSprite>
+                    </Events>
+                </Status>
 
             </Effect>
 

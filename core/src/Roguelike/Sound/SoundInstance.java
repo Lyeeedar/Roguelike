@@ -14,6 +14,7 @@ import Roguelike.Util.EnumBitflag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.XmlReader;
@@ -131,14 +132,7 @@ public class SoundInstance
 		}
 		else
 		{
-			AStarPathfind astar = new AStarPathfind( tile.level.getGrid(), tile.x, tile.y, tile.level.player.tile[0][0].x, tile.level.player.tile[0][0].y, Global.CanMoveDiagonal, false, 1, SoundPassability, null );
-			Array<Point> path = astar.getPath();
-
-			if ( path != null )
-			{
-				playerDist = path.size;
-				Global.PointPool.freeAll( path );
-			}
+			playerDist = Vector2.dst( tile.x, tile.y, tile.level.player.tile[0][0].x, tile.level.player.tile[0][0].y );
 		}
 
 		// calculate sound play volume
