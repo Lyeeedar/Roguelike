@@ -3,7 +3,8 @@
 	<Name>Icicle</Name>
 	<Description>A shard of ice spears your target.</Description>
 
-	<Cooldown>10</Cooldown>
+	<Cooldown>5</Cooldown>
+    <CooldownType>Wait</CooldownType>
 	<Range>4</Range>
 
 	<Icon>

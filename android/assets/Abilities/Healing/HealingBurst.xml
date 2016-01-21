@@ -3,7 +3,8 @@
 	<Name>Healing Burst</Name>
 	<Description>A blast of healing energy surges from within you.</Description>
 
-	<Cooldown>50</Cooldown>
+	<Cooldown>20</Cooldown>
+    <CooldownType>Hurt</CooldownType>
 	<Range>1</Range>
 
 	<Icon>

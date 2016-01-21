@@ -3,7 +3,8 @@
     <Name>Reave</Name>
     <Description>Pour your bloodthirst into a strike that rips apart your target.</Description>
 
-    <Cooldown>15</Cooldown>
+    <Cooldown>10</Cooldown>
+    <CooldownType>Attack</CooldownType>
     <Range>1</Range>
 
     <Icon>

@@ -3,7 +3,8 @@
 	<Name>Magic Missile</Name>
 	<Description>A bolt of pure elemental energy shoots at a nearby foe.</Description>
 
-	<Cooldown>20</Cooldown>
+	<Cooldown>6</Cooldown>
+    <CooldownType>Wait</CooldownType>
 	<Range>4</Range>
     <Aoe>1</Aoe>
 

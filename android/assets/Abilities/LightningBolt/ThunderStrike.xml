@@ -3,7 +3,8 @@
 	<Name>Thunder Strike</Name>
 	<Description>A blast of electricity smites all those around the target area.</Description>
 
-	<Cooldown>15</Cooldown>
+	<Cooldown>5</Cooldown>
+    <CooldownType>Wait</CooldownType>
 	<AOE>1</AOE>
 	<Range>4</Range>
 	<ScreenShake>20</ScreenShake>

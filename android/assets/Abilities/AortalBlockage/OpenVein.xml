@@ -3,7 +3,8 @@
 	<Name>Open Vein</Name>
 	<Description>Split your targets skin, letting its lifeforce drain out.</Description>
 
-	<Cooldown>15</Cooldown>
+	<Cooldown>5</Cooldown>
+    <CooldownType>Wait</CooldownType>
 	<Range>4</Range>
 
 	<Icon>

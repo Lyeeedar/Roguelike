@@ -222,6 +222,36 @@ public class PassiveAbility extends GameEventHandler implements IAbility
 	{
 	}
 
+	@Override
+	public void onMove()
+	{
+
+	}
+
+	@Override
+	public void onAttack()
+	{
+
+	}
+
+	@Override
+	public void onWait()
+	{
+
+	}
+
+	@Override
+	public void onDamaged()
+	{
+
+	}
+
+	@Override
+	public void onHealed()
+	{
+
+	}
+
 	// ----------------------------------------------------------------------
 	@Override
 	public void setCooldown( int val )

@@ -3,7 +3,8 @@
 	<Name>Greater Fire Attunement</Name>
 	<Description>Enchant your weaponry with intense fire.</Description>
 
-	<Cooldown>22</Cooldown>
+	<Cooldown>10</Cooldown>
+    <CooldownType>Wait</CooldownType>
 	<Range>1</Range>
 
     <HitSprite>

@@ -3,7 +3,8 @@
 	<Name>Arctic Surge</Name>
 	<Description>Immense cold blasts the target, freezing everything in its tracks.</Description>
 
-	<Cooldown>20</Cooldown>
+	<Cooldown>6</Cooldown>
+    <CooldownType>Wait</CooldownType>
 	<Range>4</Range>
 
 	<AOE>1</AOE>

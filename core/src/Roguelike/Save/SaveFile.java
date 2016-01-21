@@ -1,6 +1,7 @@
 package Roguelike.Save;
 
 import Roguelike.Ability.AbilityTree;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.AssetManager;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.Room;
@@ -379,6 +380,7 @@ public final class SaveFile
 		kryo.register( Direction.class );
 		kryo.register( GameTile.OrbType.class );
 		kryo.register( Item.WeaponDefinition.HitType.class );
+		kryo.register( ActiveAbility.CooldownType.class );
 
 		kryo.register( ConstantEvent.class );
 		kryo.register( DamageEvent.class );

@@ -8,7 +8,9 @@ import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.AbstractTask;
+import Roguelike.Entity.Tasks.TaskAttack;
 import Roguelike.Entity.Tasks.TaskMove;
+import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Fields.Field;
 import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.GameEvent.GameEventHandler;
@@ -779,6 +781,9 @@ public class Level
 
 	private void processPlayer()
 	{
+		player.updatedAbilityDam = false;
+		player.updatedAbilityHeal = false;
+
 		AbstractTask task = player.tasks.removeIndex( 0 );
 		for ( GameEventHandler handler : player.getAllHandlers() )
 		{
@@ -788,6 +793,37 @@ public class Level
 		if ( !task.cancel )
 		{
 			task.processTask( player );
+		}
+
+		if (task instanceof TaskMove)
+		{
+			for (AbilityTree ab : player.slottedAbilities)
+			{
+				if (ab != null)
+				{
+					ab.current.current.onMove();
+				}
+			}
+		}
+		else if (task instanceof TaskAttack)
+		{
+			for (AbilityTree ab : player.slottedAbilities)
+			{
+				if (ab != null)
+				{
+					ab.current.current.onAttack();
+				}
+			}
+		}
+		else if (task instanceof TaskWait)
+		{
+			for (AbilityTree ab : player.slottedAbilities)
+			{
+				if (ab != null)
+				{
+					ab.current.current.onWait();
+				}
+			}
 		}
 
 		if ( !(task instanceof TaskMove ) )
@@ -1023,6 +1059,9 @@ public class Level
 			// If a task is queued, process it
 			if ( e.tasks.size > 0 )
 			{
+				e.updatedAbilityDam = false;
+				e.updatedAbilityHeal = false;
+
 				AbstractTask task = e.tasks.removeIndex( 0 );
 				for ( GameEventHandler handler : e.getAllHandlers() )
 				{
@@ -1032,6 +1071,37 @@ public class Level
 				if ( !task.cancel )
 				{
 					task.processTask( e );
+				}
+
+				if (task instanceof TaskMove)
+				{
+					for (AbilityTree ab : e.slottedAbilities)
+					{
+						if (ab != null)
+						{
+							ab.current.current.onMove();
+						}
+					}
+				}
+				else if (task instanceof TaskAttack)
+				{
+					for (AbilityTree ab : e.slottedAbilities)
+					{
+						if (ab != null)
+						{
+							ab.current.current.onAttack();
+						}
+					}
+				}
+				else if (task instanceof TaskWait)
+				{
+					for (AbilityTree ab : e.slottedAbilities)
+					{
+						if (ab != null)
+						{
+							ab.current.current.onWait();
+						}
+					}
 				}
 
 				if ( !(task instanceof TaskMove ) )

@@ -3,7 +3,8 @@
 	<Name>Jump Strike</Name>
 	<Description>Leap through the air to strike at your target.</Description>
 
-	<Cooldown>10</Cooldown>
+	<Cooldown>6</Cooldown>
+    <CooldownType>Move</CooldownType>
 	<Range>4</Range>
 
 	<Icon>

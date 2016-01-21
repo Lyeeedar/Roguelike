@@ -3,7 +3,8 @@
 	<Name>Fire Attunement</Name>
 	<Description>Enchant your weaponry with fire.</Description>
 
-	<Cooldown>20</Cooldown>
+	<Cooldown>10</Cooldown>
+    <CooldownType>Wait</CooldownType>
 	<Range>1</Range>
 
     <HitSprite>

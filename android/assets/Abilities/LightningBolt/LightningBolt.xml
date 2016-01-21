@@ -3,7 +3,8 @@
 	<Name>Lightning Bolt</Name>
 	<Description>A bolt of lightning pierces through your enemies in a line.</Description>
 
-	<Cooldown>10</Cooldown>
+	<Cooldown>5</Cooldown>
+    <CooldownType>Wait</CooldownType>
 	<Range>3</Range>
 
 	<Icon>

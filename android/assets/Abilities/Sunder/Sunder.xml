@@ -3,7 +3,8 @@
     <Name>Sunder</Name>
     <Description>Break through your opponents defenses with a powerful strike.</Description>
 
-    <Cooldown>15</Cooldown>
+    <Cooldown>10</Cooldown>
+    <CooldownType>Attack</CooldownType>
     <Range>1</Range>
 
     <Icon>

@@ -3,7 +3,8 @@
 	<Name>Jump Smash</Name>
 	<Description>Leap through the air to strike at your target.</Description>
 
-	<Cooldown>15</Cooldown>
+	<Cooldown>5</Cooldown>
+    <CooldownType>Move</CooldownType>
 	<Range>4</Range>
     <Cone>1</Cone>
 

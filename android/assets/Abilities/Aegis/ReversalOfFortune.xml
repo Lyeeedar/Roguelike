@@ -3,7 +3,8 @@
 	<Name>Reversal of Fortune</Name>
 	<Description>Next time you would take damage, heal by a portion of that amount instead.</Description>
 
-	<Cooldown>30</Cooldown>
+	<Cooldown>10</Cooldown>
+    <CooldownType>Hurt</CooldownType>
 	<Range>1</Range>
 
 	<Icon>

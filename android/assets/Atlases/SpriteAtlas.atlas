@@ -174,42 +174,42 @@ EffectSprites/FireBoltMove/FireBoltMove_3
   index: -1
 EffectSprites/FireBurst/FireBurst_0
   rotate: false
-  xy: 967, 923
+  xy: 357, 7
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/FireBurst/FireBurst_1
   rotate: false
-  xy: 967, 889
+  xy: 983, 957
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/FireBurst/FireBurst_2
   rotate: false
-  xy: 951, 841
+  xy: 967, 923
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/FireBurst/FireBurst_3
   rotate: false
-  xy: 951, 807
+  xy: 967, 889
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/FireBurst/FireBurst_4
   rotate: false
-  xy: 951, 773
+  xy: 951, 841
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/FireBurst/FireBurst_5
   rotate: false
-  xy: 951, 739
+  xy: 951, 807
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -587,42 +587,49 @@ GUI/ButtonDown
   index: -1
 GUI/Checked
   rotate: false
-  xy: 941, 327
+  xy: 941, 293
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-GUI/Eye
+GUI/Cog
   rotate: false
   xy: 873, 337
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-GUI/Icon32
+GUI/Eye
   rotate: false
-  xy: 873, 235
+  xy: 873, 303
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-GUI/Ingot
+GUI/Icon32
   rotate: false
   xy: 939, 489
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-GUI/Jewelry
+GUI/Ingot
   rotate: false
   xy: 923, 455
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+GUI/Jewelry
+  rotate: false
+  xy: 907, 405
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 GUI/Misc
   rotate: false
-  xy: 907, 371
+  xy: 907, 337
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -650,21 +657,21 @@ GUI/PanelVertical
   index: -1
 GUI/PassiveTileBorder
   rotate: false
-  xy: 907, 337
+  xy: 907, 303
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/ProgressIndicator
   rotate: false
-  xy: 941, 301
+  xy: 941, 267
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 GUI/QuestionMark
   rotate: false
-  xy: 907, 303
+  xy: 907, 269
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -685,7 +692,7 @@ GUI/SeperatorVertical
   index: -1
 GUI/Sheathed
   rotate: false
-  xy: 907, 269
+  xy: 907, 235
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -706,77 +713,77 @@ GUI/SpeechBubbleArrow
   index: -1
 GUI/TextField
   rotate: false
-  xy: 907, 235
+  xy: 873, 201
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/TileBackground
   rotate: false
-  xy: 873, 201
+  xy: 907, 201
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/TileBorder
   rotate: false
-  xy: 907, 201
+  xy: 957, 455
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/TilePanel
   rotate: false
-  xy: 957, 455
+  xy: 941, 421
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Treasure
   rotate: false
-  xy: 941, 421
+  xy: 941, 387
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Unchecked
   rotate: false
-  xy: 941, 275
+  xy: 941, 241
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 GUI/Unsheathed
   rotate: false
-  xy: 941, 387
+  xy: 941, 353
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Weapon
   rotate: false
-  xy: 941, 353
+  xy: 941, 319
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/frame_0
   rotate: false
-  xy: 873, 303
+  xy: 873, 269
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/frame_1
   rotate: false
-  xy: 873, 269
+  xy: 873, 235
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/locked
   rotate: false
-  xy: 907, 405
+  xy: 907, 371
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -874,7 +881,7 @@ Icons/CriticalStrikes
   index: -1
 Icons/Fireball
   rotate: false
-  xy: 983, 957
+  xy: 951, 739
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -1070,7 +1077,7 @@ Icons/ThunderStrike
   index: -1
 Icons/UnreliableFlames
   rotate: false
-  xy: 357, 7
+  xy: 951, 773
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -3359,7 +3366,7 @@ blank
   index: -1
 white
   rotate: false
-  xy: 941, 257
+  xy: 941, 223
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

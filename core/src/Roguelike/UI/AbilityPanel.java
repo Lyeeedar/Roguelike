@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.utils.Align;
 
 public class AbilityPanel extends TilePanel
 {
@@ -37,7 +38,7 @@ public class AbilityPanel extends TilePanel
 		super( skin, stage, AssetManager.loadSprite( "GUI/TileBackground" ), AssetManager.loadSprite( "GUI/TileBorder" ), 1, Global.NUM_ABILITY_SLOTS, 48, false );
 
 		drawHorizontalBackground = false;
-		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
+		font = skin.getFont( "default" );
 		padding = 10;
 
 		this.white = AssetManager.loadTextureRegion( "Sprites/white.png" );
@@ -175,10 +176,10 @@ public class AbilityPanel extends TilePanel
 
 				if (cooldown > 0)
 				{
-					String text = "" + cooldown;
-					layout.setText( font, text );
+					String text = Global.capitalizeString( ""+aa.cooldownType ) + "\n" + cooldown;
+					layout.setText( font, text, Color.WHITE, 0, Align.center, false );
 
-					font.draw( batch, text, x + width / 2 - layout.width / 2, y + height / 2 + layout.height / 2 );
+					font.draw( batch, layout, x + width / 2, y + height / 2 + layout.height / 2 );
 				}
 			}
 		}

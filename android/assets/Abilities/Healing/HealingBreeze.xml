@@ -3,7 +3,8 @@
 	<Name>Healing Breeze</Name>
 	<Description>A faint wind washes your ills away.</Description>
 
-	<Cooldown>40</Cooldown>
+	<Cooldown>20</Cooldown>
+    <CooldownType>Hurt</CooldownType>
 	<Range>1</Range>
 
 	<Icon>

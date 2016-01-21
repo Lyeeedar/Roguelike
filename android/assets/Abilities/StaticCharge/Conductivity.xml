@@ -3,7 +3,8 @@
 	<Name>Conductivity</Name>
 	<Description>Charge your targets with electricity, increasing the damage they take.</Description>
 
-	<Cooldown>20</Cooldown>
+	<Cooldown>6</Cooldown>
+    <CooldownType>Wait</CooldownType>
 	<AOE>1</AOE>
 	<Range>4</Range>
 

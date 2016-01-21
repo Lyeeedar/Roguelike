@@ -3,7 +3,8 @@
     <Name>Firebolt</Name>
     <Description>A blast of flame.</Description>
 
-    <Cooldown>10</Cooldown>
+    <Cooldown>5</Cooldown>
+    <CooldownType>Wait</CooldownType>
     <Range>3</Range>
 
     <Icon>

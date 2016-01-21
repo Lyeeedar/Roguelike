@@ -4,6 +4,7 @@
 	<Description>A bolt of pure elemental energy shoots at a nearby foe. It spins and drills through their armour.</Description>
 
 	<Cooldown>6</Cooldown>
+    <CooldownType>Wait</CooldownType>
 	<Range>4</Range>
 
 	<Icon>

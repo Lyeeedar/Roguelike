@@ -3,7 +3,8 @@
 	<Name>Cardiac Arrest</Name>
 	<Description>Temporarily stop your targets heart, causing them to pause in their tracks and take damage.</Description>
 
-	<Cooldown>20</Cooldown>
+	<Cooldown>5</Cooldown>
+    <CooldownType>Wait</CooldownType>
 	<Range>4</Range>
 
 	<Icon>

@@ -2,7 +2,8 @@
 	<Name>Protective Spirit</Name>
 	<Description>Boost defense by 25%</Description>
 
-	<Cooldown>30</Cooldown>
+	<Cooldown>10</Cooldown>
+    <CooldownType>Hurt</CooldownType>
 	<Range>1</Range>
 
 	<Icon>

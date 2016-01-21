@@ -241,6 +241,37 @@ public class GameEntity extends Entity
 		super.applyDamage( dam, damager );
 
 		AI.setData( "EnemyPos", Global.PointPool.obtain().set( damager.tile[ 0 ][ 0 ].x, damager.tile[ 0 ][ 0 ].y ) );
+
+		if (!updatedAbilityDam)
+		{
+			for (AbilityTree ab : slottedAbilities)
+			{
+				if (ab != null)
+				{
+					ab.current.current.onDamaged();
+				}
+			}
+			updatedAbilityDam = true;
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public void applyHealing( int heal )
+	{
+		super.applyHealing( heal );
+
+		if (!updatedAbilityHeal)
+		{
+			for (AbilityTree ab : slottedAbilities)
+			{
+				if (ab != null)
+				{
+					ab.current.current.onHealed();
+				}
+			}
+			updatedAbilityHeal = true;
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -384,6 +415,10 @@ public class GameEntity extends Entity
 	// ----------------------------------------------------------------------
 	public HashSet<String> factions = new HashSet<String>();
 	public BehaviourTree AI;
+
+	// ----------------------------------------------------------------------
+	public boolean updatedAbilityDam = false;
+	public boolean updatedAbilityHeal = false;
 
 	// endregion Data
 	// ####################################################################//

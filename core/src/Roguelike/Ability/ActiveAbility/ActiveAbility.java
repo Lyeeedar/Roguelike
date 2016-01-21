@@ -49,8 +49,19 @@ import java.util.Iterator;
 
 public class ActiveAbility implements IAbility, IGameObject
 {
+	public enum CooldownType
+	{
+		TURN,
+		MOVE,
+		ATTACK,
+		WAIT,
+		HURT,
+		HEALED
+	}
+
 	public int cooldownAccumulator;
 	public int cooldown = 1;
+	public CooldownType cooldownType = CooldownType.TURN;
 	public Array<AbstractCostType> costTypes = new Array<AbstractCostType>();
 	public AbstractTargetingType targetingType = new TargetingTypeTile();
 	public AbstractHitType hitType = new HitTypeAny();
@@ -173,6 +184,8 @@ public class ActiveAbility implements IAbility, IGameObject
 		aa.range = range;
 		aa.cone = cone;
 		aa.screenshake = screenshake;
+
+		aa.cooldownType = cooldownType;
 
 		aa.targetingType = targetingType.copy();
 		aa.movementType = movementType.copy();
@@ -599,6 +612,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		cone = xmlElement.getInt( "Cone", cone );
 		range = xmlElement.getInt( "Range", range );
 		cooldown = xmlElement.getInt( "Cooldown", cooldown );
+		cooldownType = CooldownType.valueOf( xmlElement.get( "CooldownType", ""+cooldownType ).toUpperCase() );
 		screenshake = xmlElement.getFloat( "ScreenShake", screenshake );
 
 		Icon = xmlElement.getChildByName( "Icon" ) != null ? AssetManager.loadSprite( xmlElement.getChildByName( "Icon" ) ) : Icon;
@@ -686,10 +700,83 @@ public class ActiveAbility implements IAbility, IGameObject
 	@Override
 	public void onTurn()
 	{
-		cooldownAccumulator--;
-		if ( cooldownAccumulator < 0 )
+		if (cooldownType == CooldownType.TURN)
 		{
-			cooldownAccumulator = 0;
+			cooldownAccumulator--;
+			if ( cooldownAccumulator < 0 )
+			{
+				cooldownAccumulator = 0;
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public void onMove()
+	{
+		if (cooldownType == CooldownType.MOVE)
+		{
+			cooldownAccumulator--;
+			if ( cooldownAccumulator < 0 )
+			{
+				cooldownAccumulator = 0;
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public void onAttack()
+	{
+		if (cooldownType == CooldownType.ATTACK)
+		{
+			cooldownAccumulator--;
+			if ( cooldownAccumulator < 0 )
+			{
+				cooldownAccumulator = 0;
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public void onWait()
+	{
+		if (cooldownType == CooldownType.WAIT)
+		{
+			cooldownAccumulator--;
+			if ( cooldownAccumulator < 0 )
+			{
+				cooldownAccumulator = 0;
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public void onDamaged()
+	{
+		if (cooldownType == CooldownType.HURT )
+		{
+			cooldownAccumulator--;
+			if ( cooldownAccumulator < 0 )
+			{
+				cooldownAccumulator = 0;
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public void onHealed()
+	{
+		if (cooldownType == CooldownType.HEALED)
+		{
+			cooldownAccumulator--;
+			if ( cooldownAccumulator < 0 )
+			{
+				cooldownAccumulator = 0;
+			}
 		}
 	}
 
@@ -758,6 +845,9 @@ public class ActiveAbility implements IAbility, IGameObject
 		table.row();
 
 		table.add( new Label( "Cooldown: " + cooldown, skin ) ).expandX().left();
+		table.row();
+
+		table.add( new Label( "Cooldown Type: " + Global.capitalizeString( ""+cooldownType ), skin ) ).expandX().left();
 		table.row();
 
 		table.add( new Label( "Range: " + getRange(), skin ) ).expandX().left();

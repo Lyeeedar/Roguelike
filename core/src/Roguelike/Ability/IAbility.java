@@ -16,6 +16,11 @@ public interface IAbility
 	void setTree(AbilityTree.AbilityStage tree );
 
 	void onTurn();
+	void onMove();
+	void onAttack();
+	void onWait();
+	void onDamaged();
+	void onHealed();
 
 	int getCooldown();
 

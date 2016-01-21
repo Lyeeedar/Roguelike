@@ -3,7 +3,8 @@
 	<Name>Charge</Name>
 	<Description>Charge at your foe.</Description>
 
-	<Cooldown>20</Cooldown>
+	<Cooldown>7</Cooldown>
+    <CooldownType>Move</CooldownType>
 	<Range>4</Range>
 
 	<Icon>
