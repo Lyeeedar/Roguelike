@@ -86,10 +86,11 @@ public class EquipmentPanel extends TilePanel
 			int stones = Global.CurrentLevel.player.inventory.upgradeStones;
 
 			Table table = new Table();
+			table.defaults().pad( 5 );
 
-			table.add( new Label("You have " + stones + " upgrade stones.", skin) );
+			table.add( new Label("You have " + stones + " upgrade stones.", skin) ).colspan( 2 );
 			table.row();
-			table.add( new Seperator( skin ) ).expandX().fillX();
+			table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
 			table.row();
 
 			for ( Item.EquipmentSlot slot : Item.EquipmentSlot.values() )
@@ -98,12 +99,11 @@ public class EquipmentPanel extends TilePanel
 
 				if ( equip != null )
 				{
-					final int required = (int)Math.pow( 2, equip.upgradeCount );
-					String text = equip.getName()+": Requires " + required + " stones.";
+					final int required = 2 * equip.upgradeCount;
 
 					if (required <= stones)
 					{
-						TextButton button = new TextButton(text, skin);
+						TextButton button = new TextButton(equip.getName(), skin);
 						button.addListener( new InputListener()
 						{
 							@Override
@@ -126,13 +126,16 @@ public class EquipmentPanel extends TilePanel
 					}
 					else
 					{
-						table.add( new Label(text, skin) );
+						table.add( new Label(equip.getName(), skin) ).expandX().left();
 					}
+
+					table.add( new Label( "Requires " + required + " stones", skin ) ).expandX().left();
+
 					table.row();
 				}
 			}
 
-			table.add( new Seperator( skin ) ).expandX().fillX();
+			table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
 			table.row();
 
 			TextButton cancel = new TextButton( "Cancel", skin );
@@ -152,7 +155,7 @@ public class EquipmentPanel extends TilePanel
 				}
 			} );
 
-			table.add( cancel );
+			table.add( cancel ).colspan( 2 );
 			table.row();
 
 			GameScreen.Instance.displayContextMenu( table, true );
@@ -185,6 +188,26 @@ public class EquipmentPanel extends TilePanel
 	@Override
 	public Color getColourForData( Object data )
 	{
+		if (data instanceof Integer)
+		{
+			int stones = (Integer)data;
+
+			for ( Item.EquipmentSlot slot : Item.EquipmentSlot.values() )
+			{
+				final Item equip = Global.CurrentLevel.player.inventory.getEquip( slot );
+
+				if ( equip != null )
+				{
+					final int required = 2 * equip.upgradeCount;
+
+					if (required <= stones)
+					{
+						return null;
+					}
+				}
+			}
+		}
+
 		if ( !( data instanceof Item ) ) { return Color.DARK_GRAY; }
 
 		return null;

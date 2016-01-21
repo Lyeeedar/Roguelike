@@ -68,11 +68,22 @@ public final class Item extends GameEventHandler
 
 		if ( slots.contains( EquipmentSlot.WEAPON, true ) )
 		{
-
+			// only upgrade attack
+			int currentAtk = constantEvent.getStatistic( Statistic.emptyMap, Statistic.ATTACK );
+			int newAtk = currentAtk + (int)(currentAtk * 0.1f);
+			constantEvent.putStatistic( Statistic.ATTACK, ""+newAtk );
 		}
 		else
 		{
-
+			for (Statistic stat : Statistic.values())
+			{
+				if (constantEvent.equations.containsKey( stat ))
+				{
+					int currentVal = constantEvent.getStatistic( Statistic.emptyMap, stat );
+					int newVal = currentVal + (int)(currentVal * 0.1f);
+					constantEvent.putStatistic( stat, ""+newVal );
+				}
+			}
 		}
 	}
 

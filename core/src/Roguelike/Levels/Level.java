@@ -364,7 +364,14 @@ public class Level
 				Point target = possibleTiles.size > 0 ? possibleTiles.random() : Global.PointPool.obtain().set( source );
 				GameTile tile = getGameTile( target );
 
-				tile.items.add( i );
+				if (tile.entity == player)
+				{
+					GameScreen.Instance.pickupQueue.add( i );
+				}
+				else
+				{
+					tile.items.add( i );
+				}
 
 				int[] diff = tile.getPosDiff( source );
 
@@ -377,6 +384,8 @@ public class Level
 		}
 
 		Global.PointPool.freeAll( possibleTiles );
+
+		pickupOrbs();
 	}
 
 	private float dropOrbs( int val, float delay, GameTile.OrbType type, GameTile source, Array<Point> possibleTiles)
@@ -871,37 +880,7 @@ public class Level
 			}
 		}
 
-		if ( player.tile[ 0 ][ 0 ].orbs.size > 0 )
-		{
-			for ( GameTile.OrbType type : GameTile.OrbType.values() )
-			{
-				if ( player.tile[ 0 ][ 0 ].orbs.containsKey( type ) )
-				{
-					int val = player.tile[ 0 ][ 0 ].orbs.get( type );
-
-					if ( type == GameTile.OrbType.EXPERIENCE )
-					{
-						player.pendingMessages.add( new Message( "+" + val + " xp", Color.YELLOW ) );
-						for (AbilityTree tree : player.slottedAbilities)
-						{
-							if (tree != null)
-							{
-								tree.current.gainExp( val );
-							}
-						}
-						pickupXPSound.play( player.tile[ 0 ][ 0 ] );
-					}
-					else if ( type == GameTile.OrbType.HEALTH )
-					{
-						player.applyHealing( val );
-
-						pickupHPSound.play( player.tile[ 0 ][ 0 ] );
-					}
-
-					player.tile[ 0 ][ 0 ].orbs.remove( type );
-				}
-			}
-		}
+		pickupOrbs();
 
 		if ( task instanceof TaskMove && player.tile[0][0].items.size > 0 )
 		{
@@ -929,6 +908,53 @@ public class Level
 		{
 			player.AI.setData( "Pos", null );
 			player.AI.setData( "Rest", null );
+		}
+	}
+
+	public void pickupOrbs()
+	{
+		if ( player.tile[ 0 ][ 0 ].orbs.size > 0 )
+		{
+			for ( GameTile.OrbType type : GameTile.OrbType.values() )
+			{
+				if ( player.tile[ 0 ][ 0 ].orbs.containsKey( type ) )
+				{
+					int val = player.tile[ 0 ][ 0 ].orbs.get( type );
+
+					if ( type == GameTile.OrbType.EXPERIENCE )
+					{
+						player.pendingMessages.add( new Message( "+" + val + " xp", Color.YELLOW ) );
+						for (AbilityTree tree : player.slottedAbilities)
+						{
+							if (tree != null)
+							{
+								tree.current.gainExp( val );
+							}
+						}
+						pickupXPSound.play( player.tile[ 0 ][ 0 ] );
+
+						player.tile[ 0 ][ 0 ].orbs.remove( type );
+					}
+					else if ( type == GameTile.OrbType.HEALTH )
+					{
+						int healthMissing = player.getStatistic( Statistic.CONSTITUTION ) * 10 - player.HP;
+
+						int restored = Math.min( healthMissing, val );
+
+						if (restored > 0)
+						{
+							player.applyHealing( restored );
+							pickupHPSound.play( player.tile[ 0 ][ 0 ] );
+							player.tile[ 0 ][ 0 ].orbs.remove( type );
+
+							if (val - restored > 0)
+							{
+								player.tile[ 0 ][ 0 ].orbs.put( GameTile.OrbType.HEALTH, val - restored );
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 

@@ -1620,8 +1620,12 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 			System.out.println(influence);
 
-			pair.room.addFeatures( ran, dfp, majorFaction, influence, spawnMiniboss );
-			spawnMiniboss = false;
+			boolean spawnedMiniboss = pair.room.addFeatures( ran, dfp, majorFaction, influence, spawnMiniboss );
+
+			if (spawnedMiniboss)
+			{
+				spawnMiniboss = false;
+			}
 		}
 	}
 

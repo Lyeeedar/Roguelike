@@ -1143,6 +1143,17 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					{
 						lockContextMenu = false;
 						clearContextMenu();
+
+						for ( Item.EquipmentSlot slot : item.slots)
+						{
+							Item currentItem = Global.CurrentLevel.player.inventory.getEquip( slot );
+
+							if (currentItem != null)
+							{
+								Global.CurrentLevel.player.tile[0][0].items.add( currentItem );
+							}
+						}
+
 						Global.CurrentLevel.player.getInventory().equip( item );
 					}
 				} );
@@ -1182,8 +1193,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						lockContextMenu = false;
 						clearContextMenu();
 
-						Global.CurrentLevel.player.inventory.upgradeStones++;
-						Global.CurrentLevel.player.pendingMessages.add(new Message( "Gained 1 Upgrade Stone", Color.GOLD ));
+						Global.CurrentLevel.player.inventory.upgradeStones += item.quality;
+						Global.CurrentLevel.player.pendingMessages.add(new Message( "Gained " + item.quality + " Upgrade Stones", Color.GOLD ));
 					}
 				} );
 

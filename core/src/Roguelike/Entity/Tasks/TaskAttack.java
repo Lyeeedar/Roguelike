@@ -383,7 +383,7 @@ public class TaskAttack extends AbstractTask
 					validEnvironmentTiles.add( tile );
 				}
 			}
-			
+
 			Comparator<GameTile> comp = new Comparator<GameTile>()
 			{
 				@Override
@@ -400,12 +400,12 @@ public class TaskAttack extends AbstractTask
 			validEntityTiles.sort( comp );
 			validEnvironmentTiles.sort( comp );
 
-			for ( int i = 0; i < num; i++ )
+			for ( int i = 0; i < num && i < validEntityTiles.size; i++ )
 			{
 				attackedTiles.add( validEntityTiles.get( i ) );
 			}
-			
-			for ( int i = 0; i < num - validEntityTiles.size; i++ )
+
+			for ( int i = 0; i < num - validEntityTiles.size && i < validEnvironmentTiles.size; i++ )
 			{
 				attackedTiles.add( validEnvironmentTiles.get( i ) );
 			}
@@ -437,7 +437,7 @@ public class TaskAttack extends AbstractTask
 					attackedTiles.add( validEntityTiles.random() );
 				}
 			}
-			else
+			else if (validEnvironmentTiles.size > 0)
 			{
 				for (int i = 0; i < num; i++)
 				{
