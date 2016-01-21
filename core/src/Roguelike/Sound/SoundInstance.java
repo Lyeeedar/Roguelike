@@ -135,21 +135,24 @@ public class SoundInstance
 			playerDist = Vector2.dst( tile.x, tile.y, tile.level.player.tile[0][0].x, tile.level.player.tile[0][0].y );
 		}
 
-		// calculate sound play volume
-		if ( playerDist <= range && sound != null )
+		if (Global.EffectVolume > 0)
 		{
-			float vol = volume * Global.EffectVolume;
-
-			if ( playerDist > falloffMin )
+			// calculate sound play volume
+			if ( playerDist <= range && sound != null )
 			{
-				float alpha = 1 - ( playerDist - falloffMin ) / ( range - falloffMin );
-				vol *= alpha;
+				float vol = volume * Global.EffectVolume;
+
+				if ( playerDist > falloffMin )
+				{
+					float alpha = 1 - ( playerDist - falloffMin ) / ( range - falloffMin );
+					vol *= alpha;
+				}
+
+				float xdiff = tile.x - tile.level.player.tile[0][0].x;
+				xdiff /= range;
+
+				sound.play( vol, minPitch + MathUtils.random() * ( maxPitch - minPitch ), xdiff );
 			}
-
-			float xdiff = tile.x - tile.level.player.tile[0][0].x;
-			xdiff /= range;
-
-			sound.play( vol, minPitch + MathUtils.random() * ( maxPitch - minPitch ), xdiff );
 		}
 	}
 

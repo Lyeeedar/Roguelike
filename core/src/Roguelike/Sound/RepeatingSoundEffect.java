@@ -46,8 +46,11 @@ public class RepeatingSoundEffect
 
 			if (timeAccumulator >= nextRepeat)
 			{
-				soundID = sound.play( volume * Global.AmbientVolume, minPitch + MathUtils.random() * ( maxPitch - minPitch), 0);
-				isPlaying = true;
+				if (Global.AmbientVolume > 0)
+				{
+					soundID = sound.play( volume * Global.AmbientVolume, minPitch + MathUtils.random() * ( maxPitch - minPitch ), 0 );
+					isPlaying = true;
+				}
 
 				nextRepeat = repeatMin + MathUtils.random() * (repeatMax - repeatMin);
 				timeAccumulator = 0;

@@ -74,7 +74,7 @@ public class TreasureGenerator
 			0, // currency
 			3, // armour
 			3, // weapons
-			1 // abilities
+			2 // abilities
 		};
 
 		int count = 0;

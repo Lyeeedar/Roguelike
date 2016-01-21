@@ -725,6 +725,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 									}
 								}
 							}
+
+							queueSprite( border, Color.GOLD, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.ITEM, 1 );
 						}
 
 						if ( gtile.orbs.size > 0 && gtile.spriteEffects.size == 0 )
