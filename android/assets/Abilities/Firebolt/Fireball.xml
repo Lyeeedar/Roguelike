@@ -3,7 +3,7 @@
 	<Name>Fireball</Name>
 	<Description>A orb of fiery explosiveness.</Description>
 
-	<Cooldown>6</Cooldown>
+	<Cooldown>4</Cooldown>
     <CooldownType>Wait</CooldownType>
 	<AOE>1</AOE>
 	<Range>6</Range>

@@ -3,7 +3,7 @@
 	<Name>Flame Surge</Name>
 	<Description>A surge of fire washes over your foes.</Description>
 
-	<Cooldown>5</Cooldown>
+	<Cooldown>3</Cooldown>
     <CooldownType>Wait</CooldownType>
 	<Cone>2</Cone>
 	<Range>1</Range>

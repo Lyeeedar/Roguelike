@@ -3,7 +3,7 @@
 	<Name>Magic Arrow</Name>
 	<Description>A bolt of pure elemental energy shoots at a nearby foe.</Description>
 
-	<Cooldown>6</Cooldown>
+	<Cooldown>2</Cooldown>
     <CooldownType>Wait</CooldownType>
 	<Range>4</Range>
 

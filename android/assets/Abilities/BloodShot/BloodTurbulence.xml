@@ -3,7 +3,7 @@
 	<Name>Blood Turbulence</Name>
 	<Description>Excite the blood of the creatures in the target area, dealing damage.</Description>
 
-	<Cooldown>5</Cooldown>
+	<Cooldown>3</Cooldown>
     <CooldownType>Wait</CooldownType>
 	<Range>4</Range>
 	<AOE>1</AOE>

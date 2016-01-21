@@ -3,7 +3,7 @@
     <Name>Cleave</Name>
     <Description>Strike a cone before you.</Description>
 
-    <Cooldown>10</Cooldown>
+    <Cooldown>5</Cooldown>
     <CooldownType>Attack</CooldownType>
     <Range>1</Range>
     <Cone>1</Cone>

@@ -3,7 +3,7 @@
     <Name>Rend</Name>
     <Description>Smash your opponent and gain bloodthirst, making your attacks more vicious.</Description>
 
-    <Cooldown>10</Cooldown>
+    <Cooldown>5</Cooldown>
     <CooldownType>Attack</CooldownType>
     <Range>1</Range>
 

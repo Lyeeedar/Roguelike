@@ -3,7 +3,7 @@
 	<Name>Cone of Cold</Name>
 	<Description>A cone of freezing magic blasts from your hands.</Description>
 
-	<Cooldown>5</Cooldown>
+	<Cooldown>3</Cooldown>
     <CooldownType>Wait</CooldownType>
 	<Cone>1</Cone>
 	<Range>1</Range>

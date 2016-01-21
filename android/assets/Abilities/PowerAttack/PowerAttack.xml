@@ -3,7 +3,7 @@
     <Name>Power Attack</Name>
     <Description>Strike your opponent with a powerful blow.</Description>
 
-    <Cooldown>10</Cooldown>
+    <Cooldown>5</Cooldown>
     <CooldownType>Attack</CooldownType>
     <Range>1</Range>
 

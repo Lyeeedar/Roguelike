@@ -3,7 +3,7 @@
     <Name>Sunder Armour</Name>
     <Description>Break through your opponents defenses with a powerful strike, leaving them vulnerable.</Description>
 
-    <Cooldown>10</Cooldown>
+    <Cooldown>5</Cooldown>
     <CooldownType>Attack</CooldownType>
     <Range>1</Range>
 

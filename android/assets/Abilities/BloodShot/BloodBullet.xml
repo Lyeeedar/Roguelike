@@ -3,7 +3,7 @@
 	<Name>Blood Bullet</Name>
 	<Description>Sacrifice some health to fire a bullet of blood at your target.</Description>
 
-	<Cooldown>5</Cooldown>
+	<Cooldown>3</Cooldown>
     <CooldownType>Wait</CooldownType>
 	<Range>4</Range>
 
