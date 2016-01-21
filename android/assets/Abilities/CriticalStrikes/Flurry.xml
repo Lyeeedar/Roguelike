@@ -1,10 +1,10 @@
 <Active>
 
 	<Name>Flurry</Name>
-	<Description>Attack with a furious flurry of strikes, making your attacks faster but lowering your guard.</Description>
+	<Description>Attack with a furious flurry of weaker strikes.</Description>
 
 	<Cooldown>10</Cooldown>
-    <CooldownType>Attack</CooldownType>
+    <CooldownType>Wait</CooldownType>
 	<Range>1</Range>
 
 	<Icon>
@@ -29,17 +29,15 @@
 
 	<Effect>
 		<Status>
-			<Attacker>
-			    <Duration>10</Duration>
-			    <Events>
-			        <OnReceiveDamage>
-			            <Damage>Damage*0.2</Damage>
-			        </OnReceiveDamage>
-			        <OnAttack>
-			            <Cost>cost*(1 - 0.2 * (level / 3))</Cost>
-			        </OnAttack>
-			    </Events>
-			</Attacker>
+            <Duration>10</Duration>
+            <Events>
+                <OnDealDamage>
+                    <Damage>-Damage*0.5</Damage>
+                </OnDealDamage>
+                <OnAttack>
+                    <Cost>cost*(1 - 0.2 * (level / 3))</Cost>
+                </OnAttack>
+            </Events>
 		</Status>
 	</Effect>
 

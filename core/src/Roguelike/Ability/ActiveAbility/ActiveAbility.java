@@ -51,12 +51,19 @@ public class ActiveAbility implements IAbility, IGameObject
 {
 	public enum CooldownType
 	{
-		TURN,
-		MOVE,
-		ATTACK,
-		WAIT,
-		HURT,
-		HEALED
+		TURN("Turn"),
+		MOVE("Move"),
+		ATTACK("Atck"),
+		WAIT("Wait"),
+		HURT("Hurt"),
+		HEALED("Heal");
+
+		public final String text;
+
+		CooldownType( String text )
+		{
+			this.text = text;
+		}
 	}
 
 	public int cooldownAccumulator;

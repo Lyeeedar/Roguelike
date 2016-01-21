@@ -53,11 +53,27 @@ public final class Item extends GameEventHandler
 	public AbilityTree ability;
 	public WeaponDefinition wepDef;
 	public int quality = 1;
+	public int upgradeCount = 1;
 
 	// ----------------------------------------------------------------------
 	public Item()
 	{
 
+	}
+
+	// ----------------------------------------------------------------------
+	public void upgrade()
+	{
+		upgradeCount++;
+
+		if ( slots.contains( EquipmentSlot.WEAPON, true ) )
+		{
+
+		}
+		else
+		{
+
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -172,7 +188,7 @@ public final class Item extends GameEventHandler
 	private Table createArmourTable( Item other, GameEntity entity, Skin skin )
 	{
 		Table table = new Table();
-		
+
 		Table titleRow = new Table();
 
 		titleRow.add( new Label( name, skin, "title" ) ).expandX().left();
@@ -495,10 +511,7 @@ public final class Item extends GameEventHandler
 		// Armour
 		HEAD,
 		BODY,
-		LEGS,
-
-		// Jewelry
-		RUNE
+		LEGS
 	}
 
 	// ----------------------------------------------------------------------

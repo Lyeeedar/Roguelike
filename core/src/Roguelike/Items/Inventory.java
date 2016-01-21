@@ -18,6 +18,8 @@ public final class Inventory
 
 	private FastEnumMap<EquipmentSlot, Item> m_equipment = new FastEnumMap<EquipmentSlot, Item>( EquipmentSlot.class );
 
+	public int upgradeStones;
+
 	public void load( Element xml )
 	{
 		Element equipElement = xml.getChildByName( "Equipment" );

@@ -1181,6 +1181,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					{
 						lockContextMenu = false;
 						clearContextMenu();
+
+						Global.CurrentLevel.player.inventory.upgradeStones++;
+						Global.CurrentLevel.player.pendingMessages.add(new Message( "Gained 1 Upgrade Stone", Color.GOLD ));
 					}
 				} );
 

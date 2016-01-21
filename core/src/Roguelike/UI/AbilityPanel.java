@@ -176,7 +176,7 @@ public class AbilityPanel extends TilePanel
 
 				if (cooldown > 0)
 				{
-					String text = Global.capitalizeString( ""+aa.cooldownType ) + "\n" + cooldown;
+					String text = aa.cooldownType.text + "\n" + cooldown;
 					layout.setText( font, text, Color.WHITE, 0, Align.center, false );
 
 					font.draw( batch, layout, x + width / 2, y + height / 2 + layout.height / 2 );
