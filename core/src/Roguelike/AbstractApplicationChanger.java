@@ -15,7 +15,7 @@ public abstract class AbstractApplicationChanger
 		{
 			setDefaultPrefs( prefs );
 			prefs.putBoolean( "created", true );
-			prefs.putString( "window-name", "Chronicles Of Aether" );
+			prefs.putString( "window-name", "A Skin of Others" );
 
 			prefs.flush();
 		}
