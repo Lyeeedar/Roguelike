@@ -64,7 +64,10 @@ public class GameEntity extends Entity
 
 		for ( AbilityTree a : slottedAbilities )
 		{
-			a.current.current.onTurn();
+			if (a != null)
+			{
+				a.current.current.onTurn();
+			}
 		}
 
 		for ( GameEventHandler h : getAllHandlers() )

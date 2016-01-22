@@ -1157,6 +1157,15 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 
 						Global.CurrentLevel.player.getInventory().equip( item );
+
+						Global.CurrentLevel.player.isVariableMapDirty = true;
+						for ( AbilityTree tree : Global.CurrentLevel.player.slottedAbilities )
+						{
+							if (tree != null)
+							{
+								tree.current.current.setCaster( Global.CurrentLevel.player );
+							}
+						}
 					}
 				} );
 

@@ -41,7 +41,7 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 		cfg.foregroundFPS = 0;
 		cfg.backgroundFPS = 2;
 		cfg.samples = pref.getInteger( "msaa" );
-		cfg.addIcon( "Sprites/GUI/Icon32.png", FileType.Internal );
+		cfg.addIcon( "Sprites/Title/Icon32.png", FileType.Internal );
 
 		Global.TargetResolution[0] = cfg.width;
 		Global.TargetResolution[1] = cfg.height;

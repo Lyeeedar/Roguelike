@@ -1,5 +1,6 @@
 package Roguelike.UI;
 
+import Roguelike.Ability.AbilityTree;
 import Roguelike.AssetManager;
 import Roguelike.Entity.Tasks.TaskAttack;
 import Roguelike.Global;
@@ -120,9 +121,18 @@ public class EquipmentPanel extends TilePanel
 
 								Global.CurrentLevel.player.inventory.upgradeStones -= required;
 								equip.upgrade();
+
+								Global.CurrentLevel.player.isVariableMapDirty = true;
+								for ( AbilityTree tree : Global.CurrentLevel.player.slottedAbilities )
+								{
+									if (tree != null)
+									{
+										tree.current.current.setCaster( Global.CurrentLevel.player );
+									}
+								}
 							}
 						} );
-						table.add( button );
+						table.add( button ).expandX().left();
 					}
 					else
 					{

@@ -28,16 +28,9 @@
     </HitType>
 
 	<Effect>
-        <Status>
-            <Duration>1</Duration>
-            <Events>
-                <Constant>
-                    <Defense>-5 * level</Defense>
-                </Constant>
-            </Events>
-        </Status>
 		<Damage>
             <Attack>150 + 5 * level</Attack>
+            <Penetration>2 * level</Penetration>
             <Willpower>1</Willpower>
 		</Damage>
 	</Effect>
