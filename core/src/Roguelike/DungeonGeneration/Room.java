@@ -801,7 +801,7 @@ public final class Room
 
 					if ( faction.minibosses.size > 0 )
 					{
-						faction.minibosses.get( ran.nextInt( faction.minibosses.size ) );
+						entityName = faction.minibosses.get( ran.nextInt( faction.minibosses.size ) );
 					}
 					else
 					{

@@ -41,7 +41,7 @@ public abstract class AbstractDungeonGenerator
 	protected int width;
 	protected int height;
 
-	protected static final boolean DEBUG_OUTPUT = true;
+	protected static final boolean DEBUG_OUTPUT = false;
 
 	// ----------------------------------------------------------------------
 	public abstract void setup( SaveLevel level, DungeonFileParser dfp );
