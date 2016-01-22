@@ -19,7 +19,7 @@ public class EntityStatusRenderer
 {
 	public static void draw( Entity entity, Batch batch, int x, int y, int width, int height, float heightScale, Color colour )
 	{
-		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 8 );
+		BitmapFont font = AssetManager.loadFont( "Sprites/Unpacked/stan0755.ttf", 8 );
 
 		float val = (float) entity.HP / (float) ( entity.getVariable( Statistic.CONSTITUTION ) * 10 );
 		float extraVal = (float) entity.extraUIHP / (float) ( entity.getVariable( Statistic.CONSTITUTION ) * 10 );

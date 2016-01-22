@@ -46,7 +46,7 @@ public class MainMenuScreen implements Screen
 		// Label title = new Label( "Chronicles of Aether", skin );
 		// table.add( title ).expandY().top().padTop( 100 );
 		// table.row();
-		Image image = new Image( AssetManager.loadTexture( "Sprites/Title/Title.png" ) );
+		Image image = new Image( AssetManager.loadTexture( "Sprites/Unpacked/Title.png" ) );
 		table.add( image ).expandX().fillX();
 		table.row();
 

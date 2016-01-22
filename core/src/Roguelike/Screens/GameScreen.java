@@ -101,8 +101,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		batch = new SpriteBatch();
 
-		font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12, new Color( 1f, 0.9f, 0.8f, 1 ), 1, Color.BLACK, false );
-		hightlightfont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12, new Color( 1f, 1f, 0.9f, 1 ), 1, Color.BLACK, false );
+		font = AssetManager.loadFont( "Sprites/Unpacked/stan0755.ttf", 12, new Color( 1f, 0.9f, 0.8f, 1 ), 1, Color.BLACK, false );
+		hightlightfont = AssetManager.loadFont( "Sprites/Unpacked/stan0755.ttf", 12, new Color( 1f, 1f, 0.9f, 1 ), 1, Color.BLACK, false );
 
 		blank = AssetManager.loadTextureRegion( "Sprites/blank.png" );
 		white = AssetManager.loadTextureRegion( "Sprites/white.png" );

@@ -409,10 +409,10 @@ public class Global
 	{
 		Skin skin = new Skin();
 
-		BitmapFont font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12, new Color( 0.97f, 0.87f, 0.7f, 1 ), 1, Color.BLACK, false );
+		BitmapFont font = AssetManager.loadFont( "Sprites/Unpacked/stan0755.ttf", 12, new Color( 0.97f, 0.87f, 0.7f, 1 ), 1, Color.BLACK, false );
 		skin.add( "default", font );
 
-		BitmapFont titlefont = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 20, new Color( 1f, 0.9f, 0.8f, 1 ), 1, Color.BLACK, true );
+		BitmapFont titlefont = AssetManager.loadFont( "Sprites/Unpacked/stan0755.ttf", 20, new Color( 1f, 0.9f, 0.8f, 1 ), 1, Color.BLACK, true );
 		skin.add( "title", titlefont );
 
 		Pixmap pixmap = new Pixmap( 1, 1, Format.RGBA8888 );

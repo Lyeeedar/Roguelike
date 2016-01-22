@@ -145,7 +145,7 @@ public class InventoryPanel extends Table
 		{
 			super( skin, stage, tileBackground, tileBorder, ItemCategory.values().length, 1, tileSize, true );
 
-			font = AssetManager.loadFont( "Sprites/GUI/stan0755.ttf", 12 );
+			font = skin.getFont( "default" );
 
 			padding = 5;
 		}
