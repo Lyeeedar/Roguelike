@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.XmlReader;
  */
 public class QuestOutput
 {
+	public boolean runFlag;
 	public String key;
 	public String data;
 
@@ -24,13 +25,21 @@ public class QuestOutput
 			}
 		}
 
-		Global.Flags.put( key, data );
+		if (runFlag)
+		{
+			Global.RunFlags.put( key, data );
+		}
+		else
+		{
+			Global.WorldFlags.put( key, data );
+		}
 	}
 
 	public void parse( XmlReader.Element xml )
 	{
 		key = xml.getName();
 		data = xml.get( "Data", "true" );
+		runFlag = xml.getBooleanAttribute( "RunFlag", false );
 
 		XmlReader.Element conditionsElement = xml.getChildByName( "Conditions" );
 		if (conditionsElement != null)

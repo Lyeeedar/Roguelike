@@ -9,7 +9,7 @@ public class DialogueActionSetVariable extends AbstractDialogueAction
 {
 	public enum VariableType
 	{
-		LOCAL, FLAG
+		LOCAL, WORLDFLAG, RUNFLAG
 	}
 
 	private VariableType type;
@@ -23,9 +23,13 @@ public class DialogueActionSetVariable extends AbstractDialogueAction
 		{
 			manager.data.put( key, Integer.parseInt( value ) );
 		}
-		else if ( type == VariableType.FLAG )
+		else if ( type == VariableType.WORLDFLAG )
 		{
-			Global.Flags.put( key, Global.expandNames( value ) );
+			Global.WorldFlags.put( key, Global.expandNames( value ) );
+		}
+		else if ( type == VariableType.RUNFLAG )
+		{
+			Global.RunFlags.put( key, Global.expandNames( value ) );
 		}
 
 		return ReturnType.ADVANCE;

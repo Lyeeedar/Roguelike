@@ -111,7 +111,8 @@ public class Global
 	public static Level CurrentLevel;
 
 	// ----------------------------------------------------------------------
-	public static ObjectMap<String, String> Flags = new ObjectMap<String, String>();
+	public static ObjectMap<String, String> WorldFlags = new ObjectMap<String, String>();
+	public static ObjectMap<String, String> RunFlags = new ObjectMap<String, String>();
 
 	// ----------------------------------------------------------------------
 	public static Mixer BGM;
@@ -155,7 +156,8 @@ public class Global
 
 		Global.QuestManager = new QuestManager();
 		Global.QuestManager.usedQuests = save.usedQuests;
-		Global.Flags = save.flags;
+		Global.WorldFlags = save.worldFlags;
+		Global.RunFlags = save.runFlags;
 
 		LevelManager = save.levelManager;
 		SaveLevel level = LevelManager.current.currentLevel;
@@ -168,12 +170,27 @@ public class Global
 	}
 
 	// ----------------------------------------------------------------------
+	public static void save()
+	{
+		SaveFile save = new SaveFile();
+
+		LevelManager.current.currentLevel.store( Global.CurrentLevel );
+		save.levelManager = LevelManager;
+		save.usedQuests = QuestManager.usedQuests;
+		save.worldFlags = WorldFlags;
+		save.runFlags = RunFlags;
+
+		save.save();
+	}
+
+	// ----------------------------------------------------------------------
 	public static void newGame( GameEntity player )
 	{
 		LevelManager = new LevelManager();
 		QuestManager = new QuestManager();
 		AUT = 0;
 		DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
+		RunFlags.clear();
 
 		SaveLevel firstLevel = new SaveLevel( LevelManager.current.levelName, 1, LevelManager.current.getExtraRooms( "NewGame", 1, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
 		LevelManager.current.currentLevel = firstLevel;
@@ -252,19 +269,6 @@ public class Global
 		CurrentLevel.updateVisibleTiles();
 
 		save();
-	}
-
-	// ----------------------------------------------------------------------
-	public static void save()
-	{
-		SaveFile save = new SaveFile();
-
-		LevelManager.current.currentLevel.store( Global.CurrentLevel );
-		save.levelManager = LevelManager;
-		save.usedQuests = QuestManager.usedQuests;
-		save.flags = Flags;
-
-		save.save();
 	}
 
 	// ----------------------------------------------------------------------
@@ -362,9 +366,13 @@ public class Global
 			{
 				output += split[i];
 			}
-			else
+			else if ( WorldFlags.containsKey( split[i].toLowerCase() ) )
 			{
-				output += Flags.get( split[i].toLowerCase() );
+				output += WorldFlags.get( split[i].toLowerCase() );
+			}
+			else if ( RunFlags.containsKey( split[i].toLowerCase() ) )
+			{
+				output += RunFlags.get( split[i].toLowerCase() );
 			}
 
 			skip = !skip;

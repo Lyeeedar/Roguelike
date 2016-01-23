@@ -234,40 +234,36 @@ public class ExclamationManager
 		// ----------------------------------------------------------------------
 		public boolean processCondition( HashMap<String, Integer> data, String condition, String[] reliesOn )
 		{
-			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-			EquationHelper.setVariableNames( expB, data, "" );
-
 			for ( String name : reliesOn )
 			{
 				if ( !data.containsKey( name ) )
 				{
-					expB.variable( name );
-				}
-			}
-
-			Expression exp = EquationHelper.tryBuild( expB );
-			if ( exp == null ) { return false; }
-
-			EquationHelper.setVariableValues( exp, data, "" );
-
-			for ( String name : reliesOn )
-			{
-				if ( !data.containsKey( name ) )
-				{
-					if (Global.Flags.containsKey( name ))
+					String flag = "";
+					if ( Global.WorldFlags.containsKey( name ) )
 					{
-						exp.setVariable( name, 1 );
+						flag = Global.WorldFlags.get( name );
+					}
+					else if ( Global.RunFlags.containsKey( name ) )
+					{
+						flag = Global.RunFlags.get( name );
 					}
 					else
 					{
-						exp.setVariable( name, 0 );
+						flag = "0";
+					}
+
+					if (Global.isNumber( flag ))
+					{
+						data.put( name, Integer.parseInt( flag ) );
+					}
+					else
+					{
+						data.put( name, 1 );
 					}
 				}
 			}
 
-			int raw = (int) exp.evaluate();
-
-			return raw > 0;
+			return EquationHelper.evaluate( condition, data ) > 0;
 		}
 
 		public void parse( Element xml )

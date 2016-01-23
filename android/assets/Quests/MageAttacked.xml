@@ -1,8 +1,8 @@
 <Quest>
-    <AllowedLevels>Forest,EnchantedForest</AllowedLevels>
+    <AllowedLevels>Forest</AllowedLevels>
 
     <Inputs>
-        <FlagPresent Not="true">MageAttacked</FlagPresent>
+        <FlagPresent Not="true">MageQuest</FlagPresent>
     </Inputs>
 
     <Room>
@@ -52,18 +52,18 @@
     </Room>
 
     <Outputs>
-        <MageAttacked></MageAttacked>
-        <MageLived>
+        <MageQuest>
+            <Data>1</Data>
             <Conditions>
                 <EntityAlive>Mage</EntityAlive>
             </Conditions>
-        </MageLived>
-        <MageLived>
-            <Data>false</Data>
+        </MageQuest>
+        <MageQuest>
+            <Data>-1</Data>
             <Conditions>
                 <EntityAlive Not="true">Mage</EntityAlive>
             </Conditions>
-        </MageLived>
+        </MageQuest>
         <MageAttacked />
     </Outputs>
 </Quest>

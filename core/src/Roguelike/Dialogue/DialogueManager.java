@@ -49,30 +49,34 @@ public class DialogueManager
 
 		for ( String name : reliesOn )
 		{
-			if ( !data.containsKey( name ) && !Global.Flags.containsKey( name ) )
+			if ( !data.containsKey( name ) )
 			{
-				if (Global.Flags.containsKey( name ))
+				String flag = "";
+				if ( Global.WorldFlags.containsKey( name ) )
 				{
-					data.put( name, 1 );
+					flag = Global.WorldFlags.get( name );
+				}
+				else if ( Global.RunFlags.containsKey( name ) )
+				{
+					flag = Global.RunFlags.get( name );
 				}
 				else
 				{
-					data.put( name, 0 );
+					flag = "0";
+				}
+
+				if (Global.isNumber( flag ))
+				{
+					data.put( name, Integer.parseInt( flag ) );
+				}
+				else
+				{
+					data.put( name, 1 );
 				}
 			}
 		}
 
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-		EquationHelper.setVariableNames( expB, data, "" );
-
-		Expression exp = EquationHelper.tryBuild( expB );
-		if ( exp == null ) { return false; }
-
-		EquationHelper.setVariableValues( exp, data, "" );
-
-		int raw = (int) exp.evaluate();
-
-		return raw > 0;
+		return EquationHelper.evaluate( condition, data ) > 0;
 	}
 
 	// ----------------------------------------------------------------------

@@ -76,7 +76,8 @@ public final class SaveFile
 
 	public LevelManager levelManager;
 	public ObjectSet<String> usedQuests;
-	public ObjectMap<String, String> flags;
+	public ObjectMap<String, String> worldFlags;
+	public ObjectMap<String, String> runFlags;
 
 	public void save()
 	{
@@ -96,7 +97,8 @@ public final class SaveFile
 
 		kryo.writeObject( output, levelManager );
 		kryo.writeObject( output, usedQuests );
-		kryo.writeObject( output, flags );
+		kryo.writeObject( output, worldFlags );
+		kryo.writeObject( output, runFlags );
 
 		output.close();
 
@@ -125,7 +127,8 @@ public final class SaveFile
 
 		levelManager = kryo.readObject( input, LevelManager.class );
 		usedQuests = kryo.readObject( input, ObjectSet.class );
-		flags = kryo.readObject( input, ObjectMap.class );
+		worldFlags = kryo.readObject( input, ObjectMap.class );
+		runFlags = kryo.readObject( input, ObjectMap.class );
 
 		input.close();
 	}

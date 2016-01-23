@@ -14,7 +14,7 @@ public class QuestInputFlagPresent extends AbstractQuestInput
 	@Override
 	public boolean evaluate()
 	{
-		if ( Global.Flags.containsKey( key ) )
+		if ( Global.WorldFlags.containsKey( key ) || Global.RunFlags.containsKey( key ) )
 		{
 			return !not;
 		}

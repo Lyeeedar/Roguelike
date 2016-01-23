@@ -21,40 +21,36 @@ public abstract class AbstractDialogueAction
 	// ----------------------------------------------------------------------
 	public boolean processCondition( String condition, String[] reliesOn )
 	{
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
-		EquationHelper.setVariableNames( expB, manager.data, "" );
-
 		for ( String name : reliesOn )
 		{
 			if ( !manager.data.containsKey( name ) )
 			{
-				expB.variable( name );
-			}
-		}
-
-		Expression exp = EquationHelper.tryBuild( expB );
-		if ( exp == null ) { return false; }
-
-		EquationHelper.setVariableValues( exp, manager.data, "" );
-
-		for ( String name : reliesOn )
-		{
-			if ( !manager.data.containsKey( name ))
-			{
-				if (Global.Flags.containsKey( name ))
+				String flag = "";
+				if ( Global.WorldFlags.containsKey( name ) )
 				{
-					exp.setVariable( name, 1 );
+					flag = Global.WorldFlags.get( name );
+				}
+				else if ( Global.RunFlags.containsKey( name ) )
+				{
+					flag = Global.RunFlags.get( name );
 				}
 				else
 				{
-					exp.setVariable( name, 0 );
+					flag = "0";
+				}
+
+				if (Global.isNumber( flag ))
+				{
+					manager.data.put( name, Integer.parseInt( flag ) );
+				}
+				else
+				{
+					manager.data.put( name, 1 );
 				}
 			}
 		}
 
-		int raw = (int) exp.evaluate();
-
-		return raw > 0;
+		return EquationHelper.evaluate( condition, manager.data ) > 0;
 	}
 
 	// ----------------------------------------------------------------------
