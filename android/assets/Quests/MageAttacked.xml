@@ -25,7 +25,8 @@
                         </Exclamations>
                         <Dialogue>
                             <Chunk Condition="FirstChat == 0" ReliesOn="FirstChat">
-                                <Text>Thanks for helping me, I thought I was a goner. I'll teach you a little of what I know as thanks.</Text>
+                                <Text>Thanks for helping me, I thought I was a goner.</Text>
+                                <Text>I'll teach you a little of what I know as thanks.</Text>
                                 <GainAbility>random(magic)</GainAbility>
                                 <SetVariable>
                                     <Key>FirstChat</Key>

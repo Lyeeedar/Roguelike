@@ -78,8 +78,10 @@ public final class SaveFile
 	public ObjectSet<String> usedQuests;
 	public ObjectMap<String, String> worldFlags;
 	public ObjectMap<String, String> runFlags;
+	public boolean isDead;
+	public int lives;
 
-	public void save()
+	public void save(int slot)
 	{
 		setupKryo();
 
@@ -99,11 +101,13 @@ public final class SaveFile
 		kryo.writeObject( output, usedQuests );
 		kryo.writeObject( output, worldFlags );
 		kryo.writeObject( output, runFlags );
+		output.writeBoolean( isDead );
+		output.writeInt( lives );
 
 		output.close();
 
 		byte[] bytes = attemptFile.readBytes();
-		FileHandle actualFile = Gdx.files.local( "save.dat" );
+		FileHandle actualFile = Gdx.files.local( "save"+slot+".dat" );
 		actualFile.writeBytes( bytes, false );
 
 		attemptFile.delete();
@@ -111,14 +115,14 @@ public final class SaveFile
 		System.out.println( "Saved" );
 	}
 
-	public void load()
+	public void load(int slot)
 	{
 		setupKryo();
 
 		Input input = null;
 		try
 		{
-			input = new Input( new GZIPInputStream( Gdx.files.local( "save.dat" ).read() ) );
+			input = new Input( new GZIPInputStream( Gdx.files.local( "save"+slot+".dat" ).read() ) );
 		}
 		catch ( IOException e )
 		{
@@ -129,6 +133,8 @@ public final class SaveFile
 		usedQuests = kryo.readObject( input, ObjectSet.class );
 		worldFlags = kryo.readObject( input, ObjectMap.class );
 		runFlags = kryo.readObject( input, ObjectMap.class );
+		isDead = input.readBoolean();
+		lives = input.readInt();
 
 		input.close();
 	}

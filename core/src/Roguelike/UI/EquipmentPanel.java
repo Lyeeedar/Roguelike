@@ -25,8 +25,8 @@ import com.badlogic.gdx.utils.Align;
 public class EquipmentPanel extends TilePanel
 {
 	private final GlyphLayout layout = new GlyphLayout();
-	private BitmapFont font;
-	private TextureRegion white;
+	private final BitmapFont font;
+	private final TextureRegion white;
 
 	public EquipmentPanel( Skin skin, Stage stage )
 	{

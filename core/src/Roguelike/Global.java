@@ -115,10 +115,14 @@ public class Global
 	public static ObjectMap<String, String> RunFlags = new ObjectMap<String, String>();
 
 	// ----------------------------------------------------------------------
+	public static int SaveSlot;
+
+	// ----------------------------------------------------------------------
 	public static Mixer BGM;
 
 	// ----------------------------------------------------------------------
 	public static float AUT = 0;
+	public static int lives;
 
 	// ----------------------------------------------------------------------
 	public static float DayNightFactor = 1;
@@ -152,21 +156,26 @@ public class Global
 	public static void load()
 	{
 		SaveFile save = new SaveFile();
-		save.load();
+		save.load(SaveSlot);
 
 		Global.QuestManager = new QuestManager();
 		Global.QuestManager.usedQuests = save.usedQuests;
 		Global.WorldFlags = save.worldFlags;
 		Global.RunFlags = save.runFlags;
+		Global.lives = save.lives;
 
 		LevelManager = save.levelManager;
 		SaveLevel level = LevelManager.current.currentLevel;
 
-		LoadingScreen.Instance.set( level, null, null, null );
-		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
-
-		// AUT = save.AUT;
-		DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
+		if (save.isDead)
+		{
+			RoguelikeGame.Instance.switchScreen( ScreenEnum.CHARACTERCREATION );
+		}
+		else
+		{
+			LoadingScreen.Instance.set( level, null, null, null );
+			RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -174,18 +183,43 @@ public class Global
 	{
 		SaveFile save = new SaveFile();
 
-		LevelManager.current.currentLevel.store( Global.CurrentLevel );
 		save.levelManager = LevelManager;
 		save.usedQuests = QuestManager.usedQuests;
 		save.worldFlags = WorldFlags;
 		save.runFlags = RunFlags;
 
-		save.save();
+		save.lives = lives;
+
+		if ( CurrentLevel != null )
+		{
+			LevelManager.current.currentLevel.store( Global.CurrentLevel );
+			save.isDead = CurrentLevel.player.HP <= 0;
+		}
+		else
+		{
+			save.isDead = true;
+		}
+
+		save.save(SaveSlot);
+	}
+
+	// ----------------------------------------------------------------------
+	public static void newWorld()
+	{
+		lives = 0;
+
+		LevelManager = new LevelManager();
+		QuestManager = new QuestManager();
+		AUT = 0;
+		WorldFlags.clear();
+		RunFlags.clear();
 	}
 
 	// ----------------------------------------------------------------------
 	public static void newGame( GameEntity player )
 	{
+		lives++;
+
 		LevelManager = new LevelManager();
 		QuestManager = new QuestManager();
 		AUT = 0;

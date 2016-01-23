@@ -146,6 +146,20 @@ public final class SaveLevel extends SaveableObject<Level>
 		return null;
 	}
 
+	public GameEntity getPlayer()
+	{
+		for ( SaveGameEntity entity : gameEntities )
+		{
+			if ( entity.isPlayer )
+			{
+				GameEntity ge = entity.create();
+				return ge;
+			}
+		}
+
+		return null;
+	}
+
 	public void addSavedLevelContents( Level level )
 	{
 		for ( SaveGameEntity entity : gameEntities )

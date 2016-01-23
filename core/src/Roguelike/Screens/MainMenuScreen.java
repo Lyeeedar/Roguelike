@@ -6,6 +6,7 @@ import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
 
 import Roguelike.Save.SaveFile;
+import Roguelike.UI.SaveSlotButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -47,81 +48,22 @@ public class MainMenuScreen implements Screen
 		// table.add( title ).expandY().top().padTop( 100 );
 		// table.row();
 		Image image = new Image( AssetManager.loadTexture( "Sprites/Unpacked/Title.png" ) );
-		table.add( image ).expandX().fillX();
+		table.add( image ).expandX().fillX().pad( 20 );
 		table.row();
 
 		Table buttonTable = new Table();
-		buttonTable.defaults().width( 200 ).pad( 5 );
+		buttonTable.defaults().width( 200 ).height( 50 ).pad( 5 );
 
-		boolean hasFile = false;
-
-		try
-		{
-			SaveFile save = new SaveFile();
-			save.load();
-			hasFile = true;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		if (hasFile)
-		{
-			TextButton cbutton = new TextButton( "Continue", skin, "big" );
-			cbutton.addListener( new InputListener()
-			{
-				@Override
-				public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-				{
-					return true;
-				}
-
-				@Override
-				public void touchUp( InputEvent event, float x, float y, int pointer, int button )
-				{
-					Global.load();
-				}
-			} );
-			buttonTable.add( cbutton ).expandX().fillX();
-			buttonTable.row();
-		}
-
-		TextButton ngbutton = new TextButton( "New Game", skin, "big" );
-		ngbutton.addListener( new InputListener()
-		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
-			{
-				RoguelikeGame.Instance.switchScreen( ScreenEnum.CHARACTERCREATION );
-			}
-		} );
-		buttonTable.add( ngbutton ).expandX().fillX();
+		SaveSlotButton s1button = new SaveSlotButton( skin, 1 );
+		buttonTable.add( s1button ).expandX().fillX();
 		buttonTable.row();
 
-		TextButton optionButton = new TextButton( "Options", skin, "big" );
-		optionButton.addListener( new InputListener()
-		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
+		SaveSlotButton s2button = new SaveSlotButton( skin, 2 );
+		buttonTable.add( s2button ).expandX().fillX();
+		buttonTable.row();
 
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
-			{
-				OptionsScreen.Instance.screen = ScreenEnum.MAINMENU;
-				RoguelikeGame.Instance.switchScreen( ScreenEnum.OPTIONS );
-			}
-		});
-		buttonTable.add( optionButton ).expandX().fillX();
+		SaveSlotButton s3button = new SaveSlotButton( skin, 3 );
+		buttonTable.add( s3button ).expandX().fillX();
 		buttonTable.row();
 
 		TextButton qbutton = new TextButton( "Quit", skin, "big" );
@@ -139,17 +81,10 @@ public class MainMenuScreen implements Screen
 				Gdx.app.exit();
 			}
 		} );
-		buttonTable.add( qbutton ).expandX().fillX();
+		buttonTable.add( qbutton ).expandX().fillX().padTop( 20 );
 		buttonTable.row();
 
-		if (Global.ANDROID)
-		{
-			table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expand().fill().pad( 20 );
-		}
-		else
-		{
-			table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expand().pad( 20 ).bottom().right();
-		}
+		table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expand().fill().pad( 20 );
 
 		table.setFillParent( true );
 		stage.addActor( table );

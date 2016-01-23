@@ -1956,6 +1956,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void displayGameOverMessage()
 	{
+		Global.save();
+
 		Table table = new Table();
 
 		Label titleLabel = new Label( "Game Over", skin, "title" );
@@ -1980,7 +1982,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.add( new Seperator(skin, false) ).expandX().fillX();
 		table.row();
 
-		TextButton button = new TextButton( "Main Menu", skin );
+		TextButton button = new TextButton( "Begin Life Anew", skin );
 		button.addListener( new InputListener()
 		{
 
@@ -1996,7 +1998,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				lockContextMenu = false;
 				clearContextMenu();
 
-				RoguelikeGame.Instance.switchScreen( ScreenEnum.MAINMENU );
+				RoguelikeGame.Instance.switchScreen( ScreenEnum.CHARACTERCREATION );
 			}
 		} );
 		table.add( button ).expandX().center();
@@ -2052,8 +2054,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.add( optionsButton ).expandX().width( 200 ).center();
 		table.row();
 
-		TextButton mainmenuButton = new TextButton( "Main Menu", skin );
-		mainmenuButton.addListener( new InputListener()
+		TextButton quitButton = new TextButton( "Save and Quit", skin );
+		quitButton.addListener( new InputListener()
 		{
 
 			@Override
@@ -2065,10 +2067,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			@Override
 			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
 			{
-				RoguelikeGame.Instance.switchScreen( ScreenEnum.MAINMENU );
+				Gdx.app.exit();
 			}
 		} );
-		table.add( mainmenuButton ).expandX().width( 200 ).center();
+		table.add( quitButton ).expandX().width( 200 ).center();
 		table.row();
 
 		displayContextMenu( table, true );
