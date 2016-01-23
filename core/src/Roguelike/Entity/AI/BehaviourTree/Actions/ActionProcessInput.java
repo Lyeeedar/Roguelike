@@ -199,8 +199,8 @@ public class ActionProcessInput extends AbstractAction
 			}
 			else if ( dialogueWithinRange )
 			{
-				tile.entity.dialogue.initialiseDialogue();
-				tile.entity.dialogue.advance();
+				tile.entity.dialogue.initialiseDialogue( entity );
+				tile.entity.dialogue.advance( entity );
 			}
 			else
 			{

@@ -3,6 +3,7 @@ package Roguelike.Save;
 import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.AssetManager;
+import Roguelike.Dialogue.*;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.Room;
 import Roguelike.DungeonGeneration.Room.RoomDoor;
@@ -43,6 +44,7 @@ import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.esotericsoftware.kryo.Kryo;
@@ -62,8 +64,7 @@ public final class SaveFile
 	private static Kryo kryo;
 
 	public LevelManager levelManager;
-	public HashMap<String, Integer> globalVariables;
-	public HashMap<String, String> globalNames;
+	public ObjectMap<String, String> flags;
 
 	public void save()
 	{
@@ -80,8 +81,7 @@ public final class SaveFile
 		}
 
 		kryo.writeObject( output, levelManager );
-		kryo.writeObject( output, globalVariables );
-		kryo.writeObject( output, globalNames );
+		kryo.writeObject( output, flags );
 
 		output.close();
 
@@ -103,8 +103,7 @@ public final class SaveFile
 		}
 
 		levelManager = kryo.readObject( input, LevelManager.class );
-		globalVariables = kryo.readObject( input, HashMap.class );
-		globalNames = kryo.readObject( input, HashMap.class );
+		flags = kryo.readObject( input, ObjectMap.class );
 
 		input.close();
 	}
@@ -373,6 +372,7 @@ public final class SaveFile
 		kryo.register( Float[][].class );
 		kryo.register( boolean[].class );
 		kryo.register( boolean[][].class );
+		kryo.register( ObjectMap.class );
 
 		kryo.register( EquipmentSlot.class );
 		kryo.register( ItemCategory.class );
@@ -399,5 +399,18 @@ public final class SaveFile
 		kryo.register( HealOverTimeEvent.class );
 		kryo.register( KillOnExpireEvent.class );
 		kryo.register( AbilityOnExpireEvent.class );
+
+		kryo.register( Dialogue.class );
+		kryo.register( DialogueManager.class );
+		kryo.register( DialogueManager.DialogueChunkWrapper.class );
+		kryo.register( DialogueActionBranch.class );
+		kryo.register( DialogueActionGainAbility.class );
+		kryo.register( DialogueActionInput.class );
+		kryo.register( DialogueActionLoop.class );
+		kryo.register( DialogueActionSetVariable.class );
+		kryo.register( DialogueActionText.class );
+		kryo.register( ExclamationManager.class );
+		kryo.register( ExclamationManager.ExclamationWrapper.class );
+		kryo.register( ExclamationManager.ExclamationEventWrapper.class );
 	}
 }

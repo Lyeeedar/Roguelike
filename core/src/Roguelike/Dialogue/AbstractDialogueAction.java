@@ -23,11 +23,10 @@ public abstract class AbstractDialogueAction
 	{
 		ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
 		EquationHelper.setVariableNames( expB, manager.data, "" );
-		EquationHelper.setVariableNames( expB, Global.GlobalVariables, "" );
 
 		for ( String name : reliesOn )
 		{
-			if ( !manager.data.containsKey( name ) && !Global.GlobalVariables.containsKey( name ) )
+			if ( !manager.data.containsKey( name ) )
 			{
 				expB.variable( name );
 			}
@@ -37,13 +36,19 @@ public abstract class AbstractDialogueAction
 		if ( exp == null ) { return false; }
 
 		EquationHelper.setVariableValues( exp, manager.data, "" );
-		EquationHelper.setVariableValues( exp, Global.GlobalVariables, "" );
 
 		for ( String name : reliesOn )
 		{
-			if ( !manager.data.containsKey( name ) && !Global.GlobalVariables.containsKey( name ) )
+			if ( !manager.data.containsKey( name ))
 			{
-				exp.setVariable( name, 0 );
+				if (Global.Flags.containsKey( name ))
+				{
+					exp.setVariable( name, 1 );
+				}
+				else
+				{
+					exp.setVariable( name, 0 );
+				}
 			}
 		}
 
@@ -90,5 +95,6 @@ public abstract class AbstractDialogueAction
 		ClassMap.put( "BRANCH", DialogueActionBranch.class );
 		ClassMap.put( "LOOP", DialogueActionLoop.class );
 		ClassMap.put( "SETVARIABLE", DialogueActionSetVariable.class );
+		ClassMap.put( "GAINABILITY", DialogueActionGainAbility.class );
 	}
 }

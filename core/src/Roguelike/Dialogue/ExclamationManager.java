@@ -186,7 +186,7 @@ public class ExclamationManager
 		return manager;
 	}
 
-	private static class ExclamationEventWrapper
+	public static class ExclamationEventWrapper
 	{
 		public Array<ExclamationWrapper> groups = new Array<ExclamationWrapper>();
 		public float cooldown;
@@ -229,11 +229,10 @@ public class ExclamationManager
 		{
 			ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
 			EquationHelper.setVariableNames( expB, data, "" );
-			EquationHelper.setVariableNames( expB, Global.GlobalVariables, "" );
 
 			for ( String name : reliesOn )
 			{
-				if ( !data.containsKey( name ) && !Global.GlobalVariables.containsKey( name ) )
+				if ( !data.containsKey( name ) )
 				{
 					expB.variable( name );
 				}
@@ -243,13 +242,19 @@ public class ExclamationManager
 			if ( exp == null ) { return false; }
 
 			EquationHelper.setVariableValues( exp, data, "" );
-			EquationHelper.setVariableValues( exp, Global.GlobalVariables, "" );
 
 			for ( String name : reliesOn )
 			{
-				if ( !data.containsKey( name ) && !Global.GlobalVariables.containsKey( name ) )
+				if ( !data.containsKey( name ) )
 				{
-					exp.setVariable( name, 0 );
+					if (Global.Flags.containsKey( name ))
+					{
+						exp.setVariable( name, 1 );
+					}
+					else
+					{
+						exp.setVariable( name, 0 );
+					}
 				}
 			}
 
@@ -276,7 +281,7 @@ public class ExclamationManager
 		}
 	}
 
-	private static class ExclamationWrapper
+	public static class ExclamationWrapper
 	{
 		public String condition;
 		public String[] reliesOn;

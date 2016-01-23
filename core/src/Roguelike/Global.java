@@ -40,6 +40,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -78,7 +79,7 @@ public class Global
 	public static boolean ANDROID = false;
 
 	// ----------------------------------------------------------------------
-	public static DialogueManager CurrentDialogue = null;
+	public static GameEntity CurrentDialogue = null;
 
 	// ----------------------------------------------------------------------
 	public static float AnimationSpeed = 1;
@@ -108,10 +109,7 @@ public class Global
 	public static Level CurrentLevel;
 
 	// ----------------------------------------------------------------------
-	public static HashMap<String, Integer> GlobalVariables = new HashMap<String, Integer>();
-
-	// ----------------------------------------------------------------------
-	public static HashMap<String, String> GlobalNames = new HashMap<String, String>();
+	public static ObjectMap<String, String> Flags = new ObjectMap<String, String>();
 
 	// ----------------------------------------------------------------------
 	public static Mixer BGM;
@@ -160,8 +158,7 @@ public class Global
 		// }
 
 		// Global.abilityPool = save.abilityPool.create();
-		Global.GlobalVariables = (HashMap<String, Integer>) save.globalVariables.clone();
-		Global.GlobalNames = (HashMap<String, String>) save.globalNames.clone();
+		Global.Flags = save.flags;
 
 		LevelManager = save.levelManager;
 		SaveLevel level = LevelManager.current.currentLevel;
@@ -179,11 +176,6 @@ public class Global
 		LevelManager = new LevelManager();
 		AUT = 0;
 		DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
-
-		GlobalVariables.clear();
-		GlobalNames.clear();
-
-		GlobalNames.put( "player", "You" );
 
 		SaveLevel firstLevel = new SaveLevel( LevelManager.current.levelName, 1, LevelManager.current.getExtraRooms( "NewGame", 1, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
 		LevelManager.current.currentLevel = firstLevel;
@@ -272,8 +264,7 @@ public class Global
 		LevelManager.current.currentLevel.store( Global.CurrentLevel );
 		save.levelManager = LevelManager;
 
-		save.globalVariables = (HashMap<String, Integer>) GlobalVariables.clone();
-		save.globalNames = (HashMap<String, String>) GlobalNames.clone();
+		save.flags = Flags;
 
 		save.save();
 	}
@@ -375,7 +366,7 @@ public class Global
 			}
 			else
 			{
-				output += GlobalNames.get( split[i].toLowerCase() );
+				output += Flags.get( split[i].toLowerCase() );
 			}
 
 			skip = !skip;

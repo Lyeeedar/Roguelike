@@ -14,12 +14,8 @@ public class DialogueActionText extends AbstractDialogueAction
 	@Override
 	public ReturnType process()
 	{
-		manager.entity.setPopupText( Global.expandNames( text ), 2 );
-
-		if ( sound != null )
-		{
-			sound.play( manager.entity.tile[0][0] );
-		}
+		manager.popupText = Global.expandNames( text );
+		manager.soundToBePlayed = sound;
 
 		return ReturnType.COMPLETED;
 	}

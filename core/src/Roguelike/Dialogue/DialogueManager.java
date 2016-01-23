@@ -3,6 +3,9 @@ package Roguelike.Dialogue;
 import java.io.IOException;
 import java.util.HashMap;
 
+import Roguelike.Entity.GameEntity;
+import Roguelike.Sound.SoundInstance;
+import com.badlogic.gdx.audio.Sound;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import Roguelike.Global;
@@ -28,9 +31,10 @@ public class DialogueManager
 	public Array<DialogueChunkWrapper> dialogueChunks = new Array<DialogueChunkWrapper>();
 
 	public int currentDialogue = -1;
-	public Entity entity;
 	public DialogueActionInput currentInput;
 	public int mouseOverInput = -1;
+	public String popupText;
+	public SoundInstance soundToBePlayed;
 
 	// ----------------------------------------------------------------------
 	public ExclamationManager exclamationManager;
@@ -40,21 +44,26 @@ public class DialogueManager
 	{
 		for ( String name : reliesOn )
 		{
-			if ( !data.containsKey( name ) && !Global.GlobalVariables.containsKey( name ) )
+			if ( !data.containsKey( name ) && !Global.Flags.containsKey( name ) )
 			{
-				data.put( name, 0 );
+				if (Global.Flags.containsKey( name ))
+				{
+					data.put( name, 1 );
+				}
+				else
+				{
+					data.put( name, 0 );
+				}
 			}
 		}
 
 		ExpressionBuilder expB = EquationHelper.createEquationBuilder( condition );
 		EquationHelper.setVariableNames( expB, data, "" );
-		EquationHelper.setVariableNames( expB, Global.GlobalVariables, "" );
 
 		Expression exp = EquationHelper.tryBuild( expB );
 		if ( exp == null ) { return false; }
 
 		EquationHelper.setVariableValues( exp, data, "" );
-		EquationHelper.setVariableValues( exp, Global.GlobalVariables, "" );
 
 		int raw = (int) exp.evaluate();
 
@@ -62,7 +71,7 @@ public class DialogueManager
 	}
 
 	// ----------------------------------------------------------------------
-	public void initialiseDialogue()
+	public void initialiseDialogue( GameEntity entity )
 	{
 		if ( currentDialogue == -1 )
 		{
@@ -71,7 +80,7 @@ public class DialogueManager
 				if ( processCondition( dialogueChunks.get( i ).condition, dialogueChunks.get( i ).reliesOn ) )
 				{
 					currentDialogue = i;
-					Global.CurrentDialogue = this;
+					Global.CurrentDialogue = entity;
 					dialogueChunks.get( currentDialogue ).dialogue.index = 0;
 					break;
 				}
@@ -80,7 +89,7 @@ public class DialogueManager
 	}
 
 	// ----------------------------------------------------------------------
-	public void advance()
+	public void advance( GameEntity entity )
 	{
 		if ( currentDialogue >= 0 )
 		{
@@ -93,7 +102,7 @@ public class DialogueManager
 			}
 			else
 			{
-				Global.CurrentDialogue = this;
+				Global.CurrentDialogue = entity;
 			}
 		}
 	}
@@ -119,10 +128,9 @@ public class DialogueManager
 	}
 
 	// ----------------------------------------------------------------------
-	public static DialogueManager load( String path, Entity entity )
+	public static DialogueManager load( String path )
 	{
 		DialogueManager manager = new DialogueManager();
-		manager.entity = entity;
 
 		XmlReader xmlReader = new XmlReader();
 		Element xml = null;
@@ -142,7 +150,7 @@ public class DialogueManager
 	}
 
 	// ----------------------------------------------------------------------
-	private static class DialogueChunkWrapper
+	public static class DialogueChunkWrapper
 	{
 		public String condition;
 		public String[] reliesOn;

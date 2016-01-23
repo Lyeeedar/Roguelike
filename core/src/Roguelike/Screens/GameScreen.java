@@ -1010,21 +1010,21 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			font.draw( batch, layout, left + 10, cy + layout.height + 10 );
 		}
 
-		if ( Global.CurrentDialogue != null && Global.CurrentDialogue.currentInput != null )
+		if ( Global.CurrentDialogue != null && Global.CurrentDialogue.dialogue.currentInput != null )
 		{
 			int padding = Global.ANDROID ? 20 : 10;
 
-			int x = Global.CurrentDialogue.entity.tile[ 0 ][ 0 ].x;
-			int y = Global.CurrentDialogue.entity.tile[ 0 ][ 0 ].y;
+			int x = Global.CurrentDialogue.tile[ 0 ][ 0 ].x;
+			int y = Global.CurrentDialogue.tile[ 0 ][ 0 ].y;
 
 			int cx = x * Global.TileSize + offsetx + Global.TileSize / 2;
 			int cy = y * Global.TileSize + offsety;
 
 			float layoutwidth = 0;
 			float layoutheight = 0;
-			for ( int i = 0; i < Global.CurrentDialogue.currentInput.choices.size; i++ )
+			for ( int i = 0; i < Global.CurrentDialogue.dialogue.currentInput.choices.size; i++ )
 			{
-				String message = ( i + 1 ) + ": " + Global.expandNames( Global.CurrentDialogue.currentInput.choices.get( i ) );
+				String message = ( i + 1 ) + ": " + Global.expandNames( Global.CurrentDialogue.dialogue.currentInput.choices.get( i ) );
 
 				layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
 				if ( layout.width > layoutwidth )
@@ -1053,12 +1053,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			speechBubbleBackground.draw( batch, left, cy, layoutwidth + 20, layoutheight + 20 );
 
 			float voffset = padding / 2;
-			for ( int i = Global.CurrentDialogue.currentInput.choices.size - 1; i >= 0; i-- )
+			for ( int i = Global.CurrentDialogue.dialogue.currentInput.choices.size - 1; i >= 0; i-- )
 			{
-				String message = ( i + 1 ) + ": " + Global.expandNames( Global.CurrentDialogue.currentInput.choices.get( i ) );
+				String message = ( i + 1 ) + ": " + Global.expandNames( Global.CurrentDialogue.dialogue.currentInput.choices.get( i ) );
 
 				BitmapFont font = this.font;
-				if ( Global.CurrentDialogue.mouseOverInput == i )
+				if ( Global.CurrentDialogue.dialogue.mouseOverInput == i )
 				{
 					font = hightlightfont;
 				}
@@ -1313,22 +1313,22 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		if ( Global.CurrentDialogue != null )
 		{
-			if ( Global.CurrentDialogue.currentInput != null && keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
+			if ( Global.CurrentDialogue.dialogue.currentInput != null && keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
 			{
 				int val = keycode - Keys.NUM_0;
-				if ( val <= Global.CurrentDialogue.currentInput.choices.size )
+				if ( val <= Global.CurrentDialogue.dialogue.currentInput.choices.size )
 				{
-					Global.CurrentDialogue.currentInput.answer = val;
+					Global.CurrentDialogue.dialogue.currentInput.answer = val;
 				}
 			}
 
-			if ( Global.CurrentDialogue.entity.popup.length() == Global.CurrentDialogue.entity.displayedPopup.length() )
+			if ( Global.CurrentDialogue.popup.length() == Global.CurrentDialogue.displayedPopup.length() )
 			{
-				Global.CurrentDialogue.advance();
+				Global.CurrentDialogue.dialogue.advance( Global.CurrentDialogue );
 			}
 			else
 			{
-				Global.CurrentDialogue.entity.displayedPopup = Global.CurrentDialogue.entity.popup;
+				Global.CurrentDialogue.displayedPopup = Global.CurrentDialogue.popup;
 			}
 		}
 		else if ( keycode == Keys.S )
@@ -1489,28 +1489,28 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		if ( Global.CurrentDialogue != null )
 		{
-			if ( Global.CurrentDialogue.currentInput != null )
+			if ( Global.CurrentDialogue.dialogue.currentInput != null )
 			{
 				if ( Global.ANDROID )
 				{
 					int mouseOver = getMouseOverDialogueOption( screenX, screenY );
-					Global.CurrentDialogue.mouseOverInput = mouseOver;
+					Global.CurrentDialogue.dialogue.mouseOverInput = mouseOver;
 				}
 
-				if ( Global.CurrentDialogue.mouseOverInput != -1 )
+				if ( Global.CurrentDialogue.dialogue.mouseOverInput != -1 )
 				{
-					Global.CurrentDialogue.currentInput.answer = Global.CurrentDialogue.mouseOverInput + 1;
-					Global.CurrentDialogue.mouseOverInput = -1;
+					Global.CurrentDialogue.dialogue.currentInput.answer = Global.CurrentDialogue.dialogue.mouseOverInput + 1;
+					Global.CurrentDialogue.dialogue.mouseOverInput = -1;
 				}
 			}
 
-			if ( Global.CurrentDialogue.entity.popup.length() == Global.CurrentDialogue.entity.displayedPopup.length() )
+			if ( Global.CurrentDialogue.popup.length() == Global.CurrentDialogue.displayedPopup.length() )
 			{
-				Global.CurrentDialogue.advance();
+				Global.CurrentDialogue.dialogue.advance( Global.CurrentDialogue );
 			}
 			else
 			{
-				Global.CurrentDialogue.entity.displayedPopup = Global.CurrentDialogue.entity.popup;
+				Global.CurrentDialogue.displayedPopup = Global.CurrentDialogue.popup;
 			}
 		}
 		else
@@ -1594,10 +1594,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		if ( Global.CurrentDialogue != null )
 		{
-			if ( Global.CurrentDialogue.currentInput != null )
+			if ( Global.CurrentDialogue.dialogue.currentInput != null )
 			{
 				int mouseOver = getMouseOverDialogueOption( screenX, screenY );
-				Global.CurrentDialogue.mouseOverInput = mouseOver;
+				Global.CurrentDialogue.dialogue.mouseOverInput = mouseOver;
 			}
 		}
 		else
@@ -1676,17 +1676,17 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
 		int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
 
-		int x = Global.CurrentDialogue.entity.tile[ 0 ][ 0 ].x;
-		int y = Global.CurrentDialogue.entity.tile[ 0 ][ 0 ].y;
+		int x = Global.CurrentDialogue.tile[ 0 ][ 0 ].x;
+		int y = Global.CurrentDialogue.tile[ 0 ][ 0 ].y;
 
 		int cx = x * Global.TileSize + offsetx + Global.TileSize / 2;
 		int cy = y * Global.TileSize + offsety;
 
 		float layoutwidth = 0;
 		float layoutheight = 0;
-		for ( int i = 0; i < Global.CurrentDialogue.currentInput.choices.size; i++ )
+		for ( int i = 0; i < Global.CurrentDialogue.dialogue.currentInput.choices.size; i++ )
 		{
-			String message = ( i + 1 ) + ": " + Global.expandNames( Global.CurrentDialogue.currentInput.choices.get( i ) );
+			String message = ( i + 1 ) + ": " + Global.expandNames( Global.CurrentDialogue.dialogue.currentInput.choices.get( i ) );
 
 			layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
 			if ( layout.width > layoutwidth )
@@ -1712,12 +1712,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			left -= right - stage.getWidth();
 		}
 
-		Global.CurrentDialogue.mouseOverInput = -1;
+		Global.CurrentDialogue.dialogue.mouseOverInput = -1;
 
 		float voffset = padding / 2;
-		for ( int i = Global.CurrentDialogue.currentInput.choices.size - 1; i >= 0; i-- )
+		for ( int i = Global.CurrentDialogue.dialogue.currentInput.choices.size - 1; i >= 0; i-- )
 		{
-			String message = ( i + 1 ) + ": " + Global.expandNames( Global.CurrentDialogue.currentInput.choices.get( i ) );
+			String message = ( i + 1 ) + ": " + Global.expandNames( Global.CurrentDialogue.dialogue.currentInput.choices.get( i ) );
 			layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
 
 			if ( mousePosX >= left && mousePosX <= right && mousePosY <= cy + layout.height + 10 + voffset && mousePosY >= cy + 10 + voffset )

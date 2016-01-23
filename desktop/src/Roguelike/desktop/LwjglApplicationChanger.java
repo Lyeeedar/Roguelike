@@ -33,7 +33,7 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 
-		cfg.title = pref.getString( "window-name" );
+		cfg.title = "A Skin of Others";
 		cfg.width = pref.getInteger( "resolutionX" );
 		cfg.height = pref.getInteger( "resolutionY" );
 		cfg.fullscreen = pref.getBoolean( "fullscreen" );

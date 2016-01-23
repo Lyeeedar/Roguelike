@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.IAbility;
+import Roguelike.Dialogue.Dialogue;
+import Roguelike.Dialogue.DialogueManager;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Items.Inventory;
 import Roguelike.StatusEffect.StatusEffect;
@@ -25,8 +27,8 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 	public Array<SaveAbilityTree> slottedAbilities = new Array<SaveAbilityTree>();
 	public Inventory inventory;
 	public String UID;
-	public HashMap<String, Integer> dialogueData = new HashMap<String, Integer>();
 
+	public DialogueManager dialogue;
 	// need to save ai
 
 	@Override
@@ -43,6 +45,7 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 			statuses.add( status );
 		}
 		inventory = obj.inventory;
+		dialogue = obj.dialogue;
 
 		for ( AbilityTree a : obj.slottedAbilities )
 		{
@@ -60,11 +63,6 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		}
 
 		UID = obj.UID;
-
-		if ( obj.dialogue != null )
-		{
-			dialogueData = (HashMap<String, Integer>) obj.dialogue.data.clone();
-		}
 	}
 
 	@Override
@@ -119,10 +117,7 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 
 		entity.UID = UID;
 
-		if ( entity.dialogue != null )
-		{
-			entity.dialogue.data = (HashMap<String, Integer>) dialogueData.clone();
-		}
+		entity.dialogue = dialogue;
 
 		return entity;
 	}

@@ -112,7 +112,7 @@ public class CharacterCreationScreen implements Screen
 				GameEntity entity = male.isChecked() ? classList.chosen.male : classList.chosen.female;
 
 				Global.newGame( entity );
-				Global.GlobalNames.put( "class", classList.chosen.name );
+				Global.Flags.put( "class", classList.chosen.name );
 			}
 		} );
 

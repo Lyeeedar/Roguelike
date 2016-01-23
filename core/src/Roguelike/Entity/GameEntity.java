@@ -82,9 +82,24 @@ public class GameEntity extends Entity
 			popupDuration -= 1;
 		}
 
-		if ( dialogue != null && dialogue.exclamationManager != null )
+		if (dialogue != null)
 		{
-			dialogue.exclamationManager.update( 1 );
+			if (dialogue.exclamationManager != null)
+			{
+				dialogue.exclamationManager.update( 1 );
+			}
+
+			if (dialogue.popupText != null)
+			{
+				setPopupText( dialogue.popupText, 2 );
+				dialogue.popupText = null;
+			}
+
+			if (dialogue.soundToBePlayed != null)
+			{
+				dialogue.soundToBePlayed.play( tile[0][0] );
+				dialogue.soundToBePlayed = null;
+			}
 		}
 	}
 
@@ -199,7 +214,7 @@ public class GameEntity extends Entity
 		String dialoguePath = xmlElement.get( "Dialogue", null );
 		if ( dialoguePath != null )
 		{
-			dialogue = DialogueManager.load( dialoguePath, this );
+			dialogue = DialogueManager.load( dialoguePath );
 		}
 
 		essence = xmlElement.getInt( "Essence", MathUtils.random( HP ) );
