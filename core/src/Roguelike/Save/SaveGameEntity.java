@@ -27,6 +27,7 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 	public Array<SaveAbilityTree> slottedAbilities = new Array<SaveAbilityTree>();
 	public Inventory inventory;
 	public String UID;
+	public Point spawnPoint;
 
 	public DialogueManager dialogue;
 	// need to save ai
@@ -63,12 +64,15 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		}
 
 		UID = obj.UID;
+
+		spawnPoint = obj.spawnPos;
 	}
 
 	@Override
 	public GameEntity create()
 	{
 		GameEntity entity = fileName != null ? GameEntity.load( fileName ) : GameEntity.load( xmlData );
+		entity.spawnPos = spawnPoint;
 
 		entity.essence = essence;
 		entity.HP = hp;

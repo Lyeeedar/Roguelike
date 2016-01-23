@@ -1,0 +1,16 @@
+<Entity Extends="NPC/Mage">
+    <Abilities>
+        <MagicArrow>MagicArrow</MagicArrow>
+        <MagicArrow>MagicArrow</MagicArrow>
+        <MagicArrow>MagicArrow</MagicArrow>
+    </Abilities>
+    <Inventory>
+        <Equipment>
+            <Wand>
+                <Recipe>Wand</Recipe>
+                <Material>Metal</Material>
+                <Quality>2</Quality>
+            </Wand>
+        </Equipment>
+    </Inventory>
+</Entity>

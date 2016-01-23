@@ -16,6 +16,7 @@ import Roguelike.Levels.Level;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Tiles.GameTile;
 
+import Roguelike.Tiles.Point;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
@@ -465,6 +466,7 @@ public abstract class AbstractDungeonGenerator
 					if ( e != null )
 					{
 						newTile.addGameEntity( e );
+						e.spawnPos = new Point( newTile );
 					}
 				}
 			}

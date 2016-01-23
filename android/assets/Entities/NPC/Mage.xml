@@ -4,8 +4,19 @@
 
     <Sprite>
         <Name>Oryx/uf_split/uf_heroes/wizard</Name>
+        <Colour><RGB>160,226,100</RGB></Colour>
         <DrawActualSize>true</DrawActualSize>
     </Sprite>
+
+    <Inventory>
+        <Equipment>
+            <Wand>
+                <Recipe>Wand</Recipe>
+                <Material>Metal</Material>
+                <Quality>1</Quality>
+            </Wand>
+        </Equipment>
+    </Inventory>
 
     <Statistics>
         <Constitution>val+10</Constitution>

@@ -443,6 +443,9 @@ public class GameEntity extends Entity
 	public boolean updatedAbilityDam = false;
 	public boolean updatedAbilityHeal = false;
 
+	// ----------------------------------------------------------------------
+	public Point spawnPos;
+
 	// endregion Data
 	// ####################################################################//
 }

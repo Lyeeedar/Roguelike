@@ -15,6 +15,12 @@ public final class Point implements Poolable
 
 	}
 
+	public Point( GameTile tile )
+	{
+		this.x = tile.x;
+		this.y = tile.y;
+	}
+
 	public Point( int x, int y )
 	{
 		this.x = x;

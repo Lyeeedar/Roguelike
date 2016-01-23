@@ -1094,6 +1094,7 @@ public class Level
 			// If no tasks queued, process the ai
 			if ( e.tasks.size == 0 )
 			{
+				e.AI.setData( "SpawnPos", e.spawnPos );
 				e.AI.update( e );
 			}
 

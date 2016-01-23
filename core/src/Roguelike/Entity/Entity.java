@@ -445,6 +445,11 @@ public abstract class Entity
 	// ----------------------------------------------------------------------
 	public void setPopupText( String text, float duration )
 	{
+		if (popup != null && popup.equals( text ))
+		{
+			return;
+		}
+
 		popup = text;
 		displayedPopup = "";
 		popupDuration = duration;

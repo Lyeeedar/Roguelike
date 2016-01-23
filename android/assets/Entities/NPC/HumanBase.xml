@@ -1,5 +1,5 @@
 <Entity>
-    <AI>basicMonster</AI>
+    <AI>sentry</AI>
 
     <Factions>
         <Faction>Human</Faction>
