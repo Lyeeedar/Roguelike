@@ -2,6 +2,7 @@ package Roguelike.Levels;
 
 import Roguelike.DungeonGeneration.DungeonFileParser;
 import Roguelike.Global;
+import Roguelike.Quests.Quest;
 import Roguelike.RoguelikeGame;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.GameScreen;
@@ -26,6 +27,8 @@ public class LevelManager
 	public LevelData root;
 	public LevelData current;
 
+	public Array<Quest> activeQuests = new Array<Quest>(  );
+
 	public LevelManager()
 	{
 		XmlReader xmlReader = new XmlReader();
@@ -48,6 +51,12 @@ public class LevelManager
 
 	public void nextLevel( String name )
 	{
+		for (Quest quest : activeQuests)
+		{
+			quest.evaluateOutputs();
+		}
+		activeQuests.clear();
+
 		LevelData prev = current;
 		current = getLevel( name );
 
@@ -167,6 +176,17 @@ public class LevelManager
 			}
 
 			// For each quest get rooms
+			int numQuests = ran.nextInt( 2 ) + 1;
+			for (int i = 0; i < numQuests; i++)
+			{
+				Quest quest = Global.QuestManager.getQuest( levelName, ran );
+				if (quest != null)
+				{
+					root.activeQuests.add( quest );
+					rooms.add( quest.room );
+				}
+			}
+
 			return rooms;
 		}
 

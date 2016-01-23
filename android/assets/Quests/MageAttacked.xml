@@ -1,0 +1,69 @@
+<Quest>
+    <AllowedLevels>Forest,EnchantedForest</AllowedLevels>
+
+    <Inputs>
+        <FlagPresent Not="true">MageAttacked</FlagPresent>
+    </Inputs>
+
+    <Room>
+        <AddFeatures>false</AddFeatures>
+
+        <Symbols>
+            <Symbol Extends=".">
+                <Char>M</Char>
+                <EntityData>
+                    <Name>NPC/Mage</Name>
+                    <Dialogue>
+                        <Exclamations>
+                            <SeePlayer>
+                                <Exclamation Condition="FirstChat == 0" ReliesOn="FirstChat">Hey you! Help me please!</Exclamation>
+                                <Exclamation>Thanks for your help earlier.</Exclamation>
+                            </SeePlayer>
+                            <InCombat>
+                                <Exclamation>Watch out! Behind you!</Exclamation>
+                            </InCombat>
+                        </Exclamations>
+                        <Dialogue>
+                            <Chunk Condition="FirstChat == 0" ReliesOn="FirstChat">
+                                <Text>Thanks for helping me, I thought I was a goner. I'll teach you a little of what I know as thanks.</Text>
+                                <GainAbility>random(magic)</GainAbility>
+                                <SetVariable>
+                                    <Key>FirstChat</Key>
+                                    <Value>1</Value>
+                                </SetVariable>
+                            </Chunk>
+                            <Chunk>
+                                <Text>Thanks for your help, I think I can find my way back from here.</Text>
+                            </Chunk>
+                        </Dialogue>
+                    </Dialogue>
+                </EntityData>
+            </Symbol>
+        </Symbols>
+
+        <Rows>
+            <Row>1....</Row>
+            <Row>.....</Row>
+            <Row>..M.1</Row>
+            <Row>.....</Row>
+            <Row>1....</Row>
+        </Rows>
+
+    </Room>
+
+    <Outputs>
+        <MageAttacked></MageAttacked>
+        <MageLived>
+            <Conditions>
+                <EntityAlive>Mage</EntityAlive>
+            </Conditions>
+        </MageLived>
+        <MageLived>
+            <Data>false</Data>
+            <Conditions>
+                <EntityAlive Not="true">Mage</EntityAlive>
+            </Conditions>
+        </MageLived>
+        <MageAttacked />
+    </Outputs>
+</Quest>

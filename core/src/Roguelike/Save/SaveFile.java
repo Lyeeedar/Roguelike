@@ -30,21 +30,31 @@ import Roguelike.Items.Item.ItemCategory;
 import Roguelike.Levels.LevelManager;
 import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.ShadowCastCache;
+import Roguelike.Quests.Input.QuestInputFlagPresent;
+import Roguelike.Quests.Output.QuestOutput;
+import Roguelike.Quests.Output.QuestOutputConditionEntityAlive;
+import Roguelike.Quests.Quest;
 import Roguelike.Save.SaveLevel.SaveLevelItem;
 import Roguelike.Save.SaveLevel.SaveOrb;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.Sprite.AnimationMode;
 import Roguelike.Sprite.Sprite.AnimationState;
+import Roguelike.Sprite.SpriteAnimation.AbstractSpriteAnimation;
+import Roguelike.Sprite.SpriteAnimation.BumpAnimation;
+import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
+import Roguelike.Sprite.SpriteAnimation.StretchAnimation;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.esotericsoftware.kryo.Kryo;
@@ -53,6 +63,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import kryo.FastEnumMapSerializer;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,16 +75,19 @@ public final class SaveFile
 	private static Kryo kryo;
 
 	public LevelManager levelManager;
+	public ObjectSet<String> usedQuests;
 	public ObjectMap<String, String> flags;
 
 	public void save()
 	{
 		setupKryo();
 
+		FileHandle attemptFile = Gdx.files.local( "attempt_save.dat" );
+
 		Output output = null;
 		try
 		{
-			output = new Output( new GZIPOutputStream( Gdx.files.local( "save.dat" ).write( false ) ) );
+			output = new Output( new GZIPOutputStream( attemptFile.write( false ) ) );
 		}
 		catch ( IOException e )
 		{
@@ -81,9 +95,16 @@ public final class SaveFile
 		}
 
 		kryo.writeObject( output, levelManager );
+		kryo.writeObject( output, usedQuests );
 		kryo.writeObject( output, flags );
 
 		output.close();
+
+		byte[] bytes = attemptFile.readBytes();
+		FileHandle actualFile = Gdx.files.local( "save.dat" );
+		actualFile.writeBytes( bytes, false );
+
+		attemptFile.delete();
 
 		System.out.println( "Saved" );
 	}
@@ -103,6 +124,7 @@ public final class SaveFile
 		}
 
 		levelManager = kryo.readObject( input, LevelManager.class );
+		usedQuests = kryo.readObject( input, ObjectSet.class );
 		flags = kryo.readObject( input, ObjectMap.class );
 
 		input.close();
@@ -234,8 +256,10 @@ public final class SaveFile
 				float[] scale = input.readFloats( 2 );
 				boolean drawActualSize = input.readBoolean();
 				SoundInstance sound = kryo.readObjectOrNull( input, SoundInstance.class );
+				AbstractSpriteAnimation anim = (AbstractSpriteAnimation)kryo.readClassAndObject( input );
 
 				Sprite sprite = AssetManager.loadSprite( fileName, animDelay, color, mode, sound, drawActualSize );
+				sprite.spriteAnimation = anim;
 				sprite.baseScale = scale;
 				return sprite;
 			}
@@ -250,6 +274,7 @@ public final class SaveFile
 				output.writeFloats( sprite.baseScale );
 				output.writeBoolean( sprite.drawActualSize );
 				kryo.writeObjectOrNull( output, sprite.sound, SoundInstance.class );
+				kryo.writeClassAndObject( output, sprite.spriteAnimation );
 			}
 		} );
 
@@ -373,6 +398,13 @@ public final class SaveFile
 		kryo.register( boolean[].class );
 		kryo.register( boolean[][].class );
 		kryo.register( ObjectMap.class );
+		kryo.register( ObjectSet.class );
+
+		kryo.register( BumpAnimation.class );
+		kryo.register( MoveAnimation.class );
+		kryo.register( StretchAnimation.class );
+		kryo.register( MoveAnimation.MoveEquation.class );
+		kryo.register( StretchAnimation.StretchEquation.class );
 
 		kryo.register( EquipmentSlot.class );
 		kryo.register( ItemCategory.class );
@@ -408,9 +440,15 @@ public final class SaveFile
 		kryo.register( DialogueActionInput.class );
 		kryo.register( DialogueActionLoop.class );
 		kryo.register( DialogueActionSetVariable.class );
+		kryo.register( DialogueActionSetVariable.VariableType.class );
 		kryo.register( DialogueActionText.class );
 		kryo.register( ExclamationManager.class );
 		kryo.register( ExclamationManager.ExclamationWrapper.class );
 		kryo.register( ExclamationManager.ExclamationEventWrapper.class );
+
+		kryo.register( Quest.class );
+		kryo.register( QuestInputFlagPresent.class );
+		kryo.register( QuestOutput.class );
+		kryo.register( QuestOutputConditionEntityAlive.class );
 	}
 }

@@ -40,8 +40,8 @@ public class AtlasCreator
 		settings.paddingX = 2;
 		settings.paddingY = 2;
 		settings.useIndexes = false;
-		settings.filterMin = Texture.TextureFilter.MipMapLinearLinear;
-		settings.filterMag = Texture.TextureFilter.MipMapLinearLinear;
+		settings.filterMin = Texture.TextureFilter.MipMapNearestNearest;
+		settings.filterMag = Texture.TextureFilter.MipMapNearestNearest;
 
 		packer = new TexturePacker( new File("Sprites"), settings );
 

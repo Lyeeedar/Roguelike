@@ -18,6 +18,8 @@ import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.StatusEffect.StatusEffect;
+import Roguelike.Tiles.GameTile;
+import Roguelike.Tiles.Point;
 import Roguelike.Util.EnumBitflag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
@@ -88,19 +90,22 @@ public class GameEntity extends Entity
 			{
 				dialogue.exclamationManager.update( 1 );
 			}
+		}
+	}
 
-			if (dialogue.popupText != null)
+	// ----------------------------------------------------------------------
+	public boolean inCombat()
+	{
+		for ( Point p : visibilityCache.getCurrentShadowCast() )
+		{
+			GameTile otile = tile[0][0].level.getGameTile(p);
+			if (otile.entity != null && !otile.entity.isAllies( this ))
 			{
-				setPopupText( dialogue.popupText, 2 );
-				dialogue.popupText = null;
-			}
-
-			if (dialogue.soundToBePlayed != null)
-			{
-				dialogue.soundToBePlayed.play( tile[0][0] );
-				dialogue.soundToBePlayed = null;
+				return true;
 			}
 		}
+
+		return false;
 	}
 
 	// ----------------------------------------------------------------------

@@ -441,6 +441,7 @@ public final class Room
 	public boolean addFeatures( Random ran, DungeonFileParser dfp, FactionParser faction, int influence, boolean spawnMiniBoss )
 	{
 		if ( faction == null ) { return !spawnMiniBoss; }
+		if ( roomData != null && !roomData.addFactionFeatures ) { return !spawnMiniBoss; }
 
 		Symbol[][] roomCopy = new Symbol[width][height];
 		for ( int x = 0; x < width; x++ )

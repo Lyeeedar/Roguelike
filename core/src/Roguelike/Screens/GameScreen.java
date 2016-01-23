@@ -194,6 +194,21 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			fpsAccumulator = 0;
 		}
 
+		if (Global.CurrentDialogue != null)
+		{
+			if (Global.CurrentDialogue.dialogue.popupText != null)
+			{
+				Global.CurrentDialogue.setPopupText( Global.CurrentDialogue.dialogue.popupText, 2 );
+				Global.CurrentDialogue.dialogue.popupText = null;
+			}
+
+			if (Global.CurrentDialogue.dialogue.soundToBePlayed != null)
+			{
+				Global.CurrentDialogue.dialogue.soundToBePlayed.play( Global.CurrentDialogue.tile[0][0] );
+				Global.CurrentDialogue.dialogue.soundToBePlayed = null;
+			}
+		}
+
 		Global.BGM.update( delta );
 
 		if ( !examineMode && !lockContextMenu )
@@ -1159,8 +1174,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						Global.CurrentLevel.player.getInventory().equip( item );
 
 						Global.CurrentLevel.player.isVariableMapDirty = true;
-						for ( AbilityTree tree : Global.CurrentLevel.player.slottedAbilities )
+						for ( int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++ )
 						{
+							AbilityTree tree = Global.CurrentLevel.player.slottedAbilities.get( i );
 							if (tree != null)
 							{
 								tree.current.current.setCaster( Global.CurrentLevel.player );

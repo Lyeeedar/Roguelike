@@ -23,6 +23,7 @@ public class ExclamationManager
 	public ExclamationEventWrapper seeAlly;
 	public ExclamationEventWrapper seeEnemy;
 	public ExclamationEventWrapper lowHealth;
+	public ExclamationEventWrapper inCombat;
 
 	public void update( float delta )
 	{
@@ -177,6 +178,12 @@ public class ExclamationManager
 		{
 			lowHealth = ExclamationEventWrapper.load( lowHealthElement );
 		}
+
+		Element inCombatElement = xml.getChildByName( "InCombat" );
+		if ( inCombatElement != null )
+		{
+			inCombat = ExclamationEventWrapper.load( inCombatElement );
+		}
 	}
 
 	public static ExclamationManager load( Element xml )
@@ -293,17 +300,20 @@ public class ExclamationManager
 			condition = xml.getAttribute( "Condition", "1" ).toLowerCase();
 			reliesOn = xml.getAttribute( "ReliesOn", "" ).toLowerCase().split( "," );
 
-			Element soundEl = xml.getChildByName( "Sound" );
-			if ( soundEl != null )
+			if ( xml.getChildCount() == 0 )
 			{
-				sound = SoundInstance.load( soundEl );
+				text = xml.getText();
 			}
 			else
 			{
-				sound = new SoundInstance();
-			}
+				Element soundEl = xml.getChildByName( "Sound" );
+				if ( soundEl != null )
+				{
+					sound = SoundInstance.load( soundEl );
+				}
 
-			text = xml.get( "Text" );
+				text = xml.get( "Text" );
+			}
 		}
 
 		public static ExclamationWrapper load( Element xml )

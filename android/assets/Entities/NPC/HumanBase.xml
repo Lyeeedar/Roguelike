@@ -1,0 +1,21 @@
+<Entity>
+    <AI>basicMonster</AI>
+
+    <Factions>
+        <Faction>Human</Faction>
+    </Factions>
+
+    <Statistics>
+
+        <Attack>5</Attack>
+        <Defense>30</Defense>
+
+        <Constitution>10</Constitution>
+        <Perception>10</Perception>
+        <Strength>10</Strength>
+        <Willpower>10</Willpower>
+        <Speed>10</Speed>
+
+    </Statistics>
+
+</Entity>

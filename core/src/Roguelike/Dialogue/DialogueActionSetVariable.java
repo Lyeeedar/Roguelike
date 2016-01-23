@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class DialogueActionSetVariable extends AbstractDialogueAction
 {
-	private enum VariableType
+	public enum VariableType
 	{
 		LOCAL, FLAG
 	}

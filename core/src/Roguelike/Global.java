@@ -8,6 +8,7 @@ import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Levels.Level;
 import Roguelike.Levels.LevelManager;
 import Roguelike.Lights.Light;
+import Roguelike.Quests.QuestManager;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Save.SaveFile;
 import Roguelike.Save.SaveLevel;
@@ -104,6 +105,7 @@ public class Global
 
 	// ----------------------------------------------------------------------
 	public static LevelManager LevelManager;
+	public static QuestManager QuestManager;
 
 	// ----------------------------------------------------------------------
 	public static Level CurrentLevel;
@@ -151,13 +153,8 @@ public class Global
 		SaveFile save = new SaveFile();
 		save.load();
 
-		// for ( SaveDungeon saveDungeon : save.dungeons )
-		// {
-		// Dungeon dungeon = saveDungeon.create();
-		// Dungeons.put( dungeon.UID, dungeon );
-		// }
-
-		// Global.abilityPool = save.abilityPool.create();
+		Global.QuestManager = new QuestManager();
+		Global.QuestManager.usedQuests = save.usedQuests;
 		Global.Flags = save.flags;
 
 		LevelManager = save.levelManager;
@@ -174,6 +171,7 @@ public class Global
 	public static void newGame( GameEntity player )
 	{
 		LevelManager = new LevelManager();
+		QuestManager = new QuestManager();
 		AUT = 0;
 		DayNightFactor = (float) ( 0.1f + ( ( ( Math.sin( AUT / 100.0f ) + 1.0f ) / 2.0f ) * 0.9f ) );
 
@@ -263,7 +261,7 @@ public class Global
 
 		LevelManager.current.currentLevel.store( Global.CurrentLevel );
 		save.levelManager = LevelManager;
-
+		save.usedQuests = QuestManager.usedQuests;
 		save.flags = Flags;
 
 		save.save();

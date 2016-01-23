@@ -19,9 +19,17 @@ public class DialogueActionGainAbility extends AbstractDialogueAction
 	@Override
 	public DialogueManager.ReturnType process()
 	{
-		if (ability.equalsIgnoreCase( "Random" ))
+		if (ability.toLowerCase().startsWith( "random" ))
 		{
-			GameScreen.Instance.pickupQueue.addAll( TreasureGenerator.generateAbility( 1, MathUtils.random ) );
+			String[] abilityParts = ability.toLowerCase().split( "[\\(\\)]" );
+			String[] tags = new String[]{};
+
+			if (abilityParts.length > 1)
+			{
+				tags = abilityParts[1].split( "," );
+			}
+
+			GameScreen.Instance.pickupQueue.addAll( TreasureGenerator.generateAbility( 1, MathUtils.random, tags ) );
 		}
 		else
 		{

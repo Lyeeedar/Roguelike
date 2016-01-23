@@ -145,6 +145,7 @@ public class DungeonFileParser
 		public HashMap<Character, Symbol> symbolMap = new HashMap<Character, Symbol>();
 		public char[][] roomDef;
 		public String faction;
+		public boolean addFactionFeatures = true;
 		public AbstractRoomGenerator generator;
 		public String placementHint;
 
@@ -165,6 +166,8 @@ public class DungeonFileParser
 			room.placement = Placement.valueOf( xml.get( "Placement", "Centre" ).toUpperCase() );
 
 			room.lockRotation = xml.getBoolean( "LockRotation", false );
+
+			room.addFactionFeatures = xml.getBoolean( "AddFeatures", true );
 
 			Element rowsElement = xml.getChildByName( "Rows" );
 
@@ -443,6 +446,34 @@ public class DungeonFileParser
 	}
 
 	// ----------------------------------------------------------------------
+	public void addDefaultSymbols()
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			char c = (""+i).charAt( 0 );
+			if (!sharedSymbolMap.containsKey( c ))
+			{
+				Symbol symbol = new Symbol();
+				symbol.character = c;
+				symbol.entityData = ""+c;
+				symbol.extendsSymbol = '.';
+
+				sharedSymbolMap.put( c, symbol );
+			}
+		}
+
+		if (!sharedSymbolMap.containsKey( 'B' ))
+		{
+			Symbol symbol = new Symbol();
+			symbol.character = 'B';
+			symbol.entityData = "Boss";
+			symbol.extendsSymbol = '.';
+
+			sharedSymbolMap.put( 'B', symbol );
+		}
+	}
+
+	// ----------------------------------------------------------------------
 	public Array<DFPRoom> getRooms( int depth, Random ran, boolean isBoss, FactionParser majorFaction, Array<FactionParser> minorFactions )
 	{
 		Array<DFPRoom> outRooms = new Array<DFPRoom>();
@@ -643,6 +674,7 @@ public class DungeonFileParser
 			Symbol symbol = Symbol.parse( symbolsElement.getChild( i ) );
 			sharedSymbolMap.put( symbol.character, symbol );
 		}
+		addDefaultSymbols();
 
 		for (Element el : xmlElement.getChildrenByName( "Entrance" ))
 		{

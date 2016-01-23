@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+import Roguelike.Dialogue.DialogueManager;
 import Roguelike.Fields.Field;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
@@ -16,6 +17,7 @@ import Roguelike.Save.SaveLevel;
 import Roguelike.Tiles.GameTile;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
@@ -415,13 +417,26 @@ public abstract class AbstractDungeonGenerator
 					GameTile newTile = actualTiles[x][y];
 					GameEntity e = null;
 
-					if ( symbol.entityData.equals( "Boss" ) )
+					String entityPath = null;
+					XmlReader.Element entityData = null;
+
+					if (symbol.entityData instanceof String)
+					{
+						entityPath = (String)symbol.entityData;
+					}
+					else
+					{
+						entityData = (XmlReader.Element)symbol.entityData;
+						entityPath = entityData.get( "Name" );
+					}
+
+					if ( entityPath.equals( "Boss" ) )
 					{
 						e = GameEntity.load( fp.bosses.get( ran.nextInt( fp.bosses.size ) ) );
 					}
-					else if ( Global.isNumber( symbol.entityData ) )
+					else if ( Global.isNumber( entityPath ) )
 					{
-						int index = Integer.parseInt( symbol.entityData );
+						int index = Integer.parseInt( entityPath );
 
 						index = (int) ( ( index / 9.0f ) * fp.creatures.size );
 
@@ -429,7 +444,17 @@ public abstract class AbstractDungeonGenerator
 					}
 					else
 					{
-						e = GameEntity.load( symbol.entityData );
+						e = GameEntity.load( entityPath );
+					}
+
+					if (entityData != null)
+					{
+						XmlReader.Element dialogueElement = entityData.getChildByName( "Dialogue" );
+						if (dialogueElement != null)
+						{
+							DialogueManager dialogue = DialogueManager.load( dialogueElement );
+							e.dialogue = dialogue;
+						}
 					}
 
 					if ( symbol.isBoss )

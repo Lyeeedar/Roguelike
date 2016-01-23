@@ -1,0 +1,14 @@
+<Entity Extends="NPC/HumanBase">
+
+    <Name>Mage</Name>
+
+    <Sprite>
+        <Name>Oryx/uf_split/uf_heroes/wizard</Name>
+        <DrawActualSize>true</DrawActualSize>
+    </Sprite>
+
+    <Statistics>
+        <Constitution>val+10</Constitution>
+    </Statistics>
+
+</Entity>

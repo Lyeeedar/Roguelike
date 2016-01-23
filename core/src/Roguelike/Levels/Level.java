@@ -635,6 +635,21 @@ public class Level
 	{
 		if ( tile.entity != null && tile.entity.tile[0][0] == tile )
 		{
+			if (tile.entity.dialogue != null)
+			{
+				if (tile.entity.dialogue.popupText != null)
+				{
+					tile.entity.setPopupText( tile.entity.dialogue.popupText, 2 );
+					tile.entity.dialogue.popupText = null;
+				}
+
+				if (tile.entity.dialogue.soundToBePlayed != null)
+				{
+					tile.entity.dialogue.soundToBePlayed.play( tile.entity.tile[0][0] );
+					tile.entity.dialogue.soundToBePlayed = null;
+				}
+			}
+
 			if ( tile.entity.popup != null )
 			{
 				if ( tile.entity.displayedPopup.length() < tile.entity.popup.length() )
@@ -1054,7 +1069,7 @@ public class Level
 			}
 
 			saveCounter++;
-			if (saveCounter == 50)
+			if (saveCounter == 10)
 			{
 				Global.save();
 				saveCounter = 0;

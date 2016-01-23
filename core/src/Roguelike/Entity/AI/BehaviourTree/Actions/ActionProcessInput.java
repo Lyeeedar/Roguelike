@@ -122,7 +122,7 @@ public class ActionProcessInput extends AbstractAction
 			boolean isWait = targetPos.x == entity.tile[0][0].x && targetPos.y == entity.tile[0][0].y;
 
 			Point oldPos = (Point) getData( "Pos", null );
-			if ( oldPos != null )
+			if ( oldPos != null && oldPos.obtained )
 			{
 				Global.PointPool.free( oldPos );
 			}
@@ -197,10 +197,17 @@ public class ActionProcessInput extends AbstractAction
 
 				setData( "Pos", null );
 			}
-			else if ( dialogueWithinRange )
+			else if ( dialogueWithinRange && !tile.entity.inCombat() )
 			{
-				tile.entity.dialogue.initialiseDialogue( entity );
-				tile.entity.dialogue.advance( entity );
+				if (tile.entity.inCombat())
+				{
+					tile.entity.dialogue.exclamationManager.inCombat.process( tile.entity, null, null );
+				}
+				else
+				{
+					tile.entity.dialogue.initialiseDialogue( tile.entity );
+					tile.entity.dialogue.advance( tile.entity );
+				}
 			}
 			else
 			{

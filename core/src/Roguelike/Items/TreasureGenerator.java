@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.XmlReader;
 
 import java.io.IOException;
@@ -28,9 +29,17 @@ public class TreasureGenerator
 			{
 				items.addAll( TreasureGenerator.generateCurrency( quality, MathUtils.random ) );
 			}
-			else if ( type.equals( "ability" ) )
+			else if ( type.startsWith( "ability" ) )
 			{
-				items.addAll( TreasureGenerator.generateAbility( quality, MathUtils.random ) );
+				String[] abilityParts = type.split( "[\\(\\)]" );
+				String[] tags = new String[]{};
+
+				if (abilityParts.length > 1)
+				{
+					tags = abilityParts[1].split( "," );
+				}
+
+				items.addAll( TreasureGenerator.generateAbility( quality, MathUtils.random, tags ) );
 			}
 			else if ( type.equals( "armour" ) )
 			{
@@ -108,7 +117,7 @@ public class TreasureGenerator
 
 		if ( chance < chances[3] )
 		{
-			items.addAll( TreasureGenerator.generateAbility( quality, ran ) );
+			items.addAll( TreasureGenerator.generateAbility( quality, ran, new String[]{} ) );
 			return items;
 		}
 
@@ -143,16 +152,34 @@ public class TreasureGenerator
 		return items;
 	}
 
-	public static Array<Item> generateAbility( int quality, Random ran )
+	public static Array<Item> generateAbility( int quality, Random ran, String[] tags )
 	{
 		Array<Item> items = new Array<Item>(  );
 
-		int maxQuality = Math.min( quality, abilityList.qualityData.size );
-		int chosenQuality = ran.nextInt( maxQuality );
+		Array<QualityData> validList = new Array<QualityData>(  );
 
-		int numChoices = abilityList.qualityData.get( chosenQuality ).size;
-		int choice = ran.nextInt( numChoices );
-		String chosen = abilityList.qualityData.get( chosenQuality ).get( choice ).name;
+		for (int i = 0; i < quality && i < abilityList.qualityData.size; i++)
+		{
+			for (QualityData qd : abilityList.qualityData.get( i ))
+			{
+				boolean valid = true;
+				for (String tag : tags)
+				{
+					if (!qd.tags.contains( tag ))
+					{
+						valid = false;
+						break;
+					}
+				}
+
+				if (valid)
+				{
+					validList.add( qd );
+				}
+			}
+		}
+
+		String chosen = validList.get( ran.nextInt( validList.size ) ).name;
 
 		AbilityTree tree = new AbilityTree( chosen );
 
@@ -430,7 +457,10 @@ public class TreasureGenerator
 					XmlReader.Element qEl = qualityElement.getChild( ii );
 					String name = qEl.getName();
 					String colour = qEl.getAttribute( "RGB", null );
-					qualityLevel.add( new QualityData( name, colour ) );
+					String tagString = qEl.getText();
+					if (tagString == null) { tagString = ""; }
+					String[] tags = tagString.toLowerCase().split( "," );
+					qualityLevel.add( new QualityData( name, colour, tags ) );
 				}
 
 				qualityData.add( qualityLevel );
@@ -442,11 +472,13 @@ public class TreasureGenerator
 	{
 		public String name;
 		public String colour;
+		public ObjectSet<String> tags = new ObjectSet<String>(  );
 
-		public QualityData( String name, String colour )
+		public QualityData( String name, String colour, String[] tags )
 		{
 			this.name = name;
 			this.colour = colour;
+			this.tags.addAll( tags );
 		}
 	}
 }

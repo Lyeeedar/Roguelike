@@ -48,7 +48,7 @@ public final class Point implements Poolable
 		return Global.PointPool.obtain().set( x, y );
 	}
 
-	private boolean obtained = false;
+	public boolean obtained = false;
 
 	@Override
 	public void reset()

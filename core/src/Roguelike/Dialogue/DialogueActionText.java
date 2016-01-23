@@ -23,15 +23,20 @@ public class DialogueActionText extends AbstractDialogueAction
 	@Override
 	public void parse( Element xml )
 	{
-		text = xml.getText();
-
-		Element soundEl = xml.getChildByName( "Sound" );
-		if ( soundEl != null )
+		if ( xml.getChildCount() == 0 )
 		{
-			sound = SoundInstance.load( soundEl );
+			text = xml.getText();
 		}
+		else
+		{
+			Element soundEl = xml.getChildByName( "Sound" );
+			if ( soundEl != null )
+			{
+				sound = SoundInstance.load( soundEl );
+			}
 
-		text = xml.get( "Text" );
+			text = xml.get( "Text" );
+		}
 	}
 
 }

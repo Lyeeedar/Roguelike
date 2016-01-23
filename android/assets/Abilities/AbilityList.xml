@@ -1,22 +1,22 @@
 <Data>
     <Quality1>
-        <Firebolt></Firebolt>
-        <LightningBolt></LightningBolt>
-        <MagicArrow></MagicArrow>
-        <PowerAttack></PowerAttack>
-        <Sunder></Sunder>
+        <Firebolt>magic,fire</Firebolt>
+        <LightningBolt>magic,lightning</LightningBolt>
+        <MagicArrow>magic</MagicArrow>
+        <PowerAttack>melee</PowerAttack>
+        <Sunder>melee</Sunder>
     </Quality1>
     <Quality2>
-        <Aegis></Aegis>
-        <Healing></Healing>
-        <Icicle></Icicle>
-        <BloodShot></BloodShot>
-        <Rend></Rend>
+        <Aegis>defensive</Aegis>
+        <Healing>defensive</Healing>
+        <Icicle>magic,ice</Icicle>
+        <BloodShot>magic,blood</BloodShot>
+        <Rend>melee,blood</Rend>
     </Quality2>
     <Quality3>
-        <AortalBlockage></AortalBlockage>
-        <CriticalStrikes></CriticalStrikes>
-        <FireAttunement></FireAttunement>
-        <StaticCharge></StaticCharge>
+        <AortalBlockage>magic,blood</AortalBlockage>
+        <CriticalStrikes>melee</CriticalStrikes>
+        <FireAttunement>magic,fire</FireAttunement>
+        <StaticCharge>magic,lightning</StaticCharge>
     </Quality3>
 </Data>

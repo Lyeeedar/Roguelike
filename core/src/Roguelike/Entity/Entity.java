@@ -495,7 +495,7 @@ public abstract class Entity
 	public Inventory inventory = new Inventory();
 
 	// ----------------------------------------------------------------------
-	public String name;
+	public String name = "";
 
 	// ----------------------------------------------------------------------
 	public String popup;

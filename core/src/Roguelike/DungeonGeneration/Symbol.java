@@ -26,7 +26,7 @@ public final class Symbol implements PathfindingTile
 	public HashMap<String, Object> environmentEntityData;
 	public Direction attachLocation;
 
-	public String entityData;
+	public Object entityData;
 	public boolean isBoss;
 
 	public Element fieldData;
@@ -134,7 +134,11 @@ public final class Symbol implements PathfindingTile
 			symbol.environmentData = enviromentDataElement;
 		}
 
-		symbol.entityData = xml.get( "EntityData", symbol.entityData );
+		Element entityElement = xml.getChildByName( "EntityData" );
+		if (entityElement != null)
+		{
+			symbol.entityData = entityElement;
+		}
 
 		Element fieldElement = xml.getChildByName( "FieldData" );
 		if ( fieldElement != null )

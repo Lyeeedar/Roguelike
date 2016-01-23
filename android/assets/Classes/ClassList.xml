@@ -95,6 +95,7 @@
 
         <Factions>
             <Faction>Player</Faction>
+            <Faction>Human</Faction>
         </Factions>
 
         <AI>player</AI>

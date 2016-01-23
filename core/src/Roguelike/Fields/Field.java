@@ -169,7 +169,7 @@ public class Field implements IGameObject
 							fieldStore.put( layer, null );
 						}
 
-						tile.fields.put( layer, null );
+						newTile.fields.put( layer, null );
 
 						Field field = interaction.process( srcField, dstField );
 

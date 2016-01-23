@@ -123,8 +123,9 @@ public class EquipmentPanel extends TilePanel
 								equip.upgrade();
 
 								Global.CurrentLevel.player.isVariableMapDirty = true;
-								for ( AbilityTree tree : Global.CurrentLevel.player.slottedAbilities )
+								for ( int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++ )
 								{
+									AbilityTree tree = Global.CurrentLevel.player.slottedAbilities.get( i );
 									if (tree != null)
 									{
 										tree.current.current.setCaster( Global.CurrentLevel.player );

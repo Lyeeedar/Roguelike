@@ -42,6 +42,11 @@ public class DialogueManager
 	// ----------------------------------------------------------------------
 	public boolean processCondition( String condition, String[] reliesOn )
 	{
+		if (condition == null)
+		{
+			return true;
+		}
+
 		for ( String name : reliesOn )
 		{
 			if ( !data.containsKey( name ) && !Global.Flags.containsKey( name ) )
@@ -130,8 +135,6 @@ public class DialogueManager
 	// ----------------------------------------------------------------------
 	public static DialogueManager load( String path )
 	{
-		DialogueManager manager = new DialogueManager();
-
 		XmlReader xmlReader = new XmlReader();
 		Element xml = null;
 
@@ -144,8 +147,14 @@ public class DialogueManager
 			e.printStackTrace();
 		}
 
-		manager.parse( xml );
+		return load( xml );
+	}
 
+	// ----------------------------------------------------------------------
+	public static DialogueManager load( Element xml )
+	{
+		DialogueManager manager = new DialogueManager();
+		manager.parse( xml );
 		return manager;
 	}
 
