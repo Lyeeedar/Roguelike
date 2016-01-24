@@ -57,9 +57,11 @@
                     <Icon><Name>Oryx/Custom/terrain/cocoon</Name></Icon>
                     <Events>
                         <OnMove><Cancel/></OnMove>
-                        <AdditionalSprite>
-                            <Name>Oryx/Custom/terrain/cocoon</Name>
-                        </AdditionalSprite>
+                        <AdditionalSprites>
+                            <AdditionalSprite>
+                                <Name>Oryx/Custom/terrain/cocoon</Name>
+                            </AdditionalSprite>
+                        </AdditionalSprites>
                     </Events>
                 </Status>
 

@@ -13,6 +13,7 @@ import Roguelike.Entity.Tasks.TaskMove;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Fields.Field;
 import Roguelike.Fields.Field.FieldLayer;
+import Roguelike.GameEvent.AdditionalSprite;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
@@ -770,9 +771,9 @@ public class Level
 			{
 				tile.environmentEntity.replacementSprite.update( delta );
 			}
-			for (Sprite s : tile.environmentEntity.additionalSprites)
+			for (AdditionalSprite s : tile.environmentEntity.additionalSprites)
 			{
-				s.update( delta );
+				s.sprite.update( delta );
 			}
 		}
 
@@ -784,9 +785,9 @@ public class Level
 			{
 				tile.entity.replacementSprite.update( delta );
 			}
-			for (Sprite s : tile.entity.additionalSprites)
+			for (AdditionalSprite s : tile.entity.additionalSprites)
 			{
-				s.update( delta );
+				s.sprite.update( delta );
 			}
 		}
 

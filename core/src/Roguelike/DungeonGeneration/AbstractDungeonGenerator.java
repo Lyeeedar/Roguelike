@@ -273,7 +273,7 @@ public abstract class AbstractDungeonGenerator
 		width = symbolGrid.length;
 		height = symbolGrid[0].length;
 
-		if ( DEBUG_OUTPUT )
+		//if ( DEBUG_OUTPUT )
 		{
 			DEBUG_printGrid( symbolGrid );
 		}

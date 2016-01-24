@@ -115,55 +115,63 @@
                     </Sprite>
 
                     <Dialogue>
-                        <Chunk Condition="LoversChat == 0" ReliesOn="LoversChat">
-                            <Text>Adventurer! Please let us out of here!</Text>
-                            <Input Key="Response">
-                                <Choice>What are you doing here?</Choice>
-                                <Choice>*Let him out*</Choice>
-                                <Choice>*Leave*</Choice>
-                            </Input>
-                            <Branch>
-                                <Branch Condition="Response == 1">
-                                    <Text>Ruffly and I, our relationship is not exactly approved of by our families.</Text>
-                                    <Text>We heard that deep in the heart of the woods lies a temple to the goddess of love, Dysa.</Text>
-                                    <Text>We wished to get her blessing, so our love might endure the hardship before us.</Text>
-                                    <Text>We got ambushed by goblins but a kind adventurer saved us.</Text>
-                                    <Text>As we were camping out for the night another group of goblins snuck up on us and captured us. And now we are here.</Text>
-                                    <Text>So... Could you let us out now please.</Text>
-                                    <Input Key="Response">
-                                        <Choice>*Let him out*</Choice>
-                                        <Choice>*Leave*</Choice>
-                                    </Input>
-                                    <Branch>
-                                        <Branch Condition="Response == 1">
-                                            <ConsumeStatus>Captured</ConsumeStatus>
-                                            <SetVariable>
-                                                <Key>LoversChat</Key>
-                                                <Value>1</Value>
-                                            </SetVariable>
-                                            <Text>Thank you!</Text>
-                                        </Branch>
-                                        <Branch Condition="Response == 2">
-                                            <Text>No! Come back!</Text>
+                        <Exclamations>
+                            <SeePlayer>
+                                <Exclamation Condition="LoversChat == 0" ReliesOn="LoversChat">Help!</Exclamation>
+                                <Exclamation>Thank you for your gallant rescue.</Exclamation>
+                            </SeePlayer>
+                        </Exclamations>
+                        <Dialogue>
+                            <Chunk Condition="LoversChat == 0" ReliesOn="LoversChat">
+                                <Text>Adventurer! Please let us out of here!</Text>
+                                <Input Key="Response">
+                                    <Choice>What are you doing here?</Choice>
+                                    <Choice>*Let her out*</Choice>
+                                    <Choice>*Leave*</Choice>
+                                </Input>
+                                <Branch>
+                                    <Branch Condition="Response == 1">
+                                        <Text>Ruffly and I, our relationship is not exactly approved of by our families.</Text>
+                                        <Text>We heard that deep in the heart of the woods lies a temple to the goddess of love, Dysa.</Text>
+                                        <Text>We wished to get her blessing, so our love might endure the hardship before us.</Text>
+                                        <Text>We got ambushed by goblins but a kind adventurer saved us.</Text>
+                                        <Text>As we were camping out for the night another group of goblins snuck up on us and captured us. And now we are here.</Text>
+                                        <Text>So... Could you let us out now please.</Text>
+                                        <Input Key="Response">
+                                            <Choice>*Let her out*</Choice>
+                                            <Choice>*Leave*</Choice>
+                                        </Input>
+                                        <Branch>
+                                            <Branch Condition="Response == 1">
+                                                <ConsumeStatus>Captured</ConsumeStatus>
+                                                <SetVariable>
+                                                    <Key>LoversChat</Key>
+                                                    <Value>1</Value>
+                                                </SetVariable>
+                                                <Text>Thank you!</Text>
+                                            </Branch>
+                                            <Branch Condition="Response == 2">
+                                                <Text>No! Come back!</Text>
+                                            </Branch>
                                         </Branch>
                                     </Branch>
+                                    <Branch Condition="Response == 2">
+                                        <ConsumeStatus>Captured</ConsumeStatus>
+                                        <SetVariable>
+                                            <Key>LoversChat</Key>
+                                            <Value>1</Value>
+                                        </SetVariable>
+                                        <Text>Thank you!</Text>
+                                    </Branch>
+                                    <Branch Condition="Response == 3">
+                                        <Text>No! Come back!</Text>
+                                    </Branch>
                                 </Branch>
-                                <Branch Condition="Response == 2">
-                                    <ConsumeStatus>Captured</ConsumeStatus>
-                                    <SetVariable>
-                                        <Key>LoversChat</Key>
-                                        <Value>1</Value>
-                                    </SetVariable>
-                                    <Text>Thank you!</Text>
-                                </Branch>
-                                <Branch Condition="Response == 3">
-                                    <Text>No! Come back!</Text>
-                                </Branch>
-                            </Branch>
-                        </Chunk>
-                        <Chunk>
-                            <Text>Thanks for saving us. Who knows what would have happened to us had you not come along.</Text>
-                        </Chunk>
+                            </Chunk>
+                            <Chunk>
+                                <Text>Thanks for saving us. Who knows what would have happened to us had you not come along.</Text>
+                            </Chunk>
+                        </Dialogue>
                     </Dialogue>
 
                 </EntityData>

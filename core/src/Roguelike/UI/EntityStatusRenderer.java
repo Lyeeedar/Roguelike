@@ -39,7 +39,11 @@ public class EntityStatusRenderer
 			for ( StatusEffect status : entity.statusEffects )
 			{
 				status.icon.render( batch, sx, sy, statusTileSize, statusTileSize );
-				font.draw( batch, "" + status.duration, sx, sy );
+
+				if ( status.durationType != StatusEffect.DurationType.PERMANENT)
+				{
+					font.draw( batch, "" + status.duration, sx, sy );
+				}
 
 				sx += statusTileSize;
 

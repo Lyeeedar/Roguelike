@@ -11,10 +11,14 @@
         <OnTask>
             <Cancel />
         </OnTask>
-        <AdditionalSprite>
-            <Name>Oryx/uf_split/uf_terrain/fence_10</Name>
-            <DrawActualSize>true</DrawActualSize>
-        </AdditionalSprite>
+        <AdditionalSprites>
+            <AdditionalSprite Priority="-1">
+                <Name>Oryx/Custom/terrain/fence_top</Name>
+            </AdditionalSprite>
+            <AdditionalSprite>
+                <Name>Oryx/uf_split/uf_terrain/fence_10</Name>
+            </AdditionalSprite>
+        </AdditionalSprites>
     </Events>
 
 </StatusEffect>

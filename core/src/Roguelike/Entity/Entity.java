@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import Roguelike.AssetManager;
+import Roguelike.GameEvent.AdditionalSprite;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
@@ -384,9 +385,9 @@ public abstract class Entity
 			{
 				replacementSprite = se.replacementSprite;
 			}
-			if (se.additionalSprite != null)
+			for (AdditionalSprite as : se.additionalSprites)
 			{
-				additionalSprites.add( se.additionalSprite );
+				additionalSprites.add( as );
 			}
 		}
 	}
@@ -468,7 +469,7 @@ public abstract class Entity
 
 	// ----------------------------------------------------------------------
 	public Sprite replacementSprite;
-	public Array<Sprite> additionalSprites = new Array<Sprite>(  );
+	public Array<AdditionalSprite> additionalSprites = new Array<AdditionalSprite>(  );
 
 	// ----------------------------------------------------------------------
 	public boolean weaponSheathed = false;

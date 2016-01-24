@@ -241,6 +241,8 @@ public class GameEntity extends Entity
 				StatusEffect effect = StatusEffect.load( statusElement.getText() );
 				pendingStatusEffects.add( effect );
 			}
+
+			processStatuses();
 		}
 	}
 

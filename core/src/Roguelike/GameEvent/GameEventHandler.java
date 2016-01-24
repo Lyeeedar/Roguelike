@@ -39,7 +39,7 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnExpireEvent> onExpireEvents = new Array<AbstractOnExpireEvent>();
 
 	public Sprite replacementSprite;
-	public Sprite additionalSprite;
+	public Array<AdditionalSprite> additionalSprites = new Array<AdditionalSprite>(  );
 
 	public Array<Object[]> extraData = new Array<Object[]>();
 
@@ -462,10 +462,18 @@ public abstract class GameEventHandler implements IGameObject
 			replacementSprite = AssetManager.loadSprite( replacementSpriteElement );
 		}
 
-		Element additionalSpriteElement = xml.getChildByName( "AdditionalSprite" );
-		if (additionalSpriteElement != null)
+		Element additionalSpritesElement = xml.getChildByName( "AdditionalSprites" );
+		if (additionalSpritesElement != null)
 		{
-			additionalSprite = AssetManager.loadSprite( additionalSpriteElement );
+			for ( int i = 0; i < additionalSpritesElement.getChildCount(); i++ )
+			{
+				Element additionalSpriteElement = additionalSpritesElement.getChild( i );
+				AdditionalSprite additionalSprite = new AdditionalSprite();
+				additionalSprite.parse( additionalSpriteElement );
+
+				additionalSprites.add( additionalSprite );
+			}
+
 		}
 	}
 

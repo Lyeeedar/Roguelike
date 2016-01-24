@@ -30,14 +30,17 @@ public class QuestOutput
 		if (defer)
 		{
 			Global.QuestManager.deferredFlags.put( key, data );
+			System.out.println("Setting defered flag: '" + key + "' to '" + data+"'");
 		}
 		else if (runFlag)
 		{
 			Global.RunFlags.put( key, data );
+			System.out.println("Setting run flag: '" + key + "' to '" + data+"'");
 		}
 		else
 		{
 			Global.WorldFlags.put( key, data );
+			System.out.println("Setting world flag: '" + key + "' to '" + data+"'");
 		}
 	}
 

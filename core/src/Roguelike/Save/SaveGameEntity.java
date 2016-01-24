@@ -81,10 +81,14 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 
 		entity.essence = essence;
 		entity.HP = hp;
+		entity.statusEffects.clear();
 		for ( StatusEffect saveStatus : statuses )
 		{
 			entity.addStatusEffect( saveStatus );
 		}
+
+		entity.processStatuses();
+
 		entity.inventory = inventory;
 
 		for ( int i = 0; i < slottedAbilities.size; i++ )

@@ -37,11 +37,11 @@ public class AtlasCreator
 		TexturePacker.Settings settings = new TexturePacker.Settings();
 		settings.combineSubdirectories = true;
 		settings.duplicatePadding = true;
-		settings.paddingX = 2;
-		settings.paddingY = 2;
+		settings.paddingX = 4;
+		settings.paddingY = 4;
 		settings.useIndexes = false;
-		settings.filterMin = Texture.TextureFilter.MipMapNearestNearest;
-		settings.filterMag = Texture.TextureFilter.MipMapNearestNearest;
+		settings.filterMin = Texture.TextureFilter.MipMapLinearLinear;
+		settings.filterMag = Texture.TextureFilter.MipMapLinearLinear;
 
 		packer = new TexturePacker( new File("Sprites"), settings );
 

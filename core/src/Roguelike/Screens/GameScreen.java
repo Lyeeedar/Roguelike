@@ -12,6 +12,7 @@ import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Fields.Field;
 import Roguelike.Fields.Field.FieldLayer;
+import Roguelike.GameEvent.AdditionalSprite;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
@@ -651,18 +652,18 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						{
 							queueSprite( sprite, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OVERHEAD, 2 );
 
-							for (Sprite s : entity.additionalSprites)
+							for (AdditionalSprite s : entity.additionalSprites)
 							{
-								queueSprite( s, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OVERHEAD, 3 );
+								queueSprite( s.sprite, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OVERHEAD, 2 + s.priorityDiff );
 							}
 						}
 						else
 						{
 							queueSprite( sprite, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OBJECT, 2 );
 
-							for (Sprite s : entity.additionalSprites)
+							for (AdditionalSprite s : entity.additionalSprites)
 							{
-								queueSprite( s, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OBJECT, 3 );
+								queueSprite( s.sprite, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OBJECT, 2 + s.priorityDiff );
 							}
 						}
 
@@ -712,9 +713,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 							queueSprite( sprite, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OBJECT, 4 );
 
-							for (Sprite s : entity.additionalSprites)
+							for (AdditionalSprite s : entity.additionalSprites)
 							{
-								queueSprite( s, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OBJECT, 5 );
+								queueSprite( s.sprite, notVisibleCol, cx, cy, width, height, offsetx, offsety, RenderLayer.OBJECT, 4 + s.priorityDiff );
 							}
 
 							if ( entity.tile[ 0 ][ 0 ].visible && entity.popup != null )

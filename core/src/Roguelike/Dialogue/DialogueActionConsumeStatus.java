@@ -16,6 +16,7 @@ public class DialogueActionConsumeStatus extends AbstractDialogueAction
 	{
 		GameEntity e = Global.CurrentDialogue;
 		e.removeStatusEffect( key );
+		e.processStatuses();
 
 		return DialogueManager.ReturnType.ADVANCE;
 	}

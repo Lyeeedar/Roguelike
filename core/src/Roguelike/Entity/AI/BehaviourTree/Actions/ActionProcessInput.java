@@ -197,7 +197,7 @@ public class ActionProcessInput extends AbstractAction
 
 				setData( "Pos", null );
 			}
-			else if ( dialogueWithinRange && !tile.entity.inCombat() && Gdx.input.justTouched() )
+			else if ( dialogueWithinRange )
 			{
 				if (tile.entity.inCombat())
 				{

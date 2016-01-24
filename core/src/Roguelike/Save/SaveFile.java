@@ -8,6 +8,7 @@ import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.Room;
 import Roguelike.DungeonGeneration.Room.RoomDoor;
 import Roguelike.DungeonGeneration.Symbol;
+import Roguelike.GameEvent.AdditionalSprite;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.GameEvent.Damage.*;
 import Roguelike.GameEvent.OnDeath.AbstractOnDeathEvent;
@@ -448,6 +449,7 @@ public final class SaveFile
 		kryo.register( HealOverTimeEvent.class );
 		kryo.register( KillOnExpireEvent.class );
 		kryo.register( AbilityOnExpireEvent.class );
+		kryo.register( AdditionalSprite.class );
 
 //		kryo.register( Dialogue.class );
 //		kryo.register( DialogueManager.class );

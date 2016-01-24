@@ -1,6 +1,6 @@
 <Quest>
     <Inputs>
-        <FlagPresent Not="true">LoverQuest</FlagPresent>
+        <FlagPresent Not="true">LoversQuest</FlagPresent>
     </Inputs>
 
     <AllowedLevels>Forest</AllowedLevels>
