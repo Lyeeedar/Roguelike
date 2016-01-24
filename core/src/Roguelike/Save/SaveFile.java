@@ -30,7 +30,9 @@ import Roguelike.Items.Item.ItemCategory;
 import Roguelike.Levels.LevelManager;
 import Roguelike.Lights.Light;
 import Roguelike.Pathfinding.ShadowCastCache;
+import Roguelike.Quests.Input.QuestInputFlagEquals;
 import Roguelike.Quests.Input.QuestInputFlagPresent;
+import Roguelike.Quests.Output.QuestOuputConditionDialogueValue;
 import Roguelike.Quests.Output.QuestOutput;
 import Roguelike.Quests.Output.QuestOutputConditionEntityAlive;
 import Roguelike.Quests.Quest;
@@ -78,6 +80,7 @@ public final class SaveFile
 	public ObjectSet<String> usedQuests;
 	public ObjectMap<String, String> worldFlags;
 	public ObjectMap<String, String> runFlags;
+	public ObjectMap<String, String> deferredFlags;
 	public boolean isDead;
 	public int lives;
 
@@ -101,6 +104,7 @@ public final class SaveFile
 		kryo.writeObject( output, usedQuests );
 		kryo.writeObject( output, worldFlags );
 		kryo.writeObject( output, runFlags );
+		kryo.writeObject( output, deferredFlags );
 		output.writeBoolean( isDead );
 		output.writeInt( lives );
 
@@ -133,6 +137,7 @@ public final class SaveFile
 		usedQuests = kryo.readObject( input, ObjectSet.class );
 		worldFlags = kryo.readObject( input, ObjectMap.class );
 		runFlags = kryo.readObject( input, ObjectMap.class );
+		deferredFlags = kryo.readObject( input, ObjectMap.class );
 		isDead = input.readBoolean();
 		lives = input.readInt();
 
@@ -375,6 +380,7 @@ public final class SaveFile
 
 		kryo.register( Point.class );
 		kryo.register( StatusEffect.class );
+		kryo.register( StatusEffect.DurationType.class );
 		kryo.register( Inventory.class );
 		kryo.register( Element.class );
 		kryo.register( DFPRoom.class );
@@ -407,6 +413,8 @@ public final class SaveFile
 		kryo.register( boolean[].class );
 		kryo.register( boolean[][].class );
 		kryo.register( ObjectMap.class );
+		kryo.register( ObjectMap.Entries.class );
+		kryo.register( ObjectMap.Entry.class );
 		kryo.register( ObjectSet.class );
 
 		kryo.register( BumpAnimation.class );
@@ -441,23 +449,26 @@ public final class SaveFile
 		kryo.register( KillOnExpireEvent.class );
 		kryo.register( AbilityOnExpireEvent.class );
 
-		kryo.register( Dialogue.class );
-		kryo.register( DialogueManager.class );
-		kryo.register( DialogueManager.DialogueChunkWrapper.class );
-		kryo.register( DialogueActionBranch.class );
-		kryo.register( DialogueActionGainAbility.class );
-		kryo.register( DialogueActionInput.class );
-		kryo.register( DialogueActionLoop.class );
-		kryo.register( DialogueActionSetVariable.class );
-		kryo.register( DialogueActionSetVariable.VariableType.class );
-		kryo.register( DialogueActionText.class );
-		kryo.register( ExclamationManager.class );
-		kryo.register( ExclamationManager.ExclamationWrapper.class );
-		kryo.register( ExclamationManager.ExclamationEventWrapper.class );
+//		kryo.register( Dialogue.class );
+//		kryo.register( DialogueManager.class );
+//		kryo.register( DialogueManager.DialogueChunkWrapper.class );
+//		kryo.register( DialogueActionBranch.class );
+//		kryo.register( DialogueActionGainAbility.class );
+//		kryo.register( DialogueActionGainItem.class );
+//		kryo.register( DialogueActionInput.class );
+//		kryo.register( DialogueActionLoop.class );
+//		kryo.register( DialogueActionSetVariable.class );
+//		kryo.register( DialogueActionSetVariable.VariableType.class );
+//		kryo.register( DialogueActionText.class );
+//		kryo.register( ExclamationManager.class );
+//		kryo.register( ExclamationManager.ExclamationWrapper.class );
+//		kryo.register( ExclamationManager.ExclamationEventWrapper.class );
 
 		kryo.register( Quest.class );
 		kryo.register( QuestInputFlagPresent.class );
+		kryo.register( QuestInputFlagEquals.class );
 		kryo.register( QuestOutput.class );
 		kryo.register( QuestOutputConditionEntityAlive.class );
+		kryo.register( QuestOuputConditionDialogueValue.class );
 	}
 }

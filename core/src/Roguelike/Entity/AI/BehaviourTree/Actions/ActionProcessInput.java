@@ -29,7 +29,7 @@ public class ActionProcessInput extends AbstractAction
 		}
 		else if ( ! Global.MovementTypePathfind && GameScreen.Instance.preparedAbility == null )
 		{
-			if ( Gdx.input.isTouched( 0 ) && ! Gdx.input.isTouched( 1 ) )
+			if ( Gdx.input.isTouched( 0 ) && ! Gdx.input.isTouched( 1 ) && ! Gdx.input.isTouched( 2 ) && ! Gdx.input.isTouched( 3 ) && ! Gdx.input.isTouched( 4 ) )
 			{
 				int touchX = Gdx.input.getX();
 				int touchY = Gdx.input.getY();
@@ -197,7 +197,7 @@ public class ActionProcessInput extends AbstractAction
 
 				setData( "Pos", null );
 			}
-			else if ( dialogueWithinRange && !tile.entity.inCombat() )
+			else if ( dialogueWithinRange && !tile.entity.inCombat() && Gdx.input.justTouched() )
 			{
 				if (tile.entity.inCombat())
 				{

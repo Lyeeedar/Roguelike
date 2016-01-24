@@ -1,5 +1,6 @@
 <Any>
     <ClearValue Key="Enemy"></ClearValue>
+    <ClearValue Key="EnemyPos"></ClearValue>
 
     <GetAllVisible Type="Tiles" Key="Tiles"></GetAllVisible>
     <GetAllVisible Type="Enemies" SrcKey="Tiles" Key="Enemies"></GetAllVisible>

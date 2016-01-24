@@ -1,0 +1,20 @@
+<StatusEffect>
+    <Name>Captured</Name>
+    <Description>Captured</Description>
+    <DurationType>Permanent</DurationType>
+
+    <Icon>
+        <Name>Oryx/uf_split/uf_terrain/fence_10</Name>
+    </Icon>
+
+    <Events>
+        <OnTask>
+            <Cancel />
+        </OnTask>
+        <AdditionalSprite>
+            <Name>Oryx/uf_split/uf_terrain/fence_10</Name>
+            <DrawActualSize>true</DrawActualSize>
+        </AdditionalSprite>
+    </Events>
+
+</StatusEffect>

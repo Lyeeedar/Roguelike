@@ -13,6 +13,8 @@ public class QuestOutput
 	public String key;
 	public String data;
 
+	public boolean defer;
+
 	public Array<AbstractQuestOutputCondition> conditions = new Array<AbstractQuestOutputCondition>(  );
 
 	public void evaluate()
@@ -25,7 +27,11 @@ public class QuestOutput
 			}
 		}
 
-		if (runFlag)
+		if (defer)
+		{
+			Global.QuestManager.deferredFlags.put( key, data );
+		}
+		else if (runFlag)
 		{
 			Global.RunFlags.put( key, data );
 		}
@@ -40,6 +46,7 @@ public class QuestOutput
 		key = xml.getName();
 		data = xml.get( "Data", "true" );
 		runFlag = xml.getBooleanAttribute( "RunFlag", false );
+		defer = xml.getBooleanAttribute( "Defer", true );
 
 		XmlReader.Element conditionsElement = xml.getChildByName( "Conditions" );
 		if (conditionsElement != null)

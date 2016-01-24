@@ -418,44 +418,32 @@ public abstract class AbstractDungeonGenerator
 					GameTile newTile = actualTiles[x][y];
 					GameEntity e = null;
 
-					String entityPath = null;
-					XmlReader.Element entityData = null;
-
 					if (symbol.entityData instanceof String)
 					{
-						entityPath = (String)symbol.entityData;
-					}
-					else
-					{
-						entityData = (XmlReader.Element)symbol.entityData;
-						entityPath = entityData.get( "Name" );
-					}
+						String entityPath = (String)symbol.entityData;
 
-					if ( entityPath.equals( "Boss" ) )
-					{
-						e = GameEntity.load( fp.bosses.get( ran.nextInt( fp.bosses.size ) ) );
-					}
-					else if ( Global.isNumber( entityPath ) )
-					{
-						int index = Integer.parseInt( entityPath );
-
-						index = (int) ( ( index / 9.0f ) * fp.creatures.size );
-
-						e = GameEntity.load( fp.creatures.get( index ).entityName );
-					}
-					else
-					{
-						e = GameEntity.load( entityPath );
-					}
-
-					if (entityData != null)
-					{
-						XmlReader.Element dialogueElement = entityData.getChildByName( "Dialogue" );
-						if (dialogueElement != null)
+						if ( entityPath.equals( "Boss" ) )
 						{
-							DialogueManager dialogue = DialogueManager.load( dialogueElement );
-							e.dialogue = dialogue;
+							e = GameEntity.load( fp.bosses.get( ran.nextInt( fp.bosses.size ) ) );
 						}
+						else if ( Global.isNumber( entityPath ) )
+						{
+							int index = Integer.parseInt( entityPath );
+
+							index = (int) ( ( index / 9.0f ) * fp.creatures.size );
+
+							e = GameEntity.load( fp.creatures.get( index ).entityName );
+						}
+						else
+						{
+							e = GameEntity.load( entityPath );
+						}
+					}
+					else
+					{
+						Array<XmlReader.Element> data = new Array<XmlReader.Element>(  );
+						data.add( ( XmlReader.Element)symbol.entityData );
+						e = GameEntity.load( data );
 					}
 
 					if ( symbol.isBoss )

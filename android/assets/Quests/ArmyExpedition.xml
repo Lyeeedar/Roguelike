@@ -1,0 +1,108 @@
+<Quest>
+    <AllowedLevel>Forest,EnchantedForest</AllowedLevel>
+
+    <Room>
+        <AddFeatures>false</AddFeatures>
+
+        <Symbols>
+            <Symbol Extends=",">
+                <Char>s</Char>
+                <EntityData>
+
+                    <Name>Soldier</Name>
+
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_heroes/knight</Name>
+                        <Colour><RGB>200,200,200</RGB></Colour>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+
+                    <Statistics>
+                        <Attack>10</Attack>
+                        <Constitution>val+5</Constitution>
+                    </Statistics>
+
+                    <Dialogue>
+                        <Exclamations>
+                            <SeePlayer>
+                                <Exclamation>Hello adventurer.</Exclamation>
+                            </SeePlayer>
+                            <InCombat>
+                                <Exclamation>Take this you ugly monster!</Exclamation>
+                            </InCombat>
+                        </Exclamations>
+                        <Dialogue>
+                            <Chunk>
+                                <Text>You should speak to the captain.</Text>
+                            </Chunk>
+                        </Dialogue>
+                    </Dialogue>
+
+                </EntityData>
+            </Symbol>
+            <Symbol Extends=",">
+                <Char>C</Char>
+                <EntityData>
+
+                    <Name>Captain</Name>
+
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_heroes/paladin</Name>
+                        <Colour><RGB>200,200,200</RGB></Colour>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+
+                    <Statistics>
+                        <Attack>15</Attack>
+                        <Constitution>val+10</Constitution>
+                    </Statistics>
+
+                    <Dialogue>
+                        <Exclamations>
+                            <SeePlayer>
+                                <Exclamation>Hello adventurer.</Exclamation>
+                            </SeePlayer>
+                            <InCombat>
+                                <Exclamation>At them men! Do not falter!</Exclamation>
+                            </InCombat>
+                        </Exclamations>
+                        <Dialogue>
+                            <Chunk Condition="FirstChat == 0" ReliesOn="FirstChat">
+                                <Text>Hello adventurer, thank you for the help.</Text>
+                                <Text>The knights of Ros never forget a favour.</Text>
+                                <Text>Here take this, with our thanks.</Text>
+                                <GainItem>
+                                    <Recipe>sword</Recipe>
+                                    <Material>Metal</Material>
+                                    <Quality>2</Quality>
+                                </GainItem>
+                                <SetVariable>
+                                    <Key>FirstChat</Key>
+                                    <Value>1</Value>
+                                </SetVariable>
+                            </Chunk>
+                            <Chunk>
+                                <Text>Thank you for your help.</Text>
+                            </Chunk>
+                        </Dialogue>
+                    </Dialogue>
+
+                </EntityData>
+            </Symbol>
+        </Symbols>
+
+        <Rows>
+            <Row>..........</Row>
+            <Row>.3.....4..</Row>
+            <Row>..ww.sww..</Row>
+            <Row>..s,,,,w..</Row>
+            <Row>1.w,C,sw.1</Row>
+            <Row>..s,,,.w..</Row>
+            <Row>..w,s,....</Row>
+            <Row>.1.,w,ww.2</Row>
+            <Row>.7....6...</Row>
+            <Row>..........</Row>
+        </Rows>
+
+    </Room>
+</Quest>

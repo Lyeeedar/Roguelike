@@ -8,6 +8,8 @@ import com.badlogic.gdx.utils.XmlReader;
  */
 public class QuestInputFlagPresent extends AbstractQuestInput
 {
+	public boolean consume;
+
 	private String key;
 	private boolean not;
 
@@ -16,6 +18,12 @@ public class QuestInputFlagPresent extends AbstractQuestInput
 	{
 		if ( Global.WorldFlags.containsKey( key ) || Global.RunFlags.containsKey( key ) )
 		{
+			if (!not)
+			{
+				Global.WorldFlags.remove( key );
+				Global.RunFlags.remove( key );
+			}
+
 			return !not;
 		}
 
@@ -27,5 +35,6 @@ public class QuestInputFlagPresent extends AbstractQuestInput
 	{
 		key = xml.getText();
 		not = xml.getBooleanAttribute( "Not", false );
+		consume = xml.getBooleanAttribute( "Consume", true );
 	}
 }

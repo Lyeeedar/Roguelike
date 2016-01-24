@@ -160,6 +160,7 @@ public class Global
 
 		Global.QuestManager = new QuestManager();
 		Global.QuestManager.usedQuests = save.usedQuests;
+		Global.QuestManager.deferredFlags = save.deferredFlags;
 		Global.WorldFlags = save.worldFlags;
 		Global.RunFlags = save.runFlags;
 		Global.lives = save.lives;
@@ -187,6 +188,7 @@ public class Global
 		save.usedQuests = QuestManager.usedQuests;
 		save.worldFlags = WorldFlags;
 		save.runFlags = RunFlags;
+		save.deferredFlags = QuestManager.deferredFlags;
 
 		save.lives = lives;
 
@@ -360,6 +362,13 @@ public class Global
 		}
 
 		return totalAtk;
+	}
+
+	// ----------------------------------------------------------------------
+	public static int getQuality()
+	{
+		int quality = Math.max( 1, Global.LevelManager.totalDepth / 5 + Math.max( 0, (int)(MathUtils.random.nextFloat() * MathUtils.random.nextFloat() * MathUtils.random.nextFloat() * 2.0f) ) );
+		return quality;
 	}
 
 	// ----------------------------------------------------------------------

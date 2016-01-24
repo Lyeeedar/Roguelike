@@ -215,25 +215,28 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			Level level = Global.CurrentLevel;
 
-			if (!level.isInTurn() && level.canStartTurn())
+			if (Global.CurrentDialogue == null)
 			{
-				level.startTurn();
-			}
-
-			if (level.isInTurn())
-			{
-				// advance whilst time allows it
-				long milliDelta = lastSleep;
-				long currentTime = System.currentTimeMillis();
-				while (true)
+				if ( !level.isInTurn() && level.canStartTurn() )
 				{
-					level.doTurnWork();
-					long diff = System.currentTimeMillis() - currentTime;
-					milliDelta -= diff;
+					level.startTurn();
+				}
 
-					if (milliDelta <= 0 || !level.isInTurn())
+				if ( level.isInTurn() )
+				{
+					// advance whilst time allows it
+					long milliDelta = lastSleep;
+					long currentTime = System.currentTimeMillis();
+					while ( true )
 					{
-						break;
+						level.doTurnWork();
+						long diff = System.currentTimeMillis() - currentTime;
+						milliDelta -= diff;
+
+						if ( milliDelta <= 0 || !level.isInTurn() )
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -1956,6 +1959,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void displayGameOverMessage()
 	{
+		Global.LevelManager.evaluateQuestOutput();
+		for (ObjectMap.Entry<String, String> entry : Global.QuestManager.deferredFlags.entries())
+		{
+			Global.WorldFlags.put( entry.key, entry.value );
+		}
+		Global.QuestManager.deferredFlags.clear();
 		Global.save();
 
 		Table table = new Table();

@@ -92,5 +92,7 @@ public abstract class AbstractDialogueAction
 		ClassMap.put( "LOOP", DialogueActionLoop.class );
 		ClassMap.put( "SETVARIABLE", DialogueActionSetVariable.class );
 		ClassMap.put( "GAINABILITY", DialogueActionGainAbility.class );
+		ClassMap.put( "GAINITEM", DialogueActionGainItem.class );
+		ClassMap.put( "CONSUMESTATUS", DialogueActionConsumeStatus.class );
 	}
 }

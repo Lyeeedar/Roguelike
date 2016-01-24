@@ -44,5 +44,6 @@ public abstract class AbstractQuestOutputCondition
 	static
 	{
 		ClassMap.put( "ENTITYALIVE", QuestOutputConditionEntityAlive.class );
+		ClassMap.put( "DIALOGUEVALUE", QuestOuputConditionDialogueValue.class );
 	}
 }

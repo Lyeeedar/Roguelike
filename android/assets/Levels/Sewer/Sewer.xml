@@ -97,7 +97,7 @@
 	        <Name>Torch</Name>
 	        <EnvironmentData>
 	            <AttachToWall>true</AttachToWall>
-	            <OverHead>true</OverHead>
+	            <Overhead>true</Overhead>
 				<Sprite>
 					<Name>Oryx/uf_split/uf_terrain/torch1</Name>
 				</Sprite>

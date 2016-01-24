@@ -44,5 +44,6 @@ public abstract class AbstractQuestInput
 	static
 	{
 		ClassMap.put( "FLAGPRESENT", QuestInputFlagPresent.class );
+		ClassMap.put( "FLAGEQUALS", QuestInputFlagEquals.class );
 	}
 }

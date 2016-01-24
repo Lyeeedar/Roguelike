@@ -529,7 +529,7 @@ public class EnvironmentEntity extends Entity
 		}
 
 		entity.attachToWall = xml.getBoolean( "AttachToWall", false );
-		entity.overHead = xml.getBoolean( "OverHead", false );
+		entity.overHead = xml.getBoolean( "Overhead", false );
 		entity.canTakeDamage = xml.getChildByName( "Statistics" ) != null;
 
 		entity.baseInternalLoad( xml );

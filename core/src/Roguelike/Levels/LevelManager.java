@@ -49,13 +49,18 @@ public class LevelManager
 		current = root;
 	}
 
-	public void nextLevel( String name )
+	public void evaluateQuestOutput()
 	{
 		for (Quest quest : activeQuests)
 		{
 			quest.evaluateOutputs();
 		}
 		activeQuests.clear();
+	}
+
+	public void nextLevel( String name )
+	{
+		evaluateQuestOutput();
 
 		LevelData prev = current;
 		current = getLevel( name );

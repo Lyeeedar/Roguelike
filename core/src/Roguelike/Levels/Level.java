@@ -257,7 +257,7 @@ public class Level
 
 				if ( e.canTakeDamage && e != player && e.HP <= 0 && !hasActiveEffects( e ) )
 				{
-					int quality = Math.max( 1, Global.LevelManager.totalDepth / 5 + Math.max( 0, (int)(MathUtils.random.nextFloat() * MathUtils.random.nextFloat() * MathUtils.random.nextFloat() * 2.0f) ) );
+					int quality = Global.getQuality();
 
 					if ( e.isBoss )
 					{

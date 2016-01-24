@@ -29,7 +29,7 @@ public class DialogueActionGainAbility extends AbstractDialogueAction
 				tags = abilityParts[1].split( "," );
 			}
 
-			GameScreen.Instance.pickupQueue.addAll( TreasureGenerator.generateAbility( 1, MathUtils.random, tags ) );
+			GameScreen.Instance.pickupQueue.addAll( TreasureGenerator.generateAbility( Global.getQuality(), MathUtils.random, tags ) );
 		}
 		else
 		{

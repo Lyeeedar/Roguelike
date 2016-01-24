@@ -21,32 +21,39 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 
 public final class StatusEffect extends GameEventHandler
 {
+	public enum DurationType
+	{
+		TURN,
+		PROCESSED,
+		PERMANENT
+	}
+
 	public String name;
 	private String description;
 
-	public boolean persistUntilProcessed = false;
 	public boolean stackable = true;
 
 	public Sprite icon;
-	public int duration;
+	public int duration = 1;
+	public DurationType durationType = DurationType.TURN;
 
 	@Override
 	public void onTurn( Entity entity, float cost )
 	{
 		super.onTurn( entity, cost );
 
-		if ( !persistUntilProcessed )
+		if ( durationType == DurationType.TURN )
 		{
-			duration -= 1;
+			duration--;
 		}
 	}
 
 	@Override
 	public void processed()
 	{
-		if ( persistUntilProcessed )
+		if ( durationType == DurationType.PROCESSED )
 		{
-			duration = -1;
+			duration--;
 		}
 	}
 
@@ -116,12 +123,13 @@ public final class StatusEffect extends GameEventHandler
 
 		icon = xmlElement.getChildByName( "Icon" ) != null ? AssetManager.loadSprite( xmlElement.getChildByName( "Icon" ) ) : icon;
 		duration = xmlElement.getInt( "Duration", duration );
-		persistUntilProcessed = xmlElement.getBoolean( "PersistUntilProcessed", persistUntilProcessed );
-		stackable = xmlElement.getBoolean( "Stackable", stackable );
-		if ( persistUntilProcessed )
+
+		String durationTypeString = xmlElement.get( "DurationType", null );
+		if (durationTypeString != null)
 		{
-			duration = 1;
+			durationType = DurationType.valueOf( durationTypeString.toUpperCase() );
 		}
+		stackable = xmlElement.getBoolean( "Stackable", stackable );
 
 		Element eventsElement = xmlElement.getChildByName( "Events" );
 		if ( eventsElement != null )

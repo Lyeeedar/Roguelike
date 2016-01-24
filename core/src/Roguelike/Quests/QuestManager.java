@@ -17,6 +17,8 @@ public class QuestManager
 	public Array<Quest> availableQuests = new Array<Quest>(  );
 	public ObjectSet<String> usedQuests = new ObjectSet<String>(  );
 
+	public ObjectMap<String, String> deferredFlags = new ObjectMap<String, String>(  );
+
 	public QuestManager()
 	{
 		XmlReader reader = new XmlReader();

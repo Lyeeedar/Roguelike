@@ -216,13 +216,32 @@ public class GameEntity extends Entity
 			}
 		}
 
-		String dialoguePath = xmlElement.get( "Dialogue", null );
-		if ( dialoguePath != null )
+		Element dialogueElement = xmlElement.getChildByName( "Dialogue" );
+		if ( dialogueElement != null )
 		{
-			dialogue = DialogueManager.load( dialoguePath );
+			if (dialogueElement.getChildCount() > 0)
+			{
+				dialogue = DialogueManager.load( dialogueElement );
+			}
+			else
+			{
+				dialogue = DialogueManager.load( dialogueElement.getText() );
+			}
 		}
 
 		essence = xmlElement.getInt( "Essence", MathUtils.random( HP ) );
+
+		Element statusesElement = xmlElement.getChildByName( "Statuses" );
+		if ( statusesElement != null )
+		{
+			for ( int i = 0; i < statusesElement.getChildCount(); i++ )
+			{
+				Element statusElement = statusesElement.getChild( i );
+
+				StatusEffect effect = StatusEffect.load( statusElement.getText() );
+				pendingStatusEffects.add( effect );
+			}
+		}
 	}
 
 	// ----------------------------------------------------------------------

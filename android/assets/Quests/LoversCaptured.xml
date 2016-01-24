@@ -1,0 +1,201 @@
+<Quest>
+    <Inputs>
+        <FlagEquals Consume="false">
+            <Key>LoversQuest</Key>
+            <Value>Captured</Value>
+        </FlagEquals>
+    </Inputs>
+
+    <AllowedLevels>Forest</AllowedLevels>
+
+    <Room>
+        <Faction>Goblin</Faction>
+        <AddFeatures>false</AddFeatures>
+
+        <Symbols>
+            <Symbol Extends=".">
+                <Char>m</Char>
+                <EntityData Extends="NPC/HumanBase">
+
+                    <Name>Ruffletop</Name>
+
+                    <Statuses>
+                        <Status>Captured</Status>
+                    </Statuses>
+
+                    <Factions>
+                        <Faction>Goblin</Faction>
+                    </Factions>
+
+                    <Sprite>
+                        <Name>Oryx/Custom/heroes/bar_patron</Name>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+
+                    <Dialogue>
+                        <Exclamations>
+                            <SeePlayer>
+                                <Exclamation Condition="LoversChat == 0" ReliesOn="LoversChat">Please save us!</Exclamation>
+                                <Exclamation>Thank you for letting us out.</Exclamation>
+                            </SeePlayer>
+                        </Exclamations>
+                        <Dialogue>
+                            <Chunk Condition="LoversChat == 0" ReliesOn="LoversChat">
+                                <Text>Adventurer! Please let us out of here!</Text>
+                                <Input Key="Response">
+                                    <Choice>What are you doing here?</Choice>
+                                    <Choice>*Let him out*</Choice>
+                                    <Choice>*Leave*</Choice>
+                                </Input>
+                                <Branch>
+                                    <Branch Condition="Response == 1">
+                                        <Text>Juliana and I, our relationship is not exactly approved of by our families.</Text>
+                                        <Text>We heard that deep in the heart of the woods lies a temple to the goddess of love, Dysa.</Text>
+                                        <Text>We wished to get her blessing, so our love might endure the hardship before us.</Text>
+                                        <Text>We got ambushed by goblins but a kind adventurer saved us.</Text>
+                                        <Text>As we were camping out for the night another group of goblins snuck up on us and captured us. And now we are here.</Text>
+                                        <Text>So... Could you let us out now please.</Text>
+                                        <Input Key="Response">
+                                            <Choice>*Let him out*</Choice>
+                                            <Choice>*Leave*</Choice>
+                                        </Input>
+                                        <Branch>
+                                            <Branch Condition="Response == 1">
+                                                <ConsumeStatus>Captured</ConsumeStatus>
+                                                <SetVariable>
+                                                    <Key>LoversChat</Key>
+                                                    <Value>1</Value>
+                                                </SetVariable>
+                                                <Text>Thank you!</Text>
+                                            </Branch>
+                                            <Branch Condition="Response == 2">
+                                                <Text>No! Come back!</Text>
+                                            </Branch>
+                                        </Branch>
+                                    </Branch>
+                                    <Branch Condition="Response == 2">
+                                        <ConsumeStatus>Captured</ConsumeStatus>
+                                        <SetVariable>
+                                            <Key>LoversChat</Key>
+                                            <Value>1</Value>
+                                        </SetVariable>
+                                        <Text>Thank you!</Text>
+                                    </Branch>
+                                    <Branch Condition="Response == 3">
+                                        <Text>No! Come back!</Text>
+                                    </Branch>
+                                </Branch>
+                            </Chunk>
+                            <Chunk>
+                                <Text>Thanks for saving us. Who knows what would have happened to us had you not come along.</Text>
+                            </Chunk>
+                        </Dialogue>
+                    </Dialogue>
+
+                </EntityData>
+            </Symbol>
+
+            <Symbol Extends=".">
+                <Char>f</Char>
+                <EntityData Extends="NPC/HumanBase">
+
+                    <Name>Juliana</Name>
+
+                    <Statuses>
+                        <Status>Captured</Status>
+                    </Statuses>
+
+                    <Factions>
+                        <Faction>Goblin</Faction>
+                    </Factions>
+
+                    <Sprite>
+                        <Name>Oryx/Custom/heroes/barmaid</Name>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+
+                    <Dialogue>
+                        <Chunk Condition="LoversChat == 0" ReliesOn="LoversChat">
+                            <Text>Adventurer! Please let us out of here!</Text>
+                            <Input Key="Response">
+                                <Choice>What are you doing here?</Choice>
+                                <Choice>*Let him out*</Choice>
+                                <Choice>*Leave*</Choice>
+                            </Input>
+                            <Branch>
+                                <Branch Condition="Response == 1">
+                                    <Text>Ruffly and I, our relationship is not exactly approved of by our families.</Text>
+                                    <Text>We heard that deep in the heart of the woods lies a temple to the goddess of love, Dysa.</Text>
+                                    <Text>We wished to get her blessing, so our love might endure the hardship before us.</Text>
+                                    <Text>We got ambushed by goblins but a kind adventurer saved us.</Text>
+                                    <Text>As we were camping out for the night another group of goblins snuck up on us and captured us. And now we are here.</Text>
+                                    <Text>So... Could you let us out now please.</Text>
+                                    <Input Key="Response">
+                                        <Choice>*Let him out*</Choice>
+                                        <Choice>*Leave*</Choice>
+                                    </Input>
+                                    <Branch>
+                                        <Branch Condition="Response == 1">
+                                            <ConsumeStatus>Captured</ConsumeStatus>
+                                            <SetVariable>
+                                                <Key>LoversChat</Key>
+                                                <Value>1</Value>
+                                            </SetVariable>
+                                            <Text>Thank you!</Text>
+                                        </Branch>
+                                        <Branch Condition="Response == 2">
+                                            <Text>No! Come back!</Text>
+                                        </Branch>
+                                    </Branch>
+                                </Branch>
+                                <Branch Condition="Response == 2">
+                                    <ConsumeStatus>Captured</ConsumeStatus>
+                                    <SetVariable>
+                                        <Key>LoversChat</Key>
+                                        <Value>1</Value>
+                                    </SetVariable>
+                                    <Text>Thank you!</Text>
+                                </Branch>
+                                <Branch Condition="Response == 3">
+                                    <Text>No! Come back!</Text>
+                                </Branch>
+                            </Branch>
+                        </Chunk>
+                        <Chunk>
+                            <Text>Thanks for saving us. Who knows what would have happened to us had you not come along.</Text>
+                        </Chunk>
+                    </Dialogue>
+
+                </EntityData>
+            </Symbol>
+        </Symbols>
+
+        <Rows>
+            <Row>......</Row>
+            <Row>.2....</Row>
+            <Row>....5.</Row>
+            <Row>..mf..</Row>
+            <Row>.1..1.</Row>
+            <Row>......</Row>
+        </Rows>
+    </Room>
+
+    <Outputs>
+        <LoversQuest Defer="true">
+            <Data>Ruin</Data>
+            <Conditions>
+                <DialogueValue>
+                    <Key>LoversChat</Key>
+                    <Value>1</Value>
+                </DialogueValue>
+            </Conditions>
+        </LoversQuest>
+
+        <LoversQuest Defer="true">
+            <Data>Captured</Data>
+            <Conditions>
+                <EntityAlive Not="true">Player</EntityAlive>
+            </Conditions>
+        </LoversQuest>
+    </Outputs>
+</Quest>

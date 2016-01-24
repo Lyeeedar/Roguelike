@@ -23,14 +23,14 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 	public int essence;
 	public Point pos = new Point();
 	public boolean isPlayer = false;
+	public boolean isBoss = false;
 	public Array<StatusEffect> statuses = new Array<StatusEffect>();
 	public Array<SaveAbilityTree> slottedAbilities = new Array<SaveAbilityTree>();
 	public Inventory inventory;
 	public String UID;
 	public Point spawnPoint;
 
-	public DialogueManager dialogue;
-	// need to save ai
+	public HashMap<String, Integer> dialogueData;
 
 	@Override
 	public void store( GameEntity obj )
@@ -46,7 +46,11 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 			statuses.add( status );
 		}
 		inventory = obj.inventory;
-		dialogue = obj.dialogue;
+
+		if (obj.dialogue != null)
+		{
+			dialogueData = obj.dialogue.data;
+		}
 
 		for ( AbilityTree a : obj.slottedAbilities )
 		{
@@ -66,6 +70,7 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		UID = obj.UID;
 
 		spawnPoint = obj.spawnPos;
+		isBoss = obj.isBoss;
 	}
 
 	@Override
@@ -121,7 +126,11 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 
 		entity.UID = UID;
 
-		entity.dialogue = dialogue;
+		if (entity.dialogue != null && dialogueData != null)
+		{
+			entity.dialogue.data = dialogueData;
+		}
+		entity.isBoss = isBoss;
 
 		return entity;
 	}

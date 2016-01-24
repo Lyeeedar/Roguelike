@@ -1,7 +1,7 @@
 <Active>
 
 	<Name>Lightning Bolt</Name>
-	<Description>A bolt of lightning pierces through your enemies in a line.</Description>
+	<Description>Zap your foes with a bolt of lightning.</Description>
 
 	<Cooldown>3</Cooldown>
     <CooldownType>Wait</CooldownType>
@@ -28,17 +28,9 @@
 		</Animation>
 	</MovementSprite>
 
-	<Targeting>
-		<Direction />
-	</Targeting>
-
     <HitType>
-        <Any></Any>
+        <Enemy></Enemy>
     </HitType>
-
-	<Movement>
-		<Ray/>
-	</Movement>
 
 	<Effect>
         <Damage>
