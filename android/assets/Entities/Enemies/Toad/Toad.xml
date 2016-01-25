@@ -26,11 +26,10 @@
 					<Name>Oryx/Custom/terrain/spawner</Name>
 				</Sprite>
 				<Passable>false</Passable>
-				<Type>Spawner</Type>
-				<MaxAlive>1</MaxAlive>
-				<Entity>Enemies/Toad/Fly</Entity>
-				<Delay>25</Delay>
-				<Spawn>OnTurn</Spawn>
+                <Opaque>false</Opaque>
+                <OnTurn>
+                    <Group><SpawnEntity Num="5" Delay="25">Enemies/Toad/Fly</SpawnEntity></Group>
+                </OnTurn>
 
 				<Statistics>
 					<Constitution>5</Constitution>

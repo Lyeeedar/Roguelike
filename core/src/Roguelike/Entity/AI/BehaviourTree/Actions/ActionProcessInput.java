@@ -1,7 +1,7 @@
 package Roguelike.Entity.AI.BehaviourTree.Actions;
 
+import Roguelike.Entity.ActivationAction.ActivationActionGroup;
 import Roguelike.Global;
-import Roguelike.Entity.EnvironmentEntity.ActivationAction;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree.BehaviourTreeState;
 import Roguelike.Entity.Tasks.TaskWait;
@@ -9,7 +9,6 @@ import Roguelike.Screens.GameScreen;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector3;
@@ -138,9 +137,9 @@ public class ActionProcessInput extends AbstractAction
 				{
 					if ( tile.environmentEntity != null )
 					{
-						for ( ActivationAction action : tile.environmentEntity.actions )
+						for ( ActivationActionGroup action : tile.environmentEntity.onActivateActions )
 						{
-							if ( action.visible )
+							if ( action.enabled )
 							{
 								entityWithinRange = true;
 								break;
@@ -154,9 +153,9 @@ public class ActionProcessInput extends AbstractAction
 						 && !tile.environmentEntity.canTakeDamage
 						 && !tile.environmentEntity.passableBy.intersect( Global.CurrentLevel.player.getTravelType() ) )
 					{
-						for ( ActivationAction action : tile.environmentEntity.actions )
+						for ( ActivationActionGroup action : tile.environmentEntity.onActivateActions )
 						{
-							if ( action.visible )
+							if ( action.enabled )
 							{
 								entityWithinRange = Math.abs( Global.CurrentLevel.player.tile[0][0].x - tile.x ) <= 1
 													&& Math.abs( Global.CurrentLevel.player.tile[0][0].y - tile.y ) <= 1;
@@ -181,11 +180,11 @@ public class ActionProcessInput extends AbstractAction
 
 			if ( entityWithinRange )
 			{
-				for ( ActivationAction action : tile.environmentEntity.actions )
+				for ( ActivationActionGroup action : tile.environmentEntity.onActivateActions )
 				{
-					if ( action.visible )
+					if ( action.enabled )
 					{
-						action.activate( tile.environmentEntity );
+						action.activate( tile.environmentEntity, 1 );
 						Global.CurrentLevel.player.tasks.add( new TaskWait() );
 						break;
 					}

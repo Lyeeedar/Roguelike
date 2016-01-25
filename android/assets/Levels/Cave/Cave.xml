@@ -88,8 +88,8 @@
             <LockRotation>true</LockRotation>
 
             <Rows>
-                <Row>v</Row>
-                <Row>.</Row>
+                <Row>#v#</Row>
+                <Row>...</Row>
             </Rows>
         </Prev>
         <This>

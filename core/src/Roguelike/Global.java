@@ -289,15 +289,6 @@ public class Global
 									break outer;
 								}
 							}
-
-							if ( tile.environmentEntity != null && tile.environmentEntity.data.size() > 0 )
-							{
-								if ( tile.environmentEntity.data.containsKey( travelKey ) )
-								{
-									tile.addGameEntity( player );
-									break outer;
-								}
-							}
 						}
 					}
 			}
@@ -434,6 +425,21 @@ public class Global
 	public static String capitalizeString( String s )
 	{
 		return s.substring( 0, 1 ).toUpperCase() + s.substring( 1 ).toLowerCase();
+	}
+
+	// ----------------------------------------------------------------------
+	public static int TaxiDist(Point p1, Point p2)
+	{
+		return TaxiDist( p1.x, p1.y, p2.x, p2.y );
+	}
+
+	// ----------------------------------------------------------------------
+	public static int TaxiDist(int x1, int y1, int x2, int y2)
+	{
+		int xdiff = Math.abs( x1 - x2 );
+		int ydiff = Math.abs( y1 - y2 );
+
+		return Math.max( xdiff, ydiff );
 	}
 
 	// ----------------------------------------------------------------------

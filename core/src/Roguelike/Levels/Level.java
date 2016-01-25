@@ -4,6 +4,7 @@ import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.AssetManager;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
+import Roguelike.Entity.ActivationAction.ActivationActionGroup;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
@@ -301,9 +302,12 @@ public class Level
 				{
 					dropItems( e.getInventory(), e.tile[0][0], e.essence, e );
 
-					if ( e.onDeathAction != null )
+					for ( ActivationActionGroup group : e.onDeathActions)
 					{
-						e.onDeathAction.process( e );
+						if (group.enabled)
+						{
+							group.activate( e, 1 );
+						}
 					}
 
 					e.removeFromTile();
@@ -873,7 +877,7 @@ public class Level
 		getAllEntitiesToBeProcessed( actionCost );
 
 		tempEnvironmentEntityList.clear();
-		getAllEnvironmentEntities( tempEnvironmentEntityList );
+		getAllEnvironmentEntitiesToBeProcessed( tempEnvironmentEntityList );
 		for ( EnvironmentEntity ee : tempEnvironmentEntityList )
 		{
 			ee.update( actionCost );
@@ -1298,6 +1302,25 @@ public class Level
 			{
 				if ( Grid[x][y].environmentEntity != null && Grid[x][y].environmentEntity.tile[0][0] == Grid[x][y] )
 				{
+					list.add( Grid[x][y].environmentEntity );
+				}
+			}
+		}
+	}
+
+	public final void getAllEnvironmentEntitiesToBeProcessed( Array<EnvironmentEntity> list )
+	{
+		for ( int x = 0; x < width; x++ )
+		{
+			for ( int y = 0; y < height; y++ )
+			{
+				if ( Grid[x][y].environmentEntity != null && Grid[x][y].environmentEntity.tile[0][0] == Grid[x][y] )
+				{
+					if ( Math.min( Math.abs( x - player.tile[0][0].x ), Math.abs( y - player.tile[0][0].y ) ) > 25 )
+					{
+						continue;
+					}
+
 					list.add( Grid[x][y].environmentEntity );
 				}
 			}

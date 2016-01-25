@@ -2,11 +2,10 @@ package Roguelike.Screens;
 
 import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
-import Roguelike.Ability.IAbility;
 import Roguelike.AssetManager;
+import Roguelike.Entity.ActivationAction.ActivationActionGroup;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
-import Roguelike.Entity.EnvironmentEntity.ActivationAction;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
@@ -24,7 +23,6 @@ import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
-import Roguelike.Sprite.SpriteAnimation.StretchAnimation;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Sprite.TilingSprite;
 import Roguelike.Tiles.GameTile;
@@ -48,7 +46,6 @@ import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -56,14 +53,10 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import javax.tools.Tool;
-import java.util.Comparator;
 import java.util.EnumMap;
-import java.util.PriorityQueue;
 
 public class GameScreen implements Screen, InputProcessor, GestureListener
 {
@@ -1415,11 +1408,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			if ( Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity != null )
 			{
-				for ( ActivationAction action : Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity.actions )
+				for ( ActivationActionGroup action : Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity.onActivateActions )
 				{
-					if ( action.visible )
+					if ( action.enabled )
 					{
-						action.activate( Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity );
+						action.activate( Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity, 1 );
 						Global.CurrentLevel.player.tasks.add( new TaskWait() );
 						break;
 					}

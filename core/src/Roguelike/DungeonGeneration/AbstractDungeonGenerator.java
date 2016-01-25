@@ -319,7 +319,7 @@ public abstract class AbstractDungeonGenerator
 				if ( symbol.hasEnvironmentEntity() )
 				{
 					GameTile newTile = actualTiles[x][y];
-					EnvironmentEntity entity = symbol.getEnvironmentEntity( saveLevel.UID, saveLevel.depth );
+					EnvironmentEntity entity = symbol.getEnvironmentEntity( );
 
 					if ( !saveLevel.created || !entity.canTakeDamage )
 					{

@@ -1000,7 +1000,6 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					{
 						t.symbol = t.symbol.copy();
 						t.symbol.environmentData = null;
-						t.symbol.environmentEntityData = null;
 					}
 
 					// Wipe out all features in the central square
@@ -1008,7 +1007,6 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 					{
 						t.symbol = t.symbol.copy();
 						t.symbol.environmentData = null;
-						t.symbol.environmentEntityData = null;
 					}
 				}
 			}

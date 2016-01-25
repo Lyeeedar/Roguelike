@@ -2,11 +2,16 @@ package Roguelike.Save;
 
 import java.util.HashMap;
 
+import Roguelike.Entity.ActivationAction.ActivationActionGroup;
 import Roguelike.Entity.EnvironmentEntity;
+import Roguelike.Global;
 import Roguelike.Items.Inventory;
+import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.TilingSprite;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.Point;
 
+import Roguelike.Util.EnumBitflag;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -18,7 +23,15 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 	public Inventory inventory;
 	public String UID;
 	public Element creationData;
-	public HashMap<String, Object> data;
+
+	public Sprite sprite;
+	public TilingSprite tilingSprite;
+	public EnumBitflag<Global.Passability> passableBy;
+
+	public Array<ActivationActionGroup> onActivateActions;
+	public Array<ActivationActionGroup> onTurnActions;
+	public Array<ActivationActionGroup> onHearActions;
+	public Array<ActivationActionGroup> onDeathActions;
 
 	@Override
 	public void store( EnvironmentEntity obj )
@@ -34,14 +47,26 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 		UID = obj.UID;
 
 		creationData = obj.creationData;
-		data = (HashMap<String, Object>) obj.data.clone();
+		sprite = obj.sprite;
+		tilingSprite = obj.tilingSprite;
+		passableBy = obj.passableBy;
+		onActivateActions = obj.onActivateActions;
+		onTurnActions = obj.onTurnActions;
+		onHearActions = obj.onHearActions;
+		onDeathActions = obj.onDeathActions;
 	}
 
 	@Override
 	public EnvironmentEntity create()
 	{
 		EnvironmentEntity entity = EnvironmentEntity.load( creationData );
-		entity.data = (HashMap<String, Object>) data.clone();
+		entity.sprite = sprite;
+		entity.tilingSprite = tilingSprite;
+		entity.passableBy = passableBy;
+		entity.onActivateActions = onActivateActions;
+		entity.onTurnActions = onTurnActions;
+		entity.onHearActions = onHearActions;
+		entity.onDeathActions = onDeathActions;
 
 		entity.HP = hp;
 		for ( StatusEffect saveStatus : statuses )

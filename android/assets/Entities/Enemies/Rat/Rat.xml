@@ -75,11 +75,9 @@
                         <Passable>true</Passable>
                         <Opaque>false</Opaque>
 
-                        <Type>Spawner</Type>
-                        <Entity>Enemies/Rat/SmallRat</Entity>
-                        <Spawn>OnHear</Spawn>
-                        <NumToSpawn>2</NumToSpawn>
-                        <Delay>2</Delay>
+                        <OnHear>
+                            <Group><SpawnEntity Num="2">Enemies/Rat/SmallRat</SpawnEntity></Group>
+                        </OnHear>
 
                         <CanTakeDamage>false</CanTakeDamage>
                     </EnvironmentData>

@@ -746,7 +746,6 @@ public final class Room
 							 && !s.getEnvironmentEntityPassable( GeneratorPassability ) )
 						{
 							s.environmentData = roomCopy[point.x][point.y].environmentData;
-							s.environmentEntityData = roomCopy[point.x][point.y].environmentEntityData;
 						}
 
 						roomContents[point.x][point.y] = s;
@@ -789,7 +788,6 @@ public final class Room
 					if ( blockedList.size > 0 )
 					{
 						Point p = blockedList.removeIndex( 0 );
-						roomContents[p.x][p.y].environmentEntityData = roomCopy[p.x][p.y].environmentEntityData;
 						roomContents[p.x][p.y].environmentData = roomCopy[p.x][p.y].environmentData;
 
 						spawnList.add( p );
@@ -838,7 +836,6 @@ public final class Room
 					else
 					{
 						Point p = blockedList.removeIndex( 0 );
-						roomContents[p.x][p.y].environmentEntityData = roomCopy[p.x][p.y].environmentEntityData;
 						roomContents[p.x][p.y].environmentData = roomCopy[p.x][p.y].environmentData;
 
 						spawnList.add( p );

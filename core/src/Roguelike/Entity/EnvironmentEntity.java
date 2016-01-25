@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 import Roguelike.AssetManager;
+import Roguelike.Entity.ActivationAction.*;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
@@ -36,22 +37,22 @@ public class EnvironmentEntity extends Entity
 
 	public EnumBitflag<Passability> passableBy;
 
-	public Array<ActivationAction> actions = new Array<ActivationAction>();
-
-	public OnTurnAction onTurnAction;
-	public OnHearAction onHearAction;
-	public OnDeathAction onDeathAction;
-
+	public Array<ActivationActionGroup> onActivateActions = new Array<ActivationActionGroup>(  );
+	public Array<ActivationActionGroup> onTurnActions = new Array<ActivationActionGroup>(  );
+	public Array<ActivationActionGroup> onHearActions = new Array<ActivationActionGroup>(  );
+	public Array<ActivationActionGroup> onDeathActions = new Array<ActivationActionGroup>(  );
 	public Element creationData;
-	public HashMap<String, Object> data = new HashMap<String, Object>();
 
 	// ----------------------------------------------------------------------
 	@Override
 	public void update( float cost )
 	{
-		if ( onTurnAction != null )
+		for (ActivationActionGroup group : onTurnActions)
 		{
-			onTurnAction.update( this, 1 );
+			if (group.enabled)
+			{
+				group.activate( this, cost );
+			}
 		}
 
 		for ( GameEventHandler h : getAllHandlers() )
@@ -122,63 +123,10 @@ public class EnvironmentEntity extends Entity
 	}
 
 	// ----------------------------------------------------------------------
-	private static EnvironmentEntity CreateTreasureChest( Element xml )
-	{
-		EnvironmentEntity entity = new EnvironmentEntity();
-
-		entity.passableBy = Passability.parse( "false" );
-		entity.passableBy.setBit( Passability.LIGHT );
-
-		entity.canTakeDamage = false;
-
-		String type = xml.get( "Treasure", "Random" ).toLowerCase();
-		int quality = xml.getInt( "Quality", 1 );
-
-		entity.data.put( "Treasure", type );
-		entity.data.put( "Quality", quality );
-
-		entity.actions.add( new ActivationAction( "Loot" ) {
-			@Override
-			public void activate( EnvironmentEntity entity )
-			{
-				String type = (String) entity.data.get( "Treasure" );
-				int quality = (Integer) entity.data.get( "Quality" );
-
-				entity.inventory.m_items.addAll( TreasureGenerator.generateLoot( quality, type, MathUtils.random ) );
-
-				entity.HP = 0;
-				entity.canTakeDamage = true;
-			}
-		} );
-
-		Element spriteElement = xml.getChildByName( "Sprite" );
-		if (spriteElement != null)
-		{
-			entity.sprite = AssetManager.loadSprite( spriteElement );
-		}
-		else
-		{
-			entity.sprite = AssetManager.loadSprite( "Oryx/uf_split/uf_items/chest_gold" );
-		}
-
-		entity.baseInternalLoad( xml );
-
-		return entity;
-	}
-
-	// ----------------------------------------------------------------------
 	private static EnvironmentEntity CreateTransition( final Element data )
 	{
-		ActivationAction action = new ActivationAction( "Change Level" )
-		{
-			@Override
-			public void activate( EnvironmentEntity entity )
-			{
-				Global.save();
-				String destination = (String)entity.data.get( "Destination" );
-				Global.LevelManager.nextLevel( destination );
-			}
-		};
+		ActivationActionGroup group = new ActivationActionGroup("Change Level");
+		group.actions.add( new ActivationActionChangeLevel( data.get( "Destination" ) ) );
 
 		Sprite stairs = null;
 
@@ -213,10 +161,7 @@ public class EnvironmentEntity extends Entity
 
 		entity.sprite = stairs;
 		entity.canTakeDamage = false;
-		entity.actions.add( action );
-		entity.data.put( "Destination", data.get( "Destination" ) );
-		entity.UID = "EnvironmentEntity Stair: ID " + entity.hashCode();
-
+		entity.onActivateActions.add( group );
 		entity.tile = new GameTile[entity.size][entity.size];
 		stairs.size[0] = entity.size;
 		stairs.size[1] = entity.size;
@@ -234,275 +179,37 @@ public class EnvironmentEntity extends Entity
 		Sprite doorVOpen = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_v_open", true );
 
 		final TilingSprite closedSprite = new TilingSprite(doorVClosed, doorHClosed);
+		closedSprite.name = "wall";
 		closedSprite.id = "wall".hashCode();
 
 		final TilingSprite openSprite = new TilingSprite(doorVOpen, doorHOpen);
+		openSprite.name = "wall";
 		openSprite.id = "wall".hashCode();
 
-		ActivationAction action = new ActivationAction( "Open" )
-		{
-			@Override
-			public void activate( EnvironmentEntity entity )
-			{
-				Global.save();
+		ActivationActionGroup open = new ActivationActionGroup();
+		open.name = "Open";
+		open.enabled = true;
+		open.actions.add( new ActivationActionSetSprite( null, openSprite ) );
+		open.actions.add( new ActivationActionSetPassable( Passability.parse( "true" ) ) );
+		open.actions.add( new ActivationActionSetEnabled( null, "Close", true ) );
+		open.actions.add( new ActivationActionSetEnabled( null, "Open", false ) );
 
-				boolean closed = entity.data.get( "State" ).equals( "Closed" );
-				if ( closed )
-				{
-					entity.data.put( "State", "Open" );
-				}
-				else
-				{
-					entity.data.put( "State", "Closed" );
-				}
-			}
-		};
-
-		OnTurnAction onTurn = new OnTurnAction()
-		{
-
-			@Override
-			public void update( EnvironmentEntity entity, float delta )
-			{
-				boolean closed = entity.data.get( "State" ).equals( "Closed" );
-				if ( closed )
-				{
-					entity.passableBy.clear();
-					entity.tilingSprite = closedSprite;
-					entity.actions.get( 0 ).name = "Open";
-				}
-				else
-				{
-					entity.passableBy.setAll( Passability.class );
-					entity.tilingSprite = openSprite;
-					entity.actions.get( 0 ).name = "Close";
-				}
-			}
-
-		};
+		ActivationActionGroup close = new ActivationActionGroup();
+		close.name = "Close";
+		close.enabled = true;
+		close.actions.add( new ActivationActionSetSprite( null, closedSprite ) );
+		close.actions.add( new ActivationActionSetPassable( Passability.parse( "false" ) ) );
+		close.actions.add( new ActivationActionSetEnabled( null, "Close", false ) );
+		close.actions.add( new ActivationActionSetEnabled( null, "Open", true ) );
 
 		EnvironmentEntity entity = new EnvironmentEntity();
-		entity.data.put( "State", "Closed" );
 		entity.passableBy = Passability.parse( "false" );
 		entity.passableBy.clearBit( Passability.LIGHT );
 		entity.tilingSprite = closedSprite;
-		entity.actions.add( action );
-		entity.onTurnAction = onTurn;
-		entity.UID = "EnvironmentEntity Door: ID " + entity.hashCode();
 		entity.canTakeDamage = false;
 
-		return entity;
-	}
-
-	// ----------------------------------------------------------------------
-	private static EnvironmentEntity CreateSpawner( Element xml )
-	{
-		EnvironmentEntity entity = new EnvironmentEntity();
-		entity.passableBy = Passability.parse( xml.get( "Passable" ) );
-
-		if ( xml.get( "Opaque", null ) != null )
-		{
-			boolean opaque = xml.getBoolean( "Opaque", false );
-
-			if ( opaque )
-			{
-				entity.passableBy.clearBit( Passability.LIGHT );
-			}
-			else
-			{
-				entity.passableBy.setBit( Passability.LIGHT );
-			}
-		}
-
-		entity.baseInternalLoad( xml );
-
-		final boolean spawnOnHear = xml.get( "Spawn", "OnTurn" ).toLowerCase().contains( "onhear" );
-		final boolean spawnOnDeath = xml.get( "Spawn", "OnTurn" ).toLowerCase().contains( "ondeath" );
-
-		entity.data.put( "MaxAlive", xml.getInt( "MaxAlive", 1 ) );
-		entity.data.put( "NumToSpawn", xml.getInt( "NumToSpawn", Integer.MAX_VALUE ) );
-		entity.data.put( "EntityName", xml.get( "Entity" ) );
-		entity.data.put( "Delay", xml.getFloat( "Delay", 10.0f ) );
-		entity.data.put( "SpawnOnTurn", xml.get( "Spawn", "OnTurn" ).toLowerCase().contains( "onturn" ) );
-
-		entity.data.put( "Accumulator", 0.0f );
-		entity.data.put( "NumSpawned", 0 );
-		entity.data.put( "IsSpawning", false );
-		entity.data.put( "RequestSpawn", false );
-
-		entity.onTurnAction = new OnTurnAction()
-		{
-			GameEntity[] entities;
-
-			@Override
-			public void update( EnvironmentEntity entity, float delta )
-			{
-				float accumulator = (Float) entity.data.get( "Accumulator" );
-
-				// reload data
-				if ( entities == null )
-				{
-					int maxAlive = (Integer) entity.data.get( "MaxAlive" );
-
-					entities = new GameEntity[maxAlive];
-
-					for ( int i = 0; i < maxAlive; i++ )
-					{
-						String key = "Entity" + i;
-						if ( entity.data.containsKey( key ) )
-						{
-							String UID = (String) entity.data.get( key );
-
-							GameEntity ge = (GameEntity) entity.tile[0][0].level.getEntityWithUID( UID );
-
-							if ( ge == null )
-							{
-								System.out.println( "Failed to find entity with UID: " + UID );
-							}
-
-							entities[i] = ge;
-						}
-					}
-				}
-
-				boolean isSpawning = (Boolean) entity.data.get( "IsSpawning" );
-
-				if ( isSpawning )
-				{
-					if ( accumulator > 0 )
-					{
-						accumulator -= delta;
-					}
-
-					if ( accumulator <= 0 )
-					{
-						GameEntity ge = GameEntity.load( (String) entity.data.get( "EntityName" ) );
-
-						GameTile tile = entity.tile[0][0];
-						int x = tile.x;
-						int y = tile.y;
-
-						GameTile spawnTile = null;
-
-						for ( Direction d : Direction.values() )
-						{
-							int nx = x + d.getX();
-							int ny = y + d.getY();
-
-							GameTile ntile = tile.level.getGameTile( nx, ny );
-
-							if ( ntile != null && ntile.getPassable( ge.getTravelType(), null ) && ntile.entity == null )
-							{
-								spawnTile = ntile;
-								break;
-							}
-						}
-
-						if ( spawnTile != null )
-						{
-							for ( int i = 0; i < entities.length; i++ )
-							{
-								if ( entities[i] == null )
-								{
-									entities[i] = ge;
-
-									entity.data.put( "Entity" + i, ge.UID );
-									break;
-								}
-							}
-
-							spawnTile.addGameEntity( ge );
-
-							entity.data.put( "IsSpawning", false );
-							entity.data.put( "NumSpawned", ( (Integer) entity.data.get( "NumSpawned" ) ) + 1 );
-						}
-					}
-				}
-
-				boolean requestSpawn = (Boolean) entity.data.get( "RequestSpawn" );
-				boolean spawnOnTurn = (Boolean) entity.data.get( "SpawnOnTurn" );
-				int numToSpawn = (Integer) entity.data.get( "NumToSpawn" );
-
-				if ( !isSpawning && ( requestSpawn || spawnOnTurn ) )
-				{
-					boolean needsSpawn = false;
-
-					if ( (Integer) entity.data.get( "NumSpawned" ) < numToSpawn )
-					{
-						for ( int i = 0; i < entities.length; i++ )
-						{
-							GameEntity ge = entities[i];
-
-							if ( ge == null || ge.HP <= 0 )
-							{
-								entities[i] = null;
-								entity.data.remove( "Entity" + i );
-
-								needsSpawn = true;
-							}
-						}
-					}
-
-					if ( needsSpawn )
-					{
-						accumulator = (Float) entity.data.get( "Delay" );
-						entity.data.put( "IsSpawning", true );
-						entity.data.put( "RequestSpawn", false );
-					}
-				}
-
-				entity.data.put( "Accumulator", accumulator );
-			}
-		};
-
-		if ( spawnOnHear )
-		{
-			entity.onHearAction = new OnHearAction()
-			{
-				@Override
-				public void process( EnvironmentEntity entity, Point source, String key, Object value )
-				{
-					entity.data.put( "RequestSpawn", true );
-				}
-			};
-		}
-
-		if ( spawnOnDeath )
-		{
-			entity.onDeathAction = new OnDeathAction()
-			{
-				@Override
-				public void process( EnvironmentEntity entity )
-				{
-					GameEntity ge = GameEntity.load( (String) entity.data.get( "EntityName" ) );
-
-					GameTile tile = entity.tile[0][0];
-					int x = tile.x;
-					int y = tile.y;
-
-					GameTile spawnTile = null;
-
-					for ( Direction d : Direction.values() )
-					{
-						int nx = x + d.getX();
-						int ny = y + d.getY();
-
-						GameTile ntile = tile.level.getGameTile( nx, ny );
-
-						if ( ntile != null && ntile.getPassable( ge.getTravelType(), null ) && ntile.entity == null )
-						{
-							spawnTile = ntile;
-							break;
-						}
-					}
-
-					if ( spawnTile != null )
-					{
-						spawnTile.addGameEntity( ge );
-					}
-				}
-			};
-		}
+		entity.onActivateActions.add( open );
+		entity.onActivateActions.add( close );
 
 		return entity;
 	}
@@ -534,7 +241,27 @@ public class EnvironmentEntity extends Entity
 
 		entity.baseInternalLoad( xml );
 
+		loadActions(xml.getChildByName( "OnTurn" ), entity.onTurnActions);
+		loadActions(xml.getChildByName( "OnActivate" ), entity.onActivateActions);
+		loadActions(xml.getChildByName( "OnHear" ), entity.onHearActions);
+		loadActions(xml.getChildByName( "OnDeath" ), entity.onDeathActions);
+
 		return entity;
+	}
+
+	private static void loadActions(Element xml, Array<ActivationActionGroup> actionList)
+	{
+		if (xml != null)
+		{
+			for (int i = 0; i < xml.getChildCount(); i++)
+			{
+				Element el = xml.getChild( i );
+				ActivationActionGroup group = new ActivationActionGroup(  );
+				group.parse( el );
+
+				actionList.add( group );
+			}
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -552,14 +279,6 @@ public class EnvironmentEntity extends Entity
 		{
 			entity = CreateTransition( xml );
 		}
-		else if ( type.equalsIgnoreCase( "Spawner" ) )
-		{
-			entity = CreateSpawner( xml );
-		}
-		else if ( type.equalsIgnoreCase( "Treasure" ) )
-		{
-			entity = CreateTreasureChest( xml );
-		}
 		else
 		{
 			entity = CreateBasic( xml );
@@ -568,37 +287,5 @@ public class EnvironmentEntity extends Entity
 		entity.tile = new GameTile[entity.size][entity.size];
 		entity.creationData = xml;
 		return entity;
-	}
-
-	// ----------------------------------------------------------------------
-	public static abstract class ActivationAction
-	{
-		public String name;
-		public boolean visible = true;
-
-		public ActivationAction( String name )
-		{
-			this.name = name;
-		}
-
-		public abstract void activate( EnvironmentEntity entity );
-	}
-
-	// ----------------------------------------------------------------------
-	public static abstract class OnTurnAction
-	{
-		public abstract void update( EnvironmentEntity entity, float delta );
-	}
-
-	// ----------------------------------------------------------------------
-	public static abstract class OnHearAction
-	{
-		public abstract void process( EnvironmentEntity entity, Point source, String key, Object value );
-	}
-
-	// ----------------------------------------------------------------------
-	public static abstract class OnDeathAction
-	{
-		public abstract void process( EnvironmentEntity entity );
 	}
 }

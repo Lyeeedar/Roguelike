@@ -23,7 +23,6 @@ public final class Symbol implements PathfindingTile
 	public Element tileData;
 
 	public Element environmentData;
-	public HashMap<String, Object> environmentEntityData;
 	public Direction attachLocation;
 
 	public Object entityData;
@@ -46,7 +45,6 @@ public final class Symbol implements PathfindingTile
 		s.character = character;
 		s.tileData = tileData;
 		s.environmentData = environmentData;
-		s.environmentEntityData = environmentEntityData != null ? (HashMap<String, Object>) environmentEntityData.clone() : null;
 		s.fieldData = fieldData;
 		s.attachLocation = attachLocation;
 		s.entityData = entityData;
@@ -61,25 +59,11 @@ public final class Symbol implements PathfindingTile
 		return environmentData != null;
 	}
 
-	public EnvironmentEntity getEnvironmentEntity( String levelUID, int depth )
+	public EnvironmentEntity getEnvironmentEntity( )
 	{
 		if ( environmentData != null )
 		{
 			EnvironmentEntity ee = EnvironmentEntity.load( environmentData );
-
-			if ( ee.creationData.get( "Type", "" ).equals( "Transition" ) || ee.creationData.get( "Type", "" ).equals( "Dungeon" ) )
-			{
-				if ( environmentEntityData != null )
-				{
-					ee.data = environmentEntityData;
-				}
-				else
-				{
-					environmentEntityData = ee.data;
-				}
-
-			}
-
 			return ee;
 		}
 

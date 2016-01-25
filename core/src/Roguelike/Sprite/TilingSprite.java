@@ -40,6 +40,7 @@ public class TilingSprite
 
 	public IntMap<Sprite> sprites = new IntMap<Sprite>(  );
 
+	public String name;
 	public long id;
 	public String texName;
 	public String maskName;
@@ -93,6 +94,7 @@ public class TilingSprite
 
 	public void load( String name, String texName, String maskName, Element spriteElement, Element overhangElement )
 	{
+		this.name = name;
 		this.id = name.toLowerCase().hashCode();
 		this.texName = texName;
 		this.maskName = maskName;

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashSet;
 
 import Roguelike.AssetManager;
+import Roguelike.Entity.ActivationAction.ActivationActionGroup;
 import Roguelike.Global;
 import Roguelike.Global.Passability;
 import Roguelike.Pathfinding.AStarPathfind;
@@ -111,19 +112,35 @@ public class SoundInstance
 							}
 						}
 
-						if ( t.environmentEntity != null && t.environmentEntity.onHearAction != null )
+						if ( t.environmentEntity != null && t.environmentEntity.onHearActions.size > 0 )
 						{
-							AStarPathfind astar = new AStarPathfind( tile.level.getGrid(), tile.x, tile.y, x, y, true, false, 1, SoundPassability, null );
-							Array<Point> path = astar.getPath();
-
-							if ( path != null && path.size < maxAudibleDist )
+							boolean hasActive = false;
+							for ( ActivationActionGroup group : t.environmentEntity.onHearActions )
 							{
-								t.environmentEntity.onHearAction.process( t.environmentEntity, shoutSource, key, value );
+								if (group.enabled)
+								{
+									hasActive = true;
+									break;
+								}
 							}
 
-							if ( path != null )
+							if (hasActive)
 							{
-								Global.PointPool.freeAll( path );
+								AStarPathfind astar = new AStarPathfind( tile.level.getGrid(), tile.x, tile.y, x, y, true, false, 1, SoundPassability, null );
+								Array<Point> path = astar.getPath();
+
+								if ( path != null && path.size < maxAudibleDist )
+								{
+									for ( ActivationActionGroup group : t.environmentEntity.onHearActions )
+									{
+										group.activate( t.environmentEntity, 1 );
+									}
+								}
+
+								if ( path != null )
+								{
+									Global.PointPool.freeAll( path );
+								}
 							}
 						}
 					}

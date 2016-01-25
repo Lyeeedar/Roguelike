@@ -8,6 +8,7 @@ import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.Room;
 import Roguelike.DungeonGeneration.Room.RoomDoor;
 import Roguelike.DungeonGeneration.Symbol;
+import Roguelike.Entity.ActivationAction.*;
 import Roguelike.GameEvent.AdditionalSprite;
 import Roguelike.GameEvent.Constant.ConstantEvent;
 import Roguelike.GameEvent.Damage.*;
@@ -497,5 +498,16 @@ public final class SaveFile
 		kryo.register( QuestOutput.class );
 		kryo.register( QuestOutputConditionEntityAlive.class );
 		kryo.register( QuestOuputConditionDialogueValue.class );
+
+		kryo.register( ActivationActionGroup.class );
+		kryo.register( ActivationActionChangeLevel.class );
+		kryo.register( ActivationActionSetEnabled.class );
+		kryo.register( ActivationActionSetPassable.class );
+		kryo.register( ActivationActionSetSprite.class );
+		kryo.register( ActivationActionSpawnEntity.class );
+		kryo.register( ActivationActionActivate.class );
+		kryo.register( ActivationActionSpawnField.class );
+		kryo.register( ActivationActionKillThis.class );
+		kryo.register( ActivationConditionPlayerProximity.class );
 	}
 }
