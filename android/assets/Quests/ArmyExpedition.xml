@@ -1,5 +1,5 @@
 <Quest>
-    <AllowedLevel>Forest,EnchantedForest</AllowedLevel>
+    <AllowedLevels>Forest,EnchantedForest</AllowedLevels>
 
     <Room>
         <AddFeatures>false</AddFeatures>

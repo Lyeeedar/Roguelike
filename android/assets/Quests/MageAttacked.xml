@@ -76,17 +76,16 @@
 
     <Outputs>
         <MageQuest>
-            <Data>1</Data>
+            <Data>Lived1</Data>
             <Conditions>
                 <EntityAlive>Mage</EntityAlive>
             </Conditions>
         </MageQuest>
         <MageQuest>
-            <Data>-1</Data>
+            <Data>Died1</Data>
             <Conditions>
                 <EntityAlive Not="true">Mage</EntityAlive>
             </Conditions>
         </MageQuest>
-        <MageAttacked />
     </Outputs>
 </Quest>

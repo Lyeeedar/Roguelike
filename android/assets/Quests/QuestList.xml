@@ -1,7 +1,6 @@
 <Quests>
-    <MageAttacked></MageAttacked>
-    <ArmyExpedition></ArmyExpedition>
-
-    <LoversEncounter></LoversEncounter>
-    <LoversCaptured></LoversCaptured>
+	<ArmyExpedition/>
+	<LoversCaptured/>
+	<LoversEncounter/>
+	<MageAttacked/>
 </Quests>

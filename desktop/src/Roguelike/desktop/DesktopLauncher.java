@@ -12,6 +12,7 @@ public class DesktopLauncher
 		Global.ApplicationChanger = new LwjglApplicationChanger();
 		Global.ApplicationChanger.createApplication();
 
+		new QuestProcessor();
 		//new AtlasCreator();
 	}
 }

@@ -8,11 +8,6 @@ import com.badlogic.gdx.utils.XmlReader;
  */
 public class QuestInputFlagPresent extends AbstractQuestInput
 {
-	public boolean consume;
-
-	private String key;
-	private boolean not;
-
 	@Override
 	public boolean evaluate()
 	{

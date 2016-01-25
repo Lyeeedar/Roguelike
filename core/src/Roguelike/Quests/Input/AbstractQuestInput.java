@@ -12,6 +12,12 @@ import java.util.HashMap;
 public abstract class AbstractQuestInput
 {
 	// ----------------------------------------------------------------------
+	public String key;
+	public String value;
+	public boolean consume;
+	public boolean not;
+
+	// ----------------------------------------------------------------------
 	public abstract boolean evaluate();
 
 	// ----------------------------------------------------------------------
