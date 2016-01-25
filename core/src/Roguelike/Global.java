@@ -238,6 +238,19 @@ public class Global
 	}
 
 	// ----------------------------------------------------------------------
+	public static void changeBGM(String bgmName)
+	{
+		if ( BGM != null )
+		{
+			BGM.mix( bgmName, 1 );
+		}
+		else
+		{
+			BGM = new Mixer( bgmName, 1f );
+		}
+	}
+
+	// ----------------------------------------------------------------------
 	public static void changeLevel( Level level, GameEntity player, Object travelData )
 	{
 		if ( CurrentLevel != null )
@@ -252,14 +265,7 @@ public class Global
 
 		CurrentLevel = level;
 
-		if ( BGM != null )
-		{
-			BGM.mix( level.bgmName, 1 );
-		}
-		else
-		{
-			BGM = new Mixer( level.bgmName, 1f );
-		}
+		changeBGM(level.bgmName);
 
 		if ( player != null )
 		{

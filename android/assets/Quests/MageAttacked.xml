@@ -5,74 +5,74 @@
         <FlagPresent Not="true">MageQuest</FlagPresent>
     </Inputs>
 
-    <Room>
-        <AddFeatures>false</AddFeatures>
+    <Rooms>
+        <Room>
+            <AddFeatures>false</AddFeatures>
 
-        <Symbols>
-            <Symbol Extends=".">
-                <Char>M</Char>
-                <EntityData Extends="NPC/HumanBase">
-                    <Name>Mage</Name>
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>M</Char>
+                    <EntityData Extends="NPC/HumanBase">
+                        <Name>Mage</Name>
 
-                    <Sprite>
-                        <Name>Oryx/uf_split/uf_heroes/wizard</Name>
-                        <Colour><RGB>160,226,100</RGB></Colour>
-                        <DrawActualSize>true</DrawActualSize>
-                    </Sprite>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_heroes/wizard</Name>
+                            <Colour><RGB>160,226,100</RGB></Colour>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
 
-                    <Inventory>
-                        <Equipment>
-                            <Wand>
-                                <Recipe>Wand</Recipe>
-                                <Material>Metal</Material>
-                                <Quality>1</Quality>
-                            </Wand>
-                        </Equipment>
-                    </Inventory>
+                        <Inventory>
+                            <Equipment>
+                                <Wand>
+                                    <Recipe>Wand</Recipe>
+                                    <Material>Metal</Material>
+                                    <Quality>1</Quality>
+                                </Wand>
+                            </Equipment>
+                        </Inventory>
 
-                    <Statistics>
-                        <Constitution>val+10</Constitution>
-                    </Statistics>
+                        <Statistics>
+                            <Constitution>val+10</Constitution>
+                        </Statistics>
 
-                    <Dialogue>
-                        <Exclamations>
-                            <SeePlayer>
-                                <Exclamation Condition="FirstChat == 0" ReliesOn="FirstChat">Hey you! Help me please!</Exclamation>
-                                <Exclamation>Thanks for your help earlier.</Exclamation>
-                            </SeePlayer>
-                            <InCombat>
-                                <Exclamation>Watch out! Behind you!</Exclamation>
-                            </InCombat>
-                        </Exclamations>
                         <Dialogue>
-                            <Chunk Condition="FirstChat == 0" ReliesOn="FirstChat">
-                                <Text>Thanks for helping me, I thought I was a goner.</Text>
-                                <Text>I'll teach you a little of what I know as thanks.</Text>
-                                <GainAbility>random(magic)</GainAbility>
-                                <SetVariable>
-                                    <Key>FirstChat</Key>
-                                    <Value>1</Value>
-                                </SetVariable>
-                            </Chunk>
-                            <Chunk>
-                                <Text>Thanks for your help, I think I can find my way back from here.</Text>
-                            </Chunk>
+                            <Exclamations>
+                                <SeePlayer>
+                                    <Exclamation Condition="FirstChat == 0" ReliesOn="FirstChat">Hey you! Help me please!</Exclamation>
+                                    <Exclamation>Thanks for your help earlier.</Exclamation>
+                                </SeePlayer>
+                                <InCombat>
+                                    <Exclamation>Watch out! Behind you!</Exclamation>
+                                </InCombat>
+                            </Exclamations>
+                            <Dialogue>
+                                <Chunk Condition="FirstChat == 0" ReliesOn="FirstChat">
+                                    <Text>Thanks for helping me, I thought I was a goner.</Text>
+                                    <Text>I'll teach you a little of what I know as thanks.</Text>
+                                    <GainAbility>random(magic)</GainAbility>
+                                    <SetVariable>
+                                        <Key>FirstChat</Key>
+                                        <Value>1</Value>
+                                    </SetVariable>
+                                </Chunk>
+                                <Chunk>
+                                    <Text>Thanks for your help, I think I can find my way back from here.</Text>
+                                </Chunk>
+                            </Dialogue>
                         </Dialogue>
-                    </Dialogue>
 
-                </EntityData>
-            </Symbol>
-        </Symbols>
+                    </EntityData>
+                </Symbol>
+            </Symbols>
 
-        <Rows>
-            <Row>1....</Row>
-            <Row>.....</Row>
-            <Row>..M.1</Row>
-            <Row>.....</Row>
-            <Row>1....</Row>
-        </Rows>
+            <Rows>
+                <Row>1...</Row>
+                <Row>.M.1</Row>
+                <Row>1...</Row>
+            </Rows>
 
-    </Room>
+        </Room>
+    </Rooms>
 
     <Outputs>
         <MageQuest>

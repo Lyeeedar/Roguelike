@@ -5,129 +5,129 @@
 
     <AllowedLevels>Forest</AllowedLevels>
 
-    <Room>
-        <Faction>Goblin</Faction>
-        <AddFeatures>false</AddFeatures>
+    <Rooms>
+        <Room>
+            <Faction>Goblin</Faction>
+            <AddFeatures>false</AddFeatures>
 
-        <Symbols>
-            <Symbol Extends=".">
-                <Char>m</Char>
-                <EntityData Extends="NPC/HumanBase">
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>m</Char>
+                    <EntityData Extends="NPC/HumanBase">
 
-                    <Name>Ruffletop</Name>
+                        <Name>Ruffletop</Name>
 
-                    <Factions>
-                        <Faction>Goblin</Faction>
-                    </Factions>
+                        <Factions>
+                            <Faction>Goblin</Faction>
+                        </Factions>
 
-                    <Sprite>
-                        <Name>Oryx/Custom/heroes/bar_patron</Name>
-                        <DrawActualSize>true</DrawActualSize>
-                    </Sprite>
+                        <Sprite>
+                            <Name>Oryx/Custom/heroes/bar_patron</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
 
-                    <Dialogue>
-                        <Exclamations>
-                            <SeePlayer>
-                                <Exclamation Condition="LoversChat == 0" ReliesOn="LoversChat">Hey you! Help us! Please!</Exclamation>
-                                <Exclamation>Thank you for your help kind adventurer.</Exclamation>
-                            </SeePlayer>
-                            <InCombat>
-                                <Exclamation>Behind me my dear Juliana! I shall protect you!</Exclamation>
-                            </InCombat>
-                        </Exclamations>
                         <Dialogue>
-                            <Chunk>
-                                <Text>Thank you for your help kind adventurer, without you my dear Juliana and I would sure be in some Goblin cell.</Text>
-                                <Text>We have nothing with which to repay you right now, but we will not forget this kindness.</Text>
-                                <Input Key="Response">
-                                    <Choice>What are you doing out here?</Choice>
-                                    <Choice>I'm going to go... Take care.</Choice>
-                                </Input>
-                                <Branch>
-                                    <Branch Condition="Response==1">
-                                        <Text>Juliana and I, our relationship is not exactly approved of by our families.</Text>
-                                        <Text>We heard that deep in the heart of the woods lies a temple to the goddess of love, Dysa.</Text>
-                                        <Text>We wished to get her blessing, so our love might endure the hardship before us.</Text>
+                            <Exclamations>
+                                <SeePlayer>
+                                    <Exclamation Condition="LoversChat == 0" ReliesOn="LoversChat">Hey you! Help us! Please!</Exclamation>
+                                    <Exclamation>Thank you for your help kind adventurer.</Exclamation>
+                                </SeePlayer>
+                                <InCombat>
+                                    <Exclamation>Behind me my dear Juliana! I shall protect you!</Exclamation>
+                                </InCombat>
+                            </Exclamations>
+                            <Dialogue>
+                                <Chunk>
+                                    <Text>Thank you for your help kind adventurer, without you my dear Juliana and I would sure be in some Goblin cell.</Text>
+                                    <Text>We have nothing with which to repay you right now, but we will not forget this kindness.</Text>
+                                    <Input Key="Response">
+                                        <Choice>What are you doing out here?</Choice>
+                                        <Choice>I'm going to go... Take care.</Choice>
+                                    </Input>
+                                    <Branch>
+                                        <Branch Condition="Response==1">
+                                            <Text>Juliana and I, our relationship is not exactly approved of by our families.</Text>
+                                            <Text>We heard that deep in the heart of the woods lies a temple to the goddess of love, Dysa.</Text>
+                                            <Text>We wished to get her blessing, so our love might endure the hardship before us.</Text>
+                                        </Branch>
+                                        <Branch Condition="Response==2">
+                                            <Text>To you too.</Text>
+                                        </Branch>
                                     </Branch>
-                                    <Branch Condition="Response==2">
-                                        <Text>To you too.</Text>
-                                    </Branch>
-                                </Branch>
-                                <SetVariable>
-                                    <Key>LoversChat</Key>
-                                    <Value>1</Value>
-                                </SetVariable>
-                            </Chunk>
+                                    <SetVariable>
+                                        <Key>LoversChat</Key>
+                                        <Value>1</Value>
+                                    </SetVariable>
+                                </Chunk>
+                            </Dialogue>
                         </Dialogue>
-                    </Dialogue>
 
-                </EntityData>
-            </Symbol>
+                    </EntityData>
+                </Symbol>
 
-            <Symbol Extends=".">
-                <Char>f</Char>
-                <EntityData Extends="NPC/HumanBase">
+                <Symbol Extends=".">
+                    <Char>f</Char>
+                    <EntityData Extends="NPC/HumanBase">
 
-                    <Name>Juliana</Name>
+                        <Name>Juliana</Name>
 
-                    <Factions>
-                        <Faction>Goblin</Faction>
-                    </Factions>
+                        <Factions>
+                            <Faction>Goblin</Faction>
+                        </Factions>
 
-                    <Sprite>
-                        <Name>Oryx/Custom/heroes/barmaid</Name>
-                        <DrawActualSize>true</DrawActualSize>
-                    </Sprite>
+                        <Sprite>
+                            <Name>Oryx/Custom/heroes/barmaid</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
 
-                    <Dialogue>
-                        <Exclamations>
-                            <SeePlayer>
-                                <Exclamation Condition="LoversChat == 0" ReliesOn="LoversChat">Hey you! Help us! Please!</Exclamation>
-                                <Exclamation>Thank you for your help kind adventurer.</Exclamation>
-                            </SeePlayer>
-                            <InCombat>
-                                <Exclamation>Get them Ruffly! Show them what happens when they mess with you!</Exclamation>
-                            </InCombat>
-                        </Exclamations>
                         <Dialogue>
-                            <Chunk>
-                                <Text>Thank you for your help kind adventurer, without you my dear Ruffly and I would sure be in some Goblin cell.</Text>
-                                <Text>We have nothing with which to repay you right now, but we will not forget this kindness.</Text>
-                                <Input Key="Response">
-                                    <Choice>What are you doing out here?</Choice>
-                                    <Choice>I'm going to go... Take care.</Choice>
-                                </Input>
-                                <Branch>
-                                    <Branch Condition="Response==1">
-                                        <Text>Ruffly and I, our relationship is not exactly approved of by our families.</Text>
-                                        <Text>We heard that deep in the heart of the woods lies a temple to the goddess of love, Dysa.</Text>
-                                        <Text>We wished to get her blessing, so our love might endure the hardship before us.</Text>
+                            <Exclamations>
+                                <SeePlayer>
+                                    <Exclamation Condition="LoversChat == 0" ReliesOn="LoversChat">Hey you! Help us! Please!</Exclamation>
+                                    <Exclamation>Thank you for your help kind adventurer.</Exclamation>
+                                </SeePlayer>
+                                <InCombat>
+                                    <Exclamation>Get them Ruffly! Show them what happens when they mess with you!</Exclamation>
+                                </InCombat>
+                            </Exclamations>
+                            <Dialogue>
+                                <Chunk>
+                                    <Text>Thank you for your help kind adventurer, without you my dear Ruffly and I would sure be in some Goblin cell.</Text>
+                                    <Text>We have nothing with which to repay you right now, but we will not forget this kindness.</Text>
+                                    <Input Key="Response">
+                                        <Choice>What are you doing out here?</Choice>
+                                        <Choice>I'm going to go... Take care.</Choice>
+                                    </Input>
+                                    <Branch>
+                                        <Branch Condition="Response==1">
+                                            <Text>Ruffly and I, our relationship is not exactly approved of by our families.</Text>
+                                            <Text>We heard that deep in the heart of the woods lies a temple to the goddess of love, Dysa.</Text>
+                                            <Text>We wished to get her blessing, so our love might endure the hardship before us.</Text>
+                                        </Branch>
+                                        <Branch Condition="Response==2">
+                                            <Text>To you too.</Text>
+                                        </Branch>
                                     </Branch>
-                                    <Branch Condition="Response==2">
-                                        <Text>To you too.</Text>
-                                    </Branch>
-                                </Branch>
-                                <SetVariable>
-                                    <Key>LoversChat</Key>
-                                    <Value>1</Value>
-                                </SetVariable>
-                            </Chunk>
+                                    <SetVariable>
+                                        <Key>LoversChat</Key>
+                                        <Value>1</Value>
+                                    </SetVariable>
+                                </Chunk>
+                            </Dialogue>
                         </Dialogue>
-                    </Dialogue>
 
-                </EntityData>
-            </Symbol>
-        </Symbols>
+                    </EntityData>
+                </Symbol>
+            </Symbols>
 
-        <Rows>
-            <Row>......</Row>
-            <Row>.2....</Row>
-            <Row>....5.</Row>
-            <Row>..mf..</Row>
-            <Row>.1..1.</Row>
-            <Row>......</Row>
-        </Rows>
-    </Room>
+            <Rows>
+                <Row>2...</Row>
+                <Row>...5</Row>
+                <Row>.mf.</Row>
+                <Row>1..1</Row>
+            </Rows>
+        </Room>
+    </Rooms>
 
     <Outputs>
         <LoversQuest Defer="true">

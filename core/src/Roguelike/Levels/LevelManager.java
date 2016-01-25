@@ -188,7 +188,7 @@ public class LevelManager
 				if (quest != null)
 				{
 					root.activeQuests.add( quest );
-					rooms.add( quest.room );
+					rooms.addAll( quest.rooms );
 				}
 			}
 

@@ -29,6 +29,7 @@ import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public final class Item extends GameEventHandler
 {
@@ -62,6 +63,18 @@ public final class Item extends GameEventHandler
 	}
 
 	// ----------------------------------------------------------------------
+	@Override
+	protected void appendExtraVariables(HashMap<String, Integer> variableMap )
+	{
+		variableMap.put("upgrade", upgradeCount-1);
+
+		for (Object[] data : extraData)
+		{
+			variableMap.put( (String)data[0], (Integer)data[1] );
+		}
+	}
+
+	// ----------------------------------------------------------------------
 	public void upgrade()
 	{
 		upgradeCount++;
@@ -69,9 +82,14 @@ public final class Item extends GameEventHandler
 		if ( slots.contains( EquipmentSlot.WEAPON, true ) )
 		{
 			// only upgrade attack
-			int currentAtk = constantEvent.getStatistic( Statistic.emptyMap, Statistic.ATTACK );
-			int newAtk = currentAtk + (int)(currentAtk * 0.1f);
-			constantEvent.putStatistic( Statistic.ATTACK, ""+newAtk );
+			String currentAtk = constantEvent.equations.get( Statistic.ATTACK );
+
+			if (!currentAtk.endsWith( "upgrade)" ))
+			{
+				currentAtk = "(" + currentAtk + ")*(1+0.1*upgrade)";
+			}
+
+			constantEvent.putStatistic( Statistic.ATTACK, currentAtk );
 		}
 		else
 		{
@@ -79,9 +97,14 @@ public final class Item extends GameEventHandler
 			{
 				if (constantEvent.equations.containsKey( stat ))
 				{
-					int currentVal = constantEvent.getStatistic( Statistic.emptyMap, stat );
-					int newVal = currentVal + (int)(currentVal * 0.1f);
-					constantEvent.putStatistic( stat, ""+newVal );
+					String currentVal = constantEvent.equations.get( stat );
+
+					if (!currentVal.endsWith( "upgrade)" ))
+					{
+						currentVal = "(" + currentVal + ")*(1+0.1*upgrade)";
+					}
+
+					constantEvent.putStatistic( stat, currentVal );
 				}
 			}
 		}

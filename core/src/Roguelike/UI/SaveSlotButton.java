@@ -131,7 +131,7 @@ public class SaveSlotButton extends Widget
 			layout.setText( font, "Awaiting new life" );
 			font.draw( batch, layout, getX()+edgePad*2, cy+layout.height+edgePad );
 
-			layout.setText( font, "Lives: " + save.lives );
+			layout.setText( font, "Souls Lost: " + (save.lives-1) );
 			font.draw( batch, layout, getX()+edgePad*2, getY()+edgePad+layout.height+edgePad );
 		}
 		else

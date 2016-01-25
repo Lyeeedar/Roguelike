@@ -19,7 +19,7 @@ public class Quest
 	public String path;
 	public Array<AbstractQuestInput> inputs = new Array<AbstractQuestInput>(  );
 	public Array<QuestOutput> outputs = new Array<QuestOutput>(  );
-	public DungeonFileParser.DFPRoom room;
+	public Array<DungeonFileParser.DFPRoom> rooms = new Array<DungeonFileParser.DFPRoom>(  );
 	public ObjectSet<String> allowedLevels = new ObjectSet<String>(  );
 
 	public boolean evaluateInputs()
@@ -69,8 +69,14 @@ public class Quest
 			}
 		}
 
-		XmlReader.Element roomElement = xml.getChildByName( "Room" );
-		room = DungeonFileParser.DFPRoom.parse( roomElement );
+		XmlReader.Element roomsElement = xml.getChildByName( "Rooms" );
+		for ( int i = 0; i < roomsElement.getChildCount(); i++ )
+		{
+			XmlReader.Element roomElement = roomsElement.getChild( i );
+			DungeonFileParser.DFPRoom room = DungeonFileParser.DFPRoom.parse( roomElement );
+
+			rooms.add( room );
+		}
 
 		allowedLevels.addAll(xml.get( "AllowedLevels", "any" ).split( "," ));
 	}
