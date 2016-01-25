@@ -47,7 +47,7 @@ public class SaveSlotButton extends Widget
 			SaveFile save = new SaveFile();
 			save.load(slot);
 			file = save;
-		} catch (Exception e) {}
+		} catch (Exception e) { e.printStackTrace(); }
 		this.save = file;
 
 		this.addListener( new InputListener()
@@ -86,7 +86,7 @@ public class SaveSlotButton extends Widget
 
 	private void drawUnfilledSlot( Batch batch )
 	{
-		layout.setText( titleFont, "Empty Slot" );
+		layout.setText( titleFont, "New World" );
 
 		float cx = getX() + getWidth() / 2.0f;
 		float cy = getY() + getHeight() / 2.0f;
@@ -116,65 +116,49 @@ public class SaveSlotButton extends Widget
 
 		if (save.isDead)
 		{
-			layout.setText( titleFont, "Dead" );
-
-			float cx = getX() + getWidth() / 2.0f;
+			float height = getHeight() - edgePad * 2;
 			float cy = getY() + getHeight() / 2.0f;
 
 			if (!mouseOver)
 			{
-				titleFont.setColor( Color.LIGHT_GRAY );
+				font.setColor( Color.LIGHT_GRAY );
 			}
 			else
 			{
-				titleFont.setColor( Color.WHITE );
+				font.setColor( Color.WHITE );
 			}
 
-			titleFont.draw( batch, layout, cx - layout.width / 2, cy + layout.height / 2 );
+			layout.setText( font, "Awaiting new life" );
+			font.draw( batch, layout, getX()+edgePad*2, cy+layout.height+edgePad );
+
+			layout.setText( font, "Lives: " + save.lives );
+			font.draw( batch, layout, getX()+edgePad*2, getY()+edgePad+layout.height+edgePad );
 		}
 		else
 		{
 			float width = getWidth() - edgePad * 2;
 			float height = getHeight() - edgePad * 2;
+			float cy = getY() + getHeight() / 2.0f;
 
 			GameEntity player = save.levelManager.current.currentLevel.getPlayer();
 			TextureRegion playerSprite = player.sprite.getCurrentTexture();
 
 			batch.draw( playerSprite, getX()+edgePad, getY()+edgePad, height, height );
 
-			float hh = height / 2 - edgePad / 2;
-
-			float x = getX()+edgePad + height+edgePad;
-			for ( int i = 0; i < Global.NUM_ABILITY_SLOTS; i++ )
+			if (!mouseOver)
 			{
-				AbilityTree tree = null;
-				if ( i < player.slottedAbilities.size )
-				{
-					tree = player.slottedAbilities.get( i );
-				}
-
-				if (tree != null)
-				{
-					TextureRegion region = tree.current.current.getIcon().getCurrentTexture();
-					batch.draw( region, x, getY()+edgePad+hh+edgePad/2, hh, hh );
-				}
-
-				x += hh + edgePad/2;
+				font.setColor( Color.LIGHT_GRAY );
+			}
+			else
+			{
+				font.setColor( Color.WHITE );
 			}
 
-			x = getX()+edgePad + height+edgePad;
-			for ( Item.EquipmentSlot slot : Item.EquipmentSlot.values() )
-			{
-				Item item = player.getInventory().getEquip( slot );
+			layout.setText( font, save.levelManager.current.levelTitle );
+			font.draw( batch, layout, getX()+height+edgePad, cy+layout.height+edgePad );
 
-				if (item != null)
-				{
-					TextureRegion region = item.getIcon().getCurrentTexture();
-					batch.draw( region, x, getY()+edgePad, hh, hh );
-				}
-
-				x += hh + edgePad/2;
-			}
+			layout.setText( font, "Lives: " + save.lives );
+			font.draw( batch, layout, getX()+height+edgePad, getY()+edgePad+layout.height+edgePad );
 		}
 
 		batch.setColor( Color.WHITE );

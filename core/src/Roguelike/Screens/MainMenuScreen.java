@@ -35,18 +35,17 @@ public class MainMenuScreen implements Screen
 
 		stage = new Stage( new ScreenViewport() );
 		batch = new SpriteBatch();
+		table = new Table();
+		table.setFillParent( true );
+		stage.addActor( table );
 
 		createUI();
 	}
 
 	private void createUI()
 	{
-		Table table = new Table();
-		// table.debug();
+		table.clear();
 
-		// Label title = new Label( "Chronicles of Aether", skin );
-		// table.add( title ).expandY().top().padTop( 100 );
-		// table.row();
 		Image image = new Image( AssetManager.loadTexture( "Sprites/Unpacked/Title.png" ) );
 		table.add( image ).expandX().fillX().pad( 20 );
 		table.row();
@@ -85,9 +84,6 @@ public class MainMenuScreen implements Screen
 		buttonTable.row();
 
 		table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expand().fill().pad( 20 );
-
-		table.setFillParent( true );
-		stage.addActor( table );
 	}
 
 	@Override
@@ -219,6 +215,8 @@ public class MainMenuScreen implements Screen
 
 	Stage stage;
 	Skin skin;
+
+	Table table;
 
 	SpriteBatch batch;
 }

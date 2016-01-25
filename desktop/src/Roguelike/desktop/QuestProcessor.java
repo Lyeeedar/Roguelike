@@ -41,6 +41,28 @@ public class QuestProcessor
 			}
 		}
 
+		for (OutputData data : output.values())
+		{
+			for (String value : data.values)
+			{
+				boolean found = false;
+
+				for (InputData id : input)
+				{
+					if (id.key.equals( data.key ) && value.equals( id.value ))
+					{
+						found = true;
+						break;
+					}
+				}
+
+				if (!found)
+				{
+					System.err.println( "Output key '"+data.key+"' with value '"+value+"' is never used." );
+				}
+			}
+		}
+
 		String questListContents = "<Quests>\n";
 		for (String path : questPaths)
 		{

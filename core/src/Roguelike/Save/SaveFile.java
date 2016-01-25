@@ -365,6 +365,34 @@ public final class SaveFile
 				output.writeString( element.toString() );
 			}
 		} );
+
+		kryo.register( ObjectMap.class, new Serializer<ObjectMap>()
+		{
+			@Override
+			public void write( Kryo kryo, Output output, ObjectMap object )
+			{
+				Array<Object[]> data = new Array<Object[]>(  );
+				for (Object key : object.keys())
+				{
+					Object value = object.get( key );
+					data.add( new Object[]{key, value} );
+				}
+				kryo.writeObject( output, data );
+			}
+
+			@Override
+			public ObjectMap read( Kryo kryo, Input input, Class<ObjectMap> type )
+			{
+				Array<Object[]> data = kryo.readObject( input, Array.class );
+
+				ObjectMap map = new ObjectMap(  );
+				for (Object[] pair : data)
+				{
+					map.put( pair[0], pair[1] );
+				}
+				return map;
+			}
+		} );
 	}
 
 	private void registerClasses( Kryo kryo )
@@ -413,9 +441,6 @@ public final class SaveFile
 		kryo.register( Float[][].class );
 		kryo.register( boolean[].class );
 		kryo.register( boolean[][].class );
-		kryo.register( ObjectMap.class );
-		kryo.register( ObjectMap.Entries.class );
-		kryo.register( ObjectMap.Entry.class );
 		kryo.register( ObjectSet.class );
 
 		kryo.register( BumpAnimation.class );
