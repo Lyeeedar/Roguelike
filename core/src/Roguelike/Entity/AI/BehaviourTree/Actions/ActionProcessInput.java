@@ -208,7 +208,7 @@ public class ActionProcessInput extends AbstractAction
 				{
 					tile.entity.dialogue.exclamationManager.inCombat.process( tile.entity, null, null );
 				}
-				else
+				else if (tile.entity.dialogue.popupText == null)
 				{
 					tile.entity.dialogue.initialiseDialogue( tile.entity );
 					tile.entity.dialogue.advance( tile.entity );

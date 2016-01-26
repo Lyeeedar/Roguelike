@@ -1953,6 +1953,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void displayGameOverMessage()
 	{
+		Global.lives++;
 		Global.LevelManager.evaluateQuestOutput();
 		for (ObjectMap.Entry<String, String> entry : Global.QuestManager.deferredFlags.entries())
 		{
@@ -2156,6 +2157,29 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			table.add( button ).expandX().width( 200 ).center();
 			table.row();
 		}
+
+		table.add( new Seperator( skin ) ).expandX().fillX();
+		table.row();
+
+		TextButton qbutton = new TextButton( "Cancel", skin );
+		qbutton.addListener( new InputListener()
+		{
+
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				lockContextMenu = false;
+				clearContextMenu();
+			}
+		} );
+		table.add( qbutton ).expandX().width( 200 ).center();
+		table.row();
 
 		displayContextMenu( table, true );
 	}

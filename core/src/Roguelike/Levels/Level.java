@@ -430,7 +430,7 @@ public class Level
 			}
 			else
 			{
-				int existingVal = source.orbs.get( type );
+				int existingVal = source.orbs.containsKey( type ) ? source.orbs.get( type ) : 0;
 				source.orbs.put( type, existingVal + val );
 
 				int[] diff = new int[] { 0, 0 };

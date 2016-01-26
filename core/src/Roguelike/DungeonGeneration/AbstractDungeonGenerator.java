@@ -316,93 +316,90 @@ public abstract class AbstractDungeonGenerator
 			{
 				Symbol symbol = symbolGrid[x][y];
 
-				if ( symbol.hasEnvironmentEntity() )
+				if ( !saveLevel.created && symbol.hasEnvironmentEntity() )
 				{
 					GameTile newTile = actualTiles[x][y];
 					EnvironmentEntity entity = symbol.getEnvironmentEntity( );
 
-					if ( !saveLevel.created || !entity.canTakeDamage )
+					if ( entity.attachToWall )
 					{
-						if ( entity.attachToWall )
+						Direction location = Direction.CENTER;
+
+						if ( symbol.attachLocation != null )
 						{
-							Direction location = Direction.CENTER;
-
-							if ( symbol.attachLocation != null )
-							{
-								location = symbol.attachLocation;
-							}
-							else
-							{
-								// get direction
-								HashSet<Direction> validDirections = new HashSet<Direction>();
-								for ( Direction dir : Direction.values() )
-								{
-									boolean passable = symbolGrid[x + dir.getX()][y + dir.getY()].getTileData().passableBy.getBitFlag() != 0;
-									if ( !passable )
-									{
-										validDirections.add( dir );
-									}
-								}
-
-								if ( validDirections.size() > 0 )
-								{
-									if ( location == Direction.CENTER )
-									{
-										for ( Direction dir : Direction.values() )
-										{
-											if ( dir.isCardinal() )
-											{
-												if ( validDirections.contains( dir ) )
-												{
-													location = dir;
-													break;
-												}
-											}
-										}
-									}
-
-									// look for direction with full surround
-									for ( Direction dir : Direction.values() )
-									{
-										boolean acwvalid = validDirections.contains( dir.getAnticlockwise() );
-										boolean valid = validDirections.contains( dir );
-										boolean cwvalid = validDirections.contains( dir.getClockwise() );
-
-										if ( acwvalid && valid && cwvalid )
-										{
-											location = dir;
-											break;
-										}
-									}
-
-									// If that failed then just try the cardinal
-									// directions
-
-									// else pick random
-									if ( location == Direction.CENTER )
-									{
-										location = validDirections.toArray( new Direction[validDirections.size()] )[ran.nextInt( validDirections.size() )];
-									}
-
-									location = location.getOpposite();
-								}
-							}
-
-							entity.location = location;
-							// entity.sprite.rotation = location.getAngle();
+							location = symbol.attachLocation;
 						}
 						else
 						{
-							if ( symbol.containingRoom != null
-									&& symbol.containingRoom.orientation != Direction.CENTER
-									&& symbol.environmentData.getBoolean( "MatchRoomRotation", false ) )
+							// get direction
+							HashSet<Direction> validDirections = new HashSet<Direction>();
+							for ( Direction dir : Direction.values() )
 							{
-								entity.sprite.rotation = symbol.containingRoom.orientation.getAngle();
+								boolean passable = symbolGrid[x + dir.getX()][y + dir.getY()].getTileData().passableBy.getBitFlag() != 0;
+								if ( !passable )
+								{
+									validDirections.add( dir );
+								}
+							}
+
+							if ( validDirections.size() > 0 )
+							{
+								if ( location == Direction.CENTER )
+								{
+									for ( Direction dir : Direction.values() )
+									{
+										if ( dir.isCardinal() )
+										{
+											if ( validDirections.contains( dir ) )
+											{
+												location = dir;
+												break;
+											}
+										}
+									}
+								}
+
+								// look for direction with full surround
+								for ( Direction dir : Direction.values() )
+								{
+									boolean acwvalid = validDirections.contains( dir.getAnticlockwise() );
+									boolean valid = validDirections.contains( dir );
+									boolean cwvalid = validDirections.contains( dir.getClockwise() );
+
+									if ( acwvalid && valid && cwvalid )
+									{
+										location = dir;
+										break;
+									}
+								}
+
+								// If that failed then just try the cardinal
+								// directions
+
+								// else pick random
+								if ( location == Direction.CENTER )
+								{
+									location = validDirections.toArray( new Direction[validDirections.size()] )[ran.nextInt( validDirections.size() )];
+								}
+
+								location = location.getOpposite();
 							}
 						}
 
-						newTile.addEnvironmentEntity( entity );
+						entity.location = location;
+						// entity.sprite.rotation = location.getAngle();
 					}
+					else
+					{
+						if ( symbol.containingRoom != null
+							 && symbol.containingRoom.orientation != Direction.CENTER
+							 && symbol.environmentData.getBoolean( "MatchRoomRotation", false ) )
+						{
+							entity.sprite.rotation = symbol.containingRoom.orientation.getAngle();
+						}
+					}
+
+					newTile.addEnvironmentEntity( entity );
 				}
 
 				if ( !saveLevel.created && symbol.fieldData != null )

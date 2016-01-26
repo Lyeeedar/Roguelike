@@ -220,8 +220,6 @@ public class Global
 	// ----------------------------------------------------------------------
 	public static void newGame( GameEntity player )
 	{
-		lives++;
-
 		LevelManager = new LevelManager();
 		QuestManager = new QuestManager();
 		AUT = 0;

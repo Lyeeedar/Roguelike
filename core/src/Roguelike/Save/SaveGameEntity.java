@@ -136,6 +136,8 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		}
 		entity.isBoss = isBoss;
 
+		entity.isVariableMapDirty = true;
+
 		return entity;
 	}
 }

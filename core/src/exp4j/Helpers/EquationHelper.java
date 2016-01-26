@@ -59,6 +59,16 @@ public class EquationHelper
 		return expB;
 	}
 
+	public static int evaluate( String eqn )
+	{
+		return evaluate( eqn, Global.Statistic.emptyMap, MathUtils.random );
+	}
+
+	public static int evaluate( String eqn, Random ran )
+	{
+		return evaluate( eqn, Global.Statistic.emptyMap, ran );
+	}
+
 	public static int evaluate( String eqn, HashMap<String, Integer> variableMap )
 	{
 		return evaluate( eqn, variableMap, MathUtils.random );

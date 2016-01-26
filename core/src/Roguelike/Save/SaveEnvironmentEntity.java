@@ -80,6 +80,8 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 
 		entity.UID = UID;
 
+		entity.isVariableMapDirty = true;
+
 		return entity;
 	}
 

@@ -122,12 +122,9 @@ public final class SaveLevel extends SaveableObject<Level>
 		obj.getAllEnvironmentEntities( tempEnvironmentEntities );
 		for ( EnvironmentEntity entity : tempEnvironmentEntities )
 		{
-			if ( entity.canTakeDamage )
-			{
-				SaveEnvironmentEntity saveObj = new SaveEnvironmentEntity();
-				saveObj.store( entity );
-				environmentEntities.add( saveObj );
-			}
+			SaveEnvironmentEntity saveObj = new SaveEnvironmentEntity();
+			saveObj.store( entity );
+			environmentEntities.add( saveObj );
 		}
 
 		seenState = new boolean[obj.Grid.length][obj.Grid[0].length];

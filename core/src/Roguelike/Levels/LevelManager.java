@@ -181,7 +181,7 @@ public class LevelManager
 			}
 
 			// For each quest get rooms
-			int numQuests = ran.nextInt( 2 ) + 1;
+			int numQuests = (int)(ran.nextFloat() * ran.nextFloat() * 2.0f + 0.5f);
 			for (int i = 0; i < numQuests; i++)
 			{
 				Quest quest = Global.QuestManager.getQuest( levelName, ran );

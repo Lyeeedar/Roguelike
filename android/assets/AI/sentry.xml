@@ -12,10 +12,12 @@
         <Import Path="useAbility.xml"></Import>
         <Import Path="attackClosest.xml"></Import>
         <Sequence>
-            <CheckValue Condition="hp<maxhp" />
-            <Rest />
+            <MoveTo Key="SpawnPos"></MoveTo>
+            <Sequence>
+                <CheckValue Condition="hp<maxhp" />
+                <Rest />
+            </Sequence>
         </Sequence>
-        <MoveTo Key="SpawnPos"></MoveTo>
     </Priority>
 
     <Exclaim TilesKey="Tiles"></Exclaim>

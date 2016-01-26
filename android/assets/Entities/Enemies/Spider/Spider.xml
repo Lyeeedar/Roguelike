@@ -26,15 +26,6 @@
 					<Constitution>10</Constitution>
 				</Statistics>
 
-				<Inventory>
-
-				    <Item DropChance="rnd(4)<1">
-				        <Type>Material</Type>
-					    <Name>Rusted Iron</Name>
-					    <MaterialType>Ingot</MaterialType>
-				    </Item>
-
-				</Inventory>
 			</EnvironmentData>
 		</Feature>
 

@@ -41,6 +41,11 @@ public class ExclamationManager
 		{
 			seeEnemy.cooldownAccumulator -= delta;
 		}
+
+		if ( inCombat != null && inCombat.cooldownAccumulator > 0 )
+		{
+			inCombat.cooldownAccumulator -= delta;
+		}
 	}
 
 	public void process( Array<GameTile> tiles, GameEntity entity )
@@ -64,6 +69,11 @@ public class ExclamationManager
 		{
 			processLowHealth( tiles, entity );
 		}
+
+		if ( inCombat != null )
+		{
+			processInCombat( tiles, entity );
+		}
 	}
 
 	private void processSeePlayer( Array<GameTile> tiles, GameEntity entity )
@@ -85,7 +95,7 @@ public class ExclamationManager
 				seePlayer.process( entity, null, null );
 			}
 
-			seePlayer.cooldownAccumulator = seePlayer.cooldown;
+			seePlayer.cooldownAccumulator = EquationHelper.evaluate( seePlayer.cooldown );
 		}
 	}
 
@@ -108,7 +118,7 @@ public class ExclamationManager
 				seeAlly.process( entity, null, null );
 			}
 
-			seeAlly.cooldownAccumulator = seeAlly.cooldown;
+			seeAlly.cooldownAccumulator = EquationHelper.evaluate( seeAlly.cooldown );
 		}
 	}
 
@@ -134,7 +144,32 @@ public class ExclamationManager
 				seeEnemy.process( entity, "EnemyPos", pos );
 			}
 
-			seeEnemy.cooldownAccumulator = seeEnemy.cooldown;
+			seeEnemy.cooldownAccumulator = EquationHelper.evaluate( seeEnemy.cooldown );
+		}
+	}
+
+	private void processInCombat( Array<GameTile> tiles, GameEntity entity )
+	{
+		Point pos = null;
+
+		boolean canSeeEnemy = false;
+		for ( GameTile tile : tiles )
+		{
+			if ( tile.entity != null && !tile.entity.isAllies( entity ) )
+			{
+				pos = new Point().set( tile );
+				canSeeEnemy = true;
+				break;
+			}
+		}
+
+		if ( canSeeEnemy )
+		{
+			if ( inCombat.cooldownAccumulator <= 0 )
+			{
+				inCombat.process( entity, "EnemyPos", pos );
+				inCombat.cooldownAccumulator = EquationHelper.evaluate( inCombat.cooldown );
+			}
 		}
 	}
 
@@ -149,7 +184,7 @@ public class ExclamationManager
 				lowHealth.process( entity, "LowHealth", new Point().set( entity ) );
 			}
 
-			lowHealth.cooldownAccumulator = lowHealth.cooldown;
+			lowHealth.cooldownAccumulator = EquationHelper.evaluate( lowHealth.cooldown );
 		}
 	}
 
@@ -196,7 +231,7 @@ public class ExclamationManager
 	public static class ExclamationEventWrapper
 	{
 		public Array<ExclamationWrapper> groups = new Array<ExclamationWrapper>();
-		public float cooldown;
+		public String cooldown;
 		public float cooldownAccumulator;
 
 		public void process( GameEntity entity, String key, Object value )
@@ -268,7 +303,7 @@ public class ExclamationManager
 
 		public void parse( Element xml )
 		{
-			cooldown = xml.getFloat( "Cooldown", 5 );
+			cooldown = xml.get( "Cooldown", "5+rnd(5)" );
 
 			for ( int i = 0; i < xml.getChildCount(); i++ )
 			{
