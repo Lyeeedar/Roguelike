@@ -157,7 +157,7 @@ public class SaveSlotButton extends Widget
 			layout.setText( font, save.levelManager.current.levelTitle );
 			font.draw( batch, layout, getX()+height+edgePad, cy+layout.height+edgePad );
 
-			layout.setText( font, "Lives: " + save.lives );
+			layout.setText( font, "Souls Lost: " + save.lives );
 			font.draw( batch, layout, getX()+height+edgePad, getY()+edgePad+layout.height+edgePad );
 		}
 

@@ -80,6 +80,14 @@ public class ActivationActionSetEnabled extends AbstractActivationAction
 				group.enabled = enabled;
 			}
 		}
+
+		for (ActivationActionGroup group : entity.noneActions)
+		{
+			if (group.name.equals( actionName ))
+			{
+				group.enabled = enabled;
+			}
+		}
 	}
 
 	@Override

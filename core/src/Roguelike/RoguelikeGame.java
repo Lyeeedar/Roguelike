@@ -2,12 +2,7 @@ package Roguelike;
 
 import java.util.HashMap;
 
-import Roguelike.Screens.CharacterCreationScreen;
-import Roguelike.Screens.GameOverScreen;
-import Roguelike.Screens.GameScreen;
-import Roguelike.Screens.LoadingScreen;
-import Roguelike.Screens.MainMenuScreen;
-import Roguelike.Screens.OptionsScreen;
+import Roguelike.Screens.*;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
@@ -23,7 +18,7 @@ public class RoguelikeGame extends Game
 
 	public enum ScreenEnum
 	{
-		MAINMENU, GAME, GAMEOVER, LOADING, CHARACTERCREATION, OPTIONS
+		MAINMENU, GAME, LOADING, CHARACTERCREATION, OPTIONS, CREDITS
 	}
 
 	public final HashMap<ScreenEnum, Screen> screens = new HashMap<ScreenEnum, Screen>();
@@ -33,10 +28,10 @@ public class RoguelikeGame extends Game
 	{
 		screens.put( ScreenEnum.GAME, new GameScreen() );
 		screens.put( ScreenEnum.MAINMENU, new MainMenuScreen() );
-		screens.put( ScreenEnum.GAMEOVER, new GameOverScreen() );
 		screens.put( ScreenEnum.LOADING, new LoadingScreen() );
 		screens.put( ScreenEnum.CHARACTERCREATION, new CharacterCreationScreen() );
 		screens.put( ScreenEnum.OPTIONS, new OptionsScreen() );
+		screens.put( ScreenEnum.CREDITS, new CreditsScreen() );
 
 		switchScreen( ScreenEnum.MAINMENU );
 	}

@@ -12,6 +12,7 @@ import Roguelike.Tiles.Point;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionProcessInput extends AbstractAction
@@ -180,14 +181,19 @@ public class ActionProcessInput extends AbstractAction
 
 			if ( entityWithinRange )
 			{
+				Array<ActivationActionGroup> valid = new Array<ActivationActionGroup>(  );
 				for ( ActivationActionGroup action : tile.environmentEntity.onActivateActions )
 				{
-					if ( action.enabled )
+					if ( action.enabled && action.checkCondition( tile.environmentEntity, 1 ) )
 					{
-						action.activate( tile.environmentEntity, 1 );
-						Global.CurrentLevel.player.tasks.add( new TaskWait() );
+						valid.add( action );
 						break;
 					}
+				}
+
+				if (valid.size > 0)
+				{
+					GameScreen.Instance.displayActionOptions(valid, tile.environmentEntity);
 				}
 			}
 			else if ( isWait )

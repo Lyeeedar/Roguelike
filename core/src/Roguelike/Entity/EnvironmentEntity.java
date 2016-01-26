@@ -41,6 +41,7 @@ public class EnvironmentEntity extends Entity
 	public Array<ActivationActionGroup> onTurnActions = new Array<ActivationActionGroup>(  );
 	public Array<ActivationActionGroup> onHearActions = new Array<ActivationActionGroup>(  );
 	public Array<ActivationActionGroup> onDeathActions = new Array<ActivationActionGroup>(  );
+	public Array<ActivationActionGroup> noneActions = new Array<ActivationActionGroup>(  );
 	public Element creationData;
 
 	// ----------------------------------------------------------------------
@@ -125,7 +126,7 @@ public class EnvironmentEntity extends Entity
 	// ----------------------------------------------------------------------
 	private static EnvironmentEntity CreateTransition( final Element data )
 	{
-		ActivationActionGroup group = new ActivationActionGroup("Change Level");
+		ActivationActionGroup group = new ActivationActionGroup("Go Onward");
 		group.actions.add( new ActivationActionChangeLevel( data.get( "Destination" ) ) );
 
 		Sprite stairs = null;
@@ -245,6 +246,7 @@ public class EnvironmentEntity extends Entity
 		loadActions(xml.getChildByName( "OnActivate" ), entity.onActivateActions);
 		loadActions(xml.getChildByName( "OnHear" ), entity.onHearActions);
 		loadActions(xml.getChildByName( "OnDeath" ), entity.onDeathActions);
+		loadActions( xml.getChildByName( "Actions" ), entity.noneActions );
 
 		return entity;
 	}
@@ -283,7 +285,6 @@ public class EnvironmentEntity extends Entity
 		{
 			entity = CreateBasic( xml );
 		}
-
 		entity.tile = new GameTile[entity.size][entity.size];
 		entity.creationData = xml;
 		return entity;

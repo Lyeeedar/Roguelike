@@ -12,36 +12,47 @@ public class ActivationActionGroup
 	// ----------------------------------------------------------------------
 	public String name;
 	public boolean enabled;
+	public Array<AbstractActivationCondition> conditions = new Array<AbstractActivationCondition>(  );
+	public Array<AbstractActivationAction> actions = new Array<AbstractActivationAction>(  );
 
+	// ----------------------------------------------------------------------
 	public ActivationActionGroup()
 	{
 
 	}
 
+	// ----------------------------------------------------------------------
 	public ActivationActionGroup(String name)
 	{
 		this.name = name;
 		enabled = true;
 	}
 
+	// ----------------------------------------------------------------------
 	public ActivationActionGroup(String name, boolean enabled)
 	{
 		this.name = name;
 		this.enabled = enabled;
 	}
 
-	public Array<AbstractActivationCondition> conditions = new Array<AbstractActivationCondition>(  );
-	public Array<AbstractActivationAction> actions = new Array<AbstractActivationAction>(  );
-
-	public void activate( EnvironmentEntity entity, float delta )
+	// ----------------------------------------------------------------------
+	public boolean checkCondition( EnvironmentEntity entity, float delta )
 	{
-		for (AbstractActivationCondition conditon : conditions)
+		for (AbstractActivationCondition condition : conditions)
 		{
-			if (!conditon.evaluate( entity, delta ))
+			if (!condition.evaluate( entity, delta ))
 			{
-				return;
+				return false;
 			}
 		}
+
+		return true;
+	}
+
+	// ----------------------------------------------------------------------
+	public void activate( EnvironmentEntity entity, float delta )
+	{
+		if (!checkCondition( entity, delta )) { return; }
 
 		for (AbstractActivationAction action : actions)
 		{

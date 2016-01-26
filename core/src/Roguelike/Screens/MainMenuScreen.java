@@ -39,31 +39,75 @@ public class MainMenuScreen implements Screen
 		table.setFillParent( true );
 		stage.addActor( table );
 
-		createUI();
-	}
+		saveTable = new Table();
+		mainTable = new Table();
 
-	private void createUI()
-	{
-		table.clear();
+		saveTable.defaults().width( 200 ).height( 50 ).pad( 5 );
+		mainTable.defaults().width( 200 ).height( 50 ).pad( 5 );
 
 		Image image = new Image( AssetManager.loadTexture( "Sprites/Unpacked/Title.png" ) );
 		table.add( image ).expandX().fillX().pad( 20 );
 		table.row();
 
-		Table buttonTable = new Table();
-		buttonTable.defaults().width( 200 ).height( 50 ).pad( 5 );
+		table.add( mainTable ).expand().fill();
+		table.row();
 
-		SaveSlotButton s1button = new SaveSlotButton( skin, 1 );
-		buttonTable.add( s1button ).expandX().fillX();
-		buttonTable.row();
+		TextButton beginbutton = new TextButton( "Begin Game", skin, "big" );
+		beginbutton.addListener( new InputListener()
+		{
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
 
-		SaveSlotButton s2button = new SaveSlotButton( skin, 2 );
-		buttonTable.add( s2button ).expandX().fillX();
-		buttonTable.row();
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				mainTable.remove();
+				table.add( saveTable ).expand().fill();
+				table.row();
+			}
+		} );
+		mainTable.add( beginbutton ).expandX().fillX().padTop( 20 );
+		mainTable.row();
 
-		SaveSlotButton s3button = new SaveSlotButton( skin, 3 );
-		buttonTable.add( s3button ).expandX().fillX();
-		buttonTable.row();
+		TextButton obutton = new TextButton( "Options", skin, "big" );
+		obutton.addListener( new InputListener()
+		{
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				OptionsScreen.Instance.screen = ScreenEnum.MAINMENU;
+				RoguelikeGame.Instance.switchScreen( ScreenEnum.OPTIONS );
+			}
+		} );
+		mainTable.add( obutton ).expandX().fillX().padTop( 20 );
+		mainTable.row();
+
+		TextButton cbutton = new TextButton( "Credits", skin, "big" );
+		cbutton.addListener( new InputListener()
+		{
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				RoguelikeGame.Instance.switchScreen( ScreenEnum.CREDITS );
+			}
+		} );
+		mainTable.add( cbutton ).expandX().fillX().padTop( 20 );
+		mainTable.row();
 
 		TextButton qbutton = new TextButton( "Quit", skin, "big" );
 		qbutton.addListener( new InputListener()
@@ -80,10 +124,47 @@ public class MainMenuScreen implements Screen
 				Gdx.app.exit();
 			}
 		} );
-		buttonTable.add( qbutton ).expandX().fillX().padTop( 20 );
-		buttonTable.row();
+		mainTable.add( qbutton ).expandX().fillX().padTop( 20 );
+		mainTable.row();
 
-		table.add( buttonTable ).width( Value.percentWidth( 0.3f, table ) ).expand().fill().pad( 20 );
+		recreateUI();
+	}
+
+	private void recreateUI()
+	{
+		saveTable.clear();
+
+		SaveSlotButton s1button = new SaveSlotButton( skin, 1 );
+		saveTable.add( s1button ).expandX().fillX();
+		saveTable.row();
+
+		SaveSlotButton s2button = new SaveSlotButton( skin, 2 );
+		saveTable.add( s2button ).expandX().fillX();
+		saveTable.row();
+
+		SaveSlotButton s3button = new SaveSlotButton( skin, 3 );
+		saveTable.add( s3button ).expandX().fillX();
+		saveTable.row();
+
+		TextButton bbutton = new TextButton( "Back", skin, "big" );
+		bbutton.addListener( new InputListener()
+		{
+			@Override
+			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+			{
+				return true;
+			}
+
+			@Override
+			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			{
+				saveTable.remove();
+				table.add( mainTable ).expand().fill();
+				table.row();
+			}
+		} );
+		saveTable.add( bbutton ).expandX().fillX().padTop( 20 );
+		saveTable.row();
 	}
 
 	@Override
@@ -110,6 +191,8 @@ public class MainMenuScreen implements Screen
 		stage.getViewport().setScreenHeight( Global.ScreenSize[1] );
 
 		Global.changeBGM( "Myst" );
+
+		recreateUI();
 	}
 
 	@Override
@@ -219,6 +302,8 @@ public class MainMenuScreen implements Screen
 	Skin skin;
 
 	Table table;
+	Table mainTable;
+	Table saveTable;
 
 	SpriteBatch batch;
 }

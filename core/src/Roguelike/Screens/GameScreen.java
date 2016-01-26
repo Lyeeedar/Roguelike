@@ -2126,6 +2126,41 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
+	public void displayActionOptions(Array<ActivationActionGroup> actions, final EnvironmentEntity parent)
+	{
+		Table table = new Table();
+		table.defaults().pad( 10 );
+
+		for (final ActivationActionGroup action : actions)
+		{
+			TextButton button = new TextButton( action.name, skin );
+			button.addListener( new InputListener()
+			{
+
+				@Override
+				public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
+				{
+					return true;
+				}
+
+				@Override
+				public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+				{
+					lockContextMenu = false;
+					clearContextMenu();
+
+					action.activate( parent, 1 );
+					Global.CurrentLevel.player.tasks.add( new TaskWait() );
+				}
+			} );
+			table.add( button ).expandX().width( 200 ).center();
+			table.row();
+		}
+
+		displayContextMenu( table, true );
+	}
+
+	// ----------------------------------------------------------------------
 	public void addTouchAction( float x, float y )
 	{
 		if (skin == null)

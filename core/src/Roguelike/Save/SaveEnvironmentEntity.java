@@ -32,6 +32,7 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 	public Array<ActivationActionGroup> onTurnActions;
 	public Array<ActivationActionGroup> onHearActions;
 	public Array<ActivationActionGroup> onDeathActions;
+	public Array<ActivationActionGroup> noneActions;
 
 	@Override
 	public void store( EnvironmentEntity obj )
@@ -54,6 +55,7 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 		onTurnActions = obj.onTurnActions;
 		onHearActions = obj.onHearActions;
 		onDeathActions = obj.onDeathActions;
+		noneActions = obj.noneActions;
 	}
 
 	@Override
@@ -67,6 +69,7 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 		entity.onTurnActions = onTurnActions;
 		entity.onHearActions = onHearActions;
 		entity.onDeathActions = onDeathActions;
+		entity.noneActions = noneActions;
 
 		entity.HP = hp;
 		for ( StatusEffect saveStatus : statuses )

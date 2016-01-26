@@ -38,7 +38,7 @@ public class ActivationActionActivate extends AbstractActivationAction
 	{
 		for (ActivationActionGroup group : entity.onActivateActions)
 		{
-			if (group.name.equals( actionName ))
+			if (group.name.equals( actionName ) && group.enabled && group.checkCondition( entity, delta ))
 			{
 				group.activate( entity, delta );
 			}
@@ -46,7 +46,7 @@ public class ActivationActionActivate extends AbstractActivationAction
 
 		for (ActivationActionGroup group : entity.onTurnActions)
 		{
-			if (group.name.equals( actionName ))
+			if (group.name.equals( actionName ) && group.enabled && group.checkCondition( entity, delta ))
 			{
 				group.activate( entity, delta );
 			}
@@ -54,7 +54,7 @@ public class ActivationActionActivate extends AbstractActivationAction
 
 		for (ActivationActionGroup group : entity.onHearActions)
 		{
-			if (group.name.equals( actionName ))
+			if (group.name.equals( actionName ) && group.enabled && group.checkCondition( entity, delta ))
 			{
 				group.activate( entity, delta );
 			}
@@ -62,7 +62,15 @@ public class ActivationActionActivate extends AbstractActivationAction
 
 		for (ActivationActionGroup group : entity.onDeathActions)
 		{
-			if (group.name.equals( actionName ))
+			if (group.name.equals( actionName ) && group.enabled && group.checkCondition( entity, delta ))
+			{
+				group.activate( entity, delta );
+			}
+		}
+
+		for (ActivationActionGroup group : entity.noneActions)
+		{
+			if (group.name.equals( actionName ) && group.enabled && group.checkCondition( entity, delta ))
 			{
 				group.activate( entity, delta );
 			}
