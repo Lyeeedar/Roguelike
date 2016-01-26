@@ -121,7 +121,14 @@ public final class Symbol implements PathfindingTile
 		Element entityElement = xml.getChildByName( "EntityData" );
 		if (entityElement != null)
 		{
-			symbol.entityData = entityElement;
+			if (entityElement.getAttribute( "Extends", null ) != null || entityElement.getChildCount() > 0)
+			{
+				symbol.entityData = entityElement;
+			}
+			else
+			{
+				symbol.entityData = entityElement.getText();
+			}
 		}
 
 		Element fieldElement = xml.getChildByName( "FieldData" );

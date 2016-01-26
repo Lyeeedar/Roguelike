@@ -39,7 +39,7 @@ public final class Inventory
 					item = Item.load( el.getText() );
 				}
 
-				item.canDrop = el.getBooleanAttribute( "Drop", true );
+				item.canDrop = el.getBooleanAttribute( "Drop", false );
 				item.dropChanceEqn = el.getAttribute( "DropChance", null );
 
 				addItem( item );
@@ -141,9 +141,10 @@ public final class Inventory
 
 		for ( Item i : m_items )
 		{
-			if ( i.name.equals( itemName ) )
+			if ( i.name.equalsIgnoreCase( itemName ) )
 			{
 				found = i;
+				break;
 			}
 		}
 
@@ -154,10 +155,17 @@ public final class Inventory
 				unequip( found );
 			}
 
-			found.count -= count;
-			if ( found.count == 0 )
+			if (count == 0)
 			{
 				m_items.removeValue( found, true );
+			}
+			else
+			{
+				found.count -= count;
+				if ( found.count == 0 )
+				{
+					m_items.removeValue( found, true );
+				}
 			}
 		}
 		else
@@ -211,6 +219,21 @@ public final class Inventory
 		}
 
 		return null;
+	}
+
+	public int getItemCount( String name )
+	{
+		int count = 0;
+
+		for (Item item : m_items)
+		{
+			if (name.equalsIgnoreCase( item.name ))
+			{
+				count += item.count;
+			}
+		}
+
+		return count;
 	}
 
 	public Iterator<Item> iterator( ItemCategory type )

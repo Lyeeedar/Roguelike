@@ -206,7 +206,10 @@ public class ActionProcessInput extends AbstractAction
 			{
 				if (tile.entity.inCombat())
 				{
-					tile.entity.dialogue.exclamationManager.inCombat.process( tile.entity, null, null );
+					if (tile.entity.dialogue.exclamationManager.inCombat != null)
+					{
+						tile.entity.dialogue.exclamationManager.inCombat.process( tile.entity, null, null );
+					}
 				}
 				else if (tile.entity.dialogue.popupText == null)
 				{

@@ -46,7 +46,7 @@ public class QuestOuputConditionDialogueValue extends AbstractQuestOutputConditi
 	@Override
 	public void parse( XmlReader.Element xml )
 	{
-		entityName = xml.get( "EntityName", null );
+		entityName = xml.get( "Entity", null );
 		dialogueKey = xml.get( "Key" );
 		dialogueValue = xml.getInt( "Value" );
 

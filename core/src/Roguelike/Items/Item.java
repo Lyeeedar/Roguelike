@@ -172,14 +172,7 @@ public final class Item extends GameEventHandler
 	{
 		if ( dropChanceEqn == null ) { return true; }
 
-		ExpressionBuilder expB = EquationHelper.createEquationBuilder( dropChanceEqn );
-
-		Expression exp = EquationHelper.tryBuild( expB );
-		if ( exp == null ) { return false; }
-
-		double conditionVal = exp.evaluate();
-
-		return conditionVal == 1;
+		return EquationHelper.evaluate( dropChanceEqn ) > 0;
 	}
 
 	// ----------------------------------------------------------------------

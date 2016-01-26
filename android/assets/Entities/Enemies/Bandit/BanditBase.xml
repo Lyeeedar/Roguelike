@@ -1,0 +1,22 @@
+<Entity>
+
+    <AI>basicMonster</AI>
+
+    <Factions>
+        <Faction>Bandit</Faction>
+    </Factions>
+
+    <Statistics>
+
+        <Attack>5</Attack>
+        <Defense>8</Defense>
+
+        <Constitution>6</Constitution>
+        <Perception>7</Perception>
+        <Strength>5</Strength>
+        <Willpower>5</Willpower>
+        <Speed>7</Speed>
+
+    </Statistics>
+
+</Entity>

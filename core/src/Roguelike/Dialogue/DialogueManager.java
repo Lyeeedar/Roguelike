@@ -49,30 +49,31 @@ public class DialogueManager
 
 		for ( String name : reliesOn )
 		{
-			if ( !data.containsKey( name ) )
+			String flag = "";
+			if ( Global.WorldFlags.containsKey( name ) )
 			{
-				String flag = "";
-				if ( Global.WorldFlags.containsKey( name ) )
-				{
-					flag = Global.WorldFlags.get( name );
-				}
-				else if ( Global.RunFlags.containsKey( name ) )
-				{
-					flag = Global.RunFlags.get( name );
-				}
-				else
-				{
-					flag = "0";
-				}
+				flag = Global.WorldFlags.get( name );
+			}
+			else if ( Global.RunFlags.containsKey( name ) )
+			{
+				flag = Global.RunFlags.get( name );
+			}
+			else if ( Global.CurrentLevel.player.inventory.getItemCount(name) > 0 )
+			{
+				flag = "" + Global.CurrentLevel.player.inventory.getItemCount( name );
+			}
+			else
+			{
+				flag = "0";
+			}
 
-				if (Global.isNumber( flag ))
-				{
-					data.put( name, Integer.parseInt( flag ) );
-				}
-				else
-				{
-					data.put( name, 1 );
-				}
+			if (Global.isNumber( flag ))
+			{
+				data.put( name, Integer.parseInt( flag ) );
+			}
+			else
+			{
+				data.put( name, 1 );
 			}
 		}
 

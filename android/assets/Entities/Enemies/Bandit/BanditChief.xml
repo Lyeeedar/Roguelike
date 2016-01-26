@@ -1,0 +1,8 @@
+<Entity Extends="Enemies/Bandit/BanditBase">
+
+    <Sprite>
+        <Name>Oryx/uf_split/uf_heroes/warrior_f</Name>
+        <DrawActualSize>true</DrawActualSize>
+    </Sprite>
+
+</Entity>

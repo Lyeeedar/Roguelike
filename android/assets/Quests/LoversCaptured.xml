@@ -190,7 +190,7 @@
 
     <Outputs>
         <LoversQuest Defer="true">
-            <Data>Ruin</Data>
+            <Data>Temple</Data>
             <Conditions>
                 <DialogueValue>
                     <Key>LoversChat</Key>

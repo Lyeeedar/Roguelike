@@ -1,0 +1,17 @@
+<Entity Extends="Enemies/Bandit/BanditBase">
+
+    <Sprite>
+        <Name>Oryx/uf_split/uf_heroes/archer</Name>
+        <DrawActualSize>true</DrawActualSize>
+    </Sprite>
+
+    <Inventory>
+        <Equipment>
+            <Bow>
+                <Slot>Weapon</Slot>
+                <Type>Bow</Type>
+            </Bow>
+        </Equipment>
+    </Inventory>
+
+</Entity>

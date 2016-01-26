@@ -1,0 +1,102 @@
+<Quest>
+    <Inputs>
+        <FlagEquals Consume="false">
+            <Key>LoversQuest</Key>
+            <Value>Temple</Value>
+        </FlagEquals>
+    </Inputs>
+
+    <Rooms>
+
+        <Room>
+
+            <Symbols>
+                <Symbol Extends=",">
+                    <Char>A</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/altar_blood</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+                        <Passable>false</Passable>
+                        <Opaque>false</Opaque>
+                    </EnvironmentData>
+                    <EntityData>
+                        <Name>Succubus</Name>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_heroes/pixie_b</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+                        <AI>basicMonster</AI>
+                        <Factions>
+                            <Faction>Demon</Faction>
+                        </Factions>
+
+                        <Statistics>
+
+                            <Attack>5</Attack>
+                            <Defense>30</Defense>
+
+                            <Constitution>10</Constitution>
+                            <Perception>10</Perception>
+                            <Strength>10</Strength>
+                            <Willpower>10</Willpower>
+                            <Speed>10</Speed>
+
+                        </Statistics>
+                    </EntityData>
+                </Symbol>
+                <Symbol Extends=",">
+                    <Char>p</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/wall_hedge_7</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+                        <Passable>false</Passable>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>.............</Row>
+                <Row>...wwwwwww...</Row>
+                <Row>...wp,A,pw...</Row>
+                <Row>..ww,,,,,ww..</Row>
+                <Row>.ww,pm,,p,ww.</Row>
+                <Row>.w,,f,,,,,,w.</Row>
+                <Row>.ww,p,,,p,ww.</Row>
+                <Row>..ww,,,,,ww..</Row>
+                <Row>...wp,,,pw...</Row>
+                <Row>...www+www...</Row>
+                <Row>.............</Row>
+            </Rows>
+        </Room>
+
+    </Rooms>
+
+    <Outputs>
+
+        <LoversQuest Defer="true">
+            <Data>Possessed</Data>
+            <Conditions>
+                <EntityAlive Not="true">Player</EntityAlive>
+            </Conditions>
+        </LoversQuest>
+
+        <LoversQuest Defer="true">
+            <Data>Survived</Data>
+            <Conditions>
+                <EntityAlive Not="true">Succubus</EntityAlive>
+            </Conditions>
+        </LoversQuest>
+
+        <LoversQuest Defer="true">
+            <Data>Resurrect</Data>
+            <Conditions>
+                <EntityAlive Not="true">Ruffletop</EntityAlive>
+            </Conditions>
+        </LoversQuest>
+    </Outputs>
+
+</Quest>

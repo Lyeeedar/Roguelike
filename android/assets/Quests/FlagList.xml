@@ -1,8 +1,14 @@
 <Flags>
 	<LoversQuest>
-		<Ruin/>
+		<Temple/>
 		<Captured/>
+		<Possessed/>
+		<Survived/>
+		<Resurrect/>
 	</LoversQuest>
+	<HelpedMerchant>
+		<true/>
+	</HelpedMerchant>
 	<MageQuest>
 		<Lived1/>
 		<Died1/>

@@ -136,8 +136,6 @@ public class DungeonFileParser
 
 		public Placement placement;
 
-		public boolean isTransition;
-
 		public String spawnEquation;
 
 		public String width;
@@ -252,12 +250,6 @@ public class DungeonFileParser
 				{
 					Symbol symbol = Symbol.parse( symbolsElement.getChild( i ) );
 					room.symbolMap.put( symbol.character, symbol );
-
-					if ( symbol.environmentData != null
-							&& ( symbol.environmentData.get( "Type", "" ).equals( "Transition" ) || symbol.environmentData.get( "Type", "" ).equals( "Dungeon" ) ) )
-					{
-						room.isTransition = true;
-					}
 				}
 			}
 
@@ -268,7 +260,10 @@ public class DungeonFileParser
 		{
 			for (Map.Entry<Character, Symbol> pair : sharedSymbolMap.entrySet())
 			{
-				symbolMap.put( pair.getKey(), pair.getValue().copy() );
+				if ( !symbolMap.containsKey( pair.getKey() ) )
+				{
+					symbolMap.put( pair.getKey(), pair.getValue().copy() );
+				}
 			}
 
 			for (Symbol s : symbolMap.values())
@@ -284,7 +279,6 @@ public class DungeonFileParser
 			DFPRoom room = new DFPRoom();
 
 			room.placement = placement;
-			room.isTransition = isTransition;
 			room.spawnEquation = spawnEquation;
 			room.width = width;
 			room.height = height;

@@ -1,0 +1,104 @@
+<Quest>
+    <AllowedLevels>Forest</AllowedLevels>
+
+    <Rooms>
+        <Room>
+            <Faction>none</Faction>
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>m</Char>
+                    <EntityData Extends="NPC/HumanBase">
+                        <Name>Merchant</Name>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_heroes/merchant_a</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+                        <Dialogue>
+                            <Exclamations>
+                                <SeePlayer>
+                                    <Exclamation>Hey you! Help me please!</Exclamation>
+                                </SeePlayer>
+                            </Exclamations>
+                            <Dialogue>
+                                <Chunk Condition="Goods == 0 && ReceivedReward == 0" ReliesOn="Goods,ReceivedReward">
+                                    <Text>You look like you can handle yourself.</Text>
+                                    <Text>I was attacked by some bandits, they took all my goods!</Text>
+                                    <Text>If you return them to me I'll reward you.</Text>
+                                </Chunk>
+                                <Chunk Condition="ReceivedReward == 0" ReliesOn="ReceivedReward">
+                                    <Text>Are those my goods? Thank you so much!</Text>
+                                    <RemoveItem>Goods</RemoveItem>
+                                    <Text>Here, take half, you've earned it.</Text>
+                                    <GainItem>currency</GainItem>
+                                    <SetVariable>
+                                        <Key>ReceivedReward</Key>
+                                        <Value>1</Value>
+                                    </SetVariable>
+                                </Chunk>
+                                <Chunk>
+                                    <Text>Thank you so much for getting my goods back for me. I'll remember you!</Text>
+                                </Chunk>
+                            </Dialogue>
+                        </Dialogue>
+                    </EntityData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>...</Row>
+                <Row>.m.</Row>
+                <Row>...</Row>
+            </Rows>
+        </Room>
+
+        <Room>
+            <Faction>none</Faction>
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>1</Char>
+                    <EntityData>Enemies/Bandit/BanditWarrior</EntityData>
+                </Symbol>
+                <Symbol Extends=".">
+                    <Char>2</Char>
+                    <EntityData>Enemies/Bandit/BanditArcher</EntityData>
+                </Symbol>
+                <Symbol Extends=".">
+                    <Char>b</Char>
+                    <EntityData Extends="Enemies/Bandit/BanditChief">
+                        <Inventory>
+                            <Item Drop="true">
+                                <Name>Goods</Name>
+                                <Icon>
+                                    <Name>Oryx/uf_split/uf_items/chest_silver</Name>
+                                </Icon>
+                            </Item>
+                        </Inventory>
+                    </EntityData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>##.#####</Row>
+                <Row>##...###</Row>
+                <Row>#.1....#</Row>
+                <Row>##.1b2##</Row>
+                <Row>##.....#</Row>
+                <Row>#..2.###</Row>
+                <Row>#..#####</Row>
+                <Row>########</Row>
+            </Rows>
+        </Room>
+    </Rooms>
+
+    <Outputs>
+        <HelpedMerchant>
+            <Conditions>
+                <DialogueValue>
+                    <Entity>Merchant</Entity>
+                    <Key>ReceivedReward</Key>
+                    <Value>1</Value>
+                </DialogueValue>
+            </Conditions>
+        </HelpedMerchant>
+    </Outputs>
+</Quest>

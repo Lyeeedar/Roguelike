@@ -1,0 +1,6 @@
+<Faction>
+    <Creatures>
+        <BanditWarrior></BanditWarrior>
+        <BanditArcher></BanditArcher>
+    </Creatures>
+</Faction>
