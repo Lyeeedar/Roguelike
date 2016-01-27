@@ -1,0 +1,39 @@
+<Active>
+
+    <Name>Electrocuting Blow</Name>
+    <Description>Wrap your weapon in electricity and discharge it into your opponent.</Description>
+
+    <Cooldown>5</Cooldown>
+    <CooldownType>Attack</CooldownType>
+    <Range>1</Range>
+
+    <Icon>
+        <Name>Icons/PowerAttack</Name>
+        <Colour><RGB>248,255,43</RGB></Colour>
+    </Icon>
+
+    <HitSprite>
+        <Name>EffectSprites/Slash/Slash</Name>
+        <Colour><RGB>248,255,43</RGB></Colour>
+    </HitSprite>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>135 + level * 2.5</Attack>
+            <Strength>1</Strength>
+        </Damage>
+        <Status>
+            <Duration>10</Duration>
+            <Events>
+                <Constant>
+                    <Defense>-5 - level</Defense>
+                </Constant>
+            </Events>
+        </Status>
+    </Effect>
+
+</Active>

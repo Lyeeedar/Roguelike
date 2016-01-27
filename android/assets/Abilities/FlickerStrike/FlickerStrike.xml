@@ -1,0 +1,39 @@
+<Active>
+
+    <Name>Flicker Strike</Name>
+    <Description>Strike like a flicker of lightning, accelerating your movements.</Description>
+
+    <Cooldown>6</Cooldown>
+    <CooldownType>Attack</CooldownType>
+    <Range>1</Range>
+
+    <Icon>
+        <Name>Icons/PowerAttack</Name>
+        <Colour><RGB>248,255,43</RGB></Colour>
+    </Icon>
+
+    <HitSprite>
+        <Name>EffectSprites/Slash/Slash</Name>
+        <Colour><RGB>248,255,43</RGB></Colour>
+    </HitSprite>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>135 + level * 2.5</Attack>
+            <Strength>1</Strength>
+        </Damage>
+        <Status Self="true">
+            <Duration>3</Duration>
+            <Events>
+                <Constant>
+                    <Speed>5+0.5*level</Speed>
+                </Constant>
+            </Events>
+        </Status>
+    </Effect>
+
+</Active>

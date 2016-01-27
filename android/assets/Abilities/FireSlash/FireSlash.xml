@@ -1,0 +1,31 @@
+<Active>
+
+    <Name>Fire Slash</Name>
+    <Description>Wrap your weapon in flames and strike out.</Description>
+
+    <Cooldown>5</Cooldown>
+    <CooldownType>Attack</CooldownType>
+    <Range>1</Range>
+
+    <Icon>
+        <Name>Icons/PowerAttack</Name>
+        <Colour><RGB>255,165,0</RGB></Colour>
+    </Icon>
+
+    <HitSprite>
+        <Name>EffectSprites/Slash/Slash</Name>
+        <Colour><RGB>255,165,0</RGB></Colour>
+    </HitSprite>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>150 + level * 3</Attack>
+            <Strength>1</Strength>
+        </Damage>
+    </Effect>
+
+</Active>

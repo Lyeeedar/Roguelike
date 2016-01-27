@@ -1,0 +1,39 @@
+<Active>
+
+    <Name>Detonation Blow</Name>
+    <Description>A strike which blows everything away.</Description>
+
+    <Cooldown>8</Cooldown>
+    <CooldownType>Attack</CooldownType>
+    <Range>1</Range>
+    <AOE>1</AOE>
+
+    <Icon>
+        <Name>Icons/Slime</Name>
+        <Colour><RGB>255,185,0</RGB></Colour>
+    </Icon>
+
+    <HitSprite>
+        <Name>EffectSprites/Slash/Slash</Name>
+        <Colour><RGB>255,165,0</RGB></Colour>
+    </HitSprite>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>180 + level * 3</Attack>
+            <Strength>1</Strength>
+        </Damage>
+        <Teleport>
+            <Move>Target</Move>
+            <Direction>Away</Direction>
+            <Type>Cone</Type>
+            <Distance>2</Distance>
+            <Style>Leap</Style>
+        </Teleport>
+    </Effect>
+
+</Active>

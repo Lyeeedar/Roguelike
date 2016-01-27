@@ -5,6 +5,7 @@
         <MagicArrow>magic</MagicArrow>
         <PowerAttack>melee</PowerAttack>
         <Sunder>melee</Sunder>
+        <FireSlash>melee,fire</FireSlash>
     </Quality1>
     <Quality2>
         <Aegis>defensive</Aegis>
@@ -18,5 +19,6 @@
         <CriticalStrikes>melee</CriticalStrikes>
         <FireAttunement>magic,fire</FireAttunement>
         <StaticCharge>magic,lightning</StaticCharge>
+        <FlickerStrike>melee,lightning</FlickerStrike>
     </Quality3>
 </Data>
