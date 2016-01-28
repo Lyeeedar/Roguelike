@@ -20,7 +20,7 @@ public class Mixer
 		this.musicName = musicName;
 		this.volume = volume;
 
-		music = Gdx.audio.newMusic(Gdx.files.internal("Music/"+musicName+".mp3"));
+		music = Gdx.audio.newMusic(Gdx.files.internal("Music/"+musicName+".ogg"));
 		music.play();
 		music.setLooping(true);
 		music.setVolume( volume * Global.MusicVolume);
@@ -31,7 +31,7 @@ public class Mixer
 		if (musicName.equals(mixName)) { return; }
 
 		this.mixName = mixName;
-		mix = Gdx.audio.newMusic(Gdx.files.internal("Music/"+mixName+".mp3"));
+		mix = Gdx.audio.newMusic(Gdx.files.internal("Music/"+mixName+".ogg"));
 
 		try
 		{

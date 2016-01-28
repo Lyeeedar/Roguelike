@@ -292,7 +292,7 @@ public class CharacterCreationScreen implements Screen
 		stage.getViewport().setScreenHeight( Global.ScreenSize[1] );
 
 		classList.setWidth( classList.getPrefWidth() );
-		classList.setHeight( roundTo( h - 40, 64 ) );
+		classList.setHeight( h-40 );//roundTo( h - 40, 64 + classList.padding ) );
 		fillClassDesc();
 	}
 

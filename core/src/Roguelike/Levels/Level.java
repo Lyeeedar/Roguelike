@@ -709,7 +709,11 @@ public class Level
 			while (tile.entity.extraUIHP > 0 && tile.entity.extraUIHPAccumulator > 0)
 			{
 				tile.entity.extraUIHP--;
-				tile.entity.extraUIHPAccumulator -= 0.02f;
+
+				float ratio = (float)tile.entity.extraUIHP / (float)(tile.entity.getStatistic( Statistic.CONSTITUTION ) * 10);
+				ratio = 0.02f - 0.02f * ratio;
+
+				tile.entity.extraUIHPAccumulator -= ratio;
 			}
 		}
 
@@ -720,7 +724,11 @@ public class Level
 			while (tile.environmentEntity.extraUIHP > 0 && tile.environmentEntity.extraUIHPAccumulator > 0)
 			{
 				tile.environmentEntity.extraUIHP--;
-				tile.environmentEntity.extraUIHPAccumulator -= 0.02f;
+
+				float ratio = (float)tile.environmentEntity.extraUIHP / (float)(tile.environmentEntity.getStatistic( Statistic.CONSTITUTION ) * 10);
+				ratio = 0.02f - 0.02f * ratio;
+
+				tile.environmentEntity.extraUIHPAccumulator -= ratio;
 			}
 		}
 	}

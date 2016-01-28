@@ -1,11 +1,17 @@
 package Roguelike;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 
 import Roguelike.Screens.*;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
+
+import javax.swing.*;
 
 public class RoguelikeGame extends Game
 {
@@ -26,6 +32,25 @@ public class RoguelikeGame extends Game
 	@Override
 	public void create()
 	{
+		if (!Global.ANDROID)
+		{
+			Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()
+			{
+				public void uncaughtException(Thread myThread, Throwable e)
+				{
+					StringWriter sw = new StringWriter();
+					e.printStackTrace(new PrintWriter( sw) );
+					String exceptionAsString = sw.toString();
+
+					FileHandle file = Gdx.files.local( "error.log" );
+					file.writeString( exceptionAsString, false );
+
+					JOptionPane.showMessageDialog( null, "An fatal error occured. Please send error.log to me so that I can fix it.", "An error occured", JOptionPane.ERROR_MESSAGE );
+					Gdx.app.exit();
+				}
+			});
+		}
+
 		screens.put( ScreenEnum.GAME, new GameScreen() );
 		screens.put( ScreenEnum.MAINMENU, new MainMenuScreen() );
 		screens.put( ScreenEnum.LOADING, new LoadingScreen() );

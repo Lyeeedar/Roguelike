@@ -3,8 +3,8 @@
     <Name>Blink</Name>
     <Description>A short range teleport flings you through space.</Description>
 
-    <Cooldown>10</Cooldown>
-    <CooldownType>Move</CooldownType>
+    <Cooldown>13</Cooldown>
+    <CooldownType>Turn</CooldownType>
     <Range>3</Range>
 
     <Icon>
@@ -19,7 +19,7 @@
     </HitSprite>
 
     <HitType>
-        <Any></Any>
+        <Empty></Empty>
     </HitType>
 
     <Effect>

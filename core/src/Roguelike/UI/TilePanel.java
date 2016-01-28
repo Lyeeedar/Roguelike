@@ -152,6 +152,11 @@ public abstract class TilePanel extends Widget
 		int height = viewHeight * ( tileSize + padding ) + padding;
 		int width = viewWidth * ( tileSize + padding ) + padding;
 
+		if ( dataHeight > viewHeight )
+		{
+			width += 25;
+		}
+
 		batch.setColor( Color.WHITE );
 
 		if (drawHorizontalBackground)
@@ -165,6 +170,11 @@ public abstract class TilePanel extends Widget
 
 		int xOffset = (int) getX() + padding;
 		int top = (int) ( getY() - padding + getHeight() ) - tileSize;
+
+		if ( dataHeight > viewHeight )
+		{
+			tileBackground.render( batch, xOffset + tileSize + 5, top - height, 10, height );
+		}
 
 		int x = 0;
 		int y = 0;

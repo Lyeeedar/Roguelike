@@ -5,7 +5,7 @@
 
     <Cooldown>8</Cooldown>
     <CooldownType>Wait</CooldownType>
-    <Cone>3</Cone>
+    <Cone>2</Cone>
 
     <Icon>
         <Name>Icons/JumpStrike</Name>

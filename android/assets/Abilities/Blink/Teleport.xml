@@ -19,7 +19,7 @@
     </HitSprite>
 
     <HitType>
-        <Any></Any>
+        <Empty></Empty>
     </HitType>
 
     <Effect>

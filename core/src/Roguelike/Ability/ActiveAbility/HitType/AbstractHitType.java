@@ -45,5 +45,6 @@ public abstract class AbstractHitType
 		ClassMap.put( "ANY", HitTypeAny.class );
 		ClassMap.put( "ENEMY", HitTypeEnemy.class );
 		ClassMap.put( "ALLY", HitTypeAlly.class );
+		ClassMap.put( "EMPTY", HitTypeEmpty.class );
 	}
 }

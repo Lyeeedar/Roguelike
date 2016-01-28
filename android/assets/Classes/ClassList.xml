@@ -162,11 +162,11 @@
             </Statistics>
             <Inventory>
                 <Equipment>
-                    <Sword>
-                        <Recipe>Sword</Recipe>
+                    <Weapon>
+                        <Recipe>Axe</Recipe>
                         <Material>Metal</Material>
                         <Quality>1</Quality>
-                    </Sword>
+                    </Weapon>
                     <Top>
                         <Recipe>Cuirass</Recipe>
                         <Material>Metal</Material>

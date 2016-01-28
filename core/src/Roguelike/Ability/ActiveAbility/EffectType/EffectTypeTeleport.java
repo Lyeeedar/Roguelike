@@ -129,6 +129,11 @@ public class EffectTypeTeleport extends AbstractEffectType
 			}
 		}
 
+		if (destination == null)
+		{
+			return src;
+		}
+
 		Array<Point> possibleTiles = BresenhamLine.lineNoDiag( src.x, src.y, destination.x, destination.y );
 
 		for ( int i = possibleTiles.size - 1; i >= 0; i-- )
