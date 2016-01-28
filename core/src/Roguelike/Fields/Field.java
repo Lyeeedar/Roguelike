@@ -1,6 +1,7 @@
 package Roguelike.Fields;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import Roguelike.AssetManager;
@@ -63,10 +64,9 @@ public class Field implements IGameObject
 	public String[] tags = new String[0];
 
 	public GameTile tile;
-	public Light light;
 
-	public Sprite sprite;
-	public TilingSprite tilingSprite;
+	public Array<SpriteGroup> groups = new Array<SpriteGroup>(  );
+
 	public FieldLayer layer = FieldLayer.GROUND;
 	public int stacks = 1;
 
@@ -80,6 +80,18 @@ public class Field implements IGameObject
 
 	public EnumBitflag<Passability> allowPassability = new EnumBitflag<Passability>();
 	public EnumBitflag<Passability> restrictPassability = new EnumBitflag<Passability>();
+
+	public SpriteGroup getSpriteGroup()
+	{
+		for (int i = groups.size - 1; i >= 0; i--)
+		{
+			if (groups.get( i ).stacks < stacks)
+			{
+				return groups.get( i );
+			}
+		}
+		return groups.get( 0 );
+	}
 
 	public void update( float cost )
 	{
@@ -245,11 +257,14 @@ public class Field implements IGameObject
 		field.fileName = fileName;
 		field.fieldName = fieldName;
 		field.tags = tags;
-		field.sprite = sprite.copy();
-		field.tilingSprite = tilingSprite;
+
+		for (SpriteGroup group : groups)
+		{
+			field.groups.add( group.copy() );
+		}
+
 		field.layer = layer;
 		field.stacks = stacks;
-		field.light = light != null ? light.copyNoFlag() : null;
 
 		field.durationStyle = durationStyle;
 		field.spreadStyle = spreadStyle;
@@ -306,22 +321,33 @@ public class Field implements IGameObject
 		fieldName = xml.get( "FieldName", fieldName );
 
 		Element spriteElement = xml.getChildByName( "Sprite" );
-		if (spriteElement != null)
-		{
-			sprite = AssetManager.loadSprite( spriteElement );
-		}
-
 		Element tilingSpriteElement = xml.getChildByName( "TilingSprite" );
-		if (tilingSpriteElement != null)
+		if (spriteElement != null || tilingSpriteElement != null)
 		{
-			tilingSprite = TilingSprite.load( tilingSpriteElement );
+			SpriteGroup group = new SpriteGroup();
+			group.parse( xml );
+
+			groups.add( group );
 		}
 
-		Element lightElement = xml.getChildByName( "Light" );
-		if ( lightElement != null )
+		Element groupsElement = xml.getChildByName( "Groups" );
+		if (groupsElement != null)
 		{
-			light = Roguelike.Lights.Light.load( lightElement );
+			for (int i = 0; i < groupsElement.getChildCount(); i++)
+			{
+				SpriteGroup group = new SpriteGroup();
+				group.parse( groupsElement.getChild( i ) );
+				groups.add( group );
+			}
 		}
+
+		groups.sort( new Comparator<SpriteGroup>() {
+			@Override
+			public int compare( SpriteGroup o1, SpriteGroup o2 )
+			{
+				return o1.stacks - o2.stacks;
+			}
+		} );
 
 		layer = xml.get( "Layer", null ) != null ? FieldLayer.valueOf( xml.get( "Layer" ).toUpperCase() ) : layer;
 
@@ -414,11 +440,59 @@ public class Field implements IGameObject
 	@Override
 	public Sprite getIcon()
 	{
-		if (sprite != null)
+		if (groups.get( 0 ).sprite != null)
 		{
-			return sprite;
+			return groups.get( 0 ).sprite;
 		}
 
-		return tilingSprite.getSprite( new EnumBitflag<Global.Direction>(  ) );
+		return groups.get( 0 ).tilingSprite.getSprite( new EnumBitflag<Global.Direction>(  ) );
+	}
+
+	public static class SpriteGroup
+	{
+		public Sprite sprite;
+		public TilingSprite tilingSprite;
+		public Light light;
+		public int stacks;
+
+		public SpriteGroup()
+		{
+
+		}
+
+		public void parse(Element xml)
+		{
+			stacks = xml.getIntAttribute( "Stacks", 0 );
+
+			Element spriteElement = xml.getChildByName( "Sprite" );
+			if (spriteElement != null)
+			{
+				sprite = AssetManager.loadSprite( spriteElement );
+			}
+
+			Element tilingSpriteElement = xml.getChildByName( "TilingSprite" );
+			if (tilingSpriteElement != null)
+			{
+				tilingSprite = TilingSprite.load( tilingSpriteElement );
+			}
+
+			Element lightElement = xml.getChildByName( "Light" );
+			if (lightElement != null)
+			{
+				light = Light.load( lightElement );
+			}
+		}
+
+		public SpriteGroup copy()
+		{
+			SpriteGroup group = new SpriteGroup();
+
+			group.sprite = sprite != null ? sprite.copy() : null;
+			group.tilingSprite = tilingSprite != null ? tilingSprite.copy() : null;
+			group.light = light != null ? light.copy() : null ;
+			group.stacks = stacks;
+
+			return group;
+		}
 	}
 }

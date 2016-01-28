@@ -158,13 +158,14 @@ public class Level
 			for ( FieldLayer layer : FieldLayer.values() )
 			{
 				Field field = tile.fields.get( layer );
-				if ( field != null && field.light != null )
+				if ( field != null )
 				{
-					if ( checkLightCloseEnough( lx, ly, (int) field.light.baseIntensity, px, py, viewRange ) )
+					Field.SpriteGroup group = field.getSpriteGroup();
+					if ( group.light != null && checkLightCloseEnough( lx, ly, (int) group.light.baseIntensity, px, py, viewRange ) )
 					{
-						field.light.lx = lx;
-						field.light.ly = ly;
-						output.add( field.light );
+						group.light.lx = lx;
+						group.light.ly = ly;
+						output.add( group.light );
 					}
 				}
 			}
@@ -618,10 +619,14 @@ public class Level
 						for (FieldLayer layer : FieldLayer.values())
 						{
 							Field field = otile.fields.get( layer );
-							if (field != null && field.tilingSprite != null && field.tilingSprite.id == id)
+							if (field != null)
 							{
-								matchFound = true;
-								break;
+								Field.SpriteGroup group = field.getSpriteGroup();
+								if (group.tilingSprite != null && group.tilingSprite.id == id)
+								{
+									matchFound = true;
+									break;
+								}
 							}
 						}
 					}
@@ -760,9 +765,13 @@ public class Level
 			for ( FieldLayer layer : FieldLayer.values() )
 			{
 				Field field = tile.fields.get( layer );
-				if ( field != null && field.sprite != null )
+				if ( field != null )
 				{
-					field.sprite.update( delta );
+					Field.SpriteGroup group = field.getSpriteGroup();
+					if (group.sprite != null)
+					{
+						group.sprite.update( delta );
+					}
 				}
 			}
 		}

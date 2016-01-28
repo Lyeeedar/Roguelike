@@ -1,0 +1,31 @@
+<Active>
+
+    <Name>Blink</Name>
+    <Description>A short range teleport flings you through space.</Description>
+
+    <Cooldown>10</Cooldown>
+    <CooldownType>Move</CooldownType>
+    <Range>3</Range>
+
+    <Icon>
+        <Name>Icons/JumpStrike</Name>
+        <Colour><RGB>220,200,220</RGB></Colour>
+    </Icon>
+
+    <HitSprite>
+        <Name>EffectSprites/Heal/Heal</Name>
+        <UpdateRate>0.1</UpdateRate>
+        <Colour><RGB>220,200,220</RGB></Colour>
+    </HitSprite>
+
+    <HitType>
+        <Any></Any>
+    </HitType>
+
+    <Effect>
+        <Teleport>
+            <Style>Blink</Style>
+        </Teleport>
+    </Effect>
+
+</Active>

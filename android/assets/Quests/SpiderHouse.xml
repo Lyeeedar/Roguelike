@@ -1,0 +1,45 @@
+<Quest>
+	<AllowedLevels>Forest</AllowedLevels>
+
+	<Rooms>
+		<Room>
+			<Faction>Spider</Faction>
+			<Symbols>
+				<Symbol Extends=",">
+					<Char>c</Char>
+
+					<EnvironmentData>
+						<Sprite>
+							<Name>Oryx/Custom/terrain/cocoon</Name>
+							<Colour><RGB>255,200,200</RGB></Colour>
+						</Sprite>
+						<Passable>false</Passable>
+						<Opaque>false</Opaque>
+
+						<Statistics>
+							<Constitution>10</Constitution>
+						</Statistics>
+
+						<Inventory>
+							<Item Drop="true">
+								<Name>Wedding Ring</Name>
+								<Description>A small ring. The smoothness of the inner surface shows signs of being well worn over many years.</Description>
+								<Icon>
+									<Name>Oryx/uf_split/uf_items/ring_pearl</Name>
+								</Icon>
+							</Item>
+						</Inventory>
+
+					</EnvironmentData>
+				</Symbol>
+			</Symbols>
+			<Rows>
+				<Row>wwwww</Row>
+				<Row>wc,,w</Row>
+				<Row>w,,,w</Row>
+				<Row>w,,,w</Row>
+				<Row>ww+ww</Row>
+			</Rows>
+		</Room>
+	</Rooms>
+</Quest>

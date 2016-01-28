@@ -1,0 +1,35 @@
+<Active>
+
+    <Name>Scatter</Name>
+    <Description>Teleport your foes randomly away from you.</Description>
+
+    <Cooldown>8</Cooldown>
+    <CooldownType>Wait</CooldownType>
+    <Cone>3</Cone>
+
+    <Icon>
+        <Name>Icons/JumpStrike</Name>
+        <Colour><RGB>220,200,220</RGB></Colour>
+    </Icon>
+
+    <HitSprite>
+        <Name>EffectSprites/Heal/Heal</Name>
+        <UpdateRate>0.1</UpdateRate>
+        <Colour><RGB>220,200,220</RGB></Colour>
+    </HitSprite>
+
+    <HitType>
+        <Any></Any>
+    </HitType>
+
+    <Effect>
+        <Teleport>
+            <Move>Target</Move>
+            <Direction>Away</Direction>
+            <Type>Cone</Type>
+            <Distance>3</Distance>
+            <Style>Blink</Style>
+        </Teleport>
+    </Effect>
+
+</Active>

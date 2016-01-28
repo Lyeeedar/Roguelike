@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class OptionsScreen implements Screen, InputProcessor
@@ -142,16 +143,9 @@ public class OptionsScreen implements Screen, InputProcessor
 		msaa.setSelected( prefs.getInteger( "msaa" ) );
 
 		TextButton apply = new TextButton( "Apply", skin );
-		apply.addListener( new InputListener()
+		apply.addListener( new ClickListener()
 		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				prefs.putBoolean( "pathfindMovement", movementtype.getSelectedIndex() == 1 );
 
@@ -204,16 +198,9 @@ public class OptionsScreen implements Screen, InputProcessor
 		} );
 
 		TextButton defaults = new TextButton( "Defaults", skin );
-		defaults.addListener( new InputListener()
+		defaults.addListener( new ClickListener()
 		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				Global.ApplicationChanger.setDefaultPrefs( prefs );
 
@@ -226,16 +213,9 @@ public class OptionsScreen implements Screen, InputProcessor
 		} );
 
 		TextButton backButton = new TextButton( "Back", skin );
-		backButton.addListener( new InputListener()
+		backButton.addListener( new ClickListener()
 		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				RoguelikeGame.Instance.switchScreen( screen );
 			}

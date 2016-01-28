@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.XmlReader;
 
 import java.io.IOException;
@@ -109,17 +110,9 @@ public class AbilityTree
 			table.row();
 
 			TextButton branch1Button = new TextButton( ""+branch1.current.getName(), skin);
-			branch1Button.addListener( new InputListener()
+			branch1Button.addListener( new ClickListener()
 			{
-
-				@Override
-				public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-				{
-					return true;
-				}
-
-				@Override
-				public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+				public void clicked( InputEvent event, float x, float y )
 				{
 					GameScreen.Instance.lockContextMenu = false;
 					GameScreen.Instance.clearContextMenu();
@@ -129,17 +122,9 @@ public class AbilityTree
 			} );
 
 			TextButton branch2Button = new TextButton( ""+branch2.current.getName(), skin );
-			branch2Button.addListener( new InputListener()
+			branch2Button.addListener( new ClickListener()
 			{
-
-				@Override
-				public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-				{
-					return true;
-				}
-
-				@Override
-				public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+				public void clicked( InputEvent event, float x, float y )
 				{
 					GameScreen.Instance.lockContextMenu = false;
 					GameScreen.Instance.clearContextMenu();

@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
  * Created by Philip on 23-Jan-16.
@@ -27,10 +28,9 @@ public class SaveSlotButton extends Widget
 	private final GlyphLayout layout = new GlyphLayout();
 	private final TextureRegion white;
 	private final NinePatch background;
+	private final ClickListener clickListener;
 
 	private final int edgePad = 6;
-
-	public boolean mouseOver;
 
 	public SaveSlotButton( Skin skin, int saveSlot )
 	{
@@ -50,26 +50,9 @@ public class SaveSlotButton extends Widget
 		} catch (Exception e) { e.printStackTrace(); }
 		this.save = file;
 
-		this.addListener( new InputListener()
+		addListener(clickListener = new ClickListener()
 		{
-			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor )
-			{
-				mouseOver = true;
-			}
-
-			public void exit (InputEvent event, float x, float y, int pointer, Actor toActor)
-			{
-				mouseOver = false;
-			}
-
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				Global.SaveSlot = slot;
 
@@ -81,7 +64,27 @@ public class SaveSlotButton extends Widget
 
 				Global.load();
 			}
-		} );
+		});
+	}
+
+	@Override
+	public float getPrefWidth () {
+		return 50;
+	}
+
+	@Override
+	public float getPrefHeight () {
+		return 200;
+	}
+
+	@Override
+	public float getMaxWidth () {
+		return 50;
+	}
+
+	@Override
+	public float getMaxHeight () {
+		return 200;
 	}
 
 	private void drawUnfilledSlot( Batch batch )
@@ -91,42 +94,16 @@ public class SaveSlotButton extends Widget
 		float cx = getX() + getWidth() / 2.0f;
 		float cy = getY() + getHeight() / 2.0f;
 
-		if (!mouseOver)
-		{
-			titleFont.setColor( Color.LIGHT_GRAY );
-		}
-		else
-		{
-			titleFont.setColor( Color.WHITE );
-		}
 
 		titleFont.draw( batch, layout, cx - layout.width / 2, cy + layout.height / 2 );
 	}
 
 	private void drawFilledSlot( Batch batch )
 	{
-		if (!mouseOver)
-		{
-			batch.setColor( Color.LIGHT_GRAY );
-		}
-		else
-		{
-			batch.setColor( Color.WHITE );
-		}
-
 		if (save.isDead)
 		{
 			float height = getHeight() - edgePad * 2;
 			float cy = getY() + getHeight() / 2.0f;
-
-			if (!mouseOver)
-			{
-				font.setColor( Color.LIGHT_GRAY );
-			}
-			else
-			{
-				font.setColor( Color.WHITE );
-			}
 
 			layout.setText( font, "Awaiting new life" );
 			font.draw( batch, layout, getX()+edgePad*2, cy+layout.height+edgePad );
@@ -145,31 +122,33 @@ public class SaveSlotButton extends Widget
 
 			batch.draw( playerSprite, getX()+edgePad, getY()+edgePad, height, height );
 
-			if (!mouseOver)
-			{
-				font.setColor( Color.LIGHT_GRAY );
-			}
-			else
-			{
-				font.setColor( Color.WHITE );
-			}
-
 			layout.setText( font, save.levelManager.current.levelTitle );
 			font.draw( batch, layout, getX()+height+edgePad, cy+layout.height+edgePad );
 
 			layout.setText( font, "Souls Lost: " + save.lives );
 			font.draw( batch, layout, getX()+height+edgePad, getY()+edgePad+layout.height+edgePad );
 		}
-
-		batch.setColor( Color.WHITE );
 	}
 
 	@Override
 	public void draw( Batch batch, float parentAlpha )
 	{
+		if (!clickListener.isOver())
+		{
+			//batch.setColor( Color.LIGHT_GRAY );
+			titleFont.setColor( Color.LIGHT_GRAY );
+			font.setColor( Color.LIGHT_GRAY );
+		}
+		else
+		{
+			//batch.setColor( Color.WHITE );
+			titleFont.setColor( Color.WHITE );
+			font.setColor( Color.WHITE );
+		}
+
 		background.draw( batch, getX(), getY(), getWidth(), getHeight() );
 
-		if (save == null)
+		if (save == null || (save.isDead && save.lives == 0))
 		{
 			drawUnfilledSlot( batch );
 		}

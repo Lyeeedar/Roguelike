@@ -1,0 +1,15 @@
+<StatusEffect>
+    <Name>Frozen</Name>
+    <Description>You are frozen in place.</Description>
+    <Duration>2</Duration>
+
+    <Icon>
+        <Name>Icons/ArcticSurge</Name>
+        <Colour><RGB>240,250,255</RGB></Colour>
+    </Icon>
+
+    <Events>
+        <OnTask><Cancel/></OnTask>
+    </Events>
+
+</StatusEffect>

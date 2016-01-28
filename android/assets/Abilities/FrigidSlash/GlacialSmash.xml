@@ -1,0 +1,33 @@
+<Active>
+
+    <Name>Glacial Smash</Name>
+    <Description>Your strike hits with the power of a glacier, and leaves you opponent moving at about the same speed.</Description>
+
+    <Cooldown>5</Cooldown>
+    <CooldownType>Attack</CooldownType>
+    <Range>1</Range>
+
+    <Icon>
+        <Name>Icons/PowerAttack</Name>
+        <Colour><RGB>240,255,255</RGB></Colour>
+    </Icon>
+
+    <HitSprite>
+        <Name>EffectSprites/IceBurst/IceBurst</Name>
+        <Colour><RGB>240,255,255</RGB></Colour>
+        <UpdateRate>0.1</UpdateRate>
+    </HitSprite>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>170 + level * 3</Attack>
+            <Strength>1</Strength>
+        </Damage>
+        <Status Stacks="3+level/3">Chilled</Status>
+    </Effect>
+
+</Active>

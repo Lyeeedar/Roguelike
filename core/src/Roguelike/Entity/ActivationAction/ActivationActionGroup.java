@@ -54,9 +54,9 @@ public class ActivationActionGroup
 	{
 		if (!checkCondition( entity, delta )) { return; }
 
-		for (AbstractActivationAction action : actions)
+		for (int i = 0; i < actions.size; i++)
 		{
-			action.evaluate( entity, delta );
+			actions.get( i ).evaluate( entity, delta );
 		}
 	}
 

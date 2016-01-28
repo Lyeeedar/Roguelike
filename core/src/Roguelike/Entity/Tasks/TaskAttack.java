@@ -165,7 +165,7 @@ public class TaskAttack extends AbstractTask
 		return points;
 	}
 
-	public Array<GameTile> buildHitTileArray( GameEntity attacker, Direction dir )
+	public static Array<GameTile> buildHitTileArray( GameEntity attacker, Direction dir )
 	{
 		Array<GameTile> tiles = new Array<GameTile>(  );
 

@@ -32,12 +32,29 @@ public class Mixer
 
 		this.mixName = mixName;
 		mix = Gdx.audio.newMusic(Gdx.files.internal("Music/"+mixName+".mp3"));
-		mix.play();
-		mix.setLooping(true);
-		mix.setVolume(0);
 
-		mixTime = time;
-		this.time = 0;
+		try
+		{
+			mix.play();
+			mix.setLooping(true);
+			mix.setVolume(0);
+			mixTime = time;
+			this.time = 0;
+		}
+		catch (Exception e)
+		{
+			musicName = mixName;
+			music.stop();
+			music.dispose();
+			music = mix;
+			mix = null;
+
+			music.play();
+			music.setLooping( true );
+
+			float actualVolume = volume * Global.MusicVolume;
+			music.setVolume(actualVolume);
+		}
 	}
 
 	public void update(float delta)

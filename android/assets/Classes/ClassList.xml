@@ -41,6 +41,7 @@
             </Inventory>
             <Abilities>
                 <PowerAttack>PowerAttack</PowerAttack>
+                <Aegis>Aegis</Aegis>
             </Abilities>
         </Both>
     </Class>
@@ -86,6 +87,101 @@
             </Inventory>
             <Abilities>
                 <MagicArrow>MagicArrow</MagicArrow>
+                <MagicArrow>MagicArrow</MagicArrow>
+            </Abilities>
+        </Both>
+    </Class>
+
+    <Class>
+        <Name>Archer</Name>
+        <Description>A survival expert proficient with a bow</Description>
+        <Male>
+            <Sprite>
+                <Name>Oryx/uf_split/uf_heroes/archer</Name>
+                <DrawActualSize>true</DrawActualSize>
+            </Sprite>
+        </Male>
+        <Female>
+            <Sprite>
+                <Name>Oryx/uf_split/uf_heroes/archer</Name>
+                <Colour><RGB>255,192,203</RGB></Colour>
+                <DrawActualSize>true</DrawActualSize>
+            </Sprite>
+        </Female>
+        <Both>
+            <Statistics>
+                <Perception>val+2</Perception>
+                <Speed>val+1</Speed>
+            </Statistics>
+            <Inventory>
+                <Equipment>
+                    <Wand>
+                        <Recipe>Bow</Recipe>
+                        <Material>Wood</Material>
+                        <Quality>1</Quality>
+                    </Wand>
+                    <Top>
+                        <Recipe>Jerkin</Recipe>
+                        <Material>Leather</Material>
+                        <Quality>1</Quality>
+                    </Top>
+                    <Legs>
+                        <Recipe>Boots</Recipe>
+                        <Material>Leather</Material>
+                        <Quality>1</Quality>
+                    </Legs>
+                </Equipment>
+            </Inventory>
+            <Abilities>
+                <PowerShot>PowerShot</PowerShot>
+                <Healing>Healing</Healing>
+            </Abilities>
+        </Both>
+    </Class>
+
+    <Class>
+        <Name>Hexblade</Name>
+        <Description>A close quarters fighter, specialising in magical strikes.</Description>
+        <Male>
+            <Sprite>
+                <Name>Oryx/uf_split/uf_heroes/cultist</Name>
+                <DrawActualSize>true</DrawActualSize>
+            </Sprite>
+        </Male>
+        <Female>
+            <Sprite>
+                <Name>Oryx/uf_split/uf_heroes/cultist</Name>
+                <Colour><RGB>255,192,203</RGB></Colour>
+                <DrawActualSize>true</DrawActualSize>
+            </Sprite>
+        </Female>
+        <Both>
+            <Statistics>
+                <Strength>val+2</Strength>
+                <Willpower>val+2</Willpower>
+            </Statistics>
+            <Inventory>
+                <Equipment>
+                    <Sword>
+                        <Recipe>Sword</Recipe>
+                        <Material>Metal</Material>
+                        <Quality>1</Quality>
+                    </Sword>
+                    <Top>
+                        <Recipe>Cuirass</Recipe>
+                        <Material>Metal</Material>
+                        <Quality>1</Quality>
+                    </Top>
+                    <Legs>
+                        <Recipe>Greaves</Recipe>
+                        <Material>Metal</Material>
+                        <Quality>1</Quality>
+                    </Legs>
+                </Equipment>
+            </Inventory>
+            <Abilities>
+                <FireSlash>FireSlash</FireSlash>
+                <Blink>Blink</Blink>
             </Abilities>
         </Both>
     </Class>

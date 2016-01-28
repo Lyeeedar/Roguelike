@@ -48,6 +48,7 @@ import Roguelike.Sprite.SpriteAnimation.AbstractSpriteAnimation;
 import Roguelike.Sprite.SpriteAnimation.BumpAnimation;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Sprite.SpriteAnimation.StretchAnimation;
+import Roguelike.Sprite.TilingSprite;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
@@ -56,10 +57,7 @@ import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.ObjectSet;
-import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
@@ -71,6 +69,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -266,6 +265,7 @@ public final class SaveFile
 			{
 				String fileName = input.readString();
 				float animDelay = input.readFloat();
+				float repeatDelay = input.readFloat();
 				Color color = kryo.readObject( input, Color.class );
 				int modeVal = input.readInt();
 				AnimationMode mode = AnimationMode.values()[ modeVal ];
@@ -277,6 +277,7 @@ public final class SaveFile
 				Sprite sprite = AssetManager.loadSprite( fileName, animDelay, color, mode, sound, drawActualSize );
 				sprite.spriteAnimation = anim;
 				sprite.baseScale = scale;
+				sprite.repeatDelay = repeatDelay;
 				return sprite;
 			}
 
@@ -285,6 +286,7 @@ public final class SaveFile
 			{
 				output.writeString( sprite.fileName );
 				output.writeFloat( sprite.animationDelay );
+				output.writeFloat( sprite.repeatDelay );
 				kryo.writeObject( output, sprite.colour );
 				output.writeInt( sprite.animationState.mode.ordinal() );
 				output.writeFloats( sprite.baseScale );
@@ -394,6 +396,35 @@ public final class SaveFile
 				return map;
 			}
 		} );
+
+		kryo.register( IntMap.class, new Serializer<IntMap>()
+		{
+			@Override
+			public void write( Kryo kryo, Output output, IntMap object )
+			{
+				Array<Object[]> data = new Array<Object[]>(  );
+
+				for (Object entryObj : object.entries())
+				{
+					IntMap.Entry entry = (IntMap.Entry)entryObj;
+					data.add( new Object[]{entry.key, entry.value} );
+				}
+				kryo.writeObject( output, data );
+			}
+
+			@Override
+			public IntMap read( Kryo kryo, Input input, Class<IntMap> type )
+			{
+				Array<Object[]> data = kryo.readObject( input, Array.class );
+
+				IntMap map = new IntMap(  );
+				for (Object[] pair : data)
+				{
+					map.put( (Integer)pair[0], pair[1] );
+				}
+				return map;
+			}
+		} );
 	}
 
 	private void registerClasses( Kryo kryo )
@@ -430,6 +461,7 @@ public final class SaveFile
 		kryo.register( LevelManager.class );
 		kryo.register( LevelManager.LevelData.class );
 		kryo.register( LevelManager.BranchData.class );
+		kryo.register( TilingSprite.class );
 
 		kryo.register( HashMap.class );
 		kryo.register( String[].class );

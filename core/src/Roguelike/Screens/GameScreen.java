@@ -53,6 +53,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -371,7 +372,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			dragDropPayload.sprite.render( batch, (int) dragDropPayload.x, (int) dragDropPayload.y, 32, 32 );
 		}
 
-		font.draw( batch, "FPS: " + fps, 20, Global.Resolution[ 1 ] - 20 );
+		if ( !Global.RELEASE )
+		{
+			font.draw( batch, "FPS: " + fps, 20, Global.Resolution[ 1 ] - 20 );
+		}
 
 		batch.end();
 
@@ -578,25 +582,23 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							Field field = gtile.fields.get( layer );
 							if ( field != null )
 							{
-								Sprite sprite = field.sprite;
+								Field.SpriteGroup group = field.getSpriteGroup();
+								Sprite sprite = group.sprite;
 
-								if ( field.tilingSprite != null )
+								if ( group.tilingSprite != null )
 								{
-									Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, field.tilingSprite.id);
-									sprite = field.tilingSprite.getSprite( directionBitflag );
+									Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, group.tilingSprite.id);
+									sprite = group.tilingSprite.getSprite( directionBitflag );
 								}
 
 								int count = (int)Math.ceil(field.stacks / 4.0f);
-								for (int i = 0; i < count; i++)
+								if ( field.layer == FieldLayer.GROUND )
 								{
-									if ( field.layer == FieldLayer.GROUND )
-									{
-										queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.GROUNDFIELD, 1 );
-									}
-									else
-									{
-										queueSprite( sprite, notVisibleCol, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.OVERHEAD, 1 );
-									}
+									queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.GROUNDFIELD, 1 );
+								}
+								else
+								{
+									queueSprite( sprite, notVisibleCol, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.OVERHEAD, 1 );
 								}
 							}
 						}
@@ -1143,17 +1145,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				table.row();
 
 				TextButton equipButton = new TextButton( "Equip", skin );
-				equipButton.addListener( new InputListener()
+				equipButton.addListener( new ClickListener()
 				{
-
-					@Override
-					public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-					{
-						return true;
-					}
-
-					@Override
-					public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+					public void clicked( InputEvent event, float x, float y )
 					{
 						lockContextMenu = false;
 						clearContextMenu();
@@ -1183,17 +1177,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				} );
 
 				TextButton dropButton = new TextButton( "Drop", skin );
-				dropButton.addListener( new InputListener()
+				dropButton.addListener( new ClickListener()
 				{
-
-					@Override
-					public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-					{
-						return true;
-					}
-
-					@Override
-					public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+					public void clicked( InputEvent event, float x, float y )
 					{
 						lockContextMenu = false;
 						clearContextMenu();
@@ -1202,17 +1188,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				} );
 
 				TextButton sellButton = new TextButton( "Sell", skin );
-				sellButton.addListener( new InputListener()
+				sellButton.addListener( new ClickListener()
 				{
-
-					@Override
-					public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-					{
-						return true;
-					}
-
-					@Override
-					public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+					public void clicked( InputEvent event, float x, float y )
 					{
 						lockContextMenu = false;
 						clearContextMenu();
@@ -1257,17 +1235,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				table.row();
 
 				TextButton dropButton = new TextButton( "Drop", skin );
-				dropButton.addListener( new InputListener()
+				dropButton.addListener( new ClickListener()
 				{
-
-					@Override
-					public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-					{
-						return true;
-					}
-
-					@Override
-					public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+					public void clicked( InputEvent event, float x, float y )
 					{
 						lockContextMenu = false;
 						clearContextMenu();
@@ -1987,17 +1957,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.row();
 
 		TextButton button = new TextButton( "Begin Life Anew", skin );
-		button.addListener( new InputListener()
+		button.addListener( new ClickListener()
 		{
-
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				lockContextMenu = false;
 				clearContextMenu();
@@ -2019,17 +1981,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.defaults().pad( 10 );
 
 		TextButton resumeButton = new TextButton( "Resume", skin );
-		resumeButton.addListener( new InputListener()
+		resumeButton.addListener( new ClickListener()
 		{
-
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				lockContextMenu = false;
 				clearContextMenu();
@@ -2039,17 +1993,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.row();
 
 		TextButton optionsButton = new TextButton( "Options", skin );
-		optionsButton.addListener( new InputListener()
+		optionsButton.addListener( new ClickListener()
 		{
-
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				OptionsScreen.Instance.screen = ScreenEnum.GAME;
 				RoguelikeGame.Instance.switchScreen( ScreenEnum.OPTIONS );
@@ -2059,17 +2005,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.row();
 
 		TextButton quitButton = new TextButton( "Save and Quit", skin );
-		quitButton.addListener( new InputListener()
+		quitButton.addListener( new ClickListener()
 		{
-
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				Gdx.app.exit();
 			}
@@ -2105,17 +2043,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.row();
 
 		TextButton button = new TextButton( "Continue", skin );
-		button.addListener( new InputListener()
+		button.addListener( new ClickListener()
 		{
-
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				lockContextMenu = false;
 				clearContextMenu();
@@ -2135,17 +2065,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		for (final ActivationActionGroup action : actions)
 		{
 			TextButton button = new TextButton( action.name, skin );
-			button.addListener( new InputListener()
+			button.addListener( new ClickListener()
 			{
-
-				@Override
-				public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-				{
-					return true;
-				}
-
-				@Override
-				public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+				public void clicked( InputEvent event, float x, float y )
 				{
 					lockContextMenu = false;
 					clearContextMenu();
@@ -2162,17 +2084,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.row();
 
 		TextButton qbutton = new TextButton( "Cancel", skin );
-		qbutton.addListener( new InputListener()
+		qbutton.addListener( new ClickListener()
 		{
-
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				lockContextMenu = false;
 				clearContextMenu();

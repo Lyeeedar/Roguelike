@@ -18,8 +18,8 @@ public class SpriteOnDeathEffect extends AbstractOnDeathEffect
 	public void process(Field field, GameTile tile)
 	{
 		if (field.tile == null) { return; }
-		
-		Light l = field.light != null ? field.light.copyNoFlag() : null;
+
+		Light l = field.getSpriteGroup().light != null ? field.getSpriteGroup().light.copyNoFlag() : null;
 		Sprite s = sprite.copy();
 		s.renderDelay = s.animationDelay * (tile.getDist(field.tile)/3);
 		tile.spriteEffects.add(new SpriteEffect(s, Direction.CENTER, l));

@@ -16,6 +16,7 @@
     <HitSprite>
         <Name>EffectSprites/Slash/Slash</Name>
         <Colour><RGB>255,165,0</RGB></Colour>
+        <UpdateRate>0.1</UpdateRate>
     </HitSprite>
 
     <HitType>

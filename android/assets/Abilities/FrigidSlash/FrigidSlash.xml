@@ -1,7 +1,7 @@
 <Active>
 
-    <Name>Fire Slash</Name>
-    <Description>Wrap your weapon in flames and strike out.</Description>
+    <Name>Frigid Slash</Name>
+    <Description>Wrap your weapon in icy cold and strike out.</Description>
 
     <Cooldown>5</Cooldown>
     <CooldownType>Attack</CooldownType>
@@ -9,12 +9,12 @@
 
     <Icon>
         <Name>Icons/PowerAttack</Name>
-        <Colour><RGB>255,165,0</RGB></Colour>
+        <Colour><RGB>240,255,255</RGB></Colour>
     </Icon>
 
     <HitSprite>
         <Name>EffectSprites/Slash/Slash</Name>
-        <Colour><RGB>255,165,0</RGB></Colour>
+        <Colour><RGB>240,255,255</RGB></Colour>
         <UpdateRate>0.1</UpdateRate>
     </HitSprite>
 
@@ -24,9 +24,10 @@
 
     <Effect>
         <Damage>
-            <Attack>150 + level * 3</Attack>
+            <Attack>140 + level * 3</Attack>
             <Strength>1</Strength>
         </Damage>
+        <Status Stacks="level/3">Chilled</Status>
     </Effect>
 
 </Active>

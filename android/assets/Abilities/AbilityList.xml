@@ -10,7 +10,9 @@
     <Quality2>
         <Aegis>defensive</Aegis>
         <Healing>defensive</Healing>
+        <Blink>magic,defensive</Blink>
         <Icicle>magic,ice</Icicle>
+        <FrigidSlash>melee,ice</FrigidSlash>
         <BloodShot>magic,blood</BloodShot>
         <Rend>melee,blood</Rend>
     </Quality2>

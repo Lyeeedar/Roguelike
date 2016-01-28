@@ -74,16 +74,9 @@ public class CreditsScreen implements Screen
 		table.row();
 
 		TextButton button = new TextButton( "Back", skin, "big" );
-		button.addListener( new InputListener()
+		button.addListener( new ClickListener()
 		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				RoguelikeGame.Instance.switchScreen( RoguelikeGame.ScreenEnum.MAINMENU );
 			}

@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenuScreen implements Screen
@@ -53,16 +54,9 @@ public class MainMenuScreen implements Screen
 		table.row();
 
 		TextButton beginbutton = new TextButton( "Begin Game", skin, "big" );
-		beginbutton.addListener( new InputListener()
+		beginbutton.addListener( new ClickListener()
 		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				mainTable.remove();
 				table.add( saveTable ).expand().fill();
@@ -73,16 +67,9 @@ public class MainMenuScreen implements Screen
 		mainTable.row();
 
 		TextButton obutton = new TextButton( "Options", skin, "big" );
-		obutton.addListener( new InputListener()
+		obutton.addListener( new ClickListener()
 		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				OptionsScreen.Instance.screen = ScreenEnum.MAINMENU;
 				RoguelikeGame.Instance.switchScreen( ScreenEnum.OPTIONS );
@@ -92,16 +79,9 @@ public class MainMenuScreen implements Screen
 		mainTable.row();
 
 		TextButton cbutton = new TextButton( "Credits", skin, "big" );
-		cbutton.addListener( new InputListener()
+		cbutton.addListener( new ClickListener()
 		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				RoguelikeGame.Instance.switchScreen( ScreenEnum.CREDITS );
 			}
@@ -110,16 +90,9 @@ public class MainMenuScreen implements Screen
 		mainTable.row();
 
 		TextButton qbutton = new TextButton( "Quit", skin, "big" );
-		qbutton.addListener( new InputListener()
+		qbutton.addListener( new ClickListener()
 		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				Gdx.app.exit();
 			}
@@ -147,16 +120,9 @@ public class MainMenuScreen implements Screen
 		saveTable.row();
 
 		TextButton bbutton = new TextButton( "Back", skin, "big" );
-		bbutton.addListener( new InputListener()
+		bbutton.addListener( new ClickListener()
 		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				saveTable.remove();
 				table.add( mainTable ).expand().fill();

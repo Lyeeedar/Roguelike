@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 public class EquipmentPanel extends TilePanel
@@ -105,16 +106,9 @@ public class EquipmentPanel extends TilePanel
 					if (required <= stones)
 					{
 						TextButton button = new TextButton(equip.getName(), skin);
-						button.addListener( new InputListener()
+						button.addListener( new ClickListener()
 						{
-							@Override
-							public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-							{
-								return true;
-							}
-
-							@Override
-							public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+							public void clicked( InputEvent event, float x, float y )
 							{
 								GameScreen.Instance.lockContextMenu = false;
 								GameScreen.Instance.clearContextMenu();
@@ -150,16 +144,9 @@ public class EquipmentPanel extends TilePanel
 			table.row();
 
 			TextButton cancel = new TextButton( "Cancel", skin );
-			cancel.addListener( new InputListener()
+			cancel.addListener( new ClickListener()
 			{
-				@Override
-				public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-				{
-					return true;
-				}
-
-				@Override
-				public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+				public void clicked( InputEvent event, float x, float y )
 				{
 					GameScreen.Instance.lockContextMenu = false;
 					GameScreen.Instance.clearContextMenu();

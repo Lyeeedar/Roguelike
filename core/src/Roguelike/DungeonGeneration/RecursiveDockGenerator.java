@@ -1382,22 +1382,52 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							Symbol floor = dfp.getSymbol( '.' );
 							floor.resolveExtends( dfp.sharedSymbolMap );
 							room.carveDoors( dfp, ran, floor, true );
+
+							// fill in edges
+							if (room.x == 0)
+							{
+								for (int i = 0; i < room.height; i++)
+								{
+									room.roomContents[0][i] = wall;
+								}
+							}
+
+							if (room.y == 0)
+							{
+								for (int i = 0; i < room.width; i++)
+								{
+									room.roomContents[i][0] = wall;
+								}
+							}
+
+							if (room.x + room.width == width-1)
+							{
+								for (int i = 0; i < room.height; i++)
+								{
+									room.roomContents[room.width-1][i] = wall;
+								}
+							}
+
+							if (room.y + room.height == height-1)
+							{
+								for (int i = 0; i < room.width; i++)
+								{
+									room.roomContents[i][room.height-1] = wall;
+								}
+							}
+
 							room.findDoors( ran, dfp );
 						}
 
-						if (room.doors.size == 0)
+						if (room.doors.size > 0)
 						{
-							throw new RuntimeException( "No doors wat" );
+							room.fromEmptySpace = true;
+
+							System.out.println("Free Space:");
+							room.print();
+
+							placedRooms.add( room );
 						}
-
-						//room.enclose( dfp );
-
-						room.fromEmptySpace = true;
-
-						System.out.println("Free Space:");
-						room.print();
-
-						placedRooms.add( room );
 					}
 
 					// Mark the area as empty space to indicate we already

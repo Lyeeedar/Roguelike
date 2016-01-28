@@ -1,0 +1,53 @@
+<Quest>
+	<AllowedLevels>Forest</AllowedLevels>
+	
+	<Rooms>
+		<Room>
+			<Faction>None</Faction>
+			<Symbols>
+				<Symbol Extends=",">
+                    <Char>k</Char>
+                    <EntityData Extends="NPC/HumanBase">
+
+                        <Name>Knight</Name>
+						
+						<AI>basicMonster</AI>
+
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_heroes/knight</Name>
+                            <Colour><RGB>200,200,200</RGB></Colour>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+
+                        <Statistics>
+                            <Attack>10</Attack>
+                        </Statistics>
+
+                        <Dialogue>
+                            <Exclamations>
+								<SeePlayer>
+									<Exclamation>Adventurer! I Challenge you!</Exclamation>
+								</SeePlayer>
+                                <InCombat>
+                                    <Exclamation>Stand and fight you coward!</Exclamation>
+									<Exclamation>Take this you lily livered buffoon!</Exclamation>
+									<Exclamation>Have at you!</Exclamation>
+									<Exclamation>Your mother was a hamster!</Exclamation>
+									<Exclamation>Your father smelt of elderberries!</Exclamation>
+                                </InCombat>
+                            </Exclamations>
+                        </Dialogue>
+
+                    </EntityData>
+                </Symbol>
+			</Symbols>
+			<Rows>
+				<Row>#####</Row>
+				<Row>##..#</Row>
+				<Row>#.k##</Row>
+				<Row>#...#</Row>
+				<Row>#...#</Row>
+			</Rows>
+		</Room>
+	</Rooms>
+</Quest>

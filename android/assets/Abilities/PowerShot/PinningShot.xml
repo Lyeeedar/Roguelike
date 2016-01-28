@@ -3,13 +3,21 @@
 	<Name>Pinning Shot</Name>
 	<Description>Pin an enemy to the ground.</Description>
 
-	<Cooldown>15</Cooldown>
-	<Range>-1</Range>
+    <Cooldown>5</Cooldown>
+    <CooldownType>Attack</CooldownType>
+	<Range>5</Range>
 
 	<Icon>
 		<Name>Icons/PinningShot</Name>
 		<Colour><RGB>220,220,220</RGB></Colour>
 	</Icon>
+
+    <MovementSprite>
+        <Name>EffectSprites/Arrow/Arrow</Name>
+        <Animation><Move/></Animation>
+        <UpdateRate>0.1</UpdateRate>
+        <Sound><Name>Arrow</Name></Sound>
+    </MovementSprite>
 
 	<Cost>
 	    <Equipped>bow</Equipped>

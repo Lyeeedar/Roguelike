@@ -1,0 +1,80 @@
+<Quest>
+	<AllowedLevels>Forest</AllowedLevels>
+
+	<Rooms>
+		<Room>
+			<Symbols>
+                <Symbol Extends=",">
+                    <Char>.</Char>
+                </Symbol>
+				<Symbol Extends=",">
+					<Char>v</Char>
+					<EntityData Extends="NPC/HumanBase">
+						<Name>Captured Villager</Name>
+
+						<Statuses>
+                            <Status>Captured</Status>
+                        </Statuses>
+
+                        <Factions>
+                            <Faction>Goblin</Faction>
+                        </Factions>
+
+						<Sprite>
+							<Name>Oryx/Custom/heroes/bar_patron</Name>
+							<DrawActualSize>true</DrawActualSize>
+						</Sprite>
+
+						<Dialogue>
+							<Dialogue>
+								<Chunk Condition="Released == 0" ReliesOn="Released">
+									<Text>Please free us!</Text>
+                                    <Input Key="Response">
+										<Choice>*Let him out*</Choice>
+                                        <Choice>*Leave*</Choice>
+                                    </Input>
+                                    <Branch>
+										<Branch Condition="Response == 1">
+											<ConsumeStatus>Captured</ConsumeStatus>
+                                            <SetVariable>
+												<Key>Released</Key>
+												<Value>1</Value>
+                                            </SetVariable>
+                                            <Text>Thank you!</Text>
+                                        </Branch>
+                                        <Branch Condition="Response == 2">
+											<Text>No! Come back!</Text>
+                                        </Branch>
+                                    </Branch>
+								</Chunk>
+								<Chunk>
+									<Text>Thank you so much for freeing us! We won't forget this favour.</Text>
+								</Chunk>
+							</Dialogue>
+						</Dialogue>
+
+					</EntityData>
+				</Symbol>
+			</Symbols>
+			<Rows>
+				<Row>wwwww</Row>
+				<Row>wvvvw</Row>
+				<Row>wv8,w</Row>
+				<Row>w,44w</Row>
+				<Row>ww+ww</Row>
+			</Rows>
+		</Room>
+	</Rooms>
+
+	<Outputs>
+		<VillagersFreed>
+			<Conditions>
+				<DialogueValue>
+					<Entity>Captured Villager</Entity>
+					<Key>Released</Key>
+					<Value>1</Value>
+				</DialogueValue>
+			</Conditions>
+		</VillagersFreed>
+	</Outputs>
+</Quest>

@@ -3,8 +3,9 @@
 	<Name>Power Shot</Name>
 	<Description>Fire a powerful arrow.</Description>
 
-	<Cooldown>10</Cooldown>
-	<Range>-1</Range>
+    <Cooldown>5</Cooldown>
+    <CooldownType>Attack</CooldownType>
+	<Range>5</Range>
 
 	<Icon>
 		<Name>Icons/PowerShot</Name>
@@ -14,6 +15,13 @@
 	<Cost>
 	    <Equipped>bow</Equipped>
 	</Cost>
+
+    <MovementSprite>
+        <Name>EffectSprites/Arrow/Arrow</Name>
+        <Animation><Move/></Animation>
+        <UpdateRate>0.1</UpdateRate>
+        <Sound><Name>Arrow</Name></Sound>
+    </MovementSprite>
 
     <HitType>
         <Enemy></Enemy>

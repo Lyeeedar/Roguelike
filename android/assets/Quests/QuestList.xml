@@ -1,8 +1,12 @@
 <Quests>
 	<ArmyExpedition/>
+	<ArmyExpeditionLosing/>
+	<CapturedVillagers/>
+	<KnightChallenge/>
 	<LoversCaptured/>
 	<LoversEncounter/>
 	<LoversTemple/>
 	<MageAttacked/>
 	<MerchantRobbed/>
+	<SpiderHouse/>
 </Quests>

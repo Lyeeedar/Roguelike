@@ -8,6 +8,7 @@ import Roguelike.Entity.Tasks.TaskAttack;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class ActionAttack extends AbstractAction
@@ -32,6 +33,7 @@ public class ActionAttack extends AbstractAction
 			return State;
 		}
 
+		// Find out preferred attack direction
 		int cx = 0;
 		int cy = 0;
 		int dst = Integer.MAX_VALUE;
@@ -51,16 +53,59 @@ public class ActionAttack extends AbstractAction
 			}
 		}
 
-		Direction dir = Direction.getDirection( target.x - cx, target.y - cy );
+		GameTile targetTile = entity.tile[0][0].level.getGameTile( target );
+		Direction preferredDir = Direction.getCardinalDirection( target.x - cx, target.y - cy );
 
-		if ( dir != Direction.CENTER && ( Global.CanMoveDiagonal || dir.isCardinal() ) )
+		Direction bestDir = preferredDir;
+		int bestCount = 0;
+
+		// Check for best direction
+		for ( Direction dir : Direction.values() )
 		{
-			TaskAttack task = new TaskAttack( dir );
-			GameTile targetTile = entity.tile[0][0].level.getGameTile( target );
+			if ( dir != Direction.CENTER && (Global.CanMoveDiagonal || dir.isCardinal()) )
+			{
+				Array<GameTile> hitTiles = TaskAttack.buildHitTileArray( entity, dir );
+				int targetCount = 0;
+				boolean valid = false;
+
+				for (GameTile tile : hitTiles)
+				{
+					if (tile == targetTile)
+					{
+						valid = true;
+					}
+
+					if (tile.entity != null && !tile.entity.isAllies( entity ))
+					{
+						targetCount++;
+					}
+				}
+
+				if (valid)
+				{
+					if (dir == preferredDir)
+					{
+						bestDir = preferredDir;
+						break;
+					}
+
+					if (targetCount > bestCount)
+					{
+						bestDir = dir;
+						bestCount = targetCount;
+					}
+				}
+			}
+		}
+
+		if (bestDir != Direction.CENTER)
+		{
+			TaskAttack task = new TaskAttack( bestDir );
+
 			if ( targetTile != null
-						 && targetTile.environmentEntity != null
-						 && targetTile.environmentEntity.canTakeDamage
-						 && task.canAttackTile( entity, targetTile ) )
+				 && targetTile.environmentEntity != null
+				 && targetTile.environmentEntity.canTakeDamage
+				 && task.canAttackTile( entity, targetTile ) )
 			{
 				entity.tasks.add( task );
 

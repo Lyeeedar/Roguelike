@@ -1,7 +1,7 @@
 <Active>
 
-    <Name>Fire Slash</Name>
-    <Description>Wrap your weapon in flames and strike out.</Description>
+    <Name>Frozen Impact</Name>
+    <Description>The icy heart of winter freezes the blood in the veins of those you wound.</Description>
 
     <Cooldown>5</Cooldown>
     <CooldownType>Attack</CooldownType>
@@ -9,12 +9,12 @@
 
     <Icon>
         <Name>Icons/PowerAttack</Name>
-        <Colour><RGB>255,165,0</RGB></Colour>
+        <Colour><RGB>240,255,255</RGB></Colour>
     </Icon>
 
     <HitSprite>
-        <Name>EffectSprites/Slash/Slash</Name>
-        <Colour><RGB>255,165,0</RGB></Colour>
+        <Name>EffectSprites/Impact/Impact</Name>
+        <Colour><RGB>240,255,255</RGB></Colour>
         <UpdateRate>0.1</UpdateRate>
     </HitSprite>
 
@@ -27,6 +27,7 @@
             <Attack>150 + level * 3</Attack>
             <Strength>1</Strength>
         </Damage>
+        <Status>Frozen</Status>
     </Effect>
 
 </Active>

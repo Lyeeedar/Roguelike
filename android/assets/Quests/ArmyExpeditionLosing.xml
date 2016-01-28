@@ -1,0 +1,102 @@
+<Quest>
+    <AllowedLevels>Forest,EnchantedForest</AllowedLevels>
+
+    <Rooms>
+        <Room>
+            <AddFeatures>false</AddFeatures>
+
+            <Symbols>
+                <Symbol Extends=",">
+                    <Char>s</Char>
+                    <EntityData Extends="NPC/HumanBase">
+
+                        <Name>Soldier</Name>
+
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_heroes/knight</Name>
+                            <Colour><RGB>200,200,200</RGB></Colour>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+
+                        <Statistics>
+                            <Attack>10</Attack>
+                            <Constitution>val+5</Constitution>
+                        </Statistics>
+
+                        <Dialogue>
+                            <Exclamations>
+                                <InCombat>
+                                    <Exclamation>Take this you ugly monster!</Exclamation>
+									<Exclamation>This is for Kelva!</Exclamation>
+                                </InCombat>
+                            </Exclamations>
+                            <Dialogue>
+                                <Chunk>
+                                    <Text>I can't believe I survived that. You should speak to the captain.</Text>
+                                </Chunk>
+                            </Dialogue>
+                        </Dialogue>
+
+                    </EntityData>
+                </Symbol>
+                <Symbol Extends=",">
+                    <Char>C</Char>
+                    <EntityData Extends="NPC/HumanBase">
+
+                        <Name>Captain</Name>
+
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_heroes/paladin</Name>
+                            <Colour><RGB>200,200,200</RGB></Colour>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+
+                        <Statistics>
+                            <Attack>15</Attack>
+                            <Constitution>val+10</Constitution>
+                        </Statistics>
+
+                        <Dialogue>
+                            <Exclamations>
+                                <InCombat>
+                                    <Exclamation>At them men! Do not falter!</Exclamation>
+                                </InCombat>
+                            </Exclamations>
+                            <Dialogue>
+                                <Chunk Condition="FirstChat == 0" ReliesOn="FirstChat">
+                                    <Text>Hello adventurer... *cough* *cough*</Text>
+                                    <Text>The knights of Ros never... *cough*... forget a favour.</Text>
+                                    <Text>Here take this, with our thanks.</Text>
+                                    <GainItem>armour</GainItem>
+                                    <SetVariable>
+                                        <Key>FirstChat</Key>
+                                        <Value>1</Value>
+                                    </SetVariable>
+                                </Chunk>
+                                <Chunk>
+                                    <Text>What am I going to tell their families...</Text>
+                                </Chunk>
+                            </Dialogue>
+                        </Dialogue>
+
+                    </EntityData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>..........</Row>
+                <Row>.3.....4..</Row>
+                <Row>..ww.sww..</Row>
+                <Row>..2,,,,,..</Row>
+                <Row>1.w,C,sw.1</Row>
+                <Row>..,,,,.w..</Row>
+                <Row>..w,,,....</Row>
+                <Row>.1.,w,ww.2</Row>
+                <Row>.7...6....</Row>
+                <Row>..........</Row>
+            </Rows>
+
+        </Room>
+    </Rooms>
+
+</Quest>

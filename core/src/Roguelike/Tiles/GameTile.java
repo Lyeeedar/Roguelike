@@ -173,7 +173,7 @@ public class GameTile implements PathfindingTile
 			for (FieldLayer layer : FieldLayer.values())
 			{
 				Field field = fields.get( layer );
-				if (field != null && field.light != null)
+				if (field != null && field.getSpriteGroup().light != null)
 				{
 					hasFieldLight = true;
 					break;

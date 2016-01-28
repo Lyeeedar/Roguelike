@@ -30,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -98,16 +99,9 @@ public class CharacterCreationScreen implements Screen
 		classTable.add( selectedClass ).fill().expand();
 
 		TextButton ngbutton = new TextButton( "New Game", skin, "big" );
-		ngbutton.addListener( new InputListener()
+		ngbutton.addListener( new ClickListener()
 		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				GameEntity entity = male.isChecked() ? classList.chosen.male : classList.chosen.female;
 
@@ -117,16 +111,9 @@ public class CharacterCreationScreen implements Screen
 		} );
 
 		TextButton mainMenubutton = new TextButton( "Main Menu", skin, "big" );
-		mainMenubutton.addListener( new InputListener()
+		mainMenubutton.addListener( new ClickListener()
 		{
-			@Override
-			public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
-			{
-				return true;
-			}
-
-			@Override
-			public void touchUp( InputEvent event, float x, float y, int pointer, int button )
+			public void clicked( InputEvent event, float x, float y )
 			{
 				RoguelikeGame.Instance.switchScreen( RoguelikeGame.ScreenEnum.MAINMENU );
 			}

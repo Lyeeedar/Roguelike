@@ -78,6 +78,7 @@ public class Global
 
 	// ----------------------------------------------------------------------
 	public static boolean ANDROID = false;
+	public static boolean RELEASE = false;
 
 	// ----------------------------------------------------------------------
 	public static GameEntity CurrentDialogue = null;
@@ -267,6 +268,7 @@ public class Global
 
 		if ( player != null )
 		{
+			boolean placed = false;
 			level.player = player;
 
 			if ( travelData instanceof String )
@@ -284,6 +286,7 @@ public class Global
 								if ( tile.metaValue.equals( travelKey ) )
 								{
 									tile.addGameEntity( player );
+									placed = true;
 									break outer;
 								}
 							}
@@ -294,6 +297,24 @@ public class Global
 			{
 				GameTile tile = level.getGameTile( (Point) travelData );
 				tile.addGameEntity( player );
+				placed = true;
+			}
+
+			if (!placed)
+			{
+				while (!placed)
+				{
+					int x = MathUtils.random( level.width );
+					int y = MathUtils.random( level.height );
+
+					GameTile tile = level.getGameTile( x, y );
+
+					if (tile.getPassable( player.getTravelType(), player ))
+					{
+						tile.addGameEntity( player );
+						placed = true;
+					}
+				}
 			}
 		}
 
@@ -666,16 +687,16 @@ public class Global
 			return getDirection( dir[0], dir[1] );
 		}
 
-		public static Direction getDirection( int x, int y )
+		public static Direction getDirection( int dx, int dy )
 		{
-			x = MathUtils.clamp( x, -1, 1 );
-			y = MathUtils.clamp( y, -1, 1 );
+			dx = MathUtils.clamp( dx, -1, 1 );
+			dy = MathUtils.clamp( dy, -1, 1 );
 
 			Direction d = Direction.CENTER;
 
 			for ( Direction dir : Direction.values() )
 			{
-				if ( dir.getX() == x && dir.getY() == y )
+				if ( dir.getX() == dx && dir.getY() == dy )
 				{
 					d = dir;
 					break;
@@ -683,6 +704,37 @@ public class Global
 			}
 
 			return d;
+		}
+
+		public static Direction getCardinalDirection( int dx, int dy )
+		{
+			if (dx == 0 && dy == 0)
+			{
+				return Direction.CENTER;
+			}
+
+			if (Math.abs( dx ) > Math.abs( dy ))
+			{
+				if (dx < 0)
+				{
+					return Direction.WEST;
+				}
+				else
+				{
+					return Direction.EAST;
+				}
+			}
+			else
+			{
+				if (dy < 0)
+				{
+					return Direction.SOUTH;
+				}
+				else
+				{
+					return Direction.NORTH;
+				}
+			}
 		}
 
 		public int getX()

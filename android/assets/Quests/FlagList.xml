@@ -9,6 +9,9 @@
 	<HelpedMerchant>
 		<true/>
 	</HelpedMerchant>
+	<VillagersFreed>
+		<true/>
+	</VillagersFreed>
 	<MageQuest>
 		<Lived1/>
 		<Died1/>
