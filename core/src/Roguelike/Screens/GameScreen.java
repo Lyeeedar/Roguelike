@@ -547,20 +547,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						queueSprite( sprite, col, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, sprite.drawActualSize ? RenderLayer.OBJECT : RenderLayer.GROUNDTILE, i );
 					}
 
-					GameTile nextTile = Global.CurrentLevel.getGameTile( x, y - 1 );
-					if ( nextTile != null && nextTile.getTilingSprite() != null )
-					{
-						GameTile ogtile = nextTile;
-						GameTile oprevTile = gtile;
-
-						if ( ogtile.getTilingSprite().overhangSprite != null
-							 && oprevTile != null
-							 && ( oprevTile.getTilingSprite() == null || oprevTile.getTilingSprite().id != gtile.getTilingSprite().id ) )
-						{
-							queueSprite( ogtile.getTilingSprite().overhangSprite, notVisibleCol, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.OVERHEAD, 0 );
-						}
-					}
-
 					if ( gtile.getTilingSprite() != null )
 					{
 						Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().id);
@@ -573,6 +559,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 
 						queueSprite( sprite, col, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, sprite.drawActualSize ? RenderLayer.OBJECT : RenderLayer.GROUNDTILE, gtile.getSprites().size );
+
+						if (gtile.getTilingSprite().overhangSprite != null && directionBitflag.contains( Direction.NORTH ))
+						{
+							queueSprite( gtile.getTilingSprite().overhangSprite, notVisibleCol, drawX, drawY + Global.TileSize, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.OVERHEAD, 0 );
+						}
 					}
 
 					if ( gtile.hasFields )
@@ -589,9 +580,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 								{
 									Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, group.tilingSprite.id);
 									sprite = group.tilingSprite.getSprite( directionBitflag );
+
+									if (group.tilingSprite.overhangSprite != null && directionBitflag.contains( Direction.NORTH ))
+									{
+										queueSprite( group.tilingSprite.overhangSprite, notVisibleCol, drawX, drawY + Global.TileSize, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.OVERHEAD, 0 );
+									}
 								}
 
-								int count = (int)Math.ceil(field.stacks / 4.0f);
 								if ( field.layer == FieldLayer.GROUND )
 								{
 									queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.GROUNDFIELD, 1 );
@@ -624,6 +619,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						{
 							Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, entity.tilingSprite.id);
 							sprite = entity.tilingSprite.getSprite( directionBitflag );
+
+							if (entity.tilingSprite.overhangSprite != null && directionBitflag.contains( Direction.NORTH ))
+							{
+								queueSprite( entity.tilingSprite.overhangSprite, notVisibleCol, drawX, drawY + Global.TileSize, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.OVERHEAD, 0 );
+							}
 						}
 
 						if ( entity.location != Direction.CENTER )
@@ -690,6 +690,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							{
 								Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().id);
 								sprite = gtile.getTilingSprite().getSprite( directionBitflag );
+
+								if (entity.tilingSprite.overhangSprite != null && directionBitflag.contains( Direction.NORTH ))
+								{
+									queueSprite( entity.tilingSprite.overhangSprite, notVisibleCol, drawX, drawY + Global.TileSize, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.OVERHEAD, 0 );
+								}
 							}
 
 							if ( entity.location != Direction.CENTER )

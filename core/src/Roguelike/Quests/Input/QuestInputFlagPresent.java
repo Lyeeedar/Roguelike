@@ -13,12 +13,6 @@ public class QuestInputFlagPresent extends AbstractQuestInput
 	{
 		if ( Global.WorldFlags.containsKey( key ) || Global.RunFlags.containsKey( key ) )
 		{
-			if (!not)
-			{
-				Global.WorldFlags.remove( key );
-				Global.RunFlags.remove( key );
-			}
-
 			return !not;
 		}
 
