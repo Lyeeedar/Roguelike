@@ -30,6 +30,5 @@ public class QuestInputFlagPresent extends AbstractQuestInput
 	{
 		key = xml.getText();
 		not = xml.getBooleanAttribute( "Not", false );
-		consume = xml.getBooleanAttribute( "Consume", true );
 	}
 }

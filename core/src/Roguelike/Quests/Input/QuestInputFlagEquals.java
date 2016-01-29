@@ -15,21 +15,11 @@ public class QuestInputFlagEquals extends AbstractQuestInput
 		{
 			String val = Global.WorldFlags.get( key );
 
-			if ( consume )
-			{
-				Global.WorldFlags.remove( key );
-			}
-
 			return !not && val.equalsIgnoreCase( value );
 		}
 		else if ( Global.RunFlags.containsKey( key ) )
 		{
 			String val = Global.RunFlags.get( key );
-
-			if ( consume )
-			{
-				Global.RunFlags.remove( key );
-			}
 
 			return !not && val.equalsIgnoreCase( value );
 		}
@@ -47,6 +37,5 @@ public class QuestInputFlagEquals extends AbstractQuestInput
 
 
 		not = xml.getBooleanAttribute( "Not", false );
-		consume = xml.getBooleanAttribute( "Consume", true );
 	}
 }

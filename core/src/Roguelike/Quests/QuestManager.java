@@ -1,5 +1,7 @@
 package Roguelike.Quests;
 
+import Roguelike.Global;
+import Roguelike.Quests.Input.AbstractQuestInput;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -59,7 +61,35 @@ public class QuestManager
 			return null;
 		}
 
-		Quest chosen = validQuests.get( ran.nextInt( validQuests.size ) );
+		Array<Quest> runQuests = new Array<Quest>(  );
+		for (Quest quest : validQuests)
+		{
+			boolean run = false;
+
+			for ( AbstractQuestInput input : quest.inputs )
+			{
+				if ( Global.RunFlags.containsKey( input.key ) )
+				{
+					run = true;
+					break;
+				}
+			}
+
+			if (run)
+			{
+				runQuests.add( quest );
+			}
+		}
+
+		Quest chosen = null;
+		if (runQuests.size > 0)
+		{
+			chosen = runQuests.get( ran.nextInt( runQuests.size ) );
+		}
+		else
+		{
+			chosen = validQuests.get( ran.nextInt( validQuests.size ) );
+		}
 
 		usedQuests.add( chosen.path );
 
