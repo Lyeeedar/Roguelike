@@ -40,6 +40,23 @@ public class DialogueManager
 	public ExclamationManager exclamationManager;
 
 	// ----------------------------------------------------------------------
+	private boolean checkEntityAlive( String name )
+	{
+		Array<GameEntity> entities = new Array<GameEntity>(  );
+		Global.CurrentLevel.getAllEntities( entities );
+
+		for (GameEntity entity : entities)
+		{
+			if (entity.name != null && name.equalsIgnoreCase( entity.name ) && entity.HP > 0)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// ----------------------------------------------------------------------
 	public boolean processCondition( String condition, String[] reliesOn )
 	{
 		if (condition == null)
@@ -47,8 +64,16 @@ public class DialogueManager
 			return true;
 		}
 
+		HashMap<String, Integer> variableMap = new HashMap<String, Integer>(  );
+		variableMap.putAll( data );
+
 		for ( String name : reliesOn )
 		{
+			if (variableMap.containsKey( name ))
+			{
+				continue;
+			}
+
 			String flag = "";
 			if ( Global.WorldFlags.containsKey( name ) )
 			{
@@ -62,6 +87,30 @@ public class DialogueManager
 			{
 				flag = "" + Global.CurrentLevel.player.inventory.getItemCount( name );
 			}
+			else if ( name.endsWith( "alive" ) )
+			{
+				String entityName = name.replace( "alive", "" );
+				if (checkEntityAlive( entityName ))
+				{
+					flag = "1";
+				}
+				else
+				{
+					flag = "0";
+				}
+			}
+			else if ( name.endsWith( "dead" ) )
+			{
+				String entityName = name.replace( "dead", "" );
+				if (checkEntityAlive( entityName ))
+				{
+					flag = "0";
+				}
+				else
+				{
+					flag = "1";
+				}
+			}
 			else
 			{
 				flag = "0";
@@ -69,15 +118,15 @@ public class DialogueManager
 
 			if (Global.isNumber( flag ))
 			{
-				data.put( name, Integer.parseInt( flag ) );
+				variableMap.put( name, Integer.parseInt( flag ) );
 			}
 			else
 			{
-				data.put( name, 1 );
+				variableMap.put( name, 1 );
 			}
 		}
 
-		return EquationHelper.evaluate( condition, data ) > 0;
+		return EquationHelper.evaluate( condition, variableMap ) > 0;
 	}
 
 	// ----------------------------------------------------------------------

@@ -67,7 +67,7 @@
                                     <Text>Hello adventurer... *cough* *cough*</Text>
                                     <Text>The knights of Ros never... *cough*... forget a favour.</Text>
                                     <Text>Here take this, with our thanks.</Text>
-                                    <GainItem>armour</GainItem>
+                                    <GainItem>item(metal)</GainItem>
                                     <SetVariable>
                                         <Key>FirstChat</Key>
                                         <Value>1</Value>

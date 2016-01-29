@@ -176,7 +176,7 @@ public class GameEntity extends Entity
 		{
 			for ( Element faction : factionElement.getChildrenByName( "Faction" ) )
 			{
-				factions.add( faction.getText() );
+				factions.add( faction.getText().toLowerCase() );
 			}
 		}
 

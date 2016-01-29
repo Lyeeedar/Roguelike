@@ -21,36 +21,7 @@ public abstract class AbstractDialogueAction
 	// ----------------------------------------------------------------------
 	public boolean processCondition( String condition, String[] reliesOn )
 	{
-		for ( String name : reliesOn )
-		{
-			if ( !manager.data.containsKey( name ) )
-			{
-				String flag = "";
-				if ( Global.WorldFlags.containsKey( name ) )
-				{
-					flag = Global.WorldFlags.get( name );
-				}
-				else if ( Global.RunFlags.containsKey( name ) )
-				{
-					flag = Global.RunFlags.get( name );
-				}
-				else
-				{
-					flag = "0";
-				}
-
-				if (Global.isNumber( flag ))
-				{
-					manager.data.put( name, Integer.parseInt( flag ) );
-				}
-				else
-				{
-					manager.data.put( name, 1 );
-				}
-			}
-		}
-
-		return EquationHelper.evaluate( condition, manager.data ) > 0;
+		return manager.processCondition( condition, reliesOn );
 	}
 
 	// ----------------------------------------------------------------------
@@ -95,5 +66,7 @@ public abstract class AbstractDialogueAction
 		ClassMap.put( "GAINITEM", DialogueActionGainItem.class );
 		ClassMap.put( "REMOVEITEM", DialogueActionRemoveItem.class );
 		ClassMap.put( "CONSUMESTATUS", DialogueActionConsumeStatus.class );
+		ClassMap.put( "ADDFACTION", DialogueActionAddFaction.class );
+		ClassMap.put( "REMOVEFACTION", DialogueActionRemoveFaction.class );
 	}
 }

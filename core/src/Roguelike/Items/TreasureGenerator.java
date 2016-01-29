@@ -27,7 +27,7 @@ public class TreasureGenerator
 		{
 			if ( type.equals( "currency" ) )
 			{
-				items.addAll( TreasureGenerator.generateCurrency( quality, MathUtils.random ) );
+				items.addAll( TreasureGenerator.generateCurrency( quality, ran ) );
 			}
 			else if ( type.startsWith( "ability" ) )
 			{
@@ -36,33 +36,39 @@ public class TreasureGenerator
 
 				if (abilityParts.length > 1)
 				{
-					tags = abilityParts[1].split( "," );
+					tags = new String[]{ abilityParts[1] };
 				}
 
-				items.addAll( TreasureGenerator.generateAbility( quality, MathUtils.random, tags ) );
+				items.addAll( TreasureGenerator.generateAbility( quality, ran, tags ) );
 			}
 			else if ( type.equals( "armour" ) )
 			{
-				items.addAll( TreasureGenerator.generateArmour( quality, MathUtils.random ) );
+				items.addAll( TreasureGenerator.generateArmour( quality, ran ) );
 			}
 			else if ( type.equals( "weapon" ) )
 			{
-				items.addAll( TreasureGenerator.generateWeapon( quality, MathUtils.random ) );
+				items.addAll( TreasureGenerator.generateWeapon( quality, ran ) );
 			}
 			else if ( type.equals( "item" ) )
 			{
 				if ( ran.nextBoolean() )
 				{
-					items.addAll( TreasureGenerator.generateArmour( quality, MathUtils.random ) );
+					items.addAll( TreasureGenerator.generateArmour( quality, ran ) );
 				}
 				else
 				{
-					items.addAll( TreasureGenerator.generateWeapon( quality, MathUtils.random ) );
+					items.addAll( TreasureGenerator.generateWeapon( quality, ran ) );
 				}
 			}
 			else if ( type.equals( "random" ) )
 			{
-				items.addAll( TreasureGenerator.generateRandom( quality, MathUtils.random ) );
+				items.addAll( TreasureGenerator.generateRandom( quality, ran ) );
+			}
+			else if ( type.startsWith( "item(" ) )
+			{
+				String[] parts = type.split( "[\\(\\)]" );
+
+				items.addAll( TreasureGenerator.generateItemFromMaterial( parts[1], quality, ran ) );
 			}
 		}
 
@@ -213,6 +219,39 @@ public class TreasureGenerator
 		return items;
 	}
 
+	public static Array<Item> generateItemFromMaterial( String materialType, int quality, Random ran )
+	{
+		Array<RecipeData> validRecipes = new Array<RecipeData>(  );
+
+		for (RecipeData recipe : recipeList.weaponRecipes)
+		{
+			if (recipe.acceptsMaterial( materialType ))
+			{
+				validRecipes.add( recipe );
+			}
+		}
+
+		for (RecipeData recipe : recipeList.armourRecipes)
+		{
+			if (recipe.acceptsMaterial( materialType ))
+			{
+				validRecipes.add( recipe );
+			}
+		}
+
+		Array<Item> items = new Array<Item>(  );
+
+		if (validRecipes.size == 0)
+		{
+			return items;
+		}
+
+		RecipeData chosen = validRecipes.get( ran.nextInt( validRecipes.size ) );
+		items.add( itemFromRecipe( chosen, quality, ran ) );
+
+		return items;
+	}
+
 	public static Item itemFromRecipe( RecipeData recipe, int quality, Random ran )
 	{
 		String materialType = recipe.acceptedMaterials[ ran.nextInt( recipe.acceptedMaterials.length ) ];
@@ -243,11 +282,23 @@ public class TreasureGenerator
 
 	public static Item getMaterial( String materialType, int quality, Random ran )
 	{
+		if (!materialLists.containsKey( materialType ))
+		{
+			if (Gdx.files.internal( "Items/Material/" + materialType + ".xml" ).exists())
+			{
+				QualityMap materialMap = new QualityMap( "Items/Material/" + materialType + ".xml" );
+				materialLists.put( materialType, materialMap );
+			}
+			else
+			{
+				materialLists.put( materialType, null );
+			}
+		}
+
 		QualityMap materialMap = materialLists.get( materialType );
 		if (materialMap == null)
 		{
-			materialMap = new QualityMap( "Items/Material/" + materialType + ".xml" );
-			materialLists.put( materialType, materialMap );
+			return null;
 		}
 
 		int materialQuality = Math.min( quality, materialMap.qualityData.size );
@@ -425,6 +476,19 @@ public class TreasureGenerator
 		{
 			this.recipeName = recipeName;
 			this.acceptedMaterials = acceptedMaterials;
+		}
+
+		public boolean acceptsMaterial( String material )
+		{
+			for (int i = 0; i < acceptedMaterials.length; i++)
+			{
+				if (acceptedMaterials[i].equalsIgnoreCase( material ))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 	}
 
