@@ -43,5 +43,6 @@ public abstract class AbstractActivationCondition
 	static
 	{
 		ClassMap.put( "PLAYERPROXIMITY", ActivationConditionPlayerProximity.class );
+		ClassMap.put( "HASITEM", ActivationConditionHasItem.class );
 	}
 }

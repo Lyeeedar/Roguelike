@@ -1019,7 +1019,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			float width = layout.width;
 			float height = layout.height;
 
-			layout.setText( font, entity.displayedPopup, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
+			layout.setText( font, entity.displayedPopup, tempColour, stage.getWidth() / 2, Align.left, true );
 
 			batch.setColor( tempColour );
 
@@ -1045,7 +1045,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				String message = ( i + 1 ) + ": " + Global.expandNames( Global.CurrentDialogue.dialogue.currentInput.choices.get( i ) );
 
-				layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
+				layout.setText( font, message, tempColour, stage.getWidth() / 2, Align.left, true );
 				if ( layout.width > layoutwidth )
 				{
 					layoutwidth = layout.width;
@@ -1082,7 +1082,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					font = hightlightfont;
 				}
 
-				layout.setText( font, message, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
+				layout.setText( font, message, tempColour, stage.getWidth() / 2, Align.left, true );
 
 				font.draw( batch, layout, left + 10, cy + layout.height + 10 + voffset );
 

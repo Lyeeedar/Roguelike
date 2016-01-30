@@ -22,7 +22,6 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 	public Array<StatusEffect> statuses = new Array<StatusEffect>();
 	public Inventory inventory;
 	public String UID;
-	public Element creationData;
 
 	public Sprite sprite;
 	public TilingSprite tilingSprite;
@@ -47,7 +46,6 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 
 		UID = obj.UID;
 
-		creationData = obj.creationData;
 		sprite = obj.sprite;
 		tilingSprite = obj.tilingSprite;
 		passableBy = obj.passableBy;
@@ -61,7 +59,7 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 	@Override
 	public EnvironmentEntity create()
 	{
-		EnvironmentEntity entity = EnvironmentEntity.load( creationData );
+		EnvironmentEntity entity = new EnvironmentEntity();
 		entity.sprite = sprite;
 		entity.tilingSprite = tilingSprite;
 		entity.passableBy = passableBy;

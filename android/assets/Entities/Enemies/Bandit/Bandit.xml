@@ -3,4 +3,7 @@
         <BanditWarrior></BanditWarrior>
         <BanditArcher></BanditArcher>
     </Creatures>
+    <Bosses>
+        <BanditChief></BanditChief>
+    </Bosses>
 </Faction>

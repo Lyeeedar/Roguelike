@@ -668,7 +668,7 @@ public class Level
 
 					while ( tile.entity.popupAccumulator >= 0 && tile.entity.displayedPopup.length() < tile.entity.popup.length() )
 					{
-						tile.entity.popupAccumulator -= 0.03f;
+						tile.entity.popupAccumulator -= 0.02f;
 
 						tile.entity.displayedPopup = tile.entity.popup.substring( 0, tile.entity.displayedPopup.length() + 1 );
 					}
@@ -688,7 +688,7 @@ public class Level
 
 					while ( tile.environmentEntity.popupAccumulator >= 0 && tile.environmentEntity.displayedPopup.length() < tile.environmentEntity.popup.length() )
 					{
-						tile.environmentEntity.popupAccumulator -= 0.03f;
+						tile.environmentEntity.popupAccumulator -= 0.02f;
 
 						tile.environmentEntity.displayedPopup = tile.environmentEntity.popup.substring( 0, tile.environmentEntity.displayedPopup.length() + 1 );
 					}

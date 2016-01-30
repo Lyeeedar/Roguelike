@@ -1,0 +1,109 @@
+<Quest>
+	<Rooms>
+		<Room>
+
+			<Symbols>
+				<Symbol Extends=".">
+					<Char>w</Char>
+					<EntityData Extends="NPC/HumanBase">
+
+						<Name>Witch</Name>
+
+						<Sprite>
+							<Name>Oryx/uf_split/uf_heroes/witch</Name>
+							<DrawActualSize>true</DrawActualSize>
+						</Sprite>
+
+						<Dialogue>
+
+							<Dialogue>
+
+								<Chunk Condition="herb == 0 && delivered == 0" ReliesOn="herb,delivered">
+									<Text>Oh dearie, could you do me a favour?</Text>
+									<Text>There is a blue herb somewhere in this part of the forest but me old old legs are tired.</Text>
+									<Text>Could you fetch it for me please?</Text>
+								</Chunk>
+
+								<Chunk Condition="herb == 1" ReliesOn="herb">
+									<Text>That herb, that's the one I've been looking for!</Text>
+									<Text>Hand it over young person!</Text>
+									<RemoveItem>Herb</RemoveItem>
+									<SetVariable>
+										<Key>Delivered</Key>
+										<Value>1</Value>
+									</SetVariable>
+								</Chunk>
+
+								<Chunk>
+									<Text>Run along dearie</Text>
+								</Chunk>
+
+							</Dialogue>
+						</Dialogue>
+					</EntityData>
+				</Symbol>
+			</Symbols>
+
+			<Rows>
+				<Row>...</Row>
+				<Row>.w.</Row>
+				<Row>...</Row>
+			</Rows>
+		</Room>
+		<Room>
+
+			<Symbols>
+				<Symbol Extends=".">
+					<Char>h</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Oryx/uf_split/uf_terrain/leaves_green_1</Name>
+							<Colour><RGB>0,100,255</RGB></Colour>
+                            <Light>
+                                <Colour><RGB>0,100,255</RGB></Colour>
+                                <Intensity>3</Intensity>
+                            </Light>
+						</Sprite>
+
+                        <Passable>false</Passable>
+                        <Opaque>false</Opaque>
+
+						<OnActivate>
+							<Group Name="Take Herb">
+								<AddItem>
+									<Name>Herb</Name>
+									<Description>A glowing blue herb.</Description>
+									<Icon>
+										<Name>Oryx/uf_split/uf_terrain/leaves_green_1</Name>
+										<Colour><RGB>0,100,255</RGB></Colour>
+									</Icon>
+								</AddItem>
+								<KillThis/>
+							</Group>
+						</OnActivate>
+
+					</EnvironmentData>
+				</Symbol>
+			</Symbols>
+
+			<Rows>
+				<Row>...</Row>
+				<Row>.h.</Row>
+				<Row>...</Row>
+			</Rows>
+
+		</Room>
+	</Rooms>
+
+	<Outputs>
+		<WitchHelped>
+			<Conditions>
+				<DialogueValue>
+					<Entity>Witch</Entity>
+					<Key>Delivered</Key>
+					<Value>1</Value>
+				</DialogueValue>
+			</Conditions>
+		</WitchHelped>
+	</Outputs>
+</Quest>

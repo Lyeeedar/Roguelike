@@ -1,19 +1,22 @@
 <Flags>
-	<LoversQuest>
-		<Temple/>
-		<Captured/>
-		<Possessed/>
-		<Survived/>
-		<Resurrect/>
-	</LoversQuest>
-	<HelpedMerchant>
+	<loversquest>
+		<temple/>
+		<captured/>
+		<possessed/>
+		<survived/>
+		<resurrect/>
+	</loversquest>
+	<witchhelped>
 		<true/>
-	</HelpedMerchant>
-	<VillagersFreed>
+	</witchhelped>
+	<helpedmerchant>
 		<true/>
-	</VillagersFreed>
-	<MageQuest>
-		<Lived1/>
-		<Died1/>
-	</MageQuest>
+	</helpedmerchant>
+	<villagersfreed>
+		<true/>
+	</villagersfreed>
+	<magequest>
+		<lived1/>
+		<died1/>
+	</magequest>
 </Flags>

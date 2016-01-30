@@ -1,12 +1,14 @@
 <Quests>
-	<ArmyExpedition/>
-	<ArmyExpeditionLosing/>
-	<CapturedVillagers/>
-	<KnightChallenge/>
-	<LoversCaptured/>
-	<LoversEncounter/>
-	<LoversTemple/>
-	<MageAttacked/>
-	<MerchantRobbed/>
-	<SpiderHouse/>
+	<Quest>Forest/ArmyExpedition</Quest>
+	<Quest>Forest/ArmyExpeditionLosing</Quest>
+	<Quest>Forest/BanditStash</Quest>
+	<Quest>Forest/CapturedVillagers</Quest>
+	<Quest>Forest/KnightChallenge</Quest>
+	<Quest>Forest/MageAttacked</Quest>
+	<Quest>Forest/MerchantRobbed</Quest>
+	<Quest>Forest/SpiderHouse</Quest>
+	<Quest>Forest/WitchHerb</Quest>
+	<Quest>Lovers/LoversCaptured</Quest>
+	<Quest>Lovers/LoversEncounter</Quest>
+	<Quest>Lovers/LoversTemple</Quest>
 </Quests>

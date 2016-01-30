@@ -14,7 +14,7 @@
     </Icon>
 
     <HitSprite>
-        <Name>EffectSprites/Slash/Slash</Name>
+        <Name>EffectSprites/Explosion/Explosion</Name>
         <Colour><RGB>255,165,0</RGB></Colour>
         <UpdateRate>0.1</UpdateRate>
     </HitSprite>

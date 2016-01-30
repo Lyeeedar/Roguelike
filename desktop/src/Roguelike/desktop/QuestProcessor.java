@@ -66,7 +66,7 @@ public class QuestProcessor
 		String questListContents = "<Quests>\n";
 		for (String path : questPaths)
 		{
-			questListContents += "\t<"+path+"/>\n";
+			questListContents += "\t<Quest>"+path+"</Quest>\n";
 		}
 		questListContents += "</Quests>";
 

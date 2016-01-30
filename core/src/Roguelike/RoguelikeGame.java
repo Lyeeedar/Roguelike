@@ -2,6 +2,7 @@ package Roguelike;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.HashMap;
 
 import Roguelike.Screens.*;
@@ -42,7 +43,9 @@ public class RoguelikeGame extends Game
 					e.printStackTrace(new PrintWriter( sw) );
 					String exceptionAsString = sw.toString();
 
-					FileHandle file = Gdx.files.local( "error.log" );
+					Date date = new Date();
+
+					FileHandle file = Gdx.files.local( "error" + date.toString() + ".log" );
 					file.writeString( exceptionAsString, false );
 
 					JOptionPane.showMessageDialog( null, "An fatal error occured. Please send error.log to me so that I can fix it.", "An error occured", JOptionPane.ERROR_MESSAGE );

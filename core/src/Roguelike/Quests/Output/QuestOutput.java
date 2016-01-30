@@ -46,8 +46,8 @@ public class QuestOutput
 
 	public void parse( XmlReader.Element xml )
 	{
-		key = xml.getName();
-		data = xml.get( "Data", "true" );
+		key = xml.getName().toLowerCase();
+		data = xml.get( "Data", "true" ).toLowerCase();
 		runFlag = xml.getBooleanAttribute( "RunFlag", false );
 		defer = xml.getBooleanAttribute( "Defer", true );
 

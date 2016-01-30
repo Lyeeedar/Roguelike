@@ -51,5 +51,6 @@ public abstract class AbstractActivationAction
 		ClassMap.put( "ACTIVATE", ActivationActionActivate.class );
 		ClassMap.put( "KILLTHIS", ActivationActionKillThis.class );
 		ClassMap.put( "SPAWNFIELD", ActivationActionSpawnField.class );
+		ClassMap.put( "REMOVEITEM", ActivationActionRemoveItem.class );
 	}
 }

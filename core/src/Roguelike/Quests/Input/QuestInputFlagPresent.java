@@ -22,7 +22,7 @@ public class QuestInputFlagPresent extends AbstractQuestInput
 	@Override
 	public void parse( XmlReader.Element xml )
 	{
-		key = xml.getText();
+		key = xml.getText().toLowerCase();
 		not = xml.getBooleanAttribute( "Not", false );
 	}
 }

@@ -38,7 +38,7 @@ public class QuestManager
 		for (int i = 0; i < xml.getChildCount(); i++)
 		{
 			XmlReader.Element questEl = xml.getChild( i );
-			Quest quest = Quest.load( questEl.getName() );
+			Quest quest = Quest.load( questEl.getText() );
 			availableQuests.add( quest );
 		}
 	}

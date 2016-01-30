@@ -42,7 +42,6 @@ public class EnvironmentEntity extends Entity
 	public Array<ActivationActionGroup> onHearActions = new Array<ActivationActionGroup>(  );
 	public Array<ActivationActionGroup> onDeathActions = new Array<ActivationActionGroup>(  );
 	public Array<ActivationActionGroup> noneActions = new Array<ActivationActionGroup>(  );
-	public Element creationData;
 
 	// ----------------------------------------------------------------------
 	@Override
@@ -171,13 +170,37 @@ public class EnvironmentEntity extends Entity
 	}
 
 	// ----------------------------------------------------------------------
-	private static EnvironmentEntity CreateDoor()
+	private static EnvironmentEntity CreateDoor( final Element xml )
 	{
 		Sprite doorHClosed = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_h_closed", true );
 		Sprite doorHOpen = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_h_open", true );
 
 		Sprite doorVClosed = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_v_closed", true );
 		Sprite doorVOpen = AssetManager.loadSprite( "Oryx/Custom/terrain/door_wood_v_open", true );
+
+		Element hClosedElement = xml.getChildByName( "HClosed" );
+		if (hClosedElement != null)
+		{
+			doorHClosed = AssetManager.loadSprite( hClosedElement );
+		}
+
+		Element hOpenElement = xml.getChildByName( "HOpen" );
+		if (hOpenElement != null)
+		{
+			doorHOpen = AssetManager.loadSprite( hOpenElement );
+		}
+
+		Element vClosedElement = xml.getChildByName( "VClosed" );
+		if (vClosedElement != null)
+		{
+			doorVClosed = AssetManager.loadSprite( vClosedElement );
+		}
+
+		Element vOpenElement = xml.getChildByName( "VOpen" );
+		if (vOpenElement != null)
+		{
+			doorVOpen = AssetManager.loadSprite( vOpenElement );
+		}
 
 		final TilingSprite closedSprite = new TilingSprite(doorVClosed, doorHClosed);
 		closedSprite.name = "wall";
@@ -187,30 +210,45 @@ public class EnvironmentEntity extends Entity
 		openSprite.name = "wall";
 		openSprite.id = "wall".hashCode();
 
-		ActivationActionGroup open = new ActivationActionGroup();
-		open.name = "Open";
-		open.enabled = true;
-		open.actions.add( new ActivationActionSetSprite( null, openSprite ) );
-		open.actions.add( new ActivationActionSetPassable( Passability.parse( "true" ) ) );
-		open.actions.add( new ActivationActionSetEnabled( null, "Close", true ) );
-		open.actions.add( new ActivationActionSetEnabled( null, "Open", false ) );
-
-		ActivationActionGroup close = new ActivationActionGroup();
-		close.name = "Close";
-		close.enabled = true;
-		close.actions.add( new ActivationActionSetSprite( null, closedSprite ) );
-		close.actions.add( new ActivationActionSetPassable( Passability.parse( "false" ) ) );
-		close.actions.add( new ActivationActionSetEnabled( null, "Close", false ) );
-		close.actions.add( new ActivationActionSetEnabled( null, "Open", true ) );
-
 		EnvironmentEntity entity = new EnvironmentEntity();
 		entity.passableBy = Passability.parse( "false" );
 		entity.passableBy.clearBit( Passability.LIGHT );
 		entity.tilingSprite = closedSprite;
 		entity.canTakeDamage = false;
 
-		entity.onActivateActions.add( open );
-		entity.onActivateActions.add( close );
+		String lockedBy = xml.get( "LockedBy", null );
+		if (lockedBy != null)
+		{
+			ActivationActionGroup unlock = new ActivationActionGroup();
+			unlock.name = "Unlock";
+			unlock.enabled = true;
+			unlock.conditions.add( new ActivationConditionHasItem( lockedBy, 1 ) );
+			unlock.actions.add( new ActivationActionRemoveItem( lockedBy, 1 ) );
+			unlock.actions.add( new ActivationActionSetEnabled( null, "Open", true ) );
+			unlock.actions.add( new ActivationActionSetEnabled( null, "Unlock", false ) );
+
+			entity.onActivateActions.add( unlock );
+
+			ActivationActionGroup open = new ActivationActionGroup();
+			open.name = "Open";
+			open.enabled = false;
+			open.actions.add( new ActivationActionSetSprite( null, openSprite ) );
+			open.actions.add( new ActivationActionSetPassable( Passability.parse( "true" ) ) );
+			open.actions.add( new ActivationActionSetEnabled( null, "Open", false ) );
+
+			entity.onActivateActions.add( open );
+		}
+		else
+		{
+			ActivationActionGroup open = new ActivationActionGroup();
+			open.name = "Open";
+			open.enabled = true;
+			open.actions.add( new ActivationActionSetSprite( null, openSprite ) );
+			open.actions.add( new ActivationActionSetPassable( Passability.parse( "true" ) ) );
+			open.actions.add( new ActivationActionSetEnabled( null, "Open", false ) );
+
+			entity.onActivateActions.add( open );
+		}
 
 		return entity;
 	}
@@ -275,7 +313,7 @@ public class EnvironmentEntity extends Entity
 
 		if ( type.equalsIgnoreCase( "Door" ) )
 		{
-			entity = CreateDoor();
+			entity = CreateDoor( xml );
 		}
 		else if ( type.equalsIgnoreCase( "Transition" ) )
 		{
@@ -286,7 +324,6 @@ public class EnvironmentEntity extends Entity
 			entity = CreateBasic( xml );
 		}
 		entity.tile = new GameTile[entity.size][entity.size];
-		entity.creationData = xml;
 		return entity;
 	}
 }

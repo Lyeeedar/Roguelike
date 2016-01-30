@@ -540,6 +540,8 @@ public final class SaveFile
 		kryo.register( ActivationActionActivate.class );
 		kryo.register( ActivationActionSpawnField.class );
 		kryo.register( ActivationActionKillThis.class );
+		kryo.register( ActivationActionRemoveItem.class );
 		kryo.register( ActivationConditionPlayerProximity.class );
+		kryo.register( ActivationConditionHasItem.class );
 	}
 }

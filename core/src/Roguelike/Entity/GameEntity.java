@@ -174,6 +174,11 @@ public class GameEntity extends Entity
 		Element factionElement = xmlElement.getChildByName( "Factions" );
 		if ( factionElement != null )
 		{
+			if (factionElement.getBooleanAttribute( "Override", false ))
+			{
+				factions.clear();
+			}
+
 			for ( Element faction : factionElement.getChildrenByName( "Faction" ) )
 			{
 				factions.add( faction.getText().toLowerCase() );

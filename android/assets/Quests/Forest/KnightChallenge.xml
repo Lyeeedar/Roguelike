@@ -1,6 +1,6 @@
 <Quest>
 	<AllowedLevels>Forest</AllowedLevels>
-	
+
 	<Rooms>
 		<Room>
 			<Faction>None</Faction>
@@ -10,8 +10,12 @@
                     <EntityData Extends="NPC/HumanBase">
 
                         <Name>Knight</Name>
-						
+
 						<AI>basicMonster</AI>
+
+                        <Factions Override="true">
+                            <Faction>Knight</Faction>
+                        </Factions>
 
                         <Sprite>
                             <Name>Oryx/uf_split/uf_heroes/knight</Name>

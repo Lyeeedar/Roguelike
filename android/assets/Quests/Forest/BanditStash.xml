@@ -1,0 +1,76 @@
+<Quest>
+	<Rooms>
+		<Room>
+			<Faction>Bandit</Faction>
+
+			<Symbols>
+				<Symbol Extends=".">
+					<Char>c</Char>
+					<EntityData Extends="Enemies/Bandit/BanditChief">
+						<Inventory>
+							<Item>
+								<Name>Stash Key</Name>
+								<Description>A well worn key</Description>
+								<Icon>
+									<Name>Oryx/uf_split/uf_items/key_silver</Name>
+								</Icon>
+							</Item>
+						</Inventory>
+					</EntityData>
+				</Symbol>
+			</Symbols>
+
+			<Rows>
+				<Row>........</Row>
+				<Row>......2.</Row>
+				<Row>.4..8...</Row>
+				<Row>....c...</Row>
+				<Row>..1...4.</Row>
+				<Row>........</Row>
+			</Rows>
+		</Room>
+
+		<Room>
+			<Faction>none</Faction>
+			<Symbols>
+				<Symbol Extends=",">
+					<Char>c</Char>
+					<EnvironmentData>
+						<Sprite>
+							<Name>Oryx/uf_split/uf_items/chest_silver</Name>
+						</Sprite>
+
+						<OnActivate>
+							<Group Name="Open">
+								<SetSprite>
+									<Sprite>
+										<Name>Oryx/uf_split/uf_items/chest_silver_empty</Name>
+									</Sprite>
+								</SetSprite>
+								<SetEnabled Enabled="false">Open</SetEnabled>
+								<AddItem>random</AddItem>
+							</Group>
+						</OnActivate>
+					</EnvironmentData>
+				</Symbol>
+
+				<Symbol Extends=",">
+					<Char>+</Char>
+
+					<EnvironmentData>
+						<Type>Door</Type>
+                        <LockedBy>Stash Key</LockedBy>
+					</EnvironmentData>
+				</Symbol>
+			</Symbols>
+
+			<Rows>
+				<Row>wwwwwww</Row>
+				<Row>wc,c,cw</Row>
+				<Row>w,,,,,w</Row>
+				<Row>wc,,,cw</Row>
+				<Row>www+www</Row>
+			</Rows>
+		</Room>
+	</Rooms>
+</Quest>

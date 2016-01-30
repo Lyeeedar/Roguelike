@@ -32,8 +32,8 @@ public class QuestInputFlagEquals extends AbstractQuestInput
 	@Override
 	public void parse( XmlReader.Element xml )
 	{
-		key = xml.get( "Key" );
-		value = xml.get( "Value" );
+		key = xml.get( "Key" ).toLowerCase();
+		value = xml.get( "Value" ).toLowerCase();
 
 
 		not = xml.getBooleanAttribute( "Not", false );
