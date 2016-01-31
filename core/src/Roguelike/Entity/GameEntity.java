@@ -399,7 +399,7 @@ public class GameEntity extends Entity
 
 		e.internalLoad( name );
 
-		e.HP = e.getStatistic( Statistic.CONSTITUTION ) * 10;
+		e.HP = e.getMaxHP();
 
 		e.statistics.put( Statistic.WALK, 1 );
 
@@ -420,7 +420,7 @@ public class GameEntity extends Entity
 			e.internalLoad( el );
 		}
 
-		e.HP = e.getStatistic( Statistic.CONSTITUTION ) * 10;
+		e.HP = e.getMaxHP();
 
 		e.statistics.put( Statistic.WALK, 1 );
 

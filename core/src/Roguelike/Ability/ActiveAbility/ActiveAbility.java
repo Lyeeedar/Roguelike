@@ -96,6 +96,14 @@ public class ActiveAbility implements IAbility, IGameObject
 
 	public AbilityTree.AbilityStage tree;
 
+	public String creationPath;
+	public Element creationData;
+
+	public ActiveAbility()
+	{
+
+	}
+
 	// ----------------------------------------------------------------------
 	@Override
 	public void setCaster(Entity e)
@@ -150,6 +158,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	{
 		ActiveAbility ab = new ActiveAbility();
 
+		ab.creationPath = name;
 		ab.internalLoad( name );
 
 		return ab;
@@ -160,6 +169,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	{
 		ActiveAbility ab = new ActiveAbility();
 
+		ab.creationData = xml;
 		ab.internalLoad( xml );
 
 		return ab;

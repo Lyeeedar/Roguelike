@@ -638,7 +638,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							}
 						}
 
-						if ( entity.canTakeDamage && entity.HP < entity.getVariable( Statistic.CONSTITUTION ) * 10 )
+						if ( entity.canTakeDamage && entity.HP < entity.getMaxHP() )
 						{
 							hasStatus.add( entity );
 						}
@@ -962,6 +962,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		for ( Entity entity : entitiesWithSpeech )
 		{
+			if (Global.CurrentDialogue != null && entity != Global.CurrentDialogue)
+			{
+				continue;
+			}
+
 			if ( entity.popupDuration <= 0 && entity.displayedPopup.length() == entity.popup.length() )
 			{
 				entity.popupFade -= delta;

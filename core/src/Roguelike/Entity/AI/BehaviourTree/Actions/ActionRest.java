@@ -21,7 +21,7 @@ public class ActionRest extends AbstractAction
 	{
 		tempValues.clear();
 
-		if ( entity.HP < entity.getStatistic( Statistic.CONSTITUTION ) * 10 )
+		if ( entity.HP < entity.getMaxHP() )
 		{
 			tempValues.add( "HP" );
 		}

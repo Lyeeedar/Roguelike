@@ -91,7 +91,7 @@ public abstract class Entity
 		if ( statElement != null )
 		{
 			Statistic.load( statElement, statistics );
-			HP = getStatistic( Statistic.CONSTITUTION ) * 10;
+			HP = getMaxHP();
 
 			statistics.put( Statistic.WALK, 1 );
 			//statistics.put( Statistic.ENTITY, 1 );
@@ -265,9 +265,9 @@ public abstract class Entity
 		hasDamage = true;
 		extraUIHP += dam;
 
-		if (HP + extraUIHP > ( getStatistic( Statistic.CONSTITUTION ) * 10 ))
+		if (HP + extraUIHP > getMaxHP() )
 		{
-			extraUIHP = ( getStatistic( Statistic.CONSTITUTION ) * 10 ) - HP;
+			extraUIHP = getMaxHP() - HP;
 		}
 
 		if ( dam != 0 )
@@ -281,7 +281,7 @@ public abstract class Entity
 	{
 		if ( !canTakeDamage ) { return; }
 
-		int appliedHeal = Math.min( heal, ( getStatistic( Statistic.CONSTITUTION ) * 10 ) - HP );
+		int appliedHeal = Math.min( heal, getMaxHP() - HP );
 		HP += appliedHeal;
 		extraUIHP -= appliedHeal;
 		if (extraUIHP < 0) { extraUIHP = 0; }
@@ -292,6 +292,12 @@ public abstract class Entity
 		{
 			isVariableMapDirty = true;
 		}
+	}
+
+	// ----------------------------------------------------------------------
+	public int getMaxHP()
+	{
+		return getVariable( Statistic.CONSTITUTION ) * 10;
 	}
 
 	// ----------------------------------------------------------------------

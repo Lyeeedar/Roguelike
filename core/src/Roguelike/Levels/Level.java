@@ -348,7 +348,7 @@ public class Level
 			if ( MathUtils.random( 5 ) <= Global.LevelManager.hpDropCounter )
 			{
 				Global.LevelManager.hpDropCounter -= 3;
-				int amount = Math.max( 10, (player.getStatistic( Statistic.CONSTITUTION ) * 10) / 5 );
+				int amount = Math.max( 10, player.getMaxHP() / 5 );
 				delay += dropOrbs( amount, delay, GameTile.OrbType.HEALTH, source, possibleTiles );
 			}
 			else
@@ -358,7 +358,7 @@ public class Level
 
 			if ( obj instanceof GameEntity && ((GameEntity)obj).isBoss )
 			{
-				int amount = Math.max( 10, (player.getStatistic( Statistic.CONSTITUTION ) * 10) );
+				int amount = Math.max( 10, player.getMaxHP() );
 				delay += dropOrbs( amount, delay, GameTile.OrbType.HEALTH, source, possibleTiles );
 			}
 		}
@@ -710,7 +710,7 @@ public class Level
 			{
 				tile.entity.extraUIHP--;
 
-				float ratio = (float)tile.entity.extraUIHP / (float)(tile.entity.getStatistic( Statistic.CONSTITUTION ) * 10);
+				float ratio = (float)tile.entity.extraUIHP / (float)(tile.entity.getMaxHP());
 				ratio = 0.02f - 0.02f * ratio;
 
 				tile.entity.extraUIHPAccumulator -= ratio;
@@ -725,7 +725,7 @@ public class Level
 			{
 				tile.environmentEntity.extraUIHP--;
 
-				float ratio = (float)tile.environmentEntity.extraUIHP / (float)(tile.environmentEntity.getStatistic( Statistic.CONSTITUTION ) * 10);
+				float ratio = (float)tile.environmentEntity.extraUIHP / (float)(tile.environmentEntity.getMaxHP());
 				ratio = 0.02f - 0.02f * ratio;
 
 				tile.environmentEntity.extraUIHPAccumulator -= ratio;
@@ -974,7 +974,7 @@ public class Level
 					}
 					else if ( type == GameTile.OrbType.HEALTH )
 					{
-						int healthMissing = player.getStatistic( Statistic.CONSTITUTION ) * 10 - player.HP;
+						int healthMissing = player.getMaxHP() - player.HP;
 
 						int restored = Math.min( healthMissing, val );
 

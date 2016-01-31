@@ -350,6 +350,35 @@ public final class SaveFile
 			}
 		} );
 
+		kryo.register( ActiveAbility.class, new Serializer<ActiveAbility>()
+		{
+			@Override
+			public void write( Kryo kryo, Output output, ActiveAbility object )
+			{
+				output.writeString( object.creationPath );
+				kryo.writeObjectOrNull( output, object.creationData, Element.class);
+			}
+
+			@Override
+			public ActiveAbility read( Kryo kryo, Input input, Class<ActiveAbility> type )
+			{
+				String creationPath = input.readString();
+				Element creationData = kryo.readObjectOrNull( input, Element.class );
+
+				ActiveAbility ab;
+				if (creationPath != null)
+				{
+					ab = ActiveAbility.load( creationPath );
+				}
+				else
+				{
+					ab = ActiveAbility.load( creationData );
+				}
+
+				return ab;
+			}
+		} );
+
 		kryo.register( Element.class, new Serializer<Element>()
 		{
 			@Override
