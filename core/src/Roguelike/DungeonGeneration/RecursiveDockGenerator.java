@@ -961,9 +961,11 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 				}
 				DEBUG_printGrid( symbolGrid );
 			}
-
-			carveCorridor( path );
-			Global.PointPool.freeAll( path );
+			else
+			{
+				carveCorridor( path );
+				Global.PointPool.freeAll( path );
+			}
 		}
 	}
 

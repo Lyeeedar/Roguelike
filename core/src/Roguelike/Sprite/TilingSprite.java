@@ -35,13 +35,13 @@ public class TilingSprite
 	{
 		Element spriteBase = new Element("Sprite", null);
 
-		load( name, texture, mask, spriteBase, null );
+		load( name, name, texture, mask, spriteBase, null );
 	}
 
 	public IntMap<Sprite> sprites = new IntMap<Sprite>(  );
 
-	public String name;
-	public long id;
+	public long thisID;
+	public long checkID;
 	public String texName;
 	public String maskName;
 	public Element spriteBase = new Element( "Sprite", null );
@@ -53,7 +53,8 @@ public class TilingSprite
 	public TilingSprite copy()
 	{
 		TilingSprite copy = new TilingSprite();
-		copy.id = id;
+		copy.checkID = checkID;
+		copy.thisID = thisID;
 		copy.texName = texName;
 		copy.maskName = maskName;
 		copy.spriteBase = spriteBase;
@@ -70,7 +71,12 @@ public class TilingSprite
 
 	public void parse( Element xml )
 	{
-		String name = xml.get( "Name" );
+		String checkName, thisName;
+		checkName = thisName = xml.get( "Name", null );
+
+		checkName = xml.get( "CheckName", checkName );
+		thisName = xml.get( "ThisName", thisName );
+
 		Element overhangElement = xml.getChildByName( "Overhang" );
 
 		Element topElement = xml.getChildByName("Top");
@@ -89,13 +95,13 @@ public class TilingSprite
 		String texName = spriteElement != null ? spriteElement.get( "Name" ) : null;
 		String maskName = xml.get( "Mask", null );
 
-		load(name, texName, maskName, spriteElement, overhangElement);
+		load(thisName, checkName, texName, maskName, spriteElement, overhangElement);
 	}
 
-	public void load( String name, String texName, String maskName, Element spriteElement, Element overhangElement )
+	public void load( String thisName, String checkName, String texName, String maskName, Element spriteElement, Element overhangElement )
 	{
-		this.name = name;
-		this.id = name.toLowerCase().hashCode();
+		this.thisID = thisName.toLowerCase().hashCode();
+		this.checkID = checkName.toLowerCase().hashCode();
 		this.texName = texName;
 		this.maskName = maskName;
 		this.spriteBase = spriteElement;

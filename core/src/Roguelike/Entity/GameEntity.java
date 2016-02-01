@@ -399,9 +399,12 @@ public class GameEntity extends Entity
 
 		e.internalLoad( name );
 
-		e.HP = e.getMaxHP();
-
 		e.statistics.put( Statistic.WALK, 1 );
+
+		e.isVariableMapDirty = true;
+		e.recalculateMaps();
+
+		e.HP = e.getMaxHP();
 
 		e.isVariableMapDirty = true;
 		e.recalculateMaps();

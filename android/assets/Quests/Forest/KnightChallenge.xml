@@ -13,6 +13,8 @@
 
 						<AI>basicMonster</AI>
 
+                        <IsBoss>true</IsBoss>
+
                         <Factions Override="true">
                             <Faction>Knight</Faction>
                         </Factions>
@@ -24,7 +26,8 @@
                         </Sprite>
 
                         <Statistics>
-                            <Attack>10</Attack>
+                            <Attack>val+10</Attack>
+                            <Defence>val+20</Defence>
                         </Statistics>
 
                         <Dialogue>

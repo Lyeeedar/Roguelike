@@ -203,12 +203,10 @@ public class EnvironmentEntity extends Entity
 		}
 
 		final TilingSprite closedSprite = new TilingSprite(doorVClosed, doorHClosed);
-		closedSprite.name = "wall";
-		closedSprite.id = "wall".hashCode();
+		closedSprite.checkID = "wall".hashCode();
 
 		final TilingSprite openSprite = new TilingSprite(doorVOpen, doorHOpen);
-		openSprite.name = "wall";
-		openSprite.id = "wall".hashCode();
+		openSprite.checkID = "wall".hashCode();
 
 		EnvironmentEntity entity = new EnvironmentEntity();
 		entity.passableBy = Passability.parse( "false" );

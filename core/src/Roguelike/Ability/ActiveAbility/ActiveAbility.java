@@ -74,7 +74,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	public AbstractHitType hitType = new HitTypeAny();
 	public AbstractMovementType movementType = new MovementTypeSmite();
 	public Array<AbstractEffectType> effectTypes = new Array<AbstractEffectType>();
-	public Array<GameTile> AffectedTiles = new Array<GameTile>();
+	public Array<GameTile> AffectedTiles = new Array<GameTile>( false, 16 );
 	public GameTile source;
 	private GameEntity caster;
 	private HashMap<String, Integer> variableMap = new HashMap<String, Integer>();

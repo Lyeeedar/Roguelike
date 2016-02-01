@@ -549,7 +549,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 					if ( gtile.getTilingSprite() != null )
 					{
-						Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().id);
+						Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().checkID);
 						Sprite sprite = gtile.getTilingSprite().getSprite( directionBitflag );
 
 						Color col = gtile.light;
@@ -578,7 +578,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 								if ( group.tilingSprite != null )
 								{
-									Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, group.tilingSprite.id);
+									Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, group.tilingSprite.checkID);
 									sprite = group.tilingSprite.getSprite( directionBitflag );
 
 									if (group.tilingSprite.overhangSprite != null && directionBitflag.contains( Direction.NORTH ))
@@ -617,7 +617,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						}
 						else if ( entity.tilingSprite != null )
 						{
-							Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, entity.tilingSprite.id);
+							Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, entity.tilingSprite.checkID);
 							sprite = entity.tilingSprite.getSprite( directionBitflag );
 
 							if (entity.tilingSprite.overhangSprite != null && directionBitflag.contains( Direction.NORTH ))
@@ -688,7 +688,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							}
 							else if ( entity.tilingSprite != null )
 							{
-								Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().id);
+								Global.CurrentLevel.buildTilingBitflag(directionBitflag, x, y, gtile.getTilingSprite().checkID);
 								sprite = gtile.getTilingSprite().getSprite( directionBitflag );
 
 								if (entity.tilingSprite.overhangSprite != null && directionBitflag.contains( Direction.NORTH ))
@@ -1005,7 +1005,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				cy += offset[ 1 ];
 			}
 
-			layout.setText( font, entity.popup, tempColour, ( stage.getWidth() / 3 ) * 2, Align.left, true );
+			layout.setText( font, entity.popup, tempColour, ( stage.getWidth() / 2 ) * 2, Align.left, true );
 
 			float left = cx - ( layout.width / 2 ) - 10;
 

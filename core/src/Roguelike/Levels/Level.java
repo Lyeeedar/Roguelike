@@ -595,11 +595,11 @@ public class Level
 				// Attempt to find match
 				boolean matchFound = false;
 
-				if (otile.spriteGroup.tilingSprite != null && otile.spriteGroup.tilingSprite.id == id)
+				if (otile.spriteGroup.tilingSprite != null && otile.spriteGroup.tilingSprite.thisID == id)
 				{
 					matchFound = true;
 				}
-				else if (otile.environmentEntity != null && otile.environmentEntity.tilingSprite != null && otile.environmentEntity.tilingSprite.id == id)
+				else if (otile.environmentEntity != null && otile.environmentEntity.tilingSprite != null && otile.environmentEntity.tilingSprite.thisID == id)
 				{
 					matchFound = true;
 				}
@@ -622,7 +622,7 @@ public class Level
 							if (field != null)
 							{
 								Field.SpriteGroup group = field.getSpriteGroup();
-								if (group.tilingSprite != null && group.tilingSprite.id == id)
+								if (group.tilingSprite != null && group.tilingSprite.thisID == id)
 								{
 									matchFound = true;
 									break;
