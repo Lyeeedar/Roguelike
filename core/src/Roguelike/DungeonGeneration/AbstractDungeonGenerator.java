@@ -61,6 +61,8 @@ public abstract class AbstractDungeonGenerator
 	// ----------------------------------------------------------------------
 	protected void selectFactions()
 	{
+		if (dfp.majorFactions.size == 0) { return; }
+
 		String majorFactionName = dfp.getMajorFaction( ran );
 
 		majorFaction = FactionParser.load( majorFactionName );
@@ -291,6 +293,8 @@ public abstract class AbstractDungeonGenerator
 		level.requiredRooms = additionalRooms;
 
 		level.background = dfp.background;
+
+		level.isVisionRestricted = dfp.visionRestricted;
 
 		for ( int x = 0; x < width; x++ )
 		{

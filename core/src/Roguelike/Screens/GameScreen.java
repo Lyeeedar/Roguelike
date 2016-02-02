@@ -128,8 +128,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	{
 		skin = Global.loadSkin();
 
-		Global.skin = skin;
-
 		stage = new Stage( new ScreenViewport() );
 
 		abilityPanel = new AbilityPanel( skin, stage );
@@ -210,7 +208,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			Level level = Global.CurrentLevel;
 
-			if (Global.CurrentDialogue == null)
+			if (Global.CurrentDialogue == null && !Global.CharGenMode)
 			{
 				if ( !level.isInTurn() && level.canStartTurn() )
 				{
@@ -497,7 +495,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private void renderVisibleTiles( int offsetx, int offsety, int tileSize3 )
 	{
-		for ( int x = -1; x < Global.CurrentLevel.width+1; x++ )
+		for ( int x = 0; x < Global.CurrentLevel.width; x++ )
 		{
 			int drawX = x * Global.TileSize + offsetx;
 			if (drawX + Global.TileSize < 0 || drawX > Global.Resolution[0])
@@ -505,7 +503,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				continue;
 			}
 
-			for ( int y = -1; y < Global.CurrentLevel.height+1; y++ )
+			for ( int y = 0; y < Global.CurrentLevel.height; y++ )
 			{
 				int drawY = y * Global.TileSize + offsety;
 				if (drawY + Global.TileSize < 0 || drawY > Global.Resolution[1])
@@ -524,7 +522,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						GameTile btile = Global.CurrentLevel.getGameTile( x, y-1 );
 						if (btile != null && btile.unseenBitflag.getBitFlag() != 0)
 						{
-							queueSprite( fogSprite.getSprite( gtile.unseenBitflag ), unseenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.UNSEENFOG, 0 );
+							//queueSprite( fogSprite.getSprite( gtile.unseenBitflag ), unseenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.UNSEENFOG, 0 );
 						}
 
 						continue;
@@ -785,23 +783,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					}
 				}
 
-				if (gtile == null)
-				{
-					Global.CurrentLevel.buildTilingBitflag( directionBitflag, x, y, Level.SEENID );
-					//if (directionBitflag.getBitFlag() != 0)
-					{
-						Sprite sprite = fogSprite.getSprite( directionBitflag );
-						queueSprite( sprite, seenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.SEENFOG, 0 );
-					}
-
-					Global.CurrentLevel.buildTilingBitflag( directionBitflag, x, y, Level.UNSEENID );
-					//if (directionBitflag.getBitFlag() != 0)
-					{
-						Sprite sprite = fogSprite.getSprite( directionBitflag );
-						queueSprite( sprite, unseenFogCol, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.UNSEENFOG, 0 );
-					}
-				}
-				else if (!gtile.visible)
+				if (!gtile.visible)
 				{
 					// not visible, so draw fog
 					Sprite sprite = fogSprite.getSprite( gtile.seenBitflag );
@@ -1739,6 +1721,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void prepareAbility( ActiveAbility aa )
 	{
+		if (Global.CharGenMode) { return; }
+
 		preparedAbility = aa;
 
 		if (preparedAbility == null)
@@ -1908,6 +1892,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		if (lockContextMenu)
 		{
 			return;
+		}
+
+		if ( !created )
+		{
+			create();
+			created = true;
 		}
 
 		ScrollPane scroll = new ScrollPane( content );

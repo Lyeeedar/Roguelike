@@ -1,0 +1,44 @@
+<Building>
+
+    <Rooms>
+
+        <Room>
+            <LockRotation>true</LockRotation>
+
+            <Symbols>
+                <Symbol Extends=",">
+                    <Char>S</Char>
+                    <MetaValue>Tavern</MetaValue>
+                </Symbol>
+
+                <Symbol Extends=",">
+                    <Char>b</Char>
+                </Symbol>
+
+                <Symbol Extends=",">
+                    <Char>t</Char>
+                </Symbol>
+
+                <Symbol Extends=",">
+                    <Char>l</Char>
+                    <EnvironmentData>
+                        <Type>Door</Type>
+                        <LockedBy>Something</LockedBy>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>wwwwwwwwwwwww</Row>
+                <Row>wt,bw,,,w,,,w</Row>
+                <Row>w,S,w,,,w,,,w</Row>
+                <Row>ww+wwwlwwwlww</Row>
+                <Row>w,,,,,,,,,,,w</Row>
+                <Row>w,,,,,,,,,,,w</Row>
+                <Row>wwwwww+wwwwww</Row>
+            </Rows>
+        </Room>
+
+    </Rooms>
+
+</Building>

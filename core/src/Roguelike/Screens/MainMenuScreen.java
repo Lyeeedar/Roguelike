@@ -2,6 +2,7 @@ package Roguelike.Screens;
 
 import Roguelike.AssetManager;
 import Roguelike.Global;
+import Roguelike.Levels.TownCreator;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
 
@@ -58,9 +59,28 @@ public class MainMenuScreen implements Screen
 		{
 			public void clicked( InputEvent event, float x, float y )
 			{
-				mainTable.remove();
-				table.add( saveTable ).expand().fill();
-				table.row();
+//				mainTable.remove();
+//				table.add( saveTable ).expand().fill();
+//				table.row();
+				SaveFile save = Global.load();
+
+				if (save == null)
+				{
+					Global.newWorld();
+					Global.save();
+					save = Global.load();
+				}
+
+				if (save.isDead)
+				{
+					TownCreator townCreator = new TownCreator();
+					townCreator.create();
+				}
+				else
+				{
+					LoadingScreen.Instance.set( save.levelManager.current.currentLevel, null, null, null );
+					RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
+				}
 			}
 		} );
 		mainTable.add( beginbutton ).expandX().fillX().padTop( 20 );

@@ -85,7 +85,7 @@ public final class SaveFile
 	public boolean isDead;
 	public int lives;
 
-	public void save(int slot)
+	public void save()
 	{
 		setupKryo();
 
@@ -112,7 +112,7 @@ public final class SaveFile
 		output.close();
 
 		byte[] bytes = attemptFile.readBytes();
-		FileHandle actualFile = Gdx.files.local( "save"+slot+".dat" );
+		FileHandle actualFile = Gdx.files.local( "save.dat" );
 		actualFile.writeBytes( bytes, false );
 
 		attemptFile.delete();
@@ -120,14 +120,14 @@ public final class SaveFile
 		System.out.println( "Saved" );
 	}
 
-	public void load(int slot)
+	public void load()
 	{
 		setupKryo();
 
 		Input input = null;
 		try
 		{
-			input = new Input( new GZIPInputStream( Gdx.files.local( "save"+slot+".dat" ).read() ) );
+			input = new Input( new GZIPInputStream( Gdx.files.local( "save.dat" ).read() ) );
 		}
 		catch ( IOException e )
 		{

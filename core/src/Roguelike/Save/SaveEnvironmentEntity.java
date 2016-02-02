@@ -1,17 +1,20 @@
 package Roguelike.Save;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 
 import Roguelike.Entity.ActivationAction.ActivationActionGroup;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Global;
 import Roguelike.Items.Inventory;
+import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.TilingSprite;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.Point;
 
 import Roguelike.Util.EnumBitflag;
+import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
@@ -25,13 +28,21 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 
 	public Sprite sprite;
 	public TilingSprite tilingSprite;
+	public Light light;
 	public EnumBitflag<Global.Passability> passableBy;
+	public boolean canTakeDamage;
+
+	public boolean attachToWall;
+	public boolean overhead;
+	public Global.Direction location;
 
 	public Array<ActivationActionGroup> onActivateActions;
 	public Array<ActivationActionGroup> onTurnActions;
 	public Array<ActivationActionGroup> onHearActions;
 	public Array<ActivationActionGroup> onDeathActions;
 	public Array<ActivationActionGroup> noneActions;
+
+	public FastEnumMap<Global.Statistic, Integer> stats;
 
 	@Override
 	public void store( EnvironmentEntity obj )
@@ -54,6 +65,16 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 		onHearActions = obj.onHearActions;
 		onDeathActions = obj.onDeathActions;
 		noneActions = obj.noneActions;
+
+		canTakeDamage = obj.canTakeDamage;
+
+		attachToWall = obj.attachToWall;
+		overhead = obj.overHead;
+		location = obj.location;
+
+		light = obj.light;
+
+		stats = obj.statistics;
 	}
 
 	@Override
@@ -69,6 +90,8 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 		entity.onDeathActions = onDeathActions;
 		entity.noneActions = noneActions;
 
+		entity.canTakeDamage = canTakeDamage;
+
 		entity.HP = hp;
 		for ( StatusEffect saveStatus : statuses )
 		{
@@ -77,6 +100,14 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 		entity.inventory = inventory;
 
 		entity.UID = UID;
+
+		entity.statistics = stats;
+
+		entity.attachToWall = attachToWall;
+		entity.overHead = overhead;
+		entity.location = location;
+
+		entity.light = light;
 
 		entity.isVariableMapDirty = true;
 

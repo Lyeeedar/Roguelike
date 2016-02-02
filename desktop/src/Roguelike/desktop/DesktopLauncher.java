@@ -22,7 +22,7 @@ public class DesktopLauncher
 		if (!Global.RELEASE)
 		{
 			new QuestProcessor();
-			//new AtlasCreator();
+			new AtlasCreator();
 		}
 	}
 }

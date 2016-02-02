@@ -99,9 +99,6 @@ public class Global
 	public static int[] TargetResolution = { 600, 400 };
 
 	// ----------------------------------------------------------------------
-	public static Skin skin;
-
-	// ----------------------------------------------------------------------
 	public static int TileSize = 32;
 
 	// ----------------------------------------------------------------------
@@ -116,7 +113,7 @@ public class Global
 	public static ObjectMap<String, String> RunFlags = new ObjectMap<String, String>();
 
 	// ----------------------------------------------------------------------
-	public static int SaveSlot;
+	public static boolean CharGenMode = false;
 
 	// ----------------------------------------------------------------------
 	public static Mixer BGM;
@@ -154,10 +151,18 @@ public class Global
 	}
 
 	// ----------------------------------------------------------------------
-	public static void load()
+	public static SaveFile load()
 	{
-		SaveFile save = new SaveFile();
-		save.load(SaveSlot);
+		SaveFile save = null;
+		try
+		{
+			save = new SaveFile();
+			save.load();
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
 
 		Global.QuestManager = new QuestManager();
 		Global.QuestManager.usedQuests = save.usedQuests;
@@ -167,17 +172,8 @@ public class Global
 		Global.lives = save.lives;
 
 		LevelManager = save.levelManager;
-		SaveLevel level = LevelManager.current.currentLevel;
 
-		if (save.isDead)
-		{
-			RoguelikeGame.Instance.switchScreen( ScreenEnum.CHARACTERCREATION );
-		}
-		else
-		{
-			LoadingScreen.Instance.set( level, null, null, null );
-			RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
-		}
+		return save;
 	}
 
 	// ----------------------------------------------------------------------
@@ -193,7 +189,7 @@ public class Global
 
 		save.lives = lives;
 
-		if ( CurrentLevel != null )
+		if ( CurrentLevel != null && LevelManager.current != null && LevelManager.current.currentLevel != null )
 		{
 			LevelManager.current.currentLevel.store( Global.CurrentLevel );
 			save.isDead = CurrentLevel.player.HP <= 0;
@@ -203,7 +199,7 @@ public class Global
 			save.isDead = true;
 		}
 
-		save.save(SaveSlot);
+		save.save();
 	}
 
 	// ----------------------------------------------------------------------
@@ -216,6 +212,8 @@ public class Global
 		AUT = 0;
 		WorldFlags.clear();
 		RunFlags.clear();
+
+		Global.WorldFlags.put( "Tavern", "1" );
 	}
 
 	// ----------------------------------------------------------------------
@@ -476,9 +474,15 @@ public class Global
 	}
 
 	// ----------------------------------------------------------------------
+	private static Skin skin = null;
 	public static Skin loadSkin()
 	{
-		Skin skin = new Skin();
+		if (skin != null)
+		{
+			return skin;
+		}
+
+		skin = new Skin();
 
 		BitmapFont font = AssetManager.loadFont( "Sprites/Unpacked/stan0755.ttf", 12, new Color( 0.97f, 0.87f, 0.7f, 1 ), 1, Color.BLACK, false );
 		skin.add( "default", font );
@@ -518,6 +522,7 @@ public class Global
 		textButton.font = skin.getFont( "default" );
 		textButton.fontColor = Color.LIGHT_GRAY;
 		textButton.overFontColor = Color.WHITE;
+		textButton.checked = ((NinePatchDrawable)textButton.up).tint( Color.DARK_GRAY );
 		skin.add( "default", textButton );
 
 		TextButtonStyle bigTextButton = new TextButtonStyle();

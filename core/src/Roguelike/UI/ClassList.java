@@ -25,7 +25,8 @@ public class ClassList extends TilePanel
 
 		drawHorizontalBackground = false;
 
-		parse( "Classes/ClassList.xml" );
+		parse( );
+		chosen = classes.get( 0 );
 	}
 
 	public Array<ClassDesc> classes = new Array<ClassDesc>();
@@ -35,18 +36,18 @@ public class ClassList extends TilePanel
 
 	public void reparse()
 	{
-		classes.clear();
-		parse( "Classes/ClassList.xml" );
+		classes = parse( );
+		chosen = classes.get( 0 );
 	}
 
-	public void parse( String path )
+	public static Array<ClassDesc> parse( )
 	{
 		XmlReader xmlReader = new XmlReader();
 		Element xml = null;
 
 		try
 		{
-			xml = xmlReader.parse( Gdx.files.internal( path ) );
+			xml = xmlReader.parse( Gdx.files.internal( "Classes/ClassList.xml" ) );
 		}
 		catch ( IOException e )
 		{
@@ -54,6 +55,8 @@ public class ClassList extends TilePanel
 		}
 
 		Element template = xml.getChildByName( "EntityTemplate" );
+
+		Array<ClassDesc> classes = new Array<ClassDesc>(  );
 
 		for ( Element classElement : xml.getChildrenByName( "Class" ) )
 		{
@@ -63,7 +66,7 @@ public class ClassList extends TilePanel
 			classes.add( desc );
 		}
 
-		chosen = classes.get( 0 );
+		return classes;
 	}
 
 	@Override

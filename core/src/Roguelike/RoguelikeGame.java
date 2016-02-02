@@ -39,6 +39,8 @@ public class RoguelikeGame extends Game
 			{
 				public void uncaughtException(Thread myThread, Throwable e)
 				{
+					e.printStackTrace();
+
 					StringWriter sw = new StringWriter();
 					e.printStackTrace(new PrintWriter( sw) );
 					String exceptionAsString = sw.toString();
@@ -49,7 +51,6 @@ public class RoguelikeGame extends Game
 					file.writeString( exceptionAsString, false );
 
 					JOptionPane.showMessageDialog( null, "An fatal error occured. Please send error.log to me so that I can fix it.", "An error occured", JOptionPane.ERROR_MESSAGE );
-					Gdx.app.exit();
 				}
 			});
 		}

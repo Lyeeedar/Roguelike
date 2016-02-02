@@ -423,6 +423,9 @@ public class DungeonFileParser
 	public int minHeight;
 
 	// ----------------------------------------------------------------------
+	public boolean visionRestricted = true;
+
+	// ----------------------------------------------------------------------
 	public HashMap<String, DFPRoom[]> entranceRooms = new HashMap<String, DFPRoom[]>(  );
 
 	// ----------------------------------------------------------------------
@@ -481,14 +484,17 @@ public class DungeonFileParser
 			}
 		}
 
-		for (DFPRoom room : majorFaction.rooms)
+		if (majorFaction != null)
 		{
-			int count = room.processCondition( depth, ran, isBoss );
-			for ( int i = 0; i < count; i++ )
+			for ( DFPRoom room : majorFaction.rooms )
 			{
-				DFPRoom cpy = room.copy();
-				cpy.faction = majorFaction.name;
-				outRooms.add( cpy );
+				int count = room.processCondition( depth, ran, isBoss );
+				for ( int i = 0; i < count; i++ )
+				{
+					DFPRoom cpy = room.copy();
+					cpy.faction = majorFaction.name;
+					outRooms.add( cpy );
+				}
 			}
 		}
 
@@ -708,6 +714,8 @@ public class DungeonFileParser
 				ambientSounds.add( RepeatingSoundEffect.parse( ambientSound ) );
 			}
 		}
+
+		visionRestricted = xmlElement.getBoolean( "VisionRestricted", true );
 	}
 
 	// ----------------------------------------------------------------------

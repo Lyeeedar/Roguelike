@@ -45,7 +45,7 @@ public class SaveSlotButton extends Widget
 		try
 		{
 			SaveFile save = new SaveFile();
-			save.load(slot);
+			save.load();
 			file = save;
 		} catch (Exception e) { e.printStackTrace(); }
 		this.save = file;
@@ -54,7 +54,7 @@ public class SaveSlotButton extends Widget
 		{
 			public void clicked( InputEvent event, float x, float y )
 			{
-				Global.SaveSlot = slot;
+				//Global.SaveSlot = slot;
 
 				if (save == null)
 				{

@@ -505,6 +505,9 @@ public class Level
 				{
 					Grid[x][y].visible = true;
 					Grid[x][y].seen = true;
+
+					Grid[x][y].seenBitflag.setAll( Direction.class );
+					Grid[x][y].unseenBitflag.setAll( Direction.class );
 				}
 			}
 		}
@@ -1002,7 +1005,7 @@ public class Level
 
 	public boolean canStartTurn()
 	{
-		return !hasActiveEffects() && Global.CurrentDialogue == null && updateAccumulator >= updateDeltaStep;
+		return !hasActiveEffects() && Global.CurrentDialogue == null && updateAccumulator >= updateDeltaStep && player.AI != null;
 	}
 
 	public void startTurn()

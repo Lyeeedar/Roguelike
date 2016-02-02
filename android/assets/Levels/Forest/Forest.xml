@@ -240,14 +240,6 @@
 			</EnvironmentData>
 		</Symbol>
 
-        <Symbol Extends=",">
-            <Char>t</Char>
-            <EnvironmentData>
-                <Type>Treasure</Type>
-                <Treasure>random</Treasure>
-            </EnvironmentData>
-        </Symbol>
-
 	</Symbols>
 
 	<Rooms>
