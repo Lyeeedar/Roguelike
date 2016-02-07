@@ -3,15 +3,15 @@
     <Description>Stuff used for currency. Can be traded for goods.</Description>
     <CanStack>true</CanStack>
     <Icon>
-        <Group Count="0">
+        <Sprite Count="0">
             <Name>Oryx/uf_split/uf_items/coin_copper</Name>
-        </Group>
-        <Group Count="10">
+        </Sprite>
+        <Sprite Count="10">
             <Name>Oryx/uf_split/uf_items/coin_silver</Name>
-        </Group>
-        <Group Count="100">
+        </Sprite>
+        <Sprite Count="100">
             <Name>Oryx/uf_split/uf_items/coin_gold</Name>
-        </Group>
+        </Sprite>
     </Icon>
     <Category>Treasure</Category>
 </Item>

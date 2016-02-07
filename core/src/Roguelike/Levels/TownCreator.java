@@ -79,13 +79,28 @@ public class TownCreator
 		Skin skin = Global.loadSkin();
 		Table table = new Table();
 		ButtonGroup<CheckBox> genderGroup = new ButtonGroup<CheckBox>(  );
+		final ButtonGroup<TextButton> classGroup = new ButtonGroup<TextButton>(  );
 
 		final CheckBox male = new CheckBox( "Male", skin );
 		male.addListener( new ChangeListener() {
 			@Override
 			public void changed( ChangeEvent event, Actor actor )
 			{
-				//Global.CurrentLevel.player;
+				if (classGroup.getChecked() != null)
+				{
+					String selected = "" + classGroup.getChecked().getText();
+
+					for ( ClassList.ClassDesc desc : classes )
+					{
+						if ( desc.name.equals( selected ) )
+						{
+							GameEntity newPlayer = male.isChecked() ? desc.male : desc.female;
+							Global.CurrentLevel.player.tile[ 0 ][ 0 ].addGameEntity( newPlayer );
+							Global.CurrentLevel.player = newPlayer;
+							break;
+						}
+					}
+				}
 			}
 		} );
 		CheckBox female = new CheckBox( "Female", skin );
@@ -95,8 +110,6 @@ public class TownCreator
 		table.add( male );
 		table.add( female );
 		table.row();
-
-		ButtonGroup<TextButton> classGroup = new ButtonGroup<TextButton>(  );
 
 		Table choiceTable = new Table(  );
 		for ( final ClassList.ClassDesc desc : classes )

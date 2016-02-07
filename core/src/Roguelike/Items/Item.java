@@ -483,7 +483,7 @@ public final class Item extends GameEventHandler
 				spriteGroups.add( new SpriteGroup( 0, icon ) );
 			}
 
-			for (Element el : iconElement.getChildrenByName( "Group" ))
+			for (Element el : iconElement.getChildrenByName( "Sprite" ))
 			{
 				int count = el.getIntAttribute( "Count" );
 				Sprite icon = AssetManager.loadSprite( el );

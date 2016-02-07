@@ -1082,17 +1082,6 @@ public class Level
 		}
 		else if (turnCount == 3)
 		{
-			for ( AbilityTree a : player.slottedAbilities )
-			{
-				if ( a != null && a.current.current instanceof ActiveAbility )
-				{
-					ActiveAbility aa = (ActiveAbility) a.current.current;
-
-					aa.source = player.tile[0][0];
-					aa.hasValidTargets = aa.getValidTargets().size > 0;
-				}
-			}
-
 			saveCounter++;
 			if (saveCounter == 10)
 			{
@@ -1560,6 +1549,17 @@ public class Level
 						}
 					}
 				}
+			}
+		}
+
+		for ( AbilityTree a : player.slottedAbilities )
+		{
+			if ( a != null && a.current.current instanceof ActiveAbility )
+			{
+				ActiveAbility aa = (ActiveAbility) a.current.current;
+
+				aa.source = player.tile[0][0];
+				aa.hasValidTargets = aa.getValidTargets().size > 0;
 			}
 		}
 

@@ -18,6 +18,7 @@ import Roguelike.Global.Statistic;
 import Roguelike.Items.Item;
 import Roguelike.Items.TreasureGenerator;
 import Roguelike.Levels.Level;
+import Roguelike.Levels.TownCreator;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.Sound.SoundInstance;
@@ -203,7 +204,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 
 		Global.BGM.update( delta );
-		stage.act( delta );
 
 		if ( !examineMode && !lockContextMenu )
 		{
@@ -342,6 +342,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		batch.end();
 
+		stage.act( delta );
 		stage.draw();
 
 		batch.begin();
@@ -1875,6 +1876,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			return;
 		}
 
+		lockContextMenu = lock;
+
 		if ( !created )
 		{
 			create();
@@ -1892,13 +1895,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		contextMenu.setHeight( stage.getHeight() - ( buttonsPanel.getHeight() + 40 ) );
 
 		contextMenu.show( stage.getWidth() / 2 - contextMenu.getWidth() / 2 - 10, stage.getHeight() / 2 - contextMenu.getHeight() / 2 - 30, lock );
-		lockContextMenu = lock;
 
-		contextMenu.addAction(
-				new ParallelAction(
-						new SequenceAction( Actions.alpha( 0 ), Actions.fadeIn( 0.5f ) ),
-						new SequenceAction( Actions.scaleTo( 0, 0 ), Actions.scaleTo( 1, 1, 0.5f ) )
-				) );
+		ParallelAction parallelAction = new ParallelAction(
+				new SequenceAction( Actions.alpha( 0 ), Actions.fadeIn( 0.25f ) ),
+				new SequenceAction( Actions.scaleTo( 0, 0 ), Actions.scaleTo( 1, 1, 0.25f ) ) );
+
+		contextMenu.addAction( new SequenceAction( parallelAction, Actions.removeAction( parallelAction ) ) );
 	}
 
 	// ----------------------------------------------------------------------
@@ -1945,7 +1947,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				lockContextMenu = false;
 				clearContextMenu();
 
-				RoguelikeGame.Instance.switchScreen( ScreenEnum.CHARACTERCREATION );
+				TownCreator townCreator = new TownCreator();
+				townCreator.create();
 			}
 		} );
 		table.add( button ).expandX().center();
@@ -2284,6 +2287,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 			int sx = (int)bx;
 			int sy = (int)by;
+
+			if (layer == RenderLayer.OVERHEAD)
+			{
+				sy--;
+			}
 
 			comparisonVal = ( MAX_Y_BLOCK_SIZE - ( sy * Y_BLOCK_SIZE ) ) + ( MAX_X_BLOCK_SIZE - ( sx * X_BLOCK_SIZE ) ) + layer.ordinal() * LAYER_BLOCK_SIZE + index;
 

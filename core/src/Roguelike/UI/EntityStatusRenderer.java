@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class EntityStatusRenderer
 {
+	private static final Color tempCol = new Color();
+
 	public static void draw( Entity entity, Batch batch, int x, int y, int width, int height, float heightScale, Color colour )
 	{
 		BitmapFont font = AssetManager.loadFont( "Sprites/Unpacked/stan0755.ttf", 8 );
@@ -26,9 +28,17 @@ public class EntityStatusRenderer
 
 		float barheight = height * heightScale;
 
+		float alpha = val == 1 ? 0.25f : 1.0f ;
+		if (entity instanceof GameEntity && entity.statusEffects.size > 0)
+		{
+			alpha = 1;
+		}
+
 		int by = y-height+(int)barheight+8;
 
-		drawHpBar( val, extraVal, batch, x, by, width, height, heightScale, colour );
+		drawHpBar( val, extraVal, batch, x, by, width, height, heightScale, colour, alpha );
+
+		batch.setColor( Color.WHITE );
 
 		if ( entity instanceof GameEntity )
 		{
@@ -56,24 +66,31 @@ public class EntityStatusRenderer
 		}
 	}
 
-	public static void drawHpBar( float val, float extraVal, Batch batch, int x, int y, int width, int height, float heightScale, Color colour )
+	public static void drawHpBar( float val, float extraVal, Batch batch, int x, int y, int width, int height, float heightScale, Color colour, float alpha )
 	{
 		TextureRegion white = AssetManager.loadTextureRegion( "Sprites/white.png" );
 
 		float barheight = height * heightScale;
 
-		batch.setColor( Color.LIGHT_GRAY );
+		tempCol.set( Color.LIGHT_GRAY );
+		tempCol.a = alpha;
+		batch.setColor( tempCol );
 		batch.draw( white, x - 2, y + height - barheight - 2, width + 4, barheight + 4 );
 
-		batch.setColor( Color.DARK_GRAY );
+		tempCol.set( Color.DARK_GRAY );
+		tempCol.a = alpha;
+		batch.setColor( tempCol );
 		batch.draw( white, x - 1, y + height - barheight - 1, width + 2, barheight + 2 );
 
-		batch.setColor( Color.LIGHT_GRAY );
+		tempCol.set( Color.LIGHT_GRAY );
+		tempCol.a = alpha;
+		batch.setColor( tempCol );
 		batch.draw( white, x, y + height - barheight, width * (val + extraVal), barheight );
 
-		batch.setColor( colour );
+		tempCol.set( colour );
+		tempCol.a = alpha;
+		batch.setColor( tempCol );
 		batch.draw( white, x, y + height - barheight, width * val, barheight );
-		batch.setColor( Color.WHITE );
 	}
 
 	public static Table getMouseOverTable( GameEntity entity, int x, int y, int width, int height, float heightScale, int mousex, int mousey, Skin skin )

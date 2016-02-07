@@ -50,7 +50,8 @@ public class TaskMove extends AbstractTask
 								int[] diff1 = oldTile.addGameEntity( newTile.entity );
 								int[] diff = newTile.addGameEntity( obj );
 
-								newTile.entity.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff, MoveEquation.LINEAR );
+								oldTile.entity.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff1, MoveEquation.LINEAR );
+								oldTile.entity.tasks.add( new TaskWait(  ) );
 								obj.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff, MoveEquation.LINEAR );
 
 								canMove = false;

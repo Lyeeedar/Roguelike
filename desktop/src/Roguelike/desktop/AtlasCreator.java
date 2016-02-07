@@ -323,7 +323,12 @@ public class AtlasCreator
 
 	private boolean processSprite( XmlReader.Element spriteElement )
 	{
-		String name = spriteElement.get( "Name" );
+		String name = spriteElement.get( "Name", null );
+
+		if (name == null)
+		{
+			return true;
+		}
 
 		return processSprite( name );
 	}

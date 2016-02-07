@@ -316,7 +316,7 @@ public class Global
 			}
 		}
 
-		CurrentLevel.updateVisibleTiles();
+		CurrentLevel.advance( 0 );
 
 		save();
 	}

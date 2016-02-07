@@ -60,6 +60,7 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 		table.row();
 
 		Table group = new Table();
+		group.defaults().pad( 10 );
 
 		for (final Item item : Global.CurrentDialogue.inventory.m_items)
 		{
@@ -98,17 +99,10 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 				name.addListener( tooltipListener );
 				group.add( name ).expandX().left();
 
-				Label cost = new Label(""  + item.value, skin);
-				cost.addListener( tooltipListener );
+				Label cost = new Label("Purchase for "  + item.value, skin);
+				cost.setColor( Color.RED );
 
-				if (!hasTheCash)
-				{
-					cost.setColor( Color.RED );
-				}
-
-				group.add( cost ).expandX().left();
-
-				TextButton purchase = new TextButton( "Purchase", skin );
+				TextButton purchase = new TextButton( "Purchase for " + item.value, skin );
 				purchase.addListener( new ClickListener(  )
 				{
 					public void clicked (InputEvent event, float x, float y)
@@ -123,6 +117,10 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 				if (hasTheCash)
 				{
 					group.add( purchase ).expandX().left();
+				}
+				else
+				{
+					group.add( cost ).expandX().left();
 				}
 
 				group.row();

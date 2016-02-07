@@ -103,8 +103,7 @@
         </Male>
         <Female>
             <Sprite>
-                <Name>Oryx/uf_split/uf_heroes/archer</Name>
-                <Colour><RGB>255,192,203</RGB></Colour>
+                <Name>Oryx/Custom/heroes/archer</Name>
                 <DrawActualSize>true</DrawActualSize>
             </Sprite>
         </Female>
@@ -144,14 +143,13 @@
         <Description>A close quarters fighter, specialising in magical strikes.</Description>
         <Male>
             <Sprite>
-                <Name>Oryx/uf_split/uf_heroes/cultist</Name>
+                <Name>Oryx/Custom/heroes/hexblade_m</Name>
                 <DrawActualSize>true</DrawActualSize>
             </Sprite>
         </Male>
         <Female>
             <Sprite>
-                <Name>Oryx/uf_split/uf_heroes/cultist</Name>
-                <Colour><RGB>255,192,203</RGB></Colour>
+                <Name>Oryx/Custom/heroes/hexblade_f</Name>
                 <DrawActualSize>true</DrawActualSize>
             </Sprite>
         </Female>
