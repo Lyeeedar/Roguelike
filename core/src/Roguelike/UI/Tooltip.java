@@ -1,5 +1,6 @@
 package Roguelike.UI;
 
+import Roguelike.Screens.GameScreen;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -45,7 +46,19 @@ public class Tooltip extends Table
 
 	public void show( float x, float y, boolean lockedMenu )
 	{
-		if ( openTooltip != null )
+		if (getStage() == null)
+		{
+			if (openTooltip != null)
+			{
+				openTooltip.getStage().addActor( this );
+			}
+			else
+			{
+				GameScreen.Instance.stage.addActor( this );
+			}
+		}
+
+		if ( openTooltip != null && openTooltip != this )
 		{
 			openTooltip.setVisible( false );
 			openTooltip.remove();

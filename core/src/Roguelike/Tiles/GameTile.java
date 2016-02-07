@@ -262,6 +262,10 @@ public class GameTile implements PathfindingTile
 			{
 				return true;
 			}
+			else if (entity.dialogue == null && selfEntity.canSwap && entity.canMove)
+			{
+				return true;
+			}
 		}
 
 		return false;

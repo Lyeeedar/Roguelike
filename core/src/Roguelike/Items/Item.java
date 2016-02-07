@@ -41,7 +41,6 @@ public final class Item extends GameEventHandler
 
 	public String name = "";
 	public String description = "";
-	public Sprite icon;
 	public Sprite hitEffect;
 	public Array<EquipmentSlot> slots = new Array<EquipmentSlot>();
 	public ItemCategory category;
@@ -55,6 +54,9 @@ public final class Item extends GameEventHandler
 	public WeaponDefinition wepDef;
 	public int quality = 1;
 	public int upgradeCount = 1;
+	public int value;
+
+	public Array<SpriteGroup> spriteGroups = new Array<SpriteGroup>(  );
 
 	// ----------------------------------------------------------------------
 	public Item()
@@ -125,7 +127,12 @@ public final class Item extends GameEventHandler
 	{
 		Item item = null;
 
-		if ( xml.getChildByName( "Recipe" ) != null )
+		if (xml.getChildCount() == 0)
+		{
+			item = Item.load( xml.getText() );
+			item.count = xml.getIntAttribute( "Count", 1 );
+		}
+		else if ( xml.getChildByName( "Recipe" ) != null )
 		{
 			String recipe = Global.capitalizeString( xml.getChildByName( "Recipe" ).getText() );
 			String material = xml.get( "Material" );
@@ -163,6 +170,8 @@ public final class Item extends GameEventHandler
 			item = new Item();
 			item.internalLoad( xml );
 		}
+
+		item.value = xml.getInt( "Value", 0 );
 
 		return item;
 	}
@@ -409,14 +418,25 @@ public final class Item extends GameEventHandler
 	@Override
 	public Sprite getIcon()
 	{
-		if ( icon != null ) { return icon; }
+		if ( spriteGroups.size > 0 )
+		{
+			for (int i = spriteGroups.size - 1; i >= 0; i--)
+			{
+				if (spriteGroups.get( i ).stacks < count)
+				{
+					return spriteGroups.get( i ).sprite;
+				}
+			}
+			return spriteGroups.get( 0 ).sprite;
+		}
 		if ( ability != null) { return ability.current.current.getIcon(); }
 
-		if ( icon == null )
+		if ( spriteGroups.size == 0 )
 		{
-			icon = AssetManager.loadSprite( "white" );
+			Sprite icon = AssetManager.loadSprite( "white" );
+			spriteGroups.add( new SpriteGroup( 0, icon ) );
 		}
-		return icon;
+		return spriteGroups.get( 0 ).sprite;
 	}
 
 	// ----------------------------------------------------------------------
@@ -456,7 +476,20 @@ public final class Item extends GameEventHandler
 		Element iconElement = xmlElement.getChildByName( "Icon" );
 		if ( iconElement != null )
 		{
-			icon = AssetManager.loadSprite( iconElement );
+			if (iconElement.getChildByName( "Name" ) != null)
+			{
+				Sprite icon = AssetManager.loadSprite( iconElement );
+
+				spriteGroups.add( new SpriteGroup( 0, icon ) );
+			}
+
+			for (Element el : iconElement.getChildrenByName( "Group" ))
+			{
+				int count = el.getIntAttribute( "Count" );
+				Sprite icon = AssetManager.loadSprite( el );
+
+				spriteGroups.add( new SpriteGroup( count, icon ) );
+			}
 		}
 
 		Element hitElement = xmlElement.getChildByName( "HitEffect" );
@@ -635,6 +668,24 @@ public final class Item extends GameEventHandler
 			}
 
 			return wepDef;
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	public static class SpriteGroup
+	{
+		public int stacks;
+		public Sprite sprite;
+
+		public SpriteGroup()
+		{
+
+		}
+
+		public SpriteGroup(int stacks, Sprite sprite)
+		{
+			this.stacks = stacks;
+			this.sprite = sprite;
 		}
 	}
 }

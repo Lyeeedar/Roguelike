@@ -476,6 +476,7 @@ public final class SaveFile
 		kryo.register( DFPRoom.class );
 		kryo.register( Item.class );
 		kryo.register( Item.WeaponDefinition.class );
+		kryo.register( Item.SpriteGroup.class );
 		kryo.register( Light.class );
 		kryo.register( ShadowCastCache.class );
 		kryo.register( EnumBitflag.class );

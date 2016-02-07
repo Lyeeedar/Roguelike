@@ -168,8 +168,8 @@ public class GameEntity extends Entity
 
 		defaultHitEffect = xmlElement.getChildByName( "HitEffect" ) != null ? AssetManager.loadSprite( xmlElement.getChildByName( "HitEffect" ) ) : defaultHitEffect;
 		AI = xmlElement.getChildByName( "AI" ) != null ? BehaviourTree.load( Gdx.files.internal( "AI/" + xmlElement.get( "AI" ) + ".xml" ) ) : AI;
-		canSwap = xmlElement.getBoolean( "CanSwap", false );
-		canMove = xmlElement.getBoolean( "CanMove", true );
+		canSwap = xmlElement.getBoolean( "CanSwap", canSwap );
+		canMove = xmlElement.getBoolean( "CanMove", canMove );
 
 		Element factionElement = xmlElement.getChildByName( "Factions" );
 		if ( factionElement != null )
@@ -423,9 +423,12 @@ public class GameEntity extends Entity
 			e.internalLoad( el );
 		}
 
-		e.HP = e.getMaxHP();
-
 		e.statistics.put( Statistic.WALK, 1 );
+
+		e.isVariableMapDirty = true;
+		e.recalculateMaps();
+
+		e.HP = e.getMaxHP();
 
 		e.isVariableMapDirty = true;
 		e.recalculateMaps();
@@ -459,7 +462,7 @@ public class GameEntity extends Entity
 	public Array<AbstractTask> tasks = new Array<AbstractTask>();
 	public float actionDelayAccumulator;
 	public boolean canSwap;
-	public boolean canMove;
+	public boolean canMove = true;
 
 	// ----------------------------------------------------------------------
 	public DialogueManager dialogue;

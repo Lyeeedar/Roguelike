@@ -206,6 +206,10 @@
             <Speed>10</Speed>
         </Statistics>
 
+        <Inventory>
+            <Item Count="100">Treasure/Money</Item>
+        </Inventory>
+
         <Light>
             <Colour>
                 <Red>1</Red>

@@ -64,6 +64,20 @@
 
         <Symbol Extends=".">
             <Char>#</Char>
+            <TileData>
+                <Opaque>false</Opaque>
+                <Passable>false</Passable>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                </Sprite>
+                <TilingSprite>
+                    <Name>Fence</Name>
+                    <Mask>Masks/fence</Mask>
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/floor_wood_1</Name>
+                    </Sprite>
+                </TilingSprite>
+            </TileData>
         </Symbol>
 
         <Symbol>

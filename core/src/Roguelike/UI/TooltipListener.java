@@ -30,6 +30,15 @@ public class TooltipListener extends InputListener
 	}
 
 	@Override
+	public boolean mouseMoved (InputEvent event, float x, float y)
+	{
+		tooltip.show( event, x, y, false );
+		tooltip.openTooltip = tooltip;
+
+		return true;
+	}
+
+	@Override
 	public void exit(InputEvent event, float x, float y, int pointer, Actor toActor)
 	{
 		tooltip.setVisible(false);

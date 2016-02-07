@@ -29,6 +29,7 @@ import java.util.Random;
 public class TownCreator
 {
 	public Array<Building> buildings = new Array<Building>(  );
+	public Building houses = new Building( "House", null );
 
 	public TownCreator()
 	{
@@ -65,6 +66,10 @@ public class TownCreator
 
 				rooms.add( building.rooms.get( index ) );
 			}
+		}
+		for (int i = 0; i < 3; i++)
+		{
+			rooms.add(houses.rooms.get( 0 ));
 		}
 
 		Global.CharGenMode = true;

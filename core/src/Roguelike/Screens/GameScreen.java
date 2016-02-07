@@ -203,6 +203,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 
 		Global.BGM.update( delta );
+		stage.act( delta );
 
 		if ( !examineMode && !lockContextMenu )
 		{
@@ -337,33 +338,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					batch.draw( white, tile.x * Global.TileSize + offsetx, tile.y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
 				}
 			}
-
-			// if ( Global.ANDROID )
-			// {
-			// EntityStatusRenderer.draw( Global.CurrentLevel.player, batch,
-			// Global.Resolution[0] - ( Global.Resolution[0] / 4 ) - 120,
-			// Global.Resolution[1] - 120, Global.Resolution[0] / 4, 100, 1.0f /
-			// 4.0f );
-			// }
-			// else
-			// {
-			// font.draw( batch, Global.PlayerName + " the " +
-			// Global.PlayerTitle, 20, Global.Resolution[1] - 20 );
-			// font.draw( batch, "Essence: " +
-			// Global.CurrentLevel.player.essence, 20, Global.Resolution[1] - 40
-			// );
-			// EntityStatusRenderer.draw( Global.CurrentLevel.player, batch, 20,
-			// Global.Resolution[1] - 160, Global.Resolution[0] / 4, 100, 1.0f /
-			// 4.0f );
-			// }
-
-			batch.end();
-
-			stage.act( delta );
-			stage.draw();
-
-			batch.begin();
 		}
+
+		batch.end();
+
+		stage.draw();
+
+		batch.begin();
 
 		if ( dragDropPayload != null && dragDropPayload.shouldDraw() )
 		{
@@ -2216,7 +2197,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	private Sprite border;
 	private int mousePosX;
 	private int mousePosY;
-	private Stage stage;
+	public Stage stage;
 	private SpriteBatch batch;
 	private TextureRegion blank;
 	private TextureRegion white;

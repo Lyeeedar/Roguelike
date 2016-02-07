@@ -11,6 +11,7 @@ import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
 import Roguelike.Global.Statistic;
 import Roguelike.Items.TreasureGenerator;
+import Roguelike.Levels.LevelManager;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
 import Roguelike.DungeonGeneration.DungeonFileParser;
@@ -123,10 +124,18 @@ public class EnvironmentEntity extends Entity
 	}
 
 	// ----------------------------------------------------------------------
-	private static EnvironmentEntity CreateTransition( final Element data )
+	private static EnvironmentEntity CreateTransition( final Element data, LevelManager.LevelData levelData )
 	{
-		ActivationActionGroup group = new ActivationActionGroup("Go Onward");
-		group.actions.add( new ActivationActionChangeLevel( data.get( "Destination" ) ) );
+		String dest = data.get( "Destination" );
+
+		String text = "Go Onward";
+		if (!levelData.levelName.equals( dest ))
+		{
+			text = "Enter the " + Global.LevelManager.getLevel( levelData, dest ).levelTitle;
+		}
+
+		ActivationActionGroup group = new ActivationActionGroup(text);
+		group.actions.add( new ActivationActionChangeLevel( dest ) );
 
 		Sprite stairs = null;
 
@@ -287,6 +296,7 @@ public class EnvironmentEntity extends Entity
 		return entity;
 	}
 
+	// ----------------------------------------------------------------------
 	private static void loadActions(Element xml, Array<ActivationActionGroup> actionList)
 	{
 		if (xml != null)
@@ -303,7 +313,7 @@ public class EnvironmentEntity extends Entity
 	}
 
 	// ----------------------------------------------------------------------
-	public static EnvironmentEntity load( Element xml )
+	public static EnvironmentEntity load( Element xml, LevelManager.LevelData levelData )
 	{
 		EnvironmentEntity entity = null;
 
@@ -315,7 +325,7 @@ public class EnvironmentEntity extends Entity
 		}
 		else if ( type.equalsIgnoreCase( "Transition" ) )
 		{
-			entity = CreateTransition( xml );
+			entity = CreateTransition( xml, levelData );
 		}
 		else
 		{

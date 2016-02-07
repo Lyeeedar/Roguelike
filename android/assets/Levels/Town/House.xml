@@ -1,0 +1,27 @@
+<Building>
+    <Rooms>
+
+        <Room>
+            <Symbols>
+                <Symbol Extends=",">
+                    <Char>+</Char>
+                    <EnvironmentData>
+                        <Type>Door</Type>
+                        <LockedBy>Something</LockedBy>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+
+                <Row>wwwww</Row>
+                <Row>w,,,w</Row>
+                <Row>w,,,w</Row>
+                <Row>w,,,w</Row>
+                <Row>ww+ww</Row>
+
+            </Rows>
+        </Room>
+
+    </Rooms>
+</Building>

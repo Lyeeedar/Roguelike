@@ -522,7 +522,7 @@ public class Global
 		textButton.font = skin.getFont( "default" );
 		textButton.fontColor = Color.LIGHT_GRAY;
 		textButton.overFontColor = Color.WHITE;
-		textButton.checked = ((NinePatchDrawable)textButton.up).tint( Color.DARK_GRAY );
+		textButton.checked = ((NinePatchDrawable)textButton.up).tint( Color.LIGHT_GRAY );
 		skin.add( "default", textButton );
 
 		TextButtonStyle bigTextButton = new TextButtonStyle();

@@ -13,10 +13,26 @@
 
                 <Symbol Extends=",">
                     <Char>b</Char>
+                    <EnvironmentData>
+                        <Opaque>false</Opaque>
+                        <Passable>false</Passable>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/bed</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+                    </EnvironmentData>
                 </Symbol>
 
                 <Symbol Extends=",">
                     <Char>t</Char>
+                    <EnvironmentData>
+                        <Opaque>false</Opaque>
+                        <Passable>false</Passable>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/table</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+                    </EnvironmentData>
                 </Symbol>
 
                 <Symbol Extends=",">
@@ -26,16 +42,69 @@
                         <LockedBy>Something</LockedBy>
                     </EnvironmentData>
                 </Symbol>
+
+                <Symbol Extends=",">
+                    <Char>d</Char>
+                    <EntityData Extends="NPC/HumanBase">
+                        <Sprite>
+                            <Name>Oryx/Custom/heroes/bar_patron</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+                    </EntityData>
+                </Symbol>
+
+                <Symbol Extends=",">
+                    <Char>m</Char>
+                    <EntityData Extends="NPC/HumanBase">
+                        <Sprite>
+                            <Name>Oryx/Custom/heroes/barmaid</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+                        <Inventory>
+                            <Item>
+                                <Recipe>Sword</Recipe>
+                                <Material>Metal</Material>
+                                <Quality>1</Quality>
+                                <Value>20</Value>
+                            </Item>
+
+                            <Item>
+                                <Recipe>Spear</Recipe>
+                                <Material>Metal</Material>
+                                <Quality>1</Quality>
+                                <Value>20</Value>
+                            </Item>
+
+                            <Item>
+                                <Recipe>Axe</Recipe>
+                                <Material>Metal</Material>
+                                <Quality>1</Quality>
+                                <Value>20</Value>
+                            </Item>
+                        </Inventory>
+                        <Dialogue>
+                            <Dialogue>
+                                <Chunk>
+                                    <Text>I sell stuff</Text>
+                                    <OpenShop></OpenShop>
+                                    <Text>Hope to see you again!</Text>
+                                </Chunk>
+                            </Dialogue>
+                        </Dialogue>
+                    </EntityData>
+                </Symbol>
             </Symbols>
 
             <Rows>
-                <Row>wwwwwwwwwwwww</Row>
-                <Row>wt,bw,,,w,,,w</Row>
-                <Row>w,S,w,,,w,,,w</Row>
-                <Row>ww+wwwlwwwlww</Row>
-                <Row>w,,,,,,,,,,,w</Row>
-                <Row>w,,,,,,,,,,,w</Row>
-                <Row>wwwwww+wwwwww</Row>
+                <Row>wwwwwwwwww</Row>
+                <Row>wtbw,,w,,w</Row>
+                <Row>w,Sw,,w,,w</Row>
+                <Row>ww+wwlwwlw</Row>
+                <Row>w,,d,,,d,w</Row>
+                <Row>wdt,,dt,,w</Row>
+                <Row>w,td,,td,w</Row>
+                <Row>wm,,,,d,,w</Row>
+                <Row>wwww+wwwww</Row>
             </Rows>
         </Room>
 

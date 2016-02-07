@@ -49,16 +49,7 @@ public final class Inventory
 
 		for ( Element el : xml.getChildrenByName( "Item" ) )
 		{
-			Item item = null;
-
-			if ( el.getChildCount() > 0 )
-			{
-				item = Item.load( el );
-			}
-			else
-			{
-				Item.load( el.getText() );
-			}
+			Item item = Item.load( el );
 
 			item.canDrop = el.getBooleanAttribute( "Drop", true );
 			item.dropChanceEqn = el.getAttribute( "DropChance", null );
@@ -106,16 +97,18 @@ public final class Inventory
 			addItem( item );
 		}
 
-		for ( EquipmentSlot slot : item.slots )
+		for ( int i = 0; i < item.slots.size; i++ )
 		{
+			EquipmentSlot slot = item.slots.get( i );
 			if ( m_equipment.containsKey( slot ) )
 			{
 				unequip( m_equipment.get( slot ) );
 			}
 		}
 
-		for ( EquipmentSlot slot : item.slots )
+		for ( int i = 0; i < item.slots.size; i++ )
 		{
+			EquipmentSlot slot = item.slots.get( i );
 			m_equipment.put( slot, item );
 			isVariableMapDirty = true;
 		}
@@ -123,8 +116,9 @@ public final class Inventory
 
 	public void unequip( Item item )
 	{
-		for ( EquipmentSlot slot : item.slots )
+		for ( int i = 0; i < item.slots.size; i++ )
 		{
+			EquipmentSlot slot = item.slots.get( i );
 			m_equipment.remove( slot );
 			isVariableMapDirty = true;
 		}
@@ -176,6 +170,7 @@ public final class Inventory
 
 	public boolean isEquipped( Item item )
 	{
+		if (item.getMainSlot() == null) { return false; }
 		return m_equipment.get( item.getMainSlot() ) == item;
 	}
 

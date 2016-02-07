@@ -48,10 +48,12 @@ public class TaskMove extends AbstractTask
 							if ( obj.canSwap && obj.canMove && newTile.entity.canMove )
 							{
 								int[] diff1 = oldTile.addGameEntity( newTile.entity );
-								int[] diff2 = newTile.addGameEntity( obj );
+								int[] diff = newTile.addGameEntity( obj );
 
-								newTile.entity.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff1, MoveEquation.LINEAR );
-								obj.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff2, MoveEquation.LINEAR );
+								newTile.entity.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff, MoveEquation.LINEAR );
+								obj.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff, MoveEquation.LINEAR );
+
+								canMove = false;
 							}
 							else
 							{

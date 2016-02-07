@@ -1,0 +1,17 @@
+<Item>
+    <Name>Money</Name>
+    <Description>Stuff used for currency. Can be traded for goods.</Description>
+    <CanStack>true</CanStack>
+    <Icon>
+        <Group Count="0">
+            <Name>Oryx/uf_split/uf_items/coin_copper</Name>
+        </Group>
+        <Group Count="10">
+            <Name>Oryx/uf_split/uf_items/coin_silver</Name>
+        </Group>
+        <Group Count="100">
+            <Name>Oryx/uf_split/uf_items/coin_gold</Name>
+        </Group>
+    </Icon>
+    <Category>Treasure</Category>
+</Item>

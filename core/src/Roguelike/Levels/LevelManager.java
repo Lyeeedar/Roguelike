@@ -60,10 +60,17 @@ public class LevelManager
 
 	public void nextLevel( String name )
 	{
+		if (name.equals( "Town" ))
+		{
+			TownCreator townCreator = new TownCreator();
+			townCreator.create();
+			return;
+		}
+
 		evaluateQuestOutput();
 
 		LevelData prev = current;
-		current = getLevel( name );
+		current = getLevel( current, name );
 
 		int depth = prev.levelName.equals( name ) ? prev.currentLevel.depth + 1 : 1;
 		prev.currentLevel = null;
@@ -87,7 +94,7 @@ public class LevelManager
 		totalDepth++;
 	}
 
-	public LevelData getLevel( String name )
+	public LevelData getLevel( LevelData current, String name )
 	{
 		if (name.equals( current.levelName ))
 		{
@@ -219,7 +226,7 @@ public class LevelManager
 		public void parse( XmlReader.Element xml )
 		{
 			levelName = xml.getName();
-			maxDepth = xml.getIntAttribute( "MaxDepth", 3 );
+			maxDepth = xml.getIntAttribute( "MaxDepth", 1 );
 			label = xml.getAttribute( "Label", null );
 
 			levelTitle = xml.getAttribute( "Title", levelName );

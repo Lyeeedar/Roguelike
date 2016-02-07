@@ -13,6 +13,7 @@ import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Levels.Level;
+import Roguelike.Levels.LevelManager;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Tiles.GameTile;
 
@@ -280,6 +281,8 @@ public abstract class AbstractDungeonGenerator
 			DEBUG_printGrid( symbolGrid );
 		}
 
+		LevelManager.LevelData levelData = Global.LevelManager.getLevel( Global.LevelManager.current, saveLevel.fileName );
+
 		GameTile[][] actualTiles = new GameTile[width][height];
 		Level level = new Level( actualTiles );
 		level.Ambient = dfp.ambient;
@@ -323,7 +326,7 @@ public abstract class AbstractDungeonGenerator
 				if ( !saveLevel.created && symbol.hasEnvironmentEntity() )
 				{
 					GameTile newTile = actualTiles[x][y];
-					EnvironmentEntity entity = symbol.getEnvironmentEntity( );
+					EnvironmentEntity entity = symbol.getEnvironmentEntity( levelData );
 
 					if ( entity.attachToWall )
 					{

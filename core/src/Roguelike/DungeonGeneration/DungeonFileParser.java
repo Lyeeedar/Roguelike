@@ -136,7 +136,7 @@ public class DungeonFileParser
 
 		public Placement placement;
 
-		public String spawnEquation;
+		public String spawnEquation = "1";
 
 		public String width;
 		public String height;
@@ -155,7 +155,8 @@ public class DungeonFileParser
 		{
 			DFPRoom room = new DFPRoom();
 
-			room.spawnEquation = xml.getAttribute( "Condition", "1" ).toLowerCase();
+			room.spawnEquation = xml.getAttribute( "Condition", room.spawnEquation ).toLowerCase();
+			room.spawnEquation = xml.getAttribute( "Count", room.spawnEquation ).toLowerCase();
 
 			room.placementHint = xml.get( "PlacementHint", null );
 
