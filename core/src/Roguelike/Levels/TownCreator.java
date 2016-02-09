@@ -114,6 +114,11 @@ public class TownCreator
 		Table choiceTable = new Table(  );
 		for ( final ClassList.ClassDesc desc : classes )
 		{
+			if (desc.unlockedBy != null && !Global.WorldFlags.containsKey( desc.unlockedBy ))
+			{
+				continue;
+			}
+
 			TextButton button = new TextButton( desc.name, skin );
 			button.addListener( new ClickListener(  )
 			{

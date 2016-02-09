@@ -146,6 +146,7 @@ public class ClassList extends TilePanel
 	{
 		public String name;
 		public String description;
+		public String unlockedBy;
 		public GameEntity female;
 		public GameEntity male;
 
@@ -153,6 +154,7 @@ public class ClassList extends TilePanel
 		{
 			name = xml.get( "Name" );
 			description = xml.get( "Description" );
+			unlockedBy = xml.get( "UnlockedBy", null );
 
 			Element maleElement = xml.getChildByName( "Male" );
 			Element femaleElement = xml.getChildByName( "Female" );

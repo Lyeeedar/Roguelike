@@ -29,7 +29,7 @@
                         </Factions>
 
                         <Sprite>
-                            <Name>Oryx/Custom/heroes/bar_patron</Name>
+                            <Name>Oryx/Custom/heroes/ruffletop</Name>
                             <DrawActualSize>true</DrawActualSize>
                         </Sprite>
 
@@ -111,7 +111,7 @@
                         </Factions>
 
                         <Sprite>
-                            <Name>Oryx/Custom/heroes/barmaid</Name>
+                            <Name>Oryx/Custom/heroes/juliana</Name>
                             <DrawActualSize>true</DrawActualSize>
                         </Sprite>
 

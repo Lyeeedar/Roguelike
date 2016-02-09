@@ -54,6 +54,16 @@
                 </Symbol>
 
                 <Symbol Extends=",">
+                    <Char>f</Char>
+                    <EntityData Extends="NPC/HumanBase">
+                        <Sprite>
+                            <Name>Oryx/Custom/heroes/bar_patron_f</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+                    </EntityData>
+                </Symbol>
+
+                <Symbol Extends=",">
                     <Char>m</Char>
                     <EntityData Extends="NPC/HumanBase">
                         <Sprite>
@@ -101,8 +111,8 @@
                 <Row>w,Sw,,w,,w</Row>
                 <Row>ww+wwlwwlw</Row>
                 <Row>w,,d,,,d,w</Row>
-                <Row>wdt,,dt,,w</Row>
-                <Row>w,td,,td,w</Row>
+                <Row>wft,,dt,,w</Row>
+                <Row>w,td,,tf,w</Row>
                 <Row>wm,,,,d,,w</Row>
                 <Row>wwww+wwwww</Row>
             </Rows>
