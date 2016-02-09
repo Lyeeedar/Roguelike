@@ -111,6 +111,7 @@ public class Global
 	// ----------------------------------------------------------------------
 	public static ObjectMap<String, String> WorldFlags = new ObjectMap<String, String>();
 	public static ObjectMap<String, String> RunFlags = new ObjectMap<String, String>();
+	public static ObjectMap<String, String> WorldFlagsCopy = new ObjectMap<String, String>(  );
 
 	// ----------------------------------------------------------------------
 	public static boolean CharGenMode = false;
@@ -168,6 +169,7 @@ public class Global
 		Global.QuestManager.usedQuests = save.usedQuests;
 		Global.QuestManager.deferredFlags = save.deferredFlags;
 		Global.WorldFlags = save.worldFlags;
+		Global.WorldFlagsCopy = save.worldFlagsCopy;
 		Global.RunFlags = save.runFlags;
 		Global.lives = save.lives;
 
@@ -184,6 +186,7 @@ public class Global
 		save.levelManager = LevelManager;
 		save.usedQuests = QuestManager.usedQuests;
 		save.worldFlags = WorldFlags;
+		save.worldFlagsCopy = WorldFlagsCopy;
 		save.runFlags = RunFlags;
 		save.deferredFlags = QuestManager.deferredFlags;
 
@@ -211,9 +214,11 @@ public class Global
 		QuestManager = new QuestManager();
 		AUT = 0;
 		WorldFlags.clear();
+		WorldFlagsCopy.clear();
 		RunFlags.clear();
 
-		Global.WorldFlags.put( "Tavern", "1" );
+		Global.WorldFlags.put( "tavern", "1" );
+		Global.WorldFlags.put( "startingfunds", "50" );
 	}
 
 	// ----------------------------------------------------------------------

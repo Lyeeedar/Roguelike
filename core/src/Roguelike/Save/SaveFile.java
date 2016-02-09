@@ -80,6 +80,7 @@ public final class SaveFile
 	public LevelManager levelManager;
 	public ObjectSet<String> usedQuests;
 	public ObjectMap<String, String> worldFlags;
+	public ObjectMap<String, String> worldFlagsCopy;
 	public ObjectMap<String, String> runFlags;
 	public ObjectMap<String, String> deferredFlags;
 	public boolean isDead;
@@ -104,6 +105,7 @@ public final class SaveFile
 		kryo.writeObject( output, levelManager );
 		kryo.writeObject( output, usedQuests );
 		kryo.writeObject( output, worldFlags );
+		kryo.writeObject( output, worldFlagsCopy );
 		kryo.writeObject( output, runFlags );
 		kryo.writeObject( output, deferredFlags );
 		output.writeBoolean( isDead );
@@ -137,6 +139,7 @@ public final class SaveFile
 		levelManager = kryo.readObject( input, LevelManager.class );
 		usedQuests = kryo.readObject( input, ObjectSet.class );
 		worldFlags = kryo.readObject( input, ObjectMap.class );
+		worldFlagsCopy = kryo.readObject( input, ObjectMap.class );
 		runFlags = kryo.readObject( input, ObjectMap.class );
 		deferredFlags = kryo.readObject( input, ObjectMap.class );
 		isDead = input.readBoolean();

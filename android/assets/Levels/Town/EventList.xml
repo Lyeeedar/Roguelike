@@ -1,0 +1,22 @@
+<Events>
+
+    <Blacksmith>
+        <Value Value="Quality1">
+            <Text>A wandering blacksmith has found her way into town, apparently guided by one of the adventurers that left a while back. She set up shop in one of the houses, and you can buy weapons and armour from her.\n[Gold]Blacksmith Unlocked[]</Text>
+        </Value>
+    </Blacksmith>
+
+    <MerchantHelped>
+        <Value>
+            <Text>A merchant arrived in town, reporting his survival to be thanks to an adventurer from the village. He's agreed to set up a trade route with the town, increasing our funds.\n[Gold]Starting Funds Increased[]</Text>
+            <AddFunds>10</AddFunds>
+        </Value>
+    </MerchantHelped>
+
+    <StartingFunds>
+        <Value Value="50">
+            <Text>You now have 50 monies to spend on random useless tat! Yay for you! Capitalism Ho!</Text>
+        </Value>
+    </StartingFunds>
+
+</Events>

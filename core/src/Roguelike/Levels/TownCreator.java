@@ -1,9 +1,13 @@
 package Roguelike.Levels;
 
+import Roguelike.Ability.AbilityTree;
+import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.AssetManager;
 import Roguelike.DungeonGeneration.DungeonFileParser;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Global;
+import Roguelike.Items.Item;
+import Roguelike.Levels.TownEvents.EventList;
 import Roguelike.Quests.QuestManager;
 import Roguelike.RoguelikeGame;
 import Roguelike.Save.SaveLevel;
@@ -18,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.XmlReader;
 
 import java.io.IOException;
@@ -55,6 +60,7 @@ public class TownCreator
 
 	public void create()
 	{
+		// Get extra rooms
 		Array<DungeonFileParser.DFPRoom> rooms = new Array<DungeonFileParser.DFPRoom>(  );
 		for (Building building : buildings)
 		{
@@ -72,11 +78,46 @@ public class TownCreator
 			rooms.add(houses.rooms.get( 0 ));
 		}
 
+		// Build changed flag list and evaluate events
+		ObjectMap<String, String> validFlags = new ObjectMap<String, String>(  );
+		validFlags.putAll( Global.RunFlags );
+		for (String key : Global.WorldFlags.keys())
+		{
+			String value = Global.WorldFlags.get( key );
+
+			if (!value.equals( Global.WorldFlagsCopy.get( key ) ) )
+			{
+				validFlags.put( key, value );
+			}
+		}
+
+		EventList eventList = new EventList();
+		eventList.evaluate(validFlags);
+
+		// Update the flag copy
+		Global.WorldFlagsCopy.clear();
+		Global.WorldFlagsCopy.putAll( Global.WorldFlags );
+
+		//Begin the new game
+		Array<ClassList.ClassDesc> classes = ClassList.parse();
+		createCharGenTable(classes);
+
+		Global.LevelManager = new LevelManager();
+		Global.QuestManager = new QuestManager();
+		Global.RunFlags.clear();
+
+		SaveLevel level = new SaveLevel( "Town", 0, rooms, 0 );
+		Global.LevelManager.current.currentLevel = level;
+		LoadingScreen.Instance.set( level, classes.get( 0 ).male, "Tavern", null );
+		RoguelikeGame.Instance.switchScreen( RoguelikeGame.ScreenEnum.LOADING );
+	}
+
+	private void createCharGenTable( final Array<ClassList.ClassDesc> classes )
+	{
+		Skin skin = Global.loadSkin();
+
 		Global.CharGenMode = true;
 
-		final Array<ClassList.ClassDesc> classes = ClassList.parse();
-
-		Skin skin = Global.loadSkin();
 		Table table = new Table();
 		ButtonGroup<CheckBox> genderGroup = new ButtonGroup<CheckBox>(  );
 		final ButtonGroup<TextButton> classGroup = new ButtonGroup<TextButton>(  );
@@ -97,6 +138,15 @@ public class TownCreator
 							GameEntity newPlayer = male.isChecked() ? desc.male : desc.female;
 							Global.CurrentLevel.player.tile[ 0 ][ 0 ].addGameEntity( newPlayer );
 							Global.CurrentLevel.player = newPlayer;
+
+							for (int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++)
+							{
+								AbilityTree ab = Global.CurrentLevel.player.slottedAbilities.get( i );
+								if (ab != null)
+								{
+									((ActiveAbility)ab.current.current).hasValidTargets = true;
+								}
+							}
 							break;
 						}
 					}
@@ -127,6 +177,15 @@ public class TownCreator
 					GameEntity newPlayer = male.isChecked() ? desc.male : desc.female;
 					Global.CurrentLevel.player.tile[0][0].addGameEntity( newPlayer );
 					Global.CurrentLevel.player = newPlayer;
+
+					for (int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++)
+					{
+						AbilityTree ab = Global.CurrentLevel.player.slottedAbilities.get( i );
+						if (ab != null)
+						{
+							((ActiveAbility)ab.current.current).hasValidTargets = true;
+						}
+					}
 				}
 			} );
 			choiceTable.add( button ).expandX().fillX();
@@ -148,21 +207,17 @@ public class TownCreator
 				Global.CharGenMode = false;
 				GameScreen.Instance.lockContextMenu = false;
 				GameScreen.Instance.clearContextMenu();
+
+				Item money = Item.load( "Treasure/Money" );
+				money.count = Integer.parseInt( Global.WorldFlags.get( "startingfunds" ) );
+
+				Global.CurrentLevel.player.inventory.addItem( money );
 			}
 		} );
 		table.add( startButton ).colspan( 2 ).expandX().fillX();
 		table.row();
 
-		GameScreen.Instance.displayContextMenu( table, true );
-
-		Global.LevelManager = new LevelManager();
-		Global.QuestManager = new QuestManager();
-		Global.	RunFlags.clear();
-
-		SaveLevel level = new SaveLevel( "Town", 0, rooms, 0 );
-		Global.LevelManager.current.currentLevel = level;
-		LoadingScreen.Instance.set( level, classes.get( 0 ).male, "Tavern", null );
-		RoguelikeGame.Instance.switchScreen( RoguelikeGame.ScreenEnum.LOADING );
+		GameScreen.Instance.queueContextMenu( table );
 	}
 
 	public static class Building
@@ -173,8 +228,8 @@ public class TownCreator
 
 		public Building(String name, String key)
 		{
-			this.name = name;
-			this.key = key;
+			this.name = name.toLowerCase();
+			this.key = key != null ? key.toLowerCase() : null;
 
 			XmlReader reader = new XmlReader();
 			XmlReader.Element xml = null;

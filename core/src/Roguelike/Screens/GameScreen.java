@@ -251,8 +251,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			}
 		}
 
-		int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
-		int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
+		int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize - Global.TileSize / 2;
+		int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize - Global.TileSize / 2;
 
 		if ( Global.CurrentLevel.player.sprite.spriteAnimation instanceof MoveAnimation )
 		{
@@ -1697,6 +1697,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			contextMenu.addAction( new SequenceAction( Actions.fadeOut( 0.25f ), Actions.removeActor() ) );
 			contextMenu = null;
+
+			if (contextMenuQueue.size > 0)
+			{
+				Table content = contextMenuQueue.removeIndex(0);
+				displayContextMenu( content, true );
+			}
 		}
 	}
 
@@ -1866,6 +1872,19 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			return true;
 		}
 		return false;
+	}
+
+	// ----------------------------------------------------------------------
+	public void queueContextMenu(Table table)
+	{
+		if (contextMenu == null)
+		{
+			displayContextMenu( table, true );
+		}
+		else
+		{
+			contextMenuQueue.add( table );
+		}
 	}
 
 	// ----------------------------------------------------------------------
@@ -2129,6 +2148,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// endregion Public Methods
 	// ####################################################################//
 	// region Data
+
+	// ----------------------------------------------------------------------
+	public Array<Table> contextMenuQueue = new Array<Table>(  );
 
 	// ----------------------------------------------------------------------
 	public enum RenderLayer

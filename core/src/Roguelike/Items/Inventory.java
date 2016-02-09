@@ -231,6 +231,19 @@ public final class Inventory
 		return count;
 	}
 
+	public Item getItem( String name )
+	{
+		for (Item item : m_items)
+		{
+			if (name.equalsIgnoreCase( item.name ))
+			{
+				return item;
+			}
+		}
+
+		return null;
+	}
+
 	public Iterator<Item> iterator( ItemCategory type )
 	{
 		return new ItemIterator( type, m_items.iterator() );

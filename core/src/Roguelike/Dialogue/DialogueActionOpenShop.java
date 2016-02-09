@@ -52,8 +52,16 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 		table.add( new Seperator( skin ) ).expandX().fillX();
 		table.row();
 
-		Label funds = new Label("Funds: " + Global.CurrentLevel.player.inventory.getItemCount( "money" ), skin);
-		table.add( funds ).expandX().left();
+		Table fundsLine = new Table();
+
+		Item money = Global.CurrentLevel.player.inventory.getItem("money");
+		SpriteWidget fundsSprite = new SpriteWidget( money.getIcon(), 32, 32 );
+		fundsLine.add( fundsSprite );
+
+		Label funds = new Label("Funds: " + money.count, skin);
+		fundsLine.add( funds ).expandX().left();
+
+		table.add( fundsLine ).expandX().fillX();
 		table.row();
 
 		table.add( new Seperator( skin ) ).expandX().fillX();
