@@ -11,8 +11,6 @@
     <Events>
         <Constant>
             <Defense>5 + 2 * quality</Defense>
-            <Strength>1 + quality/4</Strength>
-            <Constitution>1 + quality/4</Constitution>
         </Constant>
     </Events>
 </Recipe>

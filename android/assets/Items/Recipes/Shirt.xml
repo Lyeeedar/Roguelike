@@ -11,7 +11,7 @@
     <Events>
         <Constant>
             <Defense>3 + 3 * quality</Defense>
-            <Willpower>1 + quality/2</Willpower>
+            <Speed>1 + quality/2</Speed>
         </Constant>
     </Events>
 </Recipe>

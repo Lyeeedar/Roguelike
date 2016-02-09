@@ -1695,7 +1695,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		if ( contextMenu != null )
 		{
-			contextMenu.remove();
+			contextMenu.addAction( new SequenceAction( Actions.fadeOut( 0.25f ), Actions.removeActor() ) );
 			contextMenu = null;
 		}
 	}
