@@ -612,6 +612,17 @@ public class Global
 	}
 
 	// ----------------------------------------------------------------------
+	public enum Rarity
+	{
+		VERYCOMMON,
+		COMMON,
+		UNCOMMON,
+		RARE,
+		LEGENDARY,
+		MYTHICAL
+	}
+
+	// ----------------------------------------------------------------------
 	public enum ScaleLevel
 	{
 		F,

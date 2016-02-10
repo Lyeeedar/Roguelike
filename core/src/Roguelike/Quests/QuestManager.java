@@ -61,6 +61,7 @@ public class QuestManager
 			return null;
 		}
 
+		Array<Quest> worldQuests = new Array<Quest>(  );
 		Array<Quest> runQuests = new Array<Quest>(  );
 		for (Quest quest : validQuests)
 		{
@@ -75,9 +76,21 @@ public class QuestManager
 				}
 			}
 
+			Array<Quest> chosenList = null;
 			if (run)
 			{
-				runQuests.add( quest );
+				chosenList = runQuests;
+			}
+			else
+			{
+				chosenList = worldQuests;
+			}
+
+			// do rarity
+			int rarity = (Global.Rarity.values().length - quest.rarity.ordinal()) + 1;
+			for (int i = 0; i < rarity; i++)
+			{
+				chosenList.add( quest );
 			}
 		}
 
@@ -88,7 +101,7 @@ public class QuestManager
 		}
 		else
 		{
-			chosen = validQuests.get( ran.nextInt( validQuests.size ) );
+			chosen = worldQuests.get( ran.nextInt( worldQuests.size ) );
 		}
 
 		usedQuests.add( chosen.path );

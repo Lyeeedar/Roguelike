@@ -1,6 +1,7 @@
 package Roguelike.Quests;
 
 import Roguelike.DungeonGeneration.DungeonFileParser;
+import Roguelike.Global;
 import Roguelike.Quests.Input.AbstractQuestInput;
 import Roguelike.Quests.Output.AbstractQuestOutputCondition;
 import Roguelike.Quests.Output.QuestOutput;
@@ -16,6 +17,7 @@ import java.io.IOException;
  */
 public class Quest
 {
+	public Global.Rarity rarity;
 	public String path;
 	public Array<AbstractQuestInput> inputs = new Array<AbstractQuestInput>(  );
 	public Array<QuestOutput> outputs = new Array<QuestOutput>(  );
@@ -45,6 +47,8 @@ public class Quest
 
 	public void parse( XmlReader.Element xml )
 	{
+		rarity = Global.Rarity.valueOf( xml.get("Rarity", "Common").toUpperCase() );
+
 		XmlReader.Element inputsElement = xml.getChildByName( "Inputs" );
 		if (inputsElement != null)
 		{

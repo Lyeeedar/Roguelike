@@ -23,6 +23,7 @@ import Roguelike.GameEvent.OnTask.DamageTaskEvent;
 import Roguelike.GameEvent.OnTask.StatusTaskEvent;
 import Roguelike.GameEvent.OnTurn.DamageOverTimeEvent;
 import Roguelike.GameEvent.OnTurn.HealOverTimeEvent;
+import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Statistic;
 import Roguelike.Items.Inventory;
@@ -519,6 +520,7 @@ public final class SaveFile
 		kryo.register( ItemCategory.class );
 		kryo.register( Statistic.class );
 		kryo.register( Direction.class );
+		kryo.register( Global.Rarity.class );
 		kryo.register( GameTile.OrbType.class );
 		kryo.register( Item.WeaponDefinition.HitType.class );
 		kryo.register( ActiveAbility.CooldownType.class );

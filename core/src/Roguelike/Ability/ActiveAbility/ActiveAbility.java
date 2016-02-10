@@ -53,7 +53,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	{
 		TURN("Turn"),
 		MOVE("Move"),
-		ATTACK("Atck"),
+		ATTACK("Hit"),
 		WAIT("Wait"),
 		HURT("Hurt"),
 		HEALED("Heal");
