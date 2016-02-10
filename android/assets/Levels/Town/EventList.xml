@@ -1,7 +1,7 @@
 <Events>
 
     <Blacksmith>
-        <Value Value="Quality1">
+        <Value Value="1">
             <Text>A wandering blacksmith has found her way into town, apparently guided by one of the adventurers that left a while back. She set up shop in one of the houses, and you can buy weapons and armour from her.\n[Gold]Blacksmith Unlocked[]</Text>
         </Value>
     </Blacksmith>

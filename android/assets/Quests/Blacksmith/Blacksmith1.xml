@@ -1,0 +1,102 @@
+<Quest>
+
+    <AllowedLevels>Forest,EnchantedForest</AllowedLevels>
+
+    <Inputs>
+        <FlagPresent Not="true">Blacksmith</FlagPresent>
+    </Inputs>
+
+    <Rooms>
+
+        <Room>
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>b</Char>
+                    <EntityData Extends="NPC/HumanBase">
+
+                        <Name>Blacksmith</Name>
+
+                        <Sprite>
+                            <Name>Oryx/Custom/heroes/blacksmith</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+
+                        <Dialogue>
+                            <Exclamations>
+                                <SeePlayer>
+                                    <Exclamation>Ello</Exclamation>
+                                </SeePlayer>
+                                <InCombat>
+                                    <Exclamation>Get your filthy paws off my cart!</Exclamation>
+                                    <Exclamation>Back you dirty monster!</Exclamation>
+                                    <Exclamation>Urgh! Just die already!</Exclamation>
+                                </InCombat>
+                            </Exclamations>
+                            <Dialogue>
+                                <Chunk Condition="BlacksmithChat == 0" ReliesOn="BlacksmithChat">
+                                    <Text>Phew! Quite the dangerous place isn't this? I'm Olaine, a blacksmith.</Text>
+                                    <Text>I'm pretty darned lost in this forest. You wouldn't happen to know the way to the nearest village would you?</Text>
+                                    <Input Key="Response">
+                                        <Choice>Sure! It's that way.</Choice>
+                                        <Choice>I'm just as lost as you are.</Choice>
+                                    </Input>
+                                    <Branch>
+                                        <Branch Condition="Response==1">
+                                            <Text>Ahh, thank you. I'm just going to catch my breath and then head off.</Text>
+                                            <SetVariable>
+                                                <Key>BlacksmithChat</Key>
+                                                <Value>1</Value>
+                                            </SetVariable>
+                                        </Branch>
+                                        <Branch Condition="Response==2">
+                                            <Text>Lost too? A pity. Well good luck to ya!</Text>
+                                        </Branch>
+                                    </Branch>
+                                </Chunk>
+                                <Chunk>
+                                    <Text>Hello again! I'm just going to catch my breath and then head off.</Text>
+                                    <Text>Thanks for the directions.</Text>
+                                </Chunk>
+                            </Dialogue>
+                        </Dialogue>
+
+                    </EntityData>
+                </Symbol>
+
+                <Symbol Extends=".">
+                    <Char>c</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/blacksmith_cart</Name>
+                        </Sprite>
+                        <Size>2</Size>
+                        <Passable>false</Passable>
+                        <Opaque>false</Opaque>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>.....</Row>
+                <Row>.....</Row>
+                <Row>.c...</Row>
+                <Row>...b.</Row>
+                <Row>.....</Row>
+            </Rows>
+        </Room>
+
+    </Rooms>
+
+    <Outputs>
+        <Blacksmith Defer="true">
+            <Data>1</Data>
+            <Conditions>
+                <DialogueValue>
+                    <Key>BlacksmithChat</Key>
+                    <Value>1</Value>
+                </DialogueValue>
+            </Conditions>
+        </Blacksmith>
+    </Outputs>
+
+</Quest>

@@ -1,0 +1,135 @@
+<Building>
+
+    <Rooms>
+
+        <Room>
+
+            <LockRotation>true</LockRotation>
+
+            <Symbols>
+                <Symbol Extends=",">
+                    <Char>a</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/anvil</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+
+                        <Passable>false</Passable>
+                        <Opaque>false</Opaque>
+                    </EnvironmentData>
+                </Symbol>
+
+                <Symbol Extends=",">
+                    <Char>f</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/forge</Name>
+                        </Sprite>
+
+                        <Passable>false</Passable>
+                        <Opaque>false</Opaque>
+                    </EnvironmentData>
+                </Symbol>
+
+                <Symbol Extends=",">
+                    <Char>t</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/table</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+
+                        <Passable>false</Passable>
+                        <Opaque>false</Opaque>
+                    </EnvironmentData>
+                </Symbol>
+
+                <Symbol Extends=",">
+                    <Char>b</Char>
+                    <EntityData Extends="NPC/HumanBase">
+
+                        <Name>Blacksmith</Name>
+
+                        <Sprite>
+                            <Name>Oryx/Custom/heroes/blacksmith</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+
+                        <Dialogue>
+                            <Exclamations>
+                                <SeePlayer>
+                                    <Exclamation>Ello</Exclamation>
+                                </SeePlayer>
+                            </Exclamations>
+                            <Dialogue>
+                                <Chunk>
+                                    <Text>Want to buy some stuff?</Text>
+                                    <OpenShop></OpenShop>
+                                    <Text>Good luck out there!</Text>
+                                </Chunk>
+                            </Dialogue>
+                        </Dialogue>
+
+                        <Inventory>
+                            <Item>
+                                <Recipe>Sword</Recipe>
+                                <Material>Metal</Material>
+                                <Quality>1</Quality>
+                                <Value>20</Value>
+                            </Item>
+
+                            <Item>
+                                <Recipe>Spear</Recipe>
+                                <Material>Metal</Material>
+                                <Quality>1</Quality>
+                                <Value>20</Value>
+                            </Item>
+
+                            <Item>
+                                <Recipe>Axe</Recipe>
+                                <Material>Metal</Material>
+                                <Quality>1</Quality>
+                                <Value>20</Value>
+                            </Item>
+
+                            <Item>
+                                <Recipe>Helm</Recipe>
+                                <Material>Metal</Material>
+                                <Quality>1</Quality>
+                                <Value>20</Value>
+                            </Item>
+
+                            <Item>
+                                <Recipe>Cuirass</Recipe>
+                                <Material>Metal</Material>
+                                <Quality>1</Quality>
+                                <Value>20</Value>
+                            </Item>
+
+                            <Item>
+                                <Recipe>Greaves</Recipe>
+                                <Material>Metal</Material>
+                                <Quality>1</Quality>
+                                <Value>20</Value>
+                            </Item>
+                        </Inventory>
+
+                    </EntityData>
+                </Symbol>
+
+            </Symbols>
+
+            <Rows>
+                <Row>wwwww</Row>
+                <Row>wfa,w</Row>
+                <Row>w,btw</Row>
+                <Row>w,,tw</Row>
+                <Row>ww+ww</Row>
+            </Rows>
+
+        </Room>
+
+    </Rooms>
+
+</Building>

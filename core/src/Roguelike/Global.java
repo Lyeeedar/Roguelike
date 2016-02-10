@@ -219,6 +219,8 @@ public class Global
 
 		Global.WorldFlags.put( "tavern", "1" );
 		Global.WorldFlags.put( "startingfunds", "50" );
+
+		Global.WorldFlags.put( "blacksmith", "1" );
 	}
 
 	// ----------------------------------------------------------------------

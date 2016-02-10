@@ -195,6 +195,8 @@ public class TownCreator
 		}
 
 		ScrollPane scrollPane = new ScrollPane( choiceTable, skin );
+		scrollPane.setScrollingDisabled( true, false );
+		scrollPane.setForceScroll( false, true );
 
 		table.add( scrollPane ).colspan( 2 ).expand().fill();
 		table.row();

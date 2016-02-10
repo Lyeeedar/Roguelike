@@ -969,7 +969,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				cy += offset[ 1 ];
 			}
 
-			layout.setText( font, entity.popup, tempColour, ( stage.getWidth() / 2 ) * 2, Align.left, true );
+			layout.setText( font, entity.popup, tempColour, stage.getWidth() / 2, Align.left, true );
 
 			float left = cx - ( layout.width / 2 ) - 10;
 
@@ -1608,7 +1608,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean scrolled( int amount )
 	{
-		if ( !mouseOverUI )
+		if ( !mouseOverUI && contextMenu == null )
 		{
 			Global.TileSize -= amount * 5;
 			if ( Global.TileSize < 2 )
@@ -1903,13 +1903,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			created = true;
 		}
 
-		ScrollPane scroll = new ScrollPane( content );
-		scroll.setScrollingDisabled( true, false );
-
-		Table table = new Table(  );
-		table.add( scroll ).expand().fill();
-
-		contextMenu = new Tooltip( table, skin, stage );
+		contextMenu = new Tooltip( content, skin, stage );
 		contextMenu.setWidth( stage.getWidth() - ( abilityPanel.getWidth() + equipmentPanel.getWidth() + 40 ) );
 		contextMenu.setHeight( stage.getHeight() - ( buttonsPanel.getHeight() + 40 ) );
 

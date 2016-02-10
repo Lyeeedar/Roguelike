@@ -6,6 +6,9 @@
 		<survived/>
 		<resurrect/>
 	</loversquest>
+	<blacksmith>
+		<1/>
+	</blacksmith>
 	<witchhelped>
 		<true/>
 	</witchhelped>
