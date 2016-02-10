@@ -91,7 +91,7 @@
     </Rooms>
 
     <Outputs>
-        <HelpedMerchant>
+        <MerchantHelped RunFlag="true">
             <Conditions>
                 <DialogueValue>
                     <Entity>Merchant</Entity>
@@ -99,6 +99,6 @@
                     <Value>1</Value>
                 </DialogueValue>
             </Conditions>
-        </HelpedMerchant>
+        </MerchantHelped>
     </Outputs>
 </Quest>

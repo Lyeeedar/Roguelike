@@ -1,6 +1,8 @@
 <Quest>
     <AllowedLevels>Forest,EnchantedForest</AllowedLevels>
 
+    <Rarity>Rare</Rarity>
+
     <Rooms>
         <Room>
             <AddFeatures>false</AddFeatures>

@@ -14,6 +14,7 @@ import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Screens.LoadingScreen;
 import Roguelike.UI.ClassList;
+import Roguelike.UI.Seperator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -119,10 +120,25 @@ public class TownCreator
 		Global.CharGenMode = true;
 
 		Table table = new Table();
+		table.defaults().pad( 5 );
+
+		Label title = new Label( "Character Creation", skin, "title" );
+		table.add( title ).expandX().left();
+		table.row();
+
+		table.add( new Seperator( skin ) ).expandX().fillX();
+		table.row();
+
 		ButtonGroup<CheckBox> genderGroup = new ButtonGroup<CheckBox>(  );
 		final ButtonGroup<TextButton> classGroup = new ButtonGroup<TextButton>(  );
 
-		final CheckBox male = new CheckBox( "Male", skin );
+		Table genderTable = new Table(  );
+		genderTable.defaults().padLeft( 20 );
+
+		Label genderLabel = new Label( "Gender: ", skin );
+		genderTable.add( genderLabel ).width( 100 );
+
+		final CheckBox male = new CheckBox( " Male", skin );
 		male.addListener( new ChangeListener() {
 			@Override
 			public void changed( ChangeEvent event, Actor actor )
@@ -130,6 +146,7 @@ public class TownCreator
 				if (classGroup.getChecked() != null)
 				{
 					String selected = "" + classGroup.getChecked().getText();
+					selected = selected.substring( 1 );
 
 					for ( ClassList.ClassDesc desc : classes )
 					{
@@ -153,15 +170,30 @@ public class TownCreator
 				}
 			}
 		} );
-		CheckBox female = new CheckBox( "Female", skin );
+		CheckBox female = new CheckBox( " Female", skin );
 
 		genderGroup.add( male, female );
 
-		table.add( male );
-		table.add( female );
+		genderTable.add( male );
+		genderTable.add( female );
+
+		table.add( genderTable ).expandX().left();
 		table.row();
 
+		table.add( new Seperator( skin ) ).expandX().fillX();
+		table.row();
+
+		Table classSection = new Table();
+
+		Label classTitle = new Label("Class:", skin);
+		classSection.add( classTitle ).padLeft( 20 ).width( 100 ).expandY().top();
+
 		Table choiceTable = new Table(  );
+		choiceTable.defaults().padBottom( 20 );
+
+		final Label classDescription = new Label( classes.get( 0 ).description, skin );
+		classDescription.setWrap( true );
+
 		for ( final ClassList.ClassDesc desc : classes )
 		{
 			if (desc.unlockedBy != null && !Global.WorldFlags.containsKey( desc.unlockedBy ))
@@ -169,36 +201,54 @@ public class TownCreator
 				continue;
 			}
 
-			TextButton button = new TextButton( desc.name, skin );
-			button.addListener( new ClickListener(  )
+			final CheckBox checkBox = new CheckBox( " " + desc.name, skin );
+			checkBox.addListener( new ChangeListener()
 			{
-				public void clicked( InputEvent event, float x, float y )
+				@Override
+				public void changed( ChangeEvent event, Actor actor )
 				{
-					GameEntity newPlayer = male.isChecked() ? desc.male : desc.female;
-					Global.CurrentLevel.player.tile[0][0].addGameEntity( newPlayer );
-					Global.CurrentLevel.player = newPlayer;
-
-					for (int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++)
+					if (checkBox.isChecked() && Global.CurrentLevel != null && Global.CurrentLevel.player != null)
 					{
-						AbilityTree ab = Global.CurrentLevel.player.slottedAbilities.get( i );
-						if (ab != null)
+						GameEntity newPlayer = male.isChecked() ? desc.male : desc.female;
+						Global.CurrentLevel.player.tile[0][0].addGameEntity( newPlayer );
+						Global.CurrentLevel.player = newPlayer;
+
+						for (int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++)
 						{
-							((ActiveAbility)ab.current.current).hasValidTargets = true;
+							AbilityTree ab = Global.CurrentLevel.player.slottedAbilities.get( i );
+							if (ab != null)
+							{
+								((ActiveAbility)ab.current.current).hasValidTargets = true;
+							}
 						}
+
+						classDescription.setText( desc.description );
 					}
 				}
-			} );
-			choiceTable.add( button ).expandX().fillX();
+			});
+
+			choiceTable.add( checkBox );
 			choiceTable.row();
 
-			classGroup.add( button );
+			classGroup.add( checkBox );
 		}
 
 		ScrollPane scrollPane = new ScrollPane( choiceTable, skin );
 		scrollPane.setScrollingDisabled( true, false );
-		scrollPane.setForceScroll( false, true );
+		scrollPane.setVariableSizeKnobs( true );
+		scrollPane.setFadeScrollBars( false );
+		scrollPane.setScrollbarsOnTop( false );
+		//scrollPane.setForceScroll( false, true );
+		scrollPane.setFlickScroll( false );
 
-		table.add( scrollPane ).colspan( 2 ).expand().fill();
+		classSection.add( scrollPane ).padLeft( 20 ).expandY().top();
+		classSection.add( new Seperator( skin, true ) ).expandY().fillY().pad( 15, 25, 15, 25 );
+		classSection.add( classDescription ).expand().fillX().top();
+
+		table.add( classSection ).expand().fill();
+		table.row();
+
+		table.add( new Seperator( skin ) ).expandX().fillX();
 		table.row();
 
 		TextButton startButton = new TextButton( "Begin", skin );
@@ -216,7 +266,7 @@ public class TownCreator
 				Global.CurrentLevel.player.inventory.addItem( money );
 			}
 		} );
-		table.add( startButton ).colspan( 2 ).expandX().fillX();
+		table.add( startButton ).expandX().fillX();
 		table.row();
 
 		GameScreen.Instance.queueContextMenu( table );

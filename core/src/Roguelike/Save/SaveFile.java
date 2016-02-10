@@ -567,6 +567,7 @@ public final class SaveFile
 		kryo.register( QuestOuputConditionDialogueValue.class );
 
 		kryo.register( ActivationActionGroup.class );
+		kryo.register( ActivationActionAddItem.class );
 		kryo.register( ActivationActionChangeLevel.class );
 		kryo.register( ActivationActionSetEnabled.class );
 		kryo.register( ActivationActionSetPassable.class );

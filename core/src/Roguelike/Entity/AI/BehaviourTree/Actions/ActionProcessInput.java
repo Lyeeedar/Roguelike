@@ -41,8 +41,8 @@ public class ActionProcessInput extends AbstractAction
 					int mousePosX = (int) mousePos.x;
 					int mousePosY = (int) mousePos.y;
 
-					int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize;
-					int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize;
+					int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize - Global.TileSize / 2;
+					int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize - Global.TileSize / 2;
 
 					int x = ( mousePosX - offsetx ) / Global.TileSize;
 					int y = ( mousePosY - offsety ) / Global.TileSize;

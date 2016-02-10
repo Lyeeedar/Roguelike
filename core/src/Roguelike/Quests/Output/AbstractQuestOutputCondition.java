@@ -27,8 +27,9 @@ public abstract class AbstractQuestOutputCondition
 		{
 			type = ClassReflection.newInstance( c );
 		}
-		catch ( ReflectionException e )
+		catch ( Exception e )
 		{
+			System.err.println(xml.getName());
 			e.printStackTrace();
 		}
 

@@ -2,20 +2,32 @@
 
     <Blacksmith>
         <Value Value="1">
-            <Text>A wandering blacksmith has found her way into town, apparently guided by one of the adventurers that left a while back. She set up shop in one of the houses, and you can buy weapons and armour from her.\n[Gold]Blacksmith Unlocked[]</Text>
+            <Text RewardMessage="Blacksmith Unlocked">A wandering blacksmith has found her way into town, apparently guided by one of the adventurers that left a while back. She set up shop in one of the houses, and you can buy weapons and armour from her.</Text>
         </Value>
     </Blacksmith>
 
+    <Wizard>
+        <Value Value="1">
+            <Text RewardMessage="Wizard Class Unlocked">A group of wizards and their apprentices have arrived in the village, and set up a small magic school. The apprentices can head out on adventures to gain experience if they desire.</Text>
+        </Value>
+    </Wizard>
+
     <MerchantHelped>
         <Value>
-            <Text>A merchant arrived in town, reporting his survival to be thanks to an adventurer from the village. He's agreed to set up a trade route with the town, increasing our funds.\n[Gold]Starting Funds Increased[]</Text>
+            <Text RewardMessage="Starting Funds Increased">A merchant arrived in town, reporting his survival to be thanks to an adventurer from the village. He's agreed to set up a trade route with the town, increasing our funds.</Text>
             <AddFunds>10</AddFunds>
         </Value>
     </MerchantHelped>
 
+    <VillagersFreed>
+        <Value>
+            <Text>Some of the captured villagers stumble back into town, telling stories of the mighty adventurer who saved them from the goblin clutches.</Text>
+        </Value>
+    </VillagersFreed>
+
     <StartingFunds>
         <Value Value="50">
-            <Text>You now have 50 monies to spend on random useless tat! Yay for you! Capitalism Ho!</Text>
+            <Text RewardMessage="Starting Funds Increased">You now have 50 monies to spend on random useless tat! Yay for you! Capitalism Ho!</Text>
         </Value>
     </StartingFunds>
 

@@ -491,7 +491,7 @@ public abstract class AbstractDungeonGenerator
 		{
 			type = ClassReflection.newInstance( c );
 		}
-		catch ( ReflectionException e )
+		catch ( Exception e )
 		{
 			e.printStackTrace();
 		}

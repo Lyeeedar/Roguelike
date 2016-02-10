@@ -1,4 +1,8 @@
 <Quest>
+    <AllowedLevels>Forest,EnchantedForest</AllowedLevels>
+
+    <Rarity>Uncommon</Rarity>
+
 	<Rooms>
 		<Room>
 			<Faction>Bandit</Faction>

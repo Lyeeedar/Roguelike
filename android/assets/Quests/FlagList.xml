@@ -12,9 +12,9 @@
 	<witchhelped>
 		<true/>
 	</witchhelped>
-	<helpedmerchant>
+	<merchanthelped>
 		<true/>
-	</helpedmerchant>
+	</merchanthelped>
 	<villagersfreed>
 		<true/>
 	</villagersfreed>
@@ -22,4 +22,7 @@
 		<lived1/>
 		<died1/>
 	</magequest>
+	<wizard>
+		<1/>
+	</wizard>
 </Flags>

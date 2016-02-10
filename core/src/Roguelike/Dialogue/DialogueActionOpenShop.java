@@ -46,7 +46,7 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 		final Skin skin = Global.loadSkin();
 
 		Label shop = new Label( "Shop", skin, "title" );
-		table.add( shop ).expandX().left();
+		table.add( shop ).expandX().left().pad( 5 );
 		table.row();
 
 		table.add( new Seperator( skin ) ).expandX().fillX();
@@ -68,7 +68,7 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 		table.row();
 
 		Table group = new Table();
-		group.defaults().pad( 10 );
+		group.defaults().pad( 10 ).height( 40 );
 
 		for (final Item item : Global.CurrentDialogue.inventory.m_items)
 		{
@@ -154,7 +154,7 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 				Global.CurrentDialogue.dialogue.advance( Global.CurrentDialogue );
 			}
 		});
-		table.add( done );
+		table.add( done ).pad( 5 );
 		table.row();
 	}
 

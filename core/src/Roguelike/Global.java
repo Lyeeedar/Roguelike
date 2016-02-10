@@ -219,8 +219,6 @@ public class Global
 
 		Global.WorldFlags.put( "tavern", "1" );
 		Global.WorldFlags.put( "startingfunds", "50" );
-
-		Global.WorldFlags.put( "blacksmith", "1" );
 	}
 
 	// ----------------------------------------------------------------------
@@ -529,7 +527,7 @@ public class Global
 		textButton.font = skin.getFont( "default" );
 		textButton.fontColor = Color.LIGHT_GRAY;
 		textButton.overFontColor = Color.WHITE;
-		textButton.checked = ((NinePatchDrawable)textButton.up).tint( Color.LIGHT_GRAY );
+		textButton.checked = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonDown.png" ), 12, 12, 12, 12 ) );
 		skin.add( "default", textButton );
 
 		TextButtonStyle bigTextButton = new TextButtonStyle();
@@ -537,6 +535,7 @@ public class Global
 		bigTextButton.font = skin.getFont( "title" );
 		bigTextButton.fontColor = Color.LIGHT_GRAY;
 		bigTextButton.overFontColor = Color.WHITE;
+		bigTextButton.checked = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonDown.png" ), 12, 12, 12, 12 ) );
 		skin.add( "big", bigTextButton );
 
 		TooltipStyle toolTip = new TooltipStyle();

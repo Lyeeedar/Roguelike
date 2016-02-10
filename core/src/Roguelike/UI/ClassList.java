@@ -155,6 +155,7 @@ public class ClassList extends TilePanel
 			name = xml.get( "Name" );
 			description = xml.get( "Description" );
 			unlockedBy = xml.get( "UnlockedBy", null );
+			if (unlockedBy != null) { unlockedBy = unlockedBy.toLowerCase(); }
 
 			Element maleElement = xml.getChildByName( "Male" );
 			Element femaleElement = xml.getChildByName( "Female" );

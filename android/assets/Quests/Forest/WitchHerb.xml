@@ -1,4 +1,6 @@
 <Quest>
+    <AllowedLevels>Forest,EnchantedForest</AllowedLevels>
+
 	<Rooms>
 		<Room>
 

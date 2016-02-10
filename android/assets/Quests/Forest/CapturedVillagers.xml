@@ -67,7 +67,7 @@
 	</Rooms>
 
 	<Outputs>
-		<VillagersFreed>
+		<VillagersFreed RunFlag="true">
 			<Conditions>
 				<DialogueValue>
 					<Entity>Captured Villager</Entity>

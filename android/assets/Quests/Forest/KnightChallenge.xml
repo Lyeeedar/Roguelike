@@ -1,6 +1,8 @@
 <Quest>
 	<AllowedLevels>Forest</AllowedLevels>
 
+    <Rarity>Rare</Rarity>
+
 	<Rooms>
 		<Room>
 			<Faction>None</Faction>
@@ -27,7 +29,7 @@
 
                         <Statistics>
                             <Attack>val+10</Attack>
-                            <Defence>val+20</Defence>
+                            <Defense>val+20</Defense>
                         </Statistics>
 
                         <Dialogue>

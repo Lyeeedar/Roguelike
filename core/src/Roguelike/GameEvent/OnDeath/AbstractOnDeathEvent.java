@@ -26,8 +26,9 @@ public abstract class AbstractOnDeathEvent
 		{
 			type = ClassReflection.newInstance( c );
 		}
-		catch ( ReflectionException e )
+		catch ( Exception e )
 		{
+			System.err.println(xml.getName());
 			e.printStackTrace();
 		}
 

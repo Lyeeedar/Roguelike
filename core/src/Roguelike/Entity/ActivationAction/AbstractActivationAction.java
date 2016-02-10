@@ -27,8 +27,9 @@ public abstract class AbstractActivationAction
 		{
 			type = ClassReflection.newInstance( c );
 		}
-		catch ( ReflectionException e )
+		catch ( Exception e )
 		{
+			System.err.println(xml.getName());
 			e.printStackTrace();
 		}
 
@@ -43,6 +44,7 @@ public abstract class AbstractActivationAction
 	// ----------------------------------------------------------------------
 	static
 	{
+		ClassMap.put( "ADDITEM", ActivationActionAddItem.class );
 		ClassMap.put( "SETSPRITE", ActivationActionSetSprite.class );
 		ClassMap.put( "SETPASSABLE", ActivationActionSetPassable.class );
 		ClassMap.put( "SETENABLED", ActivationActionSetEnabled.class );

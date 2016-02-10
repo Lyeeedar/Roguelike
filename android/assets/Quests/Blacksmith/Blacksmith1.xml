@@ -6,6 +6,8 @@
         <FlagPresent Not="true">Blacksmith</FlagPresent>
     </Inputs>
 
+    <Rarity>VeryCommon</Rarity>
+
     <Rooms>
 
         <Room>

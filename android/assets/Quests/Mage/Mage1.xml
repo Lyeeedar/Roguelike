@@ -1,0 +1,122 @@
+<Quest>
+
+    <Inputs>
+        <FlagPresent Not="true">Wizard</FlagPresent>
+    </Inputs>
+
+    <Rarity>VeryCommon</Rarity>
+
+    <AllowedLevels>Forest</AllowedLevels>
+
+    <Rooms>
+
+        <Room>
+
+            <Symbols>
+
+                <Symbol Extends=".">
+                    <Char>s</Char>
+                    <EntityData Extends="NPC/HumanBase">
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_heroes/wizard</Name>
+                            <Colour><RGB>170,250,220</RGB></Colour>
+                        </Sprite>
+
+                        <Inventory>
+                            <Equipment>
+                                <Wand>
+                                    <Recipe>Wand</Recipe>
+                                    <Material>Metal</Material>
+                                    <Quality>1</Quality>
+                                </Wand>
+                            </Equipment>
+                        </Inventory>
+
+                        <Dialogue>
+                            <Dialogue>
+                                <Chunk>
+                                    <Text>Good afternoon adventurer.</Text>
+                                </Chunk>
+                            </Dialogue>
+                        </Dialogue>
+                    </EntityData>
+                </Symbol>
+
+                <Symbol Extends=".">
+                    <Char>w</Char>
+                    <EntityData Extends="NPC/HumanBase">
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_heroes/witch</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+
+                        <Inventory>
+                            <Equipment>
+                                <Wand>
+                                    <Recipe>Wand</Recipe>
+                                    <Material>Metal</Material>
+                                    <Quality>1</Quality>
+                                </Wand>
+                            </Equipment>
+                        </Inventory>
+
+                        <Dialogue>
+                            <Dialogue>
+                                <Chunk Condition="MageHelped == 0" ReliesOn="MageHelped">
+                                    <Text>Good afternoon adventurer.</Text>
+                                    <Text>My students and I find ourselves a little lost, you wouldn't happen to know the way to a nearby town would you?</Text>
+                                    <Input Key="Response">
+                                        <Choice>Sure! It's that way.</Choice>
+                                        <Choice>I'm just as lost as you are.</Choice>
+                                    </Input>
+                                    <Branch>
+                                        <Branch Condition="Response==1">
+                                            <Text>Ahh, thank you. We greatly appreciate it.</Text>
+                                            <SetVariable>
+                                                <Key>MageHelped</Key>
+                                                <Value>1</Value>
+                                            </SetVariable>
+                                        </Branch>
+                                        <Branch Condition="Response==2">
+                                            <Text>Lost too? A pity. Well good luck to you too!</Text>
+                                        </Branch>
+                                    </Branch>
+                                </Chunk>
+                                <Chunk>
+                                    <Text>Thank you for the help.</Text>
+                                </Chunk>
+                            </Dialogue>
+                        </Dialogue>
+                    </EntityData>
+                </Symbol>
+
+            </Symbols>
+
+            <Rows>
+                <Row>......</Row>
+                <Row>..s...</Row>
+                <Row>...w..</Row>
+                <Row>....s.</Row>
+                <Row>..s...</Row>
+                <Row>......</Row>
+            </Rows>
+
+        </Room>
+
+    </Rooms>
+
+    <Outputs>
+
+        <Wizard>
+            <Data>1</Data>
+            <Conditions>
+                <DialogueValue>
+                    <Key>MageHelped</Key>
+                    <Value>1</Value>
+                </DialogueValue>
+            </Conditions>
+        </Wizard>
+
+    </Outputs>
+
+</Quest>

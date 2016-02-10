@@ -1,6 +1,8 @@
 <Quest>
 	<AllowedLevels>Forest</AllowedLevels>
 
+    <Rarity>Legendary</Rarity>
+
 	<Rooms>
 		<Room>
 			<Faction>Spider</Faction>
