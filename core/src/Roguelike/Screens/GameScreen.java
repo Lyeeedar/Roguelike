@@ -1115,7 +1115,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	private void processPickupQueue()
 	{
-		if ( contextMenu == null && pickupQueue.size > 0 )
+		if ( pickupQueue.size > 0 )
 		{
 			final Item item = pickupQueue.removeIndex( 0 );
 
@@ -1200,7 +1200,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				table.pack();
 
-				displayContextMenu( table, true );
+				queueContextMenu( table );
 			}
 			else if ( item.ability != null )
 			{
@@ -1239,14 +1239,59 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				table.pack();
 
-				displayContextMenu( table, true );
+				queueContextMenu( table );
 
 				abilityToEquip = item.ability;
 			}
 			else
 			{
-				Global.CurrentLevel.player.pendingMessages.add( new Message( "Picked up " + item.name + " (x" + item.count + ")", Color.ORANGE ) );
-				Global.CurrentLevel.player.getInventory().addItem( item );
+				// is misc
+				Table comparison = item.createTable( skin, Global.CurrentLevel.player );
+
+				Table table = new Table();
+				table.defaults().pad( 10 );
+
+				table.add( comparison ).expand().fill();
+				table.row();
+
+				table.add( new Seperator( skin, false ) ).expandX().fillX().pad( 10 );
+				table.row();
+
+				TextButton equipButton = new TextButton( "Take", skin );
+				equipButton.addListener( new ClickListener()
+				{
+					public void clicked( InputEvent event, float x, float y )
+					{
+						lockContextMenu = false;
+						clearContextMenu();
+
+						Global.CurrentLevel.player.getInventory().addItem( item );
+						Global.CurrentLevel.player.isVariableMapDirty = true;
+					}
+				} );
+
+				TextButton dropButton = new TextButton( "Drop", skin );
+				dropButton.addListener( new ClickListener()
+				{
+					public void clicked( InputEvent event, float x, float y )
+					{
+						lockContextMenu = false;
+						clearContextMenu();
+						Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
+					}
+				} );
+
+				Table buttons = new Table();
+				buttons.defaults().pad( 10 );
+
+				buttons.add( equipButton );
+				buttons.add( dropButton );
+
+				table.add( buttons );
+
+				table.pack();
+
+				queueContextMenu( table );
 			}
 		}
 	}
@@ -1353,6 +1398,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		else if ( keycode == Keys.E )
 		{
 			examineMode = !examineMode;
+		}
+		else if ( keycode == Keys.M )
+		{
+			Item money = Item.load( "Treasure/Money" );
+			money.count = 5;
+			pickupQueue.add( money );
 		}
 		else if ( keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
 		{
