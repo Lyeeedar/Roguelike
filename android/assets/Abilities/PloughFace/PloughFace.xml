@@ -1,0 +1,26 @@
+<Active>
+
+    <Name>Plough Face</Name>
+    <Description>Push all your expertise in working the earth into crushing your opponents face.</Description>
+
+    <Cooldown>5</Cooldown>
+    <CooldownType>Attack</CooldownType>
+    <Range>1</Range>
+
+    <Icon>
+        <Name>Icons/PloughFace</Name>
+        <Colour><RGB>160,82,45</RGB></Colour>
+    </Icon>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>140 + level * 2.5</Attack>
+            <Strength>1</Strength>
+        </Damage>
+    </Effect>
+
+</Active>

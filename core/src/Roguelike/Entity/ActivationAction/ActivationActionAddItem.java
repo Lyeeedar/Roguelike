@@ -14,21 +14,35 @@ import com.badlogic.gdx.utils.XmlReader;
  */
 public class ActivationActionAddItem extends AbstractActivationAction
 {
-	String item;
+	XmlReader.Element item;
 	int quality;
 
 	@Override
 	public void evaluate( EnvironmentEntity entity, float delta )
 	{
-		int quality = this.quality > 0 ? this.quality : Global.getQuality();
-		Array<Item> items = TreasureGenerator.generateLoot( quality, item, MathUtils.random );
-		GameScreen.Instance.pickupQueue.addAll( items );
+		if (item.getChildCount() > 0)
+		{
+			Item i = Item.load( item );
+
+			if (quality > 0)
+			{
+				i.quality = quality;
+			}
+
+			GameScreen.Instance.pickupQueue.add( i );
+		}
+		else
+		{
+			int quality = this.quality > 0 ? this.quality : Global.getQuality();
+			Array<Item> items = TreasureGenerator.generateLoot( quality, item.getText(), MathUtils.random );
+			GameScreen.Instance.pickupQueue.addAll( items );
+		}
 	}
 
 	@Override
 	public void parse( XmlReader.Element xml )
 	{
-		item = xml.getText();
+		item = xml;
 		quality = xml.getIntAttribute( "Quality", -1 );
 	}
 }

@@ -1,0 +1,34 @@
+<Active>
+
+    <Name>Harvest Life</Name>
+    <Description>With deft skill you harvest the crops. The crop in this case is your opponents life.</Description>
+
+    <Cooldown>5</Cooldown>
+    <CooldownType>Attack</CooldownType>
+    <Range>1</Range>
+
+    <Icon>
+        <Name>Icons/HarvestLife</Name>
+        <Colour><RGB>128,128,0</RGB></Colour>
+    </Icon>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>170 + level * 3</Attack>
+            <Strength>1</Strength>
+        </Damage>
+        <Status Self="true">
+            <Duration>2</Duration>
+            <Events>
+                <OnTurn>
+                    <Heal>3 + level / 2</Heal>
+                </OnTurn>
+            </Events>
+        </Status>
+    </Effect>
+
+</Active>

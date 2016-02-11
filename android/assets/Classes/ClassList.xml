@@ -40,8 +40,8 @@
                 </Equipment>
             </Inventory>
             <Abilities>
-                <PowerAttack>PowerAttack</PowerAttack>
-                <Aegis>Aegis</Aegis>
+                <PloughFace>PloughFace</PloughFace>
+                <ThrowRock>ThrowRock</ThrowRock>
             </Abilities>
         </Both>
     </Class>

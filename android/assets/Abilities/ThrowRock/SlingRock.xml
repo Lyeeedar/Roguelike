@@ -1,0 +1,38 @@
+<Active>
+
+    <Name>Sling Rock</Name>
+    <Description>Fling a rock at your target using a sling.</Description>
+
+    <Cooldown>5</Cooldown>
+    <CooldownType>Attack</CooldownType>
+    <Range>4</Range>
+
+    <Icon>
+        <Name>Icons/ThrowRock</Name>
+        <Colour><RGB>150,150,150</RGB></Colour>
+    </Icon>
+
+    <HitSprite>
+        <Name>EffectSprites/Impact/Impact</Name>
+        <Colour><RGB>50,50,50</RGB></Colour>
+        <UpdateRate>0.1</UpdateRate>
+    </HitSprite>
+
+    <MovementSprite>
+        <Name>EffectSprites/Bolt/Bolt</Name>
+        <Colour><RGB>50,50,50</RGB></Colour>
+        <UpdateRate>0.1</UpdateRate>
+    </MovementSprite>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>150 + 4 * level</Attack>
+            <Strength>1</Strength>
+        </Damage>
+    </Effect>
+
+</Active>

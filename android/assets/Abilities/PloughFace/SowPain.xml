@@ -1,0 +1,50 @@
+<Active>
+
+    <Name>Sow Pain</Name>
+    <Description>Sow the seeds of pain and let the agony sprout.</Description>
+
+    <Cooldown>5</Cooldown>
+    <CooldownType>Attack</CooldownType>
+    <Range>1</Range>
+
+    <HitSprite>
+        <Name>EffectSprites/Impact/Impact</Name>
+        <Colour><RGB>50,205,50</RGB></Colour>
+        <UpdateRate>0.05</UpdateRate>
+    </HitSprite>
+
+    <Icon>
+        <Name>Icons/SowPain</Name>
+        <Colour><RGB>50,205,50</RGB></Colour>
+    </Icon>
+
+    <HitType>
+        <Enemy></Enemy>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>160 + level * 2</Attack>
+            <Strength>1</Strength>
+        </Damage>
+        <Status>
+            <Duration>3</Duration>
+            <Events>
+                <OnExpire>
+                    <Ability>
+                        <HitType><Ally/></HitType>
+                        <HitSprite>
+                            <Name>EffectSprites/Impact/Impact</Name>
+                            <Colour><RGB>100,255,100</RGB></Colour>
+                            <UpdateRate>0.05</UpdateRate>
+                        </HitSprite>
+                        <Effect>
+                            <Damage DirectDamage="true"><Attack>20</Attack></Damage>
+                        </Effect>
+                    </Ability>
+                </OnExpire>
+            </Events>
+        </Status>
+    </Effect>
+
+</Active>

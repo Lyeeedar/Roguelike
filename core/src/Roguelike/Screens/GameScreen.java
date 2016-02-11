@@ -203,6 +203,22 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			}
 		}
 
+		if (Global.CharGenMode)
+		{
+			for (int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++)
+			{
+				AbilityTree tree = Global.CurrentLevel.player.slottedAbilities.get( i );
+
+				if (tree != null)
+				{
+					if (tree.current.current instanceof ActiveAbility)
+					{
+						((ActiveAbility)tree.current.current).hasValidTargets = true;
+					}
+				}
+			}
+		}
+
 		Global.BGM.update( delta );
 
 		if ( !examineMode && !lockContextMenu )
@@ -1929,9 +1945,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		Global.save();
 
 		Table table = new Table();
+		table.defaults().pad( 5 );
 
 		Label titleLabel = new Label( "Game Over", skin, "title" );
-		table.add( titleLabel ).expandX().fillX();
+		table.add( titleLabel ).expandX().left();
+		table.row();
+
+		table.add( new Seperator( skin ) ).expandX().fillX().padBottom( 20 );
 		table.row();
 
 		Label messageLabel = new Label("You've kicked the bucket." +
@@ -1949,7 +1969,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.add( scrollPane ).expand().fill();
 		table.row();
 
-		table.add( new Seperator(skin, false) ).expandX().fillX();
+		table.add( new Seperator(skin) ).expandX().fillX();
 		table.row();
 
 		TextButton button = new TextButton( "Begin Life Anew", skin );
@@ -1976,6 +1996,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		Table table = new Table();
 		table.defaults().pad( 10 );
+
+		Label titleLabel = new Label( "Menu", skin, "title" );
+		table.add( titleLabel ).expandX().left();
+		table.row();
+
+		table.add( new Seperator(skin) ).expandX().fillX();
+		table.row();
 
 		TextButton resumeButton = new TextButton( "Resume", skin );
 		resumeButton.addListener( new ClickListener()
@@ -2025,9 +2052,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		}
 
 		Table table = new Table();
+		table.defaults().pad( 5 );
 
 		Label titleLabel = new Label( title, skin, "title" );
-		table.add( titleLabel ).expandX().fillX();
+		table.add( titleLabel ).expandX().left();
+		table.row();
+
+		table.add( new Seperator(skin) ).expandX().fillX();
 		table.row();
 
 		Label messageLabel = new Label(message, skin);
@@ -2036,7 +2067,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.add( messageLabel ).expand().fill().left().top();
 		table.row();
 
-		table.add( new Seperator(skin, false) ).expandX().fillX();
+		table.add( new Seperator(skin) ).expandX().fillX();
 		table.row();
 
 		TextButton button = new TextButton( "Continue", skin );
@@ -2057,7 +2088,17 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public void displayActionOptions(Array<ActivationActionGroup> actions, final EnvironmentEntity parent)
 	{
 		Table table = new Table();
-		table.defaults().pad( 10 );
+		table.defaults().pad( 5 );
+
+		Label title = new Label("Action", skin, "title");
+		table.add( title ).expandX().left();
+		table.row();
+
+		table.add( new Seperator( skin ) ).expandX().fillX();
+		table.row();
+
+		Table actionTable = new Table(  );
+		actionTable.defaults().pad( 10 );
 
 		for (final ActivationActionGroup action : actions)
 		{
@@ -2073,9 +2114,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					Global.CurrentLevel.player.tasks.add( new TaskWait() );
 				}
 			} );
-			table.add( button ).expandX().width( 200 ).center();
-			table.row();
+			actionTable.add( button ).expandX().width( 200 ).center();
+			actionTable.row();
 		}
+
+		table.add( actionTable ).expand().fill();
+		table.row();
 
 		table.add( new Seperator( skin ) ).expandX().fillX();
 		table.row();

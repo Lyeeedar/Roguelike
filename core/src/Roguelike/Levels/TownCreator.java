@@ -156,14 +156,6 @@ public class TownCreator
 							Global.CurrentLevel.player.tile[ 0 ][ 0 ].addGameEntity( newPlayer );
 							Global.CurrentLevel.player = newPlayer;
 
-							for (int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++)
-							{
-								AbilityTree ab = Global.CurrentLevel.player.slottedAbilities.get( i );
-								if (ab != null)
-								{
-									((ActiveAbility)ab.current.current).hasValidTargets = true;
-								}
-							}
 							break;
 						}
 					}
@@ -212,15 +204,6 @@ public class TownCreator
 						GameEntity newPlayer = male.isChecked() ? desc.male : desc.female;
 						Global.CurrentLevel.player.tile[0][0].addGameEntity( newPlayer );
 						Global.CurrentLevel.player = newPlayer;
-
-						for (int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++)
-						{
-							AbilityTree ab = Global.CurrentLevel.player.slottedAbilities.get( i );
-							if (ab != null)
-							{
-								((ActiveAbility)ab.current.current).hasValidTargets = true;
-							}
-						}
 
 						classDescription.setText( desc.description );
 					}

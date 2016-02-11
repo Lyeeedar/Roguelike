@@ -3533,35 +3533,35 @@ filter: MipMapLinearLinear,MipMapLinearLinear
 repeat: none
 EffectSprites/Arrow/Arrow_0
   rotate: false
-  xy: 754, 186
+  xy: 862, 186
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/Fire/Fire_0
   rotate: false
-  xy: 162, 134
+  xy: 198, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/Fire/Fire_1
   rotate: false
-  xy: 162, 98
+  xy: 234, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/Fire/Fire_2
   rotate: false
-  xy: 146, 62
+  xy: 234, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/Fire/Fire_3
   rotate: false
-  xy: 198, 150
+  xy: 270, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -3757,105 +3757,105 @@ EffectSprites/Slash/Slash_4
   index: -1
 EffectSprites/Strike/Strike_0
   rotate: false
-  xy: 306, 114
+  xy: 378, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/Strike/Strike_1
   rotate: false
-  xy: 342, 150
+  xy: 414, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/Strike/Strike_2
   rotate: false
-  xy: 342, 114
+  xy: 414, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/Strike/Strike_3
   rotate: false
-  xy: 378, 150
+  xy: 450, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/Thrust/Thrust_0
   rotate: false
-  xy: 198, 114
+  xy: 270, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/Thrust/Thrust_1
   rotate: false
-  xy: 234, 150
+  xy: 306, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/Thrust/Thrust_2
   rotate: false
-  xy: 234, 114
+  xy: 306, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/Thrust/Thrust_3
   rotate: false
-  xy: 270, 150
+  xy: 342, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 EffectSprites/Thrust/Thrust_4
   rotate: false
-  xy: 270, 114
+  xy: 342, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Abilities
   rotate: false
-  xy: 378, 114
+  xy: 450, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/All
   rotate: false
-  xy: 414, 150
+  xy: 486, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Armour
   rotate: false
-  xy: 414, 114
+  xy: 486, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Button
   rotate: false
-  xy: 450, 150
+  xy: 522, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/ButtonBorder
   rotate: false
-  xy: 450, 114
+  xy: 522, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/ButtonDown
   rotate: false
-  xy: 486, 150
+  xy: 558, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -3869,42 +3869,42 @@ GUI/Checked
   index: -1
 GUI/Cog
   rotate: false
-  xy: 486, 114
+  xy: 558, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Eye
   rotate: false
-  xy: 522, 150
+  xy: 594, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Ingot
   rotate: false
-  xy: 558, 114
+  xy: 630, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Jewelry
   rotate: false
-  xy: 594, 150
+  xy: 666, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Misc
   rotate: false
-  xy: 630, 150
+  xy: 702, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/PassiveTileBorder
   rotate: false
-  xy: 630, 114
+  xy: 702, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -3918,49 +3918,49 @@ GUI/ProgressIndicator
   index: -1
 GUI/QuestionMark
   rotate: false
-  xy: 666, 150
+  xy: 738, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Sheathed
   rotate: false
-  xy: 666, 114
+  xy: 738, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/TextField
   rotate: false
-  xy: 702, 150
+  xy: 774, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/TileBackground
   rotate: false
-  xy: 702, 114
+  xy: 774, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/TileBorder
   rotate: false
-  xy: 738, 150
+  xy: 810, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/TilePanel
   rotate: false
-  xy: 738, 114
+  xy: 810, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Treasure
   rotate: false
-  xy: 774, 150
+  xy: 846, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -3974,35 +3974,35 @@ GUI/Unchecked
   index: -1
 GUI/Unsheathed
   rotate: false
-  xy: 774, 114
+  xy: 846, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Weapon
   rotate: false
-  xy: 810, 150
+  xy: 882, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/frame_0
   rotate: false
-  xy: 522, 114
+  xy: 594, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/frame_1
   rotate: false
-  xy: 558, 150
+  xy: 630, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/locked
   rotate: false
-  xy: 594, 114
+  xy: 666, 114
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -4016,21 +4016,21 @@ Icons/ArcticSurge
   index: -1
 Icons/Charge
   rotate: false
-  xy: 682, 186
+  xy: 790, 186
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Icons/Cleave
   rotate: false
-  xy: 718, 186
+  xy: 826, 186
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Icons/Conductivity
   rotate: false
-  xy: 826, 186
+  xy: 934, 186
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -4059,6 +4059,13 @@ Icons/Firebolt
 Icons/FlameSurge
   rotate: false
   xy: 230, 222
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Icons/HarvestLife
+  rotate: false
+  xy: 682, 186
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -4142,7 +4149,14 @@ Icons/PenetratingShot
   index: -1
 Icons/PinningShot
   rotate: false
-  xy: 790, 186
+  xy: 898, 186
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Icons/PloughFace
+  rotate: false
+  xy: 718, 186
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -4161,6 +4175,13 @@ Icons/Slime
   orig: 32, 32
   offset: 0, 0
   index: -1
+Icons/SowPain
+  rotate: false
+  xy: 754, 186
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 Icons/SpinningMagicArrow
   rotate: false
   xy: 646, 186
@@ -4170,28 +4191,35 @@ Icons/SpinningMagicArrow
   index: -1
 Icons/StaticCharge
   rotate: false
-  xy: 862, 186
+  xy: 970, 186
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Icons/Summon
   rotate: false
-  xy: 306, 150
+  xy: 378, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Icons/SunderArmour
   rotate: false
-  xy: 898, 186
+  xy: 38, 66
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Icons/SunderWeapon
   rotate: false
-  xy: 934, 186
+  xy: 38, 30
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Icons/ThrowRock
+  rotate: false
+  xy: 74, 82
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -4205,42 +4233,42 @@ Icons/ThunderStrike
   index: -1
 Oryx/Custom/terrain/HeadOnSpike
   rotate: false
-  xy: 970, 186
+  xy: 74, 46
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Oryx/Custom/terrain/Rubbish_1
   rotate: false
-  xy: 38, 66
+  xy: 126, 98
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Oryx/Custom/terrain/Rubbish_2
   rotate: false
-  xy: 38, 30
+  xy: 110, 62
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Oryx/Custom/terrain/Rubbish_3
   rotate: false
-  xy: 74, 82
+  xy: 162, 134
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Oryx/Custom/terrain/Rubbish_4
   rotate: false
-  xy: 74, 46
+  xy: 162, 98
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Oryx/Custom/terrain/cocoon
   rotate: false
-  xy: 126, 98
+  xy: 146, 62
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -4275,7 +4303,7 @@ Oryx/Custom/terrain/door_wood_v_open
   index: -1
 Oryx/Custom/terrain/spawner
   rotate: false
-  xy: 110, 62
+  xy: 198, 150
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

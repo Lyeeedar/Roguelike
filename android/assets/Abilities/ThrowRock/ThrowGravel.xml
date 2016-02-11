@@ -1,0 +1,51 @@
+<Active>
+
+    <Name>Throw Gravel</Name>
+    <Description>Throw a handful of gravel infront of you, blinding your foes temporarily.</Description>
+
+    <Cooldown>6</Cooldown>
+    <CooldownType>Attack</CooldownType>
+    <Range>1</Range>
+    <Cone>1</Cone>
+
+    <Icon>
+        <Name>Icons/MagicMissile</Name>
+        <Colour><RGB>150,150,150</RGB></Colour>
+    </Icon>
+
+    <HitSprite>
+        <Name>EffectSprites/Impact/Impact</Name>
+        <Colour><RGB>50,50,50</RGB></Colour>
+        <UpdateRate>0.1</UpdateRate>
+    </HitSprite>
+
+    <MovementSprite>
+        <Name>EffectSprites/Bolt/Bolt</Name>
+        <Colour><RGB>50,50,50</RGB></Colour>
+        <UpdateRate>0.1</UpdateRate>
+    </MovementSprite>
+
+    <Targeting>
+        <Direction></Direction>
+    </Targeting>
+
+    <HitType>
+        <Any></Any>
+    </HitType>
+
+    <Effect>
+        <Damage>
+            <Attack>150</Attack>
+            <Strength>1</Strength>
+        </Damage>
+        <Status>
+            <Duration>4</Duration>
+            <Events>
+                <OnDealDamage>
+                    <Block Condition="chance(3, 4)"></Block>
+                </OnDealDamage>
+            </Events>
+        </Status>
+    </Effect>
+
+</Active>
