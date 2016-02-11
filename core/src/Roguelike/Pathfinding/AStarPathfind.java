@@ -120,7 +120,7 @@ public class AStarPathfind
 		int heuristic = Math.abs( x - endx ) + Math.abs( y - endy );
 		int cost = heuristic + ( parent != null ? parent.cost : 0 );
 
-		cost += grid[x][y].getInfluence();
+		cost += grid[x][y].getInfluence( travelType, self );
 
 		// 3 possible conditions
 

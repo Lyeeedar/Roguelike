@@ -57,5 +57,6 @@ public abstract class AbstractRoomGenerator
 		ClassMap.put( "BURROW", Burrow.class );
 		ClassMap.put( "STARBURST", Starburst.class );
 		ClassMap.put( "RANDOM", RandomPlace.class );
+		ClassMap.put( "ISLAND", Island.class );
 	}
 }

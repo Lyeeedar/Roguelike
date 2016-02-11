@@ -1715,7 +1715,7 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 
 		// ----------------------------------------------------------------------
 		@Override
-		public int getInfluence()
+		public int getInfluence( EnumBitflag<Passability> travelType, Object self )
 		{
 			if ( isCorridor )
 			{

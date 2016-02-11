@@ -64,7 +64,7 @@ public class Pathfinder
 			}
 
 			@Override
-			public int getInfluence()
+			public int getInfluence( EnumBitflag<Passability> travelType, Object self )
 			{
 				return passable ? 0 : 1000;
 			}

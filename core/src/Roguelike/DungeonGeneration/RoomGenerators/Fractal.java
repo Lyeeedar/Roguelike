@@ -87,7 +87,7 @@ public class Fractal extends AbstractRoomGenerator
 				{
 					if ( val >= feature.minVal && val <= feature.maxVal )
 					{
-						grid[x][y] = feature.getAsSymbol( grid[x][y] );
+						grid[x][y] = feature.getAsSymbol( );
 						break;
 					}
 				}
@@ -121,8 +121,7 @@ public class Fractal extends AbstractRoomGenerator
 	// ----------------------------------------------------------------------
 	public static class FractalFeature
 	{
-		public Element tileData;
-		public Element environmentData;
+		public Symbol symbol;
 		public float minVal;
 		public float maxVal;
 
@@ -130,21 +129,16 @@ public class Fractal extends AbstractRoomGenerator
 		{
 			FractalFeature feature = new FractalFeature();
 
-			feature.tileData = xml.getChildByName( "TileData" );
-			feature.environmentData = xml.getChildByName( "EnvironmentData" );
-			feature.minVal = xml.getFloat( "Min", 0 );
-			feature.maxVal = xml.getFloat( "Max", 1 );
+			feature.symbol = Symbol.parse( xml );
+
+			feature.minVal = xml.getFloat( "MinVal", 0 );
+			feature.maxVal = xml.getFloat( "MaxVal", 1 );
 
 			return feature;
 		}
 
-		public Symbol getAsSymbol( Symbol current )
+		public Symbol getAsSymbol( )
 		{
-			Symbol symbol = current.copy();
-			symbol.character = 'F';
-			symbol.tileData = tileData != null ? tileData : current.tileData;
-			symbol.environmentData = environmentData != null ? environmentData : current.environmentData;
-
 			return symbol;
 		}
 	}

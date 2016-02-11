@@ -92,15 +92,6 @@
                                 <Value>20</Value>
                             </Item>
                         </Inventory>
-                        <Dialogue>
-                            <Dialogue>
-                                <Chunk>
-                                    <Text>I sell stuff</Text>
-                                    <OpenShop></OpenShop>
-                                    <Text>Hope to see you again!</Text>
-                                </Chunk>
-                            </Dialogue>
-                        </Dialogue>
                     </EntityData>
                 </Symbol>
             </Symbols>

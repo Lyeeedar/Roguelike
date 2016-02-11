@@ -203,7 +203,7 @@ public final class Symbol implements PathfindingTile
 	private static final EnumBitflag<Passability> InfluencePassable = new EnumBitflag<Passability>( Passability.WALK );
 
 	@Override
-	public int getInfluence()
+	public int getInfluence( EnumBitflag<Passability> travelType, Object self )
 	{
 		if ( character == 'F' )
 		{

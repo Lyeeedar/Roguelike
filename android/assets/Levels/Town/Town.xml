@@ -23,7 +23,11 @@
     </CorridorStyle>
 
     <Preprocessor>
-        <Basic></Basic>
+        <Island>
+            <Feature Extends=".">
+                <MinVal>0.03</MinVal>
+            </Feature>
+        </Island>
     </Preprocessor>
 
     <Background>
@@ -62,21 +66,56 @@
             </TileData>
         </Symbol>
 
-        <Symbol Extends=".">
+        <Symbol>
             <Char>#</Char>
             <TileData>
-                <Opaque>false</Opaque>
+                <Opaque>true</Opaque>
                 <Passable>false</Passable>
-                <Sprite>
-                    <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
-                </Sprite>
-                <TilingSprite>
-                    <Name>Fence</Name>
-                    <Mask>Masks/fence</Mask>
+
+                <Group Chance="0.75">
                     <Sprite>
-                        <Name>Oryx/uf_split/uf_terrain/floor_wood_1</Name>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
                     </Sprite>
-                </TilingSprite>
+                    <Sprite>
+                        <Name>Oryx/Custom/terrain/tree1</Name>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.15">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <Sprite>
+                        <Name>Oryx/Custom/terrain/tree2</Name>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <Sprite>
+                        <Name>Oryx/Custom/terrain/tree3</Name>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_1</Name>
+                    </Sprite>
+                    <Sprite>
+                        <Name>Oryx/Custom/terrain/tree4</Name>
+                        <DrawActualSize>true</DrawActualSize>
+                    </Sprite>
+                </Group>
+
+                <AmbientShadow>
+                    <Factor>0.2</Factor>
+                    <Range>2</Range>
+                </AmbientShadow>
             </TileData>
         </Symbol>
 

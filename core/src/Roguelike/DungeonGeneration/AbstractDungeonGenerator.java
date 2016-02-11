@@ -163,7 +163,7 @@ public abstract class AbstractDungeonGenerator
 				break;
 			}
 		}
-		if ( minx == -1 || maxx >= grid.length ) { return grid; }
+		if ( minx == -1 || minx >= grid.length ) { return grid; }
 
 		// find min y
 		complete = false;
@@ -229,7 +229,7 @@ public abstract class AbstractDungeonGenerator
 				break;
 			}
 		}
-		if ( maxy == -1 || miny >= grid[0].length ) { return grid; }
+		if ( maxy == -1 || maxy >= grid[0].length ) { return grid; }
 
 		// minimise room
 		int newwidth = Math.min( width, maxx - minx );
@@ -508,6 +508,5 @@ public abstract class AbstractDungeonGenerator
 	static
 	{
 		ClassMap.put( "RECURSIVEDOCK", RecursiveDockGenerator.class );
-		ClassMap.put( "WORLDMAP", WorldMapGenerator.class );
 	}
 }

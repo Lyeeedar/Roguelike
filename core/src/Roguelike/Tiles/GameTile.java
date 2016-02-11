@@ -237,7 +237,7 @@ public class GameTile implements PathfindingTile
 			}
 		}
 
-		if ( environmentEntity != null && environmentEntity != self && !environmentEntity.passableBy.intersect( travelType ) )
+		if ( environmentEntity != null && environmentEntity != self && !environmentEntity.passableBy.intersect( travelType ) && !environmentEntity.canTakeDamage )
 		{
 			return false;
 		}
@@ -272,8 +272,13 @@ public class GameTile implements PathfindingTile
 	}
 
 	@Override
-	public int getInfluence()
+	public int getInfluence( EnumBitflag<Passability> travelType, Object self )
 	{
+		if (environmentEntity != null && !environmentEntity.passableBy.intersect( travelType ) && environmentEntity.canTakeDamage)
+		{
+			return 100;
+		}
+
 		return 0;
 	}
 
