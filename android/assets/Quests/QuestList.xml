@@ -1,6 +1,5 @@
 <Quests>
 	<Quest>Blacksmith/Blacksmith1</Quest>
-	<Quest>Forest/ArmyExpedition</Quest>
 	<Quest>Forest/ArmyExpeditionLosing</Quest>
 	<Quest>Forest/BanditStash</Quest>
 	<Quest>Forest/CapturedVillagers</Quest>
@@ -13,4 +12,5 @@
 	<Quest>Lovers/LoversEncounter</Quest>
 	<Quest>Lovers/LoversTemple</Quest>
 	<Quest>Mage/Mage1</Quest>
+	<Quest>Soldier/Soldier1</Quest>
 </Quests>

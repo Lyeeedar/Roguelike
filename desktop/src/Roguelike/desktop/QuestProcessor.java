@@ -77,7 +77,14 @@ public class QuestProcessor
 		String flagListContents = "<Flags>\n";
 		for (OutputData data : output.values())
 		{
-			flagListContents += "\t<"+data.key+">\n";
+			flagListContents += "\t<"+data.key;
+
+			if (data.run)
+			{
+				flagListContents += " RunFlag=\"true\" ";
+			}
+
+			flagListContents += ">\n";
 
 			for (String val : data.values)
 			{
@@ -173,6 +180,8 @@ public class QuestProcessor
 					output.put( qo.key, data );
 				}
 
+				data.run = qo.runFlag;
+
 				if (!data.values.contains( qo.data, false ))
 				{
 					data.values.add( qo.data );
@@ -193,5 +202,6 @@ public class QuestProcessor
 	{
 		public String key;
 		public Array<String> values = new Array<String>(  );
+		public boolean run;
 	}
 }

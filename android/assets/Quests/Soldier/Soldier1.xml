@@ -1,6 +1,8 @@
 <Quest>
     <AllowedLevels>Forest,EnchantedForest</AllowedLevels>
 
+    <Rarity>VeryCommon</Rarity>
+
     <Rooms>
         <Room>
             <AddFeatures>false</AddFeatures>
@@ -15,7 +17,6 @@
                         <Sprite>
                             <Name>Oryx/uf_split/uf_heroes/knight</Name>
                             <Colour><RGB>200,200,200</RGB></Colour>
-                            <DrawActualSize>true</DrawActualSize>
                         </Sprite>
 
                         <Statistics>
@@ -62,19 +63,26 @@
                                 </InCombat>
                             </Exclamations>
                             <Dialogue>
-                                <Chunk Condition="FirstChat == 0" ReliesOn="FirstChat">
+                                <Chunk Condition="SoldierHelped == 0" ReliesOn="SoldierHelped">
                                     <Text>Hello adventurer, thank you for the help.</Text>
-                                    <Text>The knights of Ros never forget a favour.</Text>
-                                    <Text>Here take this, with our thanks.</Text>
-                                    <GainItem>
-                                        <Recipe>sword</Recipe>
-                                        <Material>Metal</Material>
-                                        <Quality>2</Quality>
-                                    </GainItem>
-                                    <SetVariable>
-                                        <Key>FirstChat</Key>
-                                        <Value>1</Value>
-                                    </SetVariable>
+                                    <Text>This was supposed to be a simple training exercise, but has turned out like this.</Text>
+                                    <Text>You wouldn't happen to know the route to the nearest town would you?</Text>
+                                    <Input Key="Response">
+                                        <Choice>Sure! It's that way.</Choice>
+                                        <Choice>I'm just as lost as you are.</Choice>
+                                    </Input>
+                                    <Branch>
+                                        <Branch Condition="Response==1">
+                                            <Text>Ahh, thank you. We greatly appreciate it.</Text>
+                                            <SetVariable>
+                                                <Key>SoldierHelped</Key>
+                                                <Value>1</Value>
+                                            </SetVariable>
+                                        </Branch>
+                                        <Branch Condition="Response==2">
+                                            <Text>Lost too? A pity. Well good luck to you too!</Text>
+                                        </Branch>
+                                    </Branch>
                                 </Chunk>
                                 <Chunk>
                                     <Text>Thank you for your help.</Text>
@@ -101,5 +109,19 @@
 
         </Room>
     </Rooms>
+
+    <Outputs>
+
+        <Soldier>
+            <Data>1</Data>
+            <Conditions>
+                <DialogueValue>
+                    <Key>SoldierHelped</Key>
+                    <Value>1</Value>
+                </DialogueValue>
+            </Conditions>
+        </Soldier>
+
+    </Outputs>
 
 </Quest>

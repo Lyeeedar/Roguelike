@@ -34,7 +34,8 @@
                             </Exclamations>
                             <Dialogue>
                                 <Chunk>
-                                    <Text>I can't believe I survived that. You should speak to the captain.</Text>
+                                    <Text>...I can't believe I survived that...</Text>
+                                    <Text>Oh hey there adventurer. You should speak to the captain.</Text>
                                 </Chunk>
                             </Dialogue>
                         </Dialogue>

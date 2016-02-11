@@ -728,8 +728,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 							}
 							else
 							{
-								Sprite sprite = TreasureGenerator.treasureTable.getCurrencySprite( gtile.items );
-								if ( sprite == null ) { sprite = bag; }
+								Sprite sprite = bag;
 								queueSprite( sprite, gtile.light, drawX, drawY, Global.TileSize, Global.TileSize, offsetx, offsety, RenderLayer.ITEM, 0 );
 
 								for ( Item item : gtile.items )

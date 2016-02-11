@@ -28,8 +28,7 @@
                                 <Chunk Condition="ReceivedReward == 0" ReliesOn="ReceivedReward">
                                     <Text>Are those my goods? Thank you so much!</Text>
                                     <RemoveItem>Goods</RemoveItem>
-                                    <Text>Here, take half, you've earned it.</Text>
-                                    <GainItem>currency</GainItem>
+                                    <Text>I won't forget this kindness</Text>
                                     <SetVariable>
                                         <Key>ReceivedReward</Key>
                                         <Value>1</Value>

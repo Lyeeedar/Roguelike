@@ -1,4 +1,7 @@
 <Flags>
+	<soldier>
+		<1/>
+	</soldier>
 	<loversquest>
 		<temple/>
 		<captured/>
@@ -9,13 +12,13 @@
 	<blacksmith>
 		<1/>
 	</blacksmith>
-	<witchhelped>
+	<witchhelped RunFlag="true" >
 		<true/>
 	</witchhelped>
-	<merchanthelped>
+	<merchanthelped RunFlag="true" >
 		<true/>
 	</merchanthelped>
-	<villagersfreed>
+	<villagersfreed RunFlag="true" >
 		<true/>
 	</villagersfreed>
 	<magequest>

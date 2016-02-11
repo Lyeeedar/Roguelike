@@ -136,24 +136,10 @@ public class TreasureGenerator
 
 		int val = ran.nextInt(100) * quality;
 
-		int i = treasureTable.items.size - 1;
+		Item money = Item.load( "Treasure/Money" );
+		money.count = val;
 
-		while ( i >= 0 )
-		{
-			TreasureTable.TreasureItem treasure = treasureTable.items.get( i );
-
-			if ( val >= treasure.value )
-			{
-				val -= treasure.value;
-
-				Item item = Item.load( "Treasure/" + treasure.fileName );
-				items.add(item);
-			}
-			else
-			{
-				i--;
-			}
-		}
+		items.add(money);
 
 		return items;
 	}
@@ -341,94 +327,10 @@ public class TreasureGenerator
 		return materialItem;
 	}
 
-	public static final TreasureTable treasureTable = new TreasureTable( "Items/Treasure/TreasureTable.xml" );
 	private static final QualityMap abilityList = new QualityMap( "Abilities/AbilityList.xml" );
 	private static final QualityMap modifierList = new QualityMap( "Items/Modifiers/ModifierList.xml" );
 	private static final HashMap<String, QualityMap> materialLists = new HashMap<String, QualityMap>(  );
 	private static final RecipeList recipeList = new RecipeList( "Items/Recipes/Recipes.xml" );
-
-	public static class TreasureTable
-	{
-		public static class TreasureItem
-		{
-			public final String fileName;
-			public final String itemName;
-			public final int value;
-
-			public TreasureItem( String name, int value )
-			{
-				this.fileName = name;
-				this.value = value;
-
-				Item item = Item.load( "Treasure/" + fileName );
-				itemName = item.name;
-			}
-		}
-
-		public Array<TreasureItem> items = new Array<TreasureItem>(  );
-
-		public TreasureTable( String path )
-		{
-			XmlReader reader = new XmlReader();
-			XmlReader.Element xml = null;
-
-			try
-			{
-				xml = reader.parse( Gdx.files.internal( path ) );
-			}
-			catch ( IOException e )
-			{
-				e.printStackTrace();
-			}
-
-			for ( int i = 0; i < xml.getChildCount(); i++ )
-			{
-				XmlReader.Element itemElement = xml.getChild( i );
-
-				items.add( new TreasureItem( itemElement.getName(), Integer.parseInt( itemElement.getText() ) ) );
-			}
-		}
-
-		public int getValueForCurrency( Item item )
-		{
-			int value = -1;
-
-			for ( TreasureItem ti : items )
-			{
-				if ( ti.itemName.equals( item.name ) )
-				{
-					value = ti.value;
-					break;
-				}
-			}
-
-			return value;
-		}
-
-		public Sprite getCurrencySprite( Array<Item> items )
-		{
-			Sprite sprite = null;
-			int bestValue = 0;
-
-			for ( Item item : items )
-			{
-				int value = getValueForCurrency( item );
-
-				if ( value == -1 )
-				{
-					return null;
-				}
-
-				if ( value > bestValue )
-				{
-					bestValue = value;
-					sprite = item.getIcon();
-				}
-			}
-
-			return sprite;
-		}
-	}
 
 	private static class RecipeList
 	{

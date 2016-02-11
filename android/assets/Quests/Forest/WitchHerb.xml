@@ -98,7 +98,7 @@
 	</Rooms>
 
 	<Outputs>
-		<WitchHelped>
+		<WitchHelped RunFlag="true">
 			<Conditions>
 				<DialogueValue>
 					<Entity>Witch</Entity>
