@@ -10,10 +10,10 @@
 
     <Statistics>
 
-        <Attack>9</Attack>
-        <Defense>10</Defense>
+        <Attack>12</Attack>
+        <Defense>20</Defense>
 
-        <Constitution>7</Constitution>
+        <Constitution>10</Constitution>
         <Perception>7</Perception>
         <Strength>5</Strength>
         <Willpower>5</Willpower>

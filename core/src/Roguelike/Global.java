@@ -371,9 +371,9 @@ public class Global
 
 			if (atkStat == 0) { continue; }
 
-			int atkerStat = attackerVariableMap.get( stat.toString().toLowerCase() ) - 10;
+			float atkerStat = attackerVariableMap.get( stat.toString().toLowerCase() ) / 5.0f;
 
-			int sclVal = atkerStat * atkStat;
+			float sclVal = atkerStat * atkStat;
 
 			float falloff = (float)Math.sqrt( sclVal );
 

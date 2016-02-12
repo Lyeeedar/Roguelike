@@ -47,9 +47,9 @@
     </Class>
 
     <Class>
-        <Name>Soldier</Name>
+        <Name>Fighter</Name>
         <Description>A physical fighter proficient in all manner of weaponry</Description>
-        <UnlockedBy>Soldier</UnlockedBy>
+        <UnlockedBy>Fighter</UnlockedBy>
         <Male>
             <Sprite>
                 <Name>Oryx/uf_split/uf_heroes/knight</Name>
@@ -94,9 +94,9 @@
     </Class>
 
     <Class>
-        <Name>Wizard</Name>
+        <Name>Mage</Name>
         <Description>A magical master proficient in slinging spells</Description>
-        <UnlockedBy>Wizard</UnlockedBy>
+        <UnlockedBy>Mage</UnlockedBy>
         <Male>
             <Sprite>
                 <Name>Oryx/uf_split/uf_heroes/wizard</Name>

@@ -1,7 +1,7 @@
 <Quest>
 
     <Inputs>
-        <FlagPresent Not="true">Wizard</FlagPresent>
+        <FlagPresent Not="true">Mage</FlagPresent>
     </Inputs>
 
     <Rarity>VeryCommon</Rarity>
@@ -107,7 +107,7 @@
 
     <Outputs>
 
-        <Wizard>
+        <Mage>
             <Data>1</Data>
             <Conditions>
                 <DialogueValue>
@@ -115,7 +115,7 @@
                     <Value>1</Value>
                 </DialogueValue>
             </Conditions>
-        </Wizard>
+        </Mage>
 
     </Outputs>
 

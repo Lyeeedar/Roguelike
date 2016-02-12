@@ -31,6 +31,8 @@ public abstract class AbstractApplicationChanger
 		Gdx.app = createApplication( Global.Game, prefs );
 	}
 
+	public abstract void processResources();
+
 	public abstract void setDefaultPrefs( Preferences prefs );
 
 	public abstract Application createApplication( RoguelikeGame game, Preferences pref );

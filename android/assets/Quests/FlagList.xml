@@ -2,9 +2,6 @@
 	<hunter>
 		<1/>
 	</hunter>
-	<soldier>
-		<1/>
-	</soldier>
 	<loversquest>
 		<temple/>
 		<captured/>
@@ -32,7 +29,10 @@
 		<lived1/>
 		<died1/>
 	</magequest>
-	<wizard>
+	<mage>
 		<1/>
-	</wizard>
+	</mage>
+	<fighter>
+		<1/>
+	</fighter>
 </Flags>

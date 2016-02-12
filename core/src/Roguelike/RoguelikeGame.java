@@ -33,6 +33,8 @@ public class RoguelikeGame extends Game
 	@Override
 	public void create()
 	{
+		Global.ApplicationChanger.processResources();
+
 		if (!Global.ANDROID)
 		{
 			Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()

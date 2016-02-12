@@ -17,12 +17,6 @@ public class DesktopLauncher
 		Global.Game = new RoguelikeGame();
 		Global.ApplicationChanger = new LwjglApplicationChanger();
 		Global.ApplicationChanger.createApplication();
-		Global.RELEASE = true;
-
-		if (!Global.RELEASE)
-		{
-			new QuestProcessor();
-			new AtlasCreator();
-		}
+		//Global.RELEASE = true;
 	}
 }

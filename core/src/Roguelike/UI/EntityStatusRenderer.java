@@ -29,9 +29,23 @@ public class EntityStatusRenderer
 		float barheight = height * heightScale;
 
 		float alpha = val == 1 ? 0.25f : 1.0f ;
-		if (entity instanceof GameEntity && entity.statusEffects.size > 0)
+		if (entity instanceof GameEntity)
 		{
-			alpha = 1;
+			boolean nonpermanentEffect = false;
+
+			for (int i = 0; i < entity.statusEffects.size; i++)
+			{
+				if ( entity.statusEffects.get( i ).durationType != StatusEffect.DurationType.PERMANENT)
+				{
+					nonpermanentEffect = true;
+					break;
+				}
+			}
+
+			if (nonpermanentEffect)
+			{
+				alpha = 1;
+			}
 		}
 
 		int by = y-height+(int)barheight+8;

@@ -11,14 +11,14 @@
 
     <Statistics>
 
-        <Attack>9</Attack>
-        <Defense>5</Defense>
+        <Attack>12</Attack>
+        <Defense>15</Defense>
 
-        <Constitution>6</Constitution>
+        <Constitution>7</Constitution>
         <Perception>7</Perception>
         <Strength>5</Strength>
         <Willpower>5</Willpower>
-        <Speed>8</Speed>
+        <Speed>9</Speed>
 
     </Statistics>
 

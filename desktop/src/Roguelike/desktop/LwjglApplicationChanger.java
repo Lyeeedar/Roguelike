@@ -62,6 +62,16 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 	}
 
 	@Override
+	public void processResources()
+	{
+		if (!Global.RELEASE)
+		{
+			new QuestProcessor();
+			new AtlasCreator();
+		}
+	}
+
+	@Override
 	public void updateApplication( Preferences pref )
 	{
 		System.setProperty( "org.lwjgl.opengl.Window.undecorated", "" + pref.getBoolean( "borderless" ) );

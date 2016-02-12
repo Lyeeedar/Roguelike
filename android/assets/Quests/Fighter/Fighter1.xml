@@ -4,7 +4,7 @@
     <Rarity>VeryCommon</Rarity>
 
     <Inputs>
-        <FlagPresent Not="true">Soldier</FlagPresent>
+        <FlagPresent Not="true">Fighter</FlagPresent>
     </Inputs>
 
     <Rooms>
@@ -116,7 +116,7 @@
 
     <Outputs>
 
-        <Soldier>
+        <Fighter>
             <Data>1</Data>
             <Conditions>
                 <DialogueValue>
@@ -124,7 +124,7 @@
                     <Value>1</Value>
                 </DialogueValue>
             </Conditions>
-        </Soldier>
+        </Fighter>
 
     </Outputs>
 

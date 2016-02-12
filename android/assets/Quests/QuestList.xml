@@ -7,6 +7,7 @@
 	<Quest>Blacksmith/Blacksmith6</Quest>
 	<Quest>EnchantedForest/EvilAltar</Quest>
 	<Quest>EnchantedForest/GoodAltar</Quest>
+	<Quest>Fighter/Fighter1</Quest>
 	<Quest>Forest/ArmyExpeditionLosing</Quest>
 	<Quest>Forest/BanditStash</Quest>
 	<Quest>Forest/CapturedVillagers</Quest>
@@ -20,5 +21,4 @@
 	<Quest>Lovers/LoversEncounter</Quest>
 	<Quest>Lovers/LoversTemple</Quest>
 	<Quest>Mage/Mage1</Quest>
-	<Quest>Soldier/Soldier1</Quest>
 </Quests>

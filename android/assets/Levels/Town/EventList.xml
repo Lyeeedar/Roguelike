@@ -21,11 +21,23 @@
         </Value>
     </Blacksmith>
 
-    <Wizard>
+    <Mage>
         <Value Value="1">
-            <Text RewardMessage="Wizard Class Unlocked">A group of wizards and their apprentices have arrived in the village, and set up a small magic school. The apprentices can head out on adventures to gain experience if they desire.</Text>
+            <Text RewardMessage="Mage Class Unlocked">A group of mages and their apprentices have arrived in the village, and set up a small magic school. The apprentices can head out on adventures to gain experience if they desire.</Text>
         </Value>
-    </Wizard>
+    </Mage>
+
+    <Fighter>
+        <Value Value="1">
+            <Text RewardMessage="Fighter Class Unlocked">A group of soldiers and their squires have arrived in the village, and set up a small training camp. The soldiers can head out on adventures to gain experience and funds if they desire.</Text>
+        </Value>
+    </Fighter>
+
+    <Hunter>
+        <Value Value="1">
+            <Text RewardMessage="Hunter Class Unlocked">A group of hunters and their trainees have arrived in the village, and set up a small archery range. The hunters can head out on hunts to gain experience if they desire.</Text>
+        </Value>
+    </Hunter>
 
     <MerchantHelped>
         <Value>
@@ -36,14 +48,9 @@
 
     <VillagersFreed>
         <Value>
-            <Text>Some of the captured villagers stumble back into town, telling stories of the mighty adventurer who saved them from the goblin clutches.</Text>
+            <Text RewardMessage="Starting Funds Increased">Some of the captured villagers stumble back into town, telling stories of the mighty adventurer who saved them from the goblin clutches.</Text>
+            <AddFunds>5</AddFunds>
         </Value>
     </VillagersFreed>
-
-    <StartingFunds>
-        <Value Value="50">
-            <Text RewardMessage="Starting Funds Increased">You now have 50 monies to spend on random useless tat! Yay for you! Capitalism Ho!</Text>
-        </Value>
-    </StartingFunds>
 
 </Events>

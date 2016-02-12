@@ -31,6 +31,9 @@ public class AndroidApplicationChanger extends AbstractApplicationChanger
 	}
 
 	@Override
+	public void processResources() {}
+
+	@Override
 	public void updateApplication( Preferences pref )
 	{
 		int width = pref.getInteger( "resolutionX" );
