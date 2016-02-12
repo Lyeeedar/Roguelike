@@ -96,7 +96,7 @@ public class EffectTypeStatus extends AbstractEffectType
 		{
 			StatusEffect status = StatusEffect.load( statusData, aa );
 			status.extraData.add( new Object[]{ "level", aa.tree.level } );
-			aa.getCaster().addStatusEffect( status );
+			target.addStatusEffect( status );
 		}
 	}
 

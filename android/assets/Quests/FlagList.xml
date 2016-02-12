@@ -1,4 +1,7 @@
 <Flags>
+	<hunter>
+		<1/>
+	</hunter>
 	<soldier>
 		<1/>
 	</soldier>
@@ -6,7 +9,6 @@
 		<temple/>
 		<captured/>
 		<possessed/>
-		<survived/>
 		<resurrect/>
 	</loversquest>
 	<blacksmith>

@@ -133,7 +133,7 @@ public class SoundInstance
 								{
 									for ( ActivationActionGroup group : t.environmentEntity.onHearActions )
 									{
-										group.activate( t.environmentEntity, 1 );
+										group.activate( t.environmentEntity, null, 1 );
 									}
 								}
 

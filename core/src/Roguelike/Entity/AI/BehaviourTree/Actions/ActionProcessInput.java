@@ -156,7 +156,7 @@ public class ActionProcessInput extends AbstractAction
 					{
 						for ( ActivationActionGroup action : tile.environmentEntity.onActivateActions )
 						{
-							if ( action.enabled && action.checkCondition( tile.environmentEntity, 1 ) )
+							if ( action.enabled && action.checkCondition( tile.environmentEntity, entity, 1 ) )
 							{
 								entityWithinRange = Math.abs( Global.CurrentLevel.player.tile[0][0].x - tile.x ) <= 1
 													&& Math.abs( Global.CurrentLevel.player.tile[0][0].y - tile.y ) <= 1;
@@ -184,7 +184,7 @@ public class ActionProcessInput extends AbstractAction
 				Array<ActivationActionGroup> valid = new Array<ActivationActionGroup>(  );
 				for ( ActivationActionGroup action : tile.environmentEntity.onActivateActions )
 				{
-					if ( action.enabled && action.checkCondition( tile.environmentEntity, 1 ) )
+					if ( action.enabled && action.checkCondition( tile.environmentEntity, entity, 1 ) )
 					{
 						valid.add( action );
 						break;

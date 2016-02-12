@@ -1,5 +1,6 @@
 package Roguelike.Entity.ActivationAction;
 
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Global;
 import Roguelike.Util.EnumBitflag;
@@ -23,9 +24,9 @@ public class ActivationActionSetPassable extends AbstractActivationAction
 	}
 
 	@Override
-	public void evaluate( EnvironmentEntity entity, float delta )
+	public void evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
-		entity.passableBy = passableBy;
+		owningEntity.passableBy = passableBy;
 	}
 
 	@Override

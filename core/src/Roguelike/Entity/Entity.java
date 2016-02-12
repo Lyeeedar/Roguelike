@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import Roguelike.AssetManager;
 import Roguelike.GameEvent.AdditionalSprite;
+import Roguelike.GameEvent.IGameObject;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
@@ -26,7 +27,7 @@ import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
-public abstract class Entity
+public abstract class Entity implements IGameObject
 {
 	// ----------------------------------------------------------------------
 	public abstract void update( float delta );
@@ -471,6 +472,27 @@ public abstract class Entity
 	public void updateShadowCast()
 	{
 		visibilityCache.getShadowCast( tile[0][0].level.Grid, tile[0][0].x, tile[0][0].y, getStatistic( Statistic.PERCEPTION ), this );
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public String getName()
+	{
+		return name;
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public String getDescription()
+	{
+		return "";
+	}
+
+	// ----------------------------------------------------------------------
+	@Override
+	public Sprite getIcon()
+	{
+		return sprite;
 	}
 
 	// ----------------------------------------------------------------------

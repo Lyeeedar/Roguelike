@@ -1,6 +1,7 @@
 package Roguelike.Entity.ActivationAction;
 
 import Roguelike.AssetManager;
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Sprite.Sprite;
 import Roguelike.Sprite.TilingSprite;
@@ -26,10 +27,10 @@ public class ActivationActionSetSprite extends AbstractActivationAction
 	}
 
 	@Override
-	public void evaluate( EnvironmentEntity entity, float delta )
+	public void evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
-		entity.sprite = sprite;
-		entity.tilingSprite = tilingSprite;
+		owningEntity.sprite = sprite;
+		owningEntity.tilingSprite = tilingSprite;
 	}
 
 	@Override

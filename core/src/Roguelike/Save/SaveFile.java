@@ -3,7 +3,6 @@ package Roguelike.Save;
 import Roguelike.Ability.AbilityTree;
 import Roguelike.Ability.ActiveAbility.ActiveAbility;
 import Roguelike.AssetManager;
-import Roguelike.Dialogue.*;
 import Roguelike.DungeonGeneration.DungeonFileParser.DFPRoom;
 import Roguelike.DungeonGeneration.Room;
 import Roguelike.DungeonGeneration.Room.RoomDoor;
@@ -66,11 +65,8 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import kryo.FastEnumMapSerializer;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -577,7 +573,9 @@ public final class SaveFile
 		kryo.register( ActivationActionSpawnField.class );
 		kryo.register( ActivationActionKillThis.class );
 		kryo.register( ActivationActionRemoveItem.class );
-		kryo.register( ActivationConditionPlayerProximity.class );
+		kryo.register( ActivationActionAddStatus.class );
+		kryo.register( ActivationActionDealDamage.class );
+		kryo.register( ActivationConditionProximity.class );
 		kryo.register( ActivationConditionHasItem.class );
 	}
 }

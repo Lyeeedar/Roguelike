@@ -21,30 +21,7 @@
                         <Passable>false</Passable>
                         <Opaque>false</Opaque>
                     </EnvironmentData>
-                    <EntityData>
-                        <Name>Succubus</Name>
-                        <Sprite>
-                            <Name>Oryx/uf_split/uf_heroes/pixie_b</Name>
-                            <DrawActualSize>true</DrawActualSize>
-                        </Sprite>
-                        <AI>basicMonster</AI>
-                        <Factions>
-                            <Faction>Demon</Faction>
-                        </Factions>
-
-                        <Statistics>
-
-                            <Attack>5</Attack>
-                            <Defense>30</Defense>
-
-                            <Constitution>10</Constitution>
-                            <Perception>10</Perception>
-                            <Strength>10</Strength>
-                            <Willpower>10</Willpower>
-                            <Speed>10</Speed>
-
-                        </Statistics>
-                    </EntityData>
+                    <EntityData>Enemies/Demon/Succubus</EntityData>
                 </Symbol>
                 <Symbol Extends=",">
                     <Char>p</Char>
@@ -55,6 +32,83 @@
                         </Sprite>
                         <Passable>false</Passable>
                     </EnvironmentData>
+                </Symbol>
+                <Symbol Extends=".">
+                    <Char>m</Char>
+                    <EntityData Extends="NPC/HumanBase">
+
+                        <Name>Ruffletop</Name>
+
+                        <Sprite>
+                            <Name>Oryx/Custom/heroes/ruffletop</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+
+                        <Dialogue>
+                            <Exclamations>
+                                <InCombat>
+                                    <Exclamation>Behind me my dear Juliana! I shall protect you!</Exclamation>
+                                </InCombat>
+                            </Exclamations>
+                        </Dialogue>
+
+                        <Statistics>
+                            <Constitution>3</Constitution>
+                            <Attack>5</Attack>
+                            <Defense>0</Defense>
+                        </Statistics>
+
+                        <Statuses>
+                            <Status>
+                                <Name>Demon curse</Name>
+                                <Description>A curse leaches away your life</Description>
+                                <Icon>
+                                    <Name>Icons/Summon</Name>
+                                    <Colour><RGB>255,0,0</RGB></Colour>
+                                </Icon>
+                                <Events>
+                                    <OnTurn>
+                                        <DOT>5</DOT>
+                                    </OnTurn>
+                                </Events>
+                            </Status>
+                        </Statuses>
+
+                    </EntityData>
+                </Symbol>
+
+                <Symbol Extends=".">
+                    <Char>f</Char>
+                    <EntityData Extends="NPC/HumanBase">
+
+                        <Name>Juliana</Name>
+
+                        <Factions>
+                            <Faction>Demon</Faction>
+                        </Factions>
+
+                        <Sprite>
+                            <Name>Oryx/Custom/heroes/juliana</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+
+                        <Dialogue>
+                            <Exclamations>
+                                <SeePlayer>
+                                    <Exclamation Condition="RuffletopAlive == 1" ReliesOn="RuffletopAlive">Ruffly no! Run! You can't beat it!</Exclamation>
+                                    <Exclamation>Ruffly why...</Exclamation>
+                                </SeePlayer>
+                            </Exclamations>
+                            <Dialogue>
+                                <Chunk>
+                                    <Text>I don't feel like talking adventurer.</Text>
+                                    <Text>My boyfriend just got murdered in front of me.</Text>
+                                    <Text>I would like to be left alone.</Text>
+                                </Chunk>
+                            </Dialogue>
+                        </Dialogue>
+
+                    </EntityData>
                 </Symbol>
             </Symbols>
 
@@ -80,23 +134,17 @@
         <LoversQuest Defer="true">
             <Data>Possessed</Data>
             <Conditions>
-                <EntityAlive Not="true">Player</EntityAlive>
-            </Conditions>
-        </LoversQuest>
-
-        <LoversQuest Defer="true">
-            <Data>Survived</Data>
-            <Conditions>
-                <EntityAlive Not="true">Succubus</EntityAlive>
+                <EntityAlive>Succubus</EntityAlive>
             </Conditions>
         </LoversQuest>
 
         <LoversQuest Defer="true">
             <Data>Resurrect</Data>
             <Conditions>
-                <EntityAlive Not="true">Ruffletop</EntityAlive>
+                <EntityAlive Not="true">Succubus</EntityAlive>
             </Conditions>
         </LoversQuest>
+
     </Outputs>
 
 </Quest>

@@ -1,5 +1,6 @@
 package Roguelike.Entity.ActivationAction;
 
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Global;
 import com.badlogic.gdx.utils.XmlReader;
@@ -24,7 +25,7 @@ public class ActivationActionRemoveItem extends AbstractActivationAction
 	}
 
 	@Override
-	public void evaluate( EnvironmentEntity entity, float delta )
+	public void evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
 		Global.CurrentLevel.player.inventory.removeItem( itemName, count );
 	}

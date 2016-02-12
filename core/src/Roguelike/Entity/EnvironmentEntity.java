@@ -43,6 +43,7 @@ public class EnvironmentEntity extends Entity
 	public Array<ActivationActionGroup> onHearActions = new Array<ActivationActionGroup>(  );
 	public Array<ActivationActionGroup> onDeathActions = new Array<ActivationActionGroup>(  );
 	public Array<ActivationActionGroup> noneActions = new Array<ActivationActionGroup>(  );
+	public Array<ActivationActionGroup> proximityActions = new Array<ActivationActionGroup>(  );
 
 	// ----------------------------------------------------------------------
 	@Override
@@ -52,7 +53,7 @@ public class EnvironmentEntity extends Entity
 		{
 			if (group.enabled)
 			{
-				group.activate( this, cost );
+				group.activate( this, null, cost );
 			}
 		}
 
@@ -292,6 +293,7 @@ public class EnvironmentEntity extends Entity
 		loadActions(xml.getChildByName( "OnHear" ), entity.onHearActions);
 		loadActions(xml.getChildByName( "OnDeath" ), entity.onDeathActions);
 		loadActions( xml.getChildByName( "Actions" ), entity.noneActions );
+		loadActions( xml.getChildByName( "Proximity" ), entity.proximityActions );
 
 		return entity;
 	}

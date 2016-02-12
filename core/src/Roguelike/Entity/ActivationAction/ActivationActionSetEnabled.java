@@ -1,5 +1,6 @@
 package Roguelike.Entity.ActivationAction;
 
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
@@ -26,12 +27,12 @@ public class ActivationActionSetEnabled extends AbstractActivationAction
 	}
 
 	@Override
-	public void evaluate( EnvironmentEntity entity, float delta )
+	public void evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
 		if (entityName != null)
 		{
 			Array<EnvironmentEntity> all = new Array<EnvironmentEntity>(  );
-			entity.tile[0][0].level.getAllEnvironmentEntities( all );
+			owningEntity.tile[0][0].level.getAllEnvironmentEntities( all );
 
 			for (EnvironmentEntity ee : all)
 			{
@@ -43,7 +44,7 @@ public class ActivationActionSetEnabled extends AbstractActivationAction
 		}
 		else
 		{
-			apply( entity );
+			apply( owningEntity );
 		}
 	}
 
@@ -82,6 +83,14 @@ public class ActivationActionSetEnabled extends AbstractActivationAction
 		}
 
 		for (ActivationActionGroup group : entity.noneActions)
+		{
+			if (group.name.equals( actionName ))
+			{
+				group.enabled = enabled;
+			}
+		}
+
+		for (ActivationActionGroup group : entity.proximityActions)
 		{
 			if (group.name.equals( actionName ))
 			{

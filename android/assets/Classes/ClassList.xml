@@ -141,9 +141,9 @@
     </Class>
 
     <Class>
-        <Name>Archer</Name>
+        <Name>Hunter</Name>
         <Description>A survival expert proficient with a bow</Description>
-        <UnlockedBy>Archer</UnlockedBy>
+        <UnlockedBy>Hunter</UnlockedBy>
         <Male>
             <Sprite>
                 <Name>Oryx/uf_split/uf_heroes/archer</Name>

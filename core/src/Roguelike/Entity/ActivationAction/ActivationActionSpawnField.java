@@ -1,5 +1,6 @@
 package Roguelike.Entity.ActivationAction;
 
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Fields.Field;
 import com.badlogic.gdx.utils.XmlReader;
@@ -13,11 +14,11 @@ public class ActivationActionSpawnField extends AbstractActivationAction
 	public int stacks;
 
 	@Override
-	public void evaluate( EnvironmentEntity entity, float delta )
+	public void evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
 		Field field = Field.load(fieldName);
 
-		field.trySpawnInTile( entity.tile[0][0], stacks );
+		field.trySpawnInTile( owningEntity.tile[0][0], stacks );
 	}
 
 	@Override

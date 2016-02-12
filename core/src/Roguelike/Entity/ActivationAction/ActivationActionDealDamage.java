@@ -5,19 +5,21 @@ import Roguelike.Entity.EnvironmentEntity;
 import com.badlogic.gdx.utils.XmlReader;
 
 /**
- * Created by Philip on 25-Jan-16.
+ * Created by Philip on 11-Feb-16.
  */
-public class ActivationActionKillThis extends AbstractActivationAction
+public class ActivationActionDealDamage extends AbstractActivationAction
 {
+	public int dam;
+
 	@Override
 	public void evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
-		owningEntity.HP = 0;
+		activatingEntity.applyDamage( dam, owningEntity );
 	}
 
 	@Override
 	public void parse( XmlReader.Element xml )
 	{
-
+		dam = Integer.parseInt( xml.getText() );
 	}
 }

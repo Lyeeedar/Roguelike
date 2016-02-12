@@ -1,5 +1,6 @@
 package Roguelike.Entity.ActivationAction;
 
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
@@ -36,11 +37,11 @@ public class ActivationActionGroup
 	}
 
 	// ----------------------------------------------------------------------
-	public boolean checkCondition( EnvironmentEntity entity, float delta )
+	public boolean checkCondition( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
 		for (AbstractActivationCondition condition : conditions)
 		{
-			if (!condition.evaluate( entity, delta ))
+			if (!condition.evaluate( owningEntity, activatingEntity, delta ))
 			{
 				return false;
 			}
@@ -50,13 +51,13 @@ public class ActivationActionGroup
 	}
 
 	// ----------------------------------------------------------------------
-	public void activate( EnvironmentEntity entity, float delta )
+	public void activate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
-		if (!checkCondition( entity, delta )) { return; }
+		if (!checkCondition( owningEntity, activatingEntity, delta )) { return; }
 
 		for (int i = 0; i < actions.size; i++)
 		{
-			actions.get( i ).evaluate( entity, delta );
+			actions.get( i ).evaluate( owningEntity, activatingEntity, delta );
 		}
 	}
 

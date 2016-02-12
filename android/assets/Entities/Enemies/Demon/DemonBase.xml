@@ -1,0 +1,24 @@
+<Entity>
+
+    <Name>Demon</Name>
+
+    <AI>basicMonster</AI>
+
+    <Factions>
+        <Faction>Demon</Faction>
+    </Factions>
+
+    <Statistics>
+
+        <Attack>15</Attack>
+        <Defense>25</Defense>
+
+        <Constitution>10</Constitution>
+        <Perception>10</Perception>
+        <Strength>10</Strength>
+        <Willpower>10</Willpower>
+        <Speed>10</Speed>
+
+    </Statistics>
+
+</Entity>

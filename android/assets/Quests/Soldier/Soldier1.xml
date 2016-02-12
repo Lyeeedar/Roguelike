@@ -3,6 +3,10 @@
 
     <Rarity>VeryCommon</Rarity>
 
+    <Inputs>
+        <FlagPresent Not="true">Soldier</FlagPresent>
+    </Inputs>
+
     <Rooms>
         <Room>
             <AddFeatures>false</AddFeatures>

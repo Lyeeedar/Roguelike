@@ -1,5 +1,6 @@
 package Roguelike.Entity.ActivationAction;
 
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Global;
@@ -30,7 +31,7 @@ public class ActivationActionSpawnEntity extends AbstractActivationAction
 	}
 
 	@Override
-	public void evaluate( EnvironmentEntity entity, float delta )
+	public void evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
 		if (numToSpawn == 0) { return; }
 
@@ -42,7 +43,7 @@ public class ActivationActionSpawnEntity extends AbstractActivationAction
 
 			GameEntity ge = GameEntity.load( entityName );
 
-			GameTile tile = entity.tile[0][0];
+			GameTile tile = owningEntity.tile[0][0];
 			int x = tile.x;
 			int y = tile.y;
 

@@ -14,7 +14,7 @@ import java.util.HashMap;
 public abstract class AbstractActivationAction
 {
 	// ----------------------------------------------------------------------
-	public abstract void evaluate( EnvironmentEntity entity, float delta );
+	public abstract void evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta );
 	public abstract void parse( XmlReader.Element xml );
 
 	// ----------------------------------------------------------------------
@@ -54,5 +54,7 @@ public abstract class AbstractActivationAction
 		ClassMap.put( "KILLTHIS", ActivationActionKillThis.class );
 		ClassMap.put( "SPAWNFIELD", ActivationActionSpawnField.class );
 		ClassMap.put( "REMOVEITEM", ActivationActionRemoveItem.class );
+		ClassMap.put( "DEALDAMAGE", ActivationActionDealDamage.class );
+		ClassMap.put( "ADDSTATUS", ActivationActionAddStatus.class );
 	}
 }

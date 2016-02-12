@@ -1,5 +1,6 @@
 package Roguelike.Entity.ActivationAction;
 
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Global;
 import com.badlogic.gdx.utils.XmlReader;
@@ -24,7 +25,7 @@ public class ActivationConditionHasItem extends AbstractActivationCondition
 	}
 
 	@Override
-	public boolean evaluate( EnvironmentEntity entity, float delta )
+	public boolean evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
 		if (Global.CurrentLevel.player.inventory.getItemCount( itemName ) >= count )
 		{

@@ -1,9 +1,9 @@
 package Roguelike.Entity.ActivationAction;
 
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 import java.util.HashMap;
 
@@ -13,7 +13,7 @@ import java.util.HashMap;
 public abstract class AbstractActivationCondition
 {
 	// ----------------------------------------------------------------------
-	public abstract boolean evaluate( EnvironmentEntity entity, float delta );
+	public abstract boolean evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta );
 	public abstract void parse( XmlReader.Element xml );
 
 	// ----------------------------------------------------------------------
@@ -43,7 +43,7 @@ public abstract class AbstractActivationCondition
 	// ----------------------------------------------------------------------
 	static
 	{
-		ClassMap.put( "PLAYERPROXIMITY", ActivationConditionPlayerProximity.class );
+		ClassMap.put( "PROXIMITY", ActivationConditionProximity.class );
 		ClassMap.put( "HASITEM", ActivationConditionHasItem.class );
 	}
 }

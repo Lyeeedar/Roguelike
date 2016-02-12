@@ -1,5 +1,6 @@
 package Roguelike.Entity.ActivationAction;
 
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
@@ -13,66 +14,42 @@ public class ActivationActionActivate extends AbstractActivationAction
 	public String actionName;
 
 	@Override
-	public void evaluate( EnvironmentEntity entity, float delta )
+	public void evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
 		if (entityName != null)
 		{
 			Array<EnvironmentEntity> all = new Array<EnvironmentEntity>(  );
-			entity.tile[0][0].level.getAllEnvironmentEntities( all );
+			owningEntity.tile[0][0].level.getAllEnvironmentEntities( all );
 
 			for (EnvironmentEntity ee : all)
 			{
 				if (ee.name.equals( entityName ))
 				{
-					apply( ee, delta );
+					apply( ee, owningEntity, delta );
 				}
 			}
 		}
 		else
 		{
-			apply( entity, delta );
+			apply( owningEntity, owningEntity, delta );
 		}
 	}
 
-	private void apply( EnvironmentEntity entity, float delta )
+	private void apply( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
-		for (ActivationActionGroup group : entity.onActivateActions)
+		for (ActivationActionGroup group : owningEntity.onActivateActions)
 		{
-			if (group.name.equals( actionName ) && group.enabled && group.checkCondition( entity, delta ))
+			if (group.name.equals( actionName ) && group.enabled && group.checkCondition( owningEntity, activatingEntity, delta ))
 			{
-				group.activate( entity, delta );
+				group.activate( owningEntity, activatingEntity, delta );
 			}
 		}
 
-		for (ActivationActionGroup group : entity.onTurnActions)
+		for (ActivationActionGroup group : owningEntity.noneActions)
 		{
-			if (group.name.equals( actionName ) && group.enabled && group.checkCondition( entity, delta ))
+			if (group.name.equals( actionName ) && group.enabled && group.checkCondition( owningEntity, activatingEntity, delta ))
 			{
-				group.activate( entity, delta );
-			}
-		}
-
-		for (ActivationActionGroup group : entity.onHearActions)
-		{
-			if (group.name.equals( actionName ) && group.enabled && group.checkCondition( entity, delta ))
-			{
-				group.activate( entity, delta );
-			}
-		}
-
-		for (ActivationActionGroup group : entity.onDeathActions)
-		{
-			if (group.name.equals( actionName ) && group.enabled && group.checkCondition( entity, delta ))
-			{
-				group.activate( entity, delta );
-			}
-		}
-
-		for (ActivationActionGroup group : entity.noneActions)
-		{
-			if (group.name.equals( actionName ) && group.enabled && group.checkCondition( entity, delta ))
-			{
-				group.activate( entity, delta );
+				group.activate( owningEntity, activatingEntity, delta );
 			}
 		}
 	}

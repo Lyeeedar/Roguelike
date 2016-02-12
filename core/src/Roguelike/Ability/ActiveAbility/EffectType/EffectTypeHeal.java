@@ -18,6 +18,8 @@ import exp4j.Helpers.EquationHelper;
 
 public class EffectTypeHeal extends AbstractEffectType
 {
+	private boolean self;
+
 	private String equation;
 	private String[] reliesOn;
 
@@ -26,19 +28,27 @@ public class EffectTypeHeal extends AbstractEffectType
 	{
 		reliesOn = xml.getAttribute( "ReliesOn", "" ).split( "," );
 		equation = xml.getText().toLowerCase();
+		self = xml.getBooleanAttribute( "Self", false );
 	}
 
 	@Override
 	public void update( ActiveAbility aa, float time, GameTile tile, GameEntity entity, EnvironmentEntity envEntity )
 	{
-		if ( entity != null )
+		if (self)
 		{
-			applyToEntity( entity, aa );
+			applyToEntity( aa.getCaster(), aa);
 		}
-
-		if ( envEntity != null )
+		else
 		{
-			applyToEntity( envEntity, aa );
+			if ( entity != null )
+			{
+				applyToEntity( entity, aa );
+			}
+
+			if ( envEntity != null )
+			{
+				applyToEntity( envEntity, aa );
+			}
 		}
 	}
 
@@ -69,6 +79,7 @@ public class EffectTypeHeal extends AbstractEffectType
 		EffectTypeHeal heal = new EffectTypeHeal();
 		heal.equation = equation;
 		heal.reliesOn = reliesOn;
+		heal.self = self;
 
 		return heal;
 	}

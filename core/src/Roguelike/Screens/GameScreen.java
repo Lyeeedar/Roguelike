@@ -1422,7 +1422,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{
 					if ( action.enabled )
 					{
-						action.activate( Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity, 1 );
+						action.activate( Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity, Global.CurrentLevel.player, 1 );
 						Global.CurrentLevel.player.tasks.add( new TaskWait() );
 						break;
 					}
@@ -2160,7 +2160,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					lockContextMenu = false;
 					clearContextMenu();
 
-					action.activate( parent, 1 );
+					action.activate( parent, Global.CurrentLevel.player, 1 );
 					Global.CurrentLevel.player.tasks.add( new TaskWait() );
 				}
 			} );

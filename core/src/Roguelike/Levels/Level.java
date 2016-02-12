@@ -307,7 +307,7 @@ public class Level
 					{
 						if (group.enabled)
 						{
-							group.activate( e, 1 );
+							group.activate( e, null, 1 );
 						}
 					}
 
@@ -901,6 +901,15 @@ public class Level
 		for ( EnvironmentEntity ee : tempEnvironmentEntityList )
 		{
 			ee.update( actionCost );
+
+			for (int i = 0; i < ee.proximityActions.size; i++)
+			{
+				ActivationActionGroup action = ee.proximityActions.get(i);
+				if ( action.enabled && action.checkCondition( ee, player, actionCost ))
+				{
+					action.activate( ee, player, actionCost );
+				}
+			}
 		}
 
 		tempFieldList.clear();
@@ -1173,6 +1182,18 @@ public class Level
 
 				float actionCost = task.cost * e.getActionDelay();
 				e.actionDelayAccumulator -= actionCost * e.getActionDelay();
+
+				for ( EnvironmentEntity ee : tempEnvironmentEntityList )
+				{
+					for (int i = 0; i < ee.proximityActions.size; i++)
+					{
+						ActivationActionGroup action = ee.proximityActions.get(i);
+						if ( action.enabled && action.checkCondition( ee, e, actionCost ))
+						{
+							action.activate( ee, e, actionCost );
+						}
+					}
+				}
 
 				e.tile[0][0].processFieldEffectsForEntity( e, actionCost );
 			}

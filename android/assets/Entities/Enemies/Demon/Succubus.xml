@@ -1,0 +1,51 @@
+<Entity Extends="Enemies/Demon/DemonBase">
+
+    <Name>Succubus</Name>
+
+    <Sprite>
+        <Name>Oryx/Custom/heroes/succubus</Name>
+        <DrawActualSize>true</DrawActualSize>
+    </Sprite>
+
+    <IsBoss>true</IsBoss>
+
+    <Abilities>
+        <BloodShot>BloodShot</BloodShot>
+        <StealHP>
+            <Range>1</Range>
+            <Cooldown>5</Cooldown>
+            <CooldownType>Wait</CooldownType>
+
+            <HitSprite>
+                <Name>EffectSprites/Splatter/Splatter</Name>
+                <UpdateRate>0.1</UpdateRate>
+                <Colour><RGB>153,0,0</RGB></Colour>
+                <Sound><Name>Bloodshot</Name></Sound>
+            </HitSprite>
+
+            <HitType>
+                <Enemy></Enemy>
+            </HitType>
+
+            <Effect>
+                <Damage>
+                    <Attack>120</Attack>
+                    <Constitution>1</Constitution>
+                </Damage>
+                <Heal Self="true">15</Heal>
+            </Effect>
+        </StealHP>
+    </Abilities>
+
+    <Dialogue>
+        <Exclamations>
+            <InCombat>
+                <Exclamation>Foolish mortal!</Exclamation>
+                <Exclamation>Time to drag you to the depths of hell!</Exclamation>
+                <Exclamation>Damnation!</Exclamation>
+                <Exclamation>Die!</Exclamation>
+            </InCombat>
+        </Exclamations>
+    </Dialogue>
+
+</Entity>

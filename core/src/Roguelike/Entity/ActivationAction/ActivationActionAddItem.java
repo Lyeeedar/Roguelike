@@ -1,5 +1,6 @@
 package Roguelike.Entity.ActivationAction;
 
+import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Global;
 import Roguelike.Items.Item;
@@ -18,7 +19,7 @@ public class ActivationActionAddItem extends AbstractActivationAction
 	int quality;
 
 	@Override
-	public void evaluate( EnvironmentEntity entity, float delta )
+	public void evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
 		if (item.getChildCount() > 0)
 		{

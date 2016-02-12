@@ -1,0 +1,55 @@
+<Quest>
+
+    <AllowedLevels>EnchantedForest</AllowedLevels>
+
+    <Rooms>
+        <Room>
+
+            <Symbols>
+                <Symbol Extends=",">
+                    <Char>A</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/altar_blood</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+                        <Passable>false</Passable>
+                        <Opaque>false</Opaque>
+                        <OnActivate>
+                            <Group Name="Spill blood on the altar">
+                                <SetEnabled Enabled="false">Spill blood on the altar</SetEnabled>
+                                <DealDamage>20</DealDamage>
+                                <SpawnEntity>Enemies/Demon/Succubus</SpawnEntity>
+                            </Group>
+                        </OnActivate>
+                    </EnvironmentData>
+                </Symbol>
+                <Symbol Extends=",">
+                    <Char>p</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/wall_hedge_7</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+                        <Passable>false</Passable>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>.............</Row>
+                <Row>...wwwwwww...</Row>
+                <Row>...wp,A,pw...</Row>
+                <Row>..ww,,,,,ww..</Row>
+                <Row>.ww,p,,,p,ww.</Row>
+                <Row>.w,,,,,,,,,w.</Row>
+                <Row>.ww,p,,,p,ww.</Row>
+                <Row>..ww,,,,,ww..</Row>
+                <Row>...wp,,,pw...</Row>
+                <Row>...www+www...</Row>
+                <Row>.............</Row>
+            </Rows>
+        </Room>
+    </Rooms>
+
+</Quest>

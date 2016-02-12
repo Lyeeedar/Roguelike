@@ -1,7 +1,7 @@
 <Quest>
 
     <Inputs>
-        <FlagPresent Not="true">Wizard</FlagPresent>
+        <FlagPresent Not="true">Hunter</FlagPresent>
     </Inputs>
 
     <Rarity>VeryCommon</Rarity>
@@ -18,14 +18,14 @@
                     <Char>s</Char>
                     <EntityData Extends="NPC/HumanBase">
                         <Sprite>
-                            <Name>Oryx/uf_split/uf_heroes/wizard</Name>
+                            <Name>Oryx/uf_split/uf_heroes/archer</Name>
                             <Colour><RGB>170,250,220</RGB></Colour>
                         </Sprite>
 
                         <Inventory>
                             <Equipment>
                                 <Wand>
-                                    <Recipe>Wand</Recipe>
+                                    <Recipe>Bow</Recipe>
                                     <Material>Metal</Material>
                                     <Quality>1</Quality>
                                 </Wand>
@@ -43,17 +43,17 @@
                 </Symbol>
 
                 <Symbol Extends=".">
-                    <Char>w</Char>
+                    <Char>h</Char>
                     <EntityData Extends="NPC/HumanBase">
                         <Sprite>
-                            <Name>Oryx/uf_split/uf_heroes/witch</Name>
+                            <Name>Oryx/Custom/heroes/archer</Name>
                             <DrawActualSize>true</DrawActualSize>
                         </Sprite>
 
                         <Inventory>
                             <Equipment>
                                 <Wand>
-                                    <Recipe>Wand</Recipe>
+                                    <Recipe>Bow</Recipe>
                                     <Material>Metal</Material>
                                     <Quality>1</Quality>
                                 </Wand>
@@ -62,9 +62,9 @@
 
                         <Dialogue>
                             <Dialogue>
-                                <Chunk Condition="MageHelped == 0" ReliesOn="MageHelped">
+                                <Chunk Condition="HunterHelped == 0" ReliesOn="HunterHelped">
                                     <Text>Good afternoon adventurer.</Text>
-                                    <Text>My students and I find ourselves a little lost, you wouldn't happen to know the way to a nearby town would you?</Text>
+                                    <Text>My apprentice and I find ourselves a little lost, you wouldn't happen to know the way to a nearby town would you?</Text>
                                     <Input Key="Response">
                                         <Choice>Sure! It's that way.</Choice>
                                         <Choice>I'm just as lost as you are.</Choice>
@@ -73,7 +73,7 @@
                                         <Branch Condition="Response==1">
                                             <Text>Ahh, thank you. We greatly appreciate it.</Text>
                                             <SetVariable>
-                                                <Key>MageHelped</Key>
+                                                <Key>HunterHelped</Key>
                                                 <Value>1</Value>
                                             </SetVariable>
                                         </Branch>
@@ -95,9 +95,8 @@
             <Rows>
                 <Row>......</Row>
                 <Row>..s...</Row>
-                <Row>...w..</Row>
-                <Row>....s.</Row>
-                <Row>..s...</Row>
+                <Row>...h..</Row>
+                <Row>......</Row>
                 <Row>......</Row>
             </Rows>
 
@@ -107,15 +106,15 @@
 
     <Outputs>
 
-        <Wizard>
+        <Hunter>
             <Data>1</Data>
             <Conditions>
                 <DialogueValue>
-                    <Key>MageHelped</Key>
+                    <Key>HunterHelped</Key>
                     <Value>1</Value>
                 </DialogueValue>
             </Conditions>
-        </Wizard>
+        </Hunter>
 
     </Outputs>
 

@@ -41,6 +41,7 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 	public Array<ActivationActionGroup> onHearActions;
 	public Array<ActivationActionGroup> onDeathActions;
 	public Array<ActivationActionGroup> noneActions;
+	public Array<ActivationActionGroup> proximityActions;
 
 	public FastEnumMap<Global.Statistic, Integer> stats;
 
@@ -65,6 +66,7 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 		onHearActions = obj.onHearActions;
 		onDeathActions = obj.onDeathActions;
 		noneActions = obj.noneActions;
+		proximityActions = obj.proximityActions;
 
 		canTakeDamage = obj.canTakeDamage;
 
@@ -89,6 +91,7 @@ public final class SaveEnvironmentEntity extends SaveableObject<EnvironmentEntit
 		entity.onHearActions = onHearActions;
 		entity.onDeathActions = onDeathActions;
 		entity.noneActions = noneActions;
+		entity.proximityActions = proximityActions;
 
 		entity.canTakeDamage = canTakeDamage;
 
