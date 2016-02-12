@@ -463,17 +463,7 @@ public abstract class AbstractDungeonGenerator
 						if (Global.LevelManager != null && Global.LevelManager.totalDepth > 0)
 						{
 							// Add stat scaling
-							for ( Global.Statistic stat : Global.Statistic.values() )
-							{
-								int current = e.statistics.get( stat );
-
-								float scaleVal = (float) Math.sqrt( Global.LevelManager.totalDepth );
-								scaleVal /= 10.0f;
-								scaleVal += 1;
-
-								int scaledVal = (int) ( (float) current * scaleVal );
-								e.statistics.put( stat, scaledVal );
-							}
+							e.applyDepthScaling();
 							e.isVariableMapDirty = true;
 							e.HP = e.getMaxHP();
 						}

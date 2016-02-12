@@ -343,6 +343,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{
 					batch.draw( white, tile.x * Global.TileSize + offsetx, tile.y * Global.TileSize + offsety, Global.TileSize, Global.TileSize );
 				}
+
+				batch.setColor( 0.8f, 0.8f, 0.4f, 0.5f );
+				if (selectedAbilityTile != null)
+				{
+					batch.draw( white, selectedAbilityTile.x * Global.TileSize + offsetx - 5, selectedAbilityTile.y * Global.TileSize + offsety - 5, Global.TileSize + 10, Global.TileSize + 10 );
+				}
 			}
 
 			if ( weaponTiles != null )
@@ -1348,63 +1354,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				Global.CurrentDialogue.displayedPopup = Global.CurrentDialogue.popup;
 			}
 		}
-		else if ( keycode == Keys.S )
-		{
-			Global.save();
-		}
-		else if ( keycode == Keys.L )
-		{
-			Global.load();
-		}
-		else if ( keycode == Keys.A )
-		{
-			AbilityTree tree = new AbilityTree( "FireAttunement" );
-
-			Item item = new Item();
-			item.ability = tree;
-
-			GameTile playerTile = Global.CurrentLevel.player.tile[ 0 ][ 0 ];
-
-			playerTile.items.add( item );
-		}
-		else if ( keycode == Keys.W )
-		{
-			Field field = Field.load( "Water" );
-			field.stacks = 10;
-			GameTile playerTile = Global.CurrentLevel.player.tile[ 0 ][ 0 ];
-			field.trySpawnInTile( playerTile, 10 );
-		}
-		else if ( keycode == Keys.F )
-		{
-			Field field = Field.load( "Fire" );
-			field.stacks = 1;
-			GameTile playerTile = Global.CurrentLevel.player.tile[ 0 ][ 0 ];
-			field.trySpawnInTile( playerTile, 1 );
-		}
-		else if ( keycode == Keys.G )
-		{
-			Field field = Field.load( "IceFog" );
-			field.stacks = 4;
-			GameTile playerTile = Global.CurrentLevel.player.tile[ 0 ][ 0 ];
-			field.trySpawnInTile( playerTile, 4 );
-		}
-		else if ( keycode == Keys.H )
-		{
-			Field field = Field.load( "Static" );
-			GameTile playerTile = Global.CurrentLevel.player.tile[ 0 ][ 0 ];
-			GameTile newTile = playerTile.level.getGameTile( playerTile.x + 1, playerTile.y + 1 );
-			field.trySpawnInTile( newTile, 10 );
-		}
-		else if ( keycode == Keys.E )
-		{
-			examineMode = !examineMode;
-		}
-		else if ( keycode == Keys.M )
-		{
-			Item money = Item.load( "Treasure/Money" );
-			money.count = 5;
-			pickupQueue.add( money );
-		}
 		else if ( keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
 		{
 			int i = keycode - Keys.NUM_1;
@@ -1414,17 +1363,54 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				prepareAbility( (ActiveAbility) a.current.current );
 			}
 		}
+		else if ( keycode == Keys.LEFT )
+		{
+			if (preparedAbility != null)
+			{
+				selectedAbilityTileIndex--;
+				if (selectedAbilityTileIndex < 0)
+				{
+					selectedAbilityTileIndex = abilityTiles.size - 1;
+				}
+
+				selectedAbilityTile = abilityTiles.get( selectedAbilityTileIndex );
+			}
+		}
+		else if ( keycode == Keys.RIGHT )
+		{
+			if (preparedAbility != null)
+			{
+				selectedAbilityTileIndex++;
+				if (selectedAbilityTileIndex >= abilityTiles.size)
+				{
+					selectedAbilityTileIndex = 0;
+				}
+
+				selectedAbilityTile = abilityTiles.get( selectedAbilityTileIndex );
+			}
+		}
 		else if ( keycode == Keys.ENTER )
 		{
-			if ( Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity != null )
+			if (preparedAbility != null)
 			{
-				for ( ActivationActionGroup action : Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity.onActivateActions )
+				if ( Global.CurrentLevel.player.tasks.size == 0 && selectedAbilityTile != null )
 				{
-					if ( action.enabled )
+					Global.CurrentLevel.player.tasks.add( new TaskUseAbility( Global.PointPool.obtain().set( selectedAbilityTile ), preparedAbility ) );
+					preparedAbility = null;
+				}
+			}
+			else
+			{
+				if ( Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity != null )
+				{
+					for ( ActivationActionGroup action : Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity.onActivateActions )
 					{
-						action.activate( Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity, Global.CurrentLevel.player, 1 );
-						Global.CurrentLevel.player.tasks.add( new TaskWait() );
-						break;
+						if ( action.enabled )
+						{
+							action.activate( Global.CurrentLevel.player.tile[ 0 ][ 0 ].environmentEntity, Global.CurrentLevel.player, 1 );
+							Global.CurrentLevel.player.tasks.add( new TaskWait() );
+							break;
+						}
 					}
 				}
 			}
@@ -1654,6 +1640,19 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 						tooltip.show( mousePosX, mousePosY, false );
 					}
 				}
+
+				if (preparedAbility != null)
+				{
+					selectedAbilityTile = null;
+					for ( Point p : abilityTiles )
+					{
+						if ( p.x == x && p.y == y )
+						{
+							selectedAbilityTile = p;
+							break;
+						}
+					}
+				}
 			}
 
 			{
@@ -1785,6 +1784,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				Global.PointPool.freeAll( abilityTiles );
 				abilityTiles = null;
+				selectedAbilityTile = null;
 			}
 
 			unprepareAbilitySound.play( Global.CurrentLevel.player.tile[0][0] );
@@ -1800,6 +1800,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			Global.PointPool.freeAll( abilityTiles );
 		}
 		abilityTiles = preparedAbility.getValidTargets();
+		selectedAbilityTile = null;
+		selectedAbilityTileIndex = -1;
 
 		prepareAbilitySound.play( Global.CurrentLevel.player.tile[0][0] );
 	}
@@ -2294,6 +2296,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	public ActiveAbility preparedAbility;
 	public AbilityTree abilityToEquip;
 	private Array<Point> abilityTiles;
+	private Point selectedAbilityTile;
+	private int selectedAbilityTileIndex;
 	public Array<Point> weaponTiles;
 	private Color tempColour = new Color();
 	//private Tooltip tooltip;

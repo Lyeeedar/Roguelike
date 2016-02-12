@@ -21,6 +21,10 @@
 
     </Statistics>
 
+    <Abilities>
+        <FlickerStrike>FlickerStrike</FlickerStrike>
+    </Abilities>
+
     <Light>
         <Colour><RGB>255,255,255</RGB><Alpha>0.5</Alpha></Colour>
         <Intensity>3</Intensity>

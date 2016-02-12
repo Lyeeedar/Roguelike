@@ -39,6 +39,8 @@ public final class Point implements Poolable
 		return this;
 	}
 
+	public Point set( Point point ) { return set( point.x, point.y ); }
+
 	public Point set( GameTile tile )
 	{
 		return set( tile.x, tile.y );

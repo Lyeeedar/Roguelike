@@ -32,18 +32,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pools;
+import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import exp4j.Helpers.EquationHelper;
 import net.objecthunter.exp4j.Expression;
@@ -219,6 +218,48 @@ public class Global
 
 		Global.WorldFlags.put( "tavern", "1" );
 		Global.WorldFlags.put( "startingfunds", "50" );
+
+		Skin skin = Global.loadSkin();
+
+		Table message = new Table();
+		message.defaults().pad( 10 );
+
+		Label title = new Label("Welcome to A Skin of Others", skin, "title");
+		message.add( title ).expandX().left();
+		message.row();
+
+		message.add( new Seperator( skin ) ).expandX().fillX();
+		message.row();
+
+		Table messageBody = new Table();
+		Label messageText = new Label( "For as long as anyone in your village can remember creatures have been attacking out from beneath Melet mountain." +
+									   "At night they spring from the darkness and snatch the unwary and unvigilant, dragging them away to who knows where. " +
+									   "The imperial capital has been unwilling to send aid, despite numerous requests, so the task of saving the village falls to you. " +
+									   "Strike out into the forest, save those within, and fight your way down into the depths of the mountain to seal the portal the creatures" +
+									   " are coming from.", skin);
+		messageText.setWrap( true );
+		messageBody.add( messageText ).expand().fillX();
+		messageBody.row();
+
+		message.add( messageBody ).expand().fill();
+		message.row();
+
+		message.add( new Seperator( skin ) ).expandX().fillX();
+		message.row();
+
+		TextButton continueButton = new TextButton( "Continue", skin );
+		continueButton.addListener( new ClickListener(  )
+		{
+			public void clicked( InputEvent event, float x, float y )
+			{
+				GameScreen.Instance.lockContextMenu = false;
+				GameScreen.Instance.clearContextMenu();
+			}
+		} );
+		message.add( continueButton ).colspan( 2 ).expandX().fillX();
+		message.row();
+
+		GameScreen.Instance.queueContextMenu( message );
 	}
 
 	// ----------------------------------------------------------------------

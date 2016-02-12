@@ -27,62 +27,60 @@ public class ActionProcessInput extends AbstractAction
 		{
 			setData( "ClickPos", null );
 		}
-		else if ( ! Global.MovementTypePathfind && GameScreen.Instance.preparedAbility == null )
+		else if ( ! Global.MovementTypePathfind && GameScreen.Instance.preparedAbility == null &&
+				  ( Gdx.input.isTouched( 0 ) && ! Gdx.input.isTouched( 1 ) && ! Gdx.input.isTouched( 2 ) && ! Gdx.input.isTouched( 3 ) && ! Gdx.input.isTouched( 4 ) ) )
 		{
-			if ( Gdx.input.isTouched( 0 ) && ! Gdx.input.isTouched( 1 ) && ! Gdx.input.isTouched( 2 ) && ! Gdx.input.isTouched( 3 ) && ! Gdx.input.isTouched( 4 ) )
+			int touchX = Gdx.input.getX();
+			int touchY = Gdx.input.getY();
+
+			if ( !GameScreen.Instance.pointOverUI( touchX, touchY ) )
 			{
-				int touchX = Gdx.input.getX();
-				int touchY = Gdx.input.getY();
+				Vector3 mousePos = GameScreen.Instance.camera.unproject( new Vector3( touchX, touchY, 0 ) );
 
-				if ( !GameScreen.Instance.pointOverUI( touchX, touchY ) )
+				int mousePosX = (int) mousePos.x;
+				int mousePosY = (int) mousePos.y;
+
+				int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize - Global.TileSize / 2;
+				int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize - Global.TileSize / 2;
+
+				int x = ( mousePosX - offsetx ) / Global.TileSize;
+				int y = ( mousePosY - offsety ) / Global.TileSize;
+
+				int dx = x - Global.CurrentLevel.player.tile[0][0].x;
+				int dy = y - Global.CurrentLevel.player.tile[0][0].y;
+
+				if ( dx == 0 && dy == 0 )
 				{
-					Vector3 mousePos = GameScreen.Instance.camera.unproject( new Vector3( touchX, touchY, 0 ) );
-
-					int mousePosX = (int) mousePos.x;
-					int mousePosY = (int) mousePos.y;
-
-					int offsetx = Global.Resolution[ 0 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].x * Global.TileSize - Global.TileSize / 2;
-					int offsety = Global.Resolution[ 1 ] / 2 - Global.CurrentLevel.player.tile[ 0 ][ 0 ].y * Global.TileSize - Global.TileSize / 2;
-
-					int x = ( mousePosX - offsetx ) / Global.TileSize;
-					int y = ( mousePosY - offsety ) / Global.TileSize;
-
-					int dx = x - Global.CurrentLevel.player.tile[0][0].x;
-					int dy = y - Global.CurrentLevel.player.tile[0][0].y;
-
-					if ( dx == 0 && dy == 0 )
+					if ( Gdx.input.justTouched() )
 					{
-						if ( Gdx.input.justTouched() )
-						{
-							targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x, entity.tile[0][0].y );
-						}
+						targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x, entity.tile[0][0].y );
 					}
-					else if ( Math.abs( dx ) > Math.abs( dy ) )
+				}
+				else if ( Math.abs( dx ) > Math.abs( dy ) )
+				{
+					if ( dx < 0 )
 					{
-						if ( dx < 0 )
-						{
-							targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x - 1, entity.tile[0][0].y );
-						}
-						else
-						{
-							targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x + 1, entity.tile[0][0].y );
-						}
+						targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x - 1, entity.tile[0][0].y );
 					}
 					else
 					{
-						if ( dy < 0 )
-						{
-							targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x, entity.tile[0][0].y - 1 );
-						}
-						else
-						{
-							targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x, entity.tile[0][0].y + 1 );
-						}
+						targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x + 1, entity.tile[0][0].y );
+					}
+				}
+				else
+				{
+					if ( dy < 0 )
+					{
+						targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x, entity.tile[0][0].y - 1 );
+					}
+					else
+					{
+						targetPos = Global.PointPool.obtain().set( entity.tile[0][0].x, entity.tile[0][0].y + 1 );
 					}
 				}
 			}
 		}
-		else if ( !GameScreen.Instance.lockContextMenu )
+		else if ( !GameScreen.Instance.lockContextMenu && GameScreen.Instance.preparedAbility == null )
 		{
 			boolean up = Gdx.input.isKeyPressed( Keys.UP );
 			boolean down = Gdx.input.isKeyPressed( Keys.DOWN );

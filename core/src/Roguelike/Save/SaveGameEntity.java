@@ -7,6 +7,7 @@ import Roguelike.Ability.IAbility;
 import Roguelike.Dialogue.Dialogue;
 import Roguelike.Dialogue.DialogueManager;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Global;
 import Roguelike.Items.Inventory;
 import Roguelike.StatusEffect.StatusEffect;
 import Roguelike.Tiles.Point;
@@ -135,6 +136,11 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 			entity.dialogue.data = dialogueData;
 		}
 		entity.isBoss = isBoss;
+
+		if (!isPlayer)
+		{
+			entity.applyDepthScaling();
+		}
 
 		entity.isVariableMapDirty = true;
 

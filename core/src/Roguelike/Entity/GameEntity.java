@@ -47,6 +47,22 @@ public class GameEntity extends Entity
 	// region Public Methods
 
 	// ----------------------------------------------------------------------
+	public void applyDepthScaling()
+	{
+		for ( Global.Statistic stat : Global.Statistic.values() )
+		{
+			int current = statistics.get( stat );
+
+			float scaleVal = (float) Math.sqrt( Global.LevelManager.totalDepth );
+			scaleVal /= 10.0f;
+			scaleVal += 1;
+
+			int scaledVal = (int) ( (float) current * scaleVal );
+			statistics.put( stat, scaledVal );
+		}
+	}
+
+	// ----------------------------------------------------------------------
 	public void attack( Entity other, Direction dir )
 	{
 		Global.calculateDamage( this, other, getVariable( Statistic.ATTACK ), other.getVariable( Statistic.DEFENSE ), getVariable( Statistic.PENETRATION ), true );
