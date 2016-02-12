@@ -25,7 +25,7 @@
     <Effect>
         <Damage>
             <Attack>160 + level * 3</Attack>
-            <Strength>1</Strength>
+            <Willpower>1</Willpower>
         </Damage>
         <Status Self="true">
             <Duration>4</Duration>

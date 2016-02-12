@@ -26,7 +26,7 @@
     <Effect>
         <Damage>
             <Attack>180 + level * 3</Attack>
-            <Strength>1</Strength>
+            <Willpower>1</Willpower>
         </Damage>
         <Teleport>
             <Move>Target</Move>

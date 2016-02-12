@@ -1,6 +1,6 @@
 <Quest>
     <Inputs>
-        <FlagEquals Consume="false">
+        <FlagEquals>
             <Key>LoversQuest</Key>
             <Value>Temple</Value>
         </FlagEquals>

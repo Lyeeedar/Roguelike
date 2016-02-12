@@ -36,6 +36,7 @@ import Roguelike.Quests.Input.QuestInputFlagEquals;
 import Roguelike.Quests.Input.QuestInputFlagPresent;
 import Roguelike.Quests.Output.QuestOuputConditionDialogueValue;
 import Roguelike.Quests.Output.QuestOutput;
+import Roguelike.Quests.Output.QuestOutputConditionActionEnabled;
 import Roguelike.Quests.Output.QuestOutputConditionEntityAlive;
 import Roguelike.Quests.Quest;
 import Roguelike.Save.SaveLevel.SaveLevelItem;
@@ -540,27 +541,13 @@ public final class SaveFile
 		kryo.register( AbilityOnExpireEvent.class );
 		kryo.register( AdditionalSprite.class );
 
-//		kryo.register( Dialogue.class );
-//		kryo.register( DialogueManager.class );
-//		kryo.register( DialogueManager.DialogueChunkWrapper.class );
-//		kryo.register( DialogueActionBranch.class );
-//		kryo.register( DialogueActionGainAbility.class );
-//		kryo.register( DialogueActionGainItem.class );
-//		kryo.register( DialogueActionInput.class );
-//		kryo.register( DialogueActionLoop.class );
-//		kryo.register( DialogueActionSetVariable.class );
-//		kryo.register( DialogueActionSetVariable.VariableType.class );
-//		kryo.register( DialogueActionText.class );
-//		kryo.register( ExclamationManager.class );
-//		kryo.register( ExclamationManager.ExclamationWrapper.class );
-//		kryo.register( ExclamationManager.ExclamationEventWrapper.class );
-
 		kryo.register( Quest.class );
 		kryo.register( QuestInputFlagPresent.class );
 		kryo.register( QuestInputFlagEquals.class );
 		kryo.register( QuestOutput.class );
 		kryo.register( QuestOutputConditionEntityAlive.class );
 		kryo.register( QuestOuputConditionDialogueValue.class );
+		kryo.register( QuestOutputConditionActionEnabled.class );
 
 		kryo.register( ActivationActionGroup.class );
 		kryo.register( ActivationActionAddItem.class );

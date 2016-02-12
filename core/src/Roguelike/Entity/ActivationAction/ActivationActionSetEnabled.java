@@ -50,47 +50,10 @@ public class ActivationActionSetEnabled extends AbstractActivationAction
 
 	private void apply( EnvironmentEntity entity )
 	{
-		for (ActivationActionGroup group : entity.onActivateActions)
-		{
-			if (group.name.equals( actionName ))
-			{
-				group.enabled = enabled;
-			}
-		}
+		Array<ActivationActionGroup> output = new Array<ActivationActionGroup>(  );
+		entity.getAllActivationActions( output );
 
-		for (ActivationActionGroup group : entity.onTurnActions)
-		{
-			if (group.name.equals( actionName ))
-			{
-				group.enabled = enabled;
-			}
-		}
-
-		for (ActivationActionGroup group : entity.onHearActions)
-		{
-			if (group.name.equals( actionName ))
-			{
-				group.enabled = enabled;
-			}
-		}
-
-		for (ActivationActionGroup group : entity.onDeathActions)
-		{
-			if (group.name.equals( actionName ))
-			{
-				group.enabled = enabled;
-			}
-		}
-
-		for (ActivationActionGroup group : entity.noneActions)
-		{
-			if (group.name.equals( actionName ))
-			{
-				group.enabled = enabled;
-			}
-		}
-
-		for (ActivationActionGroup group : entity.proximityActions)
+		for (ActivationActionGroup group : output)
 		{
 			if (group.name.equals( actionName ))
 			{

@@ -247,7 +247,7 @@ public class TreasureGenerator
 
 		item.getIcon().colour.mul( materialItem.getIcon().colour );
 
-		int numModifiers = ran.nextInt( Math.max( 1, quality / 2 ) );
+		int numModifiers = ran.nextInt( Math.max( 2, quality / 2 ) );
 		int maxModifierQuality = Math.min( quality, modifierList.qualityData.size );
 
 		while (numModifiers > 0)

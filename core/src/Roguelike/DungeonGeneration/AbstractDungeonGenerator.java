@@ -422,11 +422,6 @@ public abstract class AbstractDungeonGenerator
 					GameTile newTile = actualTiles[x][y];
 					GameEntity e = null;
 
-					if (symbol.character == '1')
-					{
-						int i = 0;
-					}
-
 					if (symbol.entityData instanceof String)
 					{
 						String entityPath = (String)symbol.entityData;

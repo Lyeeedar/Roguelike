@@ -70,5 +70,6 @@ public abstract class AbstractDialogueAction
 		ClassMap.put( "ADDFACTION", DialogueActionAddFaction.class );
 		ClassMap.put( "REMOVEFACTION", DialogueActionRemoveFaction.class );
 		ClassMap.put( "OPENSHOP", DialogueActionOpenShop.class );
+		ClassMap.put( "ADDSTATUS", DialogueActionAddStatus.class );
 	}
 }

@@ -373,7 +373,11 @@ public class Global
 
 			int atkerStat = attackerVariableMap.get( stat.toString().toLowerCase() ) - 10;
 
-			float modifier = atkerStat >= 0 ? ( atkerStat * atkStat ) / 10.0f : 1.0f / Math.abs( atkerStat );
+			int sclVal = atkerStat * atkStat;
+
+			float falloff = (float)Math.sqrt( sclVal );
+
+			float modifier = falloff / 10.0f;
 
 			int dam = (int) ( baseAtk * modifier );
 

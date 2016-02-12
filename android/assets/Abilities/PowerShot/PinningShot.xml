@@ -30,7 +30,7 @@
 	<Effect>
 	    <Damage>
             <Attack>190 + level * 3</Attack>
-            <Perception>1</Perception>
+            <Strength>1</Strength>
 		</Damage>
 		<Status>
             <Duration>4</Duration>

@@ -299,6 +299,17 @@ public class EnvironmentEntity extends Entity
 	}
 
 	// ----------------------------------------------------------------------
+	public void getAllActivationActions(Array<ActivationActionGroup> output)
+	{
+		output.addAll( onActivateActions );
+		output.addAll( onTurnActions );
+		output.addAll( onHearActions );
+		output.addAll( onDeathActions );
+		output.addAll( noneActions );
+		output.addAll( proximityActions );
+	}
+
+	// ----------------------------------------------------------------------
 	private static void loadActions(Element xml, Array<ActivationActionGroup> actionList)
 	{
 		if (xml != null)

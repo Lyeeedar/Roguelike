@@ -37,6 +37,8 @@ public class AtlasCreator
 		TexturePacker.Settings settings = new TexturePacker.Settings();
 		settings.combineSubdirectories = true;
 		settings.duplicatePadding = true;
+		settings.maxWidth = 2048;
+		settings.maxHeight = 2048;
 		settings.paddingX = 4;
 		settings.paddingY = 4;
 		settings.useIndexes = false;

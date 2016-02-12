@@ -123,6 +123,44 @@ public final class Item extends GameEventHandler
 	}
 
 	// ----------------------------------------------------------------------
+	public static Item load( String recipe, Element xml )
+	{
+		String material = xml.get( "Material" );
+		int quality = xml.getInt( "Quality" );
+
+		Item materialItem = TreasureGenerator.getMaterial( material, quality, MathUtils.random );
+
+		Item item = Recipe.createRecipe( recipe, materialItem );
+		item.getIcon().colour.mul( materialItem.getIcon().colour );
+
+		Element prefixElement = xml.getChildByName( "Prefix" );
+		if ( prefixElement != null )
+		{
+			String[] prefixes = prefixElement.getText().split( "," );
+
+			for (String prefix : prefixes)
+			{
+				Recipe.applyModifer( item, prefix, materialItem.quality, true );
+			}
+		}
+
+		Element suffixElement = xml.getChildByName( "Suffix" );
+		if ( suffixElement != null )
+		{
+			String[] suffixes = suffixElement.getText().split( "," );
+
+			for (String suffix : suffixes)
+			{
+				Recipe.applyModifer( item, suffix, materialItem.quality, false );
+			}
+		}
+
+		item.value = xml.getInt( "Value", 0 );
+
+		return item;
+	}
+
+	// ----------------------------------------------------------------------
 	public static Item load( Element xml )
 	{
 		Item item = null;
@@ -135,35 +173,7 @@ public final class Item extends GameEventHandler
 		else if ( xml.getChildByName( "Recipe" ) != null )
 		{
 			String recipe = Global.capitalizeString( xml.getChildByName( "Recipe" ).getText() );
-			String material = xml.get( "Material" );
-			int quality = xml.getInt( "Quality" );
-
-			Item materialItem = TreasureGenerator.getMaterial( material, quality, MathUtils.random );
-
-			item = Recipe.createRecipe( recipe, materialItem );
-			item.getIcon().colour.mul( materialItem.getIcon().colour );
-
-			Element prefixElement = xml.getChildByName( "Prefix" );
-			if ( prefixElement != null )
-			{
-				String[] prefixes = prefixElement.getText().split( "," );
-
-				for (String prefix : prefixes)
-				{
-					Recipe.applyModifer( item, prefix, materialItem.quality, true );
-				}
-			}
-
-			Element suffixElement = xml.getChildByName( "Suffix" );
-			if ( suffixElement != null )
-			{
-				String[] suffixes = suffixElement.getText().split( "," );
-
-				for (String suffix : suffixes)
-				{
-					Recipe.applyModifer( item, suffix, materialItem.quality, false );
-				}
-			}
+			item = Item.load( recipe, xml );
 		}
 		else
 		{

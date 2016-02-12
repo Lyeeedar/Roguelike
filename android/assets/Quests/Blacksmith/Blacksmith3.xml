@@ -1,0 +1,82 @@
+<Quest>
+
+    <Inputs>
+
+        <FlagEquals>
+            <Key>Blacksmith</Key>
+            <Value>2</Value>
+        </FlagEquals>
+
+    </Inputs>
+
+    <AllowedLevels>Cave,SpiderCave</AllowedLevels>
+
+    <Rooms>
+
+        <Room>
+
+            <Symbols>
+
+                <Symbol Extends=".">
+                    <Char>o</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/ore_steel</Name>
+                        </Sprite>
+                        <Passable>false</Passable>
+                        <Opaque>false</Opaque>
+                    </EnvironmentData>
+                </Symbol>
+
+                <Symbol Extends=".">
+                    <Char>s</Char>
+                    <EnvironmentData>
+                        <Name>OreIndicator</Name>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/indicator</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                            <Colour><RGB>255,255,150</RGB></Colour>
+                        </Sprite>
+                        <Proximity>
+                            <Group Name="Enter">
+                                <Conditions>
+                                    <Proximity PlayerOnly="true">0</Proximity>
+                                </Conditions>
+                                <Actions>
+                                    <SetEnabled Enabled="false">Enter</SetEnabled>
+                                    <SetSprite>
+                                        <Sprite>
+                                            <Name>blank</Name>
+                                        </Sprite>
+                                    </SetSprite>
+                                </Actions>
+                            </Group>
+                        </Proximity>
+                    </EnvironmentData>
+                </Symbol>
+
+            </Symbols>
+
+            <Rows>
+                <Row>######</Row>
+                <Row>##oo##</Row>
+                <Row>#osoo#</Row>
+                <Row>#o..##</Row>
+            </Rows>
+
+        </Room>
+
+    </Rooms>
+
+    <Outputs>
+
+        <Blacksmith Defer="true">
+            <Data>3</Data>
+            <Conditions>
+                <ActionEnabled Entity="OreIndicator" Not="true">Enter</ActionEnabled>
+            </Conditions>
+        </Blacksmith>
+
+    </Outputs>
+
+</Quest>

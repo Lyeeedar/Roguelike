@@ -25,7 +25,7 @@
     <Effect>
         <Damage>
             <Attack>150 + level * 3</Attack>
-            <Strength>1</Strength>
+            <Willpower>1</Willpower>
         </Damage>
         <Status>Frozen</Status>
     </Effect>

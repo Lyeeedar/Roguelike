@@ -25,7 +25,7 @@
     <Effect>
         <Damage>
             <Attack>170 + level * 3</Attack>
-            <Strength>1</Strength>
+            <Willpower>1</Willpower>
         </Damage>
         <Status Stacks="3+level/3">Chilled</Status>
     </Effect>

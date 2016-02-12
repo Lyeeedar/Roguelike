@@ -70,28 +70,85 @@
                             <Name>Oryx/Custom/heroes/barmaid</Name>
                             <DrawActualSize>true</DrawActualSize>
                         </Sprite>
-                        <Inventory>
-                            <Item>
-                                <Recipe>Sword</Recipe>
-                                <Material>Metal</Material>
-                                <Quality>1</Quality>
-                                <Value>20</Value>
-                            </Item>
-
-                            <Item>
-                                <Recipe>Spear</Recipe>
-                                <Material>Metal</Material>
-                                <Quality>1</Quality>
-                                <Value>20</Value>
-                            </Item>
-
-                            <Item>
-                                <Recipe>Axe</Recipe>
-                                <Material>Metal</Material>
-                                <Quality>1</Quality>
-                                <Value>20</Value>
-                            </Item>
-                        </Inventory>
+                        <Dialogue>
+                            <Dialogue>
+                                <Chunk Condition="Buffed == 0" ReliesOn="Buffed">
+                                    <Text>Hello there adventurer, heading into the forest?</Text>
+                                    <Text>Would you like a drink of something before you go?</Text>
+                                    <Input Key="Response">
+                                        <Choice>Shot of Firewater (Bonus to Constitution)</Choice>
+                                        <Choice>Glass of Iron Nectar (Bonus to Strength)</Choice>
+                                        <Choice>Tumbler of Cherry Dream (Bonus to Willpower)</Choice>
+                                        <Choice>Nothing for me</Choice>
+                                    </Input>
+                                    <Branch>
+                                        <Branch Condition="Response == 1">
+                                            <Text>Coming right up!</Text>
+                                            <AddStatus>
+                                                <Name>Firewater</Name>
+                                                <Description>Fire flows in your veins from the strong drink, dulling your sensation of pain.</Description>
+                                                <DurationType>Permanent</DurationType>
+                                                <Icon>
+                                                    <Name>Oryx/uf_split/uf_items/flask_red</Name>
+                                                </Icon>
+                                                <Events>
+                                                    <Constant>
+                                                        <Constitution>2</Constitution>
+                                                    </Constant>
+                                                </Events>
+                                            </AddStatus>
+                                            <SetVariable>
+                                                <Key>Buffed</Key>
+                                                <Value>1</Value>
+                                            </SetVariable>
+                                        </Branch>
+                                        <Branch Condition="Response == 2">
+                                            <Text>Coming right up!</Text>
+                                            <AddStatus>
+                                                <Name>Iron Nectar</Name>
+                                                <Description>Revitalising alchohol pulses through you, increasing your strength.</Description>
+                                                <DurationType>Permanent</DurationType>
+                                                <Icon>
+                                                    <Name>Oryx/uf_split/uf_items/flask_red</Name>
+                                                </Icon>
+                                                <Events>
+                                                    <Constant>
+                                                        <Strength>3</Strength>
+                                                    </Constant>
+                                                </Events>
+                                            </AddStatus>
+                                            <SetVariable>
+                                                <Key>Buffed</Key>
+                                                <Value>1</Value>
+                                            </SetVariable>
+                                        </Branch>
+                                        <Branch Condition="Response == 3">
+                                            <Text>Coming right up!</Text>
+                                            <AddStatus>
+                                                <Name>Cherry Dream</Name>
+                                                <Description>The subtle sour bite of the drink strengthens your will and connection to magic.</Description>
+                                                <DurationType>Permanent</DurationType>
+                                                <Icon>
+                                                    <Name>Oryx/uf_split/uf_items/flask_red</Name>
+                                                </Icon>
+                                                <Events>
+                                                    <Constant>
+                                                        <Willpower>3</Willpower>
+                                                    </Constant>
+                                                </Events>
+                                            </AddStatus>
+                                            <SetVariable>
+                                                <Key>Buffed</Key>
+                                                <Value>1</Value>
+                                            </SetVariable>
+                                        </Branch>
+                                    </Branch>
+                                </Chunk>
+                                <Chunk>
+                                    <Text>Good luck out there!</Text>
+                                </Chunk>
+                            </Dialogue>
+                        </Dialogue>
                     </EntityData>
                 </Symbol>
             </Symbols>

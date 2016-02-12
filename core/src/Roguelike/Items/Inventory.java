@@ -56,6 +56,22 @@ public final class Inventory
 
 			addItem( item );
 		}
+
+		for ( Element el : xml.getChildrenByName( "Batch" ) )
+		{
+			String recipeList = el.get( "Recipes" );
+			String[] recipes = recipeList.split( "," );
+
+			for (String recipe : recipes)
+			{
+				Item item = Item.load( recipe, el );
+
+				item.canDrop = el.getBooleanAttribute( "Drop", false );
+				item.dropChanceEqn = el.getAttribute( "DropChance", null );
+
+				addItem( item );
+			}
+		}
 	}
 
 	public void addItem( Item item )
