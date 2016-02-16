@@ -3,7 +3,7 @@
     <Name>Harvest Life</Name>
     <Description>With deft skill you harvest the crops. The crop in this case is your opponents life.</Description>
 
-    <Cooldown>5</Cooldown>
+    <Cooldown>4</Cooldown>
     <CooldownType>Attack</CooldownType>
     <Range>1</Range>
 

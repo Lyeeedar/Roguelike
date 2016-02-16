@@ -10,7 +10,7 @@
 
     <Events>
         <Constant>
-            <Defense>7 + 4 * quality</Defense>
+            <Defense>16 + 3 * quality</Defense>
         </Constant>
     </Events>
 </Recipe>

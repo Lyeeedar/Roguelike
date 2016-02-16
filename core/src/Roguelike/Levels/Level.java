@@ -299,7 +299,7 @@ public class Level
 					e.hasDamage = false;
 				}
 
-				if ( e.canTakeDamage && e.HP <= 0 && !hasActiveEffects( e ) )
+				if ( e.forceKill || ( e.canTakeDamage && e.HP <= 0 && !hasActiveEffects( e ) ) )
 				{
 					dropItems( e.getInventory(), e.tile[0][0], e.essence, e );
 

@@ -10,7 +10,7 @@
 
     <Events>
         <Constant>
-            <Defense>3 + 3 * quality</Defense>
+            <Defense>8 + 1.6 * quality</Defense>
             <Speed>1 + quality/2</Speed>
         </Constant>
     </Events>

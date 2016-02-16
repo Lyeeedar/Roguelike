@@ -3,8 +3,8 @@
     <Name>Sling Rock</Name>
     <Description>Fling a rock at your target using a sling.</Description>
 
-    <Cooldown>5</Cooldown>
-    <CooldownType>Attack</CooldownType>
+    <Cooldown>2</Cooldown>
+    <CooldownType>Wait</CooldownType>
     <Range>4</Range>
 
     <Icon>
@@ -30,7 +30,7 @@
 
     <Effect>
         <Damage>
-            <Attack>150 + 4 * level</Attack>
+            <Attack>160 + 4 * level</Attack>
             <Strength>1</Strength>
         </Damage>
     </Effect>

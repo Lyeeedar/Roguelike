@@ -74,12 +74,13 @@
     <Factions>
         <Major>
             <Slime>1</Slime>
-            <Spider>1</Spider>
+            <Toad>1</Toad>
         </Major>
         <Minor>
             <Toad>1</Toad>
-            <Slime>1</Slime>
+            <Slime>3</Slime>
             <Spider>1</Spider>
+            <Bat>2</Bat>
         </Minor>
     </Factions>
 

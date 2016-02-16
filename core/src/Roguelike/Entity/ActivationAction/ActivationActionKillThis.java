@@ -12,7 +12,7 @@ public class ActivationActionKillThis extends AbstractActivationAction
 	@Override
 	public void evaluate( EnvironmentEntity owningEntity, Entity activatingEntity, float delta )
 	{
-		owningEntity.HP = 0;
+		owningEntity.forceKill = true;
 	}
 
 	@Override

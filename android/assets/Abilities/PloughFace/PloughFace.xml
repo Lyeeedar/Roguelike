@@ -3,7 +3,7 @@
     <Name>Plough Face</Name>
     <Description>Push all your expertise in working the earth into crushing your opponents face.</Description>
 
-    <Cooldown>5</Cooldown>
+    <Cooldown>4</Cooldown>
     <CooldownType>Attack</CooldownType>
     <Range>1</Range>
 

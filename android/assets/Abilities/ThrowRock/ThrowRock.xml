@@ -3,8 +3,8 @@
     <Name>Throw Rock</Name>
     <Description>Throw a rock at your foe.</Description>
 
-    <Cooldown>5</Cooldown>
-    <CooldownType>Attack</CooldownType>
+    <Cooldown>1</Cooldown>
+    <CooldownType>Wait</CooldownType>
     <Range>3</Range>
 
     <Icon>

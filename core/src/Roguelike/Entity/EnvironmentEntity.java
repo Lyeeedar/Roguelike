@@ -36,6 +36,8 @@ public class EnvironmentEntity extends Entity
 	public boolean attachToWall = false;
 	public boolean overHead = false;
 
+	public boolean forceKill = false;
+
 	public EnumBitflag<Passability> passableBy;
 
 	public Array<ActivationActionGroup> onActivateActions = new Array<ActivationActionGroup>(  );

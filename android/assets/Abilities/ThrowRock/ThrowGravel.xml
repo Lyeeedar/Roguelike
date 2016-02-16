@@ -3,8 +3,8 @@
     <Name>Throw Gravel</Name>
     <Description>Throw a handful of gravel infront of you, blinding your foes temporarily.</Description>
 
-    <Cooldown>6</Cooldown>
-    <CooldownType>Attack</CooldownType>
+    <Cooldown>2</Cooldown>
+    <CooldownType>Wait</CooldownType>
     <Range>1</Range>
     <Cone>1</Cone>
 

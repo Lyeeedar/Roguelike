@@ -3,7 +3,7 @@
     <Name>Sow Pain</Name>
     <Description>Sow the seeds of pain and let the agony sprout.</Description>
 
-    <Cooldown>5</Cooldown>
+    <Cooldown>4</Cooldown>
     <CooldownType>Attack</CooldownType>
     <Range>1</Range>
 

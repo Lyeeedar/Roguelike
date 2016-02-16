@@ -17,8 +17,9 @@
         </Female>
         <Both>
             <Statistics>
-                <Strength>val+1</Strength>
-                <Constitution>val+1</Constitution>
+                <Strength>val+3</Strength>
+                <Constitution>val+5</Constitution>
+                <Speed>val+1</Speed>
             </Statistics>
             <Inventory>
                 <Equipment>
@@ -64,8 +65,8 @@
         </Female>
         <Both>
             <Statistics>
-                <Strength>val+2</Strength>
-                <Constitution>val+2</Constitution>
+                <Strength>val+6</Strength>
+                <Constitution>val+3</Constitution>
             </Statistics>
             <Inventory>
                 <Equipment>
@@ -111,8 +112,8 @@
         </Female>
         <Both>
             <Statistics>
-                <Willpower>val+2</Willpower>
-                <Speed>val+1</Speed>
+                <Willpower>val+7</Willpower>
+                <Speed>val+2</Speed>
             </Statistics>
             <Inventory>
                 <Equipment>
@@ -158,8 +159,8 @@
         </Female>
         <Both>
             <Statistics>
-                <Perception>val+2</Perception>
-                <Speed>val+1</Speed>
+                <Strength>val+4</Strength>
+                <Speed>val+4</Speed>
             </Statistics>
             <Inventory>
                 <Equipment>
@@ -205,8 +206,8 @@
         </Female>
         <Both>
             <Statistics>
-                <Strength>val+2</Strength>
-                <Willpower>val+2</Willpower>
+                <Strength>val+5</Strength>
+                <Willpower>val+5</Willpower>
             </Statistics>
             <Inventory>
                 <Equipment>

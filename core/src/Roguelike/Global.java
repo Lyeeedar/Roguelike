@@ -372,6 +372,9 @@ public class Global
 	{
 		if ( atk <= 0 ) { return; }
 
+		// attack range
+		atk += atk * MathUtils.random( -0.1f, 0.1f );
+
 		int applicableDef = Math.max( 0, def - pen );
 
 		float reduction = applicableDef / 100.0f;
