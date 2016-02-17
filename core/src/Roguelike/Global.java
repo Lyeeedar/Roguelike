@@ -19,6 +19,7 @@ import Roguelike.Sound.RepeatingSoundEffect;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.GameTile.LightData;
 import Roguelike.Tiles.Point;
+import Roguelike.UI.ClassList;
 import Roguelike.UI.LayeredDrawable;
 import Roguelike.UI.Seperator;
 import Roguelike.UI.Tooltip.TooltipStyle;
@@ -260,6 +261,37 @@ public class Global
 		message.row();
 
 		GameScreen.Instance.queueContextMenu( message );
+	}
+
+	// ----------------------------------------------------------------------
+	public static void testWorld()
+	{
+		LevelManager = new LevelManager();
+		LevelManager.current = LevelManager.root.getLabelledLevel( "Lake" );
+
+		QuestManager = new QuestManager();
+		AUT = 0;
+		WorldFlags.clear();
+		WorldFlagsCopy.clear();
+		RunFlags.clear();
+
+		Global.WorldFlags.put( "tavern", "1" );
+		Global.WorldFlags.put( "startingfunds", "50" );
+
+		SaveLevel firstLevel = new SaveLevel( "Lake", 1, LevelManager.current.getExtraRooms( "Cave", 1, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
+		LevelManager.current.currentLevel = firstLevel;
+
+		Array<ClassList.ClassDesc> classes = ClassList.parse();
+		GameEntity player = classes.get( 0 ).male;
+
+		for (Statistic stat : Statistic.BaseValues)
+		{
+			player.statistics.put( stat, 100 );
+		}
+		player.isVariableMapDirty = true;
+
+		LoadingScreen.Instance.set( firstLevel, player, "PlayerSpawn", null );
+		RoguelikeGame.Instance.switchScreen( ScreenEnum.LOADING );
 	}
 
 	// ----------------------------------------------------------------------

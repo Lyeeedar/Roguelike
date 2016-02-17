@@ -34,6 +34,66 @@
 										<Key>Delivered</Key>
 										<Value>1</Value>
 									</SetVariable>
+                                    <Text>As a reward you can have one of my potions. Which would you like?</Text>
+                                    <Input Key="Response">
+                                        <Choice>Health Potion (Bonus to Constitution)</Choice>
+                                        <Choice>Violence Potion (Bonus to Strength)</Choice>
+                                        <Choice>Though Potion (Bonus to Willpower)</Choice>
+                                        <Choice>Nothing for me</Choice>
+                                    </Input>
+                                    <Branch>
+                                        <Branch Condition="Response == 1">
+                                            <Text>Drink up!</Text>
+                                            <AddStatus>
+                                                <Name>Health Potion</Name>
+                                                <Description>You feel healthy.</Description>
+                                                <DurationType>Permanent</DurationType>
+                                                <Icon>
+                                                    <Name>Oryx/uf_split/uf_items/flask_red</Name>
+                                                </Icon>
+                                                <Events>
+                                                    <Constant>
+                                                        <Constitution>3</Constitution>
+                                                    </Constant>
+                                                </Events>
+                                            </AddStatus>
+                                        </Branch>
+                                        <Branch Condition="Response == 2">
+                                            <Text>Drink up!</Text>
+                                            <AddStatus>
+                                                <Name>Violence Potion</Name>
+                                                <Description>You feel strong.</Description>
+                                                <DurationType>Permanent</DurationType>
+                                                <Icon>
+                                                    <Name>Oryx/uf_split/uf_items/flask_red</Name>
+                                                </Icon>
+                                                <Events>
+                                                    <Constant>
+                                                        <Strength>5</Strength>
+                                                    </Constant>
+                                                </Events>
+                                            </AddStatus>
+                                        </Branch>
+                                        <Branch Condition="Response == 3">
+                                            <Text>Drink up!</Text>
+                                            <AddStatus>
+                                                <Name>Thought Potion</Name>
+                                                <Description>You feel smart.</Description>
+                                                <DurationType>Permanent</DurationType>
+                                                <Icon>
+                                                    <Name>Oryx/uf_split/uf_items/flask_red</Name>
+                                                </Icon>
+                                                <Events>
+                                                    <Constant>
+                                                        <Willpower>5</Willpower>
+                                                    </Constant>
+                                                </Events>
+                                            </AddStatus>
+                                        </Branch>
+                                        <Branch Condition="Response == 4">
+                                            <Text>Suit yourself</Text>
+                                        </Branch>
+                                    </Branch>
 								</Chunk>
 
 								<Chunk>

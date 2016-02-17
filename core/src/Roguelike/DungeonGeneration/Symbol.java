@@ -39,6 +39,11 @@ public final class Symbol implements PathfindingTile
 
 	// ----------------------------------------------------------------------
 
+	public boolean shouldPlaceCorridorFeatures()
+	{
+		return containingRoom == null || containingRoom.roomData == null || !containingRoom.roomData.skipPlacingCorridor;
+	}
+
 	public Symbol copy()
 	{
 		Symbol s = new Symbol();

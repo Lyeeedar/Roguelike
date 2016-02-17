@@ -1,0 +1,8 @@
+<Entity Extends="Enemies/Lizardman/LizardmanBase">
+
+    <Sprite>
+        <Name>Oryx/uf_split/uf_heroes/lizardman_green_shaman</Name>
+        <DrawActualSize>true</DrawActualSize>
+    </Sprite>
+
+</Entity>

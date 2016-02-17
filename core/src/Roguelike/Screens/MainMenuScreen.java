@@ -41,10 +41,8 @@ public class MainMenuScreen implements Screen
 		table.setFillParent( true );
 		stage.addActor( table );
 
-		saveTable = new Table();
 		mainTable = new Table();
 
-		saveTable.defaults().width( 200 ).height( 50 ).pad( 5 );
 		mainTable.defaults().width( 200 ).height( 50 ).pad( 5 );
 
 		Image image = new Image( AssetManager.loadTexture( "Sprites/Unpacked/Title.png" ) );
@@ -86,6 +84,21 @@ public class MainMenuScreen implements Screen
 		mainTable.add( beginbutton ).expandX().fillX().padTop( 20 );
 		mainTable.row();
 
+		if (!Global.RELEASE)
+		{
+			TextButton testbutton = new TextButton( "Test Game - Lake", skin, "big" );
+			testbutton.addListener( new ClickListener()
+			{
+				public void clicked( InputEvent event, float x, float y )
+				{
+
+					Global.testWorld();
+				}
+			} );
+			mainTable.add( testbutton ).expandX().fillX().padTop( 20 );
+			mainTable.row();
+		}
+
 		TextButton obutton = new TextButton( "Options", skin, "big" );
 		obutton.addListener( new ClickListener()
 		{
@@ -120,37 +133,6 @@ public class MainMenuScreen implements Screen
 		mainTable.add( qbutton ).expandX().fillX().padTop( 20 );
 		mainTable.row();
 
-		recreateUI();
-	}
-
-	private void recreateUI()
-	{
-		saveTable.clear();
-
-		SaveSlotButton s1button = new SaveSlotButton( skin, 1 );
-		saveTable.add( s1button ).expandX().fillX();
-		saveTable.row();
-
-		SaveSlotButton s2button = new SaveSlotButton( skin, 2 );
-		saveTable.add( s2button ).expandX().fillX();
-		saveTable.row();
-
-		SaveSlotButton s3button = new SaveSlotButton( skin, 3 );
-		saveTable.add( s3button ).expandX().fillX();
-		saveTable.row();
-
-		TextButton bbutton = new TextButton( "Back", skin, "big" );
-		bbutton.addListener( new ClickListener()
-		{
-			public void clicked( InputEvent event, float x, float y )
-			{
-				saveTable.remove();
-				table.add( mainTable ).expand().fill();
-				table.row();
-			}
-		} );
-		saveTable.add( bbutton ).expandX().fillX().padTop( 20 );
-		saveTable.row();
 	}
 
 	@Override
@@ -177,8 +159,6 @@ public class MainMenuScreen implements Screen
 		stage.getViewport().setScreenHeight( Global.ScreenSize[1] );
 
 		Global.changeBGM( "Myst" );
-
-		recreateUI();
 	}
 
 	@Override
@@ -289,7 +269,6 @@ public class MainMenuScreen implements Screen
 
 	Table table;
 	Table mainTable;
-	Table saveTable;
 
 	SpriteBatch batch;
 }

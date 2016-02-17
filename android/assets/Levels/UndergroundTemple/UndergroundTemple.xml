@@ -1,0 +1,247 @@
+<Level>
+
+    <Entrance Key="Lake">
+        <Prev>
+            <SkipPlacingCorridor>true</SkipPlacingCorridor>
+
+            <Symbols>
+                <Symbol>
+                    <Char>.</Char>
+                    <TileData>
+                        <Opaque>false</Opaque>
+                        <Passable>true</Passable>
+
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_terrain/floor_diagonal_red_1</Name>
+                        </Sprite>
+
+                    </TileData>
+                </Symbol>
+                <Symbol>
+                    <Char>p</Char>
+                    <TileData>
+                        <Opaque>true</Opaque>
+                        <Passable>false</Passable>
+                        <TilingSprite>
+                            <Name>Wall</Name>
+                            <Top>
+                                <Name>Oryx/uf_split/uf_terrain/wall_crypt_7</Name>
+                            </Top>
+                            <Front>
+                                <Name>Oryx/uf_split/uf_terrain/wall_crypt_14</Name>
+                            </Front>
+                            <Overhang>
+                                <Name>Oryx/uf_split/uf_terrain/wall_crypt_1</Name>
+                            </Overhang>
+                        </TilingSprite>
+                    </TileData>
+                </Symbol>
+                <Symbol Extends=".">
+                    <Char>v</Char>
+                    <EnvironmentData>
+                        <Type>Transition</Type>
+                        <Destination>UndergroundTemple</Destination>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>wwp.pww</Row>
+                <Row>wp...pw</Row>
+                <Row>p.....p</Row>
+                <Row>...v...</Row>
+                <Row>p.....p</Row>
+                <Row>wp...pw</Row>
+                <Row>wwp.pww</Row>
+            </Rows>
+        </Prev>
+        <This>
+            <Faction>none</Faction>
+
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>S</Char>
+                    <MetaValue>PlayerSpawn</MetaValue>
+                </Symbol>
+            </Symbols>
+            <Rows>
+                <Row>....</Row>
+                <Row>....</Row>
+                <Row>.S..</Row>
+                <Row>....</Row>
+            </Rows>
+        </This>
+    </Entrance>
+
+    <Entrance>
+        <Prev>
+            <Symbols>
+                <Symbol Extends=",">
+                    <Char>v</Char>
+                    <EnvironmentData>
+                        <Type>Transition</Type>
+                        <Destination>UndergroundTemple</Destination>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>....</Row>
+                <Row>....</Row>
+                <Row>..v.</Row>
+                <Row>....</Row>
+            </Rows>
+        </Prev>
+        <This>
+            <Faction>none</Faction>
+
+            <Symbols>
+                <Symbol Extends=".">
+                    <Char>S</Char>
+                    <MetaValue>PlayerSpawn</MetaValue>
+                </Symbol>
+            </Symbols>
+            <Rows>
+                <Row>....</Row>
+                <Row>....</Row>
+                <Row>.S..</Row>
+                <Row>....</Row>
+            </Rows>
+        </This>
+    </Entrance>
+
+    <Ambient>
+        <Red>0.5</Red>
+        <Green>0.75</Green>
+        <Blue>0.3</Blue>
+        <Alpha>0.2</Alpha>
+    </Ambient>
+
+    <Sound>
+        <BGM>Anguish</BGM>
+        <Ambient>
+            <Sound><Name>spooky1</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky4</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky7</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>spooky8</Name><Repeat>100</Repeat></Sound>
+            <Sound><Name>water1</Name></Sound>
+        </Ambient>
+    </Sound>
+
+    <RoomGenerators>
+        <Basic>
+            <Weight>6</Weight>
+        </Basic>
+        <Chambers><Weight>1</Weight></Chambers>
+    </RoomGenerators>
+
+    <CorridorStyle>
+        <PathStyle>Straight</PathStyle>
+
+        <CentralRecurring>
+            <Interval>5</Interval>
+            <Name>Torch</Name>
+            <EnvironmentData>
+                <AttachToWall>true</AttachToWall>
+                <Overhead>true</Overhead>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/torch1</Name>
+                </Sprite>
+                <Passable>true</Passable>
+                <Light>
+                    <Colour>
+                        <Green>0.8</Green>
+                        <Red>1</Red>
+                    </Colour>
+                    <Intensity>5</Intensity>
+                    <Flicker>2</Flicker>
+                    <FlickerPeriod>0.5</FlickerPeriod>
+                </Light>
+            </EnvironmentData>
+        </CentralRecurring>
+
+    </CorridorStyle>
+
+    <Factions>
+        <Major>
+            <Lizardman>1</Lizardman>
+        </Major>
+        <Minor>
+            <Slime>1</Slime>
+        </Minor>
+    </Factions>
+
+    <Symbols>
+
+        <Symbol>
+            <Char>.</Char>
+            <TileData>
+                <Opaque>false</Opaque>
+                <Passable>true</Passable>
+
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/floor_diagonal_red_1</Name>
+                </Sprite>
+
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>,</Char>
+            <TileData>
+                <Passable>Levitate</Passable>
+                <Opaque>false</Opaque>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/water_blue</Name>
+                </Sprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>#</Char>
+            <TileData>
+                <Opaque>true</Opaque>
+                <Passable>false</Passable>
+                <TilingSprite>
+                    <Name>Wall</Name>
+                    <Top>
+                        <Name>Oryx/uf_split/uf_terrain/wall_crypt_7</Name>
+                    </Top>
+                    <Front>
+                        <Name>Oryx/uf_split/uf_terrain/wall_crypt_14</Name>
+                    </Front>
+                    <Overhang>
+                        <Name>Oryx/uf_split/uf_terrain/wall_crypt_1</Name>
+                    </Overhang>
+                </TilingSprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>w</Char>
+            <TileData>
+                <Opaque>false</Opaque>
+                <Passable>true</Passable>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/floor_wood_4</Name>
+                </Sprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol Extends=".">
+            <Char>+</Char>
+            <EnvironmentData>
+                <Type>Door</Type>
+            </EnvironmentData>
+        </Symbol>
+
+    </Symbols>
+
+    <Rooms>
+        <Padding Condition="rnd(3)+2" >
+            <Width>5</Width>
+            <Height>5</Height>
+        </Padding>
+    </Rooms>
+
+</Level>

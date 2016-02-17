@@ -148,6 +148,7 @@ public class DungeonFileParser
 		public String placementHint;
 
 		public boolean lockRotation = false;
+		public boolean skipPlacingCorridor = false;
 
 		private boolean symbolsResolved = false;
 
@@ -165,6 +166,12 @@ public class DungeonFileParser
 			room.placement = Placement.valueOf( xml.get( "Placement", "Centre" ).toUpperCase() );
 
 			room.lockRotation = xml.getBoolean( "LockRotation", false );
+			room.skipPlacingCorridor = xml.getBoolean( "SkipPlacingCorridor", false );
+
+			if (room.skipPlacingCorridor)
+			{
+				int i = 0;
+			}
 
 			room.addFactionFeatures = xml.getBoolean( "AddFeatures", true );
 
@@ -285,8 +292,13 @@ public class DungeonFileParser
 			room.height = height;
 			room.roomDef = roomDef;
 			room.faction = faction;
+			room.addFactionFeatures = addFactionFeatures;
 			room.generator = generator;
 			room.placementHint = placementHint;
+
+			room.lockRotation = lockRotation;
+			room.skipPlacingCorridor = skipPlacingCorridor;
+			room.symbolsResolved = symbolsResolved;
 
 			for ( Character key : symbolMap.keySet() )
 			{

@@ -732,7 +732,7 @@ public final class Room
 					{
 						Symbol s = roomContents[point.x][point.y];
 
-						if ( dfp.corridorStyle != null && dfp.corridorStyle.width == 1 && dfp.corridorStyle.centralConstant != null )
+						if ( dfp.corridorStyle != null && dfp.corridorStyle.width == 1 && dfp.corridorStyle.centralConstant != null && (roomData == null || !roomData.skipPlacingCorridor) )
 						{
 							s = dfp.corridorStyle.centralConstant.getAsSymbol( s, dfp );
 						}

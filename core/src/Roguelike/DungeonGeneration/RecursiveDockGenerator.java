@@ -1016,8 +1016,12 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 			if ( dfp.corridorStyle.centralConstant != null )
 			{
 				t = tiles[pos.x + width / 2][pos.y + width / 2];
-				t.symbol = dfp.corridorStyle.centralConstant.getAsSymbol( t.symbol, dfp );
-				t.placerHashCode = path.hashCode();
+
+				if ( t.symbol.shouldPlaceCorridorFeatures() )
+				{
+					t.symbol = dfp.corridorStyle.centralConstant.getAsSymbol( t.symbol, dfp );
+					t.placerHashCode = path.hashCode();
+				}
 			}
 
 			if ( dfp.corridorStyle.centralRecurring != null )
@@ -1027,8 +1031,12 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 				if ( centralCount == dfp.corridorStyle.centralRecurring.interval )
 				{
 					t = tiles[pos.x + width / 2][pos.y + width / 2];
-					t.symbol = dfp.corridorStyle.centralRecurring.getAsSymbol( t.symbol, dfp );
-					t.placerHashCode = path.hashCode();
+
+					if ( t.symbol.shouldPlaceCorridorFeatures() )
+					{
+						t.symbol = dfp.corridorStyle.centralRecurring.getAsSymbol( t.symbol, dfp );
+						t.placerHashCode = path.hashCode();
+					}
 
 					centralCount = 0;
 				}
@@ -1055,17 +1063,25 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							if ( placeTop && isEmpty( tiles[pos.x + width / 2][pos.y - 1] ) )
 							{
 								t = tiles[pos.x + width / 2][pos.y - 1];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
-								t.symbol.attachLocation = Direction.NORTH;
-								t.placerHashCode = path.hashCode();
+
+								if ( t.symbol.shouldPlaceCorridorFeatures() )
+								{
+									t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
+									t.symbol.attachLocation = Direction.NORTH;
+									t.placerHashCode = path.hashCode();
+								}
 							}
 
 							if ( placeBottom && isEmpty( tiles[pos.x + width / 2][pos.y + width] ) )
 							{
 								t = tiles[pos.x + width / 2][pos.y + width];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
-								t.symbol.attachLocation = Direction.SOUTH;
-								t.placerHashCode = path.hashCode();
+
+								if ( t.symbol.shouldPlaceCorridorFeatures() )
+								{
+									t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
+									t.symbol.attachLocation = Direction.SOUTH;
+									t.placerHashCode = path.hashCode();
+								}
 							}
 						}
 						else
@@ -1073,17 +1089,25 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							if ( placeTop && tiles[pos.x + width / 2][pos.y - 1].symbol.character == '#' )
 							{
 								t = tiles[pos.x + width / 2][pos.y];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
-								t.symbol.attachLocation = Direction.NORTH;
-								t.placerHashCode = path.hashCode();
+
+								if ( t.symbol.shouldPlaceCorridorFeatures() )
+								{
+									t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
+									t.symbol.attachLocation = Direction.NORTH;
+									t.placerHashCode = path.hashCode();
+								}
 							}
 
 							if ( placeBottom && tiles[pos.x + width / 2][pos.y + width].symbol.character == '#' )
 							{
 								t = tiles[pos.x + width / 2][pos.y + width - 1];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
-								t.symbol.attachLocation = Direction.SOUTH;
-								t.placerHashCode = path.hashCode();
+
+								if ( t.symbol.shouldPlaceCorridorFeatures() )
+								{
+									t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
+									t.symbol.attachLocation = Direction.SOUTH;
+									t.placerHashCode = path.hashCode();
+								}
 							}
 						}
 					}
@@ -1094,17 +1118,25 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							if ( placeTop && isEmpty( tiles[pos.x - 1][pos.y + width / 2] ) )
 							{
 								t = tiles[pos.x - 1][pos.y + width / 2];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
-								t.symbol.attachLocation = Direction.EAST;
-								t.placerHashCode = path.hashCode();
+
+								if ( t.symbol.shouldPlaceCorridorFeatures() )
+								{
+									t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
+									t.symbol.attachLocation = Direction.EAST;
+									t.placerHashCode = path.hashCode();
+								}
 							}
 
 							if ( placeBottom && isEmpty( tiles[pos.x + width][pos.y + width / 2] ) )
 							{
 								t = tiles[pos.x + width][pos.y + width / 2];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
-								t.symbol.attachLocation = Direction.WEST;
-								t.placerHashCode = path.hashCode();
+
+								if ( t.symbol.shouldPlaceCorridorFeatures() )
+								{
+									t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
+									t.symbol.attachLocation = Direction.WEST;
+									t.placerHashCode = path.hashCode();
+								}
 							}
 						}
 						else
@@ -1112,17 +1144,25 @@ public class RecursiveDockGenerator extends AbstractDungeonGenerator
 							if ( placeTop && tiles[pos.x - 1][pos.y + width / 2].symbol.character == '#' )
 							{
 								t = tiles[pos.x][pos.y + width / 2];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
-								t.symbol.attachLocation = Direction.EAST;
-								t.placerHashCode = path.hashCode();
+
+								if ( t.symbol.shouldPlaceCorridorFeatures() )
+								{
+									t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
+									t.symbol.attachLocation = Direction.EAST;
+									t.placerHashCode = path.hashCode();
+								}
 							}
 
 							if ( placeBottom && tiles[pos.x + width][pos.y + width / 2].symbol.character == '#' )
 							{
 								t = tiles[pos.x + width - 1][pos.y + width / 2];
-								t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
-								t.symbol.attachLocation = Direction.WEST;
-								t.placerHashCode = path.hashCode();
+
+								if ( t.symbol.shouldPlaceCorridorFeatures() )
+								{
+									t.symbol = dfp.corridorStyle.sideRecurring.getAsSymbol( t.symbol, dfp );
+									t.symbol.attachLocation = Direction.WEST;
+									t.placerHashCode = path.hashCode();
+								}
 							}
 						}
 					}

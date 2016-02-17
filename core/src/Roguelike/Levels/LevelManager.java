@@ -160,9 +160,13 @@ public class LevelManager
 			{
 				rooms.add( dfp.entranceRooms.get( prevLevel.toLowerCase() )[1] );
 			}
-			else
+			else if (dfp.entranceRooms.get( "all" ) != null)
 			{
 				rooms.add( dfp.entranceRooms.get( "all" )[1] );
+			}
+			else
+			{
+				rooms.add( dfp.entranceRooms.values().iterator().next()[1] );
 			}
 
 			// If depth == levelDepth, getEntranceRoom of nextLevel

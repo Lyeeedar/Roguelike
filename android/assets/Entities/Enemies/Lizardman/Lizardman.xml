@@ -1,0 +1,12 @@
+<Faction>
+    <Name>Lizardman</Name>
+
+    <Creatures>
+
+        <LizardmanSwordsman></LizardmanSwordsman>
+        <LizardmanSpearman></LizardmanSpearman>
+        <LizardmanShaman><MinInfluence>60</MinInfluence></LizardmanShaman>
+
+    </Creatures>
+
+</Faction>
