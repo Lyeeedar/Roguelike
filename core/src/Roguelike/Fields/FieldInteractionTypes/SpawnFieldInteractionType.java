@@ -39,8 +39,8 @@ public class SpawnFieldInteractionType extends AbstractFieldInteractionType
 	@Override
 	public void parse(Element xml)
 	{
-		fieldName = xml.get("Field");
-		stacksEqn = xml.get("Stacks", "1").toLowerCase();
+		fieldName = xml.getText();
+		stacksEqn = xml.getAttribute("Stacks", "1").toLowerCase();
 	}
 
 }

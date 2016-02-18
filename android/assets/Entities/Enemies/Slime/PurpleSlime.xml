@@ -5,7 +5,7 @@
         <DrawActualSize>true</DrawActualSize>
         <Sound><Name>slime2</Name></Sound>
     </Sprite>
-    <Immune>PoisonLiquid</Immune>
+    <Immune>Slime</Immune>
     <Light>
         <Colour><RGB>255,0,255</RGB><Alpha>0.5</Alpha></Colour>
         <Intensity>3</Intensity>
@@ -21,13 +21,13 @@
                 <UpdateRate>0.1</UpdateRate>
             </HitSprite>
             <Effect>
-                <Field Stacks="rnd(3)+3">PoisonLiquid</Field>
+                <Field Stacks="rnd(3)+3">Slime</Field>
             </Effect>
         </Active>
         <Passive>
             <Events>
                 <OnDeath>
-                    <Field Stacks="rnd(5)+5">PoisonLiquid</Field>
+                    <Field Stacks="rnd(5)+5">Slime</Field>
                 </OnDeath>
             </Events>
         </Passive>

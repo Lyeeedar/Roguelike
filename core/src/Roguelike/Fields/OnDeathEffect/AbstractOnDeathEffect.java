@@ -45,5 +45,6 @@ public abstract class AbstractOnDeathEffect
 		ClassMap.put("DAMAGE", DamageOnDeathEffect.class);
 		ClassMap.put("STATUS", StatusOnDeathEffect.class);
 		ClassMap.put("SPRITE", SpriteOnDeathEffect.class);
+		ClassMap.put( "ABILITY", AbilityOnDeathEffect.class );
 	}
 }

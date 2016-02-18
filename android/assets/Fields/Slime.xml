@@ -1,0 +1,21 @@
+<Field Extends="Liquid">
+    <FieldName>Slime</FieldName>
+    <Tags>Wet,Flammable,Explosive</Tags>
+    <Sprite>
+        <Name>Oryx/uf_split/uf_terrain/water_bubbling</Name>
+    </Sprite>
+    <Duration>
+        <Fade>
+            <Rate>5</Rate>
+            <ResetOnStacks>true</ResetOnStacks>
+        </Fade>
+    </Duration>
+    <OnTurn>
+        <Status Condition="chance(1, 3)">Slime</Status>
+    </OnTurn>
+    <Interactions>
+        <Hot>
+            <Spawn>ArmedSlime</Spawn>
+        </Hot>
+    </Interactions>
+</Field>

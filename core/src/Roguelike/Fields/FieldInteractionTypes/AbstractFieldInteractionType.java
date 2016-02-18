@@ -23,8 +23,9 @@ public abstract class AbstractFieldInteractionType
 		{
 			type = (AbstractFieldInteractionType)ClassReflection.newInstance(c);
 		}
-		catch (ReflectionException e)
+		catch (Exception e)
 		{
+			System.err.println(xml.getName());
 			e.printStackTrace();
 		}
 
