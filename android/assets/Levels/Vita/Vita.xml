@@ -1,0 +1,192 @@
+<Level>
+
+    <Entrance>
+        <Prev>
+            <Faction>none</Faction>
+
+            <Placement>North</Placement>
+
+            <Symbols>
+                <Symbol Extends="p">
+                    <Char>v</Char>
+                    <EnvironmentData>
+                        <Type>Transition</Type>
+                        <Destination>Forest</Destination>
+                        <Passable>false</Passable>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/TransitionOut</Name>
+                        </Sprite>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <Rows>
+                <Row>#v#</Row>
+                <Row>#p#</Row>
+            </Rows>
+        </Prev>
+        <This>
+            <Faction>none</Faction>
+
+            <Symbols>
+                <Symbol Extends="p">
+                    <Char>S</Char>
+                    <MetaValue>PlayerSpawn</MetaValue>
+                    <EnvironmentData>
+                        <Passable>false</Passable>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/TransitionIn</Name>
+                        </Sprite>
+                    </EnvironmentData>
+                </Symbol>
+            </Symbols>
+
+            <Placement>South</Placement>
+
+            <Rows>
+                <Row>#p#</Row>
+                <Row>#S#</Row>
+            </Rows>
+        </This>
+    </Entrance>
+
+    <Ambient>
+        <Red>0.5</Red>
+        <Green>0.54</Green>
+        <Blue>0.4</Blue>
+    </Ambient>
+
+    <Sound>
+        <BGM>Serpentine Trek</BGM>
+    </Sound>
+
+    <RoomGenerators>
+        <CellularAutomata><Weight>1</Weight></CellularAutomata>
+        <Starburst><Weight>1</Weight></Starburst>
+        <Polygon><Weight>1</Weight></Polygon>
+    </RoomGenerators>
+
+    <CorridorStyle>
+        <PathStyle>Wandering</PathStyle>
+        <Width>1</Width>
+    </CorridorStyle>
+
+    <Preprocessor>
+        <Island>
+            <Feature Extends=".">
+                <MinVal>0.02</MinVal>
+            </Feature>
+        </Island>
+    </Preprocessor>
+
+    <Factions>
+        <Major>
+            <Vita>1</Vita>
+        </Major>
+        <Minor>
+            <Vita>1</Vita>
+        </Minor>
+    </Factions>
+
+    <Symbols>
+
+        <Symbol>
+            <Char>.</Char>
+            <TileData>
+                <Opaque>false</Opaque>
+                <Passable>true</Passable>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_burnt_2</Name>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_burnt_3</Name>
+                    </Sprite>
+                </Group>
+
+                <Group Chance="0.05">
+                    <Sprite>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_burnt_4</Name>
+                    </Sprite>
+                </Group>
+
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/ground_grass_burnt_1</Name>
+                </Sprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>#</Char>
+            <TileData>
+                <Opaque>true</Opaque>
+                <Passable>false</Passable>
+
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/ground_grass_burnt_1</Name>
+                </Sprite>
+                <Sprite>
+                    <Name>Oryx/Custom/terrain/VitaTree</Name>
+                    <DrawActualSize>true</DrawActualSize>
+                </Sprite>
+
+                <AmbientShadow>
+                    <Factor>0.2</Factor>
+                    <Range>2</Range>
+                </AmbientShadow>
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>w</Char>
+            <TileData>
+                <Opaque>true</Opaque>
+                <Passable>false</Passable>
+                <TilingSprite>
+                    <Name>Wall</Name>
+                    <Top>
+                        <Name>Oryx/uf_split/uf_terrain/wall_hedge_8</Name>
+                    </Top>
+                    <Front>
+                        <Name>Oryx/uf_split/uf_terrain/wall_hedge_15</Name>
+                    </Front>
+                    <Overhang>
+                        <Name>Oryx/uf_split/uf_terrain/wall_hedge_1</Name>
+                    </Overhang>
+                </TilingSprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol>
+            <Char>,</Char>
+            <TileData>
+                <Opaque>false</Opaque>
+                <Passable>true</Passable>
+                <CanFeature>false</CanFeature>
+                <Sprite>
+                    <Name>Oryx/uf_split/uf_terrain/water_bubbling</Name>
+                </Sprite>
+            </TileData>
+        </Symbol>
+
+        <Symbol Extends=",">
+            <Char>+</Char>
+            <EnvironmentData>
+                <Type>Door</Type>
+            </EnvironmentData>
+        </Symbol>
+
+    </Symbols>
+
+    <Rooms>
+
+        <Filler Condition="3 + rnd(2)" >
+        </Filler>
+
+    </Rooms>
+
+</Level>

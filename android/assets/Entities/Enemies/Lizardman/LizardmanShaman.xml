@@ -5,4 +5,14 @@
         <DrawActualSize>true</DrawActualSize>
     </Sprite>
 
+    <Inventory>
+        <Equipment>
+            <Weapon Drop="false">
+                <Slot>Weapon</Slot>
+                <Type>Wand</Type>
+            </Weapon>
+        </Equipment>
+
+    </Inventory>
+
 </Entity>

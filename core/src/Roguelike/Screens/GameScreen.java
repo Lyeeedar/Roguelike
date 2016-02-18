@@ -708,7 +708,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 								height = tileSize3;
 							}
 
-							if ( gtile.visible )
+							if ( entity.canTakeDamage && gtile.visible )
 							{
 								hasStatus.add( entity );
 							}

@@ -50,6 +50,7 @@
                             <Name>Oryx/Custom/heroes/bar_patron</Name>
                             <DrawActualSize>true</DrawActualSize>
                         </Sprite>
+                        <CanTakeDamage>false</CanTakeDamage>
                     </EntityData>
                 </Symbol>
 
@@ -60,6 +61,7 @@
                             <Name>Oryx/Custom/heroes/bar_patron_f</Name>
                             <DrawActualSize>true</DrawActualSize>
                         </Sprite>
+                        <CanTakeDamage>false</CanTakeDamage>
                     </EntityData>
                 </Symbol>
 
@@ -70,6 +72,7 @@
                             <Name>Oryx/Custom/heroes/barmaid</Name>
                             <DrawActualSize>true</DrawActualSize>
                         </Sprite>
+                        <CanTakeDamage>false</CanTakeDamage>
                         <Dialogue>
                             <Dialogue>
                                 <Chunk Condition="Buffed == 0" ReliesOn="Buffed">

@@ -127,9 +127,14 @@ public class AtlasCreator
 		{
 			xml = reader.parse( Gdx.files.internal( file ) );
 		}
-		catch ( IOException e )
+		catch ( Exception e )
 		{
-			e.printStackTrace();
+			return;
+		}
+
+		if (xml == null)
+		{
+			return;
 		}
 
 		Array<XmlReader.Element> spriteElements = new Array<XmlReader.Element>(  );

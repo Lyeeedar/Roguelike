@@ -51,6 +51,8 @@
 
                         <Name>Blacksmith</Name>
 
+                        <CanTakeDamage>false</CanTakeDamage>
+
                         <Sprite>
                             <Name>Oryx/Custom/heroes/blacksmith</Name>
                             <DrawActualSize>true</DrawActualSize>
@@ -150,6 +152,8 @@
                             <Name>Oryx/Custom/heroes/blacksmith</Name>
                             <DrawActualSize>true</DrawActualSize>
                         </Sprite>
+
+                        <CanTakeDamage>false</CanTakeDamage>
 
                         <Dialogue>
                             <Exclamations>
@@ -253,6 +257,8 @@
                             <DrawActualSize>true</DrawActualSize>
                         </Sprite>
 
+                        <CanTakeDamage>false</CanTakeDamage>
+
                         <Dialogue>
                             <Exclamations>
                                 <SeePlayer>
@@ -310,120 +316,122 @@
 
         <Room>
 
-        <LockRotation>true</LockRotation>
+            <LockRotation>true</LockRotation>
 
-        <Symbols>
-            <Symbol Extends=",">
-                <Char>a</Char>
-                <EnvironmentData>
-                    <Sprite>
-                        <Name>Oryx/Custom/terrain/anvil</Name>
-                        <DrawActualSize>true</DrawActualSize>
-                    </Sprite>
+            <Symbols>
+                <Symbol Extends=",">
+                    <Char>a</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/anvil</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
 
-                    <Passable>false</Passable>
-                    <Opaque>false</Opaque>
-                </EnvironmentData>
-            </Symbol>
+                        <Passable>false</Passable>
+                        <Opaque>false</Opaque>
+                    </EnvironmentData>
+                </Symbol>
 
-            <Symbol Extends=",">
-                <Char>f</Char>
-                <EnvironmentData>
-                    <Sprite>
-                        <Name>Oryx/Custom/terrain/forge</Name>
-                    </Sprite>
+                <Symbol Extends=",">
+                    <Char>f</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/forge</Name>
+                        </Sprite>
 
-                    <Passable>false</Passable>
-                    <Opaque>false</Opaque>
-                </EnvironmentData>
-            </Symbol>
+                        <Passable>false</Passable>
+                        <Opaque>false</Opaque>
+                    </EnvironmentData>
+                </Symbol>
 
-            <Symbol Extends=",">
-                <Char>t</Char>
-                <EnvironmentData>
-                    <Sprite>
-                        <Name>Oryx/Custom/terrain/table</Name>
-                        <DrawActualSize>true</DrawActualSize>
-                    </Sprite>
+                <Symbol Extends=",">
+                    <Char>t</Char>
+                    <EnvironmentData>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/table</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
 
-                    <Passable>false</Passable>
-                    <Opaque>false</Opaque>
-                </EnvironmentData>
-            </Symbol>
+                        <Passable>false</Passable>
+                        <Opaque>false</Opaque>
+                    </EnvironmentData>
+                </Symbol>
 
-            <Symbol Extends=",">
-                <Char>b</Char>
-                <EntityData Extends="NPC/HumanBase">
+                <Symbol Extends=",">
+                    <Char>b</Char>
+                    <EntityData Extends="NPC/HumanBase">
 
-                    <Name>Blacksmith</Name>
+                        <Name>Blacksmith</Name>
 
-                    <Sprite>
-                        <Name>Oryx/Custom/heroes/blacksmith</Name>
-                        <DrawActualSize>true</DrawActualSize>
-                    </Sprite>
+                        <Sprite>
+                            <Name>Oryx/Custom/heroes/blacksmith</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
 
-                    <Dialogue>
-                        <Exclamations>
-                            <SeePlayer>
-                                <Exclamation>Ello</Exclamation>
-                            </SeePlayer>
-                        </Exclamations>
+                        <CanTakeDamage>false</CanTakeDamage>
+
                         <Dialogue>
-                            <Chunk>
-                                <Text>Want to buy some stuff?</Text>
-                                <OpenShop></OpenShop>
-                                <Text>Good luck out there!</Text>
-                            </Chunk>
+                            <Exclamations>
+                                <SeePlayer>
+                                    <Exclamation>Ello</Exclamation>
+                                </SeePlayer>
+                            </Exclamations>
+                            <Dialogue>
+                                <Chunk>
+                                    <Text>Want to buy some stuff?</Text>
+                                    <OpenShop></OpenShop>
+                                    <Text>Good luck out there!</Text>
+                                </Chunk>
+                            </Dialogue>
                         </Dialogue>
-                    </Dialogue>
 
-                    <Inventory>
+                        <Inventory>
 
-                        <Batch>
-                            <Recipes>Sword,Axe,Spear,Helm,Cuirass,Greaves</Recipes>
-                            <Material>Metal</Material>
-                            <Quality>1</Quality>
-                            <Value>20</Value>
-                        </Batch>
+                            <Batch>
+                                <Recipes>Sword,Axe,Spear,Helm,Cuirass,Greaves</Recipes>
+                                <Material>Metal</Material>
+                                <Quality>1</Quality>
+                                <Value>20</Value>
+                            </Batch>
 
-                        <Batch>
-                            <Recipes>Sword,Axe,Spear,Helm,Cuirass,Greaves</Recipes>
-                            <Material>Metal</Material>
-                            <Quality>2</Quality>
-                            <Value>40</Value>
-                        </Batch>
+                            <Batch>
+                                <Recipes>Sword,Axe,Spear,Helm,Cuirass,Greaves</Recipes>
+                                <Material>Metal</Material>
+                                <Quality>2</Quality>
+                                <Value>40</Value>
+                            </Batch>
 
-                        <Batch>
-                            <Recipes>Sword,Axe,Spear,Helm,Cuirass,Greaves</Recipes>
-                            <Material>Metal</Material>
-                            <Quality>3</Quality>
-                            <Value>60</Value>
-                        </Batch>
+                            <Batch>
+                                <Recipes>Sword,Axe,Spear,Helm,Cuirass,Greaves</Recipes>
+                                <Material>Metal</Material>
+                                <Quality>3</Quality>
+                                <Value>60</Value>
+                            </Batch>
 
-                        <Batch>
-                            <Recipes>Sword,Axe,Spear,Helm,Cuirass,Greaves</Recipes>
-                            <Material>Metal</Material>
-                            <Quality>4</Quality>
-                            <Value>80</Value>
-                        </Batch>
+                            <Batch>
+                                <Recipes>Sword,Axe,Spear,Helm,Cuirass,Greaves</Recipes>
+                                <Material>Metal</Material>
+                                <Quality>4</Quality>
+                                <Value>80</Value>
+                            </Batch>
 
-                    </Inventory>
+                        </Inventory>
 
-                </EntityData>
-            </Symbol>
+                    </EntityData>
+                </Symbol>
 
-        </Symbols>
+            </Symbols>
 
-        <Rows>
-            <Row>wwwwwww</Row>
-            <Row>wffa,tw</Row>
-            <Row>w,,b,tw</Row>
-            <Row>w,,,,tw</Row>
-            <Row>w,,,,tw</Row>
-            <Row>www+www</Row>
-        </Rows>
+            <Rows>
+                <Row>wwwwwww</Row>
+                <Row>wffa,tw</Row>
+                <Row>w,,b,tw</Row>
+                <Row>w,,,,tw</Row>
+                <Row>w,,,,tw</Row>
+                <Row>www+www</Row>
+            </Rows>
 
-    </Room>
+        </Room>
 
         <Room>
 
@@ -478,6 +486,8 @@
                             <Name>Oryx/Custom/heroes/blacksmith</Name>
                             <DrawActualSize>true</DrawActualSize>
                         </Sprite>
+
+                        <CanTakeDamage>false</CanTakeDamage>
 
                         <Dialogue>
                             <Exclamations>
@@ -602,6 +612,8 @@
                             <Name>Oryx/Custom/heroes/blacksmith</Name>
                             <DrawActualSize>true</DrawActualSize>
                         </Sprite>
+
+                        <CanTakeDamage>false</CanTakeDamage>
 
                         <Dialogue>
                             <Exclamations>
