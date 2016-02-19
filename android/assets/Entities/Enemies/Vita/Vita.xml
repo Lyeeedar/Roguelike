@@ -1,0 +1,56 @@
+<Faction>
+    <Name>Vita</Name>
+
+    <Features>
+
+        <Feature>
+            <Name>Spawner</Name>
+            <Placement>Centre</Placement>
+            <EnvironmentData>
+                <Sprite>
+                    <Name>Oryx/Custom/terrain/VitaTree</Name>
+                    <DrawActualSize>true</DrawActualSize>
+                </Sprite>
+                <OnTurn>
+                    <Group>
+                        <SpawnField Around="true" Stacks="chance(1,6)">VitaBloom</SpawnField>
+                    </Group>
+                </OnTurn>
+            </EnvironmentData>
+            <Coverage Min="1" >10</Coverage>
+        </Feature>
+
+        <Feature>
+            <Name>Detonator</Name>
+            <Placement>Any</Placement>
+            <Coverage Min="1" >10</Coverage>
+
+            <EnvironmentData>
+                <Passable>true</Passable>
+                <Sprite>
+                    <Name>Oryx/Custom/terrain/VitaBloom2</Name>
+                    <DrawActualSize>true</DrawActualSize>
+                </Sprite>
+                <OnTurn>
+                    <Group>
+                        <Ability>
+                            <HitType><Any/></HitType>
+                            <NoSprite>true</NoSprite>
+                            <Effect>
+                                <FieldInteraction>Vita</FieldInteraction>
+                            </Effect>
+                        </Ability>
+                    </Group>
+                </OnTurn>
+            </EnvironmentData>
+        </Feature>
+
+    </Features>
+
+    <Creatures>
+
+        <VitaFighter></VitaFighter>
+
+    </Creatures>
+
+</Faction>

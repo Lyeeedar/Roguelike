@@ -1,0 +1,6 @@
+<Entity Extends="Enemies/Vita/VitaBase">
+    <Sprite>
+        <Name>Oryx/uf_split/uf_heroes/dknight</Name>
+        <DrawActualSize>true</DrawActualSize>
+    </Sprite>
+</Entity>

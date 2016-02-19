@@ -172,7 +172,10 @@ public class LevelManager
 			// If depth == levelDepth, getEntranceRoom of nextLevel
 			if (depth == maxDepth)
 			{
-				rooms.add( nextLevel.getEntranceRoom( levelName ) );
+				if (nextLevel != null)
+				{
+					rooms.add( nextLevel.getEntranceRoom( levelName ) );
+				}
 			}
 			else
 			{

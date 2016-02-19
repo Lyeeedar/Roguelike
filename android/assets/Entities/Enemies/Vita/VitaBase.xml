@@ -1,0 +1,23 @@
+<Entity>
+    <AI>basicMonster</AI>
+
+    <Factions>
+        <Faction>Vita</Faction>
+    </Factions>
+
+    <Immune>Vita</Immune>
+
+    <Statistics>
+
+        <Attack>15</Attack>
+        <Defense>20</Defense>
+
+        <Constitution>11</Constitution>
+        <Perception>10</Perception>
+        <Strength>14</Strength>
+        <Willpower>14</Willpower>
+        <Speed>10</Speed>
+
+    </Statistics>
+
+</Entity>

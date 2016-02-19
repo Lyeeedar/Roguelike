@@ -16,6 +16,7 @@ import Roguelike.Fields.SpreadStyle.AbstractSpreadStyle;
 import Roguelike.GameEvent.IGameObject;
 import Roguelike.Lights.Light;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.SpriteAnimation.StretchAnimation;
 import Roguelike.Sprite.TilingSprite;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Util.EnumBitflag;
@@ -114,7 +115,7 @@ public class Field implements IGameObject
 
 		durationStyle.update( cost, this );
 
-		if ( stacks > 0 )
+		if ( stacks > 0 && spreadStyle != null )
 		{
 			spreadStyle.update( cost, this );
 		}
@@ -223,6 +224,16 @@ public class Field implements IGameObject
 				}
 				else
 				{
+					Field oldField = newTile.fields.get(field.layer);
+					if (oldField == null || !oldField.fieldName.equals( field.fieldName ))
+					{
+						Sprite sprite = field.getSpriteGroup().sprite;
+						if (sprite != null)
+						{
+							sprite.spriteAnimation = new StretchAnimation( 0.25f, null, 0, StretchAnimation.StretchEquation.EXPAND );
+						}
+					}
+
 					newTile.addField( field );
 				}
 			}

@@ -44,6 +44,7 @@ public abstract class AbstractActivationAction
 	// ----------------------------------------------------------------------
 	static
 	{
+		ClassMap.put( "ABILITY", ActivationActionAbility.class );
 		ClassMap.put( "ADDITEM", ActivationActionAddItem.class );
 		ClassMap.put( "SETSPRITE", ActivationActionSetSprite.class );
 		ClassMap.put( "SETPASSABLE", ActivationActionSetPassable.class );

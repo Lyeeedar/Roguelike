@@ -93,6 +93,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	private boolean singleSprite = false;
 	private Sprite useSprite;
 	private boolean spentCost = false;
+	public boolean noSprite = false;
 
 	public AbilityTree.AbilityStage tree;
 
@@ -201,6 +202,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		aa.range = range;
 		aa.cone = cone;
 		aa.screenshake = screenshake;
+		aa.noSprite = noSprite;
 
 		aa.cooldownType = cooldownType;
 
@@ -537,26 +539,30 @@ public class ActiveAbility implements IAbility, IGameObject
 				int ey = epicenter.y - aoe;
 
 				GameTile tile = epicenter.level.getGameTile( ex, ey );
-				int[] diff = tile.getPosDiff( epicenter );
 
-				Sprite sprite = getHitSprite().copy();
-				if ( sprite.spriteAnimation != null )
+				if (tile != null)
 				{
-					int distMoved = ( Math.abs( diff[ 0 ] ) + Math.abs( diff[ 1 ] ) ) / Global.TileSize;
-					sprite.spriteAnimation.set( 0.05f * distMoved, diff );
+					int[] diff = tile.getPosDiff( epicenter );
+
+					Sprite sprite = getHitSprite().copy();
+					if ( sprite.spriteAnimation != null )
+					{
+						int distMoved = ( Math.abs( diff[ 0 ] ) + Math.abs( diff[ 1 ] ) ) / Global.TileSize;
+						sprite.spriteAnimation.set( 0.05f * distMoved, diff );
+					}
+					sprite.size[0] = aoe * 2 + 1;
+					sprite.size[1] = aoe * 2 + 1;
+
+					SpriteEffect effect = new SpriteEffect( sprite, Direction.CENTER, light != null ? light.copyNoFlag() : null );
+
+					SoundInstance sound = sprite.sound;
+					if ( sound != null )
+					{
+						sound.play( tile );
+					}
+
+					tile.spriteEffects.add( effect );
 				}
-				sprite.size[0] = aoe * 2 + 1;
-				sprite.size[1] = aoe * 2 + 1;
-
-				SpriteEffect effect = new SpriteEffect( sprite, Direction.CENTER, light != null ? light.copyNoFlag() : null );
-
-				SoundInstance sound = sprite.sound;
-				if ( sound != null )
-				{
-					sound.play( tile );
-				}
-
-				tile.spriteEffects.add( effect );
 			}
 
 			if ( screenshake > 0 )
@@ -583,6 +589,7 @@ public class ActiveAbility implements IAbility, IGameObject
 	// ----------------------------------------------------------------------
 	public Sprite getHitSprite()
 	{
+		if (noSprite) { return null; }
 		if ( hitSprite != null ) { return hitSprite; }
 		Item wep = caster.getInventory().getEquip( EquipmentSlot.WEAPON );
 		if ( wep != null ) { return wep.getWeaponHitEffect(); }
@@ -631,6 +638,7 @@ public class ActiveAbility implements IAbility, IGameObject
 		cooldown = xmlElement.getInt( "Cooldown", cooldown );
 		cooldownType = CooldownType.valueOf( xmlElement.get( "CooldownType", ""+cooldownType ).toUpperCase() );
 		screenshake = xmlElement.getFloat( "ScreenShake", screenshake );
+		noSprite = xmlElement.getBoolean( "NoSprite", noSprite );
 
 		Icon = xmlElement.getChildByName( "Icon" ) != null ? AssetManager.loadSprite( xmlElement.getChildByName( "Icon" ) ) : Icon;
 		movementSprite = xmlElement.getChildByName( "MovementSprite" ) != null ? AssetManager.loadSprite( xmlElement.getChildByName( "MovementSprite" ) ) : movementSprite;

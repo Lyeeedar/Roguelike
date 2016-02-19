@@ -7,7 +7,7 @@
             <Placement>North</Placement>
 
             <Symbols>
-                <Symbol Extends="p">
+                <Symbol Extends=".">
                     <Char>v</Char>
                     <EnvironmentData>
                         <Type>Transition</Type>
@@ -22,14 +22,14 @@
 
             <Rows>
                 <Row>#v#</Row>
-                <Row>#p#</Row>
+                <Row>#.#</Row>
             </Rows>
         </Prev>
         <This>
             <Faction>none</Faction>
 
             <Symbols>
-                <Symbol Extends="p">
+                <Symbol Extends=".">
                     <Char>S</Char>
                     <MetaValue>PlayerSpawn</MetaValue>
                     <EnvironmentData>
@@ -44,7 +44,7 @@
             <Placement>South</Placement>
 
             <Rows>
-                <Row>#p#</Row>
+                <Row>#.#</Row>
                 <Row>#S#</Row>
             </Rows>
         </This>
@@ -74,7 +74,7 @@
     <Preprocessor>
         <Island>
             <Feature Extends=".">
-                <MinVal>0.02</MinVal>
+                <MinVal>0.001</MinVal>
             </Feature>
         </Island>
     </Preprocessor>
@@ -98,7 +98,7 @@
 
                 <Group Chance="0.05">
                     <Sprite>
-                        <Name>Oryx/uf_split/uf_terrain/ground_grass_burnt_2</Name>
+                        <Name>Oryx/uf_split/uf_terrain/ground_grass_burnt_1</Name>
                     </Sprite>
                 </Group>
 
@@ -115,7 +115,7 @@
                 </Group>
 
                 <Sprite>
-                    <Name>Oryx/uf_split/uf_terrain/ground_grass_burnt_1</Name>
+                    <Name>Oryx/uf_split/uf_terrain/ground_grass_burnt_2</Name>
                 </Sprite>
             </TileData>
         </Symbol>
@@ -126,18 +126,18 @@
                 <Opaque>true</Opaque>
                 <Passable>false</Passable>
 
-                <Sprite>
-                    <Name>Oryx/uf_split/uf_terrain/ground_grass_burnt_1</Name>
-                </Sprite>
-                <Sprite>
-                    <Name>Oryx/Custom/terrain/VitaTree</Name>
-                    <DrawActualSize>true</DrawActualSize>
-                </Sprite>
-
-                <AmbientShadow>
-                    <Factor>0.2</Factor>
-                    <Range>2</Range>
-                </AmbientShadow>
+                <TilingSprite>
+                    <Name>Wall</Name>
+                    <Top>
+                        <Name>Oryx/uf_split/uf_terrain/wall_ruins_7</Name>
+                    </Top>
+                    <Front>
+                        <Name>Oryx/uf_split/uf_terrain/wall_ruins_14</Name>
+                    </Front>
+                    <Overhang>
+                        <Name>Oryx/uf_split/uf_terrain/wall_ruins_1</Name>
+                    </Overhang>
+                </TilingSprite>
             </TileData>
         </Symbol>
 

@@ -40,8 +40,11 @@ public class StretchAnimation extends AbstractSpriteAnimation
 		this.eqn = eqn;
 		this.trueDuration = duration;
 
-		float dist = (float) Math.sqrt( diff[0] * diff[0] + diff[1] * diff[1] ) + Global.TileSize * 2;
-		finalScale = ( dist / Global.TileSize ) / 2.0f;
+		if (diff != null)
+		{
+			float dist = (float) Math.sqrt( diff[ 0 ] * diff[ 0 ] + diff[ 1 ] * diff[ 1 ] ) + Global.TileSize * 2;
+			finalScale = ( dist / Global.TileSize ) / 2.0f;
+		}
 	}
 
 	@Override
@@ -67,8 +70,8 @@ public class StretchAnimation extends AbstractSpriteAnimation
 		}
 		else if ( eqn == StretchEquation.EXPAND )
 		{
-			scale[0] = alpha;
-			scale[1] = alpha;
+			scale[0] = 1 - alpha ;
+			scale[1] = 1 - alpha ;
 		}
 
 		return time > duration;

@@ -55,7 +55,7 @@ public class EnvironmentEntity extends Entity
 		{
 			if (group.enabled)
 			{
-				group.activate( this, null, cost );
+				group.activate( this, this, cost );
 			}
 		}
 

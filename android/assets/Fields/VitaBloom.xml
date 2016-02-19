@@ -1,0 +1,15 @@
+<Field Extends="Solid">
+    <FieldName>VitaBloom</FieldName>
+    <Tags>Flammable</Tags>
+    <Sprite>
+        <Name>Oryx/Custom/terrain/VitaBloom</Name>
+    </Sprite>
+    <Spread>
+        <Flow/>
+    </Spread>
+    <Interactions>
+        <Vita>
+            <Spawn>ArmedVitaBloom</Spawn>
+        </Vita>
+    </Interactions>
+</Field>

@@ -30,6 +30,11 @@ public class FlowSpreadStyle extends AbstractSpreadStyle
 			{
 				GameTile tile = field.tile.level.getGameTile( field.tile.x + dir.getX(), field.tile.y + dir.getY() );
 
+				if (tile == null)
+				{
+					continue;
+				}
+
 				Field tileField = tile.fields.get( field.layer );
 				if ( tileField != null && tileField.fieldName.equals( field.fieldName ) )
 				{

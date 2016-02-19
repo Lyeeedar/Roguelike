@@ -1,0 +1,29 @@
+<Field>
+    <FieldName>VitaBloom</FieldName>
+    <Tags>Flammable</Tags>
+    <Sprite>
+        <Name>Oryx/Custom/terrain/VitaBloomArmed</Name>
+    </Sprite>
+    <Duration>
+        <Fade>
+            <Rate>1</Rate>
+            <ResetOnStacks>false</ResetOnStacks>
+        </Fade>
+    </Duration>
+    <OnDeath>
+        <Ability>
+            <AOE>1</AOE>
+            <HitType><Any/></HitType>
+            <HitSprite>
+                <SingleSprite>true</SingleSprite>
+                <Name>EffectSprites/Explosion/Explosion</Name>
+                <Colour><RGB>255,0,255</RGB></Colour>
+                <UpdateRate>0.05</UpdateRate>
+            </HitSprite>
+            <Effect>
+                <Damage DirectDamage="true"><Attack>10</Attack></Damage>
+                <FieldInteraction>Vita</FieldInteraction>
+            </Effect>
+        </Ability>
+    </OnDeath>
+</Field>

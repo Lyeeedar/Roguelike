@@ -4,7 +4,9 @@
             <Cave Label="Cave" MaxDepth="3" Title="Melet Mountain" Description="At the centre of the forest rises a lone mountain, its grey rock faces a stark contrast against the sea of green below. Beneath the mountain is where the tear to the plane of Vita is said to have been ripped open, and therefore that is where you need to go. The interior is cold and dark, infested with the abominations spewed out by the ever mutating plane.">
                 <Lake Label="Lake" MaxDepth="1" Title="Forgotten Reservoir" Description="Deep in the heart of Melet mountain stretches a long forgotten reservoir. A vast cavern stretches away into the blackness to either side of the stairs that brought you down, the only indication that this is truely underground are the huge pillars that reach up from the surface back to the ceiling from whence you came. The light from your torch barely penetrates the waters murky depths, revealing only how little you know of what lies down beneath the frail walkways that crisscross the deathly still surface.">
                     <UndergroundTemple Label="Temple" MaxDepth="5" Title="Ancient Temple" Description="At the centre of the lake lies an ancient temple, its cold stone walls plunging down deep into the black waters that lap at its sides. A corridor stretches out before you, lit by magical torchlight, the careful mosaic tiling the floor hinting at the attention a long forgotten people paid to this structure. Doors to the Deep echoes reverberate through the air, as if something large was brushing the walls outside.">
+                        <Vita Label="Vita" MaxDepth="1" Title="Plane of Vita" Description="The plane of Vita, a land of constant change.">
 
+                        </Vita>
                     </UndergroundTemple>
                 </Lake>
             </Cave>
