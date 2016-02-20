@@ -1133,105 +1133,105 @@ Icons/UnreliableFlames
   index: -1
 Masks/fog_DNE
   rotate: false
-  xy: 834, 454
+  xy: 470, 90
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DNE_DNW
   rotate: false
-  xy: 938, 558
+  xy: 886, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DNE_DNW_DSE
   rotate: false
-  xy: 782, 402
+  xy: 834, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DNE_DNW_DSE_DSW
   rotate: false
-  xy: 1042, 766
+  xy: 678, 298
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DNE_DNW_DSW
   rotate: false
-  xy: 730, 350
+  xy: 1042, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DNE_DSE
   rotate: false
-  xy: 938, 610
+  xy: 990, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DNE_DSE_DSW
   rotate: false
-  xy: 522, 194
+  xy: 782, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DNE_DSW
   rotate: false
-  xy: 730, 402
+  xy: 678, 350
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DNW
   rotate: false
-  xy: 1042, 662
+  xy: 574, 194
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DNW_DSE
   rotate: false
-  xy: 470, 90
+  xy: 574, 246
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DNW_DSE_DSW
   rotate: false
-  xy: 574, 194
+  xy: 1042, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DNW_DSW
   rotate: false
-  xy: 990, 610
+  xy: 782, 402
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DSE
   rotate: false
-  xy: 522, 142
+  xy: 938, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DSE_DSW
   rotate: false
-  xy: 678, 298
+  xy: 730, 350
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_DSW
   rotate: false
-  xy: 886, 506
+  xy: 990, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -1245,35 +1245,35 @@ Masks/fog_E
   index: -1
 Masks/fog_E_DNW
   rotate: false
-  xy: 1042, 714
+  xy: 1094, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_E_DNW_DSW
   rotate: false
-  xy: 990, 662
+  xy: 418, 38
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_E_DSW
   rotate: false
-  xy: 574, 246
+  xy: 730, 402
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_E_W
   rotate: false
-  xy: 574, 298
+  xy: 366, 38
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_N
   rotate: false
-  xy: 834, 506
+  xy: 990, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -1287,42 +1287,42 @@ Masks/fog_NE
   index: -1
 Masks/fog_NE_DSW
   rotate: false
-  xy: 730, 454
+  xy: 626, 350
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_NE_NW
   rotate: false
-  xy: 418, 142
+  xy: 782, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_NE_NW_SE_SW
   rotate: false
-  xy: 938, 714
+  xy: 730, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_NE_SE
   rotate: false
-  xy: 366, 90
+  xy: 522, 194
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_NW
   rotate: false
-  xy: 782, 454
+  xy: 626, 298
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_NW_DSE
   rotate: false
-  xy: 626, 298
+  xy: 418, 90
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -1336,119 +1336,119 @@ Masks/fog_NW_SW
   index: -1
 Masks/fog_N_DSE
   rotate: false
-  xy: 886, 558
+  xy: 1042, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_N_DSE_DSW
   rotate: false
-  xy: 470, 194
+  xy: 938, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_N_DSW
   rotate: false
-  xy: 470, 142
+  xy: 366, 90
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_N_S
   rotate: false
-  xy: 522, 246
+  xy: 470, 142
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_S
   rotate: false
-  xy: 782, 506
+  xy: 574, 298
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_SE
   rotate: false
-  xy: 938, 662
+  xy: 470, 194
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_SE_DNW
   rotate: false
-  xy: 626, 350
+  xy: 938, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_SE_SW
   rotate: false
-  xy: 678, 402
+  xy: 522, 246
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_SW
   rotate: false
-  xy: 834, 558
+  xy: 834, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_SW_DNE
   rotate: false
-  xy: 418, 90
+  xy: 418, 142
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_S_DNE
   rotate: false
-  xy: 886, 610
+  xy: 626, 246
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_S_DNE_DNW
   rotate: false
-  xy: 1094, 766
+  xy: 886, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_S_DNW
   rotate: false
-  xy: 990, 714
+  xy: 886, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_W
   rotate: false
-  xy: 678, 350
+  xy: 834, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_W_DNE
   rotate: false
-  xy: 418, 38
+  xy: 938, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_W_DNE_DSE
   rotate: false
-  xy: 626, 246
+  xy: 522, 142
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_W_DSE
   rotate: false
-  xy: 366, 38
+  xy: 678, 402
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -1518,54 +1518,33 @@ Masks/web_Center_DSW
   index: -1
 Masks/web_Center_DNE_DNW_DSE_DSW
   rotate: false
-  xy: 1578, 922
+  xy: 1734, 818
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_DNE_DSE_DSW
   rotate: false
-  xy: 1578, 818
+  xy: 1682, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_DNE_DNW_DSE
   rotate: false
-  xy: 1578, 818
+  xy: 1682, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_DNE_DNW_DSW
   rotate: false
-  xy: 1578, 818
+  xy: 1682, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_DNW_DSE_DSW
-  rotate: false
-  xy: 1578, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_DNE_DSW
-  rotate: false
-  xy: 1682, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_DNE_DNW
-  rotate: false
-  xy: 1682, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_DNE_DSE
   rotate: false
   xy: 1682, 870
   size: 48, 48
@@ -1574,21 +1553,42 @@ Masks/web_Center_DNE_DSE
   index: -1
 Masks/web_Center_DNW_DSE
   rotate: false
-  xy: 1682, 870
+  xy: 1630, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_DNE_DNW
+  rotate: false
+  xy: 1630, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_DNE_DSE
+  rotate: false
+  xy: 1630, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_DNE_DSW
+  rotate: false
+  xy: 1630, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_DNW_DSW
   rotate: false
-  xy: 1682, 870
+  xy: 1630, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_DSE_DSW
   rotate: false
-  xy: 1682, 870
+  xy: 1630, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -1609,28 +1609,28 @@ Masks/web_Center_E_DNW_DSW
   index: -1
 Masks/web_Center_E_DSW
   rotate: false
-  xy: 1630, 870
+  xy: 1630, 818
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_E_DNW
   rotate: false
-  xy: 1630, 870
+  xy: 1630, 818
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_E_W
   rotate: false
-  xy: 1370, 818
+  xy: 1526, 818
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_N
   rotate: false
-  xy: 1682, 818
+  xy: 1578, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -1644,42 +1644,42 @@ Masks/web_Center_NE
   index: -1
 Masks/web_Center_NE_DSW
   rotate: false
-  xy: 1422, 818
+  xy: 1422, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_NE_NW
   rotate: false
-  xy: 1318, 818
+  xy: 1474, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_NE_NW_SE_SW
   rotate: false
-  xy: 1318, 922
+  xy: 1422, 818
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_NE_SE
   rotate: false
-  xy: 1370, 922
+  xy: 1578, 818
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_NW
   rotate: false
-  xy: 1734, 922
+  xy: 1682, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_NW_DSE
   rotate: false
-  xy: 1682, 922
+  xy: 1578, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -1693,77 +1693,77 @@ Masks/web_Center_NW_SW
   index: -1
 Masks/web_Center_N_DSE_DSW
   rotate: false
-  xy: 1370, 870
+  xy: 1318, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_N_DSW
   rotate: false
-  xy: 1630, 922
+  xy: 1370, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_N_DSE
   rotate: false
-  xy: 1630, 922
+  xy: 1370, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_N_S
   rotate: false
-  xy: 1422, 922
+  xy: 1630, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_S
   rotate: false
-  xy: 1474, 870
+  xy: 1370, 818
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_SE
   rotate: false
-  xy: 1526, 870
+  xy: 1370, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_SE_DNW
   rotate: false
-  xy: 1422, 870
+  xy: 1526, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_SE_SW
   rotate: false
-  xy: 1474, 922
+  xy: 1422, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_SW
   rotate: false
-  xy: 1526, 922
+  xy: 1734, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_SW_DNE
   rotate: false
-  xy: 1578, 870
+  xy: 1318, 818
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
-Masks/web_Center_S_DNE
+Masks/web_Center_S_DNE_DNW
   rotate: false
-  xy: 1474, 818
+  xy: 1682, 818
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -1775,37 +1775,37 @@ Masks/web_Center_S_DNW
   orig: 48, 48
   offset: 0, 0
   index: -1
-Masks/web_Center_S_DNE_DNW
+Masks/web_Center_S_DNE
   rotate: false
-  xy: 1786, 922
+  xy: 1474, 818
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_W
   rotate: false
-  xy: 1630, 818
+  xy: 1526, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_W_DNE_DSE
   rotate: false
-  xy: 1734, 818
+  xy: 1786, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_W_DSE
   rotate: false
-  xy: 1526, 818
+  xy: 1474, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_W_DNE
   rotate: false
-  xy: 1526, 818
+  xy: 1474, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -3604,105 +3604,105 @@ Oryx/uf_split/uf_terrain/ground_dirt_brown_1_C
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DNE
   rotate: false
-  xy: 470, 558
+  xy: 574, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DNE_DNW
   rotate: false
-  xy: 574, 662
+  xy: 522, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DNE_DNW_DSE
   rotate: false
-  xy: 418, 506
+  xy: 470, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DNE_DNW_DSE_DSW
   rotate: false
-  xy: 470, 714
+  xy: 314, 402
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DNE_DNW_DSW
   rotate: false
-  xy: 366, 454
+  xy: 678, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DNE_DSE
   rotate: false
-  xy: 314, 454
+  xy: 366, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DNE_DSE_DSW
   rotate: false
-  xy: 314, 506
+  xy: 574, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DNE_DSW
   rotate: false
-  xy: 522, 714
+  xy: 470, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DNW
   rotate: false
-  xy: 678, 766
+  xy: 210, 298
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DNW_DSE
   rotate: false
-  xy: 574, 714
+  xy: 366, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DNW_DSE_DSW
   rotate: false
-  xy: 210, 298
+  xy: 418, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DNW_DSW
   rotate: false
-  xy: 626, 714
+  xy: 418, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DSE
   rotate: false
-  xy: 626, 766
+  xy: 574, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DSE_DSW
   rotate: false
-  xy: 314, 402
+  xy: 366, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_DSW
   rotate: false
-  xy: 522, 610
+  xy: 626, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -3716,35 +3716,35 @@ Oryx/uf_split/uf_terrain/ground_dirt_brown_1_E
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_E_DNW
   rotate: false
-  xy: 418, 558
+  xy: 470, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_E_DNW_DSW
   rotate: false
-  xy: 366, 506
+  xy: 522, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_E_DSW
   rotate: false
-  xy: 366, 558
+  xy: 522, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_E_W
   rotate: false
-  xy: 314, 610
+  xy: 522, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_N
   rotate: false
-  xy: 210, 350
+  xy: 418, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -3758,42 +3758,42 @@ Oryx/uf_split/uf_terrain/ground_dirt_brown_1_NE
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_NE_DSW
   rotate: false
-  xy: 470, 766
+  xy: 366, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_NE_NW
   rotate: false
-  xy: 418, 766
+  xy: 210, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_NE_NW_SE_SW
   rotate: false
-  xy: 210, 558
+  xy: 470, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_NE_SE
   rotate: false
-  xy: 366, 714
+  xy: 314, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_NW
   rotate: false
-  xy: 574, 766
+  xy: 418, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_NW_DSE
   rotate: false
-  xy: 418, 610
+  xy: 210, 402
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -3807,119 +3807,119 @@ Oryx/uf_split/uf_terrain/ground_dirt_brown_1_NW_SW
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_N_DSE
   rotate: false
-  xy: 262, 402
+  xy: 470, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_N_DSE_DSW
   rotate: false
-  xy: 210, 506
+  xy: 210, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_N_DSW
   rotate: false
-  xy: 262, 454
+  xy: 366, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_N_S
   rotate: false
-  xy: 262, 558
+  xy: 262, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_S
   rotate: false
-  xy: 210, 454
+  xy: 314, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_SE
   rotate: false
-  xy: 366, 610
+  xy: 210, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_SE_DNW
   rotate: false
-  xy: 366, 662
+  xy: 366, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_SE_SW
   rotate: false
-  xy: 418, 714
+  xy: 262, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_SW
   rotate: false
-  xy: 262, 506
+  xy: 210, 350
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_SW_DNE
   rotate: false
-  xy: 210, 402
+  xy: 418, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_S_DNE
   rotate: false
-  xy: 314, 558
+  xy: 262, 350
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_S_DNE_DNW
   rotate: false
-  xy: 470, 610
+  xy: 262, 402
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_S_DNW
   rotate: false
-  xy: 418, 662
+  xy: 314, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_W
   rotate: false
-  xy: 470, 662
+  xy: 262, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_W_DNE
   rotate: false
-  xy: 522, 662
+  xy: 314, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_W_DNE_DSE
   rotate: false
-  xy: 262, 350
+  xy: 626, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_W_DSE
   rotate: false
-  xy: 522, 766
+  xy: 418, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

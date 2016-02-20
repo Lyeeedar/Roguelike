@@ -501,6 +501,7 @@ public final class SaveFile
 		kryo.register( Object[].class );
 		kryo.register( char[].class );
 		kryo.register( char[][].class );
+		kryo.register( float[].class );
 		kryo.register( Float[].class );
 		kryo.register( Float[][].class );
 		kryo.register( boolean[].class );

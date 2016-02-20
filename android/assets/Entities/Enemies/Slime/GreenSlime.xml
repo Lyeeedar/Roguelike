@@ -16,7 +16,7 @@
         <Passive>
             <Events>
                 <OnDealDamage>
-                    <Status Condition="chance(1, 3)">Slime</Status>
+                    <Status Condition="chance(1, 2)">Slime</Status>
                 </OnDealDamage>
             </Events>
         </Passive>

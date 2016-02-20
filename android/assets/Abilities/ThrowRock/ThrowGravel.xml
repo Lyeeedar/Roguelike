@@ -35,7 +35,7 @@
 
     <Effect>
         <Damage>
-            <Attack>150</Attack>
+            <Attack>130</Attack>
             <Strength>1</Strength>
         </Damage>
         <Status>

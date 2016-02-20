@@ -267,7 +267,7 @@ public class Global
 	public static void testWorld()
 	{
 		LevelManager = new LevelManager();
-		LevelManager.current = LevelManager.root.getLabelledLevel( "Vita" );
+		LevelManager.current = LevelManager.root.getLabelledLevel( "Lake" );
 
 		QuestManager = new QuestManager();
 		AUT = 0;
@@ -278,7 +278,7 @@ public class Global
 		Global.WorldFlags.put( "tavern", "1" );
 		Global.WorldFlags.put( "startingfunds", "50" );
 
-		SaveLevel firstLevel = new SaveLevel( "Vita", 1, LevelManager.current.getExtraRooms( "UndergroundTemple", 1, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
+		SaveLevel firstLevel = new SaveLevel( "Lake", 1, LevelManager.current.getExtraRooms( "Cave", 1, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
 		LevelManager.current.currentLevel = firstLevel;
 
 		Array<ClassList.ClassDesc> classes = ClassList.parse();

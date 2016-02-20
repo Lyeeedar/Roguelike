@@ -30,7 +30,7 @@
 
     <Effect>
         <Damage>
-            <Attack>100 + 4 * level</Attack>
+            <Attack>80 + 4 * level</Attack>
             <Strength>1</Strength>
         </Damage>
     </Effect>
