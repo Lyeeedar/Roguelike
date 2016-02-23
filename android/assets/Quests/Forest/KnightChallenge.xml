@@ -15,7 +15,7 @@
 
 						<AI>basicMonster</AI>
 
-                        <IsBoss>true</IsBoss>
+                        <Quality>3</Quality>
 
                         <Factions Override="true">
                             <Faction>Knight</Faction>

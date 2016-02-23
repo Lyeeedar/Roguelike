@@ -5,7 +5,7 @@
 		<DrawActualSize>true</DrawActualSize>
 	</Sprite>
 
-	<IsBoss>true</IsBoss>
+	<Quality>2</Quality>
 
 	<Statistics>
 

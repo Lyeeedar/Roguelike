@@ -84,6 +84,7 @@ public abstract class BehaviourTreeNode
 		ClassMap.put( "MOVETO", ActionMoveTo.class );
 		ClassMap.put( "MOVETOATTACK", ActionMoveToAttack.class );
 		ClassMap.put( "PICKCLOSEST", ActionPickClosest.class );
+		ClassMap.put( "PICKPLAYER", ActionPickPlayer.class );
 		ClassMap.put( "PICKRANDOM", ActionPickRandom.class );
 		ClassMap.put( "PROCESSINPUT", ActionProcessInput.class );
 		ClassMap.put( "REST", ActionRest.class );

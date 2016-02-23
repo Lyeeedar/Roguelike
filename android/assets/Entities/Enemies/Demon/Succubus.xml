@@ -7,7 +7,7 @@
         <DrawActualSize>true</DrawActualSize>
     </Sprite>
 
-    <IsBoss>true</IsBoss>
+    <Quality>3</Quality>
 
     <Abilities>
         <BloodShot>BloodShot</BloodShot>

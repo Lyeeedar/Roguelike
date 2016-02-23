@@ -262,9 +262,9 @@ public class Level
 				{
 					int quality = Global.getQuality();
 
-					if ( e.isBoss )
+					if ( e.quality > 1 )
 					{
-						e.inventory.m_items.addAll( TreasureGenerator.generateLoot( quality + 1, "random", MathUtils.random ) );
+						e.inventory.m_items.addAll( TreasureGenerator.generateLoot( quality + (e.quality-1), "random", MathUtils.random ) );
 					}
 					else if ( e.essence > 0 && MathUtils.random( 4 ) == 0 )
 					{
@@ -356,9 +356,9 @@ public class Level
 				Global.LevelManager.hpDropCounter++;
 			}
 
-			if ( obj instanceof GameEntity && ((GameEntity)obj).isBoss )
+			if ( obj instanceof GameEntity && ((GameEntity)obj).quality > 1 )
 			{
-				int amount = Math.max( 10, player.getMaxHP() );
+				int amount = Math.max( 10, player.getMaxHP() / 3 );
 				delay += dropOrbs( amount, delay, GameTile.OrbType.HEALTH, source, possibleTiles );
 			}
 		}

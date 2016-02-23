@@ -82,16 +82,22 @@ public class Field implements IGameObject
 	public EnumBitflag<Passability> allowPassability = new EnumBitflag<Passability>();
 	public EnumBitflag<Passability> restrictPassability = new EnumBitflag<Passability>();
 
+	public float spawnSpeed = 0.25f;
+
 	public SpriteGroup getSpriteGroup()
 	{
-		for (int i = groups.size - 1; i >= 0; i--)
+		for (int i = 0; i < groups.size; i++)
 		{
-			if (groups.get( i ).stacks < stacks)
+			SpriteGroup group = groups.get( i );
+			int thisStacks = group.stacks;
+			int prevStacks = i > 0 ? groups.get( i - 1 ).stacks : 0;
+
+			if (stacks >= prevStacks && stacks <= thisStacks)
 			{
 				return groups.get( i );
 			}
 		}
-		return groups.get( 0 );
+		return groups.get( groups.size - 1 );
 	}
 
 	public void update( float cost )
@@ -230,7 +236,7 @@ public class Field implements IGameObject
 						Sprite sprite = field.getSpriteGroup().sprite;
 						if (sprite != null)
 						{
-							sprite.spriteAnimation = new StretchAnimation( 0.25f, null, 0, StretchAnimation.StretchEquation.EXPAND );
+							sprite.spriteAnimation = new StretchAnimation( spawnSpeed, null, 0, StretchAnimation.StretchEquation.EXPAND );
 						}
 					}
 

@@ -7,7 +7,7 @@
 
 	<Dialogue>Dialogue/RatKing</Dialogue>
 
-	<IsBoss>true</IsBoss>
+	<Quality>2</Quality>
 
     <Statistics>
         <Attack>val+5</Attack>

@@ -6,7 +6,7 @@
         <Sound><Name>goblin1</Name></Sound>
 	</Sprite>
 
-	<IsBoss>true</IsBoss>
+	<Quality>3</Quality>
 
 	<Abilities>
 		<Active>

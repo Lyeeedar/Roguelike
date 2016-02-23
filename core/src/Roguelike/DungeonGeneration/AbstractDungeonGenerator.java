@@ -450,11 +450,6 @@ public abstract class AbstractDungeonGenerator
 						e = GameEntity.load( data );
 					}
 
-					if ( symbol.isBoss )
-					{
-						e.isBoss = true;
-					}
-
 					if ( e != null )
 					{
 						newTile.addGameEntity( e );

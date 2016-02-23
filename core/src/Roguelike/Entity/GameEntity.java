@@ -8,6 +8,7 @@ import Roguelike.AssetManager;
 import Roguelike.Dialogue.DialogueManager;
 import Roguelike.Entity.AI.BehaviourTree.BehaviourTree;
 import Roguelike.Entity.Tasks.AbstractTask;
+import Roguelike.Fields.Field;
 import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
@@ -186,6 +187,7 @@ public class GameEntity extends Entity
 		AI = xmlElement.getChildByName( "AI" ) != null ? BehaviourTree.load( Gdx.files.internal( "AI/" + xmlElement.get( "AI" ) + ".xml" ) ) : AI;
 		canSwap = xmlElement.getBoolean( "CanSwap", canSwap );
 		canMove = xmlElement.getBoolean( "CanMove", canMove );
+		blood = xmlElement.get( "Blood", "Blood" );
 
 		Element factionElement = xmlElement.getChildByName( "Factions" );
 		if ( factionElement != null )
@@ -306,6 +308,46 @@ public class GameEntity extends Entity
 		super.applyDamage( dam, damager );
 
 		AI.setData( "EnemyPos", Global.PointPool.obtain().set( damager.tile[ 0 ][ 0 ].x, damager.tile[ 0 ][ 0 ].y ) );
+
+		if (blood != null)
+		{
+			if (dam >= getMaxHP() / 3)
+			{
+				Direction dir = Direction.values()[ MathUtils.random( Direction.values().length - 1 ) ];
+				GameTile bloodTile = tile[ 0 ][ 0 ].level.getGameTile( tile[ 0 ][ 0 ].x + dir.getX(), tile[ 0 ][ 0 ].y + dir.getY() );
+
+				if (bloodTile.getPassable( travelType, this ))
+				{
+					Field field = Field.load( blood );
+					field.spawnSpeed = 0.1f;
+					field.trySpawnInTile( bloodTile, 1 );
+				}
+			}
+
+			if (dam >= HP)
+			{
+				Direction dir = Direction.getDirection( damager.tile[0][0], tile[0][0] );
+
+				Point start = new Point(tile[0][0]);
+				Array<Point> cone = Direction.buildCone( dir, start, 1 );
+				cone.add( start );
+
+				int count = MathUtils.random( 3 );
+				for (int i = 0; i < count; i++)
+				{
+					Point p = cone.removeIndex( MathUtils.random( cone.size - 1 ) );
+
+					GameTile bloodTile = tile[ 0 ][ 0 ].level.getGameTile( p );
+
+					if (bloodTile.getPassable( travelType, this ))
+					{
+						Field field = Field.load( blood );
+						field.spawnSpeed = 0.1f;
+						field.trySpawnInTile( bloodTile, 1 );
+					}
+				}
+			}
+		}
 
 		if (!updatedAbilityDam)
 		{
@@ -490,6 +532,9 @@ public class GameEntity extends Entity
 	// ----------------------------------------------------------------------
 	public boolean updatedAbilityDam = false;
 	public boolean updatedAbilityHeal = false;
+
+	// ----------------------------------------------------------------------
+	public String blood;
 
 	// ----------------------------------------------------------------------
 	public Point spawnPos;

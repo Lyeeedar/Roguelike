@@ -24,7 +24,7 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 	public int essence;
 	public Point pos = new Point();
 	public boolean isPlayer = false;
-	public boolean isBoss = false;
+	public int quality = 1;
 	public Array<StatusEffect> statuses = new Array<StatusEffect>();
 	public Array<SaveAbilityTree> slottedAbilities = new Array<SaveAbilityTree>();
 	public Inventory inventory;
@@ -71,7 +71,7 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		UID = obj.UID;
 
 		spawnPoint = obj.spawnPos;
-		isBoss = obj.isBoss;
+		quality = obj.quality;
 	}
 
 	@Override
@@ -135,7 +135,7 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 		{
 			entity.dialogue.data = dialogueData;
 		}
-		entity.isBoss = isBoss;
+		entity.quality = quality;
 
 		if (!isPlayer)
 		{

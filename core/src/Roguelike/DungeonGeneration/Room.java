@@ -811,7 +811,6 @@ public final class Room
 
 					roomContents[pos.x][pos.y] = roomContents[pos.x][pos.y].copy();
 					roomContents[pos.x][pos.y].entityData = entityName;
-					roomContents[pos.x][pos.y].isBoss = true;
 
 					spawnMiniBoss = false;
 				}

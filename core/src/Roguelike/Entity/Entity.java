@@ -54,7 +54,7 @@ public abstract class Entity implements IGameObject
 
 		tile = new GameTile[size][size];
 
-		isBoss = xml.getBoolean( "IsBoss", isBoss );
+		quality = xml.getInt( "Quality", quality );
 
 		Element spriteElement = xml.getChildByName( "Sprite" );
 		if ( spriteElement != null )
@@ -559,7 +559,7 @@ public abstract class Entity implements IGameObject
 	public boolean canTakeDamage = true;
 
 	// ----------------------------------------------------------------------
-	public boolean isBoss = false;
+	public int quality = 1;
 
 	// ----------------------------------------------------------------------
 	public String UID;
