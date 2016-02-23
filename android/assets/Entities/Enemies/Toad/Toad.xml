@@ -12,6 +12,18 @@
 				<Sprite>
 					<Name>Oryx/uf_split/uf_terrain/water_teal</Name>
 				</Sprite>
+                <TilingSprite>
+                    <Name>Water</Name>
+                    <Mask>Masks/indent</Mask>
+                    <Sprite>
+                        <Name>white</Name>
+                        <Colour>
+                            <RGB>255,255,255</RGB>
+                            <Alpha>0.5</Alpha>
+                        </Colour>
+                    </Sprite>
+                    <Additive>true</Additive>
+                </TilingSprite>
 			</TileData>
 			<Coverage Min="60" >75</Coverage>
 		</Feature>

@@ -50,7 +50,7 @@ public class AtlasCreator
 		findFilesRecursive( new File("").getAbsoluteFile() );
 
 		// pack fog
-		processTilingSprite( "Masks/fog", "Masks/fog" );
+		processTilingSprite( "Masks/fog", "Masks/fog", false );
 
 		// pack default strike
 		processSprite( "EffectSprites/Strike/Strike" );
@@ -197,8 +197,9 @@ public class AtlasCreator
 
 			String texName = spriteDataElement.get( "Name" );
 			String maskName = spriteElement.get( "Mask" );
+			boolean additive = spriteElement.getBoolean( "Additive", false );
 
-			boolean succeed = processTilingSprite( texName, maskName );
+			boolean succeed = processTilingSprite( texName, maskName, additive );
 			if ( !succeed )
 			{
 				return false;
@@ -208,11 +209,11 @@ public class AtlasCreator
 		return true;
 	}
 
-	private boolean processTilingSprite( String baseName, String maskBaseName )
+	private boolean processTilingSprite( String baseName, String maskBaseName, boolean additive )
 	{
 		for ( Array<String> mask : tilingMasks )
 		{
-			boolean succeed = maskSprite( baseName, maskBaseName, mask );
+			boolean succeed = maskSprite( baseName, maskBaseName, mask, additive );
 
 			if ( !succeed )
 			{
@@ -223,7 +224,7 @@ public class AtlasCreator
 		return true;
 	}
 
-	private boolean maskSprite( String baseName, String maskBaseName, Array<String> masks )
+	private boolean maskSprite( String baseName, String maskBaseName, Array<String> masks, boolean additive )
 	{
 		// Build the mask suffix
 		String mask = "";
@@ -232,7 +233,7 @@ public class AtlasCreator
 			mask += "_" + m;
 		}
 
-		String maskedName = baseName + mask;
+		String maskedName = baseName + "_" + maskBaseName + mask + "_" + additive;
 
 		// File exists on disk, no need to mask
 		if ( tryPackSprite( maskedName ) )
@@ -250,7 +251,7 @@ public class AtlasCreator
 
 		Pixmap base = new Pixmap( baseHandle );
 
-		Pixmap merged = base;
+		Pixmap merged = additive ? new Pixmap( base.getWidth(), base.getHeight(), Pixmap.Format.RGBA8888 ) : base;
 		for (String maskSuffix : masks)
 		{
 			FileHandle maskHandle = Gdx.files.internal( "Sprites/" + maskBaseName + "_" + maskSuffix + ".png" );
@@ -271,10 +272,23 @@ public class AtlasCreator
 			}
 
 			Pixmap maskPixmap = new Pixmap( maskHandle );
+			Pixmap currentPixmap = additive ? base : merged;
 
-			Pixmap maskedTex = ImageUtils.maskPixmap( merged, maskPixmap );
-			if (merged != base) { merged.dispose(); }
-			merged = maskedTex;
+			Pixmap maskedTex = ImageUtils.multiplyPixmap( currentPixmap, maskPixmap );
+
+			if (additive)
+			{
+				Pixmap addedText = ImageUtils.addPixmap( merged, maskedTex );
+				merged.dispose();
+				maskedTex.dispose();
+
+				merged = addedText;
+			}
+			else
+			{
+				if (merged != base) { merged.dispose(); }
+				merged = maskedTex;
+			}
 		}
 
 		BufferedImage image = ImageUtils.pixmapToImage( merged );

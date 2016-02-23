@@ -1,0 +1,70 @@
+<Building>
+
+    <Rooms>
+
+        <Room>
+
+            <Symbols>
+
+                <Symbol>
+                    <Char>m</Char>
+                    <TileData>
+                        <Passable>true</Passable>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/tatami_mat</Name>
+                        </Sprite>
+                    </TileData>
+                </Symbol>
+
+                <Symbol Extends=",">
+                    <Char>i</Char>
+                    <EntityData Extends="NPC/HumanBase">
+
+                        <Name>Witch</Name>
+
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_heroes/witch</Name>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+
+                        <CanTakeDamage>false</CanTakeDamage>
+
+                        <Inventory>
+
+                            <Item>
+                                <Ability>MagicArrow</Ability>
+                                <Value>50</Value>
+                            </Item>
+
+                        </Inventory>
+
+                        <Dialogue>
+                            <Dialogue>
+                                <Chunk>
+                                    <Text>So, you wish to learn the mysteries of magic?</Text>
+                                    <OpenShop></OpenShop>
+                                    <Text>Safe travels!</Text>
+                                </Chunk>
+                            </Dialogue>
+                        </Dialogue>
+
+                    </EntityData>
+                </Symbol>
+
+            </Symbols>
+
+            <Rows>
+                <Row>..www..</Row>
+                <Row>.ww,ww.</Row>
+                <Row>ww,,,ww</Row>
+                <Row>w,i,,,w</Row>
+                <Row>ww,,,ww</Row>
+                <Row>.ww,ww.</Row>
+                <Row>..w+w..</Row>
+            </Rows>
+
+        </Room>
+
+    </Rooms>
+
+</Building>

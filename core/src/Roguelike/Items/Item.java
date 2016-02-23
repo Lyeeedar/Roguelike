@@ -610,6 +610,7 @@ public final class Item extends GameEventHandler
 		public HitType hitType;
 		public String hitData;
 		public Sprite hitSprite;
+		public int hitPercent;
 
 		public Array<Point> hitPoints = new Array<Point>(  );
 
@@ -640,6 +641,7 @@ public final class Item extends GameEventHandler
 			String[] hitTypeData = xml.get( "HitType" ).split( "[\\(\\)]" );
 			wepDef.hitType = HitType.valueOf( hitTypeData[0].toUpperCase() );
 			wepDef.hitData = hitTypeData.length > 1 ? hitTypeData[1] : null;
+			wepDef.hitPercent = xml.getInt( "HitPercent", 100 );
 
 			Element hitPatternElement = xml.getChildByName( "HitPattern" );
 

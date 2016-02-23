@@ -464,6 +464,23 @@ public class TaskAttack extends AbstractTask
 		// Do the attack
 		for ( GameTile tile : attackedTiles )
 		{
+			// do misses
+			int hitPercent = weapon != null && weapon.wepDef != null ? weapon.wepDef.hitPercent : 100;
+			if (hitPercent < 100)
+			{
+				if (MathUtils.random( 100 ) > hitPercent)
+				{
+					// Argh! a miss! Hit a random surrounding tile
+
+					Direction dir = Direction.values()[MathUtils.random( Direction.values().length-1 )];
+					GameTile newTile = tile.level.getGameTile( tile.x + dir.getX(), tile.y + dir.getY() );
+					if (newTile != null)
+					{
+						tile = newTile;
+					}
+				}
+			}
+
 			if ( tile.entity != null && !tile.entity.isAllies( entity ) )
 			{
 				if (!hitEntities.contains( tile.entity ))

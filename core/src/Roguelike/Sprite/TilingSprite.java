@@ -45,6 +45,7 @@ public class TilingSprite
 	public String texName;
 	public String maskName;
 	public Element spriteBase = new Element( "Sprite", null );
+	public boolean additive = false;
 
 	public boolean hasAllElements;
 
@@ -95,6 +96,8 @@ public class TilingSprite
 		String texName = spriteElement != null ? spriteElement.get( "Name" ) : null;
 		String maskName = xml.get( "Mask", null );
 
+		this.additive = xml.getBoolean( "Additive", false );
+
 		load(thisName, checkName, texName, maskName, spriteElement, overhangElement);
 	}
 
@@ -119,7 +122,7 @@ public class TilingSprite
 		return sprite;
 	}
 
-	private static TextureRegion getMaskedSprite( String baseName, String maskBaseName, Array<String> masks )
+	private static TextureRegion getMaskedSprite( String baseName, String maskBaseName, Array<String> masks, boolean additive )
 	{
 		// If no masks then just return the original texture
 		if ( masks.size == 0)
@@ -134,7 +137,7 @@ public class TilingSprite
 			mask += "_" + m;
 		}
 
-		String maskedName = baseName + mask;
+		String maskedName = baseName + "_" + maskBaseName + mask + "_" + additive;
 
 		TextureRegion tex = AssetManager.loadTextureRegion( "Sprites/" + maskedName + ".png" );
 
@@ -292,7 +295,7 @@ public class TilingSprite
 
 				if (texName != null)
 				{
-					TextureRegion region = getMaskedSprite( texName, maskName, masks );
+					TextureRegion region = getMaskedSprite( texName, maskName, masks, additive );
 					sprite = AssetManager.loadSprite( spriteBase, region );
 				}
 				else

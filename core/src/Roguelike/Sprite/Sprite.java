@@ -152,7 +152,7 @@ public final class Sprite
 		{
 			return;
 		}
-		else if ( colour.r != 1 || colour.g != 1 || colour.b != 1 )
+		else if ( colour.r != 1 || colour.g != 1 || colour.b != 1 || colour.a != 1 )
 		{
 			oldCol = batch.getColor();
 

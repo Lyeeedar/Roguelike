@@ -2,6 +2,8 @@
 
     <HitType>Closest(1)</HitType>
 
+    <HitPercent>80</HitPercent>
+
     <HitSprite>
         <Name>EffectSprites/Arrow/Arrow</Name>
         <Animation><Move/></Animation>

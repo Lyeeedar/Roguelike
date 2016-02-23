@@ -2,6 +2,8 @@
 
     <HitType>Closest(1)</HitType>
 
+    <HitPercent>90</HitPercent>
+
     <HitSprite>
         <Name>EffectSprites/Bolt/Bolt</Name>
         <Animation><Move/></Animation>
