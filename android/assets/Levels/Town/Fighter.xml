@@ -1,0 +1,71 @@
+<Building>
+
+    <Rooms>
+
+        <Room>
+
+            <Symbols>
+
+                <Symbol>
+                    <Char>m</Char>
+                    <TileData>
+                        <Passable>true</Passable>
+                        <Sprite>
+                            <Name>Oryx/Custom/terrain/tatami_mat</Name>
+                        </Sprite>
+                    </TileData>
+                </Symbol>
+
+                <Symbol Extends="m">
+                    <Char>i</Char>
+                    <EntityData Extends="NPC/HumanBase">
+
+                        <Name>Captain</Name>
+
+                        <Sprite>
+                            <Name>Oryx/uf_split/uf_heroes/paladin</Name>
+                            <Colour><RGB>200,200,200</RGB></Colour>
+                            <DrawActualSize>true</DrawActualSize>
+                        </Sprite>
+
+                        <CanTakeDamage>false</CanTakeDamage>
+
+                        <Inventory>
+
+                            <Item>
+                                <Ability>PowerAttack</Ability>
+                                <Value>50</Value>
+                            </Item>
+
+                        </Inventory>
+
+                        <Dialogue>
+                            <Dialogue>
+                                <Chunk>
+                                    <Text>So, you wish to train in the art of fighting?</Text>
+                                    <OpenShop></OpenShop>
+                                    <Text>Safe travels!</Text>
+                                </Chunk>
+                            </Dialogue>
+                        </Dialogue>
+
+                    </EntityData>
+                </Symbol>
+
+            </Symbols>
+
+            <Rows>
+                <Row>wwwwwww</Row>
+                <Row>w,,,,,w</Row>
+                <Row>w,mmm,w</Row>
+                <Row>w,mmm,w</Row>
+                <Row>w,imm,w</Row>
+                <Row>w,,,,,w</Row>
+                <Row>www+www</Row>
+            </Rows>
+
+        </Room>
+
+    </Rooms>
+
+</Building>

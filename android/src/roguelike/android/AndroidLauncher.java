@@ -17,6 +17,7 @@ public class AndroidLauncher extends AndroidApplication
 		config.disableAudio = false;
 
 		Global.ANDROID = true;
+		Global.RELEASE = true;
 
 		initialize( new RoguelikeGame(), config );
 
