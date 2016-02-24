@@ -37,24 +37,26 @@ public class RoguelikeGame extends Game
 
 		if (!Global.ANDROID)
 		{
-			Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()
+			final StringWriter sw = new StringWriter();
+			final PrintWriter pw = new PrintWriter( sw );
+
+			final Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler()
 			{
 				public void uncaughtException(Thread myThread, Throwable e)
 				{
-					e.printStackTrace();
-
-					StringWriter sw = new StringWriter();
-					e.printStackTrace(new PrintWriter( sw) );
+					e.printStackTrace( pw );
 					String exceptionAsString = sw.toString();
 
-					Date date = new Date();
-
-					FileHandle file = Gdx.files.local( "error" + date.toString() + ".log" );
+					FileHandle file = Gdx.files.local( "error.log" );
 					file.writeString( exceptionAsString, false );
 
 					JOptionPane.showMessageDialog( null, "An fatal error occured. Please send error.log to me so that I can fix it.", "An error occured", JOptionPane.ERROR_MESSAGE );
+
+					e.printStackTrace();
 				}
-			});
+			};
+
+			Thread.currentThread().setDefaultUncaughtExceptionHandler(handler);
 		}
 
 		screens.put( ScreenEnum.GAME, new GameScreen() );
