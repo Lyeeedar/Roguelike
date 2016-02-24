@@ -324,7 +324,7 @@ public class GameEntity extends Entity
 				}
 			}
 
-			if (dam >= HP)
+			if (HP > 0 && dam >= HP)
 			{
 				Direction dir = Direction.getDirection( damager.tile[0][0], tile[0][0] );
 
@@ -332,7 +332,7 @@ public class GameEntity extends Entity
 				Array<Point> cone = Direction.buildCone( dir, start, 1 );
 				cone.add( start );
 
-				int count = MathUtils.random( 3 );
+				int count = MathUtils.random( 2 );
 				for (int i = 0; i < count; i++)
 				{
 					Point p = cone.removeIndex( MathUtils.random( cone.size - 1 ) );

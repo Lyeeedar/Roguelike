@@ -13,7 +13,7 @@
 
     <Events>
         <Constant>
-            <Attack>7 + 3.5 * quality</Attack>
+            <Attack>12 + 3.5 * quality</Attack>
             <Willpower>ceil(quality / 4)</Willpower>
         </Constant>
     </Events>

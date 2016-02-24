@@ -13,7 +13,7 @@
 
     <Events>
         <Constant>
-            <Attack>9 + 4 * quality</Attack>
+            <Attack>13 + 4 * quality</Attack>
             <Strength>ceil(quality / 3)</Strength>
         </Constant>
     </Events>

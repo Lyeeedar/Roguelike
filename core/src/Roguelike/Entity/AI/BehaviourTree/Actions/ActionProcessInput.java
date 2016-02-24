@@ -168,7 +168,7 @@ public class ActionProcessInput extends AbstractAction
 						{
 							entity.weaponSheathed = false;
 						}
-						else if ( tile.entity.dialogue != null )
+						else if ( tile.entity.dialogue != null && !tile.entity.inCombat() )
 						{
 							dialogueWithinRange = Math.abs( Global.CurrentLevel.player.tile[0][0].x - tile.x ) <= 1
 												  && Math.abs( Global.CurrentLevel.player.tile[0][0].y - tile.y ) <= 1;
@@ -204,7 +204,7 @@ public class ActionProcessInput extends AbstractAction
 			{
 				if (tile.entity.inCombat())
 				{
-					if (tile.entity.dialogue.exclamationManager.inCombat != null)
+					if (tile.entity.dialogue.exclamationManager != null && tile.entity.dialogue.exclamationManager.inCombat != null)
 					{
 						tile.entity.dialogue.exclamationManager.inCombat.process( tile.entity, null, null );
 					}
