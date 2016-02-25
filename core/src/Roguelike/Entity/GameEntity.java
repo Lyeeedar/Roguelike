@@ -319,7 +319,7 @@ public class GameEntity extends Entity
 				if (bloodTile.getPassable( travelType, this ))
 				{
 					Field field = Field.load( blood );
-					field.spawnSpeed = 0.1f;
+					field.spawnSpeed = 0.05f;
 					field.trySpawnInTile( bloodTile, 1 );
 				}
 			}
@@ -342,7 +342,7 @@ public class GameEntity extends Entity
 					if (bloodTile.getPassable( travelType, this ))
 					{
 						Field field = Field.load( blood );
-						field.spawnSpeed = 0.1f;
+						field.spawnSpeed = 0.05f;
 						field.trySpawnInTile( bloodTile, 1 );
 					}
 				}

@@ -1,4 +1,4 @@
-<Field Extends="Liquid">
+<Field Extends="Solid">
     <FieldName>Blood</FieldName>
     <Tags>Wet</Tags>
     <Groups>
@@ -13,7 +13,11 @@
         </Group>
         <Group Stacks="5">
             <Sprite>
-                <Name>Oryx/uf_split/uf_terrain/puddle_small_6</Name>
+                <Name>Oryx/uf_split/uf_terrain/puddle_large_6</Name>
+                <Colour>
+                    <RGB>255,255,255</RGB>
+                    <Alpha>0.5</Alpha>
+                </Colour>
             </Sprite>
         </Group>
         <Group Stacks="10">
@@ -22,7 +26,4 @@
             </Sprite>
         </Group>
     </Groups>
-    <Duration>
-        <Permanent></Permanent>
-    </Duration>
 </Field>

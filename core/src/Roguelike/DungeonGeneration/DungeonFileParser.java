@@ -414,6 +414,9 @@ public class DungeonFileParser
 	public Sprite background;
 
 	// ----------------------------------------------------------------------
+	public char[][] roomDef;
+
+	// ----------------------------------------------------------------------
 	public boolean affectedByDayNight = false;
 
 	// ----------------------------------------------------------------------
@@ -729,6 +732,57 @@ public class DungeonFileParser
 		}
 
 		visionRestricted = xmlElement.getBoolean( "VisionRestricted", true );
+
+		Element rowsElement = xmlElement.getChildByName( "Rows" );
+		if ( rowsElement != null )
+		{
+			if ( rowsElement.getChildCount() > 0 )
+			{
+				// Rows defined here
+				int width = 0;
+				int height = rowsElement.getChildCount();
+
+				for ( int i = 0; i < height; i++ )
+				{
+					if ( rowsElement.getChild( i ).getText().length() > width )
+					{
+						width = rowsElement.getChild( i ).getText().length();
+					}
+				}
+
+				roomDef = new char[width][height];
+				for ( int x = 0; x < width; x++ )
+				{
+					for ( int y = 0; y < height; y++ )
+					{
+						roomDef[x][y] = rowsElement.getChild( y ).getText().charAt( x );
+					}
+				}
+			}
+			else
+			{
+				// Rows in seperate csv file
+				String fileName = rowsElement.getText();
+				FileHandle handle = Gdx.files.internal( "Levels/" + fileName + ".txt" );
+				String content = handle.readString();
+				content = content.replace( "\u0000", "" );
+				content = content.replaceAll("[^\\p{ASCII}]", "");
+
+				String[] lines = content.split( "\n" );
+
+				int height = lines.length;
+				int width = lines[0].length();
+
+				roomDef = new char[width][height];
+				for ( int x = 0; x < width; x++ )
+				{
+					for ( int y = 0; y < height; y++ )
+					{
+						roomDef[x][y] = lines[height-y-1].charAt( x );
+					}
+				}
+			}
+		}
 	}
 
 	// ----------------------------------------------------------------------
