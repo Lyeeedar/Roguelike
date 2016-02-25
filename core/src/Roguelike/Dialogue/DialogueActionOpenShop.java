@@ -4,6 +4,7 @@ import MobiDevelop.UI.HorizontalFlowGroup;
 import Roguelike.Global;
 import Roguelike.Items.Item;
 import Roguelike.Screens.GameScreen;
+import Roguelike.Tiles.Point;
 import Roguelike.UI.*;
 import Roguelike.UI.Tooltip;
 import com.badlogic.gdx.Game;
@@ -32,15 +33,20 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 		}
 
 		Table table = new Table();
-		fillTable( table );
+		ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
 
-		GameScreen.Instance.displayContextMenu( table, true );
+		fillTable( table, keyboardHelper );
+
+		GameScreen.Instance.displayContextMenu( table, true, keyboardHelper );
 
 		return DialogueManager.ReturnType.RUNNING;
 	}
 
-	private void fillTable(final Table table)
+	private void fillTable( final Table table, final ButtonKeyboardHelper keyboardHelper )
 	{
+		Point oldPos = new Point().set(keyboardHelper.current);
+		keyboardHelper.grid.clear();
+
 		table.clear();
 
 		final Skin skin = Global.loadSkin();
@@ -118,7 +124,7 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 						Global.CurrentLevel.player.inventory.equip( item );
 						Global.CurrentLevel.player.inventory.removeItem( "money", item.value );
 
-						fillTable( table );
+						fillTable( table, keyboardHelper );
 					}
 				});
 
@@ -132,6 +138,8 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 				}
 
 				group.row();
+
+				keyboardHelper.add( purchase );
 			}
 		}
 
@@ -147,8 +155,7 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 		{
 			public void clicked (InputEvent event, float x, float y)
 			{
-				GameScreen.Instance.lockContextMenu = false;
-				GameScreen.Instance.clearContextMenu();
+				GameScreen.Instance.clearContextMenu( true );
 
 				complete = true;
 				Global.CurrentDialogue.dialogue.advance( Global.CurrentDialogue );
@@ -156,6 +163,9 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 		});
 		table.add( done ).pad( 5 );
 		table.row();
+
+		keyboardHelper.add( done );
+		keyboardHelper.trySetCurrent( oldPos );
 	}
 
 	@Override

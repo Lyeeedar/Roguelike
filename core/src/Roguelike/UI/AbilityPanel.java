@@ -109,8 +109,7 @@ public class AbilityPanel extends TilePanel
 					Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
 				}
 
-				GameScreen.Instance.lockContextMenu = false;
-				GameScreen.Instance.clearContextMenu();
+				GameScreen.Instance.clearContextMenu( true );
 			}
 			else
 			{

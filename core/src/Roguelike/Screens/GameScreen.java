@@ -14,9 +14,7 @@ import Roguelike.Fields.Field.FieldLayer;
 import Roguelike.GameEvent.AdditionalSprite;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
-import Roguelike.Global.Statistic;
 import Roguelike.Items.Item;
-import Roguelike.Items.TreasureGenerator;
 import Roguelike.Levels.Level;
 import Roguelike.Levels.TownCreator;
 import Roguelike.RoguelikeGame;
@@ -48,7 +46,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
@@ -167,7 +164,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			lockContextMenu = false;
 
 			contextMenu.remove();
-			displayContextMenu( contextMenu.Content, lock );
+			displayContextMenu( contextMenu.Content, lock, keyboardHelper );
 		}
 	}
 
@@ -1144,8 +1141,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{
 					public void clicked( InputEvent event, float x, float y )
 					{
-						lockContextMenu = false;
-						clearContextMenu();
+						clearContextMenu( true );
 
 						for ( Item.EquipmentSlot slot : item.slots)
 						{
@@ -1176,8 +1172,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{
 					public void clicked( InputEvent event, float x, float y )
 					{
-						lockContextMenu = false;
-						clearContextMenu();
+						clearContextMenu( true );
 						Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
 					}
 				} );
@@ -1187,8 +1182,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{
 					public void clicked( InputEvent event, float x, float y )
 					{
-						lockContextMenu = false;
-						clearContextMenu();
+						clearContextMenu( true );
 
 						Global.CurrentLevel.player.inventory.upgradeStones += item.quality;
 						Global.CurrentLevel.player.pendingMessages.add(new Message( "Gained " + item.quality + " Upgrade Stones", Color.GOLD ));
@@ -1206,7 +1200,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				table.pack();
 
-				queueContextMenu( table );
+				ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
+				keyboardHelper.add( equipButton, 0 );
+				keyboardHelper.add( dropButton, 1 );
+				keyboardHelper.add( sellButton, 2 );
+
+				queueContextMenu( table, keyboardHelper );
 			}
 			else if ( item.ability != null )
 			{
@@ -1234,8 +1233,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{
 					public void clicked( InputEvent event, float x, float y )
 					{
-						lockContextMenu = false;
-						clearContextMenu();
+						clearContextMenu( true );
 						Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
 						abilityToEquip = null;
 					}
@@ -1245,7 +1243,10 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				table.pack();
 
-				queueContextMenu( table );
+				ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
+				keyboardHelper.add( dropButton );
+
+				queueContextMenu( table, keyboardHelper );
 
 				abilityToEquip = item.ability;
 			}
@@ -1268,8 +1269,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{
 					public void clicked( InputEvent event, float x, float y )
 					{
-						lockContextMenu = false;
-						clearContextMenu();
+						clearContextMenu( true );
 
 						Global.CurrentLevel.player.getInventory().addItem( item );
 						Global.CurrentLevel.player.isVariableMapDirty = true;
@@ -1281,8 +1281,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				{
 					public void clicked( InputEvent event, float x, float y )
 					{
-						lockContextMenu = false;
-						clearContextMenu();
+						clearContextMenu( true );
 						Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
 					}
 				} );
@@ -1297,7 +1296,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				table.pack();
 
-				queueContextMenu( table );
+				ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
+				keyboardHelper.add( equipButton, 0 );
+				keyboardHelper.add( dropButton, 1 );
+
+				queueContextMenu( table, keyboardHelper );
 			}
 		}
 	}
@@ -1327,6 +1330,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean keyDown( int keycode )
 	{
+		if (keyboardHelper != null)
+		{
+			return keyboardHelper.keyDown( keycode );
+		}
+
 		if ( weaponTiles != null )
 		{
 			Global.PointPool.freeAll( weaponTiles );
@@ -1439,7 +1447,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	// ----------------------------------------------------------------------
 	@Override
-	public boolean touchDown( int screenX, int screenY, int pointer, int button )
+	public boolean touchDown( int screenX, int screenY, int pointer, int TextButton )
 	{
 		if ( pointOverUI( screenX, screenY ) )
 		{
@@ -1455,13 +1463,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			Tooltip.openTooltip = null;
 		}
 
-		clearContextMenu();
+		clearContextMenu( false );
 		return true;
 	}
 
 	// ----------------------------------------------------------------------
 	@Override
-	public boolean touchUp( int screenX, int screenY, int pointer, int button )
+	public boolean touchUp( int screenX, int screenY, int pointer, int TextButton )
 	{
 		if ( pointOverUI( screenX, screenY ) )
 		{
@@ -1489,7 +1497,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			mouseMoved( screenX, screenY );
 		}
 
-		clearContextMenu();
+		clearContextMenu( false );
 
 		if ( contextMenu != null || examineMode )
 		{
@@ -1537,7 +1545,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 			if ( preparedAbility != null )
 			{
-				if ( button == Buttons.LEFT )
+				if ( TextButton == Buttons.LEFT )
 				{
 					if ( x >= 0 && x < Global.CurrentLevel.width && y >= 0 && y < Global.CurrentLevel.height )
 					{
@@ -1594,6 +1602,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	@Override
 	public boolean mouseMoved( int screenX, int screenY )
 	{
+		if (keyboardHelper != null)
+		{
+			keyboardHelper.clear();
+		}
+
 		if ( Tooltip.openTooltip != null )
 		{
 			Tooltip.openTooltip.setVisible( false );
@@ -1754,8 +1767,13 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
-	public void clearContextMenu()
+	public void clearContextMenu( boolean releaseLock )
 	{
+		if (releaseLock)
+		{
+			lockContextMenu = false;
+		}
+
 		if ( lockContextMenu ) { return; }
 
 		if ( contextMenu != null )
@@ -1765,9 +1783,15 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 			if (contextMenuQueue.size > 0)
 			{
-				Table content = contextMenuQueue.removeIndex(0);
-				displayContextMenu( content, true );
+				ContextMenuData data = contextMenuQueue.removeIndex(0);
+				displayContextMenu( data.content, true, data.keyboardHelper );
 			}
+		}
+
+		if (keyboardHelper != null)
+		{
+			keyboardHelper.clear();
+			keyboardHelper = null;
 		}
 	}
 
@@ -1808,7 +1832,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	// ----------------------------------------------------------------------
 	@Override
-	public boolean touchDown( float x, float y, int pointer, int button )
+	public boolean touchDown( float x, float y, int pointer, int TextButton )
 	{
 		longPressed = false;
 		dragged = false;
@@ -1822,7 +1846,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	// ----------------------------------------------------------------------
 	@Override
-	public boolean tap( float x, float y, int count, int button )
+	public boolean tap( float x, float y, int count, int TextButton )
 	{
 		return false;
 	}
@@ -1837,7 +1861,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	// ----------------------------------------------------------------------
 	@Override
-	public boolean fling( float velocityX, float velocityY, int button )
+	public boolean fling( float velocityX, float velocityY, int TextButton )
 	{
 		return false;
 	}
@@ -1851,7 +1875,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	// ----------------------------------------------------------------------
 	@Override
-	public boolean panStop( float x, float y, int pointer, int button )
+	public boolean panStop( float x, float y, int pointer, int TextButton )
 	{
 		return false;
 	}
@@ -1943,20 +1967,61 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
-	public void queueContextMenu(Table table)
+	public void queueContextMenu(Table table, ButtonKeyboardHelper keyboardHelper)
 	{
 		if (contextMenu == null)
 		{
-			displayContextMenu( table, true );
+			displayContextMenu( table, true, keyboardHelper );
 		}
 		else
 		{
-			contextMenuQueue.add( table );
+			contextMenuQueue.add( new ContextMenuData( table, keyboardHelper ) );
 		}
 	}
 
 	// ----------------------------------------------------------------------
-	public void displayContextMenu(Table content, boolean lock)
+	public void queueMessage(String titleString, String messageString)
+	{
+		Skin skin = Global.loadSkin();
+
+		Table message = new Table();
+		message.defaults().pad( 10 );
+
+		Label title = new Label(titleString, skin, "title");
+		message.add( title ).expandX().left();
+		message.row();
+
+		message.add( new Seperator( skin ) ).expandX().fillX();
+		message.row();
+
+		Table messageBody = new Table();
+		Label messageText = new Label( messageString, skin);
+		messageText.setWrap( true );
+		messageBody.add( messageText ).expand().fillX();
+		messageBody.row();
+
+		message.add( messageBody ).expand().fill();
+		message.row();
+
+		message.add( new Seperator( skin ) ).expandX().fillX();
+		message.row();
+
+		TextButton continueButton = new TextButton( "Continue", skin );
+		continueButton.addListener( new ClickListener(  )
+		{
+			public void clicked( InputEvent event, float x, float y )
+			{
+				GameScreen.Instance.clearContextMenu( true );
+			}
+		} );
+		message.add( continueButton ).colspan( 2 ).expandX().fillX();
+		message.row();
+
+		GameScreen.Instance.queueContextMenu( message, new ButtonKeyboardHelper( continueButton ) );
+	}
+
+	// ----------------------------------------------------------------------
+	public void displayContextMenu(Table content, boolean lock, ButtonKeyboardHelper keyboardHelper)
 	{
 		if (lockContextMenu)
 		{
@@ -1982,6 +2047,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				new SequenceAction( Actions.scaleTo( 0, 0 ), Actions.scaleTo( 1, 1, 0.25f ) ) );
 
 		contextMenu.addAction( new SequenceAction( parallelAction, Actions.removeAction( parallelAction ) ) );
+
+		this.keyboardHelper = keyboardHelper;
 	}
 
 	// ----------------------------------------------------------------------
@@ -2029,8 +2096,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			public void clicked( InputEvent event, float x, float y )
 			{
-				lockContextMenu = false;
-				clearContextMenu();
+				clearContextMenu( true );
 
 				TownCreator townCreator = new TownCreator();
 				townCreator.create();
@@ -2038,7 +2104,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		} );
 		table.add( button ).expandX().center();
 
-		displayContextMenu( table, true );
+		displayContextMenu( table, true, new ButtonKeyboardHelper( button ) );
 	}
 
 	// ----------------------------------------------------------------------
@@ -2061,8 +2127,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			public void clicked( InputEvent event, float x, float y )
 			{
-				lockContextMenu = false;
-				clearContextMenu();
+				clearContextMenu( true );
 			}
 		} );
 		table.add( resumeButton ).expandX().width( 200 ).center();
@@ -2091,7 +2156,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		table.add( quitButton ).expandX().width( 200 ).center();
 		table.row();
 
-		displayContextMenu( table, true );
+		ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper( resumeButton );
+		keyboardHelper.add( optionsButton );
+		keyboardHelper.add( quitButton );
+
+		displayContextMenu( table, true, keyboardHelper );
 	}
 
 	// ----------------------------------------------------------------------
@@ -2127,13 +2196,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			public void clicked( InputEvent event, float x, float y )
 			{
-				lockContextMenu = false;
-				clearContextMenu();
+				clearContextMenu( true );
 			}
 		} );
 		table.add( button ).expandX().center();
 
-		displayContextMenu( table, true );
+		displayContextMenu( table, true, new ButtonKeyboardHelper( button ) );
 	}
 
 	// ----------------------------------------------------------------------
@@ -2152,6 +2220,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		Table actionTable = new Table(  );
 		actionTable.defaults().pad( 10 );
 
+		ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
+
 		for (final ActivationActionGroup action : actions)
 		{
 			TextButton button = new TextButton( action.name, skin );
@@ -2159,8 +2229,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			{
 				public void clicked( InputEvent event, float x, float y )
 				{
-					lockContextMenu = false;
-					clearContextMenu();
+					clearContextMenu( true );
 
 					action.activate( parent, Global.CurrentLevel.player, 1 );
 					Global.CurrentLevel.player.tasks.add( new TaskWait() );
@@ -2168,6 +2237,8 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			} );
 			actionTable.add( button ).expandX().width( 200 ).center();
 			actionTable.row();
+
+			keyboardHelper.add( button );
 		}
 
 		table.add( actionTable ).expand().fill();
@@ -2181,14 +2252,16 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 		{
 			public void clicked( InputEvent event, float x, float y )
 			{
-				lockContextMenu = false;
-				clearContextMenu();
+				clearContextMenu( true );
 			}
 		} );
 		table.add( qbutton ).expandX().width( 200 ).center();
 		table.row();
 
-		displayContextMenu( table, true );
+		keyboardHelper.add( qbutton );
+		keyboardHelper.cancel = qbutton;
+
+		displayContextMenu( table, true, keyboardHelper );
 	}
 
 	// ----------------------------------------------------------------------
@@ -2240,7 +2313,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// region Data
 
 	// ----------------------------------------------------------------------
-	public Array<Table> contextMenuQueue = new Array<Table>(  );
+	public Array<ContextMenuData> contextMenuQueue = new Array<ContextMenuData>(  );
 
 	// ----------------------------------------------------------------------
 	public enum RenderLayer
@@ -2276,6 +2349,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	// ----------------------------------------------------------------------
 	public GestureDetector gestureDetector;
+	public ButtonKeyboardHelper keyboardHelper;
 
 	// ----------------------------------------------------------------------
 	public OrthographicCamera camera;
@@ -2458,6 +2532,18 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 									   + "}";
 
 		public static ShaderProgram Instance = new ShaderProgram( vertexShader, fragmentShader );
+	}
+
+	public static class ContextMenuData
+	{
+		public final Table content;
+		public final ButtonKeyboardHelper keyboardHelper;
+
+		public ContextMenuData(Table content, ButtonKeyboardHelper keyboardHelper)
+		{
+			this.content = content;
+			this.keyboardHelper = keyboardHelper;
+		}
 	}
 
 	// endregion Classes

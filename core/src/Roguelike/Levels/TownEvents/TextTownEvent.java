@@ -2,6 +2,7 @@ package Roguelike.Levels.TownEvents;
 
 import Roguelike.Global;
 import Roguelike.Screens.GameScreen;
+import Roguelike.UI.ButtonKeyboardHelper;
 import Roguelike.UI.Seperator;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -66,14 +67,13 @@ public class TextTownEvent extends AbstractTownEvent
 		{
 			public void clicked( InputEvent event, float x, float y )
 			{
-				GameScreen.Instance.lockContextMenu = false;
-				GameScreen.Instance.clearContextMenu();
+				GameScreen.Instance.clearContextMenu( true );
 			}
 		} );
 		message.add( continueButton ).colspan( 2 ).expandX().fillX();
 		message.row();
 
-		GameScreen.Instance.queueContextMenu( message );
+		GameScreen.Instance.queueContextMenu( message, new ButtonKeyboardHelper( continueButton ) );
 	}
 
 	@Override

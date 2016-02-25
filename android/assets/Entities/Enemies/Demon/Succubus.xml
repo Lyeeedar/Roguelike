@@ -11,7 +11,7 @@
 
     <Abilities>
         <BloodShot>BloodShot</BloodShot>
-        <StealHP>
+        <Active>
             <Range>1</Range>
             <Cooldown>5</Cooldown>
             <CooldownType>Wait</CooldownType>
@@ -34,7 +34,7 @@
                 </Damage>
                 <Heal Self="true">15</Heal>
             </Effect>
-        </StealHP>
+        </Active>
     </Abilities>
 
     <Dialogue>

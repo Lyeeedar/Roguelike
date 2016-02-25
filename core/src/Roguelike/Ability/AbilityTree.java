@@ -4,6 +4,7 @@ import Roguelike.Ability.PassiveAbility.PassiveAbility;
 import Roguelike.Entity.Entity;
 import Roguelike.Global;
 import Roguelike.Screens.GameScreen;
+import Roguelike.UI.ButtonKeyboardHelper;
 import Roguelike.UI.Seperator;
 import Roguelike.UI.Tooltip;
 import com.badlogic.gdx.Gdx;
@@ -114,8 +115,7 @@ public class AbilityTree
 			{
 				public void clicked( InputEvent event, float x, float y )
 				{
-					GameScreen.Instance.lockContextMenu = false;
-					GameScreen.Instance.clearContextMenu();
+					GameScreen.Instance.clearContextMenu( true );
 					tree.current = branch1;
 					tree.current.expToNextLevel = expToNextLevel;
 				}
@@ -126,8 +126,7 @@ public class AbilityTree
 			{
 				public void clicked( InputEvent event, float x, float y )
 				{
-					GameScreen.Instance.lockContextMenu = false;
-					GameScreen.Instance.clearContextMenu();
+					GameScreen.Instance.clearContextMenu( true );
 					tree.current = branch2;
 					tree.current.expToNextLevel = expToNextLevel;
 				}
@@ -139,7 +138,11 @@ public class AbilityTree
 
 			table.pack();
 
-			GameScreen.Instance.displayContextMenu( table, true );
+			ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
+			keyboardHelper.add( branch1Button, 0 );
+			keyboardHelper.add( branch2Button, 1 );
+
+			GameScreen.Instance.displayContextMenu( table, true, keyboardHelper );
 		}
 
 		public void parse( XmlReader.Element xml )

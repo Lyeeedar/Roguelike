@@ -7,12 +7,13 @@ import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
 
 import Roguelike.Save.SaveFile;
-import Roguelike.UI.SaveSlotButton;
+import Roguelike.UI.ButtonKeyboardHelper;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -21,11 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class MainMenuScreen implements Screen
+public class MainMenuScreen implements Screen, InputProcessor
 {
 	public MainMenuScreen()
 	{
@@ -57,9 +57,7 @@ public class MainMenuScreen implements Screen
 		{
 			public void clicked( InputEvent event, float x, float y )
 			{
-//				mainTable.remove();
-//				table.add( saveTable ).expand().fill();
-//				table.row();
+
 				SaveFile save = Global.load();
 
 				if (save == null)
@@ -84,9 +82,10 @@ public class MainMenuScreen implements Screen
 		mainTable.add( beginbutton ).expandX().fillX().padTop( 20 );
 		mainTable.row();
 
+		TextButton testbutton = null;
 		if (!Global.RELEASE)
 		{
-			TextButton testbutton = new TextButton( "Test Game - Lake", skin, "big" );
+			testbutton = new TextButton( "Test Game - Lake", skin, "big" );
 			testbutton.addListener( new ClickListener()
 			{
 				public void clicked( InputEvent event, float x, float y )
@@ -133,6 +132,25 @@ public class MainMenuScreen implements Screen
 		mainTable.add( qbutton ).expandX().fillX().padTop( 20 );
 		mainTable.row();
 
+		keyboardHelper = new ButtonKeyboardHelper();
+		keyboardHelper.add( beginbutton );
+
+		if (testbutton != null)
+		{
+			keyboardHelper.add( testbutton );
+		}
+
+		keyboardHelper.add( obutton );
+		keyboardHelper.add( cbutton );
+		keyboardHelper.add( qbutton );
+
+		inputMultiplexer = new InputMultiplexer();
+
+		InputProcessor inputProcessorOne = this;
+		InputProcessor inputProcessorTwo = stage;
+
+		inputMultiplexer.addProcessor( inputProcessorTwo );
+		inputMultiplexer.addProcessor( inputProcessorOne );
 	}
 
 	@Override
@@ -144,7 +162,7 @@ public class MainMenuScreen implements Screen
 			created = true;
 		}
 
-		Gdx.input.setInputProcessor( stage );
+		Gdx.input.setInputProcessor( inputMultiplexer );
 
 		camera = new OrthographicCamera( Global.Resolution[0], Global.Resolution[1] );
 		camera.translate( Global.Resolution[0] / 2, Global.Resolution[1] / 2 );
@@ -271,4 +289,56 @@ public class MainMenuScreen implements Screen
 	Table mainTable;
 
 	SpriteBatch batch;
+
+	ButtonKeyboardHelper keyboardHelper;
+	InputMultiplexer inputMultiplexer;
+
+	@Override
+	public boolean keyDown( int keycode )
+	{
+		return keyboardHelper.keyDown( keycode );
+	}
+
+	@Override
+	public boolean keyUp( int keycode )
+	{
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped( char character )
+	{
+		return false;
+	}
+
+	@Override
+	public boolean touchDown( int screenX, int screenY, int pointer, int button )
+	{
+		return false;
+	}
+
+	@Override
+	public boolean touchUp( int screenX, int screenY, int pointer, int button )
+	{
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged( int screenX, int screenY, int pointer )
+	{
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved( int screenX, int screenY )
+	{
+		keyboardHelper.clear();
+		return false;
+	}
+
+	@Override
+	public boolean scrolled( int amount )
+	{
+		return false;
+	}
 }

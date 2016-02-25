@@ -87,6 +87,8 @@ public class EquipmentPanel extends TilePanel
 		{
 			int stones = Global.CurrentLevel.player.inventory.upgradeStones;
 
+			ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
+
 			Table table = new Table();
 			table.defaults().pad( 5 );
 
@@ -110,8 +112,7 @@ public class EquipmentPanel extends TilePanel
 						{
 							public void clicked( InputEvent event, float x, float y )
 							{
-								GameScreen.Instance.lockContextMenu = false;
-								GameScreen.Instance.clearContextMenu();
+								GameScreen.Instance.clearContextMenu( true );
 
 								Global.CurrentLevel.player.inventory.upgradeStones -= required;
 								equip.upgrade();
@@ -128,6 +129,8 @@ public class EquipmentPanel extends TilePanel
 							}
 						} );
 						table.add( button ).expandX().left();
+
+						keyboardHelper.add( button );
 					}
 					else
 					{
@@ -148,15 +151,17 @@ public class EquipmentPanel extends TilePanel
 			{
 				public void clicked( InputEvent event, float x, float y )
 				{
-					GameScreen.Instance.lockContextMenu = false;
-					GameScreen.Instance.clearContextMenu();
+					GameScreen.Instance.clearContextMenu( true );
 				}
 			} );
 
 			table.add( cancel ).colspan( 2 );
 			table.row();
 
-			GameScreen.Instance.displayContextMenu( table, true );
+			keyboardHelper.add( cancel );
+			keyboardHelper.cancel = cancel;
+
+			GameScreen.Instance.displayContextMenu( table, true, keyboardHelper );
 		}
 	}
 

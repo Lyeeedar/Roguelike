@@ -157,7 +157,7 @@ public class TabPanel extends Widget
 		@Override
 		public boolean touchDown( InputEvent event, float x, float y, int pointer, int button )
 		{
-			GameScreen.Instance.clearContextMenu();
+			GameScreen.Instance.clearContextMenu( false );
 
 			if ( x < tabHeaderSize )
 			{

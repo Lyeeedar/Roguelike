@@ -1,8 +1,5 @@
 package Roguelike.Levels;
 
-import Roguelike.Ability.AbilityTree;
-import Roguelike.Ability.ActiveAbility.ActiveAbility;
-import Roguelike.AssetManager;
 import Roguelike.DungeonGeneration.DungeonFileParser;
 import Roguelike.Entity.GameEntity;
 import Roguelike.Global;
@@ -13,10 +10,10 @@ import Roguelike.RoguelikeGame;
 import Roguelike.Save.SaveLevel;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Screens.LoadingScreen;
+import Roguelike.UI.ButtonKeyboardHelper;
 import Roguelike.UI.ClassList;
 import Roguelike.UI.Seperator;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -27,7 +24,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.XmlReader;
 
 import java.io.IOException;
-import java.util.Random;
 
 /**
  * Created by Philip on 02-Feb-16.
@@ -117,6 +113,8 @@ public class TownCreator
 	{
 		Skin skin = Global.loadSkin();
 
+		ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
+
 		Global.CharGenMode = true;
 
 		Table table = new Table();
@@ -169,6 +167,9 @@ public class TownCreator
 		genderTable.add( male );
 		genderTable.add( female );
 
+		keyboardHelper.add( male, 0 );
+		keyboardHelper.add( female, 1 );
+
 		table.add( genderTable ).expandX().left();
 		table.row();
 
@@ -214,6 +215,9 @@ public class TownCreator
 			choiceTable.row();
 
 			classGroup.add( checkBox );
+
+			keyboardHelper.add( checkBox, 0 );
+			keyboardHelper.add( checkBox, 1 );
 		}
 
 		ScrollPane scrollPane = new ScrollPane( choiceTable, skin );
@@ -240,8 +244,7 @@ public class TownCreator
 			public void clicked( InputEvent event, float x, float y )
 			{
 				Global.CharGenMode = false;
-				GameScreen.Instance.lockContextMenu = false;
-				GameScreen.Instance.clearContextMenu();
+				GameScreen.Instance.clearContextMenu( true );
 
 				Item money = Item.load( "Treasure/Money" );
 				money.count = Integer.parseInt( Global.WorldFlags.get( "startingfunds" ) );
@@ -252,7 +255,10 @@ public class TownCreator
 		table.add( startButton ).expandX().fillX();
 		table.row();
 
-		GameScreen.Instance.queueContextMenu( table );
+		keyboardHelper.add( startButton, 0 );
+		keyboardHelper.add( startButton, 1 );
+
+		GameScreen.Instance.queueContextMenu( table, keyboardHelper );
 	}
 
 	public static class Building

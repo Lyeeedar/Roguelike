@@ -25,9 +25,8 @@
                                     <Duration>300</Duration>
                                     <Events>
                                         <Constant>
-                                            <Stength>3</Stength>
+                                            <Strength>3</Strength>
                                             <Willpower>3</Willpower>
-                                            <Perception>3</Perception>
                                             <Speed>3</Speed>
                                             <Constitution>3</Constitution>
                                         </Constant>

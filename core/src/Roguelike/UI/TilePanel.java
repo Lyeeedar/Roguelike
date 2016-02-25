@@ -366,7 +366,7 @@ public abstract class TilePanel extends Widget
 				Tooltip.openTooltip.openTooltip.openTooltip = null;
 				Tooltip.openTooltip = null;
 			}
-			GameScreen.Instance.clearContextMenu();
+			GameScreen.Instance.clearContextMenu( false );
 			GameScreen.Instance.addTouchAction( event.getStageX(), event.getStageY() );
 
 			dragged = false;
@@ -385,7 +385,7 @@ public abstract class TilePanel extends Widget
 				Tooltip.openTooltip.remove();
 				Tooltip.openTooltip = null;
 			}
-			GameScreen.Instance.clearContextMenu();
+			GameScreen.Instance.clearContextMenu( false );
 
 			Object item = pointToItem( x, y );
 

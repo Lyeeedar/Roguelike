@@ -234,7 +234,7 @@ public class LevelManager
 		{
 			levelName = xml.getName();
 			maxDepth = xml.getIntAttribute( "MaxDepth", 1 );
-			label = xml.getAttribute( "Label", null );
+			label = xml.getAttribute( "Label", levelName );
 
 			levelTitle = xml.getAttribute( "Title", levelName );
 			levelDescription = xml.getAttribute( "Description", "PHILIP YOU SHOULD FILL THIS IN" );

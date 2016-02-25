@@ -1,6 +1,5 @@
 package Roguelike;
 
-import Roguelike.Dialogue.DialogueManager;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.Damage.DamageObject;
@@ -33,14 +32,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.*;
@@ -49,7 +45,6 @@ import exp4j.Helpers.EquationHelper;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
@@ -220,54 +215,25 @@ public class Global
 		Global.WorldFlags.put( "tavern", "1" );
 		Global.WorldFlags.put( "startingfunds", "50" );
 
-		Skin skin = Global.loadSkin();
+		GameScreen.Instance.queueMessage( "Welcome to A Skin of Others",
+										  "For as long as anyone in your village can remember creatures have been attacking out from beneath Melet mountain." +
+										  "At night they spring from the darkness and snatch the unwary and unvigilant, dragging them away to who knows where. " +
+										  "The imperial capital has been unwilling to send aid, despite numerous requests, so the task of saving the village falls to you. " +
+										  "Strike out into the forest, save those within, and fight your way down into the depths of the mountain to seal the portal the creatures" +
+										  " are coming from.");
 
-		Table message = new Table();
-		message.defaults().pad( 10 );
-
-		Label title = new Label("Welcome to A Skin of Others", skin, "title");
-		message.add( title ).expandX().left();
-		message.row();
-
-		message.add( new Seperator( skin ) ).expandX().fillX();
-		message.row();
-
-		Table messageBody = new Table();
-		Label messageText = new Label( "For as long as anyone in your village can remember creatures have been attacking out from beneath Melet mountain." +
-									   "At night they spring from the darkness and snatch the unwary and unvigilant, dragging them away to who knows where. " +
-									   "The imperial capital has been unwilling to send aid, despite numerous requests, so the task of saving the village falls to you. " +
-									   "Strike out into the forest, save those within, and fight your way down into the depths of the mountain to seal the portal the creatures" +
-									   " are coming from.", skin);
-		messageText.setWrap( true );
-		messageBody.add( messageText ).expand().fillX();
-		messageBody.row();
-
-		message.add( messageBody ).expand().fill();
-		message.row();
-
-		message.add( new Seperator( skin ) ).expandX().fillX();
-		message.row();
-
-		TextButton continueButton = new TextButton( "Continue", skin );
-		continueButton.addListener( new ClickListener(  )
-		{
-			public void clicked( InputEvent event, float x, float y )
-			{
-				GameScreen.Instance.lockContextMenu = false;
-				GameScreen.Instance.clearContextMenu();
-			}
-		} );
-		message.add( continueButton ).colspan( 2 ).expandX().fillX();
-		message.row();
-
-		GameScreen.Instance.queueContextMenu( message );
+		GameScreen.Instance.queueMessage( "Controls",
+										  "Click in a direction to move there (or use the arrow keys)." +
+										  " Click on your character to pass a turn (or press space). " +
+										  "Move into an enemy to attack them, or into an NPC to talk to them." +
+										  " Click an ability on the left to ready it, then on a blue target to use it.");
 	}
 
 	// ----------------------------------------------------------------------
 	public static void testWorld()
 	{
 		LevelManager = new LevelManager();
-		LevelManager.current = LevelManager.root.getLabelledLevel( "Lake" );
+		LevelManager.current = LevelManager.root.getLabelledLevel( "EnchantedForest" );
 
 		QuestManager = new QuestManager();
 		AUT = 0;
@@ -278,7 +244,7 @@ public class Global
 		Global.WorldFlags.put( "tavern", "1" );
 		Global.WorldFlags.put( "startingfunds", "50" );
 
-		SaveLevel firstLevel = new SaveLevel( "Lake", 1, LevelManager.current.getExtraRooms( "Cave", 1, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
+		SaveLevel firstLevel = new SaveLevel( "EnchantedForest", 1, LevelManager.current.getExtraRooms( "Forest", 1, new Random() ), MathUtils.random( Long.MAX_VALUE - 1 ) );
 		LevelManager.current.currentLevel = firstLevel;
 
 		Array<ClassList.ClassDesc> classes = ClassList.parse();
@@ -602,20 +568,22 @@ public class Global
 		checkButton.font = skin.getFont( "default" );
 		skin.add( "default", checkButton );
 
-		TextButtonStyle textButton = new TextButtonStyle();
+		TextButton.TextButtonStyle textButton = new TextButton.TextButtonStyle();
 		textButton.up = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) );
 		textButton.font = skin.getFont( "default" );
 		textButton.fontColor = Color.LIGHT_GRAY;
 		textButton.overFontColor = Color.WHITE;
 		textButton.checked = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonDown.png" ), 12, 12, 12, 12 ) );
+		textButton.over = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonOver.png" ), 12, 12, 12, 12 ) );
 		skin.add( "default", textButton );
 
-		TextButtonStyle bigTextButton = new TextButtonStyle();
+		TextButton.TextButtonStyle bigTextButton = new TextButton.TextButtonStyle();
 		bigTextButton.up = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) );
 		bigTextButton.font = skin.getFont( "title" );
 		bigTextButton.fontColor = Color.LIGHT_GRAY;
 		bigTextButton.overFontColor = Color.WHITE;
 		bigTextButton.checked = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonDown.png" ), 12, 12, 12, 12 ) );
+		bigTextButton.over = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonOver.png" ), 12, 12, 12, 12 ) );
 		skin.add( "big", bigTextButton );
 
 		TooltipStyle toolTip = new TooltipStyle();

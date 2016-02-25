@@ -613,44 +613,51 @@ GUI/ButtonDown
   orig: 32, 32
   offset: 0, 0
   index: -1
-GUI/Checked
-  rotate: false
-  xy: 838, 286
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-GUI/Cog
+GUI/ButtonOver
   rotate: false
   xy: 1670, 710
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-GUI/Eye
+GUI/Checked
+  rotate: false
+  xy: 890, 338
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+GUI/Cog
   rotate: false
   xy: 1706, 710
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-GUI/Ingot
+GUI/Eye
   rotate: false
-  xy: 1814, 710
+  xy: 1742, 710
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-GUI/Jewelry
+GUI/Ingot
   rotate: false
   xy: 1850, 710
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+GUI/Jewelry
+  rotate: false
+  xy: 1886, 710
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 GUI/Misc
   rotate: false
-  xy: 1922, 710
+  xy: 682, 122
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -678,21 +685,21 @@ GUI/PanelVertical
   index: -1
 GUI/PassiveTileBorder
   rotate: false
-  xy: 682, 122
+  xy: 682, 86
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/ProgressIndicator
   rotate: false
-  xy: 890, 338
+  xy: 942, 390
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 GUI/QuestionMark
   rotate: false
-  xy: 682, 86
+  xy: 646, 50
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -713,7 +720,7 @@ GUI/SeperatorVertical
   index: -1
 GUI/Sheathed
   rotate: false
-  xy: 646, 50
+  xy: 682, 50
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -734,77 +741,77 @@ GUI/SpeechBubbleArrow
   index: -1
 GUI/TextField
   rotate: false
-  xy: 682, 50
+  xy: 734, 174
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/TileBackground
   rotate: false
-  xy: 734, 174
+  xy: 718, 138
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/TileBorder
   rotate: false
-  xy: 718, 138
+  xy: 718, 102
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/TilePanel
   rotate: false
-  xy: 718, 102
+  xy: 718, 66
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Treasure
   rotate: false
-  xy: 718, 66
+  xy: 786, 226
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Unchecked
   rotate: false
-  xy: 942, 390
+  xy: 1170, 614
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 GUI/Unsheathed
   rotate: false
-  xy: 786, 226
+  xy: 770, 190
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/Weapon
   rotate: false
-  xy: 770, 190
+  xy: 838, 278
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/frame_0
   rotate: false
-  xy: 1742, 710
+  xy: 1778, 710
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/frame_1
   rotate: false
-  xy: 1778, 710
+  xy: 1814, 710
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 GUI/locked
   rotate: false
-  xy: 1886, 710
+  xy: 1922, 710
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -1133,98 +1140,98 @@ Icons/UnreliableFlames
   index: -1
 Masks/fog_Masks/fog_DNE_DNW_DSE_DSW_false
   rotate: false
-  xy: 886, 506
+  xy: 834, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DNE_DNW_DSE_false
   rotate: false
-  xy: 678, 298
+  xy: 730, 402
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DNE_DNW_DSW_false
   rotate: false
-  xy: 1042, 714
+  xy: 418, 38
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DNE_DNW_false
   rotate: false
-  xy: 574, 194
+  xy: 990, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DNE_DSE_DSW_false
   rotate: false
-  xy: 938, 558
+  xy: 1094, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DNE_DSE_false
   rotate: false
-  xy: 678, 402
+  xy: 886, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DNE_DSW_false
   rotate: false
-  xy: 1094, 714
+  xy: 522, 246
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DNE_false
   rotate: false
-  xy: 730, 350
+  xy: 626, 246
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DNW_DSE_DSW_false
   rotate: false
-  xy: 782, 402
+  xy: 730, 350
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DNW_DSE_false
   rotate: false
-  xy: 1146, 766
+  xy: 938, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DNW_DSW_false
   rotate: false
-  xy: 990, 610
+  xy: 1146, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DNW_false
   rotate: false
-  xy: 1042, 662
+  xy: 470, 194
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DSE_DSW_false
   rotate: false
-  xy: 782, 454
+  xy: 314, 38
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_DSE_false
   rotate: false
-  xy: 834, 454
+  xy: 1042, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -1238,217 +1245,217 @@ Masks/fog_Masks/fog_DSW_false
   index: -1
 Masks/fog_Masks/fog_E_DNW_DSW_false
   rotate: false
-  xy: 678, 350
+  xy: 522, 142
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_E_DNW_false
   rotate: false
-  xy: 314, 38
+  xy: 678, 298
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_E_DSW_false
   rotate: false
-  xy: 522, 142
+  xy: 574, 194
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_E_W_false
   rotate: false
-  xy: 470, 142
+  xy: 1042, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_E_false
   rotate: false
-  xy: 522, 194
+  xy: 678, 350
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_NE_DSW_false
   rotate: false
-  xy: 574, 298
+  xy: 1094, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_NE_NW_SE_SW_false
   rotate: false
-  xy: 470, 194
+  xy: 418, 142
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_NE_NW_false
   rotate: false
-  xy: 366, 90
+  xy: 574, 298
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_NE_SE_false
   rotate: false
-  xy: 730, 454
+  xy: 782, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_NE_false
   rotate: false
-  xy: 1094, 766
+  xy: 470, 142
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_NW_DSE_false
   rotate: false
-  xy: 574, 246
+  xy: 366, 38
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_NW_SW_false
   rotate: false
-  xy: 990, 714
+  xy: 834, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_NW_false
   rotate: false
-  xy: 834, 558
+  xy: 418, 90
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_N_DSE_DSW_false
   rotate: false
-  xy: 626, 246
+  xy: 522, 194
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_N_DSE_false
   rotate: false
-  xy: 886, 558
+  xy: 990, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_N_DSW_false
   rotate: false
-  xy: 938, 610
+  xy: 782, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_N_S_false
   rotate: false
-  xy: 418, 90
+  xy: 938, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_N_false
   rotate: false
-  xy: 418, 38
+  xy: 1042, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_SE_DNW_false
   rotate: false
-  xy: 782, 506
+  xy: 834, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_SE_SW_false
   rotate: false
-  xy: 522, 246
+  xy: 678, 402
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_SE_false
   rotate: false
-  xy: 470, 90
+  xy: 938, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_SW_DNE_false
   rotate: false
-  xy: 938, 662
+  xy: 574, 246
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_SW_false
   rotate: false
-  xy: 730, 402
+  xy: 626, 298
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_S_DNE_DNW_false
   rotate: false
-  xy: 990, 662
+  xy: 886, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_S_DNE_false
   rotate: false
-  xy: 886, 610
+  xy: 626, 350
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_S_DNW_false
   rotate: false
-  xy: 366, 38
+  xy: 782, 402
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_S_false
   rotate: false
-  xy: 626, 298
+  xy: 366, 90
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_W_DNE_DSE_false
   rotate: false
-  xy: 626, 350
+  xy: 990, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_W_DNE_false
   rotate: false
-  xy: 1042, 766
+  xy: 730, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_W_DSE_false
   rotate: false
-  xy: 834, 506
+  xy: 886, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/fog_Masks/fog_W_false
   rotate: false
-  xy: 418, 142
+  xy: 470, 90
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -1530,289 +1537,289 @@ Masks/web_Center_Masks/web_DNE_DNW_DSE_DSW_false
   orig: 48, 48
   offset: 0, 0
   index: -1
-Masks/web_Center_Masks/web_DNE_DNW_DSW_false
-  rotate: false
-  xy: 1682, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
 Masks/web_Center_Masks/web_DNE_DNW_DSE_false
-  rotate: false
-  xy: 1682, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_DNE_DSE_DSW_false
-  rotate: false
-  xy: 1682, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_DNW_DSE_DSW_false
-  rotate: false
-  xy: 1682, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_DNE_DSE_false
-  rotate: false
-  xy: 1422, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_DNE_DNW_false
-  rotate: false
-  xy: 1422, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_DNE_DSW_false
-  rotate: false
-  xy: 1422, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_DNW_DSE_false
-  rotate: false
-  xy: 1422, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_DNW_DSW_false
-  rotate: false
-  xy: 1422, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_DSE_DSW_false
-  rotate: false
-  xy: 1422, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_E_DNW_DSW_false
-  rotate: false
-  xy: 1682, 922
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_E_DNW_false
-  rotate: false
-  xy: 1266, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_E_DSW_false
-  rotate: false
-  xy: 1266, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_E_W_false
-  rotate: false
-  xy: 1578, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_E_false
-  rotate: false
-  xy: 1630, 922
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_NE_DSW_false
-  rotate: false
-  xy: 1422, 922
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_NE_NW_SE_SW_false
-  rotate: false
-  xy: 1318, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_NE_NW_false
-  rotate: false
-  xy: 1318, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_NE_SE_false
-  rotate: false
-  xy: 1474, 922
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_NE_false
-  rotate: false
-  xy: 1734, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_NW_DSE_false
-  rotate: false
-  xy: 1578, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_NW_SW_false
-  rotate: false
-  xy: 1526, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_NW_false
-  rotate: false
-  xy: 1474, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_N_DSE_DSW_false
-  rotate: false
-  xy: 1786, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_N_DSE_false
-  rotate: false
-  xy: 1682, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_N_DSW_false
-  rotate: false
-  xy: 1682, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_N_S_false
-  rotate: false
-  xy: 1526, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_N_false
-  rotate: false
-  xy: 1786, 922
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_SE_DNW_false
-  rotate: false
-  xy: 1422, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_SE_SW_false
-  rotate: false
-  xy: 1370, 870
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_SE_false
-  rotate: false
-  xy: 1734, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_SW_DNE_false
-  rotate: false
-  xy: 1474, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_SW_false
-  rotate: false
-  xy: 1630, 818
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_S_DNE_DNW_false
-  rotate: false
-  xy: 1734, 922
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_S_DNE_false
-  rotate: false
-  xy: 1526, 922
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_S_DNW_false
-  rotate: false
-  xy: 1526, 922
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: -1
-Masks/web_Center_Masks/web_S_false
   rotate: false
   xy: 1630, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
+Masks/web_Center_Masks/web_DNE_DNW_DSW_false
+  rotate: false
+  xy: 1630, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_DNE_DSE_DSW_false
+  rotate: false
+  xy: 1630, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_DNW_DSE_DSW_false
+  rotate: false
+  xy: 1630, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_DSE_DSW_false
+  rotate: false
+  xy: 1266, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_DNE_DNW_false
+  rotate: false
+  xy: 1266, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_DNE_DSE_false
+  rotate: false
+  xy: 1266, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_DNE_DSW_false
+  rotate: false
+  xy: 1266, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_DNW_DSE_false
+  rotate: false
+  xy: 1266, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_DNW_DSW_false
+  rotate: false
+  xy: 1266, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_E_DNW_DSW_false
+  rotate: false
+  xy: 1734, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_E_DSW_false
+  rotate: false
+  xy: 1786, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_E_DNW_false
+  rotate: false
+  xy: 1786, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_E_W_false
+  rotate: false
+  xy: 1526, 922
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_E_false
+  rotate: false
+  xy: 1578, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_NE_DSW_false
+  rotate: false
+  xy: 1734, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_NE_NW_SE_SW_false
+  rotate: false
+  xy: 1370, 922
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_NE_NW_false
+  rotate: false
+  xy: 1318, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_NE_SE_false
+  rotate: false
+  xy: 1422, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_NE_false
+  rotate: false
+  xy: 1578, 922
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_NW_DSE_false
+  rotate: false
+  xy: 1474, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_NW_SW_false
+  rotate: false
+  xy: 1474, 922
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_NW_false
+  rotate: false
+  xy: 1526, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_N_DSE_DSW_false
+  rotate: false
+  xy: 1526, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_N_DSW_false
+  rotate: false
+  xy: 1682, 922
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_N_DSE_false
+  rotate: false
+  xy: 1682, 922
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_N_S_false
+  rotate: false
+  xy: 1734, 922
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_N_false
+  rotate: false
+  xy: 1682, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_SE_DNW_false
+  rotate: false
+  xy: 1630, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_SE_SW_false
+  rotate: false
+  xy: 1422, 922
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_SE_false
+  rotate: false
+  xy: 1422, 818
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_SW_DNE_false
+  rotate: false
+  xy: 1578, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_SW_false
+  rotate: false
+  xy: 1630, 922
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_S_DNE_DNW_false
+  rotate: false
+  xy: 1682, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_S_DNE_false
+  rotate: false
+  xy: 1370, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_S_DNW_false
+  rotate: false
+  xy: 1370, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+Masks/web_Center_Masks/web_S_false
+  rotate: false
+  xy: 1318, 870
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 Masks/web_Center_Masks/web_W_DNE_DSE_false
   rotate: false
-  xy: 1370, 818
+  xy: 1474, 870
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_Masks/web_W_DNE_false
   rotate: false
-  xy: 1578, 922
+  xy: 1370, 818
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_Masks/web_W_DSE_false
   rotate: false
-  xy: 1578, 922
+  xy: 1370, 818
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Masks/web_Center_Masks/web_W_false
   rotate: false
-  xy: 1370, 922
+  xy: 1786, 922
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -3625,98 +3632,98 @@ Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_false
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DNE_DNW_DSE_DSW_false
   rotate: false
-  xy: 470, 558
+  xy: 418, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DNE_DNW_DSE_false
   rotate: false
-  xy: 262, 350
+  xy: 470, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DNE_DNW_DSW_false
   rotate: false
-  xy: 366, 506
+  xy: 470, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DNE_DNW_false
   rotate: false
-  xy: 626, 766
+  xy: 574, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DNE_DSE_DSW_false
   rotate: false
-  xy: 522, 610
+  xy: 678, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DNE_DSE_false
   rotate: false
-  xy: 366, 662
+  xy: 470, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DNE_DSW_false
   rotate: false
-  xy: 678, 766
+  xy: 210, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DNE_false
   rotate: false
-  xy: 314, 402
+  xy: 210, 298
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DNW_DSE_DSW_false
   rotate: false
-  xy: 366, 454
+  xy: 314, 402
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DNW_DSE_false
   rotate: false
-  xy: 210, 246
+  xy: 522, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DNW_DSW_false
   rotate: false
-  xy: 574, 662
+  xy: 210, 246
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DNW_false
   rotate: false
-  xy: 626, 714
+  xy: 418, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DSE_DSW_false
   rotate: false
-  xy: 522, 714
+  xy: 262, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DSE_false
   rotate: false
-  xy: 418, 506
+  xy: 626, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -3730,217 +3737,217 @@ Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_DSW_false
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_E_DNW_DSW_false
   rotate: false
-  xy: 418, 610
+  xy: 574, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_E_DNW_false
   rotate: false
-  xy: 262, 610
+  xy: 262, 350
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_E_DSW_false
   rotate: false
-  xy: 574, 714
+  xy: 626, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_E_W_false
   rotate: false
-  xy: 210, 402
+  xy: 418, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_E_false
   rotate: false
-  xy: 262, 454
+  xy: 418, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_NE_DSW_false
   rotate: false
-  xy: 262, 558
+  xy: 418, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_NE_NW_SE_SW_false
   rotate: false
-  xy: 418, 766
+  xy: 366, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_NE_NW_false
   rotate: false
-  xy: 314, 662
+  xy: 262, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_NE_SE_false
   rotate: false
-  xy: 418, 714
+  xy: 470, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_NE_false
   rotate: false
-  xy: 418, 558
+  xy: 210, 402
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_NW_DSE_false
   rotate: false
-  xy: 314, 506
+  xy: 470, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_NW_SW_false
   rotate: false
-  xy: 366, 610
+  xy: 210, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_NW_false
   rotate: false
-  xy: 210, 454
+  xy: 522, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_N_DSE_DSW_false
   rotate: false
-  xy: 210, 298
+  xy: 262, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_N_DSE_false
   rotate: false
-  xy: 210, 350
+  xy: 314, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_N_DSW_false
   rotate: false
-  xy: 262, 402
+  xy: 522, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_N_S_false
   rotate: false
-  xy: 522, 766
+  xy: 262, 402
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_N_false
   rotate: false
-  xy: 470, 610
+  xy: 366, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_SE_DNW_false
   rotate: false
-  xy: 470, 766
+  xy: 574, 766
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_SE_SW_false
   rotate: false
-  xy: 210, 506
+  xy: 366, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_SE_false
   rotate: false
-  xy: 522, 662
+  xy: 314, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_SW_DNE_false
   rotate: false
-  xy: 314, 558
+  xy: 314, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_SW_false
   rotate: false
-  xy: 470, 662
+  xy: 366, 558
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_S_DNE_DNW_false
   rotate: false
-  xy: 314, 454
+  xy: 210, 350
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_S_DNE_false
   rotate: false
-  xy: 262, 506
+  xy: 314, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_S_DNW_false
   rotate: false
-  xy: 470, 714
+  xy: 366, 454
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_S_false
   rotate: false
-  xy: 366, 558
+  xy: 314, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_W_DNE_DSE_false
   rotate: false
-  xy: 314, 610
+  xy: 366, 610
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_W_DNE_false
   rotate: false
-  xy: 418, 662
+  xy: 418, 714
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_W_DSE_false
   rotate: false
-  xy: 574, 766
+  xy: 262, 506
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 Oryx/uf_split/uf_terrain/ground_dirt_brown_1_Masks/path_W_false
   rotate: false
-  xy: 366, 714
+  xy: 522, 662
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -4332,49 +4339,49 @@ white_Masks/indent_true
   index: -1
 white_Masks/indent_DNE_DNW_DSE_DSW_true
   rotate: false
-  xy: 890, 318
+  xy: 1190, 574
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_DNE_DNW_DSE_true
   rotate: false
-  xy: 738, 46
+  xy: 754, 154
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_DNE_DNW_DSW_true
   rotate: false
-  xy: 754, 74
+  xy: 1170, 494
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_DNE_DNW_true
   rotate: false
-  xy: 1222, 654
+  xy: 1190, 514
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_DNE_DSE_DSW_true
   rotate: false
-  xy: 942, 370
+  xy: 758, 54
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_DNE_DSE_true
   rotate: false
-  xy: 88, 2
+  xy: 1190, 554
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_DNE_DSW_true
   rotate: false
-  xy: 910, 318
+  xy: 2030, 814
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -4388,168 +4395,168 @@ white_Masks/indent_DNE_true
   index: -1
 white_Masks/indent_DNW_DSE_DSW_true
   rotate: false
-  xy: 1174, 482
+  xy: 942, 370
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_DNW_DSE_true
   rotate: false
-  xy: 962, 370
+  xy: 1190, 534
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_DNW_DSW_true
   rotate: false
-  xy: 758, 54
+  xy: 910, 318
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_DNW_true
   rotate: false
-  xy: 858, 266
+  xy: 2030, 834
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_DSE_DSW_true
   rotate: false
-  xy: 1958, 726
+  xy: 2030, 894
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_DSE_true
   rotate: false
-  xy: 838, 266
+  xy: 1190, 494
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_DSW_true
   rotate: false
-  xy: 758, 34
+  xy: 962, 370
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_E_DNW_DSW_true
   rotate: false
-  xy: 1134, 478
+  xy: 1958, 706
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_E_DNW_true
   rotate: false
-  xy: 2030, 894
+  xy: 890, 318
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_E_DSW_true
   rotate: false
-  xy: 1154, 478
+  xy: 738, 46
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_E_W_true
   rotate: false
-  xy: 1170, 562
+  xy: 1170, 594
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_E_true
   rotate: false
-  xy: 1170, 542
+  xy: 1958, 726
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_NE_DSW_true
   rotate: false
-  xy: 48, 2
+  xy: 2026, 774
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_NE_NW_SE_SW_true
   rotate: false
-  xy: 2030, 834
+  xy: 2030, 854
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_NE_NW_true
   rotate: false
-  xy: 2030, 874
+  xy: 48, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_NE_SE_true
   rotate: false
-  xy: 108, 2
+  xy: 128, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_NE_true
   rotate: false
-  xy: 718, 46
+  xy: 1170, 534
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_NW_DSE_true
   rotate: false
-  xy: 1170, 522
+  xy: 1170, 574
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_NW_SW_true
   rotate: false
-  xy: 2030, 794
+  xy: 148, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_NW_true
   rotate: false
-  xy: 148, 2
+  xy: 1170, 554
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_N_DSE_DSW_true
   rotate: false
-  xy: 1958, 706
+  xy: 1170, 514
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_N_DSE_true
   rotate: false
-  xy: 754, 134
+  xy: 718, 46
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_N_DSW_true
   rotate: false
-  xy: 754, 114
+  xy: 754, 134
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_N_S_true
   rotate: false
-  xy: 1170, 582
+  xy: 754, 74
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -4563,28 +4570,28 @@ white_Masks/indent_N_true
   index: -1
 white_Masks/indent_SE_DNW_true
   rotate: false
-  xy: 128, 2
+  xy: 754, 114
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_SE_SW_true
   rotate: false
-  xy: 2030, 814
+  xy: 88, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_SE_true
   rotate: false
-  xy: 2026, 774
+  xy: 188, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_SW_DNE_true
   rotate: false
-  xy: 188, 2
+  xy: 1134, 478
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -4605,49 +4612,49 @@ white_Masks/indent_S_DNE_DNW_true
   index: -1
 white_Masks/indent_S_DNE_true
   rotate: false
-  xy: 168, 2
+  xy: 68, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_S_DNW_true
   rotate: false
-  xy: 1170, 602
+  xy: 1190, 594
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_S_true
   rotate: false
-  xy: 1170, 502
+  xy: 2030, 874
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_W_DNE_DSE_true
   rotate: false
-  xy: 68, 2
+  xy: 2030, 794
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_W_DNE_true
   rotate: false
-  xy: 1170, 622
+  xy: 108, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_W_DSE_true
   rotate: false
-  xy: 754, 154
+  xy: 168, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 white_Masks/indent_W_true
   rotate: false
-  xy: 2030, 854
+  xy: 1222, 654
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

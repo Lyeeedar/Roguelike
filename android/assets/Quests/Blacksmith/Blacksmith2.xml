@@ -32,6 +32,7 @@
                     <Char>s</Char>
                     <EnvironmentData>
                         <Name>OreIndicator</Name>
+                        <Passable>true</Passable>
                         <Sprite>
                             <Name>Oryx/Custom/terrain/indicator</Name>
                             <DrawActualSize>true</DrawActualSize>
