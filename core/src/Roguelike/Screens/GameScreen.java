@@ -1368,7 +1368,14 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			AbilityTree a = Global.CurrentLevel.player.slottedAbilities.size > i ? Global.CurrentLevel.player.slottedAbilities.get( i ) : null;
 			if ( a != null && a.current.current instanceof ActiveAbility && ( (ActiveAbility) a.current.current ).isAvailable() )
 			{
-				prepareAbility( (ActiveAbility) a.current.current );
+				if (preparedAbility == a.current.current )
+				{
+					prepareAbility( null );
+				}
+				else
+				{
+					prepareAbility( (ActiveAbility) a.current.current );
+				}
 			}
 		}
 		else if ( keycode == Keys.LEFT )
@@ -1776,6 +1783,12 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		if ( lockContextMenu ) { return; }
 
+		if (keyboardHelper != null)
+		{
+			keyboardHelper.clear();
+			keyboardHelper = null;
+		}
+
 		if ( contextMenu != null )
 		{
 			contextMenu.addAction( new SequenceAction( Actions.fadeOut( 0.25f ), Actions.removeActor() ) );
@@ -1786,12 +1799,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				ContextMenuData data = contextMenuQueue.removeIndex(0);
 				displayContextMenu( data.content, true, data.keyboardHelper );
 			}
-		}
-
-		if (keyboardHelper != null)
-		{
-			keyboardHelper.clear();
-			keyboardHelper = null;
 		}
 	}
 

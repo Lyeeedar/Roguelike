@@ -566,6 +566,8 @@ public class Global
 		checkButton.checkboxOff = new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/Unchecked.png" ) );
 		checkButton.checkboxOn = new TextureRegionDrawable( AssetManager.loadTextureRegion( "Sprites/GUI/Checked.png" ) );
 		checkButton.font = skin.getFont( "default" );
+		checkButton.fontColor = Color.LIGHT_GRAY;
+		checkButton.overFontColor = Color.WHITE;
 		skin.add( "default", checkButton );
 
 		TextButton.TextButtonStyle textButton = new TextButton.TextButtonStyle();
@@ -574,7 +576,7 @@ public class Global
 		textButton.fontColor = Color.LIGHT_GRAY;
 		textButton.overFontColor = Color.WHITE;
 		textButton.checked = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonDown.png" ), 12, 12, 12, 12 ) );
-		textButton.over = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonOver.png" ), 12, 12, 12, 12 ) );
+		//textButton.over = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonOver.png" ), 12, 12, 12, 12 ) );
 		skin.add( "default", textButton );
 
 		TextButton.TextButtonStyle bigTextButton = new TextButton.TextButtonStyle();
@@ -583,7 +585,7 @@ public class Global
 		bigTextButton.fontColor = Color.LIGHT_GRAY;
 		bigTextButton.overFontColor = Color.WHITE;
 		bigTextButton.checked = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonDown.png" ), 12, 12, 12, 12 ) );
-		bigTextButton.over = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonOver.png" ), 12, 12, 12, 12 ) );
+		//bigTextButton.over = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonOver.png" ), 12, 12, 12, 12 ) );
 		skin.add( "big", bigTextButton );
 
 		TooltipStyle toolTip = new TooltipStyle();
