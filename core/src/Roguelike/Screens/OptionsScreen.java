@@ -9,6 +9,9 @@ import Roguelike.RoguelikeGame.ScreenEnum;
 
 import Roguelike.UI.ButtonKeyboardHelper;
 import Roguelike.UI.Seperator;
+import Roguelike.UI.TabPanel;
+import Roguelike.Util.Controls;
+import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
@@ -21,10 +24,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -48,13 +53,6 @@ public class OptionsScreen implements Screen, InputProcessor
 		stage.addActor( table );
 		table.setFillParent( true );
 
-		buttons = new Table();
-		options = new Table();
-
-		table.add( buttons );
-		table.row();
-		table.add( options );
-
 		inputMultiplexer = new InputMultiplexer();
 
 		InputProcessor inputProcessorOne = this;
@@ -66,46 +64,257 @@ public class OptionsScreen implements Screen, InputProcessor
 
 	public void createOptions()
 	{
+		table.clear();
+
 		keyboardHelper = new ButtonKeyboardHelper(  );
 		final Preferences prefs = Global.ApplicationChanger.prefs;
 
-		options.clear();
+		TextButton apply = new TextButton( "Apply", skin );
+		apply.addListener( new ClickListener()
+		{
+			public void clicked( InputEvent event, float x, float y )
+			{
 
-		Label gameTitle = new Label("Game", skin, "title");
+				saveControls.save( prefs );
+				saveAudio.save( prefs );
+				saveVideo.save( prefs );
+
+				prefs.flush();
+
+				Global.ApplicationChanger.updateApplication( prefs );
+
+				RoguelikeGame.Instance.switchScreen( screen );
+
+			}
+		} );
+
+		TextButton backButton = new TextButton( "Back", skin );
+		backButton.addListener( new ClickListener()
+		{
+			public void clicked( InputEvent event, float x, float y )
+			{
+				RoguelikeGame.Instance.switchScreen( screen );
+			}
+		});
+
+		tabPanel = new TabPanel( skin );
+
+		final ButtonKeyboardHelper controlsHelper = new ButtonKeyboardHelper(  );
+		final ButtonKeyboardHelper audioHelper = new ButtonKeyboardHelper(  );
+		final ButtonKeyboardHelper videoHelper = new ButtonKeyboardHelper(  );
+
+		createControls(controlsHelper);
+		createAudioOptions(audioHelper);
+		createVideoOptions(videoHelper);
+
+		table.add( tabPanel ).colspan( 2 ).expand().fill().pad( 25 );
+		table.row();
+		table.add( backButton ).expandX().left().pad( 0, 25, 25, 25 );
+		table.add( apply ).expandX().right().pad( 0, 25, 25, 25 );
+		table.row();
+
+		for (Actor a : tabPanel.tabTitleTable.getChildren())
+		{
+			controlsHelper.add( a, 0, 0 );
+			audioHelper.add( a, 0, 0 );
+			videoHelper.add( a, 0, 0 );
+		}
+
+		controlsHelper.trySetCurrent( 0, 0, 0 );
+		audioHelper.trySetCurrent( 0, 0, 0 );
+		videoHelper.trySetCurrent( 0, 0, 0 );
+
+		controlsHelper.add( backButton, apply );
+		controlsHelper.cancel = backButton;
+
+		audioHelper.add( backButton, apply );
+		audioHelper.cancel = backButton;
+
+		videoHelper.add( backButton, apply );
+		videoHelper.cancel = backButton;
+
+		tabPanel.addListener( new ChangeListener() {
+			@Override
+			public void changed( ChangeEvent event, Actor actor )
+			{
+				ButtonKeyboardHelper oldHelper = keyboardHelper;
+
+				if (tabPanel.getSelectedIndex() == 0)
+				{
+					keyboardHelper = controlsHelper;
+				}
+				else if (tabPanel.getSelectedIndex() == 1)
+				{
+					keyboardHelper = audioHelper;
+				}
+				else if (tabPanel.getSelectedIndex() == 2)
+				{
+					keyboardHelper = videoHelper;
+				}
+
+				keyboardHelper.trySetCurrent( oldHelper.currentx, oldHelper.currenty, oldHelper.currentz );
+			}
+		} );
+
+		keyboardHelper = controlsHelper;
+	}
+
+	public void createControls(ButtonKeyboardHelper keyboardHelper)
+	{
+		Table table = new Table(  );
+		table.defaults().pad( 5 );
+		Skin skin = Global.loadSkin();
+
 		Label movementLabel = new Label("Movement Type:", skin);
 		final SelectBox<String> movementtype = new SelectBox<String>( skin );
 		movementtype.setItems( "Direction", "Pathfind" );
 		if (Global.MovementTypePathfind) { movementtype.setSelectedIndex( 1 ); }
 		else { movementtype.setSelectedIndex( 0 ); }
 
-		keyboardHelper.add( movementtype );
+		table.add( movementLabel ).expandX().left();
+		table.add( movementtype ).expandX().fillX();
+		table.row();
 
-		Label audioTitle = new Label("Audio", skin, "title");
+		table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
+		table.row();
 
-		Label musicLabel = new Label("Music Volume", skin);
-		final Slider musicSlider = new Slider( 0, 100, 1, false, skin );
-		musicSlider.setValue( Global.MusicVolume * 100 );
+		keyboardHelper.add( movementtype, 0, 1 );
 
-		Label ambientLabel = new Label("Ambient Volume", skin);
-		final Slider ambientSlider = new Slider( 0, 100, 1, false, skin );
-		ambientSlider.setValue( Global.AmbientVolume * 100 );
+		final FastEnumMap<Controls.Keys, TextButton> keyMap = new FastEnumMap<Controls.Keys, TextButton>( Controls.Keys.class );
 
-		Label effectLabel = new Label("Effect Volume", skin);
-		final Slider effectSlider = new Slider( 0, 100, 1, false, skin );
-		effectSlider.setValue( Global.EffectVolume * 100 );
+		if (!Global.ANDROID)
+		{
 
-		keyboardHelper.add( musicSlider );
-		keyboardHelper.add( ambientSlider );
-		keyboardHelper.add( effectSlider );
+			Label defaultLabel = new Label( "Default Keybindings", skin );
+			table.add( defaultLabel ).colspan( 2 ).expandX().left();
+			table.row();
 
-		Label videoTitle = new Label( "Video", skin, "title" );
+			Table defaultsTable = new Table();
+			defaultsTable.defaults().pad( 5 );
+			table.add( defaultsTable ).expandX().colspan( 2 ).left();
+			table.row();
+
+			TextButton defaultArrow = new TextButton( "Arrow", skin );
+			defaultArrow.addListener( new ClickListener()
+			{
+				public void clicked( InputEvent event, float x, float y )
+				{
+					Global.Controls.defaultArrow();
+
+					for ( Controls.Keys key : Controls.Keys.values() )
+					{
+						keyMap.get( key ).setText( Keys.toString( Global.Controls.getKeyCode( key ) ) );
+					}
+				}
+			} );
+			defaultsTable.add( defaultArrow );
+
+			TextButton defaultWASD = new TextButton( "WASD", skin );
+			defaultWASD.addListener( new ClickListener()
+			{
+				public void clicked( InputEvent event, float x, float y )
+				{
+					Global.Controls.defaultWASD();
+
+					for ( Controls.Keys key : Controls.Keys.values() )
+					{
+						keyMap.get( key ).setText( Keys.toString( Global.Controls.getKeyCode( key ) ) );
+					}
+				}
+			} );
+			defaultsTable.add( defaultWASD );
+
+			TextButton defaultNumpad = new TextButton( "Numpad", skin );
+			defaultNumpad.addListener( new ClickListener()
+			{
+				public void clicked( InputEvent event, float x, float y )
+				{
+					Global.Controls.defaultNumPad();
+
+					for ( Controls.Keys key : Controls.Keys.values() )
+					{
+						keyMap.get( key ).setText( Keys.toString( Global.Controls.getKeyCode( key ) ) );
+					}
+				}
+			} );
+			defaultsTable.add( defaultNumpad );
+
+			keyboardHelper.add( defaultArrow, defaultWASD, defaultNumpad );
+
+			table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
+			table.row();
+
+			for ( final Controls.Keys key : Controls.Keys.values() )
+			{
+				Label label = new Label( Global.capitalizeString( key.toString() ), skin );
+				final TextButton button = new TextButton( Keys.toString( Global.Controls.getKeyCode( key ) ), skin, "keybinding" );
+				button.addListener( new ClickListener()
+				{
+					public void clicked( InputEvent event, float x, float y )
+					{
+						button.setText( "Press key to map" );
+						mappingTo = button;
+						mapKey = key;
+					}
+				} );
+
+				keyMap.put( key, button );
+
+				table.add( label ).width( Value.percentWidth( 0.5f, table ) ).left();
+				table.add( button ).width( Value.percentWidth( 0.5f, table ) );
+				table.row();
+
+				keyboardHelper.add( button );
+			}
+
+		}
+
+		saveControls = new SaveAction() {
+			@Override
+			public void save( Preferences prefs )
+			{
+				prefs.putBoolean( "pathfindMovement", movementtype.getSelectedIndex() == 1 );
+
+				if (!Global.ANDROID)
+				{
+					for ( Controls.Keys key : Controls.Keys.values() )
+					{
+						String keyName = keyMap.get( key ).getText().toString();
+						int keycode = Keys.valueOf( keyName );
+
+						prefs.putInteger( key.toString(), keycode );
+					}
+				}
+			}
+		};
+
+		ScrollPane scrollPane = new ScrollPane( table, skin );
+		scrollPane.setScrollingDisabled( true, false );
+		scrollPane.setVariableSizeKnobs( true );
+		scrollPane.setFadeScrollBars( false );
+		scrollPane.setScrollbarsOnTop( false );
+		scrollPane.setForceScroll( false, true );
+		scrollPane.setFlickScroll( false );
+
+		keyboardHelper.scrollPane = scrollPane;
+
+		tabPanel.addTab( "Controls", scrollPane );
+	}
+
+	public void createVideoOptions(ButtonKeyboardHelper keyboardHelper)
+	{
+		final Preferences prefs = Global.ApplicationChanger.prefs;
+		Skin skin = Global.loadSkin();
+
+		Table table = new Table();
+		table.defaults().pad( 5 );
 
 		Label resolutionLabel = new Label( "Resolution:", skin );
 		final SelectBox<String> resolutions = new SelectBox<String>( skin );
 		resolutions.setItems( Global.ApplicationChanger.getSupportedDisplayModes() );
 		resolutions.setSelected( prefs.getInteger( "resolutionX" ) + "x" + prefs.getInteger( "resolutionY" ) );
 
-		keyboardHelper.add( resolutions );
+		keyboardHelper.add( resolutions, 0, 1 );
 
 		Label windowLabel = new Label( "Window Mode:", skin );
 		final SelectBox<String> windowMode = new SelectBox<String>( skin );
@@ -128,14 +337,7 @@ public class OptionsScreen implements Screen, InputProcessor
 		Label fpsLabel = new Label( "Frames per second:", skin );
 		final SelectBox<String> fps = new SelectBox<String>( skin );
 		fps.setItems( new String[] { "30", "60", "120" } );
-//		if ( prefs.getBoolean( "vSync" ) )
-//		{
-//			fps.setSelected( "VSync" );
-//		}
-//		else
-		{
-			fps.setSelected( "" + prefs.getInteger( "fps" ) );
-		}
+		fps.setSelected( "" + prefs.getInteger( "fps" ) );
 
 		keyboardHelper.add( fps );
 
@@ -160,17 +362,35 @@ public class OptionsScreen implements Screen, InputProcessor
 
 		keyboardHelper.add( msaa );
 
-		TextButton apply = new TextButton( "Apply", skin );
-		apply.addListener( new ClickListener()
+		table.add( resolutionLabel ).expandX().left();
+		table.add( resolutions ).expandX().fillX();
+		table.row();
+
+		if (!Global.ANDROID)
 		{
-			public void clicked( InputEvent event, float x, float y )
+			table.add( windowLabel ).expandX().left();
+			table.add( windowMode ).expandX().fillX();
+			table.row();
+		}
+
+		table.add( fpsLabel ).expandX().left();
+		table.add( fps ).expandX().fillX();
+		table.row();
+		table.add( animLabel ).expandX().left();
+		table.add( animspeed ).expandX().fillX();
+		table.row();
+
+		if (!Global.ANDROID)
+		{
+			table.add( msaaLabel ).expandX().left();
+			table.add( msaa ).expandX().fillX();
+			table.row();
+		}
+
+		saveVideo = new SaveAction( ) {
+			@Override
+			public void save( Preferences prefs )
 			{
-				prefs.putBoolean( "pathfindMovement", movementtype.getSelectedIndex() == 1 );
-
-				prefs.putFloat( "musicVolume", musicSlider.getValue() / 100.0f );
-				prefs.putFloat( "ambientVolume", ambientSlider.getValue() / 100.0f );
-				prefs.putFloat( "effectVolume", effectSlider.getValue() / 100.0f );
-
 				String selectedResolution = resolutions.getSelected();
 
 				int split = selectedResolution.indexOf( "x" );
@@ -207,52 +427,48 @@ public class OptionsScreen implements Screen, InputProcessor
 				}
 
 				prefs.putInteger( "msaa", msaa.getSelected() );
-
-				prefs.flush();
-
-				Global.ApplicationChanger.updateApplication( prefs );
-
 			}
-		} );
+		};
 
-		TextButton defaults = new TextButton( "Defaults", skin );
-		defaults.addListener( new ClickListener()
-		{
-			public void clicked( InputEvent event, float x, float y )
-			{
-				Global.ApplicationChanger.setDefaultPrefs( prefs );
+		ScrollPane scrollPane = new ScrollPane( table, skin );
+		scrollPane.setScrollingDisabled( true, false );
+		scrollPane.setVariableSizeKnobs( true );
+		scrollPane.setFadeScrollBars( false );
+		scrollPane.setScrollbarsOnTop( false );
+		scrollPane.setForceScroll( false, true );
+		scrollPane.setFlickScroll( false );
 
-				prefs.flush();
+		keyboardHelper.scrollPane = scrollPane;
 
-				Global.ApplicationChanger.updateApplication( prefs );
+		tabPanel.addTab( "Video", scrollPane );
+	}
 
-				createOptions();
-			}
-		} );
-
-		TextButton backButton = new TextButton( "Back", skin );
-		backButton.addListener( new ClickListener()
-		{
-			public void clicked( InputEvent event, float x, float y )
-			{
-				RoguelikeGame.Instance.switchScreen( screen );
-			}
-		});
+	public void createAudioOptions(ButtonKeyboardHelper keyboardHelper)
+	{
+		final Preferences prefs = Global.ApplicationChanger.prefs;
+		Skin skin = Global.loadSkin();
 
 		Table table = new Table();
+		table.defaults().pad( 5 );
 
-		table.add( gameTitle ).expandX().left().padTop( 20 );
-		table.row();
-		table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
-		table.row();
-		table.add( movementLabel ).expandX().left();
-		table.add( movementtype ).expandX().fillX();
-		table.row();
+		Label musicLabel = new Label("Music Volume", skin);
+		final Slider musicSlider = new Slider( 0, 100, 1, false, skin );
+		musicSlider.setValue( Global.MusicVolume * 100 );
 
-		table.add( audioTitle ).expandX().left().padTop( 20 );
-		table.row();
-		table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
-		table.row();
+		keyboardHelper.add( musicSlider, 0, 1 );
+
+		Label ambientLabel = new Label("Ambient Volume", skin);
+		final Slider ambientSlider = new Slider( 0, 100, 1, false, skin );
+		ambientSlider.setValue( Global.AmbientVolume * 100 );
+
+		keyboardHelper.add( ambientSlider );
+
+		Label effectLabel = new Label("Effect Volume", skin);
+		final Slider effectSlider = new Slider( 0, 100, 1, false, skin );
+		effectSlider.setValue( Global.EffectVolume * 100 );
+
+		keyboardHelper.add( effectSlider );
+
 		table.add( musicLabel ).expandX().left();
 		table.row();
 		table.add( musicSlider ).colspan( 2 ).expandX().fillX();
@@ -266,35 +482,15 @@ public class OptionsScreen implements Screen, InputProcessor
 		table.add( effectSlider ).colspan( 2 ).expandX().fillX();
 		table.row();
 
-		table.add( videoTitle ).expandX().left().padTop( 20 );
-		table.row();
-		table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
-		table.row();
-		table.add( resolutionLabel ).expandX().left();
-		table.add( resolutions ).expandX().fillX();
-		table.row();
-
-		if (!Global.ANDROID)
-		{
-			table.add( windowLabel ).expandX().left();
-			table.add( windowMode ).expandX().fillX();
-			table.row();
-		}
-
-
-		table.add( fpsLabel ).expandX().left();
-		table.add( fps ).expandX().fillX();
-		table.row();
-		table.add( animLabel ).expandX().left();
-		table.add( animspeed ).expandX().fillX();
-		table.row();
-
-		if (!Global.ANDROID)
-		{
-			table.add( msaaLabel ).expandX().left();
-			table.add( msaa ).expandX().fillX();
-			table.row();
-		}
+		saveAudio = new SaveAction() {
+			@Override
+			public void save( Preferences prefs )
+			{
+				prefs.putFloat( "musicVolume", musicSlider.getValue() / 100.0f );
+				prefs.putFloat( "ambientVolume", ambientSlider.getValue() / 100.0f );
+				prefs.putFloat( "effectVolume", effectSlider.getValue() / 100.0f );
+			}
+		};
 
 		ScrollPane scrollPane = new ScrollPane( table, skin );
 		scrollPane.setScrollingDisabled( true, false );
@@ -304,19 +500,9 @@ public class OptionsScreen implements Screen, InputProcessor
 		scrollPane.setForceScroll( false, true );
 		scrollPane.setFlickScroll( false );
 
-		options.add( scrollPane ).colspan( 2 ).expand().fill();
-		options.row();
-
-		Table adTable = new Table(  );
-		adTable.add( defaults );
-		adTable.add( apply );
-
-		options.add( backButton ).left().pad( 10 );
-		options.add( adTable ).right().pad( 10 );
-
-		keyboardHelper.add( backButton, defaults, apply );
-		keyboardHelper.cancel = backButton;
 		keyboardHelper.scrollPane = scrollPane;
+
+		tabPanel.addTab( "Audio", scrollPane );
 	}
 
 	@Override
@@ -444,22 +630,46 @@ public class OptionsScreen implements Screen, InputProcessor
 
 	boolean created;
 
+	SaveAction saveAudio;
+	SaveAction saveVideo;
+	SaveAction saveControls;
+
+	TabPanel tabPanel;
 	Table table;
-	Table buttons;
-	Table options;
 
 	Stage stage;
 	Skin skin;
 
 	SpriteBatch batch;
 
+	Controls.Keys mapKey;
+	TextButton mappingTo;
+
 	public InputMultiplexer inputMultiplexer;
 	public ButtonKeyboardHelper keyboardHelper;
+
+	private abstract class SaveAction
+	{
+		public abstract void save( Preferences prefs );
+	}
 
 	@Override
 	public boolean keyDown( int keycode )
 	{
-		keyboardHelper.keyDown( keycode );
+		if (mappingTo != null)
+		{
+			String name = Keys.toString( keycode );
+			mappingTo.setText( name );
+
+			Global.Controls.setKeyMap(mapKey, keycode);
+
+			mappingTo = null;
+			mapKey = null;
+		}
+		else
+		{
+			keyboardHelper.keyDown( keycode );
+		}
 
 		return false;
 	}

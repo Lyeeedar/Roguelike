@@ -9,6 +9,7 @@ import Roguelike.Screens.GameScreen;
 import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 
+import Roguelike.Util.Controls;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector3;
@@ -82,11 +83,11 @@ public class ActionProcessInput extends AbstractAction
 		}
 		else if ( !GameScreen.Instance.lockContextMenu && GameScreen.Instance.preparedAbility == null )
 		{
-			boolean up = Gdx.input.isKeyPressed( Keys.UP );
-			boolean down = Gdx.input.isKeyPressed( Keys.DOWN );
-			boolean left = Gdx.input.isKeyPressed( Keys.LEFT );
-			boolean right = Gdx.input.isKeyPressed( Keys.RIGHT );
-			boolean space = Gdx.input.isKeyPressed( Keys.SPACE );
+			boolean up = Global.Controls.isKeyDown( Controls.Keys.UP );
+			boolean down = Global.Controls.isKeyDown( Controls.Keys.DOWN );
+			boolean left = Global.Controls.isKeyDown( Controls.Keys.LEFT );
+			boolean right = Global.Controls.isKeyDown( Controls.Keys.RIGHT );
+			boolean space = Global.Controls.isKeyDown( Controls.Keys.WAIT );
 
 			int x = 0;
 			int y = 0;

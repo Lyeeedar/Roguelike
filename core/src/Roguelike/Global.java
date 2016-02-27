@@ -21,7 +21,9 @@ import Roguelike.Tiles.Point;
 import Roguelike.UI.ClassList;
 import Roguelike.UI.LayeredDrawable;
 import Roguelike.UI.Seperator;
+import Roguelike.UI.TabPanel;
 import Roguelike.UI.Tooltip.TooltipStyle;
+import Roguelike.Util.Controls;
 import Roguelike.Util.EnumBitflag;
 import Roguelike.Util.FastEnumMap;
 import com.badlogic.gdx.graphics.Color;
@@ -67,6 +69,9 @@ public class Global
 
 	// ----------------------------------------------------------------------
 	public static RoguelikeGame Game;
+
+	// ----------------------------------------------------------------------
+	public static Controls Controls = new Controls();
 
 	// ----------------------------------------------------------------------
 	public static AbstractApplicationChanger ApplicationChanger;
@@ -550,6 +555,7 @@ public class Global
 		textField.fontColor = Color.WHITE;
 		textField.font = skin.getFont( "default" );
 		textField.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TextField.png" ), 6, 6, 6, 6 ) );
+		textField.focusedBackground = ((NinePatchDrawable)textField.background).tint( new Color( 0.9f, 0.9f, 0.9f, 1.0f ) );
 		textField.cursor = skin.newDrawable( "white", Color.WHITE );
 		textField.selection = skin.newDrawable( "white", Color.LIGHT_GRAY );
 		skin.add( "default", textField );
@@ -587,6 +593,15 @@ public class Global
 		//bigTextButton.checked = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonDown.png" ), 12, 12, 12, 12 ) );
 		bigTextButton.over = ((NinePatchDrawable)bigTextButton.up).tint( new Color( 0.9f, 0.9f, 0.9f, 1.0f ) );
 		skin.add( "big", bigTextButton );
+
+		TextButton.TextButtonStyle keyBindingButton = new TextButton.TextButtonStyle();
+		keyBindingButton.up = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TextField.png" ), 6, 6, 6, 6 ) );
+		keyBindingButton.font = skin.getFont( "default" );
+		keyBindingButton.fontColor = Color.LIGHT_GRAY;
+		keyBindingButton.overFontColor = Color.WHITE;
+		//textButton.checked = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonDown.png" ), 12, 12, 12, 12 ) );
+		keyBindingButton.over = ((NinePatchDrawable)keyBindingButton.up).tint( new Color( 0.9f, 0.9f, 0.9f, 1.0f ) );
+		skin.add( "keybinding", keyBindingButton );
 
 		TooltipStyle toolTip = new TooltipStyle();
 		toolTip.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Tooltip.png" ), 21, 21, 21, 21 ) );
@@ -659,6 +674,15 @@ public class Global
 		sliderStyle.knobOver = ((NinePatchDrawable)sliderStyle.knob).tint( new Color( 0.9f, 0.9f, 0.9f, 1.0f ) );
 		sliderStyle.knobDown = ((NinePatchDrawable)sliderStyle.knob).tint( Color.LIGHT_GRAY );
 		skin.add( "default-horizontal", sliderStyle );
+
+		TabPanel.TabPanelStyle tabPanelStyle = new TabPanel.TabPanelStyle(  );
+		tabPanelStyle.font = skin.getFont( "default" );
+		tabPanelStyle.fontColor = Color.LIGHT_GRAY;
+		tabPanelStyle.overFontColor = Color.WHITE;
+		tabPanelStyle.bodyBackground = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TextField.png" ), 6, 6, 6, 6 ) ).tint( new Color( 1, 1, 1, 0.2f ) );
+		tabPanelStyle.titleButtonUnselected = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) );
+		tabPanelStyle.titleButtonSelected = ((NinePatchDrawable)tabPanelStyle.titleButtonUnselected).tint( new Color( 0.8f, 0.8f, 0.8f, 1.0f ) );
+		skin.add( "default", tabPanelStyle );
 
 		return skin;
 	}

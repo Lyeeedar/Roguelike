@@ -8,6 +8,7 @@ import Roguelike.AbstractApplicationChanger;
 import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 
+import Roguelike.Util.Controls;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Gdx;
@@ -58,6 +59,11 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 		Global.EffectVolume = pref.getFloat( "effectVolume" );
 		Global.updateVolume();
 
+		for ( Controls.Keys key : Controls.Keys.values() )
+		{
+			Global.Controls.setKeyMap( key, pref.getInteger( key.toString() ) );
+		}
+
 		return new LwjglApplication( game, cfg );
 	}
 
@@ -90,6 +96,11 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 		Global.AmbientVolume = pref.getFloat( "ambientVolume" );
 		Global.EffectVolume = pref.getFloat( "effectVolume" );
 		Global.updateVolume();
+
+		for ( Controls.Keys key : Controls.Keys.values() )
+		{
+			Global.Controls.setKeyMap( key, pref.getInteger( key.toString() ) );
+		}
 
 		if (fullscreen)
 		{
@@ -170,6 +181,12 @@ public class LwjglApplicationChanger extends AbstractApplicationChanger
 		prefs.putInteger( "fps", 0 );
 		prefs.putFloat( "animspeed", 1 );
 		prefs.putInteger( "msaa", 16 );
+
+		Global.Controls.defaultArrow();
+		for ( Controls.Keys key : Controls.Keys.values() )
+		{
+			prefs.putInteger( key.toString(), Global.Controls.getKeyCode( key ) );
+		}
 	}
 
 	@Override

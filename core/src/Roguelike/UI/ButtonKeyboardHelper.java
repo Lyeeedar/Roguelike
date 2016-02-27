@@ -1,8 +1,11 @@
 package Roguelike.UI;
 
+import Roguelike.Global;
 import Roguelike.Tiles.Point;
+import Roguelike.Util.Controls;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -54,7 +57,7 @@ public class ButtonKeyboardHelper
 	public void add( Actor... actors )
 	{
 		int x = 0;
-		int y = grid.size > 0 ? grid.get( 0 ).cells.size : 0;
+		int y = grid.size > 0 ? grid.get( 0 ).cells.get( grid.get( 0 ).cells.size - 1 ).y + 1 : 0;
 
 		for (Actor a : actors)
 		{
@@ -65,7 +68,7 @@ public class ButtonKeyboardHelper
 	// ----------------------------------------------------------------------
 	public void add( Actor actor, int x )
 	{
-		add(actor, x, grid.size > 0 ? grid.get( 0 ).cells.size : 0);
+		add(actor, x, grid.size > 0 ? grid.get( 0 ).cells.get( grid.get( 0 ).cells.size - 1 ).y + 1 : 0);
 	}
 
 	// ----------------------------------------------------------------------
@@ -187,7 +190,10 @@ public class ButtonKeyboardHelper
 
 		if (scrollPane != null)
 		{
-			scrollPane.scrollTo( current.getX(), current.getY(), current.getWidth(), current.getHeight() );
+			Vector2 stagePos = current.localToStageCoordinates( new Vector2( 0, 0 ) );
+			Vector2 relativePos = scrollPane.getWidget().stageToLocalCoordinates( stagePos );
+
+			scrollPane.scrollTo( relativePos.x, relativePos.y, current.getWidth(), current.getHeight() );
 		}
 	}
 
@@ -203,11 +209,11 @@ public class ButtonKeyboardHelper
 			if (active != null && active instanceof Slider)
 			{
 				Slider slider = (Slider)active;
-				if ( Gdx.input.isKeyPressed( Input.Keys.LEFT ) )
+				if ( Global.Controls.isKeyDown( Controls.Keys.LEFT ) )
 				{
 					slider.setValue( slider.getValue() - slider.getStepSize() );
 				}
-				else if ( Gdx.input.isKeyPressed( Input.Keys.RIGHT ) )
+				else if ( Global.Controls.isKeyDown( Controls.Keys.RIGHT ) )
 				{
 					slider.setValue( slider.getValue() + slider.getStepSize() );
 				}
@@ -224,18 +230,18 @@ public class ButtonKeyboardHelper
 			{
 				Slider slider = (Slider)active;
 
-				if ( keycode == Input.Keys.ESCAPE || keycode == Input.Keys.ENTER )
+				if ( Global.Controls.isKey( Controls.Keys.CANCEL, keycode ) || Global.Controls.isKey( Controls.Keys.ACCEPT, keycode ) )
 				{
 					float val = slider.getValue();
 					touchUp( slider );
 					slider.setValue( val );
 					active = null;
 				}
-				else if ( keycode == Input.Keys.LEFT )
+				else if ( Global.Controls.isKey( Controls.Keys.LEFT, keycode ) )
 				{
 					slider.setValue( slider.getValue() - slider.getStepSize() );
 				}
-				else if ( keycode == Input.Keys.RIGHT )
+				else if ( Global.Controls.isKey( Controls.Keys.RIGHT, keycode ) )
 				{
 					slider.setValue( slider.getValue() + slider.getStepSize() );
 				}
@@ -244,12 +250,12 @@ public class ButtonKeyboardHelper
 			{
 				SelectBox selectBox = (SelectBox)active;
 
-				if ( keycode == Input.Keys.ESCAPE || keycode == Input.Keys.ENTER )
+				if ( Global.Controls.isKey( Controls.Keys.CANCEL, keycode ) || Global.Controls.isKey( Controls.Keys.ACCEPT, keycode ) )
 				{
 					selectBox.hideList();
 					active = null;
 				}
-				else if ( keycode == Input.Keys.UP )
+				else if ( Global.Controls.isKey( Controls.Keys.UP, keycode ) )
 				{
 					int newIndex = selectBox.getSelectedIndex() - 1;
 					if (newIndex < 0) { newIndex = 0; }
@@ -257,7 +263,7 @@ public class ButtonKeyboardHelper
 					selectBox.hideList();
 					selectBox.showList();
 				}
-				else if ( keycode == Input.Keys.DOWN )
+				else if ( Global.Controls.isKey( Controls.Keys.DOWN, keycode ) )
 				{
 					int newIndex = selectBox.getSelectedIndex() + 1;
 					if (newIndex >= selectBox.getItems().size) { newIndex = selectBox.getItems().size-1; }
@@ -269,14 +275,14 @@ public class ButtonKeyboardHelper
 		}
 		else
 		{
-			if ( keycode == Input.Keys.ESCAPE )
+			if ( Global.Controls.isKey( Controls.Keys.CANCEL, keycode ) )
 			{
 				if (cancel != null)
 				{
 					pressButton( cancel );
 				}
 			}
-			else if ( keycode == Input.Keys.ENTER )
+			else if ( Global.Controls.isKey( Controls.Keys.ACCEPT, keycode ) )
 			{
 				Actor actor = getCurrent();
 				if ( actor instanceof Button )
@@ -299,7 +305,7 @@ public class ButtonKeyboardHelper
 					selectBox.showList();
 				}
 			}
-			else if ( keycode == Input.Keys.LEFT )
+			else if ( Global.Controls.isKey( Controls.Keys.LEFT, keycode ) )
 			{
 				// check if move within cell
 				if ( currentz > 0 )
@@ -317,7 +323,7 @@ public class ButtonKeyboardHelper
 					}
 				}
 			}
-			else if ( keycode == Input.Keys.RIGHT )
+			else if ( Global.Controls.isKey( Controls.Keys.RIGHT, keycode ) )
 			{
 				// check if move within cell
 				Cell cell = getColumn( currentx ).getCell( currenty );
@@ -336,11 +342,11 @@ public class ButtonKeyboardHelper
 					}
 				}
 			}
-			else if ( keycode == Input.Keys.UP )
+			else if ( Global.Controls.isKey( Controls.Keys.UP, keycode ) )
 			{
 				trySetCurrent( currentx, currenty - 1, currentz );
 			}
-			else if ( keycode == Input.Keys.DOWN )
+			else if ( Global.Controls.isKey( Controls.Keys.DOWN, keycode ) )
 			{
 				trySetCurrent( currentx, currenty + 1, currentz );
 			}

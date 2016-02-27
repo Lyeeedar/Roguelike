@@ -28,6 +28,7 @@ import Roguelike.Tiles.GameTile;
 import Roguelike.Tiles.Point;
 import Roguelike.UI.*;
 import Roguelike.UI.Tooltip;
+import Roguelike.Util.Controls;
 import Roguelike.Util.EnumBitflag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -1201,9 +1202,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				table.pack();
 
 				ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
-				keyboardHelper.add( equipButton, 0 );
-				keyboardHelper.add( dropButton, 1 );
-				keyboardHelper.add( sellButton, 2 );
+				keyboardHelper.add( equipButton, dropButton, sellButton );
 
 				queueContextMenu( table, keyboardHelper );
 			}
@@ -1297,8 +1296,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				table.pack();
 
 				ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
-				keyboardHelper.add( equipButton, 0 );
-				keyboardHelper.add( dropButton, 1 );
+				keyboardHelper.add( equipButton, dropButton );
 
 				queueContextMenu( table, keyboardHelper );
 			}
@@ -1378,7 +1376,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 			}
 		}
-		else if ( keycode == Keys.LEFT )
+		else if ( Global.Controls.isKey( Controls.Keys.LEFT, keycode ) )
 		{
 			if (preparedAbility != null)
 			{
@@ -1391,7 +1389,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				selectedAbilityTile = abilityTiles.get( selectedAbilityTileIndex );
 			}
 		}
-		else if ( keycode == Keys.RIGHT )
+		else if ( Global.Controls.isKey( Controls.Keys.RIGHT, keycode ) )
 		{
 			if (preparedAbility != null)
 			{
@@ -1404,7 +1402,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				selectedAbilityTile = abilityTiles.get( selectedAbilityTileIndex );
 			}
 		}
-		else if ( keycode == Keys.ENTER )
+		else if ( Global.Controls.isKey( Controls.Keys.ACCEPT, keycode ) )
 		{
 			if (preparedAbility != null)
 			{
@@ -1430,7 +1428,7 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				}
 			}
 		}
-		else if ( keycode == Keys.ESCAPE )
+		else if ( Global.Controls.isKey( Controls.Keys.CANCEL, keycode ) )
 		{
 			displayGameMenu();
 		}
