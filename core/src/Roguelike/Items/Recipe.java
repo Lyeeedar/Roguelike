@@ -77,6 +77,7 @@ public class Recipe
 		item1.onUseAbilityEvents.addAll( item2.onUseAbilityEvents );
 		item1.onDeathEvents.addAll( item2.onDeathEvents );
 		item1.onExpireEvents.addAll( item2.onExpireEvents );
+		item1.onHitEvents.addAll( item2.onHitEvents );
 	}
 
 	public static Item loadModifier( String modifier, int quality )
@@ -98,7 +99,7 @@ public class Recipe
 		}
 
 		XmlReader.Element namesElement = xml.getChildByName( "Names" );
-		if (quality > namesElement.getChildCount())
+		if (quality >= namesElement.getChildCount())
 		{
 			quality = namesElement.getChildCount()-1;
 		}

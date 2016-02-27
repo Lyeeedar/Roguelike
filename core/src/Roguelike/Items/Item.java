@@ -329,6 +329,15 @@ public final class Item extends GameEventHandler
 		table.add( new Seperator( skin, false ) ).expandX().fillX();
 		table.row();
 
+		table.add( new Label("HitCount: " + wepDef.hitCount, skin) ).expandX().fillX();
+		table.row();
+
+		table.add( new Label("HitPercent: " + wepDef.hitPercent, skin) ).expandX().fillX();
+		table.row();
+
+		table.add( new Seperator( skin, false ) ).expandX().fillX();
+		table.row();
+
 		int oldDam = other != null ? Global.calculateScaledAttack( Statistic.statsBlockToVariableBlock( other.getStatistics( entity.getVariableMap() ) ), entity.getVariableMap() ) : 0;
 		int newDam = Global.calculateScaledAttack( Statistic.statsBlockToVariableBlock( getStatistics( entity.getVariableMap() ) ), entity.getVariableMap() );
 
@@ -610,6 +619,7 @@ public final class Item extends GameEventHandler
 		public HitType hitType;
 		public String hitData;
 		public Sprite hitSprite;
+		public int hitCount;
 		public int hitPercent;
 
 		public Array<Point> hitPoints = new Array<Point>(  );
@@ -642,6 +652,7 @@ public final class Item extends GameEventHandler
 			wepDef.hitType = HitType.valueOf( hitTypeData[0].toUpperCase() );
 			wepDef.hitData = hitTypeData.length > 1 ? hitTypeData[1] : null;
 			wepDef.hitPercent = xml.getInt( "HitPercent", 100 );
+			wepDef.hitCount = xml.getInt( "HitCount", 1 );
 
 			Element hitPatternElement = xml.getChildByName( "HitPattern" );
 

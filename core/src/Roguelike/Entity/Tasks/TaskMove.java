@@ -82,6 +82,9 @@ public class TaskMove extends AbstractTask
 			GameTile newTile = oldTile.level.getGameTile( newX, newY );
 			int[] diff = newTile.addGameEntity( obj );
 			obj.sprite.spriteAnimation = new MoveAnimation( 0.15f, diff, MoveEquation.LINEAR );
+			obj.sprite.update( 0 );
+			obj.sprite.renderDelay = oldTile.getMaxSpriteEffectDuration();
+			obj.sprite.showBeforeRender = true;
 		}
 	}
 }

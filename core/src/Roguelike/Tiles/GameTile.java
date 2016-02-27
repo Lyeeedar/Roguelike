@@ -86,6 +86,22 @@ public class GameTile implements PathfindingTile
 		light = new Color( Color.WHITE );
 	}
 
+	public float getMaxSpriteEffectDuration()
+	{
+		float max = 0;
+
+		for (SpriteEffect effect : spriteEffects)
+		{
+			float duration = effect.Sprite.getRemainingLifetime();
+			if (duration > max)
+			{
+				max = duration;
+			}
+		}
+
+		return max;
+	}
+
 	public boolean hasEntityStayedOnTile()
 	{
 		if (prevEntity != entity)

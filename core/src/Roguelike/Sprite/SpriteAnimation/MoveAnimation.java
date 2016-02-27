@@ -12,13 +12,11 @@ public class MoveAnimation extends AbstractSpriteAnimation
 		LINEAR, SMOOTHSTEP, EXPONENTIAL, LEAP
 	}
 
-	private float duration;
 	private int[] diff;
 	private MoveEquation eqn;
 
 	public int leapHeight = 3;
 
-	private float time;
 	private int[] offset = { 0, 0 };
 
 	public MoveAnimation()

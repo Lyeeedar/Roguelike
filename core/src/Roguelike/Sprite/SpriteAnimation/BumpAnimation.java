@@ -9,9 +9,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public class BumpAnimation extends AbstractSpriteAnimation
 {
 	private Direction direction;
-	private float duration;
 
-	private float time;
 	private int[] offset = { 0, 0 };
 
 	public BumpAnimation()

@@ -8,6 +8,9 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 public abstract class AbstractSpriteAnimation
 {
+	public float duration;
+	public float time;
+
 	public abstract void set( float duration, int[] diff );
 
 	public abstract int[] getRenderOffset();

@@ -16,6 +16,7 @@ import Roguelike.GameEvent.OnDeath.FieldOnDeathEvent;
 import Roguelike.GameEvent.OnDeath.HealOnDeathEvent;
 import Roguelike.GameEvent.OnExpire.AbilityOnExpireEvent;
 import Roguelike.GameEvent.OnExpire.KillOnExpireEvent;
+import Roguelike.GameEvent.OnHit.AbilityOnHitEvent;
 import Roguelike.GameEvent.OnTask.CancelTaskEvent;
 import Roguelike.GameEvent.OnTask.CostTaskEvent;
 import Roguelike.GameEvent.OnTask.DamageTaskEvent;
@@ -541,6 +542,7 @@ public final class SaveFile
 		kryo.register( KillOnExpireEvent.class );
 		kryo.register( AbilityOnExpireEvent.class );
 		kryo.register( AdditionalSprite.class );
+		kryo.register( AbilityOnHitEvent.class );
 
 		kryo.register( Quest.class );
 		kryo.register( QuestInputFlagPresent.class );

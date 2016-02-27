@@ -14,6 +14,7 @@ import Roguelike.Ability.ActiveAbility.TargetingType.TargetingTypeTile;
 import Roguelike.Ability.IAbility;
 import Roguelike.AssetManager;
 import Roguelike.Entity.Entity;
+import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.IGameObject;
 import Roguelike.Global;
@@ -26,6 +27,7 @@ import Roguelike.Pathfinding.ShadowCaster;
 import Roguelike.Screens.GameScreen;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.SpriteAction;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Sprite.SpriteEffect;
 import Roguelike.Tiles.GameTile;
@@ -479,26 +481,10 @@ public class ActiveAbility implements IAbility, IGameObject
 				}
 			}
 
-			HashSet<Entity> hitEntities = new HashSet<Entity>(  );
+			final HashSet<Entity> hitEntities = new HashSet<Entity>(  );
 
 			for ( GameTile tile : AffectedTiles )
 			{
-				for ( AbstractEffectType effect : effectTypes )
-				{
-					effect.update( this, 1, tile,
-								   !hitEntities.contains( tile.entity ) ? tile.entity : null,
-								   !hitEntities.contains( tile.environmentEntity ) ? tile.environmentEntity : null );
-
-					if (tile.entity != null)
-					{
-						hitEntities.add( tile.entity );
-					}
-					if (tile.environmentEntity != null)
-					{
-						hitEntities.add( tile.environmentEntity );
-					}
-				}
-
 				if ( getHitSprite() != null && ( aoe == 0 || !singleSprite ) )
 				{
 					int[] diff = tile.getPosDiff( epicenter );
@@ -519,6 +505,35 @@ public class ActiveAbility implements IAbility, IGameObject
 					float angle = (float) Math.atan2( det, dot ) * MathUtils.radiansToDegrees;
 					sprite.rotation = angle;
 
+					boolean isMoving = sprite.spriteAnimation != null && sprite.spriteAnimation instanceof MoveAnimation;
+
+					final GameTile hitTile = tile;
+					final GameEntity hitEntity = hitTile.entity;
+					final EnvironmentEntity hitEnvEntity = hitTile.environmentEntity;
+					final ActiveAbility thisAbility = this;
+
+					sprite.spriteAction = new SpriteAction( isMoving ? SpriteAction.FirePoint.End : SpriteAction.FirePoint.Start) {
+						@Override
+						public void evaluate()
+						{
+							for ( AbstractEffectType effect : effectTypes )
+							{
+								effect.update( thisAbility, 1, hitTile,
+											   !hitEntities.contains( hitEntity ) ? hitEntity : null,
+											   !hitEntities.contains( hitEnvEntity ) ? hitEnvEntity : null );
+
+								if (hitEntity != null)
+								{
+									hitEntities.add( hitEntity );
+								}
+								if (hitEnvEntity != null)
+								{
+									hitEntities.add( hitEnvEntity );
+								}
+							}
+						}
+					};
+
 					SpriteEffect effect = new SpriteEffect( sprite, Direction.CENTER, light != null ? light.copyNoFlag() : null );
 
 					sprite.renderDelay = sprite.animationDelay * tile.getDist( epicenter ) + sprite.animationDelay;
@@ -530,6 +545,24 @@ public class ActiveAbility implements IAbility, IGameObject
 					}
 
 					tile.spriteEffects.add( effect );
+				}
+				else
+				{
+					for ( AbstractEffectType effect : effectTypes )
+					{
+						effect.update( this, 1, tile,
+									   !hitEntities.contains( tile.entity ) ? tile.entity : null,
+									   !hitEntities.contains( tile.environmentEntity ) ? tile.environmentEntity : null );
+
+						if (tile.entity != null)
+						{
+							hitEntities.add( tile.entity );
+						}
+						if (tile.environmentEntity != null)
+						{
+							hitEntities.add( tile.environmentEntity );
+						}
+					}
 				}
 			}
 

@@ -12,7 +12,6 @@ public class StretchAnimation extends AbstractSpriteAnimation
 		EXTEND, REVERSEEXTEND, EXPAND
 	}
 
-	private float duration;
 	private int[] diff;
 	private float finalScale;
 	private StretchEquation eqn;
@@ -20,7 +19,6 @@ public class StretchAnimation extends AbstractSpriteAnimation
 	private float animSpeed = 0.2f;
 	private float padding = 0.5f;
 
-	private float time;
 	private int[] offset = { 0, 0 };
 	private float[] scale = { 1, 1 };
 

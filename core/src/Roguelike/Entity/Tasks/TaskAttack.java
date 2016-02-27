@@ -1,7 +1,9 @@
 package Roguelike.Entity.Tasks;
 
 import Roguelike.Entity.Entity;
+import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
+import Roguelike.GameEvent.GameEventHandler;
 import Roguelike.Global;
 import Roguelike.Global.Direction;
 import Roguelike.Global.Passability;
@@ -9,6 +11,7 @@ import Roguelike.Items.Item;
 import Roguelike.Items.Item.EquipmentSlot;
 import Roguelike.Sound.SoundInstance;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Sprite.SpriteAction;
 import Roguelike.Sprite.SpriteAnimation.BumpAnimation;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation;
 import Roguelike.Sprite.SpriteAnimation.MoveAnimation.MoveEquation;
@@ -353,7 +356,7 @@ public class TaskAttack extends AbstractTask
 		}
 	}
 
-	private void doAttack( Array<GameTile> hitTiles, GameEntity entity, Item weapon )
+	private void doAttack( Array<GameTile> hitTiles, final GameEntity entity, Item weapon )
 	{
 		final GameTile source = entity.tile[0][0];
 
@@ -459,100 +462,126 @@ public class TaskAttack extends AbstractTask
 		Point minPoint = Global.PointPool.obtain().set( Integer.MAX_VALUE, Integer.MAX_VALUE );
 		Point maxPoint = Global.PointPool.obtain().set( 0, 0 );
 
-		HashSet<Entity> hitEntities = new HashSet<Entity>(  );
+		int hitCount = weapon != null && weapon.wepDef != null ? weapon.wepDef.hitCount : 1;
+		float animdelay = 0;
 
-		// Do the attack
-		for ( GameTile tile : attackedTiles )
+		for (int i = 0; i < hitCount; i++)
 		{
-			// do misses
-			int hitPercent = weapon != null && weapon.wepDef != null ? weapon.wepDef.hitPercent : 100;
-			if (hitPercent < 100)
+			// Do the attack
+			for ( GameTile tile : attackedTiles )
 			{
-				if (MathUtils.random( 100 ) > hitPercent)
+				// do misses
+				int hitPercent = weapon != null && weapon.wepDef != null ? weapon.wepDef.hitPercent : 100;
+				if ( hitPercent < 100 )
 				{
-					// Argh! a miss! Hit a random surrounding tile
-
-					Direction dir = Direction.values()[MathUtils.random( Direction.values().length-1 )];
-					GameTile newTile = tile.level.getGameTile( tile.x + dir.getX(), tile.y + dir.getY() );
-					if (newTile != null)
+					if ( MathUtils.random( 100 ) > hitPercent )
 					{
-						tile = newTile;
+						// Argh! a miss! Hit a random surrounding tile
+
+						Direction dir = Direction.values()[ MathUtils.random( Direction.values().length - 1 ) ];
+						GameTile newTile = tile.level.getGameTile( tile.x + dir.getX(), tile.y + dir.getY() );
+						if ( newTile != null )
+						{
+							tile = newTile;
+						}
 					}
 				}
-			}
 
-			if ( tile.entity != null && !tile.entity.isAllies( entity ) )
-			{
-				if (!hitEntities.contains( tile.entity ))
+				if ( weapon == null || weapon.wepDef == null || weapon.wepDef.hitType != Item.WeaponDefinition.HitType.ALL )
 				{
-					entity.attack( tile.entity, dir );
-					hitEntities.add( tile.entity );
+					int[] diff = tile.getPosDiff( source );
+
+					Sprite sprite = hitEffect.copy();
+
+					if ( sprite.spriteAnimation != null )
+					{
+						int distMoved = ( Math.abs( diff[ 0 ] ) + Math.abs( diff[ 1 ] ) ) / Global.TileSize;
+						sprite.spriteAnimation.set( 0.05f * distMoved, diff );
+					}
+
+					Vector2 vec = new Vector2( diff[ 0 ] * -1, diff[ 1 ] * -1 );
+					vec.nor();
+					float x = vec.x;
+					float y = vec.y;
+					double dot = 0 * x + 1 * y; // dot product
+					double det = 0 * y - 1 * x; // determinant
+					float angle = (float) Math.atan2( det, dot ) * MathUtils.radiansToDegrees;
+					sprite.rotation = angle;
+
+					sprite.renderDelay = animdelay;
+					animdelay += 0.1f;
+
+					boolean isMoving = sprite.spriteAnimation != null && sprite.spriteAnimation instanceof MoveAnimation;
+					final SoundInstance sound = hitEffect.sound;
+
+					final GameTile hitTile = tile;
+					final GameEntity hitEntity = hitTile.entity;
+					final EnvironmentEntity hitEnvEntity = hitTile.environmentEntity;
+
+					sprite.spriteAction = new SpriteAction( isMoving ? SpriteAction.FirePoint.End : SpriteAction.FirePoint.Start) {
+						@Override
+						public void evaluate()
+						{
+							// do on hit
+							for ( GameEventHandler handler : entity.getAllHandlers() )
+							{
+								handler.onHit( entity, hitTile );
+							}
+
+							if ( hitEntity != null && !hitEntity.isAllies( entity ) )
+							{
+								entity.attack( hitEntity, dir );
+							}
+							else if ( hitEnvEntity != null && !hitEnvEntity.passableBy.intersect( entity.getTravelType() ) )
+							{
+								entity.attack( hitEnvEntity, dir );
+							}
+
+							if ( sound != null )
+							{
+								sound.play( hitTile );
+							}
+						}
+					};
+
+					SpriteEffect effect = new SpriteEffect( sprite, Direction.CENTER, weapon != null && weapon.light != null ? weapon.light.copyNoFlag() : null );
+					tile.spriteEffects.add( effect );
 				}
-			}
-			else if ( tile.environmentEntity != null && !tile.environmentEntity.passableBy.intersect( entity.getTravelType() ) )
-			{
-				if (!hitEntities.contains( tile.environmentEntity ))
+				else
 				{
-					entity.attack( tile.environmentEntity, dir );
-					hitEntities.add( tile.environmentEntity );
+					// do on hit
+					for ( GameEventHandler handler : entity.getAllHandlers() )
+					{
+						handler.onHit( entity, tile );
+					}
+
+					if ( tile.entity != null && !tile.entity.isAllies( entity ) )
+					{
+						entity.attack( tile.entity, dir );
+					}
+					else if ( tile.environmentEntity != null && !tile.environmentEntity.passableBy.intersect( entity.getTravelType() ) )
+					{
+						entity.attack( tile.environmentEntity, dir );
+					}
+
+					if ( tile.x < minPoint.x )
+					{
+						minPoint.x = tile.x;
+					}
+					if ( tile.x > maxPoint.x )
+					{
+						maxPoint.x = tile.x;
+					}
+					if ( tile.y < minPoint.y )
+					{
+						minPoint.y = tile.y;
+					}
+					if ( tile.y > maxPoint.y )
+					{
+						maxPoint.y = tile.y;
+					}
+
 				}
-			}
-
-			if ( weapon == null || weapon.wepDef == null || weapon.wepDef.hitType != Item.WeaponDefinition.HitType.ALL )
-			{
-				int[] diff = tile.getPosDiff( source );
-
-				Sprite sprite = hitEffect.copy();
-
-				if ( sprite.spriteAnimation != null )
-				{
-					int distMoved = ( Math.abs( diff[ 0 ] ) + Math.abs( diff[ 1 ] ) ) / Global.TileSize;
-					sprite.spriteAnimation.set( 0.05f * distMoved, diff );
-				}
-
-				Vector2 vec = new Vector2( diff[ 0 ] * -1, diff[ 1 ] * -1 );
-				vec.nor();
-				float x = vec.x;
-				float y = vec.y;
-				double dot = 0 * x + 1 * y; // dot product
-				double det = 0 * y - 1 * x; // determinant
-				float angle = (float) Math.atan2( det, dot ) * MathUtils.radiansToDegrees;
-				sprite.rotation = angle;
-
-				if ( attackedTiles.size > 1 )
-				{
-					sprite.renderDelay = sprite.animationDelay * tile.getDist( source ) + sprite.animationDelay;
-				}
-
-				SpriteEffect effect = new SpriteEffect( sprite, Direction.CENTER, weapon != null && weapon.light != null ? weapon.light.copyNoFlag() : null );
-
-				tile.spriteEffects.add( effect );
-
-				SoundInstance sound = hitEffect.sound;
-				if ( sound != null )
-				{
-					sound.play( tile );
-				}
-			}
-			else
-			{
-				if (tile.x < minPoint.x)
-				{
-					minPoint.x = tile.x;
-				}
-				if (tile.x > maxPoint.x)
-				{
-					maxPoint.x = tile.x;
-				}
-				if (tile.y < minPoint.y)
-				{
-					minPoint.y = tile.y;
-				}
-				if (tile.y > maxPoint.y)
-				{
-					maxPoint.y = tile.y;
-				}
-
 			}
 		}
 

@@ -3,7 +3,9 @@ package Roguelike.GameEvent;
 import java.util.HashMap;
 
 import Roguelike.AssetManager;
+import Roguelike.Entity.GameEntity;
 import Roguelike.GameEvent.OnExpire.AbstractOnExpireEvent;
+import Roguelike.GameEvent.OnHit.AbstractOnHitEvent;
 import Roguelike.Global;
 import Roguelike.Global.Statistic;
 import Roguelike.Entity.Entity;
@@ -19,6 +21,7 @@ import Roguelike.GameEvent.OnDeath.AbstractOnDeathEvent;
 import Roguelike.GameEvent.OnTask.AbstractOnTaskEvent;
 import Roguelike.GameEvent.OnTurn.AbstractOnTurnEvent;
 import Roguelike.Sprite.Sprite;
+import Roguelike.Tiles.GameTile;
 import Roguelike.Util.FastEnumMap;
 
 import com.badlogic.gdx.utils.Array;
@@ -37,6 +40,7 @@ public abstract class GameEventHandler implements IGameObject
 	public Array<AbstractOnTaskEvent> onUseAbilityEvents = new Array<AbstractOnTaskEvent>();
 	public Array<AbstractOnDeathEvent> onDeathEvents = new Array<AbstractOnDeathEvent>();
 	public Array<AbstractOnExpireEvent> onExpireEvents = new Array<AbstractOnExpireEvent>();
+	public Array<AbstractOnHitEvent> onHitEvents = new Array<AbstractOnHitEvent>();
 
 	public Sprite replacementSprite;
 	public Array<AdditionalSprite> additionalSprites = new Array<AdditionalSprite>(  );
@@ -314,6 +318,27 @@ public abstract class GameEventHandler implements IGameObject
 	}
 
 	// ----------------------------------------------------------------------
+	public void onHit( GameEntity entity, GameTile tile )
+	{
+		boolean successfulProcess = false;
+		for ( AbstractOnHitEvent event : onHitEvents )
+		{
+			appendExtraVariables( entity.getVariableMap() );
+			boolean success = event.handle( entity, tile );
+
+			if ( success )
+			{
+				successfulProcess = true;
+			}
+		}
+
+		if ( successfulProcess )
+		{
+			processed();
+		}
+	}
+
+	// ----------------------------------------------------------------------
 	public void processed()
 	{
 
@@ -453,6 +478,16 @@ public abstract class GameEventHandler implements IGameObject
 			{
 				Element onExpireElement = onExpireElements.getChild( i );
 				onExpireEvents.add( AbstractOnExpireEvent.load( onExpireElement ) );
+			}
+		}
+
+		Element onHitElements = xml.getChildByName( "OnHit" );
+		if ( onHitElements != null )
+		{
+			for ( int i = 0; i < onHitElements.getChildCount(); i++ )
+			{
+				Element onHitElement = onHitElements.getChild( i );
+				onHitEvents.add( AbstractOnHitEvent.load( onHitElement ) );
 			}
 		}
 
@@ -620,6 +655,20 @@ public abstract class GameEventHandler implements IGameObject
 			lines.add( "On Expire:" );
 
 			for ( AbstractOnExpireEvent event : onExpireEvents )
+			{
+				Array<String> elines = event.toString( variableMap );
+				for ( String line : elines )
+				{
+					lines.add( "   " + line );
+				}
+			}
+		}
+
+		if ( onHitEvents.size > 0 )
+		{
+			lines.add( "On Hit:" );
+
+			for ( AbstractOnHitEvent event : onHitEvents )
 			{
 				Array<String> elines = event.toString( variableMap );
 				for ( String line : elines )

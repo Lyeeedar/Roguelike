@@ -67,6 +67,23 @@ public class SoundInstance
 		return sound;
 	}
 
+	public SoundInstance copy()
+	{
+		SoundInstance soundInstance = new SoundInstance(  );
+		soundInstance.sound = sound;
+		soundInstance.name = name;
+		soundInstance.minPitch = minPitch;
+		soundInstance.maxPitch = maxPitch;
+		soundInstance.volume = volume;
+		soundInstance.range = range;
+		soundInstance.falloffMin = falloffMin;
+		soundInstance.shoutFaction = shoutFaction;
+		soundInstance.key = key;
+		soundInstance.value = value;
+
+		return soundInstance;
+	}
+
 	public void play( GameTile tile )
 	{
 		// calculate data propogation
@@ -96,7 +113,7 @@ public class SoundInstance
 								{
 									playerDist = path.size;
 								}
-								else if ( tile.entity.isAllies( shoutFaction ) )
+								else if ( tile.entity != null && tile.entity.isAllies( shoutFaction ) )
 								{
 									t.entity.AI.setData( key, value );
 								}

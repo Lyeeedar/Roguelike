@@ -23,6 +23,7 @@ public final class Sprite
 	public Color colour = new Color( Color.WHITE );
 
 	public float renderDelay = -1;
+	public boolean showBeforeRender = false;
 
 	public float repeatDelay = 0;
 	public float repeatAccumulator;
@@ -37,6 +38,7 @@ public final class Sprite
 	public Array<TextureRegion> textures;
 
 	public AbstractSpriteAnimation spriteAnimation;
+	public SpriteAction spriteAction;
 
 	public AnimationState animationState;
 
@@ -62,7 +64,12 @@ public final class Sprite
 
 	public float getLifetime()
 	{
-		return animationDelay * textures.size;
+		return spriteAnimation != null ? spriteAnimation.duration : animationDelay * textures.size;
+	}
+
+	public float getRemainingLifetime()
+	{
+		return spriteAnimation != null ? spriteAnimation.duration - spriteAnimation.time : animationDelay * (textures.size - animationState.texIndex);
 	}
 
 	public boolean update( float delta )
@@ -82,6 +89,12 @@ public final class Sprite
 		boolean looped = false;
 		if (repeatAccumulator <= 0)
 		{
+			if (spriteAction != null && spriteAction.firePoint == SpriteAction.FirePoint.Start)
+			{
+				spriteAction.evaluate();
+				spriteAction = null;
+			}
+
 			animationAccumulator += delta;
 
 			while ( animationAccumulator >= animationDelay )
@@ -90,6 +103,12 @@ public final class Sprite
 
 				if ( animationState.mode == AnimationMode.TEXTURE )
 				{
+					if (spriteAction != null && spriteAnimation == null && animationState.texIndex == textures.size/2 && spriteAction.firePoint == SpriteAction.FirePoint.Middle)
+					{
+						spriteAction.evaluate();
+						spriteAction = null;
+					}
+
 					animationState.texIndex++;
 					if ( animationState.texIndex >= textures.size )
 					{
@@ -118,9 +137,28 @@ public final class Sprite
 		if ( spriteAnimation != null )
 		{
 			looped = spriteAnimation.update( delta );
+
+			if (spriteAnimation.time >= spriteAnimation.duration / 2)
+			{
+				if (spriteAction != null && spriteAction.firePoint == SpriteAction.FirePoint.Middle)
+				{
+					spriteAction.evaluate();
+					spriteAction = null;
+				}
+			}
+
 			if ( looped )
 			{
 				spriteAnimation = null;
+			}
+		}
+
+		if (looped)
+		{
+			if (spriteAction != null && spriteAction.firePoint == SpriteAction.FirePoint.End)
+			{
+				spriteAction.evaluate();
+				spriteAction = null;
 			}
 		}
 
@@ -170,7 +208,7 @@ public final class Sprite
 
 	private void drawTexture( Batch batch, TextureRegion texture, int x, int y, int width, int height, float scaleX, float scaleY, AnimationState animationState )
 	{
-		if ( renderDelay > 0 ) { return; }
+		if ( renderDelay > 0 && !showBeforeRender ) { return; }
 
 		if ( drawActualSize )
 		{
