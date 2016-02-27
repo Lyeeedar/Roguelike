@@ -575,8 +575,8 @@ public class Global
 		textButton.font = skin.getFont( "default" );
 		textButton.fontColor = Color.LIGHT_GRAY;
 		textButton.overFontColor = Color.WHITE;
-		textButton.checked = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonDown.png" ), 12, 12, 12, 12 ) );
-		//textButton.over = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonOver.png" ), 12, 12, 12, 12 ) );
+		//textButton.checked = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonDown.png" ), 12, 12, 12, 12 ) );
+		textButton.over = ((NinePatchDrawable)textButton.up).tint( new Color( 0.9f, 0.9f, 0.9f, 1.0f ) );
 		skin.add( "default", textButton );
 
 		TextButton.TextButtonStyle bigTextButton = new TextButton.TextButtonStyle();
@@ -584,8 +584,8 @@ public class Global
 		bigTextButton.font = skin.getFont( "title" );
 		bigTextButton.fontColor = Color.LIGHT_GRAY;
 		bigTextButton.overFontColor = Color.WHITE;
-		bigTextButton.checked = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonDown.png" ), 12, 12, 12, 12 ) );
-		//bigTextButton.over = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonOver.png" ), 12, 12, 12, 12 ) );
+		//bigTextButton.checked = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ButtonDown.png" ), 12, 12, 12, 12 ) );
+		bigTextButton.over = ((NinePatchDrawable)bigTextButton.up).tint( new Color( 0.9f, 0.9f, 0.9f, 1.0f ) );
 		skin.add( "big", bigTextButton );
 
 		TooltipStyle toolTip = new TooltipStyle();
@@ -650,11 +650,14 @@ public class Global
 		selectBoxStyle.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TextField.png" ), 6, 6, 6, 6 ) );
 		selectBoxStyle.scrollStyle = scrollPaneStyle;
 		selectBoxStyle.listStyle = listStyle;
+		selectBoxStyle.backgroundOver = ((NinePatchDrawable)selectBoxStyle.background).tint( new Color( 0.9f, 0.9f, 0.9f, 1.0f ) );
 		skin.add( "default", selectBoxStyle );
 
 		Slider.SliderStyle sliderStyle = new Slider.SliderStyle(  );
 		sliderStyle.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TextField.png" ), 6, 6, 6, 6 ) );
 		sliderStyle.knob = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) );
+		sliderStyle.knobOver = ((NinePatchDrawable)sliderStyle.knob).tint( new Color( 0.9f, 0.9f, 0.9f, 1.0f ) );
+		sliderStyle.knobDown = ((NinePatchDrawable)sliderStyle.knob).tint( Color.LIGHT_GRAY );
 		skin.add( "default-horizontal", sliderStyle );
 
 		return skin;

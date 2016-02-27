@@ -167,8 +167,7 @@ public class TownCreator
 		genderTable.add( male );
 		genderTable.add( female );
 
-		keyboardHelper.add( male, 0 );
-		keyboardHelper.add( female, 1 );
+		keyboardHelper.add( male, female );
 
 		table.add( genderTable ).expandX().left();
 		table.row();
@@ -216,8 +215,7 @@ public class TownCreator
 
 			classGroup.add( checkBox );
 
-			keyboardHelper.add( checkBox, 0 );
-			keyboardHelper.add( checkBox, 1 );
+			keyboardHelper.add( checkBox );
 		}
 
 		ScrollPane scrollPane = new ScrollPane( choiceTable, skin );
@@ -255,8 +253,7 @@ public class TownCreator
 		table.add( startButton ).expandX().fillX();
 		table.row();
 
-		keyboardHelper.add( startButton, 0 );
-		keyboardHelper.add( startButton, 1 );
+		keyboardHelper.add( startButton );
 
 		GameScreen.Instance.queueContextMenu( table, keyboardHelper );
 	}

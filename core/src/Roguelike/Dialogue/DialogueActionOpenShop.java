@@ -44,7 +44,10 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 
 	private void fillTable( final Table table, final ButtonKeyboardHelper keyboardHelper )
 	{
-		Point oldPos = new Point().set(keyboardHelper.current);
+		int x = keyboardHelper.currentx;
+		int y = keyboardHelper.currenty;
+		int z = keyboardHelper.currentz;
+
 		keyboardHelper.grid.clear();
 
 		table.clear();
@@ -165,7 +168,9 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 		table.row();
 
 		keyboardHelper.add( done );
-		keyboardHelper.trySetCurrent( oldPos );
+		keyboardHelper.scrollPane = scrollPane;
+
+		keyboardHelper.trySetCurrent( x, y, z );
 	}
 
 	@Override

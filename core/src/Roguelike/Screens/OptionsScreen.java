@@ -7,6 +7,7 @@ import Roguelike.Global;
 import Roguelike.RoguelikeGame;
 import Roguelike.RoguelikeGame.ScreenEnum;
 
+import Roguelike.UI.ButtonKeyboardHelper;
 import Roguelike.UI.Seperator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -65,6 +66,7 @@ public class OptionsScreen implements Screen, InputProcessor
 
 	public void createOptions()
 	{
+		keyboardHelper = new ButtonKeyboardHelper(  );
 		final Preferences prefs = Global.ApplicationChanger.prefs;
 
 		options.clear();
@@ -75,6 +77,8 @@ public class OptionsScreen implements Screen, InputProcessor
 		movementtype.setItems( "Direction", "Pathfind" );
 		if (Global.MovementTypePathfind) { movementtype.setSelectedIndex( 1 ); }
 		else { movementtype.setSelectedIndex( 0 ); }
+
+		keyboardHelper.add( movementtype );
 
 		Label audioTitle = new Label("Audio", skin, "title");
 
@@ -90,12 +94,18 @@ public class OptionsScreen implements Screen, InputProcessor
 		final Slider effectSlider = new Slider( 0, 100, 1, false, skin );
 		effectSlider.setValue( Global.EffectVolume * 100 );
 
+		keyboardHelper.add( musicSlider );
+		keyboardHelper.add( ambientSlider );
+		keyboardHelper.add( effectSlider );
+
 		Label videoTitle = new Label( "Video", skin, "title" );
 
 		Label resolutionLabel = new Label( "Resolution:", skin );
 		final SelectBox<String> resolutions = new SelectBox<String>( skin );
 		resolutions.setItems( Global.ApplicationChanger.getSupportedDisplayModes() );
 		resolutions.setSelected( prefs.getInteger( "resolutionX" ) + "x" + prefs.getInteger( "resolutionY" ) );
+
+		keyboardHelper.add( resolutions );
 
 		Label windowLabel = new Label( "Window Mode:", skin );
 		final SelectBox<String> windowMode = new SelectBox<String>( skin );
@@ -113,6 +123,8 @@ public class OptionsScreen implements Screen, InputProcessor
 			windowMode.setSelected( "Window" );
 		}
 
+		keyboardHelper.add( windowMode );
+
 		Label fpsLabel = new Label( "Frames per second:", skin );
 		final SelectBox<String> fps = new SelectBox<String>( skin );
 		fps.setItems( new String[] { "30", "60", "120" } );
@@ -124,6 +136,8 @@ public class OptionsScreen implements Screen, InputProcessor
 		{
 			fps.setSelected( "" + prefs.getInteger( "fps" ) );
 		}
+
+		keyboardHelper.add( fps );
 
 		Label animLabel = new Label( "Animation Speed:", skin );
 		final SelectBox<String> animspeed = new SelectBox<String>( skin );
@@ -137,10 +151,14 @@ public class OptionsScreen implements Screen, InputProcessor
 			animspeed.setSelected( new DecimalFormat( "#.##" ).format( prefs.getFloat( "animspeed" ) ) + "x" );
 		}
 
+		keyboardHelper.add( animspeed );
+
 		Label msaaLabel = new Label( "MSAA Samples:", skin );
 		final SelectBox<Integer> msaa = new SelectBox<Integer>( skin );
 		msaa.setItems( new Integer[] { 0, 2, 4, 8, 16, 32 } );
 		msaa.setSelected( prefs.getInteger( "msaa" ) );
+
+		keyboardHelper.add( msaa );
 
 		TextButton apply = new TextButton( "Apply", skin );
 		apply.addListener( new ClickListener()
@@ -296,6 +314,9 @@ public class OptionsScreen implements Screen, InputProcessor
 		options.add( backButton ).left().pad( 10 );
 		options.add( adTable ).right().pad( 10 );
 
+		keyboardHelper.add( backButton, defaults, apply );
+		keyboardHelper.cancel = backButton;
+		keyboardHelper.scrollPane = scrollPane;
 	}
 
 	@Override
@@ -327,6 +348,7 @@ public class OptionsScreen implements Screen, InputProcessor
 	@Override
 	public void render( float delta )
 	{
+		keyboardHelper.update( delta );
 		stage.act();
 
 		Gdx.gl.glClearColor( 0.3f, 0.3f, 0.3f, 1 );
@@ -432,14 +454,12 @@ public class OptionsScreen implements Screen, InputProcessor
 	SpriteBatch batch;
 
 	public InputMultiplexer inputMultiplexer;
+	public ButtonKeyboardHelper keyboardHelper;
 
 	@Override
 	public boolean keyDown( int keycode )
 	{
-		if ( keycode == Keys.ESCAPE )
-		{
-			Global.Game.switchScreen( screen );
-		}
+		keyboardHelper.keyDown( keycode );
 
 		return false;
 	}
@@ -477,6 +497,7 @@ public class OptionsScreen implements Screen, InputProcessor
 	@Override
 	public boolean mouseMoved( int screenX, int screenY )
 	{
+		keyboardHelper.clear();
 		return false;
 	}
 
