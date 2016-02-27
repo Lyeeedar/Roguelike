@@ -7,6 +7,7 @@ import Roguelike.Entity.ActivationAction.ActivationActionGroup;
 import Roguelike.Entity.Entity;
 import Roguelike.Entity.EnvironmentEntity;
 import Roguelike.Entity.GameEntity;
+import Roguelike.Entity.Tasks.TaskAttack;
 import Roguelike.Entity.Tasks.TaskUseAbility;
 import Roguelike.Entity.Tasks.TaskWait;
 import Roguelike.Fields.Field;
@@ -46,7 +47,9 @@ import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
@@ -1224,6 +1227,60 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				table.add( new Label( "Pick a slot to equip into", skin ) ).expandX().center();
 				table.row();
+
+				ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
+				Table buttonTable = new Table(  );
+
+				for (int i = 0; i < Global.NUM_ABILITY_SLOTS; i++)
+				{
+					Button button = new Button(skin);
+
+					final int index = i;
+					final AbilityTree current = index < Global.CurrentLevel.player.slottedAbilities.size ? Global.CurrentLevel.player.slottedAbilities.removeIndex( index ) : null;
+
+					button.addListener( new ClickListener(  )
+					{
+						public void clicked( InputEvent event, float x, float y )
+						{
+							for (int i = 0; i < index; i++)
+							{
+								if (i < Global.CurrentLevel.player.slottedAbilities.size-1)
+								{
+									Global.CurrentLevel.player.slottedAbilities.add( null );
+								}
+							}
+							Global.CurrentLevel.player.slottedAbilities.insert( index, item.ability );
+
+							if (current != null)
+							{
+								Item item = new Item();
+								item.ability = current;
+								Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
+							}
+
+							clearContextMenu( true );
+						}
+					} );
+
+					AbilityTree abilityTree = i < Global.CurrentLevel.player.slottedAbilities.size ? Global.CurrentLevel.player.slottedAbilities.get( i ) : null;
+					if (abilityTree != null)
+					{
+						SpriteWidget sprite = new SpriteWidget( abilityTree.current.current.getIcon(), 32, 32 );
+						button.add( sprite );
+					}
+					else
+					{
+						button.add( new Table() ).width( 32 ).height( 32 );
+					}
+
+					buttonTable.add( button ).expandX();
+
+					keyboardHelper.add( button, 0, 0 );
+				}
+
+				table.add( buttonTable ).expand().fill();
+				table.row();
+
 				table.add( new Label( "Or", skin ) ).expandX().center();
 				table.row();
 
@@ -1234,7 +1291,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 					{
 						clearContextMenu( true );
 						Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
-						abilityToEquip = null;
 					}
 				} );
 
@@ -1242,12 +1298,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				table.pack();
 
-				ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
 				keyboardHelper.add( dropButton );
 
 				queueContextMenu( table, keyboardHelper );
-
-				abilityToEquip = item.ability;
 			}
 			else
 			{
@@ -1342,12 +1395,35 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 		if ( Global.CurrentDialogue != null )
 		{
-			if ( Global.CurrentDialogue.dialogue.currentInput != null && keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
+			if ( Global.CurrentDialogue.dialogue.currentInput != null )
 			{
-				int val = keycode - Keys.NUM_0;
-				if ( val <= Global.CurrentDialogue.dialogue.currentInput.choices.size )
+				if (Global.Controls.isKey( Controls.Keys.ACCEPT, keycode ))
 				{
-					Global.CurrentDialogue.dialogue.currentInput.answer = val;
+					Global.CurrentDialogue.dialogue.currentInput.answer = Global.CurrentDialogue.dialogue.mouseOverInput+1;
+				}
+				else if (Global.Controls.isKey( Controls.Keys.UP, keycode ))
+				{
+					Global.CurrentDialogue.dialogue.mouseOverInput--;
+					if (Global.CurrentDialogue.dialogue.mouseOverInput < 0)
+					{
+						Global.CurrentDialogue.dialogue.mouseOverInput = 0;
+					}
+				}
+				else if (Global.Controls.isKey( Controls.Keys.DOWN, keycode ))
+				{
+					Global.CurrentDialogue.dialogue.mouseOverInput++;
+					if (Global.CurrentDialogue.dialogue.mouseOverInput >= Global.CurrentDialogue.dialogue.currentInput.choices.size)
+					{
+						Global.CurrentDialogue.dialogue.mouseOverInput = Global.CurrentDialogue.dialogue.currentInput.choices.size-1;
+					}
+				}
+				else if (keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9)
+				{
+					int val = keycode - Keys.NUM_0;
+					if ( val <= Global.CurrentDialogue.dialogue.currentInput.choices.size )
+					{
+						Global.CurrentDialogue.dialogue.currentInput.answer = val;
+					}
 				}
 			}
 
@@ -1360,9 +1436,9 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 				Global.CurrentDialogue.displayedPopup = Global.CurrentDialogue.popup;
 			}
 		}
-		else if ( keycode >= Keys.NUM_1 && keycode <= Keys.NUM_9 )
+		else if ( Global.Controls.toAbilityKey( keycode ) >= 0 )
 		{
-			int i = keycode - Keys.NUM_1;
+			int i = Global.Controls.toAbilityKey( keycode );
 			AbilityTree a = Global.CurrentLevel.player.slottedAbilities.size > i ? Global.CurrentLevel.player.slottedAbilities.get( i ) : null;
 			if ( a != null && a.current.current instanceof ActiveAbility && ( (ActiveAbility) a.current.current ).isAvailable() )
 			{
@@ -1388,6 +1464,18 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 				selectedAbilityTile = abilityTiles.get( selectedAbilityTileIndex );
 			}
+		}
+		else if ( Global.Controls.isKey( Controls.Keys.UPGRADE, keycode ))
+		{
+			displayUpgradeMenu();
+		}
+		else if ( Global.Controls.isKey( Controls.Keys.WEAPON_RANGE, keycode ))
+		{
+			displayWeaponHitPattern();
+		}
+		else if ( Global.Controls.isKey( Controls.Keys.TOGGLE_AUTOATTACK, keycode ))
+		{
+			Global.CurrentLevel.player.weaponSheathed = !Global.CurrentLevel.player.weaponSheathed;
 		}
 		else if ( Global.Controls.isKey( Controls.Keys.RIGHT, keycode ) )
 		{
@@ -2113,6 +2201,94 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	}
 
 	// ----------------------------------------------------------------------
+	public void displayUpgradeMenu()
+	{
+		int stones = Global.CurrentLevel.player.inventory.upgradeStones;
+
+		ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
+
+		Table table = new Table();
+		table.defaults().pad( 5 );
+
+		table.add( new Label("You have " + stones + " upgrade stones.", skin) ).colspan( 2 );
+		table.row();
+		table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
+		table.row();
+
+		for ( Item.EquipmentSlot slot : Item.EquipmentSlot.values() )
+		{
+			final Item equip = Global.CurrentLevel.player.inventory.getEquip( slot );
+
+			if ( equip != null )
+			{
+				final int required = 2 * equip.upgradeCount;
+
+				if (required <= stones)
+				{
+					TextButton button = new TextButton(equip.getName(), skin);
+					button.addListener( new ClickListener()
+					{
+						public void clicked( InputEvent event, float x, float y )
+						{
+							GameScreen.Instance.clearContextMenu( true );
+
+							Global.CurrentLevel.player.inventory.upgradeStones -= required;
+							equip.upgrade();
+
+							Global.CurrentLevel.player.isVariableMapDirty = true;
+							for ( int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++ )
+							{
+								AbilityTree tree = Global.CurrentLevel.player.slottedAbilities.get( i );
+								if (tree != null)
+								{
+									tree.current.current.setCaster( Global.CurrentLevel.player );
+								}
+							}
+						}
+					} );
+					table.add( button ).expandX().left();
+
+					keyboardHelper.add( button );
+				}
+				else
+				{
+					table.add( new Label(equip.getName(), skin) ).expandX().left();
+				}
+
+				table.add( new Label( "Requires " + required + " stones", skin ) ).expandX().left();
+
+				table.row();
+			}
+		}
+
+		table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
+		table.row();
+
+		TextButton cancel = new TextButton( "Cancel", skin );
+		cancel.addListener( new ClickListener()
+		{
+			public void clicked( InputEvent event, float x, float y )
+			{
+				GameScreen.Instance.clearContextMenu( true );
+			}
+		} );
+
+		table.add( cancel ).colspan( 2 );
+		table.row();
+
+		keyboardHelper.add( cancel );
+		keyboardHelper.cancel = cancel;
+
+		queueContextMenu( table, keyboardHelper );
+	}
+
+	// ----------------------------------------------------------------------
+	public void displayWeaponHitPattern()
+	{
+		weaponTiles = TaskAttack.buildAllDirectionHitTiles( Global.CurrentLevel.player );
+	}
+
+	// ----------------------------------------------------------------------
 	public void displayGameMenu()
 	{
 		Global.save();
@@ -2373,7 +2549,6 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 
 	// ----------------------------------------------------------------------
 	public ActiveAbility preparedAbility;
-	public AbilityTree abilityToEquip;
 	private Array<Point> abilityTiles;
 	private Point selectedAbilityTile;
 	private int selectedAbilityTileIndex;

@@ -497,7 +497,15 @@ public class Global
 	// ----------------------------------------------------------------------
 	public static String capitalizeString( String s )
 	{
-		return s.substring( 0, 1 ).toUpperCase() + s.substring( 1 ).toLowerCase();
+		String[] parts = s.split( "_" );
+
+		String output = "";
+		for (String part : parts)
+		{
+			output += part.substring( 0, 1 ).toUpperCase() + part.substring( 1 ).toLowerCase() + " ";
+		}
+
+		return output.trim();
 	}
 
 	// ----------------------------------------------------------------------
@@ -611,6 +619,11 @@ public class Global
 		progressBar.background = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/TextField.png" ), 6, 6, 6, 6 ) );
 		progressBar.knobBefore = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/ProgressIndicator.png" ), 8, 8, 8, 8 ) );
 		skin.add( "default-horizontal", progressBar );
+
+		Button.ButtonStyle buttonStyle = new Button.ButtonStyle(  );
+		buttonStyle.up = new NinePatchDrawable( new NinePatch( AssetManager.loadTextureRegion( "Sprites/GUI/Button.png" ), 12, 12, 12, 12 ) );
+		buttonStyle.over = ((NinePatchDrawable)buttonStyle.up).tint( new Color( 0.9f, 0.9f, 0.9f, 1.0f ) );
+		skin.add( "default", buttonStyle );
 
 		Button.ButtonStyle sheathButton = new Button.ButtonStyle(  );
 		sheathButton.up = new LayeredDrawable(

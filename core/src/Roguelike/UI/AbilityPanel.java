@@ -79,53 +79,17 @@ public class AbilityPanel extends TilePanel
 	@Override
 	public void handleDataClicked( final Object data, InputEvent event, float x, float y )
 	{
+		if ( data instanceof AbilityTree && ((AbilityTree)data).current.current instanceof ActiveAbility )
 		{
-			if ( GameScreen.Instance.abilityToEquip != null )
+			ActiveAbility aa = (ActiveAbility)((AbilityTree) data).current.current;
+
+			if (GameScreen.Instance.preparedAbility == aa)
 			{
-				int index = 0;
-				if ( data instanceof Integer )
-				{
-					index = (Integer) data;
-				}
-				else
-				{
-					index = Global.CurrentLevel.player.slottedAbilities.indexOf( (AbilityTree) data, true );
-				}
-
-				while ( Global.CurrentLevel.player.slottedAbilities.size <= index )
-				{
-					Global.CurrentLevel.player.slottedAbilities.add( null );
-				}
-
-				Global.CurrentLevel.player.slottedAbilities.removeIndex( index );
-				Global.CurrentLevel.player.slottedAbilities.insert( index, GameScreen.Instance.abilityToEquip );
-				GameScreen.Instance.abilityToEquip = null;
-
-				if ( data instanceof AbilityTree )
-				{
-					Item item = new Item();
-					item.ability = (AbilityTree) data;
-
-					Global.CurrentLevel.player.tile[ 0 ][ 0 ].items.add( item );
-				}
-
-				GameScreen.Instance.clearContextMenu( true );
+				GameScreen.Instance.prepareAbility( null );
 			}
-			else
+			else if ( aa.isAvailable() )
 			{
-				if ( data instanceof AbilityTree && ((AbilityTree)data).current.current instanceof ActiveAbility )
-				{
-					ActiveAbility aa = (ActiveAbility)((AbilityTree) data).current.current;
-
-					if (GameScreen.Instance.preparedAbility == aa)
-					{
-						GameScreen.Instance.prepareAbility( null );
-					}
-					else if ( aa.isAvailable() )
-					{
-						GameScreen.Instance.prepareAbility( aa );
-					}
-				}
+				GameScreen.Instance.prepareAbility( aa );
 			}
 		}
 	}
@@ -151,11 +115,7 @@ public class AbilityPanel extends TilePanel
 	@Override
 	public void onDrawItemBackground( Object data, Batch batch, int x, int y, int width, int height )
 	{
-		if ( GameScreen.Instance.abilityToEquip != null )
-		{
-			batch.setColor( Color.GOLD );
-			tileBackground.render( batch, x, y, width, height );
-		}
+
 	}
 
 	@Override

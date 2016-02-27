@@ -83,6 +83,11 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 		{
 			if (item.value > 0)
 			{
+				if (item.ability != null)
+				{
+					item.ability.current.current.setCaster( Global.CurrentLevel.player );
+				}
+
 				final boolean hasTheCash = Global.CurrentLevel.player.inventory.getItemCount( "money" ) >= item.value;
 
 				Table tooltipTable = new Table(  );
@@ -124,8 +129,16 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 				{
 					public void clicked (InputEvent event, float x, float y)
 					{
-						Global.CurrentLevel.player.inventory.equip( item );
-						Global.CurrentLevel.player.inventory.removeItem( "money", item.value );
+
+						if (item.ability != null)
+						{
+							GameScreen.Instance.pickupQueue.add( item );
+						}
+						else
+						{
+							Global.CurrentLevel.player.inventory.equip( item );
+							Global.CurrentLevel.player.inventory.removeItem( "money", item.value );
+						}
 
 						fillTable( table, keyboardHelper );
 					}
@@ -134,6 +147,7 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 				if (hasTheCash)
 				{
 					group.add( purchase ).expandX().left();
+					keyboardHelper.add( purchase );
 				}
 				else
 				{
@@ -141,8 +155,6 @@ public class DialogueActionOpenShop extends AbstractDialogueAction
 				}
 
 				group.row();
-
-				keyboardHelper.add( purchase );
 			}
 		}
 

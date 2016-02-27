@@ -125,7 +125,10 @@ public final class SaveGameEntity extends SaveableObject<GameEntity>
 					saveTree.writeData( tree );
 				}
 
-				entity.slottedAbilities.get( i ).current.current.setCaster( entity );
+				if (entity.slottedAbilities.get( i ) != null)
+				{
+					entity.slottedAbilities.get( i ).current.current.setCaster( entity );
+				}
 			}
 		}
 

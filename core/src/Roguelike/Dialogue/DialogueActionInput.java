@@ -26,6 +26,10 @@ public class DialogueActionInput extends AbstractDialogueAction
 		}
 		else
 		{
+			if (manager.currentInput != this)
+			{
+				manager.mouseOverInput = 0;
+			}
 			manager.currentInput = this;
 
 			return ReturnType.RUNNING;

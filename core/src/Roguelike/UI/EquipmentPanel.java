@@ -80,88 +80,12 @@ public class EquipmentPanel extends TilePanel
 
 			if ( item.getMainSlot() == Item.EquipmentSlot.WEAPON )
 			{
-				GameScreen.Instance.weaponTiles = TaskAttack.buildAllDirectionHitTiles( Global.CurrentLevel.player );
+				GameScreen.Instance.displayWeaponHitPattern();
 			}
 		}
 		else if ( data instanceof Integer )
 		{
-			int stones = Global.CurrentLevel.player.inventory.upgradeStones;
-
-			ButtonKeyboardHelper keyboardHelper = new ButtonKeyboardHelper(  );
-
-			Table table = new Table();
-			table.defaults().pad( 5 );
-
-			table.add( new Label("You have " + stones + " upgrade stones.", skin) ).colspan( 2 );
-			table.row();
-			table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
-			table.row();
-
-			for ( Item.EquipmentSlot slot : Item.EquipmentSlot.values() )
-			{
-				final Item equip = Global.CurrentLevel.player.inventory.getEquip( slot );
-
-				if ( equip != null )
-				{
-					final int required = 2 * equip.upgradeCount;
-
-					if (required <= stones)
-					{
-						TextButton button = new TextButton(equip.getName(), skin);
-						button.addListener( new ClickListener()
-						{
-							public void clicked( InputEvent event, float x, float y )
-							{
-								GameScreen.Instance.clearContextMenu( true );
-
-								Global.CurrentLevel.player.inventory.upgradeStones -= required;
-								equip.upgrade();
-
-								Global.CurrentLevel.player.isVariableMapDirty = true;
-								for ( int i = 0; i < Global.CurrentLevel.player.slottedAbilities.size; i++ )
-								{
-									AbilityTree tree = Global.CurrentLevel.player.slottedAbilities.get( i );
-									if (tree != null)
-									{
-										tree.current.current.setCaster( Global.CurrentLevel.player );
-									}
-								}
-							}
-						} );
-						table.add( button ).expandX().left();
-
-						keyboardHelper.add( button );
-					}
-					else
-					{
-						table.add( new Label(equip.getName(), skin) ).expandX().left();
-					}
-
-					table.add( new Label( "Requires " + required + " stones", skin ) ).expandX().left();
-
-					table.row();
-				}
-			}
-
-			table.add( new Seperator( skin ) ).colspan( 2 ).expandX().fillX();
-			table.row();
-
-			TextButton cancel = new TextButton( "Cancel", skin );
-			cancel.addListener( new ClickListener()
-			{
-				public void clicked( InputEvent event, float x, float y )
-				{
-					GameScreen.Instance.clearContextMenu( true );
-				}
-			} );
-
-			table.add( cancel ).colspan( 2 );
-			table.row();
-
-			keyboardHelper.add( cancel );
-			keyboardHelper.cancel = cancel;
-
-			GameScreen.Instance.displayContextMenu( table, true, keyboardHelper );
+			GameScreen.Instance.displayUpgradeMenu();
 		}
 	}
 
