@@ -648,6 +648,8 @@ public class Level
 	{
 		if ( tile.entity != null && tile.entity.tile[0][0] == tile )
 		{
+			tile.entity.processStatuses();
+
 			if (tile.entity.dialogue != null)
 			{
 				if (tile.entity.dialogue.popupText != null)

@@ -45,7 +45,7 @@ public final class StatusEvent extends AbstractOnDamageEvent
 		if ( condition != null )
 		{
 			int conditionVal = EquationHelper.evaluate( condition, variableMap );
-			//if ( conditionVal == 0 ) { return false; }
+			if ( conditionVal == 0 ) { return false; }
 		}
 
 		int stacks = 1;
@@ -53,10 +53,6 @@ public final class StatusEvent extends AbstractOnDamageEvent
 		if ( stacksEqn != null )
 		{
 			stacks = EquationHelper.evaluate( stacksEqn, variableMap );
-			if (stacks == 0)
-			{
-				stacks = 1;
-			}
 		}
 
 		for ( int i = 0; i < stacks; i++ )

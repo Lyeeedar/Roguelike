@@ -28,7 +28,7 @@
             <Duration>10</Duration>
             <Events>
                 <OnTurn>
-                    <HOT>3 + level / 2</HOT>
+                    <Heal>3 + level / 2</Heal>
                 </OnTurn>
             </Events>
 		</Status>

@@ -40,7 +40,7 @@ public abstract class AbstractOnTurnEvent
 	public static final HashMap<String, Class> ClassMap = new HashMap<String, Class>();
 	static
 	{
-		ClassMap.put( "DOT", DamageOverTimeEvent.class );
-		ClassMap.put( "HOT", HealOverTimeEvent.class );
+		ClassMap.put( "DAMAGE", DamageOverTimeEvent.class );
+		ClassMap.put( "HEAL", HealOverTimeEvent.class );
 	}
 }

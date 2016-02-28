@@ -12,7 +12,7 @@
 
     <Events>
         <OnDealDamage>
-            <Status Condition="chance(quality, 5)" Stacks="quality/5">Slime</Status>
+            <Status Condition="chance(quality, 5)" Stacks="quality/5+1">Slime</Status>
         </OnDealDamage>
     </Events>
 

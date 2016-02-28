@@ -45,6 +45,8 @@ public class EffectTypeStatus extends AbstractEffectType
 		{
 			stacksEqn = stacksEqn.toLowerCase();
 		}
+
+		StatusEffect.load( statusData, null );
 	}
 
 	@Override

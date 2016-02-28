@@ -161,17 +161,17 @@ public final class StatusEffect extends GameEventHandler
 
 			if ( se.name == null )
 			{
-				se.name = parent.getName();
+				se.name = parent != null ? parent.getName() : "Status";
 			}
 
 			if ( se.description == null )
 			{
-				se.description = parent.getDescription();
+				se.description = parent != null ? parent.getDescription() : "";
 			}
 
 			if ( se.icon == null )
 			{
-				se.icon = parent.getIcon().copy();
+				se.icon = parent != null ? parent.getIcon().copy() : AssetManager.loadSprite( "white" );
 			}
 		}
 

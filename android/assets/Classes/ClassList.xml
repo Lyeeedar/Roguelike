@@ -27,6 +27,7 @@
                         <Recipe>sword</Recipe>
                         <Material>Metal</Material>
                         <Quality>1</Quality>
+                        <Prefix>Slime</Prefix>
                     </Weapon>
                     <Body>
                         <Recipe>Jerkin</Recipe>

@@ -32,6 +32,7 @@ public class ButtonKeyboardHelper
 
 	private float updateAccumulator;
 
+	private boolean cleared = false;
 	private boolean first = true;
 
 	// ----------------------------------------------------------------------
@@ -167,12 +168,18 @@ public class ButtonKeyboardHelper
 	// ----------------------------------------------------------------------
 	public void clear()
 	{
-		exit( getCurrent() );
+		if (!cleared)
+		{
+			cleared = true;
+			exit( getCurrent() );
+		}
 	}
 
 	// ----------------------------------------------------------------------
 	public void trySetCurrent(int x, int y, int z)
 	{
+		cleared = false;
+
 		exit( getCurrent() );
 
 		currentx = x;
