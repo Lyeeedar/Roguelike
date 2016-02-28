@@ -1359,6 +1359,11 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 	// ----------------------------------------------------------------------
 	public void processMessageQueue( Entity entity, float delta )
 	{
+		if (stage == null || skin == null)
+		{
+			return;
+		}
+
 		if ( entity.messageAccumulator > 0 )
 		{
 			entity.messageAccumulator -= delta;

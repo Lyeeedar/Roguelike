@@ -22,8 +22,8 @@ public final class HealEvent extends AbstractOnDamageEvent
 	@Override
 	public void applyQuality( int quality )
 	{
-		condition.replace( "quality", ""+quality );
-		eqn.replace( "quality", ""+quality );
+		condition = condition.replace( "quality", ""+quality );
+		eqn = eqn.replace( "quality", ""+quality );
 	}
 
 	@Override

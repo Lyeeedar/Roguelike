@@ -21,7 +21,7 @@ public final class BlockEvent extends AbstractOnDamageEvent
 	@Override
 	public void applyQuality( int quality )
 	{
-		condition.replace( "quality", ""+quality );
+		condition = condition.replace( "quality", ""+quality );
 	}
 
 	@Override

@@ -22,8 +22,8 @@ public final class DamageEvent extends AbstractOnDamageEvent
 	@Override
 	public void applyQuality( int quality )
 	{
-		condition.replace( "quality", ""+quality );
-		equation.replace( "quality", ""+quality );
+		condition = condition.replace( "quality", ""+quality );
+		equation = equation.replace( "quality", ""+quality );
 	}
 
 	@Override

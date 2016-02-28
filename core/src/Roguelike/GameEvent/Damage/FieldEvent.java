@@ -25,8 +25,8 @@ public final class FieldEvent extends AbstractOnDamageEvent
 	@Override
 	public void applyQuality( int quality )
 	{
-		condition.replace( "quality", ""+quality );
-		stacksEqn.replace( "quality", ""+quality );
+		condition = condition.replace( "quality", ""+quality );
+		stacksEqn = stacksEqn.replace( "quality", ""+quality );
 	}
 
 	@Override

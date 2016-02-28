@@ -25,8 +25,8 @@ public final class StatusEvent extends AbstractOnDamageEvent
 	@Override
 	public void applyQuality( int quality )
 	{
-		condition.replace( "quality", ""+quality );
-		stacksEqn.replace( "quality", ""+quality );
+		condition = condition.replace( "quality", ""+quality );
+		stacksEqn = stacksEqn.replace( "quality", ""+quality );
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public final class StatusEvent extends AbstractOnDamageEvent
 		if ( condition != null )
 		{
 			int conditionVal = EquationHelper.evaluate( condition, variableMap );
-			if ( conditionVal == 0 ) { return false; }
+			//if ( conditionVal == 0 ) { return false; }
 		}
 
 		int stacks = 1;
@@ -53,6 +53,10 @@ public final class StatusEvent extends AbstractOnDamageEvent
 		if ( stacksEqn != null )
 		{
 			stacks = EquationHelper.evaluate( stacksEqn, variableMap );
+			if (stacks == 0)
+			{
+				stacks = 1;
+			}
 		}
 
 		for ( int i = 0; i < stacks; i++ )
