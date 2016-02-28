@@ -644,12 +644,24 @@ public class Level
 	}
 
 	// ----------------------------------------------------------------------
-	private void updatePopupsForTile( GameTile tile, float delta )
+	private void updateStatusesForTile( GameTile tile )
 	{
 		if ( tile.entity != null && tile.entity.tile[0][0] == tile )
 		{
 			tile.entity.processStatuses();
+		}
 
+		if ( tile.environmentEntity != null && tile.environmentEntity.tile[0][0] == tile )
+		{
+			tile.environmentEntity.processStatuses();
+		}
+	}
+
+	// ----------------------------------------------------------------------
+	private void updatePopupsForTile( GameTile tile, float delta )
+	{
+		if ( tile.entity != null && tile.entity.tile[0][0] == tile )
+		{
 			if (tile.entity.dialogue != null)
 			{
 				if (tile.entity.dialogue.popupText != null)
@@ -713,7 +725,8 @@ public class Level
 
 			while (tile.entity.extraUIHP > 0 && tile.entity.extraUIHPAccumulator > 0)
 			{
-				tile.entity.extraUIHP--;
+				tile.entity.extraUIHP -= (float)(tile.entity.getMaxHP()) / 100.0f;
+				if (tile.entity.extraUIHP < 0) { tile.entity.extraUIHP = 0; }
 
 				float ratio = (float)tile.entity.extraUIHP / (float)(tile.entity.getMaxHP());
 				ratio = 0.02f - 0.02f * ratio;
@@ -728,7 +741,8 @@ public class Level
 
 			while (tile.environmentEntity.extraUIHP > 0 && tile.environmentEntity.extraUIHPAccumulator > 0)
 			{
-				tile.environmentEntity.extraUIHP--;
+				tile.environmentEntity.extraUIHP -= (float)(tile.environmentEntity.getMaxHP()) / 100.0f;
+				if (tile.environmentEntity.extraUIHP < 0) { tile.environmentEntity.extraUIHP = 0; }
 
 				float ratio = (float)tile.environmentEntity.extraUIHP / (float)(tile.environmentEntity.getMaxHP());
 				ratio = 0.02f - 0.02f * ratio;
@@ -1532,6 +1546,7 @@ public class Level
 					updateSpriteEffectsForTile( tile, delta );
 					updatePopupsForTile( tile, delta );
 					updateExtraUIHPForTile( tile, delta );
+					updateStatusesForTile( tile );
 				}
 				else
 				{

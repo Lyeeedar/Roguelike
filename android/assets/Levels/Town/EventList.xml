@@ -53,4 +53,10 @@
         </Value>
     </VillagersFreed>
 
+    <SoldTreasure>
+        <Value>
+            <Text RewardMessage="Starting Funds Increased">A number of treasures were found on the body of a previous adventurer. Selling them has earned the town a nice profit.</Text>
+        </Value>
+    </SoldTreasure>
+
 </Events>

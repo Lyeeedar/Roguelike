@@ -508,9 +508,18 @@ public class ActiveAbility implements IAbility, IGameObject
 					boolean isMoving = sprite.spriteAnimation != null && sprite.spriteAnimation instanceof MoveAnimation;
 
 					final GameTile hitTile = tile;
-					final GameEntity hitEntity = hitTile.entity;
-					final EnvironmentEntity hitEnvEntity = hitTile.environmentEntity;
+					final GameEntity hitEntity = !hitEntities.contains( hitTile.entity ) ? hitTile.entity : null;
+					final EnvironmentEntity hitEnvEntity = !hitEntities.contains( hitTile.environmentEntity ) ? hitTile.environmentEntity : null;
 					final ActiveAbility thisAbility = this;
+
+					if (hitEntity != null)
+					{
+						hitEntities.add( hitEntity );
+					}
+					if (hitEnvEntity != null)
+					{
+						hitEntities.add( hitEnvEntity );
+					}
 
 					sprite.spriteAction = new SpriteAction( isMoving ? SpriteAction.FirePoint.End : SpriteAction.FirePoint.Start) {
 						@Override
@@ -518,18 +527,7 @@ public class ActiveAbility implements IAbility, IGameObject
 						{
 							for ( AbstractEffectType effect : effectTypes )
 							{
-								effect.update( thisAbility, 1, hitTile,
-											   !hitEntities.contains( hitEntity ) ? hitEntity : null,
-											   !hitEntities.contains( hitEnvEntity ) ? hitEnvEntity : null );
-
-								if (hitEntity != null)
-								{
-									hitEntities.add( hitEntity );
-								}
-								if (hitEnvEntity != null)
-								{
-									hitEntities.add( hitEnvEntity );
-								}
+								effect.update( thisAbility, 1, hitTile, hitEntity, hitEnvEntity );
 							}
 						}
 					};

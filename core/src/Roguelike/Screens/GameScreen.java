@@ -2159,6 +2159,23 @@ public class GameScreen implements Screen, InputProcessor, GestureListener
 			Global.WorldFlags.put( entry.key, entry.value );
 		}
 		Global.QuestManager.deferredFlags.clear();
+
+		// Sell treasure
+		for (Item item : Global.CurrentLevel.player.inventory.m_items)
+		{
+			if ( item.category == Item.ItemCategory.TREASURE)
+			{
+				if (item.value > 0)
+				{
+					Global.RunFlags.put( "SoldTreasure", "" );
+
+					int current = Integer.parseInt( Global.WorldFlags.get( "startingfunds" ) );
+					current += item.value;
+					Global.WorldFlags.put( "startingfunds", ""+current );
+				}
+			}
+		}
+
 		Global.save();
 
 		Table table = new Table();

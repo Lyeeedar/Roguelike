@@ -26,6 +26,8 @@
 							<Item Drop="true">
 								<Name>Wedding Ring</Name>
 								<Description>A small ring. The smoothness of the inner surface shows signs of being well worn over many years.</Description>
+                                <Value>5</Value>
+                                <Category>Treasure</Category>
 								<Icon>
 									<Name>Oryx/uf_split/uf_items/ring_pearl</Name>
 								</Icon>

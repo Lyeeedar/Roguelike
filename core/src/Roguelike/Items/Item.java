@@ -541,6 +541,7 @@ public final class Item extends GameEventHandler
 		category = xmlElement.get( "Category", null ) != null ? ItemCategory.valueOf( xmlElement.get( "Category" ).toUpperCase() ) : category;
 		type = xmlElement.get( "Type", type ).toLowerCase();
 		quality = xmlElement.getInt( "Quality", quality );
+		value = xmlElement.getInt( "Value", value );
 
 		// Load the wep def
 		if (slots.contains( EquipmentSlot.WEAPON, true ) && type != null)
